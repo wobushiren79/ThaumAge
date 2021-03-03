@@ -5,23 +5,30 @@ using UnityEngine;
 public class WorldCreateManager : BaseManager
 {
     //存储着世界中所有的Chunk
-    public static List<TerrainForChunk> chunks = new List<TerrainForChunk>();
+    public List<TerrainForChunk> chunks = new List<TerrainForChunk>();
 
-    //每个Chunk的长宽Size
-    public static int width = 50;
-    //每个Chunk的高度
-    public static int height = 30;
+    public  TerrainForChunk GetChunk(Vector3 wPos)
+    {
+        for (int i = 0; i < chunks.Count; i++)
+        {
+            Vector3 tempPos = chunks[i].transform.position;
 
+            //wPos是否超出了Chunk的XZ平面的范围
+            if ((wPos.x < tempPos.x) || (wPos.z < tempPos.z) || (wPos.x >= tempPos.x + 20) || (wPos.z >= tempPos.z + 20))
+                continue;
 
-    //随机种子
-    public int seed;
+            return chunks[i];
+        }
+        return null;
+    }
 
-    //最小生成高度
-    public float baseHeight = 10;
-
-    //噪音频率（噪音采样时会用到）
-    public float frequency = 0.025f;
-    //噪音振幅（噪音采样时会用到）
-    public float amplitude = 1;
+    /// <summary>
+    /// 增加区域
+    /// </summary>
+    /// <param name="chunk"></param>
+    public void AddChunk(TerrainForChunk chunk)
+    {
+        chunks.Add(chunk);
+    }
 
 }

@@ -5,10 +5,10 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 public class Test : BaseHandler<Test,BaseManager> {
 
-    public GameObject obj;
+
 
     private void Start()
     {
-
+        WorldCreateHandler.Instance.CreateTerrainChunk();
     }
 }
