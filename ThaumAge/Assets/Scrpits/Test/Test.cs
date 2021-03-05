@@ -9,6 +9,7 @@ public class Test : BaseHandler<Test,BaseManager> {
 
     private void Start()
     {
-        WorldCreateHandler.Instance.CreateTerrainChunk();
+        WorldCreateHandler.Instance.CreateChunk();
     }
+
 }
