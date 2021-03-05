@@ -6,10 +6,10 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
     public GameObject objModelChunk;
 
 
-    public void CreateTerrainChunk()
+    public void CreateChunk()
     {
         GameObject objChunk = Instantiate(gameObject, objModelChunk);
-        TerrainForChunk terrainForChunk = objChunk.GetComponent<TerrainForChunk>();
+        Chunk terrainForChunk = objChunk.GetComponent<Chunk>();
         manager.AddChunk(terrainForChunk);
     }
 

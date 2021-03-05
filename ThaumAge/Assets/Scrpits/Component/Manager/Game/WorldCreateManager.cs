@@ -5,9 +5,9 @@ using UnityEngine;
 public class WorldCreateManager : BaseManager
 {
     //存储着世界中所有的Chunk
-    public List<TerrainForChunk> chunks = new List<TerrainForChunk>();
+    public List<Chunk> chunks = new List<Chunk>();
 
-    public  TerrainForChunk GetChunk(Vector3 wPos)
+    public Chunk GetChunk(Vector3 wPos)
     {
         for (int i = 0; i < chunks.Count; i++)
         {
@@ -26,7 +26,7 @@ public class WorldCreateManager : BaseManager
     /// 增加区域
     /// </summary>
     /// <param name="chunk"></param>
-    public void AddChunk(TerrainForChunk chunk)
+    public void AddChunk(Chunk chunk)
     {
         chunks.Add(chunk);
     }

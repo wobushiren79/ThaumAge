@@ -2,7 +2,7 @@
 using UnityEditor;
 using UnityEngine;
 
-public class TerrainForChunk : BaseMonoBehaviour
+public class Chunk : BaseMonoBehaviour
 {    
     //Chunk的网格
     public Mesh chunkMesh;
@@ -12,15 +12,8 @@ public class TerrainForChunk : BaseMonoBehaviour
     public MeshFilter meshFilter;
 
     //存储着此Chunk内的所有Block信息
-    public BlockType[,,] mapForBlock;
+    public BlockTypeEnum[,,] mapForBlock;
 
-    public enum BlockType
-    {
-        None = 0,
-        Dirt = 1,
-        Grass = 3,
-        Gravel = 4,
-    }
     public static int width = 30;
     public static int height = 30;
 
@@ -36,9 +29,6 @@ public class TerrainForChunk : BaseMonoBehaviour
 
     void Start()
     {
-        //初始化时将自己加入chunks列表
-        WorldCreateHandler.Instance.manager.AddChunk(this);
-
         //获取自身相关组件引用
         meshRenderer = GetComponent<MeshRenderer>();
         meshCollider = GetComponent<MeshCollider>();
@@ -57,7 +47,7 @@ public class TerrainForChunk : BaseMonoBehaviour
         offset2 = new Vector3(Random.value * 1000, Random.value * 1000, Random.value * 1000);
 
         //初始化Map
-        mapForBlock = new BlockType[width, height, width];
+        mapForBlock = new BlockTypeEnum[width, height, width];
 
         //遍历map，生成其中每个Block的信息
         for (int x = 0; x < width; x++)
@@ -99,12 +89,12 @@ public class TerrainForChunk : BaseMonoBehaviour
         return Mathf.FloorToInt(noise0 + noise1 + noise2 + baseHeight);
     }
 
-    BlockType GenerateBlockType(Vector3 wPos)
+    BlockTypeEnum GenerateBlockType(Vector3 wPos)
     {
         //y坐标是否在Chunk内
         if (wPos.y >= height)
         {
-            return BlockType.None;
+            return BlockTypeEnum.None;
         }
 
         //获取当前位置方块随机生成的高度值
@@ -113,20 +103,20 @@ public class TerrainForChunk : BaseMonoBehaviour
         //当前方块位置高于随机生成的高度值时，当前方块类型为空
         if (wPos.y > genHeight)
         {
-            return BlockType.None;
+            return BlockTypeEnum.None;
         }
         //当前方块位置等于随机生成的高度值时，当前方块类型为草地
         else if (wPos.y == genHeight)
         {
-            return BlockType.Grass;
+            return BlockTypeEnum.Grass;
         }
         //当前方块位置小于随机生成的高度值 且 大于 genHeight - 5时，当前方块类型为泥土
         else if (wPos.y < genHeight && wPos.y > genHeight - 5)
         {
-            return BlockType.Dirt;
+            return BlockTypeEnum.Dirt;
         }
         //其他情况，当前方块类型为碎石
-        return BlockType.Gravel;
+        return BlockTypeEnum.Gravel;
     }
 
     public void BuildChunk()
@@ -162,7 +152,7 @@ public class TerrainForChunk : BaseMonoBehaviour
     {
         if (mapForBlock[x, y, z] == 0) return;
 
-        BlockType typeid = mapForBlock[x, y, z];
+        BlockTypeEnum typeid = mapForBlock[x, y, z];
 
         //Left
         if (CheckNeedBuildFace(x - 1, y, z))
@@ -192,14 +182,14 @@ public class TerrainForChunk : BaseMonoBehaviour
         var type = GetBlockType(x, y, z);
         switch (type)
         {
-            case BlockType.None:
+            case BlockTypeEnum.None:
                 return true;
             default:
                 return false;
         }
     }
 
-    public BlockType GetBlockType(int x, int y, int z)
+    public BlockTypeEnum GetBlockType(int x, int y, int z)
     {
         if (y < 0 || y > height - 1)
         {
@@ -215,7 +205,7 @@ public class TerrainForChunk : BaseMonoBehaviour
         return mapForBlock[x, y, z];
     }
 
-    void BuildFace(BlockType typeid, Vector3 corner, Vector3 up, Vector3 right, bool reversed, List<Vector3> verts, List<Vector2> uvs, List<int> tris)
+    void BuildFace(BlockTypeEnum typeid, Vector3 corner, Vector3 up, Vector3 right, bool reversed, List<Vector3> verts, List<Vector2> uvs, List<int> tris)
     {
         int index = verts.Count;
 

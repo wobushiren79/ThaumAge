@@ -1,4 +1,4 @@
-public enum TerrainBlockTypeEnum
+public enum BlockTypeEnum
 {
     //Пе
     None = 0,
