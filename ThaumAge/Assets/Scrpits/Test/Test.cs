@@ -3,13 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-public class Test : BaseHandler<Test,BaseManager> {
 
+public class Test : BaseMonoBehaviour
+{
 
-
-    private void Start()
-    {
-        WorldCreateHandler.Instance.CreateChunk();
-    }
 
 }

@@ -3,121 +3,39 @@ using UnityEditor;
 using UnityEngine;
 
 public class Chunk : BaseMonoBehaviour
-{    
+{
     //Chunk的网格
-    public Mesh chunkMesh;
+    protected Mesh chunkMesh;
 
-    public MeshRenderer meshRenderer;
-    public MeshCollider meshCollider;
-    public MeshFilter meshFilter;
+    protected MeshRenderer meshRenderer;
+    protected MeshCollider meshCollider;
+    protected MeshFilter meshFilter;
 
     //存储着此Chunk内的所有Block信息
-    public BlockTypeEnum[,,] mapForBlock;
+    public BlockBean[,,] mapForBlock;
 
-    public static int width = 30;
-    public static int height = 30;
+    public int width = 0;
+    public int height = 0;
 
-    public int seed;
-    public float baseHeight = 10;
-    public float frequency = 0.025f;
-    public float amplitude = 1;
-
-    Vector3 offset0;
-    Vector3 offset1;
-    Vector3 offset2;
-
-
-    void Start()
+    public void Awake()
     {
         //获取自身相关组件引用
         meshRenderer = GetComponent<MeshRenderer>();
         meshCollider = GetComponent<MeshCollider>();
         meshFilter = GetComponent<MeshFilter>();
-
-        //初始化地图
-        InitMap();
     }
 
-    void InitMap()
+
+
+    public void SetData(BlockBean[,,] mapForBlock, int width, int height)
     {
-        //初始化随机种子
-        Random.InitState(seed);
-        offset0 = new Vector3(Random.value * 1000, Random.value * 1000, Random.value * 1000);
-        offset1 = new Vector3(Random.value * 1000, Random.value * 1000, Random.value * 1000);
-        offset2 = new Vector3(Random.value * 1000, Random.value * 1000, Random.value * 1000);
-
-        //初始化Map
-        mapForBlock = new BlockTypeEnum[width, height, width];
-
-        //遍历map，生成其中每个Block的信息
-        for (int x = 0; x < width; x++)
-        {
-            for (int y = 0; y < height; y++)
-            {
-                for (int z = 0; z < width; z++)
-                {
-                    mapForBlock[x, y, z] = GenerateBlockType(new Vector3(x, y, z) + transform.position);
-                }
-            }
-        }
-
-        //根据生成的信息，Build出Chunk的网格
+        this.mapForBlock = mapForBlock;
+        this.width = width;
+        this.height = height;
         BuildChunk();
     }
 
-    int GenerateHeight(Vector3 wPos)
-    {
 
-        //让随机种子，振幅，频率，应用于我们的噪音采样结果
-        float x0 = (wPos.x + offset0.x) * frequency;
-        float y0 = (wPos.y + offset0.y) * frequency;
-        float z0 = (wPos.z + offset0.z) * frequency;
-
-        float x1 = (wPos.x + offset1.x) * frequency * 2;
-        float y1 = (wPos.y + offset1.y) * frequency * 2;
-        float z1 = (wPos.z + offset1.z) * frequency * 2;
-
-        float x2 = (wPos.x + offset2.x) * frequency / 4;
-        float y2 = (wPos.y + offset2.y) * frequency / 4;
-        float z2 = (wPos.z + offset2.z) * frequency / 4;
-
-        float noise0 = SimplexNoiseUtil.Generate(x0, y0, z0) * amplitude;
-        float noise1 = SimplexNoiseUtil.Generate(x1, y1, z1) * amplitude / 2;
-        float noise2 = SimplexNoiseUtil.Generate(x2, y2, z2) * amplitude / 4;
-
-        //在采样结果上，叠加上baseHeight，限制随机生成的高度下限
-        return Mathf.FloorToInt(noise0 + noise1 + noise2 + baseHeight);
-    }
-
-    BlockTypeEnum GenerateBlockType(Vector3 wPos)
-    {
-        //y坐标是否在Chunk内
-        if (wPos.y >= height)
-        {
-            return BlockTypeEnum.None;
-        }
-
-        //获取当前位置方块随机生成的高度值
-        float genHeight = GenerateHeight(wPos);
-
-        //当前方块位置高于随机生成的高度值时，当前方块类型为空
-        if (wPos.y > genHeight)
-        {
-            return BlockTypeEnum.None;
-        }
-        //当前方块位置等于随机生成的高度值时，当前方块类型为草地
-        else if (wPos.y == genHeight)
-        {
-            return BlockTypeEnum.Grass;
-        }
-        //当前方块位置小于随机生成的高度值 且 大于 genHeight - 5时，当前方块类型为泥土
-        else if (wPos.y < genHeight && wPos.y > genHeight - 5)
-        {
-            return BlockTypeEnum.Dirt;
-        }
-        //其他情况，当前方块类型为碎石
-        return BlockTypeEnum.Gravel;
-    }
 
     public void BuildChunk()
     {
@@ -150,30 +68,30 @@ public class Chunk : BaseMonoBehaviour
 
     void BuildBlock(int x, int y, int z, List<Vector3> verts, List<Vector2> uvs, List<int> tris)
     {
-        if (mapForBlock[x, y, z] == 0) return;
+        BlockTypeEnum typeid = mapForBlock[x, y, z].blockType;
+        if (typeid != 0)
+        {
+            //Left
+            if (CheckNeedBuildFace(x - 1, y, z))
+                BuildFace(typeid, new Vector3(x, y, z), Vector3.up, Vector3.forward, false, verts, uvs, tris);
+            //Right
+            if (CheckNeedBuildFace(x + 1, y, z))
+                BuildFace(typeid, new Vector3(x + 1, y, z), Vector3.up, Vector3.forward, true, verts, uvs, tris);
 
-        BlockTypeEnum typeid = mapForBlock[x, y, z];
+            //Bottom
+            if (CheckNeedBuildFace(x, y - 1, z))
+                BuildFace(typeid, new Vector3(x, y, z), Vector3.forward, Vector3.right, false, verts, uvs, tris);
+            //Top
+            if (CheckNeedBuildFace(x, y + 1, z))
+                BuildFace(typeid, new Vector3(x, y + 1, z), Vector3.forward, Vector3.right, true, verts, uvs, tris);
 
-        //Left
-        if (CheckNeedBuildFace(x - 1, y, z))
-            BuildFace(typeid, new Vector3(x, y, z), Vector3.up, Vector3.forward, false, verts, uvs, tris);
-        //Right
-        if (CheckNeedBuildFace(x + 1, y, z))
-            BuildFace(typeid, new Vector3(x + 1, y, z), Vector3.up, Vector3.forward, true, verts, uvs, tris);
-
-        //Bottom
-        if (CheckNeedBuildFace(x, y - 1, z))
-            BuildFace(typeid, new Vector3(x, y, z), Vector3.forward, Vector3.right, false, verts, uvs, tris);
-        //Top
-        if (CheckNeedBuildFace(x, y + 1, z))
-            BuildFace(typeid, new Vector3(x, y + 1, z), Vector3.forward, Vector3.right, true, verts, uvs, tris);
-
-        //Back
-        if (CheckNeedBuildFace(x, y, z - 1))
-            BuildFace(typeid, new Vector3(x, y, z), Vector3.up, Vector3.right, true, verts, uvs, tris);
-        //Front
-        if (CheckNeedBuildFace(x, y, z + 1))
-            BuildFace(typeid, new Vector3(x, y, z + 1), Vector3.up, Vector3.right, false, verts, uvs, tris);
+            //Back
+            if (CheckNeedBuildFace(x, y, z - 1))
+                BuildFace(typeid, new Vector3(x, y, z), Vector3.up, Vector3.right, true, verts, uvs, tris);
+            //Front
+            if (CheckNeedBuildFace(x, y, z + 1))
+                BuildFace(typeid, new Vector3(x, y, z + 1), Vector3.up, Vector3.right, false, verts, uvs, tris);
+        }
     }
 
     bool CheckNeedBuildFace(int x, int y, int z)
@@ -199,10 +117,10 @@ public class Chunk : BaseMonoBehaviour
         //当前位置是否在Chunk内
         if ((x < 0) || (z < 0) || (x >= width) || (z >= width))
         {
-            var id = GenerateBlockType(new Vector3(x, y, z) + transform.position);
+            var id = WorldCreateHandler.Instance.manager.GenerateBlockType(new Vector3(x, y, z) + transform.position, height);
             return id;
         }
-        return mapForBlock[x, y, z];
+        return mapForBlock[x, y, z].blockType;
     }
 
     void BuildFace(BlockTypeEnum typeid, Vector3 corner, Vector3 up, Vector3 right, bool reversed, List<Vector3> verts, List<Vector2> uvs, List<int> tris)

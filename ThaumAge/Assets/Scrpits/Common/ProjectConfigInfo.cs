@@ -26,6 +26,6 @@ public class ProjectConfigInfo
     /// <summary>
     /// 数据库名称
     /// </summary>
-    public readonly static string DATA_BASE_INFO_NAME = "GameDB.db";
+    public readonly static string DATA_BASE_INFO_NAME = "ThaumAge.db";
 
 }

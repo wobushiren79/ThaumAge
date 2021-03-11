@@ -1,0 +1,37 @@
+ManifestFileVersion: 0
+CRC: 2334613453
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 4e42702127b8e6d4a0dc2cfd4a0b1bd9
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 195fd4b89b331784aa02f632517d3fb1
+HashAppended: 0
+ClassTypes:
+- Class: 1
+  Script: {instanceID: 0}
+- Class: 4
+  Script: {instanceID: 0}
+- Class: 21
+  Script: {instanceID: 0}
+- Class: 23
+  Script: {instanceID: 0}
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 33
+  Script: {instanceID: 0}
+- Class: 43
+  Script: {instanceID: 0}
+- Class: 48
+  Script: {instanceID: 0}
+- Class: 64
+  Script: {instanceID: 0}
+- Class: 114
+  Script: {fileID: 11500000, guid: 69b06d9efcc6cf44d8c498189f2539c3, type: 3}
+- Class: 115
+  Script: {instanceID: 0}
+SerializeReferenceClassIdentifiers: []
+Assets:
+- Assets/Prefabs/Game/Chunk.prefab
+Dependencies: []

@@ -217,4 +217,23 @@ public class CptUtil
         }
         return number;
     }
+
+    /// <summary>
+    /// 通过名字获取OBJ
+    /// </summary>
+    /// <param name="obj"></param>
+    /// <param name="name"></param>
+    /// <returns></returns>
+    public static GameObject GetObjInChildrenByName(GameObject obj, string name)
+    {
+        for (int i = 0; i < obj.transform.childCount; i++)
+        {
+            if (obj.transform.GetChild(i).gameObject.name.Equals(name))
+            {
+                return obj.transform.GetChild(i).gameObject;
+            }
+        }
+        return null;
+    }
+
 }
