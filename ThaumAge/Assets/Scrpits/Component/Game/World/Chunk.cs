@@ -12,10 +12,11 @@ public class Chunk : BaseMonoBehaviour
     protected MeshFilter meshFilter;
 
     //存储着此Chunk内的所有Block信息
-    public BlockBean[,,] mapForBlock;
+    public Dictionary<Vector3Int, BlockBean> mapForBlock;
 
     public int width = 0;
     public int height = 0;
+    public int minHeight = 0;
 
     public void Awake()
     {
@@ -25,17 +26,14 @@ public class Chunk : BaseMonoBehaviour
         meshFilter = GetComponent<MeshFilter>();
     }
 
-
-
-    public void SetData(BlockBean[,,] mapForBlock, int width, int height)
+    public void SetData(Dictionary<Vector3Int, BlockBean> mapForBlock, int width, int height, int minHeight)
     {
         this.mapForBlock = mapForBlock;
         this.width = width;
         this.height = height;
+        this.minHeight = minHeight;
         BuildChunk();
     }
-
-
 
     public void BuildChunk()
     {
@@ -45,15 +43,9 @@ public class Chunk : BaseMonoBehaviour
         List<int> tris = new List<int>();
 
         //遍历chunk, 生成其中的每一个Block
-        for (int x = 0; x < width; x++)
+        foreach (var itemData in mapForBlock)
         {
-            for (int y = 0; y < height; y++)
-            {
-                for (int z = 0; z < width; z++)
-                {
-                    BuildBlock(x, y, z, verts, uvs, tris);
-                }
-            }
+            BuildBlock(itemData.Key, itemData.Value, verts, uvs, tris);
         }
 
         chunkMesh.vertices = verts.ToArray();
@@ -66,38 +58,38 @@ public class Chunk : BaseMonoBehaviour
         meshCollider.sharedMesh = chunkMesh;
     }
 
-    void BuildBlock(int x, int y, int z, List<Vector3> verts, List<Vector2> uvs, List<int> tris)
+    void BuildBlock(Vector3Int position, BlockBean blockData, List<Vector3> verts, List<Vector2> uvs, List<int> tris)
     {
-        BlockTypeEnum typeid = mapForBlock[x, y, z].blockType;
-        if (typeid != 0)
+        BlockTypeEnum blockType = blockData.blockType;
+        if (blockType != BlockTypeEnum.None)
         {
             //Left
-            if (CheckNeedBuildFace(x - 1, y, z))
-                BuildFace(typeid, new Vector3(x, y, z), Vector3.up, Vector3.forward, false, verts, uvs, tris);
+            if (CheckNeedBuildFace(position + new Vector3Int(-1, 0, 0)))
+                BuildFace(blockType, position, Vector3.up, Vector3.forward, false, verts, uvs, tris);
             //Right
-            if (CheckNeedBuildFace(x + 1, y, z))
-                BuildFace(typeid, new Vector3(x + 1, y, z), Vector3.up, Vector3.forward, true, verts, uvs, tris);
+            if (CheckNeedBuildFace(position + new Vector3Int(1, 0, 0)))
+                BuildFace(blockType, position + new Vector3Int(1, 0, 0), Vector3.up, Vector3.forward, true, verts, uvs, tris);
 
             //Bottom
-            if (CheckNeedBuildFace(x, y - 1, z))
-                BuildFace(typeid, new Vector3(x, y, z), Vector3.forward, Vector3.right, false, verts, uvs, tris);
+            if (CheckNeedBuildFace(position + new Vector3Int(0, -1, 0)))
+                BuildFace(blockType, position, Vector3.forward, Vector3.right, false, verts, uvs, tris);
             //Top
-            if (CheckNeedBuildFace(x, y + 1, z))
-                BuildFace(typeid, new Vector3(x, y + 1, z), Vector3.forward, Vector3.right, true, verts, uvs, tris);
+            if (CheckNeedBuildFace(position + new Vector3Int(0, 1, 0)))
+                BuildFace(blockType, position + new Vector3Int(0, 1, 0), Vector3.forward, Vector3.right, true, verts, uvs, tris);
 
             //Back
-            if (CheckNeedBuildFace(x, y, z - 1))
-                BuildFace(typeid, new Vector3(x, y, z), Vector3.up, Vector3.right, true, verts, uvs, tris);
+            if (CheckNeedBuildFace(position + new Vector3Int(0, 0, -1)))
+                BuildFace(blockType, position, Vector3.up, Vector3.right, true, verts, uvs, tris);
             //Front
-            if (CheckNeedBuildFace(x, y, z + 1))
-                BuildFace(typeid, new Vector3(x, y, z + 1), Vector3.up, Vector3.right, false, verts, uvs, tris);
+            if (CheckNeedBuildFace(position + new Vector3Int(0, 0, 1)))
+                BuildFace(blockType, position + new Vector3Int(0, 0, 1), Vector3.up, Vector3.right, false, verts, uvs, tris);
         }
     }
 
-    bool CheckNeedBuildFace(int x, int y, int z)
+    public bool CheckNeedBuildFace(Vector3Int position)
     {
-        if (y < 0) return false;
-        var type = GetBlockType(x, y, z);
+        if (position.y < 0) return false;
+        var type = GetBlockType(position);
         switch (type)
         {
             case BlockTypeEnum.None:
@@ -107,23 +99,36 @@ public class Chunk : BaseMonoBehaviour
         }
     }
 
-    public BlockTypeEnum GetBlockType(int x, int y, int z)
+    public BlockTypeEnum GetBlockType(Vector3Int position)
     {
-        if (y < 0 || y > height - 1)
+        if (position.y < 0 || position.y > height - 1)
         {
             return 0;
         }
-
+        int halfWidth = width / 2;
         //当前位置是否在Chunk内
-        if ((x < 0) || (z < 0) || (x >= width) || (z >= width))
+        if ((position.x  < -halfWidth) || (position.z  < -halfWidth) || (position.x  >= halfWidth) || (position.z  >= halfWidth))
         {
-            var id = WorldCreateHandler.Instance.manager.GenerateBlockType(new Vector3(x, y, z) + transform.position, height);
+            var id = WorldCreateHandler.Instance.manager.CreateBlockType(position + transform.position, height, minHeight);
             return id;
         }
-        return mapForBlock[x, y, z].blockType;
+        BlockBean blockData = mapForBlock[position];
+        return blockData.blockType;
     }
 
-    void BuildFace(BlockTypeEnum typeid, Vector3 corner, Vector3 up, Vector3 right, bool reversed, List<Vector3> verts, List<Vector2> uvs, List<int> tris)
+
+    /// <summary>
+    /// 构建方块的面
+    /// </summary>
+    /// <param name="blockType"></param>
+    /// <param name="corner"></param>
+    /// <param name="up"></param>
+    /// <param name="right"></param>
+    /// <param name="reversed"></param>
+    /// <param name="verts"></param>
+    /// <param name="uvs"></param>
+    /// <param name="tris"></param>
+    void BuildFace(BlockTypeEnum blockType, Vector3 corner, Vector3 up, Vector3 right, bool reversed, List<Vector3> verts, List<Vector2> uvs, List<int> tris)
     {
         int index = verts.Count;
 
@@ -135,7 +140,7 @@ public class Chunk : BaseMonoBehaviour
         Vector2 uvWidth = new Vector2(0.25f, 0.25f);
         Vector2 uvCorner = new Vector2(0.00f, 0.75f);
 
-        uvCorner.x += (float)(typeid - 1) / 4;
+        uvCorner.x += (float)(blockType - 1) / 4;
         uvs.Add(uvCorner);
         uvs.Add(new Vector2(uvCorner.x, uvCorner.y + uvWidth.y));
         uvs.Add(new Vector2(uvCorner.x + uvWidth.x, uvCorner.y + uvWidth.y));

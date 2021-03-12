@@ -4,9 +4,10 @@ using UnityEngine;
 
 public class Launcher : BaseMonoBehaviour
 {
+
     void Start()
     {
-        WorldCreateHandler.Instance.CreateChunk(30,30);
+        WorldCreateHandler.Instance.CreateChunk(123,16,256,50);
     }
 
 

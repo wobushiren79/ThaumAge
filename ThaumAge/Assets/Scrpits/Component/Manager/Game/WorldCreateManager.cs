@@ -10,6 +10,9 @@ public class WorldCreateManager : BaseManager
     //存储着世界中所有的Chunk
     public Dictionary<Vector3, Chunk> dicChunk = new Dictionary<Vector3, Chunk>();
 
+    //世界种子
+    public int worldSeed;
+
     /// <summary>
     /// 获取区块模型
     /// </summary>
@@ -18,6 +21,17 @@ public class WorldCreateManager : BaseManager
     {
         GameObject objModel = GetModel(dicModel, "block/base", "Chunk", "Assets/Prefabs/Game/Chunk.prefab");
         return objModel;
+    }
+
+    /// <summary>
+    /// 设置世界种子
+    /// </summary>
+    /// <param name="worldSeed"></param>
+    public void SetWorldSeed(int worldSeed)
+    {
+        this.worldSeed = worldSeed;
+        //初始化随机种子
+        Random.InitState(worldSeed);
     }
 
     //public Chunk GetChunk(Vector3 wPos)
@@ -44,25 +58,32 @@ public class WorldCreateManager : BaseManager
         dicChunk.Add(position, chunk);
     }
 
-    public int seed;
     Vector3 offset0;
     Vector3 offset1;
     Vector3 offset2;
-    public float baseHeight = 10;
-    public float frequency = 0.025f;
-    public float amplitude = 1;
 
-    public BlockBean[,,] CreateChunkBlockData(int width,int height)
+    public float frequency = 0.025f;
+    public float amplitude = 10;
+
+
+    /// <summary>
+    /// 创建区域方块数据
+    /// </summary>
+    /// <param name="width"></param>
+    /// <param name="height"></param>
+    /// <param name="minHeight">生成地形的最低高低</param>
+    /// <returns></returns>
+    public Dictionary<Vector3Int, BlockBean> CreateChunkBlockData(int width, int height, int minHeight)
     {
-        //初始化随机种子
-        Random.InitState(seed);
+
         offset0 = new Vector3(Random.value * 1000, Random.value * 1000, Random.value * 1000);
         offset1 = new Vector3(Random.value * 1000, Random.value * 1000, Random.value * 1000);
         offset2 = new Vector3(Random.value * 1000, Random.value * 1000, Random.value * 1000);
 
         //初始化Map
-        BlockBean[,,] mapForBlock = new BlockBean[width, height, width];
+        Dictionary<Vector3Int, BlockBean> mapForBlock = new Dictionary<Vector3Int, BlockBean>();
 
+        int halfWidth = width / 2;
         //遍历map，生成其中每个Block的信息
         for (int x = 0; x < width; x++)
         {
@@ -70,16 +91,17 @@ public class WorldCreateManager : BaseManager
             {
                 for (int z = 0; z < width; z++)
                 {
-                    mapForBlock[x, y, z] = new BlockBean();
-                    mapForBlock[x, y, z].blockType = GenerateBlockType(new Vector3(x, y, z) + transform.position, height);
+                    BlockBean blockData = new BlockBean();
+                    blockData.position = new Vector3IntBean(x - halfWidth, y, z - halfWidth);
+                    blockData.blockType = CreateBlockType(blockData.position.GetVector3Int() + transform.position, height, minHeight);
+                    mapForBlock.Add(blockData.position.GetVector3Int(), blockData);
                 }
             }
         }
-
         return mapForBlock;
     }
 
-    int GenerateHeight(Vector3 wPos)
+    public int CreateHeightData(Vector3 wPos, int minHeight)
     {
 
         //让随机种子，振幅，频率，应用于我们的噪音采样结果
@@ -100,10 +122,10 @@ public class WorldCreateManager : BaseManager
         float noise2 = SimplexNoiseUtil.Generate(x2, y2, z2) * amplitude / 4;
 
         //在采样结果上，叠加上baseHeight，限制随机生成的高度下限
-        return Mathf.FloorToInt(noise0 + noise1 + noise2 + baseHeight);
+        return Mathf.FloorToInt(noise0 + noise1 + noise2 + minHeight);
     }
 
-    public BlockTypeEnum GenerateBlockType(Vector3 wPos,int height)
+    public BlockTypeEnum CreateBlockType(Vector3 wPos, int height, int minHeight)
     {
         //y坐标是否在Chunk内
         if (wPos.y >= height)
@@ -112,8 +134,7 @@ public class WorldCreateManager : BaseManager
         }
 
         //获取当前位置方块随机生成的高度值
-        float genHeight = GenerateHeight(wPos);
-
+        float genHeight = CreateHeightData(wPos, minHeight);
         //当前方块位置高于随机生成的高度值时，当前方块类型为空
         if (wPos.y > genHeight)
         {
