@@ -77,10 +77,10 @@ public class Chunk : BaseMonoBehaviour
             if (CheckNeedBuildFace(position + new Vector3Int(0, 1, 0)))
                 BuildFace(blockType, position + new Vector3Int(0, 1, 0), Vector3.forward, Vector3.right, true, verts, uvs, tris);
 
-            //Back
+            //Front
             if (CheckNeedBuildFace(position + new Vector3Int(0, 0, -1)))
                 BuildFace(blockType, position, Vector3.up, Vector3.right, true, verts, uvs, tris);
-            //Front
+            //Back
             if (CheckNeedBuildFace(position + new Vector3Int(0, 0, 1)))
                 BuildFace(blockType, position + new Vector3Int(0, 0, 1), Vector3.up, Vector3.right, false, verts, uvs, tris);
         }
@@ -151,18 +151,18 @@ public class Chunk : BaseMonoBehaviour
             tris.Add(index + 0);
             tris.Add(index + 1);
             tris.Add(index + 2);
+            tris.Add(index + 0);
             tris.Add(index + 2);
             tris.Add(index + 3);
-            tris.Add(index + 0);
         }
         else
         {
+            tris.Add(index + 0);
+            tris.Add(index + 2);
             tris.Add(index + 1);
             tris.Add(index + 0);
-            tris.Add(index + 2);
             tris.Add(index + 3);
             tris.Add(index + 2);
-            tris.Add(index + 0);
         }
     }
 }
