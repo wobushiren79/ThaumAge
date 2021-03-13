@@ -10,7 +10,7 @@ using System.Collections.Generic;
 
 public class BlockInfoService : BaseMVCService
 {
-    public BlockInfoService() : base("", "")
+    public BlockInfoService() : base("block_info", "block_info_details_"+ GameDataHandler.Instance.manager.GetGameConfig().language)
     {
 
     }

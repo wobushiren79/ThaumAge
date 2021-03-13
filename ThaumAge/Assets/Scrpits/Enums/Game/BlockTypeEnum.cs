@@ -1,7 +1,7 @@
 public enum BlockTypeEnum
 {
     //ฟี
-    None = 0,
+    None = -1,
     //ฤเอม
     Dirt = 1,
     //ฒÝตุ

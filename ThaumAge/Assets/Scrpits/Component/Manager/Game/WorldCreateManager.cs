@@ -4,14 +4,22 @@ using UnityEngine;
 
 public class WorldCreateManager : BaseManager
 {
+    
     //模型列表
     public Dictionary<string, GameObject> dicModel = new Dictionary<string, GameObject>();
 
     //存储着世界中所有的Chunk
-    public Dictionary<Vector3, Chunk> dicChunk = new Dictionary<Vector3, Chunk>();
+    public Dictionary<Vector3Int, Chunk> dicChunk = new Dictionary<Vector3Int, Chunk>();
 
     //世界种子
     public int worldSeed;
+
+    protected Vector3 offset0;
+    protected Vector3 offset1;
+    protected Vector3 offset2;
+
+    protected float frequency = 0.025f;
+    protected float amplitude = 10;
 
     /// <summary>
     /// 获取区块模型
@@ -34,37 +42,14 @@ public class WorldCreateManager : BaseManager
         Random.InitState(worldSeed);
     }
 
-    //public Chunk GetChunk(Vector3 wPos)
-    //{
-    //    for (int i = 0; i < chunks.Count; i++)
-    //    {
-    //        Vector3 tempPos = chunks[i].transform.position;
-
-    //        //wPos是否超出了Chunk的XZ平面的范围
-    //        if ((wPos.x < tempPos.x) || (wPos.z < tempPos.z) || (wPos.x >= tempPos.x + 20) || (wPos.z >= tempPos.z + 20))
-    //            continue;
-
-    //        return chunks[i];
-    //    }
-    //    return null;
-    //}
-
     /// <summary>
     /// 增加区域
     /// </summary>
     /// <param name="chunk"></param>
-    public void AddChunk(Vector3 position, Chunk chunk)
+    public void AddChunk(Vector3Int position, Chunk chunk)
     {
         dicChunk.Add(position, chunk);
     }
-
-    Vector3 offset0;
-    Vector3 offset1;
-    Vector3 offset2;
-
-    public float frequency = 0.025f;
-    public float amplitude = 10;
-
 
     /// <summary>
     /// 创建区域方块数据
@@ -73,7 +58,7 @@ public class WorldCreateManager : BaseManager
     /// <param name="height"></param>
     /// <param name="minHeight">生成地形的最低高低</param>
     /// <returns></returns>
-    public Dictionary<Vector3Int, BlockBean> CreateChunkBlockData(int width, int height, int minHeight)
+    public Dictionary<Vector3Int, BlockBean> CreateChunkBlockData(Chunk chunk, int width, int height, int minHeight)
     {
 
         offset0 = new Vector3(Random.value * 1000, Random.value * 1000, Random.value * 1000);
@@ -93,7 +78,8 @@ public class WorldCreateManager : BaseManager
                 {
                     BlockBean blockData = new BlockBean();
                     blockData.position = new Vector3IntBean(x - halfWidth, y, z - halfWidth);
-                    blockData.blockType = CreateBlockType(blockData.position.GetVector3Int() + transform.position, height, minHeight);
+                    BlockTypeEnum blockType = GetBlockType(blockData.position.GetVector3Int() + chunk.transform.position, height, minHeight);
+                    blockData.SetBlockType(blockType);
                     mapForBlock.Add(blockData.position.GetVector3Int(), blockData);
                 }
             }
@@ -125,7 +111,7 @@ public class WorldCreateManager : BaseManager
         return Mathf.FloorToInt(noise0 + noise1 + noise2 + minHeight);
     }
 
-    public BlockTypeEnum CreateBlockType(Vector3 wPos, int height, int minHeight)
+    public BlockTypeEnum GetBlockType(Vector3 wPos, int height, int minHeight)
     {
         //y坐标是否在Chunk内
         if (wPos.y >= height)
@@ -138,7 +124,7 @@ public class WorldCreateManager : BaseManager
         //当前方块位置高于随机生成的高度值时，当前方块类型为空
         if (wPos.y > genHeight)
         {
-            return BlockTypeEnum.None;
+            return  BlockTypeEnum.None;
         }
         //当前方块位置等于随机生成的高度值时，当前方块类型为草地
         else if (wPos.y == genHeight)
