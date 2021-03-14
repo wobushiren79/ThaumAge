@@ -12,7 +12,7 @@ public class Chunk : BaseMonoBehaviour
     protected MeshFilter meshFilter;
 
     //存储着此Chunk内的所有Block信息
-    public Dictionary<Vector3Int, BlockBean> mapForBlock;
+    public Dictionary<Vector3Int, Block> mapForBlock;
 
     public int width = 0;
     public int height = 0;
@@ -33,7 +33,7 @@ public class Chunk : BaseMonoBehaviour
     /// <param name="width"></param>
     /// <param name="height"></param>
     /// <param name="minHeight"></param>
-    public void SetData(Dictionary<Vector3Int, BlockBean> mapForBlock, int width, int height, int minHeight)
+    public void SetData(Dictionary<Vector3Int, Block> mapForBlock, int width, int height, int minHeight)
     {
         this.mapForBlock = mapForBlock;
         this.width = width;
@@ -52,7 +52,7 @@ public class Chunk : BaseMonoBehaviour
         //遍历chunk, 生成其中的每一个Block
         foreach (var itemData in mapForBlock)
         {
-            BlockHandler.Instance.BuildBlock(this, itemData.Key, itemData.Value, verts, uvs, tris);
+            itemData.Value.BuildBlock(verts, uvs, tris);
         }
 
         chunkMesh.vertices = verts.ToArray();
@@ -78,7 +78,7 @@ public class Chunk : BaseMonoBehaviour
             var id = WorldCreateHandler.Instance.manager.GetBlockType(position + transform.position, height, minHeight);
             return id;
         }
-        BlockBean blockData = mapForBlock[position];
-        return blockData.GetBlockType();
+        Block block = mapForBlock[position];
+        return block.blockData.GetBlockType();
     }
 }

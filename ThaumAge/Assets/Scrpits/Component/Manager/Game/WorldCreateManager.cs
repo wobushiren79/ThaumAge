@@ -58,7 +58,7 @@ public class WorldCreateManager : BaseManager
     /// <param name="height"></param>
     /// <param name="minHeight">生成地形的最低高低</param>
     /// <returns></returns>
-    public Dictionary<Vector3Int, BlockBean> CreateChunkBlockData(Chunk chunk, int width, int height, int minHeight)
+    public Dictionary<Vector3Int, Block> CreateChunkBlockData(Chunk chunk, int width, int height, int minHeight)
     {
 
         offset0 = new Vector3(Random.value * 1000, Random.value * 1000, Random.value * 1000);
@@ -66,7 +66,7 @@ public class WorldCreateManager : BaseManager
         offset2 = new Vector3(Random.value * 1000, Random.value * 1000, Random.value * 1000);
 
         //初始化Map
-        Dictionary<Vector3Int, BlockBean> mapForBlock = new Dictionary<Vector3Int, BlockBean>();
+        Dictionary<Vector3Int, Block> mapForBlock = new Dictionary<Vector3Int, Block>();
 
         int halfWidth = width / 2;
         //遍历map，生成其中每个Block的信息
@@ -76,11 +76,13 @@ public class WorldCreateManager : BaseManager
             {
                 for (int z = 0; z < width; z++)
                 {
-                    BlockBean blockData = new BlockBean();
-                    blockData.position = new Vector3IntBean(x - halfWidth, y, z - halfWidth);
-                    BlockTypeEnum blockType = GetBlockType(blockData.position.GetVector3Int() + chunk.transform.position, height, minHeight);
-                    blockData.SetBlockType(blockType);
-                    mapForBlock.Add(blockData.position.GetVector3Int(), blockData);
+                    Vector3Int position = new Vector3Int(x - halfWidth, y, z - halfWidth);
+                    //获取方块类型
+                    BlockTypeEnum blockType = GetBlockType(position + chunk.transform.position, height, minHeight);
+                    //生成方块
+                    Block block=  BlockHandler.Instance.CreateBlock(chunk, position, blockType);
+                    //添加方块
+                    mapForBlock.Add(position,block);
                 }
             }
         }
@@ -137,6 +139,6 @@ public class WorldCreateManager : BaseManager
             return BlockTypeEnum.Dirt;
         }
         //其他情况，当前方块类型为碎石
-        return BlockTypeEnum.Gravel;
+        return BlockTypeEnum.Stone;
     }
 }

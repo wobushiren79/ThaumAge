@@ -198,4 +198,48 @@ public class ReflexUtil : ScriptableObject
         return result;
     }
 
+    /// <summary>
+    /// 创建对象实例
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="fullName">命名空间.类型名</param>
+    /// <param name="assemblyName">程序集</param>
+    /// <returns></returns>
+    public static T CreateInstance<T>(string fullName, string assemblyName)
+    {
+        try
+        {
+            string path = fullName + "," + assemblyName;//命名空间.类型名,程序集
+            Type o = Type.GetType(path);//加载类型
+            object obj = Activator.CreateInstance(o, true);//根据类型创建实例
+            return (T)obj;//类型转换并返回
+        }
+        catch (Exception e)
+        {
+            LogUtil.LogError("实例化失败，缺少 " + fullName + "," + assemblyName + " 。" + e.Message);
+            return default(T);
+        }
+    }
+
+    /// <summary>
+    /// 创建对象实例
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="fullName">命名空间.类型名</param>
+    /// <param name="assemblyName">程序集</param>
+    /// <returns></returns>
+    public static T CreateInstance<T>(string className)
+    {
+        try{
+            Type o = Type.GetType(className);//加载类型
+            object obj = Activator.CreateInstance(o, true);//根据类型创建实例
+            return (T)obj;//类型转换并返回
+        }
+        catch (Exception e)
+        {
+            LogUtil.LogError("实例化失败，缺少类名为 " + className + " 的类。" + e.Message);
+            return default(T);
+        }
+    }
+
 }

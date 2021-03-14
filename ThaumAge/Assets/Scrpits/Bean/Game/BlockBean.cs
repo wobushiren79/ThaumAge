@@ -1,5 +1,6 @@
 ﻿
 using System;
+using UnityEngine;
 
 [Serializable]
 public class BlockBean 
@@ -8,6 +9,12 @@ public class BlockBean
     public long blockId;
     //方块位置
     public Vector3IntBean position;
+
+    public BlockBean(BlockTypeEnum blockType, Vector3Int position)
+    {
+        this.blockId = (long)blockType;
+        this.position = new Vector3IntBean(position);
+    }
 
     /// <summary>
     /// 获取方块类型

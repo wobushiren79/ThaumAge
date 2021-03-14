@@ -23,7 +23,7 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
         Chunk chunk = objChunk.GetComponent<Chunk>();
         chunk.name = "Chunk_X_" + position.x + "_Y_" + position.y;
         //生成方块数据
-        Dictionary<Vector3Int, BlockBean> mapBlockData = manager.CreateChunkBlockData(chunk,width, height, minHeight);
+        Dictionary<Vector3Int, Block> mapBlockData = manager.CreateChunkBlockData(chunk,width, height, minHeight);
         //设置数据
         chunk.SetData(mapBlockData, width, height, minHeight);
         //添加区块
