@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-public class EditorUI 
+public class EditorUI
 {
     /// <summary>
     /// 按钮
@@ -131,7 +131,7 @@ public class EditorUI
     /// <param name="name"></param>
     /// <param name="data"></param>
     /// <returns></returns>
-    public static T GUIObj<T>(string name, T data) where T: UnityEngine.Object
+    public static T GUIObj<T>(string name, T data) where T : UnityEngine.Object
     {
         return EditorGUILayout.ObjectField(new GUIContent(name, ""), data, typeof(T), true) as T;
     }
@@ -143,9 +143,13 @@ public class EditorUI
     /// <param name="picName"></param>
     public static void GUIPic(string picPath, string picName)
     {
+        GUIPic(picPath, picName, 64, 64);
+    }
+    public static void GUIPic(string picPath, string picName, int width, int height)
+    {
         Texture2D iconTex = EditorGUIUtility.FindTexture(picPath + picName + ".png");
         if (iconTex)
-            GUILayout.Label(iconTex, GUILayout.Width(64), GUILayout.Height(64));
+            GUILayout.Label(iconTex, GUILayout.Width(width), GUILayout.Height(height));
     }
 
     /// <summary>

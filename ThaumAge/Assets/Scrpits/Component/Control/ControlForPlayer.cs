@@ -63,7 +63,7 @@ public class ControlForPlayer : ControlForBase
     /// <param name="jumpForce"></param>
     public void JumpCharacter(float jumpForce)
     {
-        RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.down, 1.5f, 1 << 8);
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.down, 1.5f, 1 << LayerInfo.Ground);
         rbCharacter.AddForce(Vector3.up * jumpForce * Time.deltaTime);
     }
 
