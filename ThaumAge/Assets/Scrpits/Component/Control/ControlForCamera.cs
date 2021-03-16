@@ -28,7 +28,7 @@ public class ControlForCamera : ControlForBase
         {
             lookData = tempLookData;
         }
-        Vector3 characterPosition = GameControlHandler.Instance.manager.controlForCharacter.transform.position;
+        Vector3 characterPosition = GameControlHandler.Instance.manager.controlForPlayer.transform.position;
         lookData = Vector2.Lerp(lookData, Vector2.zero, 0.06f);
         CameraHandler.Instance.RotateCameraAroundXZ(characterPosition, lookData.x, 20);
         CameraHandler.Instance.RotateCameraAroundY(characterPosition, -lookData.y, 20);

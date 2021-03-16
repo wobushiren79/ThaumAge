@@ -11,7 +11,7 @@ public class BlockHandler : BaseHandler<BlockHandler, BlockManager>
     /// <param name="position"></param>
     /// <param name="blockType"></param>
     /// <returns></returns>
-    public Block CreateBlock(Chunk chunk, Vector3Int position, BlockTypeEnum blockType)
+    public static Block CreateBlock(Chunk chunk, Vector3Int position, BlockTypeEnum blockType)
     {
         string blockTypeName = EnumUtil.GetEnumName(blockType);
         //通过反射获取类
@@ -21,5 +21,7 @@ public class BlockHandler : BaseHandler<BlockHandler, BlockManager>
         block.SetData(chunk, position, blockData);
         return block;
     }
+
+
 
 }

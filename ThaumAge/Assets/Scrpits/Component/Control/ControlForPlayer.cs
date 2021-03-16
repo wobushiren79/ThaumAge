@@ -34,10 +34,10 @@ public class ControlForPlayer : ControlForBase
     {
         Debug.DrawRay(transform.position, Vector2.down * 1.5f, Color.red);
         InputAction jumpAction = InputHandler.Instance.manager.GetJumpData();
-        float isJump = jumpAction.ReadValue<float>();
-        if (isJump == 0)
-            return;
-        JumpCharacter(10);
+        if (jumpAction.phase == InputActionPhase.Started)
+        {
+            JumpCharacter(1000);
+        }
     }
 
     /// <summary>
@@ -64,7 +64,7 @@ public class ControlForPlayer : ControlForBase
     public void JumpCharacter(float jumpForce)
     {
         RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.down, 1.5f, 1 << 8);
-        rbCharacter.AddForce(Vector3.up * jumpForce);
+        rbCharacter.AddForce(Vector3.up * jumpForce * Time.deltaTime);
     }
 
     /// <summary>

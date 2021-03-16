@@ -7,7 +7,7 @@ public class GameControlManager : BaseManager
 
     protected ControlForCamera _controlForCamera;
 
-    public ControlForPlayer controlForCharacter
+    public ControlForPlayer controlForPlayer
     {
         get
         {
