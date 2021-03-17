@@ -7,6 +7,7 @@
 using UnityEngine;
 using UnityEditor;
 using System;
+using System.Collections.Generic;
 
 [Serializable]
 public class BlockInfoBean : BaseBean
@@ -14,6 +15,8 @@ public class BlockInfoBean : BaseBean
     public long block_id;
 
     public int shape;
+
+    public string uv_position;
 
     /// <summary>
     /// 获取方块类型
@@ -31,5 +34,24 @@ public class BlockInfoBean : BaseBean
     public BlockShapeEnum GetBlockShape()
     {
         return (BlockShapeEnum)shape;
+    }
+
+    /// <summary>
+    /// 获取UV坐标点
+    /// </summary>
+    /// <returns></returns>
+    public List<Vector2Int> GetUVPosition()
+    {
+        List<Vector2Int> listData = new List<Vector2Int>();
+        if (CheckUtil.StringIsNull(uv_position))
+            return listData;
+        string[] uvArrary = StringUtil.SplitBySubstringForArrayStr(uv_position, '|');
+        for (int i = 0; i < uvArrary.Length; i++)
+        {
+            string uvItemStr = uvArrary[i];
+            int[] uvPositionArray = StringUtil.SplitBySubstringForArrayInt(uvItemStr, ',');
+            listData.Add(new Vector2Int(uvPositionArray[0], uvPositionArray[1]));
+        }
+        return listData;
     }
 }

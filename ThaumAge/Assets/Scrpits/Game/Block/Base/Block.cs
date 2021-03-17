@@ -40,7 +40,48 @@ public abstract class Block
         }
     }
 
+    /// <summary>
+    /// 构建方块
+    /// </summary>
+    /// <param name="verts"></param>
+    /// <param name="uvs"></param>
+    /// <param name="tris"></param>
     public abstract void BuildBlock(List<Vector3> verts, List<Vector2> uvs, List<int> tris);
 
-    public abstract void BuildFace(BlockTypeEnum blockType, Vector3 corner, Vector3 up, Vector3 right, bool reversed, List<Vector3> verts, List<Vector2> uvs, List<int> tris);
+    /// <summary>
+    /// 构建面
+    /// </summary>
+    /// <param name="blockData"></param>
+    /// <param name="corner"></param>
+    /// <param name="up"></param>
+    /// <param name="right"></param>
+    /// <param name="reversed"></param>
+    /// <param name="verts"></param>
+    /// <param name="uvs"></param>
+    /// <param name="tris"></param>
+    public abstract void BuildFace(BlockBean blockData, Vector3 corner, Vector3 up, Vector3 right, bool reversed, List<Vector3> verts, List<Vector2> uvs, List<int> tris);
+
+    /// <summary>
+    /// 添加坐标点
+    /// </summary>
+    /// <param name="corner"></param>
+    /// <param name="up"></param>
+    /// <param name="right"></param>
+    /// <param name="verts"></param>
+    public abstract void AddVerts(Vector3 corner, Vector3 up, Vector3 right, List<Vector3> verts);
+
+    /// <summary>
+    /// 添加UV
+    /// </summary>
+    /// <param name="blockData"></param>
+    /// <param name="uvs"></param>
+    public abstract void AddUVs(BlockBean blockData, List<Vector2> uvs);
+
+    /// <summary>
+    /// 添加索引
+    /// </summary>
+    /// <param name="index"></param>
+    /// <param name="reversed"></param>
+    /// <param name="tris"></param>
+    public abstract void AddTris(int index, bool reversed, List<int> tris);
 }
