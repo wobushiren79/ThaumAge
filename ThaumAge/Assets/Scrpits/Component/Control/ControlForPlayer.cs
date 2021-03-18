@@ -24,7 +24,7 @@ public class ControlForPlayer : ControlForBase
         //旋转角色
         RotateCharacter(moveData, 5);
         //移动角色
-        MoveCharacter(moveData, 10);
+        MoveCharacter(moveData, 20);
     }
 
     /// <summary>

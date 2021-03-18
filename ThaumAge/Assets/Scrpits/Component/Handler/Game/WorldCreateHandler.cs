@@ -33,7 +33,7 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
         Action<Dictionary<Vector3Int, Block>> callBack = (mapBlockData) =>
         {
             //设置数据
-            chunk.SetData(mapBlockData, manager.widthChunk, manager.heightChunk, manager.minHeightChunk);
+            chunk.SetData(mapBlockData, manager.widthChunk, manager.heightChunk);
         };
         //生成方块数据
         manager.CreateChunkBlockDataForAsync(chunk, callBack);

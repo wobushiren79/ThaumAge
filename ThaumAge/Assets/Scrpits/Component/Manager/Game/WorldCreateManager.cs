@@ -16,16 +16,8 @@ public class WorldCreateManager : BaseManager
     //世界种子
     public int worldSeed;
 
-    protected Vector3 offset0;
-    protected Vector3 offset1;
-    protected Vector3 offset2;
-
-    protected float frequency = 0.025f;
-    protected float amplitude = 10;
-
     public int widthChunk = 16;
     public int heightChunk = 256;
-    public int minHeightChunk = 50;
 
     /// <summary>
     /// 获取区块模型
@@ -60,10 +52,8 @@ public class WorldCreateManager : BaseManager
         this.worldSeed = worldSeed;
         //初始化随机种子
         UnityEngine.Random.InitState(worldSeed);
-
-        offset0 = new Vector3(UnityEngine.Random.value * 1000, UnityEngine.Random.value * 1000, UnityEngine.Random.value * 1000);
-        offset1 = new Vector3(UnityEngine.Random.value * 1000, UnityEngine.Random.value * 1000, UnityEngine.Random.value * 1000);
-        offset2 = new Vector3(UnityEngine.Random.value * 1000, UnityEngine.Random.value * 1000, UnityEngine.Random.value * 1000);
+        //初始化生态种子
+        BiomeHandler.Instance.InitWorldBiomeSeed();
     }
 
     /// <summary>
@@ -96,9 +86,9 @@ public class WorldCreateManager : BaseManager
                 {
                     Vector3Int position = new Vector3Int(x - halfWidth, y, z - halfWidth);
                     //获取方块类型
-                    BlockTypeEnum blockType = GetBlockType(position + chunkPosition, heightChunk, minHeightChunk);
+                    BlockTypeEnum blockType = BiomeHandler.Instance.CreateBiomeBlockType(position + chunkPosition,widthChunk,heightChunk);
                     //生成方块
-                    Block block = BlockHandler.CreateBlock(chunk, position, blockType);
+                    Block block = BlockHandler.Instance.CreateBlock(chunk, position, blockType);
                     //添加方块
                     mapForBlock.Add(position, block);
                 }
@@ -113,6 +103,8 @@ public class WorldCreateManager : BaseManager
         Dictionary<Vector3Int, Block> mapForBlock = new Dictionary<Vector3Int, Block>();
         Vector3Int chunkPosition = Vector3Int.CeilToInt(chunk.transform.position);
         int halfWidth = widthChunk / 2;
+        BiomeManager biomeManager = BiomeHandler.Instance.manager;
+        BlockManager blockManager = BlockHandler.Instance.manager;
         await Task.Run(()=> {
 
             //遍历map，生成其中每个Block的信息
@@ -124,9 +116,9 @@ public class WorldCreateManager : BaseManager
                     {
                         Vector3Int position = new Vector3Int(x - halfWidth, y, z - halfWidth);
                         //获取方块类型
-                        BlockTypeEnum blockType = GetBlockType(position + chunkPosition, heightChunk, minHeightChunk);
+                        BlockTypeEnum blockType = BiomeHandler.Instance.CreateBiomeBlockType(position + chunkPosition, widthChunk, heightChunk);
                         //生成方块
-                        Block block = BlockHandler.CreateBlock(chunk, position, blockType);
+                        Block block = BlockHandler.Instance.CreateBlock(chunk, position, blockType);
                         //添加方块
                         mapForBlock.Add(position, block);
                     }
@@ -134,58 +126,5 @@ public class WorldCreateManager : BaseManager
             }
         });
         callBack?.Invoke(mapForBlock);
-    }
-
-    public int CreateHeightData(Vector3 wPos, int minHeight)
-    {
-
-        //让随机种子，振幅，频率，应用于我们的噪音采样结果
-        float x0 = (wPos.x + offset0.x) * frequency;
-        float y0 = (wPos.y + offset0.y) * frequency;
-        float z0 = (wPos.z + offset0.z) * frequency;
-
-        float x1 = (wPos.x + offset1.x) * frequency * 2;
-        float y1 = (wPos.y + offset1.y) * frequency * 2;
-        float z1 = (wPos.z + offset1.z) * frequency * 2;
-
-        float x2 = (wPos.x + offset2.x) * frequency / 4;
-        float y2 = (wPos.y + offset2.y) * frequency / 4;
-        float z2 = (wPos.z + offset2.z) * frequency / 4;
-
-        float noise0 = SimplexNoiseUtil.Generate(x0, y0, z0) * amplitude;
-        float noise1 = SimplexNoiseUtil.Generate(x1, y1, z1) * amplitude / 2;
-        float noise2 = SimplexNoiseUtil.Generate(x2, y2, z2) * amplitude / 4;
-
-        //在采样结果上，叠加上baseHeight，限制随机生成的高度下限
-        return Mathf.FloorToInt(noise0 + noise1 + noise2 + minHeight);
-    }
-
-    public BlockTypeEnum GetBlockType(Vector3 wPos, int height, int minHeight)
-    {
-        //y坐标是否在Chunk内
-        if (wPos.y >= height)
-        {
-            return BlockTypeEnum.None;
-        }
-
-        //获取当前位置方块随机生成的高度值
-        float genHeight = CreateHeightData(wPos, minHeight);
-        //当前方块位置高于随机生成的高度值时，当前方块类型为空
-        if (wPos.y > genHeight)
-        {
-            return BlockTypeEnum.None;
-        }
-        //当前方块位置等于随机生成的高度值时，当前方块类型为草地
-        else if (wPos.y == genHeight)
-        {
-            return BlockTypeEnum.Grass;
-        }
-        //当前方块位置小于随机生成的高度值 且 大于 genHeight - 5时，当前方块类型为泥土
-        else if (wPos.y < genHeight && wPos.y > genHeight - 5)
-        {
-            return BlockTypeEnum.Dirt;
-        }
-        //其他情况，当前方块类型为碎石
-        return BlockTypeEnum.Stone;
     }
 }

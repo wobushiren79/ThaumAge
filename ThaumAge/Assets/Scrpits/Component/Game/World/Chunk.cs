@@ -16,7 +16,6 @@ public class Chunk : BaseMonoBehaviour
 
     public int width = 0;
     public int height = 0;
-    public int minHeight = 0;
 
     public void Awake()
     {
@@ -33,12 +32,11 @@ public class Chunk : BaseMonoBehaviour
     /// <param name="width"></param>
     /// <param name="height"></param>
     /// <param name="minHeight"></param>
-    public void SetData(Dictionary<Vector3Int, Block> mapForBlock, int width, int height, int minHeight)
+    public void SetData(Dictionary<Vector3Int, Block> mapForBlock, int width, int height)
     {
         this.mapForBlock = mapForBlock;
         this.width = width;
         this.height = height;
-        this.minHeight = minHeight;
         BuildChunk();
     }
 
@@ -75,8 +73,8 @@ public class Chunk : BaseMonoBehaviour
         //当前位置是否在Chunk内
         if ((position.x < -halfWidth) || (position.z < -halfWidth) || (position.x >= halfWidth) || (position.z >= halfWidth))
         {
-            var id = WorldCreateHandler.Instance.manager.GetBlockType(position + transform.position, height, minHeight);
-            return id;
+            BlockTypeEnum blockType = BiomeHandler.Instance.CreateBiomeBlockType(position + transform.position, width, height);
+            return blockType;
         }
         Block block = mapForBlock[position];
         return block.blockData.GetBlockType();

@@ -9,7 +9,7 @@ public class Launcher : BaseMonoBehaviour
 {
     void Start()
     {
-        WorldCreateHandler.Instance.CreateChunkForRange(1, Vector3Int.zero, 2);
+        WorldCreateHandler.Instance.CreateChunkForRange(1, Vector3Int.zero, 5);
     }
 
 
