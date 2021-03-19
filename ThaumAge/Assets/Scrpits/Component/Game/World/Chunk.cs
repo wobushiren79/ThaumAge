@@ -79,4 +79,28 @@ public class Chunk : BaseMonoBehaviour
         Block block = mapForBlock[position];
         return block.blockData.GetBlockType();
     }
+
+    /// <summary>
+    /// 移除方块
+    /// </summary>
+    /// <param name="position"></param>
+    public void RemoveBlock(Vector3Int position)
+    {
+        SetBlock(position, BlockTypeEnum.None);
+    }
+
+    /// <summary>
+    /// 设置方块
+    /// </summary>
+    /// <param name="worldPosition"></param>
+    /// <param name="blockType"></param>
+    public void SetBlock(Vector3Int worldPosition, BlockTypeEnum blockType)
+    {
+        if (mapForBlock.TryGetValue(worldPosition - Vector3Int.CeilToInt(transform.position), out Block block))
+        {
+            block.blockData.SetBlockType(blockType);
+        }
+        BuildChunk();
+    }
+
 }

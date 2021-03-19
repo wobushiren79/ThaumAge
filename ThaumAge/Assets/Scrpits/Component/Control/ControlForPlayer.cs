@@ -10,6 +10,7 @@ public class ControlForPlayer : ControlForBase
     {
         HandlerForMove();
         HandlerForJump();
+        HandlerForUse();
     }
 
     /// <summary>
@@ -37,6 +38,36 @@ public class ControlForPlayer : ControlForBase
         if (jumpAction.phase == InputActionPhase.Started)
         {
             JumpCharacter(1000);
+        }
+    }
+
+    /// <summary>
+    /// 使用处理
+    /// </summary>
+    public void HandlerForUse()
+    {
+        InputAction useAction = InputHandler.Instance.manager.GetUseData();
+        if (useAction.phase == InputActionPhase.Started)
+        {
+            RayUtil.RayToScreenPoint(10, 1 << LayerInfo.Chunk, out bool isCollider, out RaycastHit hit);
+            if (isCollider)
+            {
+                Chunk chunk = hit.collider.GetComponent<Chunk>();
+                if (chunk)
+                {
+                    if (Mathf.Abs(hit.normal.y) > 0.01)
+                    {
+                        Debug.Log("上表面");
+                        chunk.RemoveBlock(Vector3Int.CeilToInt(hit.point) - Vector3Int.up);
+                    }
+                    else
+                    {
+                        Debug.Log("侧面");
+                        chunk.RemoveBlock(Vector3Int.CeilToInt(hit.point));
+                    }
+     
+                }
+            }
         }
     }
 

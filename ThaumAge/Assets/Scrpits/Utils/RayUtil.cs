@@ -5,15 +5,32 @@ public class RayUtil
 {
 
     /// <summary>
+    /// 屏幕中心射线检测
+    /// </summary>
+    /// <param name="isCollider"></param>
+    /// <param name="hit"></param>
+    public static void RayToScreenPointForScreenCenter(float maxDistance, int layerMask, out bool isCollider, out RaycastHit hit)
+    {
+        RayToScreenPoint(new Vector3(Screen.width / 2, Screen.height / 2, 0), maxDistance, layerMask, out isCollider, out hit);
+    }
+
+    /// <summary>
     /// 屏幕点击射线检测
     /// </summary>
     /// <param name="isCollider"></param>
     /// <param name="hit"></param>
-    public static void RayToScreenPoint(out bool isCollider, out RaycastHit hit)
+    public static void RayToScreenPoint(float maxDistance, int layerMask, out bool isCollider, out RaycastHit hit)
     {
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        isCollider = Physics.Raycast(ray, out hit);
+        RayToScreenPoint(Input.mousePosition, maxDistance, layerMask, out isCollider, out hit);
     }
+
+    public static void RayToScreenPoint(Vector3 position, float maxDistance, int layerMask, out bool isCollider, out RaycastHit hit)
+    {
+        Ray ray = Camera.main.ScreenPointToRay(position);
+        isCollider = Physics.Raycast(ray, out hit, maxDistance, layerMask);
+    }
+
+
 
     /// <summary>
     /// 射线-球体

@@ -31,11 +31,21 @@ public class BiomeHandler : BaseHandler<BiomeHandler, BiomeManager>
         {
             return BlockTypeEnum.None;
         }
-        float weight = SimplexNoiseUtil.Get2DPerlin(new Vector2(wPos.x, wPos.z), 100, width * 2);
-        if (weight > 0.5f)
+        float strongestWeight = 0f;
+        int strongestBiomeIndex = 0;
+
+        for (int i = 1; i <= 3; i++)
         {
-            return BlockTypeEnum.Grass;
+            float weight = SimplexNoiseUtil.Get2DPerlin(new Vector2(wPos.x, wPos.z), i * 1234, i * width * 5);
+            if (weight > strongestWeight)
+            {
+
+                strongestWeight = weight;
+                strongestBiomeIndex = i;
+
+            }
         }
+        return (BlockTypeEnum)strongestBiomeIndex;
         ////当前方块位置等于随机生成的高度值时，当前方块类型为草地
         //else if (wPos.y == genHeight)
         //{
@@ -47,7 +57,7 @@ public class BiomeHandler : BaseHandler<BiomeHandler, BiomeManager>
         //    return BlockTypeEnum.Dirt;
         //}
         ////其他情况，当前方块类型为碎石
-        return BlockTypeEnum.Stone;
+        // return BlockTypeEnum.Stone;
     }
 
     public int CreateHeightData(Vector3 wPos, BiomeInfoBean biomeInfo)

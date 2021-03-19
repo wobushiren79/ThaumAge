@@ -9,6 +9,8 @@ public abstract class Block
     public Vector3Int position; //所属Chunk内的坐标
     public BlockBean blockData; //方框数据
 
+
+
     /// <summary>
     /// 设置数据
     /// </summary>

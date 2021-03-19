@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 7675334834579374577}
   - component: {fileID: 7675334834579374583}
   - component: {fileID: 7675334834579374582}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Chunk
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -95,14 +95,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 69b06d9efcc6cf44d8c498189f2539c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  chunkMesh: {fileID: 0}
-  meshRenderer: {fileID: 0}
-  meshCollider: {fileID: 0}
-  meshFilter: {fileID: 0}
-  seed: 0
-  baseHeight: 10
-  frequency: 0.025
-  amplitude: 1
+  width: 0
+  height: 0
 --- !u!64 &7675334834579374582
 MeshCollider:
   m_ObjectHideFlags: 0

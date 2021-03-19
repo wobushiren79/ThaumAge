@@ -11,6 +11,7 @@ public class InputManager : BaseManager
         inputActions.Player.Move.Enable();
         inputActions.Player.Jump.Enable();
         inputActions.Player.Look.Enable();
+        inputActions.Player.Use.Enable();
     }
 
     /// <summary>
@@ -38,5 +39,14 @@ public class InputManager : BaseManager
     public InputAction GetLookData()
     {
         return inputActions.Player.Look;
+    }
+
+    /// <summary>
+    /// 获取使用数据
+    /// </summary>
+    /// <returns></returns>
+    public InputAction GetUseData()
+    {
+        return inputActions.Player.Use;
     }
 }
