@@ -127,4 +127,15 @@ public class WorldCreateManager : BaseManager
         });
         callBack?.Invoke(mapForBlock);
     }
+
+    /// <summary>
+    /// 刷新所有chunk
+    /// </summary>
+    public void RefreshAllChunk()
+    {
+        foreach (var itemChunk in dicChunk)
+        {
+            itemChunk.Value.BuildChunk();
+        }
+    }
 }

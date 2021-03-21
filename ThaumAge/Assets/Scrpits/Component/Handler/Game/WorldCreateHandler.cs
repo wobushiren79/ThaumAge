@@ -33,7 +33,7 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
         Action<Dictionary<Vector3Int, Block>> callBack = (mapBlockData) =>
         {
             //设置数据
-            chunk.SetData(mapBlockData, manager.widthChunk, manager.heightChunk);
+            chunk.SetData(position, mapBlockData, manager.widthChunk, manager.heightChunk);
         };
         //生成方块数据
         manager.CreateChunkBlockDataForAsync(chunk, callBack);
@@ -68,6 +68,7 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
         int positionX = (int)(position.x / manager.widthChunk) * manager.widthChunk;
         int positionZ = (int)(position.z / manager.widthChunk) * manager.widthChunk;
         Vector3Int centerPosition = new Vector3Int(positionX, 0, positionZ);
-        CreateChunkForRange(worldSeed, centerPosition,  range);
+        CreateChunkForRange(worldSeed, centerPosition, range);
     }
+
 }

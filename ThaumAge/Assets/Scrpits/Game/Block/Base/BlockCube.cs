@@ -19,24 +19,24 @@ public class BlockCube : Block
         {
             //Left
             if (CheckNeedBuildFace(position + new Vector3Int(-1, 0, 0)))
-                BuildFace(blockData, position, Vector3.up, Vector3.forward, false, verts, uvs, tris);
+                BuildFace(DirectionEnum.Left,  blockData, position, Vector3.up, Vector3.forward, false, verts, uvs, tris);
             //Right
             if (CheckNeedBuildFace(position + new Vector3Int(1, 0, 0)))
-                BuildFace(blockData, position + new Vector3Int(1, 0, 0), Vector3.up, Vector3.forward, true, verts, uvs, tris);
+                BuildFace(DirectionEnum.Right, blockData, position + new Vector3Int(1, 0, 0), Vector3.up, Vector3.forward, true, verts, uvs, tris);
 
             //Bottom
             if (CheckNeedBuildFace(position + new Vector3Int(0, -1, 0)))
-                BuildFace(blockData, position, Vector3.forward, Vector3.right, false, verts, uvs, tris);
+                BuildFace(DirectionEnum.Down, blockData, position, Vector3.forward, Vector3.right, false, verts, uvs, tris);
             //Top
             if (CheckNeedBuildFace(position + new Vector3Int(0, 1, 0)))
-                BuildFace(blockData, position + new Vector3Int(0, 1, 0), Vector3.forward, Vector3.right, true, verts, uvs, tris);
+                BuildFace(DirectionEnum.UP, blockData, position + new Vector3Int(0, 1, 0), Vector3.forward, Vector3.right, true, verts, uvs, tris);
 
             //Front
             if (CheckNeedBuildFace(position + new Vector3Int(0, 0, -1)))
-                BuildFace(blockData, position, Vector3.up, Vector3.right, true, verts, uvs, tris);
+                BuildFace(DirectionEnum.Front, blockData, position, Vector3.up, Vector3.right, true, verts, uvs, tris);
             //Back
             if (CheckNeedBuildFace(position + new Vector3Int(0, 0, 1)))
-                BuildFace(blockData, position + new Vector3Int(0, 0, 1), Vector3.up, Vector3.right, false, verts, uvs, tris);
+                BuildFace(DirectionEnum.Back, blockData, position + new Vector3Int(0, 0, 1), Vector3.up, Vector3.right, false, verts, uvs, tris);
         }
     }
 
@@ -53,9 +53,14 @@ public class BlockCube : Block
     /// <param name="tris"></param>
     public override void BuildFace(BlockBean blockData, Vector3 corner, Vector3 up, Vector3 right, bool reversed, List<Vector3> verts, List<Vector2> uvs, List<int> tris)
     {
+
+    }
+
+    public  void BuildFace(DirectionEnum direction, BlockBean blockData, Vector3 corner, Vector3 up, Vector3 right, bool reversed, List<Vector3> verts, List<Vector2> uvs, List<int> tris)
+    {
         int index = verts.Count;
         AddVerts(corner, up, right, verts);
-        AddUVs(blockData, uvs);
+        AddUVs(direction, blockData, uvs);
         AddTris(index, reversed, tris);
     }
 
@@ -69,6 +74,11 @@ public class BlockCube : Block
 
     public override void AddUVs(BlockBean blockData, List<Vector2> uvs)
     {
+
+    }
+
+    public void AddUVs(DirectionEnum direction, BlockBean blockData, List<Vector2> uvs)
+    {
         float uvWidth = 1 / 128f;
         BlockInfoBean blockInfo = BlockHandler.Instance.manager.GetBlockInfo(blockData.GetBlockType());
         List<Vector2Int> listData = blockInfo.GetUVPosition();
@@ -79,7 +89,24 @@ public class BlockCube : Block
         }
         else if (listData.Count == 1)
         {
-            uvStartPosition = new Vector2(uvWidth * listData[0].y,uvWidth * listData[0].x);
+            //只有一种面
+            uvStartPosition = new Vector2(uvWidth * listData[0].y, uvWidth * listData[0].x);
+        }
+        else if (listData.Count == 3)
+        {
+            //3种面  上 中 下
+            switch (direction)
+            {
+                case DirectionEnum.UP:
+                    uvStartPosition = new Vector2(uvWidth * listData[0].y, uvWidth * listData[0].x);
+                    break;
+                case DirectionEnum.Down:
+                    uvStartPosition = new Vector2(uvWidth * listData[2].y, uvWidth * listData[2].x);
+                    break;
+                default:
+                    uvStartPosition = new Vector2(uvWidth * listData[1].y, uvWidth * listData[1].x);
+                    break;
+            }
         }
         else
         {

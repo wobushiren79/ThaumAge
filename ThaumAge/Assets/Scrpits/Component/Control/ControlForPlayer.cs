@@ -1,71 +1,119 @@
-﻿using UnityEditor;
+﻿using System;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using static UnityEngine.InputSystem.InputAction;
 
 public class ControlForPlayer : ControlForBase
 {
-    public Rigidbody rbCharacter;
+    public CharacterController characterController;
+
+    private float gravityValue = 10f;
+    private Vector3 playerVelocity;
+    private bool isJump = false;
+
+    private float timeJump = 0.2f;
+    private float timeJumpTemp = 0;
+
+    private float speedJump = 5;
+    private void Awake()
+    {
+        InputAction jumpAction = InputHandler.Instance.manager.GetJumpData();
+        jumpAction.started += HandlerForJumpStart;
+        InputAction useAction = InputHandler.Instance.manager.GetUseData();
+        useAction.started += HandlerForUse;
+    }
 
     private void Update()
     {
-        HandlerForMove();
-        HandlerForJump();
-        HandlerForUse();
+        HandlerForMoveAndJump();
     }
 
     /// <summary>
     /// 移动处理
     /// </summary>
-    public void HandlerForMove()
+    public void HandlerForMoveAndJump()
     {
         InputAction moveAction = InputHandler.Instance.manager.GetMoveData();
         Vector2 moveData = moveAction.ReadValue<Vector2>();
-        if (moveData == Vector2.zero)
-            return;
         //旋转角色
         RotateCharacter(moveData, 5);
         //移动角色
-        MoveCharacter(moveData, 20);
+        MoveCharacter(moveData, 1);
+        //跳跃处理
+        if (isJump)
+        {
+            if(timeJumpTemp <= timeJump)
+            {
+                playerVelocity.y = speedJump * Time.deltaTime;
+                timeJumpTemp += Time.deltaTime;
+            }
+            else
+            {
+                playerVelocity.y -= gravityValue * Time.deltaTime;
+                if (characterController.isGrounded)
+                {
+                    timeJumpTemp = 0;
+                    isJump = false;
+                }
+            }
+        }
+        else
+        {
+            playerVelocity.y -= gravityValue * Time.deltaTime;
+        }
+        characterController.Move(playerVelocity);
     }
 
     /// <summary>
-    /// 跳跃处理
+    /// 开始跳跃处理
     /// </summary>
-    public void HandlerForJump()
+    public void HandlerForJumpStart(CallbackContext callback)
     {
-        Debug.DrawRay(transform.position, Vector2.down * 1.5f, Color.red);
-        InputAction jumpAction = InputHandler.Instance.manager.GetJumpData();
-        if (jumpAction.phase == InputActionPhase.Started)
-        {
-            JumpCharacter(1000);
-        }
+        isJump = true;
     }
 
     /// <summary>
     /// 使用处理
     /// </summary>
-    public void HandlerForUse()
+    public void HandlerForUse(CallbackContext callback)
     {
-        InputAction useAction = InputHandler.Instance.manager.GetUseData();
-        if (useAction.phase == InputActionPhase.Started)
+        RayUtil.RayToScreenPointForScreenCenter(10, 1 << LayerInfo.Chunk, out bool isCollider, out RaycastHit hit);
+        if (isCollider)
         {
-            RayUtil.RayToScreenPoint(10, 1 << LayerInfo.Chunk, out bool isCollider, out RaycastHit hit);
-            if (isCollider)
+            Chunk chunk = hit.collider.GetComponent<Chunk>();
+            if (chunk)
             {
-                Chunk chunk = hit.collider.GetComponent<Chunk>();
-                if (chunk)
+
+                if (hit.normal.y > 0)
                 {
-                    if (Mathf.Abs(hit.normal.y) > 0.01)
-                    {
-                        Debug.Log("上表面");
-                        chunk.RemoveBlock(Vector3Int.CeilToInt(hit.point) - Vector3Int.up);
-                    }
-                    else
-                    {
-                        Debug.Log("侧面");
-                        chunk.RemoveBlock(Vector3Int.CeilToInt(hit.point));
-                    }
-     
+                    Vector3Int position = new Vector3Int((int)Mathf.Floor(hit.point.x), (int)Mathf.Floor(hit.point.y) - 1, (int)Mathf.Floor(hit.point.z));
+                    chunk.RemoveBlock(position);
+                }
+                else if (hit.normal.y < 0)
+                {
+                    Vector3Int position = new Vector3Int((int)Mathf.Floor(hit.point.x), (int)Mathf.Floor(hit.point.y), (int)Mathf.Floor(hit.point.z));
+                    chunk.RemoveBlock(position);
+                }
+                else if (hit.normal.x > 0)
+                {
+                    Vector3Int position = new Vector3Int((int)Mathf.Floor(hit.point.x) - 1, (int)Mathf.Floor(hit.point.y), (int)Mathf.Floor(hit.point.z));
+                    chunk.RemoveBlock(position);
+                }
+                else if (hit.normal.x < 0)
+                {
+                    Vector3Int position = new Vector3Int((int)Mathf.Floor(hit.point.x), (int)Mathf.Floor(hit.point.y), (int)Mathf.Floor(hit.point.z));
+                    chunk.RemoveBlock(position);
+                }
+                else if (hit.normal.z > 0)
+                {
+                    Vector3Int position = new Vector3Int((int)Mathf.Floor(hit.point.x), (int)Mathf.Floor(hit.point.y), (int)Mathf.Floor(hit.point.z) - 1);
+                    chunk.RemoveBlock(position);
+                }
+                else if (hit.normal.z < 0)
+                {
+                    Vector3Int position = new Vector3Int((int)Mathf.Floor(hit.point.x), (int)Mathf.Floor(hit.point.y), (int)Mathf.Floor(hit.point.z));
+                    chunk.RemoveBlock(position);
                 }
             }
         }
@@ -84,19 +132,9 @@ public class ControlForPlayer : ControlForBase
         forward.y = 0;
         right.y = 0;
         //朝摄像头方向移动
-        rbCharacter.transform.Translate(forward * Time.deltaTime * moveSpeed * moveOffset.y, Space.World);
-        rbCharacter.transform.Translate(right * Time.deltaTime * moveSpeed * moveOffset.x, Space.World);
+        playerVelocity = (Vector3.Normalize( forward) * moveOffset.y + Vector3.Normalize(right) * moveOffset.x) * Time.deltaTime * moveSpeed * 5;
     }
 
-    /// <summary>
-    /// 角色跳跃
-    /// </summary>
-    /// <param name="jumpForce"></param>
-    public void JumpCharacter(float jumpForce)
-    {
-        RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.down, 1.5f, 1 << LayerInfo.Ground);
-        rbCharacter.AddForce(Vector3.up * jumpForce * Time.deltaTime);
-    }
 
     /// <summary>
     /// 角色旋转
@@ -128,6 +166,6 @@ public class ControlForPlayer : ControlForBase
 
         Quaternion rotate = Quaternion.Euler(rotateAngles);
         //朝摄像头方向移动
-        rbCharacter.transform.rotation = Quaternion.Slerp(transform.rotation, rotate, rotateSpeed * Time.deltaTime);
+        characterController.transform.rotation = Quaternion.Slerp(transform.rotation, rotate, rotateSpeed * Time.deltaTime);
     }
 }

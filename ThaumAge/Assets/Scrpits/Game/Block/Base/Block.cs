@@ -32,7 +32,7 @@ public abstract class Block
     public bool CheckNeedBuildFace(Vector3Int position)
     {
         if (position.y < 0) return false;
-        BlockTypeEnum type = chunk.GetBlockType(position);
+        BlockTypeEnum type = chunk.GetBlockTypeForLocal(position);
         switch (type)
         {
             case BlockTypeEnum.None:

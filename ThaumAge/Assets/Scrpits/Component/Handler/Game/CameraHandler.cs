@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class CameraHandler : BaseHandler<CameraHandler, CameraManager>
 {
-    protected float maxAroundY = 60;
-    protected float minAroundY = 0;
+    protected float maxAroundY = 90;
+    protected float minAroundY = -60;
 
     protected float maxOrthographicSize = 100;
     protected float minOrthographicSize = 20;
@@ -29,13 +29,23 @@ public class CameraHandler : BaseHandler<CameraHandler, CameraManager>
     /// <param name="speedForMove"></param>
     public void RotateCameraAroundY(Vector3 aroundPosition, float rotateOffset, float speedForMove)
     {
-
-        Vector3 eulerAngles = manager.mainCamera.transform.eulerAngles;
+        Vector3 eulerAngles = manager.mainCamera.transform.rotation.eulerAngles;
         float tempAngles = rotateOffset * Time.deltaTime * speedForMove;
-        if (rotateOffset > 0 && eulerAngles.x + tempAngles >= maxAroundY)
-            return;
-        if (rotateOffset < 0 && eulerAngles.x + tempAngles <= minAroundY)
-            return;
+        float afterAngles = eulerAngles.x + tempAngles;
+        if (afterAngles > 180)
+        {
+            afterAngles -= 360;
+        }
+        if (afterAngles > 0)
+        {
+            if (afterAngles >= maxAroundY)
+                return;
+        }
+        else
+        {
+            if (afterAngles <= minAroundY)
+                return;
+        }
         manager.mainCamera.transform.RotateAround(aroundPosition, manager.mainCamera.transform.right, tempAngles);
     }
 

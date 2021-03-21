@@ -10,4 +10,15 @@ public enum BlockTypeEnum
     Dirt = 3,
     //Ê¯Í·
     Stone = 4,
+
+
+    //ÏğÄ¾
+    Oak = 1001,
+
+    //ÏğÄ¾Ò¶×Ó
+    LeavesOak = 2001,
+
+    //ÔÓ²İ1
+    Weed = 3001,
+
 }
