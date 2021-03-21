@@ -3,6 +3,13 @@ using UnityEditor;
 using UnityEngine;
 public class BlockCube : Block
 {
+    public BlockCube() : base()
+    {
+    }
+    public BlockCube(BlockTypeEnum blockType) : base(blockType)
+    {
+    }
+
     /// <summary>
     /// 构建方块的六个面
     /// </summary>

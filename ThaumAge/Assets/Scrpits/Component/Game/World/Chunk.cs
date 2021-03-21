@@ -27,6 +27,7 @@ public class Chunk : BaseMonoBehaviour
         meshRenderer = GetComponent<MeshRenderer>();
         meshCollider = GetComponent<MeshCollider>();
         meshFilter = GetComponent<MeshFilter>();
+        meshFilter.mesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
     }
 
     /// <summary>
@@ -42,12 +43,13 @@ public class Chunk : BaseMonoBehaviour
         this.mapForBlock = mapForBlock;
         this.width = width;
         this.height = height;
-        BuildChunk();
+        BuildChunkForAsync();
     }
 
     public void BuildChunk()
     {
         chunkMesh = new Mesh();
+        chunkMesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
         List<Vector3> verts = new List<Vector3>();
         List<Vector2> uvs = new List<Vector2>();
         List<int> tris = new List<int>();
@@ -73,6 +75,7 @@ public class Chunk : BaseMonoBehaviour
     public async void BuildChunkForAsync()
     {
         chunkMesh = new Mesh();
+        chunkMesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
         List<Vector3> verts = new List<Vector3>();
         List<Vector2> uvs = new List<Vector2>();
         List<int> tris = new List<int>();
@@ -90,11 +93,10 @@ public class Chunk : BaseMonoBehaviour
         chunkMesh.vertices = verts.ToArray();
         chunkMesh.uv = uvs.ToArray();
         chunkMesh.triangles = tris.ToArray();
-
         chunkMesh.RecalculateBounds();
         chunkMesh.RecalculateNormals();
 
-        meshFilter.mesh = chunkMesh;
+        meshFilter.mesh = chunkMesh;    
         meshCollider.sharedMesh = chunkMesh;
 
     }
@@ -103,6 +105,22 @@ public class Chunk : BaseMonoBehaviour
     {
         Vector3Int localPosition = worldPosition - Vector3Int.CeilToInt(transform.position);
         return GetBlockTypeForLocal(localPosition);
+    }
+
+    public Block GetBlockForLocal(Vector3Int localPosition)
+    {
+        if (localPosition.y < 0 || localPosition.y > height - 1)
+        {
+            return new BlockCube(BlockTypeEnum.None);
+        }
+        int halfWidth = width / 2;
+        //当前位置是否在Chunk内
+        if ((localPosition.x < -halfWidth) || (localPosition.z < -halfWidth) || (localPosition.x >= halfWidth) || (localPosition.z >= halfWidth))
+        {
+            return new BlockCube(BlockTypeEnum.None);
+        }
+        Block block = mapForBlock[localPosition];
+        return block;
     }
 
     public BlockTypeEnum GetBlockTypeForLocal(Vector3Int localPosition)

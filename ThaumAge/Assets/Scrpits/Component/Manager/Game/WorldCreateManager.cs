@@ -135,7 +135,7 @@ public class WorldCreateManager : BaseManager
     {
         foreach (var itemChunk in dicChunk)
         {
-            itemChunk.Value.BuildChunk();
+            itemChunk.Value.BuildChunkForAsync();
         }
     }
 }

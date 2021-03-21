@@ -45,7 +45,7 @@ public class BiomeHandler : BaseHandler<BiomeHandler, BiomeManager>
 
             }
         }
-        return BlockTypeEnum.LeavesOak;
+        return BlockTypeEnum.Grass;
         ////当前方块位置等于随机生成的高度值时，当前方块类型为草地
         //else if (wPos.y == genHeight)
         //{

@@ -88,7 +88,8 @@ public class ControlForPlayer : ControlForBase
                 if (hit.normal.y > 0)
                 {
                     Vector3Int position = new Vector3Int((int)Mathf.Floor(hit.point.x), (int)Mathf.Floor(hit.point.y) - 1, (int)Mathf.Floor(hit.point.z));
-                    chunk.RemoveBlock(position);
+                    //chunk.RemoveBlock(position);
+                    chunk.SetBlock(position+Vector3Int.up, BlockTypeEnum.LeavesOak);
                 }
                 else if (hit.normal.y < 0)
                 {

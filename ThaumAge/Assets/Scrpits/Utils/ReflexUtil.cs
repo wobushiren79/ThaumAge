@@ -214,7 +214,7 @@ public class ReflexUtil : ScriptableObject
             object obj = Activator.CreateInstance(o, true);//根据类型创建实例
             return (T)obj;//类型转换并返回
         }
-        catch (Exception e)
+        catch (Exception)
         {
             //LogUtil.LogError("实例化失败，缺少 " + fullName + "," + assemblyName + " 。" + e.Message);
             return default(T);
@@ -235,7 +235,7 @@ public class ReflexUtil : ScriptableObject
             object obj = Activator.CreateInstance(o, true);//根据类型创建实例
             return (T)obj;//类型转换并返回
         }
-        catch (Exception e)
+        catch (Exception)
         {
             //LogUtil.LogError("实例化失败，缺少类名为 " + className + " 的类。" + e.Message);
             return default(T);

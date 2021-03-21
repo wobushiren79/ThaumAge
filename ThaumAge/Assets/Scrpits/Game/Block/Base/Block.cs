@@ -9,7 +9,15 @@ public abstract class Block
     public Vector3Int position; //所属Chunk内的坐标
     public BlockBean blockData; //方框数据
 
+    public Block()
+    {
 
+    }
+    public Block(BlockTypeEnum blockType)
+    {
+        if (blockData == null)
+            blockData = new BlockBean(blockType,Vector3Int.zero);
+    }
 
     /// <summary>
     /// 设置数据
@@ -29,19 +37,34 @@ public abstract class Block
     /// </summary>
     /// <param name="position"></param>
     /// <returns></returns>
+    //public bool CheckNeedBuildFace(Vector3Int position)
+    //{
+    //    if (position.y < 0) return false;
+    //    Block block = chunk.GetBlockForLocal(position);
+    //    BlockInfoBean blockInfo = BlockHandler.Instance.manager.GetBlockInfo(block.blockData.blockId);
+    //    switch (blockInfo.GetBlockShape())
+    //    {
+    //        case BlockShapeEnum.Cube:
+    //            return false;
+    //        default:
+    //            return true;
+    //    }
+    //}
+
     public bool CheckNeedBuildFace(Vector3Int position)
     {
         if (position.y < 0) return false;
-        BlockTypeEnum type = chunk.GetBlockTypeForLocal(position);
-        switch (type)
+        Block block = chunk.GetBlockForLocal(position);
+        BlockInfoBean blockInfo = BlockHandler.Instance.manager.GetBlockInfo(block.blockData.blockId);
+        BlockShapeEnum blockShape = blockInfo.GetBlockShape();
+        switch (blockShape)
         {
-            case BlockTypeEnum.None:
-                return true;
-            default:
+            case BlockShapeEnum.Cube:
                 return false;
+            default:
+                return true;
         }
     }
-
     /// <summary>
     /// 构建方块
     /// </summary>
