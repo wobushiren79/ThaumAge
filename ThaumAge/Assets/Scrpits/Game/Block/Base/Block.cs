@@ -34,25 +34,12 @@ public abstract class Block
         this.blockData = blockData;
     }
 
+
     /// <summary>
     /// 检测是否需要构建面
     /// </summary>
     /// <param name="position"></param>
     /// <returns></returns>
-    //public bool CheckNeedBuildFace(Vector3Int position)
-    //{
-    //    if (position.y < 0) return false;
-    //    Block block = chunk.GetBlockForLocal(position);
-    //    BlockInfoBean blockInfo = BlockHandler.Instance.manager.GetBlockInfo(block.blockData.blockId);
-    //    switch (blockInfo.GetBlockShape())
-    //    {
-    //        case BlockShapeEnum.Cube:
-    //            return false;
-    //        default:
-    //            return true;
-    //    }
-    //}
-
     public bool CheckNeedBuildFace(Vector3Int position)
     {
         if (position.y < 0) return false;
