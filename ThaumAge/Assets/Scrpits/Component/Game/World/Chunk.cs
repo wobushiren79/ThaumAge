@@ -8,6 +8,7 @@ public class Chunk : BaseMonoBehaviour
 {
     //Chunk的网格
     protected Mesh chunkMesh;
+    protected Mesh chunkMeshCollider;
 
     protected MeshRenderer meshRenderer;
     protected MeshCollider meshCollider;
@@ -27,7 +28,10 @@ public class Chunk : BaseMonoBehaviour
         meshRenderer = GetComponent<MeshRenderer>();
         meshCollider = GetComponent<MeshCollider>();
         meshFilter = GetComponent<MeshFilter>();
+
         meshFilter.mesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
+        meshCollider.sharedMesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
+        //meshCollider.cookingOptions = MeshColliderCookingOptions.WeldColocatedVertices;
     }
 
     /// <summary>
@@ -37,7 +41,7 @@ public class Chunk : BaseMonoBehaviour
     /// <param name="width"></param>
     /// <param name="height"></param>
     /// <param name="minHeight"></param>
-    public void SetData(Vector3Int worldPosition,Dictionary<Vector3Int, Block> mapForBlock, int width, int height)
+    public void SetData(Vector3Int worldPosition, Dictionary<Vector3Int, Block> mapForBlock, int width, int height)
     {
         this.worldPosition = worldPosition;
         this.mapForBlock = mapForBlock;
@@ -46,46 +50,28 @@ public class Chunk : BaseMonoBehaviour
         BuildChunkForAsync();
     }
 
-    public void BuildChunk()
-    {
-        chunkMesh = new Mesh();
-        chunkMesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
-        List<Vector3> verts = new List<Vector3>();
-        List<Vector2> uvs = new List<Vector2>();
-        List<int> tris = new List<int>();
-
-        //遍历chunk, 生成其中的每一个Block
-        foreach (var itemData in mapForBlock)
-        {
-            itemData.Value.BuildBlock(verts, uvs, tris);
-        }
-
-        chunkMesh.vertices = verts.ToArray();
-        chunkMesh.uv = uvs.ToArray();
-        chunkMesh.triangles = tris.ToArray();
-
-        chunkMesh.RecalculateBounds();
-        chunkMesh.RecalculateNormals();
-
-        meshFilter.mesh = chunkMesh;
-        meshCollider.sharedMesh = chunkMesh;
-    }
-
-
     public async void BuildChunkForAsync()
     {
         chunkMesh = new Mesh();
+        chunkMeshCollider = new Mesh();
+
         chunkMesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
+        chunkMeshCollider.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
+
         List<Vector3> verts = new List<Vector3>();
         List<Vector2> uvs = new List<Vector2>();
         List<int> tris = new List<int>();
 
-        await Task.Run(() => {
+        List<Vector3> vertsCollider = new List<Vector3>();
+        List<int> trisCollider = new List<int>();
+
+        await Task.Run(() =>
+        {
 
             //遍历chunk, 生成其中的每一个Block
             foreach (var itemData in mapForBlock)
             {
-                itemData.Value.BuildBlock(verts, uvs, tris);
+                itemData.Value.BuildBlock(verts, uvs, tris, vertsCollider, trisCollider);
             }
 
         });
@@ -95,10 +81,13 @@ public class Chunk : BaseMonoBehaviour
         chunkMesh.triangles = tris.ToArray();
         chunkMesh.RecalculateBounds();
         chunkMesh.RecalculateNormals();
+        chunkMeshCollider.vertices = vertsCollider.ToArray();
+        chunkMeshCollider.triangles = trisCollider.ToArray();
+        chunkMeshCollider.RecalculateBounds();
+        chunkMeshCollider.RecalculateNormals();
 
-        meshFilter.mesh = chunkMesh;    
-        meshCollider.sharedMesh = chunkMesh;
-
+        meshFilter.mesh = chunkMesh;
+        meshCollider.sharedMesh = chunkMeshCollider;
     }
 
     public BlockTypeEnum GetBlockTypeForWorld(Vector3Int worldPosition)
@@ -185,12 +174,14 @@ public class Chunk : BaseMonoBehaviour
     /// <param name="blockType"></param>
     public void SetBlock(Vector3Int worldPosition, BlockTypeEnum blockType)
     {
-        if (mapForBlock.TryGetValue(worldPosition - this.worldPosition, out Block block))
+        Vector3Int blockLocalPosition = worldPosition - this.worldPosition;
+        if (mapForBlock.TryGetValue(blockLocalPosition, out Block block))
         {
-            block.blockData.SetBlockType(blockType);
+            mapForBlock.Remove(blockLocalPosition);
         }
+        Block newBlock = BlockHandler.Instance.CreateBlock(this, blockLocalPosition, blockType);
+        mapForBlock.Add(blockLocalPosition, newBlock);
         BuildChunkForAsync();
-       // BuildChunk();
     }
 
 }

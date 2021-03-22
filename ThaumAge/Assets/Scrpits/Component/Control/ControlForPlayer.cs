@@ -43,7 +43,7 @@ public class ControlForPlayer : ControlForBase
         //跳跃处理
         if (isJump)
         {
-            if(timeJumpTemp <= timeJump)
+            if (timeJumpTemp <= timeJump)
             {
                 playerVelocity.y = speedJump * Time.deltaTime;
                 timeJumpTemp += Time.deltaTime;
@@ -89,7 +89,7 @@ public class ControlForPlayer : ControlForBase
                 {
                     Vector3Int position = new Vector3Int((int)Mathf.Floor(hit.point.x), (int)Mathf.Floor(hit.point.y) - 1, (int)Mathf.Floor(hit.point.z));
                     //chunk.RemoveBlock(position);
-                    chunk.SetBlock(position+Vector3Int.up, BlockTypeEnum.LeavesOak);
+                    chunk.SetBlock(position + Vector3Int.up, BlockTypeEnum.Weed);
                 }
                 else if (hit.normal.y < 0)
                 {
@@ -133,7 +133,7 @@ public class ControlForPlayer : ControlForBase
         forward.y = 0;
         right.y = 0;
         //朝摄像头方向移动
-        playerVelocity = (Vector3.Normalize( forward) * moveOffset.y + Vector3.Normalize(right) * moveOffset.x) * Time.deltaTime * moveSpeed * 5;
+        playerVelocity = (Vector3.Normalize(forward) * moveOffset.y + Vector3.Normalize(right) * moveOffset.x) * Time.deltaTime * moveSpeed * 5;
     }
 
 

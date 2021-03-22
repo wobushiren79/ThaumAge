@@ -12,6 +12,7 @@ public class InputManager : BaseManager
         inputActions.Player.Jump.Enable();
         inputActions.Player.Look.Enable();
         inputActions.Player.Use.Enable();
+        inputActions.Player.CameraDistance.Enable();
     }
 
     /// <summary>
@@ -48,5 +49,15 @@ public class InputManager : BaseManager
     public InputAction GetUseData()
     {
         return inputActions.Player.Use;
+    }
+
+
+    /// <summary>
+    /// 获取摄像头距离数据
+    /// </summary>
+    /// <returns></returns>
+    public InputAction GetCameraDistanceData()
+    {
+        return inputActions.Player.CameraDistance;
     }
 }

@@ -9,6 +9,8 @@ public abstract class Block
     public Vector3Int position; //所属Chunk内的坐标
     public BlockBean blockData; //方框数据
 
+    protected float uvWidth = 1 / 128f;
+
     public Block()
     {
 
@@ -71,7 +73,7 @@ public abstract class Block
     /// <param name="verts"></param>
     /// <param name="uvs"></param>
     /// <param name="tris"></param>
-    public abstract void BuildBlock(List<Vector3> verts, List<Vector2> uvs, List<int> tris);
+    public abstract void BuildBlock(List<Vector3> verts, List<Vector2> uvs, List<int> tris, List<Vector3> vertsCollider, List<int> trisCollider);
 
     /// <summary>
     /// 构建面
@@ -84,7 +86,7 @@ public abstract class Block
     /// <param name="verts"></param>
     /// <param name="uvs"></param>
     /// <param name="tris"></param>
-    public abstract void BuildFace(BlockBean blockData, Vector3 corner, Vector3 up, Vector3 right, bool reversed, List<Vector3> verts, List<Vector2> uvs, List<int> tris);
+    public abstract void BuildFace(BlockBean blockData, Vector3 corner, List<Vector3> verts, List<Vector2> uvs, List<int> tris, List<Vector3> vertsCollider, List<int> trisCollider);
 
     /// <summary>
     /// 添加坐标点
@@ -93,7 +95,7 @@ public abstract class Block
     /// <param name="up"></param>
     /// <param name="right"></param>
     /// <param name="verts"></param>
-    public abstract void AddVerts(Vector3 corner, Vector3 up, Vector3 right, List<Vector3> verts);
+    public abstract void AddVerts(Vector3 corner, List<Vector3> verts, List<Vector3> vertsCollider);
 
     /// <summary>
     /// 添加UV
@@ -102,11 +104,13 @@ public abstract class Block
     /// <param name="uvs"></param>
     public abstract void AddUVs(BlockBean blockData, List<Vector2> uvs);
 
+
     /// <summary>
     /// 添加索引
     /// </summary>
     /// <param name="index"></param>
-    /// <param name="reversed"></param>
     /// <param name="tris"></param>
-    public abstract void AddTris(int index, bool reversed, List<int> tris);
+    /// <param name="indexCollider"></param>
+    /// <param name="trisCollider"></param>
+    public abstract void AddTris(int index, List<int> tris, int indexCollider, List<int> trisCollider);
 }

@@ -49,6 +49,14 @@ public class @GameInputActions : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""CameraDistance"",
+                    ""type"": ""Value"",
+                    ""id"": ""72564c59-2722-4f89-bee1-c0c27039924d"",
+                    ""expectedControlType"": ""Axis"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -269,6 +277,28 @@ public class @GameInputActions : IInputActionCollection, IDisposable
                     ""processors"": """",
                     ""groups"": ""Gamepad"",
                     ""action"": ""Jump"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""28d67b38-33e4-4c13-90f4-6941f69e4672"",
+                    ""path"": ""<Mouse>/scroll/y"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""CameraDistance"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""d970fe4d-ec25-4dee-a690-e2c7bc14cb12"",
+                    ""path"": ""<Gamepad>/select"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""CameraDistance"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -850,6 +880,7 @@ public class @GameInputActions : IInputActionCollection, IDisposable
         m_Player_Look = m_Player.FindAction("Look", throwIfNotFound: true);
         m_Player_Use = m_Player.FindAction("Use", throwIfNotFound: true);
         m_Player_Jump = m_Player.FindAction("Jump", throwIfNotFound: true);
+        m_Player_CameraDistance = m_Player.FindAction("CameraDistance", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -915,6 +946,7 @@ public class @GameInputActions : IInputActionCollection, IDisposable
     private readonly InputAction m_Player_Look;
     private readonly InputAction m_Player_Use;
     private readonly InputAction m_Player_Jump;
+    private readonly InputAction m_Player_CameraDistance;
     public struct PlayerActions
     {
         private @GameInputActions m_Wrapper;
@@ -923,6 +955,7 @@ public class @GameInputActions : IInputActionCollection, IDisposable
         public InputAction @Look => m_Wrapper.m_Player_Look;
         public InputAction @Use => m_Wrapper.m_Player_Use;
         public InputAction @Jump => m_Wrapper.m_Player_Jump;
+        public InputAction @CameraDistance => m_Wrapper.m_Player_CameraDistance;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -944,6 +977,9 @@ public class @GameInputActions : IInputActionCollection, IDisposable
                 @Jump.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnJump;
                 @Jump.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnJump;
                 @Jump.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnJump;
+                @CameraDistance.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnCameraDistance;
+                @CameraDistance.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnCameraDistance;
+                @CameraDistance.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnCameraDistance;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -960,6 +996,9 @@ public class @GameInputActions : IInputActionCollection, IDisposable
                 @Jump.started += instance.OnJump;
                 @Jump.performed += instance.OnJump;
                 @Jump.canceled += instance.OnJump;
+                @CameraDistance.started += instance.OnCameraDistance;
+                @CameraDistance.performed += instance.OnCameraDistance;
+                @CameraDistance.canceled += instance.OnCameraDistance;
             }
         }
     }
@@ -1120,6 +1159,7 @@ public class @GameInputActions : IInputActionCollection, IDisposable
         void OnLook(InputAction.CallbackContext context);
         void OnUse(InputAction.CallbackContext context);
         void OnJump(InputAction.CallbackContext context);
+        void OnCameraDistance(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {
