@@ -140,14 +140,13 @@ public class EditorUI
     /// 展示图片
     /// </summary>
     /// <param name="picPath"></param>
-    /// <param name="picName"></param>
-    public static void GUIPic(string picPath, string picName)
+    public static void GUIPic(string picPath)
     {
-        GUIPic(picPath, picName, 64, 64);
+        GUIPic(picPath, 64, 64);
     }
-    public static void GUIPic(string picPath, string picName, int width, int height)
+    public static void GUIPic(string picPath, int width, int height)
     {
-        Texture2D iconTex = EditorGUIUtility.FindTexture(picPath + picName + ".png");
+        Texture2D iconTex = EditorGUIUtility.FindTexture(picPath);
         if (iconTex)
             GUILayout.Label(iconTex, GUILayout.Width(width), GUILayout.Height(height));
     }

@@ -21,7 +21,7 @@ public class BlockInfoService : BaseMVCService
     /// <returns></returns>
     public List<BlockInfoBean> QueryAllData()
     {
-        List<BlockInfoBean> listData = BaseQueryAllData<BlockInfoBean>();
+        List<BlockInfoBean> listData = BaseQueryAllData<BlockInfoBean>("link_id");
         return listData; 
     }
 
@@ -45,18 +45,52 @@ public class BlockInfoService : BaseMVCService
     }
 
     /// <summary>
+    /// 根据ID查询数据
+    /// </summary>
+    /// <param name="ids"></param>
+    /// <returns></returns>
+    public List<BlockInfoBean> QueryDataByIds(long[] ids)
+    {
+        string values = TypeConversionUtil.ArrayToStringBySplit(ids, ",");
+        return BaseQueryData<BlockInfoBean>("link_id", tableNameForMain + ".id", "IN", "(" + values + ")");
+    }
+
+    /// <summary>
+    /// 通过名字查询
+    /// </summary>
+    /// <param name="name"></param>
+    /// <returns></returns>
+    public List<BlockInfoBean> QueryDataByName(string name)
+    {
+        return BaseQueryData<BlockInfoBean>("link_id", "name", name);
+    }
+
+    /// <summary>
     /// 更新数据
     /// </summary>
     /// <param name="data"></param>
     /// <returns></returns>
     public bool UpdateData(BlockInfoBean data)
     {
-        bool deleteState = BaseDeleteDataById(data.id);
+        bool deleteState = BaseDeleteDataWithLeft("id", "link_id", data.id+"");
         if (deleteState)
         {
-            bool insertSuccess = BaseInsertData(tableNameForMain, data);
+            List<string> listLeftData = new List<string>();
+            listLeftData.Add("link_id");
+            listLeftData.Add("name");
+            bool insertSuccess = BaseInsertDataWithLeft(data, listLeftData);
             return insertSuccess;
         }
         return false;
+    }
+
+    /// <summary>
+    /// 删除数据
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
+    public bool DeleteData(long id)
+    {
+       return BaseDeleteDataWithLeft("id", "link_id", id + "");
     }
 }

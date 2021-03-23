@@ -28,6 +28,8 @@ public class GameDataManager : BaseManager,IGameConfigView
     /// <returns></returns>
     public GameConfigBean GetGameConfig()
     {
+        if (gameConfig == null)
+            gameConfig = new GameConfigBean();
         return gameConfig;
     }
 

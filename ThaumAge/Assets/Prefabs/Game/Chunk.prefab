@@ -95,6 +95,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 69b06d9efcc6cf44d8c498189f2539c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  materials:
+  - {fileID: 2100000, guid: 4d18b1a7b676b8047b2489b426fae9c7, type: 2}
+  - {fileID: 2100000, guid: 8d068167d5d02e24bafe921fa7108554, type: 2}
   width: 0
   height: 0
   worldPosition: {x: 0, y: 0, z: 0}

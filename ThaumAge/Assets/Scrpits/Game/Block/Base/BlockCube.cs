@@ -24,8 +24,11 @@ public class BlockCube : Block
     /// <param name="tris"></param>
     public override void BuildBlock(
         List<Vector3> verts, List<Vector2> uvs, List<int> tris,
-        List<Vector3> vertsCollider, List<int> trisCollider)
+        List<Vector3> vertsCollider, List<int> trisCollider,
+        List<int> trisBothFace)
     {
+        base.BuildBlock(verts, uvs, tris, vertsCollider, trisCollider, trisBothFace);
+
         BlockTypeEnum blockType = blockData.GetBlockType();
         if (blockType != BlockTypeEnum.None)
         {
@@ -55,6 +58,7 @@ public class BlockCube : Block
     /// <summary>
     /// 构建方块的面
     /// </summary>
+    /// <param name="direction"></param>
     /// <param name="blockData"></param>
     /// <param name="corner"></param>
     /// <param name="up"></param>
@@ -63,14 +67,9 @@ public class BlockCube : Block
     /// <param name="verts"></param>
     /// <param name="uvs"></param>
     /// <param name="tris"></param>
-    public override void BuildFace(BlockBean blockData, Vector3 corner, 
-        List<Vector3> verts, List<Vector2> uvs, List<int> tris, 
-        List<Vector3> vertsCollider, List<int> trisCollider)
-    {
-
-    }
-
-    public  void BuildFace(DirectionEnum direction, BlockBean blockData, Vector3 corner, Vector3 up, Vector3 right, bool reversed,
+    /// <param name="vertsCollider"></param>
+    /// <param name="trisCollider"></param>
+    public void BuildFace(DirectionEnum direction, BlockBean blockData, Vector3 corner, Vector3 up, Vector3 right, bool reversed,
         List<Vector3> verts, List<Vector2> uvs, List<int> tris, 
         List<Vector3> vertsCollider, List<int> trisCollider)
     {
@@ -79,10 +78,6 @@ public class BlockCube : Block
         AddVerts(corner, up, right, verts,vertsCollider);
         AddUVs(direction, blockData, uvs);
         AddTris(index, indexCollider, reversed, tris,trisCollider);
-    }
-    public override void AddVerts(Vector3 corner,  List<Vector3> verts, List<Vector3> vertsCollider)
-    {
-
     }
 
     public void AddVerts(Vector3 corner, Vector3 up, Vector3 right, List<Vector3> verts, List<Vector3> vertsCollider)
@@ -96,11 +91,6 @@ public class BlockCube : Block
         vertsCollider.Add(corner + up);
         vertsCollider.Add(corner + up + right);
         vertsCollider.Add(corner + right);
-    }
-
-    public override void AddUVs(BlockBean blockData, List<Vector2> uvs)
-    {
-
     }
 
     public void AddUVs(DirectionEnum direction, BlockBean blockData, List<Vector2> uvs)
@@ -141,10 +131,6 @@ public class BlockCube : Block
         uvs.Add(uvStartPosition + new Vector2(0, uvWidth));
         uvs.Add(uvStartPosition + new Vector2(uvWidth, uvWidth));
         uvs.Add(uvStartPosition + new Vector2(uvWidth, 0));
-    }
-    public override void AddTris(int index, List<int> tris, int indexCollider, List<int> trisCollider)
-    {
-
     }
 
     public void AddTris(int index, int indexCollider, bool reversed, List<int> tris, List<int> trisCollider)

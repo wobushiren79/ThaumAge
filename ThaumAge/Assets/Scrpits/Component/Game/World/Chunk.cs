@@ -6,6 +6,9 @@ using UnityEngine;
 
 public class Chunk : BaseMonoBehaviour
 {
+    //材质合集
+    public Material[] materials;
+
     //Chunk的网格
     protected Mesh chunkMesh;
     protected Mesh chunkMeshCollider;
@@ -29,9 +32,12 @@ public class Chunk : BaseMonoBehaviour
         meshCollider = GetComponent<MeshCollider>();
         meshFilter = GetComponent<MeshFilter>();
 
+        meshRenderer.materials = materials;
+        //设置mesh的三角形上限
         meshFilter.mesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
         meshCollider.sharedMesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
-        //meshCollider.cookingOptions = MeshColliderCookingOptions.WeldColocatedVertices;
+        //设置碰撞和去除多余的顶点
+        meshCollider.cookingOptions = MeshColliderCookingOptions.WeldColocatedVertices;
     }
 
     /// <summary>
@@ -50,39 +56,56 @@ public class Chunk : BaseMonoBehaviour
         BuildChunkForAsync();
     }
 
+    /// <summary>
+    /// 异步构建chunk
+    /// </summary>
     public async void BuildChunkForAsync()
     {
         chunkMesh = new Mesh();
         chunkMeshCollider = new Mesh();
-
+        
+        //设置mesh的三角形上限
         chunkMesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
         chunkMeshCollider.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
 
+        //普通使用的三角形合集
         List<Vector3> verts = new List<Vector3>();
         List<Vector2> uvs = new List<Vector2>();
         List<int> tris = new List<int>();
 
+        //碰撞使用的三角形合集
         List<Vector3> vertsCollider = new List<Vector3>();
         List<int> trisCollider = new List<int>();
 
+        //两面都渲染的三角形合集
+        List<int> trisBothFace = new List<int>();
+
         await Task.Run(() =>
         {
-
             //遍历chunk, 生成其中的每一个Block
             foreach (var itemData in mapForBlock)
             {
-                itemData.Value.BuildBlock(verts, uvs, tris, vertsCollider, trisCollider);
+                itemData.Value.BuildBlock(verts, uvs, tris, vertsCollider, trisCollider, trisBothFace);
             }
-
         });
 
+        //设置顶点
         chunkMesh.vertices = verts.ToArray();
+        chunkMesh.subMeshCount = materials.Length;
+        //设置UV
         chunkMesh.uv = uvs.ToArray();
-        chunkMesh.triangles = tris.ToArray();
+        //设置三角（单面渲染，双面渲染）
+        chunkMesh.SetTriangles(tris.ToArray(), 0);
+        chunkMesh.SetTriangles(trisBothFace.ToArray(), 1);
+
+        //刷新
         chunkMesh.RecalculateBounds();
         chunkMesh.RecalculateNormals();
+
+        //碰撞数据设置
         chunkMeshCollider.vertices = vertsCollider.ToArray();
         chunkMeshCollider.triangles = trisCollider.ToArray();
+        //刷新
         chunkMeshCollider.RecalculateBounds();
         chunkMeshCollider.RecalculateNormals();
 

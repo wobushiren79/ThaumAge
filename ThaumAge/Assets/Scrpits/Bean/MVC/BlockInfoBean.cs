@@ -12,7 +12,9 @@ using System.Collections.Generic;
 [Serializable]
 public class BlockInfoBean : BaseBean
 {
-    public long block_id;
+    public long link_id;
+
+    public string name;
 
     public int shape;
 

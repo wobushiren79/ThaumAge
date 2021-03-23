@@ -15,6 +15,7 @@ public abstract class Block
     {
 
     }
+
     public Block(BlockTypeEnum blockType)
     {
         if (blockData == null)
@@ -60,7 +61,13 @@ public abstract class Block
     /// <param name="verts"></param>
     /// <param name="uvs"></param>
     /// <param name="tris"></param>
-    public abstract void BuildBlock(List<Vector3> verts, List<Vector2> uvs, List<int> tris, List<Vector3> vertsCollider, List<int> trisCollider);
+    public virtual void BuildBlock(
+        List<Vector3> verts, List<Vector2> uvs, List<int> tris,
+        List<Vector3> vertsCollider, List<int> trisCollider,
+        List<int> trisBothFace) 
+    { 
+    
+    }
 
     /// <summary>
     /// 构建面
@@ -73,7 +80,19 @@ public abstract class Block
     /// <param name="verts"></param>
     /// <param name="uvs"></param>
     /// <param name="tris"></param>
-    public abstract void BuildFace(BlockBean blockData, Vector3 corner, List<Vector3> verts, List<Vector2> uvs, List<int> tris, List<Vector3> vertsCollider, List<int> trisCollider);
+    public virtual void BuildFace(
+        BlockBean blockData, Vector3 corner,
+        List<Vector3> verts, List<Vector2> uvs, List<int> tris,
+        List<Vector3> vertsCollider, List<int> trisCollider,
+        List<int> trisBothFace) 
+    {
+
+        int index = verts.Count;
+        int indexCollider = vertsCollider.Count;
+        AddVerts(corner, verts, vertsCollider);
+        AddUVs(blockData, uvs);
+        AddTris(index, tris, indexCollider, trisCollider, trisBothFace);
+    }
 
     /// <summary>
     /// 添加坐标点
@@ -82,14 +101,20 @@ public abstract class Block
     /// <param name="up"></param>
     /// <param name="right"></param>
     /// <param name="verts"></param>
-    public abstract void AddVerts(Vector3 corner, List<Vector3> verts, List<Vector3> vertsCollider);
+    public virtual void AddVerts(Vector3 corner, List<Vector3> verts, List<Vector3> vertsCollider) 
+    { 
+
+    }
 
     /// <summary>
     /// 添加UV
     /// </summary>
     /// <param name="blockData"></param>
     /// <param name="uvs"></param>
-    public abstract void AddUVs(BlockBean blockData, List<Vector2> uvs);
+    public virtual void AddUVs(BlockBean blockData, List<Vector2> uvs)
+    {
+
+    }
 
 
     /// <summary>
@@ -99,5 +124,8 @@ public abstract class Block
     /// <param name="tris"></param>
     /// <param name="indexCollider"></param>
     /// <param name="trisCollider"></param>
-    public abstract void AddTris(int index, List<int> tris, int indexCollider, List<int> trisCollider);
+    public virtual void AddTris(int index, List<int> tris, int indexCollider, List<int> trisCollider, List<int> trisBothFace) 
+    { 
+
+    }
 }

@@ -94,7 +94,7 @@ public class CameraHandler : BaseHandler<CameraHandler, CameraManager>
 
         manager.mainCamera.transform.position = Vector3.MoveTowards(oldPosition, targetPosition, data * Speed);
         //如果点重合了 则回到原来的点
-        if(Vector3.Distance(targetPosition, manager.mainCamera.transform.position) <= minCameraDis)
+        if (Vector3.Distance(targetPosition, manager.mainCamera.transform.position) <= minCameraDis)
         {
             manager.mainCamera.transform.position = Vector3.MoveTowards(oldPosition, targetPosition, -maxCameraDis * data);
         }

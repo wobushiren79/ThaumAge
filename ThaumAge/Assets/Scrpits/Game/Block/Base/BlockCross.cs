@@ -4,60 +4,42 @@ using UnityEngine;
 
 public class BlockCross : Block
 {
-    public override void BuildBlock(List<Vector3> verts, List<Vector2> uvs, List<int> tris,List<Vector3> vertsCollider, List<int> trisCollider)
+    public override void BuildBlock(List<Vector3> verts, List<Vector2> uvs, List<int> tris, List<Vector3> vertsCollider, List<int> trisCollider, List<int> trisBothFace)
     {
+        base.BuildBlock(verts, uvs, tris, vertsCollider, trisCollider, trisBothFace);
+
         BlockTypeEnum blockType = blockData.GetBlockType();
         if (blockType != BlockTypeEnum.None)
         {
-            BuildFace(blockData, position, verts, uvs, tris, vertsCollider, trisCollider);
+            BuildFace(blockData, position, verts, uvs, tris, vertsCollider, trisCollider, trisBothFace);
         }
     }
-    public override void BuildFace(BlockBean blockData, Vector3 corner, List<Vector3> verts, List<Vector2> uvs, List<int> tris, List<Vector3> vertsCollider, List<int> trisCollider)
+
+    public override void AddTris(int index, List<int> tris, int indexCollider, List<int> trisCollider, List<int> trisBothFace)
     {
-        int index = verts.Count;
-        int indexCollider = vertsCollider.Count;
-        AddVerts(corner, verts, vertsCollider);
-        AddUVs(blockData, uvs);
-        AddTris(index, tris, indexCollider, trisCollider);
-    }
+        base.AddTris(index, tris, indexCollider, trisCollider, trisBothFace);
 
-    public override void AddTris(int index, List<int> tris, int indexCollider, List<int> trisCollider)
-    {
-        tris.Add(index + 0);
-        tris.Add(index + 1);
-        tris.Add(index + 2);
+        trisBothFace.Add(index + 0);
+        trisBothFace.Add(index + 1);
+        trisBothFace.Add(index + 2);
 
-        tris.Add(index + 0);
-        tris.Add(index + 2);
-        tris.Add(index + 3);
+        trisBothFace.Add(index + 0);
+        trisBothFace.Add(index + 2);
+        trisBothFace.Add(index + 3);
 
-        tris.Add(index + 0);
-        tris.Add(index + 2);
-        tris.Add(index + 1);
+        trisBothFace.Add(index + 4);
+        trisBothFace.Add(index + 5);
+        trisBothFace.Add(index + 6);
 
-        tris.Add(index + 0);
-        tris.Add(index + 3);
-        tris.Add(index + 2);
-
-        tris.Add(index + 4);
-        tris.Add(index + 5);
-        tris.Add(index + 6);
-
-        tris.Add(index + 4);
-        tris.Add(index + 6);
-        tris.Add(index + 7);
-
-        tris.Add(index + 4);
-        tris.Add(index + 6);
-        tris.Add(index + 5);
-
-        tris.Add(index + 4);
-        tris.Add(index + 7);
-        tris.Add(index + 6);
+        trisBothFace.Add(index + 4);
+        trisBothFace.Add(index + 6);
+        trisBothFace.Add(index + 7);
     }
 
     public override void AddUVs(BlockBean blockData, List<Vector2> uvs)
     {
+        base.AddUVs(blockData, uvs);
+
         BlockInfoBean blockInfo = BlockHandler.Instance.manager.GetBlockInfo(blockData.GetBlockType());
         List<Vector2Int> listData = blockInfo.GetUVPosition();
         Vector2 uvStartPosition;
@@ -87,6 +69,8 @@ public class BlockCross : Block
 
     public override void AddVerts(Vector3 corner, List<Vector3> verts, List<Vector3> vertsCollider)
     {
+        base.AddVerts(corner, verts, vertsCollider);
+
         verts.Add(corner + new Vector3(0.5f, 0, 0));
         verts.Add(corner + new Vector3(0.5f, 1, 0));
         verts.Add(corner + new Vector3(0.5f, 1, 1));
