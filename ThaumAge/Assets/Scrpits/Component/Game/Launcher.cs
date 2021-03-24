@@ -10,6 +10,8 @@ public class Launcher : BaseMonoBehaviour
     void Start()
     {
         WorldCreateHandler.Instance.CreateChunkForRange(1, Vector3Int.zero, 1);
+
+        UIHandler.Instance.manager.OpenUIAndCloseOther<UIGameMain>(UIEnum.GameMain);
     }
 
 }

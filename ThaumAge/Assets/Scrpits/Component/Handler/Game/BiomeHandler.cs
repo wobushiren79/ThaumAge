@@ -1,4 +1,5 @@
-﻿using UnityEditor;
+﻿using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 public class BiomeHandler : BaseHandler<BiomeHandler, BiomeManager>
@@ -14,7 +15,7 @@ public class BiomeHandler : BaseHandler<BiomeHandler, BiomeManager>
         offset2 = new Vector3(UnityEngine.Random.value * 1000, UnityEngine.Random.value * 1000, UnityEngine.Random.value * 1000);
     }
 
-    public BlockTypeEnum CreateBiomeBlockType(Vector3 wPos, int width, int height)
+    public BlockTypeEnum CreateBiomeBlockType(List<Biome> listBiome, Vector3 wPos, int width, int height)
     {
         //y坐标是否在Chunk内
         if (wPos.y >= height)
@@ -24,7 +25,7 @@ public class BiomeHandler : BaseHandler<BiomeHandler, BiomeManager>
 
         BiomeInfoBean biomeInfo = manager.GetBiomeInfo(1);
         //获取当前位置方块随机生成的高度值
-        float genHeight = CreateHeightData(wPos, biomeInfo);
+        int genHeight = GetHeightData(wPos, biomeInfo);
 
         //当前方块位置高于随机生成的高度值时，当前方块类型为空
         if (wPos.y > genHeight)
@@ -34,18 +35,18 @@ public class BiomeHandler : BaseHandler<BiomeHandler, BiomeManager>
         float strongestWeight = 0f;
         int strongestBiomeIndex = 0;
 
-        for (int i = 1; i <= 3; i++)
+
+        for (int i = 1; i <= listBiome.Count; i++)
         {
-            float weight = SimplexNoiseUtil.Get2DPerlin(new Vector2(wPos.x, wPos.z), i * 1234, i * width * 5);
+            float weight = SimplexNoiseUtil.Get2DPerlin(new Vector2(wPos.x, wPos.z), biomeInfo.offset, biomeInfo.scale);
             if (weight > strongestWeight)
             {
 
                 strongestWeight = weight;
                 strongestBiomeIndex = i;
-
             }
         }
-        return BlockTypeEnum.Grass;
+        return listBiome[strongestBiomeIndex].GetBlockType(genHeight);
         ////当前方块位置等于随机生成的高度值时，当前方块类型为草地
         //else if (wPos.y == genHeight)
         //{
@@ -60,7 +61,7 @@ public class BiomeHandler : BaseHandler<BiomeHandler, BiomeManager>
         // return BlockTypeEnum.Stone;
     }
 
-    public int CreateHeightData(Vector3 wPos, BiomeInfoBean biomeInfo)
+    public int GetHeightData(Vector3 wPos, BiomeInfoBean biomeInfo)
     {
 
         //让随机种子，振幅，频率，应用于我们的噪音采样结果

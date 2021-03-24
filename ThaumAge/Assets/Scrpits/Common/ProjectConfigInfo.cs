@@ -14,6 +14,11 @@ public class ProjectConfigInfo
     public static readonly bool IS_OPEN_LOG_MSG = true;
 
     /// <summary>
+    /// 游戏生成版本
+    /// </summary>
+    public readonly static ProjectBuildTypeEnum BUILD_TYPE = ProjectBuildTypeEnum.Release;
+
+    /// <summary>
     /// steamAppId
     /// </summary>
     public readonly static string STEAM_APP_ID = "983170";
