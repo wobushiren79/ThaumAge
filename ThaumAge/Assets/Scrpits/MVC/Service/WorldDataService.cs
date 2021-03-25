@@ -15,17 +15,18 @@ public class WorldDataService : BaseDataStorage<WorldDataBean>
 
     public WorldDataService()
     {
-       
+
     }
 
     /// <summary>
     /// 查询数据
     /// </summary>
     /// <returns></returns>
-    public WorldDataBean QueryData(string userId, WorldTypeEnum worldType)
+    public WorldDataBean QueryData(string userId, WorldTypeEnum worldType, Vector3Int position)
     {
-        string filePath = saveFileName + "_" + EnumUtil.GetEnumName(worldType);
-        return BaseLoadData(userId + "/" + filePath);
+        string worldName = saveFileName + "_" + EnumUtil.GetEnumName(worldType);
+        string fileName = "w_" + position.x + "_" + position.z;
+        return BaseLoadData(userId + "/" + worldName + "/" + fileName);
     }
 
     /// <summary>
@@ -35,17 +36,21 @@ public class WorldDataService : BaseDataStorage<WorldDataBean>
     public void UpdateData(WorldDataBean data)
     {
         WorldTypeEnum worldType = data.GetWorkType();
-        string filePath = saveFileName + "_" + EnumUtil.GetEnumName(worldType);
+        string worldName = saveFileName + "_" + EnumUtil.GetEnumName(worldType);
+        string fileName = "w_" + data.chunkData.position.x + "_" + data.chunkData.position.z;
         FileUtil.CreateDirectory(dataStoragePath + "/" + data.userId);
-        BaseSaveData(data.userId + "/" + filePath, data);
+        FileUtil.CreateDirectory(dataStoragePath + "/" + data.userId + "/" + worldName);
+        if (data.userId != null)
+            BaseSaveData(data.userId + "/" + worldName + "/" + fileName, data);
     }
 
     /// <summary>
     /// 删除数据
     /// </summary>
-    public void DeleteData(string userId, WorldTypeEnum worldType)
+    public void DeleteData(string userId, WorldTypeEnum worldType, Vector3Int position)
     {
-        string filePath = saveFileName + "_" + EnumUtil.GetEnumName(worldType);
-        BaseDeleteFile(userId + "/" + filePath);
+        string worldName = saveFileName + "_" + EnumUtil.GetEnumName(worldType);
+        string fileName = "w_" + position.x + "_" + position.z;
+        BaseDeleteFile(userId + "/" + worldName + "/" + fileName);
     }
 }

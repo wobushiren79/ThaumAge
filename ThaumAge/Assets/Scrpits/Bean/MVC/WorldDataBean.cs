@@ -12,8 +12,7 @@ public class WorldDataBean : BaseBean
 {
     public int workdType = 0;
     public string userId;
-
-    public List<ChunkBean> listChunkData = new List<ChunkBean>();
+    public ChunkBean chunkData;
 
     public WorldTypeEnum GetWorkType()
     {

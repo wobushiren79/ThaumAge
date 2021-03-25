@@ -21,11 +21,9 @@ public class WorldDataModel : BaseMVCModel
     /// 获取游戏数据
     /// </summary>
     /// <returns></returns>
-    public WorldDataBean GetWorldDataData(string userId,WorldTypeEnum worldType)
+    public WorldDataBean GetWorldDataData(string userId, WorldTypeEnum worldType, Vector3Int position)
     {
-        WorldDataBean data = serviceWorldData.QueryData(userId, worldType);
-        if (data == null)
-            data = new WorldDataBean();
+        WorldDataBean data = serviceWorldData.QueryData(userId, worldType, position);
         return data;
     }
 

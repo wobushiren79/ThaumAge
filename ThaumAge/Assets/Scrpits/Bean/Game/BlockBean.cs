@@ -9,7 +9,7 @@ public class BlockBean
     //方块位置
     public Vector3IntBean position;
     //方块数据
-    public string blockData;
+    public string meta;
 
     public BlockBean(BlockTypeEnum blockType, Vector3Int position)
     {
@@ -43,9 +43,9 @@ public class BlockBean
     /// <returns></returns>
     public T GetBlockData<T>()
     {
-        if (CheckUtil.StringIsNull(blockData))
+        if (CheckUtil.StringIsNull(meta))
             return default;
-        T data = JsonUtil.FromJson<T>(blockData);
+        T data = JsonUtil.FromJson<T>(meta);
         return data;
     }
 }

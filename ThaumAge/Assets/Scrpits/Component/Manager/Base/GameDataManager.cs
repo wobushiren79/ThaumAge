@@ -9,7 +9,6 @@ public class GameDataManager : BaseManager,
     //游戏设置
     protected GameConfigBean gameConfig;
     protected UserDataBean userData;
-    protected WorldDataBean worldData;
 
     public GameConfigController controllerForGameConfig;
     public WorldDataController controllerForWorldData;
@@ -38,11 +37,9 @@ public class GameDataManager : BaseManager,
     /// 获取世界数据
     /// </summary>
     /// <returns></returns>
-    public WorldDataBean GetWorldData()
+    public WorldDataBean GetWorldData(string userId, WorldTypeEnum worldType,Vector3Int position)
     {
-        if (worldData == null)
-            worldData = new WorldDataBean();
-        return worldData;
+        return controllerForWorldData.GetWorldData( userId,  worldType, position,  null);
     }
 
     /// <summary>
@@ -67,11 +64,10 @@ public class GameDataManager : BaseManager,
     /// <summary>
     /// 异步保存游戏数据
     /// </summary>
-    public async void  SaveGameDataAsync()
+    public async void SaveGameDataAsync(WorldDataBean worldData)
     {
         await Task.Run(() =>
         {
-            worldData.userId = userData.userId;
             controllerForUserData.SetUserData(userData);
             controllerForWorldData.SetWorldData(worldData, null);
         });

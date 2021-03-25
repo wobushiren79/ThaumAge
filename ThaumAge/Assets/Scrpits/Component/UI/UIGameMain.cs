@@ -15,9 +15,8 @@ public class UIGameMain : BaseUIComponent
 
     public void Save()
     {
-        UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();
-        userData.userId = "1234";
-        GameDataHandler.Instance.manager.SaveGameDataAsync();
+
+
     }
 
     public void Load()

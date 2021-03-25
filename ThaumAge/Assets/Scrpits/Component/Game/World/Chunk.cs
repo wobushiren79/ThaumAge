@@ -25,6 +25,8 @@ public class Chunk : BaseMonoBehaviour
 
     public Vector3Int worldPosition;
 
+    protected WorldDataBean worldData;
+
     public void Awake()
     {
         //获取自身相关组件引用
@@ -57,13 +59,22 @@ public class Chunk : BaseMonoBehaviour
     }
 
     /// <summary>
+    /// 设置世界数据 用于保存
+    /// </summary>
+    /// <param name="worldData"></param>
+    public void SetWorldData(WorldDataBean worldData)
+    {
+        this.worldData = worldData;
+    }
+
+    /// <summary>
     /// 异步构建chunk
     /// </summary>
     public async void BuildChunkForAsync()
     {
         chunkMesh = new Mesh();
         chunkMeshCollider = new Mesh();
-        
+
         //设置mesh的三角形上限
         chunkMesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
         chunkMeshCollider.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
@@ -198,13 +209,26 @@ public class Chunk : BaseMonoBehaviour
     public void SetBlock(Vector3Int worldPosition, BlockTypeEnum blockType)
     {
         Vector3Int blockLocalPosition = worldPosition - this.worldPosition;
+        ChunkBean chunkData = worldData.chunkData;
+        //首先移除方块
         if (mapForBlock.TryGetValue(blockLocalPosition, out Block block))
         {
             mapForBlock.Remove(blockLocalPosition);
         }
+        if (chunkData.dicBlockData.TryGetValue(blockLocalPosition, out BlockBean blockData))
+        {
+            chunkData.dicBlockData.Remove(blockLocalPosition);
+        }
+
+        //再添加新方块
         Block newBlock = BlockHandler.Instance.CreateBlock(this, blockLocalPosition, blockType);
         mapForBlock.Add(blockLocalPosition, newBlock);
+        chunkData.dicBlockData.Add(blockLocalPosition, newBlock.blockData);
+
+        //异步构建chunk
         BuildChunkForAsync();
+        //异步保存数据
+        GameDataHandler.Instance.manager.SaveGameDataAsync(worldData);
     }
 
 }

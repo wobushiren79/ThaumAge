@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Newtonsoft.Json;
+using UnityEngine;
 
 public class JsonUtil : ScriptableObject
 {
@@ -10,7 +11,8 @@ public class JsonUtil : ScriptableObject
     /// <returns></returns>
     public static T FromJson<T>(string strData)
     {
-        T dataBean = JsonUtility.FromJson<T>(strData);
+        // T dataBean = JsonUtility.FromJson<T>(strData);
+        T dataBean = JsonConvert.DeserializeObject<T>(strData);
         return dataBean;
     }
 
@@ -22,7 +24,8 @@ public class JsonUtil : ScriptableObject
     /// <returns></returns>
     public static string ToJson<T>(T dataBean)
     {
-        string json = JsonUtility.ToJson(dataBean);
+        //string json = JsonUtility.ToJson(dataBean);
+        string json = JsonConvert.SerializeObject(dataBean);
         return json;
     }
 

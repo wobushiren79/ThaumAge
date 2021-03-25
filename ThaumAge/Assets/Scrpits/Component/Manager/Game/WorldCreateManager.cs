@@ -82,30 +82,33 @@ public class WorldCreateManager : BaseManager
 
         await Task.Run(() =>
         {
+            UserDataBean userData = gameDataManager.GetUserData();
             //获取数据中的chunk
-            WorldDataBean worldData = gameDataManager.GetWorldData();
-            ChunkBean chunkData = null;
-            for (int i = 0; i < worldData.listChunkData.Count; i++)
+            WorldDataBean worldData = gameDataManager.GetWorldData(userData.userId, WorldTypeEnum.Main, chunkPosition);
+            //如果没有世界数据 则创建一个
+            if (worldData == null)
             {
-                ChunkBean tempChunkData = worldData.listChunkData[i];
-                if (tempChunkData.position.GetVector3Int() == chunkPosition)
-                {
-                    chunkData = tempChunkData;
-                    break;
-                }
+                worldData = new WorldDataBean();
+                worldData.workdType = (int)WorldTypeEnum.Main;
+                worldData.userId = userData.userId;
             }
+
             Dictionary<Vector3Int, BlockBean> dicBlockData = new Dictionary<Vector3Int, BlockBean>();
             //如果有数据 则读取数据
-            if (chunkData != null)
+            if (worldData.chunkData != null)
             {
-                for (int i = 0; i < chunkData.listBlockData.Count; i++)
+                foreach (var itemData in worldData.chunkData.dicBlockData)
                 {
-                    BlockBean blockData = chunkData.listBlockData[i];
+                    BlockBean blockData = itemData.Value;
                     dicBlockData.Add(blockData.position.GetVector3Int(), blockData);
                 }
             }
-            if (chunkData == null)
-                chunkData = new ChunkBean();
+            if (worldData.chunkData == null)
+            {
+                worldData.chunkData = new ChunkBean();
+                worldData.chunkData.position = new Vector3IntBean(chunkPosition);
+            }
+
             //遍历map，生成其中每个Block的信息
             for (int x = 0; x < widthChunk; x++)
             {
@@ -132,6 +135,7 @@ public class WorldCreateManager : BaseManager
                     }
                 }
             }
+            chunk.SetWorldData(worldData);
         });
         callBack?.Invoke(mapForBlock);
     }

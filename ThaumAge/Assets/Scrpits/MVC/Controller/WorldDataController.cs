@@ -27,9 +27,9 @@ public class WorldDataController : BaseMVCController<WorldDataModel, IWorldDataV
     /// </summary>
     /// <param name="action"></param>
     /// <returns></returns>
-    public WorldDataBean GetWorldData(string userId, WorldTypeEnum worldType, Action<WorldDataBean> action)
+    public WorldDataBean GetWorldData(string userId, WorldTypeEnum worldType, Vector3Int position, Action<WorldDataBean> action)
     {
-        WorldDataBean data = GetModel().GetWorldDataData(userId, worldType);
+        WorldDataBean data = GetModel().GetWorldDataData(userId, worldType, position);
         if (data == null)
         {
             GetView().GetWorldDataFail("没有数据", null);
