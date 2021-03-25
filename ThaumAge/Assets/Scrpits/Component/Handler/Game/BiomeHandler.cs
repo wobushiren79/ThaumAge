@@ -10,11 +10,19 @@ public class BiomeHandler : BaseHandler<BiomeHandler, BiomeManager>
 
     public void InitWorldBiomeSeed()
     {
-        offset0 = new Vector3(UnityEngine.Random.value * 1000, UnityEngine.Random.value * 1000, UnityEngine.Random.value * 1000);
-        offset1 = new Vector3(UnityEngine.Random.value * 1000, UnityEngine.Random.value * 1000, UnityEngine.Random.value * 1000);
-        offset2 = new Vector3(UnityEngine.Random.value * 1000, UnityEngine.Random.value * 1000, UnityEngine.Random.value * 1000);
+        offset0 = new Vector3(Random.value * 1000, Random.value * 1000, Random.value * 1000);
+        offset1 = new Vector3(Random.value * 1000, Random.value * 1000, Random.value * 1000);
+        offset2 = new Vector3(Random.value * 1000, Random.value * 1000, Random.value * 1000);
     }
 
+   /// <summary>
+   /// 根据生物生态 创造方块
+   /// </summary>
+   /// <param name="listBiome"></param>
+   /// <param name="wPos"></param>
+   /// <param name="width"></param>
+   /// <param name="height"></param>
+   /// <returns></returns>
     public BlockTypeEnum CreateBiomeBlockType(List<Biome> listBiome, Vector3 wPos, int width, int height)
     {
         //y坐标是否在Chunk内
@@ -23,44 +31,38 @@ public class BiomeHandler : BaseHandler<BiomeHandler, BiomeManager>
             return BlockTypeEnum.None;
         }
 
-        BiomeInfoBean biomeInfo = manager.GetBiomeInfo(1);
+        float strongestWeight = 0f;
+        int strongestBiomeIndex = 0;
+
+        BiomeInfoBean biomeInfo = null;
+        for (int i = 1; i <= listBiome.Count; i++)
+        {
+            BiomeInfoBean tempBiomeInfo = manager.GetBiomeInfo(1);
+            float weight = SimplexNoiseUtil.Get2DPerlin(new Vector2(wPos.x, wPos.z), tempBiomeInfo.offset, tempBiomeInfo.scale);
+            if (weight > strongestWeight)
+            {
+                strongestWeight = weight;
+                strongestBiomeIndex = i;
+                biomeInfo = tempBiomeInfo;
+            }
+        }
         //获取当前位置方块随机生成的高度值
         int genHeight = GetHeightData(wPos, biomeInfo);
-
         //当前方块位置高于随机生成的高度值时，当前方块类型为空
         if (wPos.y > genHeight)
         {
             return BlockTypeEnum.None;
         }
-        float strongestWeight = 0f;
-        int strongestBiomeIndex = 0;
-
-
-        for (int i = 1; i <= listBiome.Count; i++)
-        {
-            float weight = SimplexNoiseUtil.Get2DPerlin(new Vector2(wPos.x, wPos.z), biomeInfo.offset, biomeInfo.scale);
-            if (weight > strongestWeight)
-            {
-
-                strongestWeight = weight;
-                strongestBiomeIndex = i;
-            }
-        }
-        return listBiome[strongestBiomeIndex].GetBlockType(genHeight);
-        ////当前方块位置等于随机生成的高度值时，当前方块类型为草地
-        //else if (wPos.y == genHeight)
-        //{
-        //    return BlockTypeEnum.Grass;
-        //}
-        ////当前方块位置小于随机生成的高度值 且 大于 genHeight - 5时，当前方块类型为泥土
-        //else if (wPos.y < genHeight && wPos.y > genHeight - 5)
-        //{
-        //    return BlockTypeEnum.Dirt;
-        //}
-        ////其他情况，当前方块类型为碎石
-        // return BlockTypeEnum.Stone;
+        Biome biome = listBiome[strongestBiomeIndex];
+        return biome.GetBlockType(genHeight);
     }
 
+    /// <summary>
+    /// 获取高度信息
+    /// </summary>
+    /// <param name="wPos"></param>
+    /// <param name="biomeInfo"></param>
+    /// <returns></returns>
     public int GetHeightData(Vector3 wPos, BiomeInfoBean biomeInfo)
     {
 
