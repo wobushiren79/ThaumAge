@@ -104,7 +104,11 @@ public class SimplexNoiseUtil
         // The result is scaled to return values in the interval [-1,1].
         return 40.0f * (n0 + n1 + n2); // TODO: The scale factor is preliminary!
     }
-
+    public static float Generate(Vector2 position, float offset, float scale)
+    {
+        return Generate((position.x) / scale + offset, (position.y) / scale + offset);
+        //return Mathf.PerlinNoise((position.x) / scale + offset, (position.y) /  scale + offset);
+    }
 
     public static float Generate(float x, float y, float z)
     {
@@ -208,6 +212,24 @@ public class SimplexNoiseUtil
         // The result is scaled to stay just inside [-1,1]
         return 32.0f * (n0 + n1 + n2 + n3); // TODO: The scale factor is preliminary!
     }
+    public static bool Get3DPerlin(Vector3 position, float offset, float scale, float threshold)
+    {
+        float x = (position.x + offset + 0.1f) * scale;
+        float y = (position.y + offset + 0.1f) * scale;
+        float z = (position.z + offset + 0.1f) * scale;
+
+        float AB = Mathf.PerlinNoise(x, y);
+        float BC = Mathf.PerlinNoise(y, z);
+        float AC = Mathf.PerlinNoise(x, z);
+        float BA = Mathf.PerlinNoise(y, x);
+        float CB = Mathf.PerlinNoise(z, y);
+        float CA = Mathf.PerlinNoise(z, x);
+
+        if ((AB + BC + AC + BA + CB + CA) / 6f > threshold)
+            return true;
+        else
+            return false;
+    }
 
     private static byte[] perm = new byte[512] { 151,160,137,91,90,15,
               131,13,201,95,96,53,194,233,7,225,140,36,103,30,69,142,8,99,37,240,21,10,23,
@@ -275,27 +297,7 @@ public class SimplexNoiseUtil
         return ((h & 1) != 0 ? -u : u) + ((h & 2) != 0 ? -v : v) + ((h & 4) != 0 ? -w : w);
     }
 
-    public static float Get2DPerlin(Vector2 position, float offset, float scale)
-    {
-        return Mathf.PerlinNoise((position.x + 0.1f) / scale + offset, (position.y + 0.1f) /  scale + offset);
-    }
 
-    public static bool Get3DPerlin(Vector3 position, float offset, float scale, float threshold)
-    {
-        float x = (position.x + offset + 0.1f) * scale;
-        float y = (position.y + offset + 0.1f) * scale;
-        float z = (position.z + offset + 0.1f) * scale;
 
-        float AB = Mathf.PerlinNoise(x, y);
-        float BC = Mathf.PerlinNoise(y, z);
-        float AC = Mathf.PerlinNoise(x, z);
-        float BA = Mathf.PerlinNoise(y, x);
-        float CB = Mathf.PerlinNoise(z, y);
-        float CA = Mathf.PerlinNoise(z, x);
 
-        if ((AB + BC + AC + BA + CB + CA) / 6f > threshold)
-            return true;
-        else
-            return false;
-    }
 }

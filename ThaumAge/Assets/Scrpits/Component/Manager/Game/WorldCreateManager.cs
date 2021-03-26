@@ -65,10 +65,9 @@ public class WorldCreateManager : BaseManager
         dicChunk.Add(position, chunk);
     }
 
-    public async void CreateChunkBlockDataForAsync(Chunk chunk, Action<Dictionary<Vector3Int, Block>> callBack)
+    public async void CreateChunkBlockDataForAsync(Chunk chunk, Action callBack)
     {
         //初始化Map
-        Dictionary<Vector3Int, Block> mapForBlock = new Dictionary<Vector3Int, Block>();
         Vector3Int chunkPosition = Vector3Int.CeilToInt(chunk.transform.position);
         int halfWidth = widthChunk / 2;
         BiomeManager biomeManager = BiomeHandler.Instance.manager;
@@ -97,18 +96,14 @@ public class WorldCreateManager : BaseManager
             //如果有数据 则读取数据
             if (worldData.chunkData != null)
             {
-                foreach (var itemData in worldData.chunkData.dicBlockData)
-                {
-                    BlockBean blockData = itemData.Value;
-                    dicBlockData.Add(blockData.position.GetVector3Int(), blockData);
-                }
+                dicBlockData = worldData.chunkData.dicBlockData;
             }
-            if (worldData.chunkData == null)
+            else
             {
                 worldData.chunkData = new ChunkBean();
                 worldData.chunkData.position = new Vector3IntBean(chunkPosition);
             }
-
+            //chunk.mapForBlock.Clear();
             //遍历map，生成其中每个Block的信息
             for (int x = 0; x < widthChunk; x++)
             {
@@ -117,27 +112,33 @@ public class WorldCreateManager : BaseManager
                     for (int z = 0; z < widthChunk; z++)
                     {
                         Vector3Int position = new Vector3Int(x - halfWidth, y, z - halfWidth);
-                        Block block;
-                        if (dicBlockData.TryGetValue(position, out BlockBean value))
+                        //检测存档方块
+                        if (dicBlockData.TryGetValue(position, out BlockBean blockInfo))
                         {
                             //生成方块
-                            block = BlockHandler.Instance.CreateBlock(chunk, value);
+                            Block block = BlockHandler.Instance.CreateBlock(chunk, blockInfo);
+                            //添加方块 如果已经有该方块 则先删除，优先使用存档的方块
+                            if (chunk.mapForBlock.ContainsKey(position))
+                            {
+                                chunk.mapForBlock.Remove(position);
+                            }
+                            chunk.mapForBlock.Add(position, block);
                         }
                         else
                         {
                             //获取方块类型
-                            BlockTypeEnum blockType = BiomeHandler.Instance.CreateBiomeBlockType(listBiome, position + chunkPosition, widthChunk, heightChunk);
+                            BlockTypeEnum blockType = BiomeHandler.Instance.CreateBiomeBlockType(chunk, listBiome, position);
                             //生成方块
-                            block = BlockHandler.Instance.CreateBlock(chunk, position, blockType);
+                            Block block = BlockHandler.Instance.CreateBlock(chunk, position, blockType);
+                            //添加方块
+                            chunk.mapForBlock.Add(position, block);
                         }
-                        //添加方块
-                        mapForBlock.Add(position, block);
                     }
                 }
             }
             chunk.SetWorldData(worldData);
         });
-        callBack?.Invoke(mapForBlock);
+        callBack?.Invoke();
     }
 
     /// <summary>

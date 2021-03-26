@@ -29,11 +29,13 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
         objChunk.transform.position = position;
         chunk = objChunk.GetComponent<Chunk>();
         chunk.name = "Chunk_X:" + position.x + "_Y:" + position.y + "_Z:" + position.z;
+        //设置数据
+        chunk.SetData(position, manager.widthChunk, manager.heightChunk);
         //回调
-        Action<Dictionary<Vector3Int, Block>> callBack = (mapBlockData) =>
-        {
+        Action callBack = () =>
+        {       
             //设置数据
-            chunk.SetData(position, mapBlockData, manager.widthChunk, manager.heightChunk);
+            chunk.BuildChunkForAsync();
         };
         //生成方块数据
         manager.CreateChunkBlockDataForAsync(chunk, callBack);

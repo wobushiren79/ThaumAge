@@ -18,7 +18,7 @@ public class Chunk : BaseMonoBehaviour
     protected MeshFilter meshFilter;
 
     //存储着此Chunk内的所有Block信息
-    public Dictionary<Vector3Int, Block> mapForBlock;
+    public Dictionary<Vector3Int, Block> mapForBlock = new Dictionary<Vector3Int, Block>();
 
     public int width = 0;
     public int height = 0;
@@ -49,13 +49,11 @@ public class Chunk : BaseMonoBehaviour
     /// <param name="width"></param>
     /// <param name="height"></param>
     /// <param name="minHeight"></param>
-    public void SetData(Vector3Int worldPosition, Dictionary<Vector3Int, Block> mapForBlock, int width, int height)
+    public void SetData(Vector3Int worldPosition, int width, int height)
     {
         this.worldPosition = worldPosition;
-        this.mapForBlock = mapForBlock;
         this.width = width;
         this.height = height;
-        BuildChunkForAsync();
     }
 
     /// <summary>

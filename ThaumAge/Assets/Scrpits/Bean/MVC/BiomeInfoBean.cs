@@ -17,8 +17,6 @@ public class BiomeInfoBean : BaseBean
     public float amplitude;
     //最小高度
     public int minHeight;
-    //偏移
-    public float offset;
     //大小
     public float scale;
 
