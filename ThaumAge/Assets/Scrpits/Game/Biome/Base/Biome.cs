@@ -17,6 +17,6 @@ public class Biome
     /// <returns></returns>
     public virtual BlockTypeEnum GetBlockType(int genHeight, Vector3Int wPos)
     {
-        return BlockTypeEnum.Grass;
+        return BlockTypeEnum.Stone;
     }
 }

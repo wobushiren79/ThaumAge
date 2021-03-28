@@ -8,8 +8,27 @@ public class BiomePrairie : Biome
 
     }
 
-    public override BlockTypeEnum GetBlockType(int genHeight,  Vector3Int wPos)
+    public override BlockTypeEnum GetBlockType(int genHeight, Vector3Int wPos)
     {
-        return  BlockTypeEnum.Grass;
+        if (wPos.y == genHeight)
+        {
+            // 地表，使用草
+            return BlockTypeEnum.Grass;
+        }
+        if (wPos.y < genHeight && wPos.y > genHeight - 5)
+        {
+            //中使用泥土
+            return BlockTypeEnum.Dirt;
+        }
+        else if (wPos.y == 0)
+        {
+            //基础
+            return BlockTypeEnum.LeavesOak;
+        }
+        else
+        {
+            //其他石头
+            return BlockTypeEnum.Stone;
+        }
     }
 }

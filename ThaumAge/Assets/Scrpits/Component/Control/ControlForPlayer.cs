@@ -93,7 +93,7 @@ public class ControlForPlayer : ControlForBase
                 {
                     Vector3Int position = new Vector3Int((int)Mathf.Floor(hit.point.x), (int)Mathf.Floor(hit.point.y) - 1, (int)Mathf.Floor(hit.point.z));
                     //chunk.RemoveBlock(position);
-                    chunk.SetBlock(position + Vector3Int.up, BlockTypeEnum.Weed);
+                    chunk.SetBlock(position + Vector3Int.up, BlockTypeEnum.Weed_Long);
                 }
                 else if (hit.normal.y < 0)
                 {

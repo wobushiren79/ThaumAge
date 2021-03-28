@@ -50,7 +50,7 @@ public class FileUtil
         catch (Exception e)
         {
             string strError = "读取文件失败-" + e.Message;
-            LogUtil.LogWarning(strError);
+            LogUtil.Log(strError);
             return null;
         }
         finally

@@ -54,6 +54,7 @@ public class BlockCross : Block
         }
         else
         {
+            //随机选一个
             uvStartPosition = Vector2.zero;
         }
         uvs.Add(uvStartPosition);

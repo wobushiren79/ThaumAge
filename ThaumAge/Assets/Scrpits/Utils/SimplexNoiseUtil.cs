@@ -106,9 +106,9 @@ public class SimplexNoiseUtil
     }
     public static float Generate(Vector2 position, float offset, float scale)
     {
-        return Generate((position.x) / scale + offset, (position.y) / scale + offset);
-        //return Mathf.PerlinNoise((position.x) / scale + offset, (position.y) /  scale + offset);
-    }
+        //return Generate((position.x) / scale + offset, (position.y) / scale + offset);
+        return Mathf.PerlinNoise((position.x) / scale + offset, (position.y) /  scale + offset);
+    } 
 
     public static float Generate(float x, float y, float z)
     {
