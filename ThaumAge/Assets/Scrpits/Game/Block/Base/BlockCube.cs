@@ -80,7 +80,7 @@ public class BlockCube : Block
         AddTris(index, indexCollider, reversed, tris,trisCollider);
     }
 
-    public void AddVerts(Vector3 corner, Vector3 up, Vector3 right, List<Vector3> verts, List<Vector3> vertsCollider)
+    public virtual void AddVerts(Vector3 corner, Vector3 up, Vector3 right, List<Vector3> verts, List<Vector3> vertsCollider)
     {
         verts.Add(corner);
         verts.Add(corner + up);

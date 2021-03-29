@@ -1,4 +1,5 @@
 ﻿
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,5 +8,6 @@ using UnityEngine;
 public class ChunkBean
 {
     public Vector3IntBean position;
-    public Dictionary<Vector3Int, BlockBean> dicBlockData= new Dictionary<Vector3Int, BlockBean>();
+    public Dictionary<string, BlockBean> dicBlockData = new Dictionary<string, BlockBean>();
+
 }

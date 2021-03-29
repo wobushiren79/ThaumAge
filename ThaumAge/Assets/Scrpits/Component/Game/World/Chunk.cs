@@ -91,10 +91,13 @@ public class Chunk : BaseMonoBehaviour
 
         await Task.Run(() =>
         {
-            //遍历chunk, 生成其中的每一个Block
-            foreach (var itemData in mapForBlock)
-            {
-                itemData.Value.BuildBlock(verts, uvs, tris, vertsCollider, trisCollider, trisBothFace);
+            lock (this)
+            {    
+                //遍历chunk, 生成其中的每一个Block
+                foreach (var itemData in mapForBlock)
+                {
+                    itemData.Value.BuildBlock(verts, uvs, tris, vertsCollider, trisCollider, trisBothFace);
+                }
             }
         });
 
@@ -213,15 +216,15 @@ public class Chunk : BaseMonoBehaviour
         {
             mapForBlock.Remove(blockLocalPosition);
         }
-        if (chunkData.dicBlockData.TryGetValue(blockLocalPosition, out BlockBean blockData))
+        if (chunkData.dicBlockData.TryGetValue(blockLocalPosition.ToString(), out BlockBean blockData))
         {
-            chunkData.dicBlockData.Remove(blockLocalPosition);
+            chunkData.dicBlockData.Remove(blockLocalPosition.ToString());
         }
 
         //再添加新方块
         Block newBlock = BlockHandler.Instance.CreateBlock(this, blockLocalPosition, blockType);
         mapForBlock.Add(blockLocalPosition, newBlock);
-        chunkData.dicBlockData.Add(blockLocalPosition, newBlock.blockData);
+        chunkData.dicBlockData.Add(blockLocalPosition.ToString(), newBlock.blockData);
 
         //异步构建chunk
         BuildChunkForAsync();

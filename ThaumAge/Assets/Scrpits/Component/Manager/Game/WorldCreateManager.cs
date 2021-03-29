@@ -13,11 +13,95 @@ public class WorldCreateManager : BaseManager
     //存储着世界中所有的Chunk
     public Dictionary<Vector3Int, Chunk> dicChunk = new Dictionary<Vector3Int, Chunk>();
 
+    //所有待修改的方块
+    public List<BlockBean> listUpdateBlock = new List<BlockBean>();
+
     //世界种子
     public int worldSeed;
 
     public int widthChunk = 16;
     public int heightChunk = 256;
+
+
+    /// <summary>
+    /// 处理 更新方块
+    /// </summary>
+    public void HandleForUpdateBlock()
+    {
+        if (listUpdateBlock.Count <= 0)
+            return;
+        //添加修改的方块信息，用于树木或建筑群等用于多个区块的数据
+        List<Chunk> listUpdateChunk = new List<Chunk>();
+        for (int i = 0; i < listUpdateBlock.Count; i++)
+        {
+            BlockBean itemBlock = listUpdateBlock[i];
+            Vector3Int positionBlock = itemBlock.worldPosition.GetVector3Int();
+            Chunk chunk = GetChunkForWorldPosition(positionBlock);
+            if (chunk != null)
+            {
+                //生成方块
+                Block block = BlockHandler.Instance.CreateBlock(chunk, itemBlock);
+                if (!chunk.mapForBlock.ContainsKey(positionBlock))
+                {
+                    chunk.mapForBlock.Add(positionBlock, block);
+                    listUpdateChunk.Add(chunk);
+                }
+                //从更新列表中移除
+                listUpdateBlock.Remove(itemBlock);
+                i--;
+            }
+        }
+        //构建修改过的区块
+        for (int i = 0; i < listUpdateBlock.Count; i++)
+        {
+            Chunk itemChunk = listUpdateChunk[i];
+            itemChunk.BuildChunkForAsync();
+        }
+    }
+
+    /// <summary>
+    /// 处理 读取的方块
+    /// </summary>
+    public void HandleForLoadBlock(Chunk chunk)
+    {
+        GameDataManager gameDataManager = GameDataHandler.Instance.manager;
+        Vector3Int chunkPosition = Vector3Int.CeilToInt(chunk.transform.position);
+        //获取数据中的chunk
+        UserDataBean userData = gameDataManager.GetUserData();
+        WorldDataBean worldData = gameDataManager.GetWorldData(userData.userId, WorldTypeEnum.Main, chunkPosition);
+        //如果没有世界数据 则创建一个
+        if (worldData == null)
+        {
+            worldData = new WorldDataBean();
+            worldData.workdType = (int)WorldTypeEnum.Main;
+            worldData.userId = userData.userId;
+        }
+        Dictionary<string, BlockBean> dicBlockData = new Dictionary<string, BlockBean>();
+        //如果有数据 则读取数据
+        if (worldData.chunkData != null)
+        {
+            dicBlockData = worldData.chunkData.dicBlockData;
+        }
+        else
+        {
+            worldData.chunkData = new ChunkBean();
+            worldData.chunkData.position = new Vector3IntBean(chunkPosition);
+        }
+        foreach (var itemData in dicBlockData)
+        {
+            BlockBean blockData = itemData.Value;
+            //生成方块
+            Block block = BlockHandler.Instance.CreateBlock(chunk, blockData);
+            Vector3Int positionBlock = blockData.position.GetVector3Int();
+            //添加方块 如果已经有该方块 则先删除，优先使用存档的方块
+            if (chunk.mapForBlock.ContainsKey(positionBlock))
+            {
+                chunk.mapForBlock.Remove(positionBlock);
+            }
+            chunk.mapForBlock.Add(positionBlock, block);
+        }
+        chunk.SetWorldData(worldData);
+    }
 
     /// <summary>
     /// 获取区块模型
@@ -43,6 +127,16 @@ public class WorldCreateManager : BaseManager
         return null;
     }
 
+    public Chunk GetChunkForWorldPosition(Vector3Int pos)
+    {
+        int halfWidth = widthChunk / 2;
+
+        int posX = (int)Mathf.Floor((pos.x - halfWidth) / (float)widthChunk) * widthChunk;
+        int posZ = (int)Mathf.Floor((pos.z - halfWidth) / (float)widthChunk) * widthChunk;
+
+        return GetChunk(new Vector3Int(posX, 0, posZ));
+    }
+
     /// <summary>
     /// 设置世界种子
     /// </summary>
@@ -65,10 +159,14 @@ public class WorldCreateManager : BaseManager
         dicChunk.Add(position, chunk);
     }
 
+    /// <summary>
+    /// 异步创建区块方块数据
+    /// </summary>
+    /// <param name="chunk"></param>
+    /// <param name="callBack"></param>
     public async void CreateChunkBlockDataForAsync(Chunk chunk, Action callBack)
     {
         //初始化Map
-        Vector3Int chunkPosition = Vector3Int.CeilToInt(chunk.transform.position);
         int halfWidth = widthChunk / 2;
         BiomeManager biomeManager = BiomeHandler.Instance.manager;
         BlockManager blockManager = BlockHandler.Instance.manager;
@@ -81,30 +179,9 @@ public class WorldCreateManager : BaseManager
 
         await Task.Run(() =>
         {
-            UserDataBean userData = gameDataManager.GetUserData();
-            //获取数据中的chunk
-            WorldDataBean worldData = gameDataManager.GetWorldData(userData.userId, WorldTypeEnum.Main, chunkPosition);
-            //如果没有世界数据 则创建一个
-            if (worldData == null)
-            {
-                worldData = new WorldDataBean();
-                worldData.workdType = (int)WorldTypeEnum.Main;
-                worldData.userId = userData.userId;
-            }
-
-            Dictionary<Vector3Int, BlockBean> dicBlockData = new Dictionary<Vector3Int, BlockBean>();
-            //如果有数据 则读取数据
-            if (worldData.chunkData != null)
-            {
-                dicBlockData = worldData.chunkData.dicBlockData;
-            }
-            else
-            {
-                worldData.chunkData = new ChunkBean();
-                worldData.chunkData.position = new Vector3IntBean(chunkPosition);
-            }
             //chunk.mapForBlock.Clear();
-            //遍历map，生成其中每个Block的信息
+            //遍历map，生成其中每个Block的信息 
+            //生成基础地形数据
             for (int x = 0; x < widthChunk; x++)
             {
                 for (int y = 0; y < heightChunk; y++)
@@ -112,32 +189,26 @@ public class WorldCreateManager : BaseManager
                     for (int z = 0; z < widthChunk; z++)
                     {
                         Vector3Int position = new Vector3Int(x - halfWidth, y, z - halfWidth);
-                        //检测存档方块
-                        if (dicBlockData.TryGetValue(position, out BlockBean blockInfo))
+
+                        //获取方块类型
+                        BlockTypeEnum blockType = BiomeHandler.Instance.CreateBiomeBlockType(chunk, listBiome, position);
+                        //生成方块
+                        Block block = BlockHandler.Instance.CreateBlock(chunk, position, blockType);
+                        //TODO 还可以检测方块的优先级
+                        if (!chunk.mapForBlock.ContainsKey(position))
                         {
-                            //生成方块
-                            Block block = BlockHandler.Instance.CreateBlock(chunk, blockInfo);
-                            //添加方块 如果已经有该方块 则先删除，优先使用存档的方块
-                            if (chunk.mapForBlock.ContainsKey(position))
-                            {
-                                chunk.mapForBlock.Remove(position);
-                            }
-                            chunk.mapForBlock.Add(position, block);
-                        }
-                        else
-                        {
-                            //获取方块类型
-                            BlockTypeEnum blockType = BiomeHandler.Instance.CreateBiomeBlockType(chunk, listBiome, position);
-                            //生成方块
-                            Block block = BlockHandler.Instance.CreateBlock(chunk, position, blockType);
                             //添加方块
                             chunk.mapForBlock.Add(position, block);
                         }
                     }
                 }
             }
-            chunk.SetWorldData(worldData);
+            //处理更新方块
+            HandleForUpdateBlock();
+            //处理存档方块 优先使用存档方块
+            HandleForLoadBlock(chunk);
         });
+
         callBack?.Invoke();
     }
 

@@ -14,7 +14,7 @@ public class BlockHandler : BaseHandler<BlockHandler, BlockManager>
     public Block CreateBlock(Chunk chunk, Vector3Int position, BlockTypeEnum blockType)
     {
         //设置数据
-        BlockBean blockData = new BlockBean(blockType, position);
+        BlockBean blockData = new BlockBean(blockType, position, position + chunk.worldPosition);
         return CreateBlock(chunk, blockData);
     }
 

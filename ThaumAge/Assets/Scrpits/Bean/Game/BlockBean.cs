@@ -8,13 +8,21 @@ public class BlockBean
     public long blockId;
     //方块位置
     public Vector3IntBean position;
+    //方块的世界坐标
+    public Vector3IntBean worldPosition;
     //方块数据
     public string meta;
 
-    public BlockBean(BlockTypeEnum blockType, Vector3Int position)
+    public BlockBean()
+    {
+
+    }
+
+    public BlockBean(BlockTypeEnum blockType, Vector3Int position,Vector3Int worldPosition)
     {
         this.blockId = (long)blockType;
         this.position = new Vector3IntBean(position);
+        this.worldPosition= new Vector3IntBean(worldPosition);
     }
 
     /// <summary>

@@ -9,6 +9,11 @@ public class Vector3IntBean
     public int y;
     public int z;
 
+    public Vector3IntBean()
+    {
+
+    }
+
     public Vector3IntBean(Vector3Int vector)
     {
         this.x = vector.x;

@@ -1,29 +1,22 @@
 public enum BlockTypeEnum
 {
-    //空
-    None = -1,
-    //地基
-    Foundation = 1,
-    //草地
-    Grass = 2,
-    //沙子
-    Sand = 3,
-    //泥土
-    Dirt = 4,
-    //石头
-    Stone = 5,
+    None = -1,    //空
+    Foundation = 1,    //地基
+    Grass = 2,    //草地
+    Sand = 3,    //沙子
+    Dirt = 4,    //泥土
+    Stone = 5,    //石头
 
+    Oak = 1001,//橡木
+    LeavesOak = 2001,    //橡木叶子
 
-    //橡木
-    Oak = 1001,
+    Weed_Long = 3001,    //杂草长
+    Weed_Normal = 3002,    //杂草中等
+    Weed_Short = 3003,    //杂草短
 
-    //橡木叶子
-    LeavesOak = 2001,
+    Sunflower = 3011,    //太阳花
+    Rose = 3012,    //玫瑰
+    Chrysanthemum = 3013,    //菊花
 
-    //杂草长
-    Weed_Long = 3001,
-    //杂草中等
-    Weed_Normal = 3002,
-    //杂草短
-    Weed_Short = 3003,
+    Cactus = 4001,    //仙人掌
 }

@@ -18,7 +18,7 @@ public abstract class Block
     public Block(BlockTypeEnum blockType)
     {
         if (blockData == null)
-            blockData = new BlockBean(blockType,Vector3Int.zero);
+            blockData = new BlockBean(blockType,Vector3Int.zero, Vector3Int.zero);
     }
 
     /// <summary>

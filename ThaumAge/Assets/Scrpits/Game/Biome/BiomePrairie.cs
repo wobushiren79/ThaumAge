@@ -23,7 +23,7 @@ public class BiomePrairie : Biome
         else if (wPos.y == 0)
         {
             //基础
-            return BlockTypeEnum.LeavesOak;
+            return BlockTypeEnum.Foundation;
         }
         else
         {
