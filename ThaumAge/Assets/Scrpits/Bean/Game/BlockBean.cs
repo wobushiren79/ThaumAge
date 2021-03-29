@@ -7,7 +7,7 @@ public class BlockBean
     //方块类型
     public long blockId;
     //方块位置
-    public Vector3IntBean position;
+    public Vector3IntBean localPosition;
     //方块的世界坐标
     public Vector3IntBean worldPosition;
     //方块数据
@@ -18,10 +18,10 @@ public class BlockBean
 
     }
 
-    public BlockBean(BlockTypeEnum blockType, Vector3Int position,Vector3Int worldPosition)
+    public BlockBean(BlockTypeEnum blockType, Vector3Int localposition,Vector3Int worldPosition)
     {
         this.blockId = (long)blockType;
-        this.position = new Vector3IntBean(position);
+        this.localPosition = new Vector3IntBean(localposition);
         this.worldPosition= new Vector3IntBean(worldPosition);
     }
 

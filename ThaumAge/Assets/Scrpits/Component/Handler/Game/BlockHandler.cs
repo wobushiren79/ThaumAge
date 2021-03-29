@@ -39,7 +39,7 @@ public class BlockHandler : BaseHandler<BlockHandler, BlockManager>
             string blockShapeName = EnumUtil.GetEnumName(blockShape);
             block = ReflexUtil.CreateInstance<Block>("Block" + blockShapeName);
         }
-        block.SetData(chunk, blockData.position.GetVector3Int(), blockData);
+        block.SetData(chunk, blockData.localPosition.GetVector3Int(), blockData);
         return block;
     }
 

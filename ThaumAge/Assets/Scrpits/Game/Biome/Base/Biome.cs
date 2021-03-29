@@ -15,7 +15,7 @@ public class Biome
     /// </summary>
     /// <param name="genHeight"></param>
     /// <returns></returns>
-    public virtual BlockTypeEnum GetBlockType(int genHeight, Vector3Int wPos)
+    public virtual BlockTypeEnum GetBlockType(int genHeight,Vector3Int localPos, Vector3Int wPos)
     {
         return BlockTypeEnum.Stone;
     }

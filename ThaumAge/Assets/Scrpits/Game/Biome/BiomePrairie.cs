@@ -8,10 +8,12 @@ public class BiomePrairie : Biome
 
     }
 
-    public override BlockTypeEnum GetBlockType(int genHeight, Vector3Int wPos)
+    public override BlockTypeEnum GetBlockType(int genHeight, Vector3Int localPos, Vector3Int wPos)
     {
         if (wPos.y == genHeight)
         {
+            BlockBean blockData = new BlockBean(BlockTypeEnum.Weed_Normal, Vector3Int.zero, wPos + Vector3Int.up);
+            WorldCreateHandler.Instance.manager.listUpdateBlock.Add(blockData);
             // 地表，使用草
             return BlockTypeEnum.Grass;
         }

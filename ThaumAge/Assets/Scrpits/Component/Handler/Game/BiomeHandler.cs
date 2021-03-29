@@ -61,7 +61,7 @@ public class BiomeHandler : BaseHandler<BiomeHandler, BiomeManager>
         }
         Biome biome = listBiome[strongestBiomeIndex];
         //获取方块
-        return biome.GetBlockType(genHeight, wPos);
+        return biome.GetBlockType(genHeight, blockLocPosition, wPos);
     }
 
     /// <summary>
