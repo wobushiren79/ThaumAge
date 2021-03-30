@@ -5,8 +5,7 @@ using UnityEngine.UI;
 
 public class Test : BaseMonoBehaviour
 {
-    public int x;
-    public int y;
+    public int randomSeed;
     public void Start()
     {
 
@@ -14,24 +13,19 @@ public class Test : BaseMonoBehaviour
 
     public void Test1()
     {
-        Vector3Int pos = new Vector3Int(x, 0, y);
-        int posX;
-        if (pos.x < 0)
-        {
-             posX = Mathf.FloorToInt((pos.x - 7) / 16) * 16;
-        }
-        else
-        {
-             posX = Mathf.FloorToInt((pos.x + 8) / 16) * 16;
-        }
+        System.Random random = new System.Random(randomSeed);
+        int randomNumber1 = random.Next(0, 1000);
+        int randomNumber2 = random.Next(0, 100);
+        int randomNumber3 = random.Next(0, 10);
+        int randomNumber4 = random.Next(0, 10000);
+        int randomNumber5 = random.Next(0, 100000);
 
-        int posZ = Mathf.FloorToInt((pos.z - 7) / 16) * 16;
-        LogUtil.Log("pos:" + posX);
+        LogUtil.Log(randomNumber1 + " " + randomNumber2 + " " + randomNumber3 + " " + randomNumber4 + " " + randomNumber5);
     }
 
     public void OnGUI()
     {
-        if (GUI.Button(new Rect(new Vector2(0,0),new Vector2(50,50)), "测试"))
+        if (GUI.Button(new Rect(new Vector2(0, 0), new Vector2(50, 50)), "测试"))
         {
             Test1();
         }

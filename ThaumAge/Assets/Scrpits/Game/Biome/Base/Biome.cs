@@ -10,6 +10,35 @@ public class Biome
         this.biomeType = biomeType;
     }
 
+    public struct TreeData 
+    {
+        public int addRateMin;
+        public int addRateMax;
+        public int minHeight;
+        public int maxHeight;
+        public BlockTypeEnum treeTrunk;//树干
+        public BlockTypeEnum treeLeaves;//树叶
+    }
+
+    public struct WeedData 
+    {
+        public int addRateMin;
+        public int addRateMax;
+    }
+
+    public struct Cactus
+    {
+        public int addRateMin;
+        public int addRateMax;
+    }
+
+    public struct Flowers
+    {
+        public int addRateMin;
+        public int addRateMax;
+    }
+
+
     /// <summary>
     /// 获取方块类型
     /// </summary>
@@ -20,23 +49,32 @@ public class Biome
         return BlockTypeEnum.Stone;
     }
 
-    public virtual void AddTree(Vector3Int startPosition)
+    /// <summary>
+    /// 增加普通的树
+    /// </summary>
+    /// <param name="startPosition"></param>
+    /// <param name="treeData"></param>
+    public virtual void AddTree(Vector3Int startPosition, TreeData treeData)
     {
-        int addRate = WorldCreateHandler.Instance.manager.worldRandom.Next(0, 100);
-        if (addRate < 2)
+        int worldSeed = WorldCreateHandler.Instance.manager.GetWorldSeed();
+        System.Random random = new System.Random(worldSeed * startPosition.x * startPosition.y * startPosition.z);
+        int addRate = random.Next(0, treeData.addRateMax);
+        if (addRate < treeData.addRateMin)
         {
             for (int i = 0; i < 5; i++)
             {
-                BlockBean blockData = new BlockBean(BlockTypeEnum.Oak, Vector3Int.zero, startPosition + Vector3Int.up * (i + 1));
+                BlockBean blockData = new BlockBean(treeData.treeTrunk, Vector3Int.zero, startPosition + Vector3Int.up * (i + 1));
                 WorldCreateHandler.Instance.manager.listUpdateBlock.Add(blockData);
             }
         }
     }
 
-    public virtual void AddWeed(Vector3Int startPosition)
+    public virtual void AddWeed(Vector3Int startPosition, WeedData weedData)
     {
-        int addRate = WorldCreateHandler.Instance.manager.worldRandom.Next(0, 100);
-        if (addRate < 10)
+        int worldSeed = WorldCreateHandler.Instance.manager.GetWorldSeed();
+        System.Random random = new System.Random(worldSeed * startPosition.x * startPosition.y * startPosition.z);
+        int addRate = random.Next(0, weedData.addRateMax);
+        if (addRate < weedData.addRateMin)
         {
             BlockBean blockData = new BlockBean(BlockTypeEnum.Weed_Normal, Vector3Int.zero, startPosition + Vector3Int.up);
             WorldCreateHandler.Instance.manager.listUpdateBlock.Add(blockData);

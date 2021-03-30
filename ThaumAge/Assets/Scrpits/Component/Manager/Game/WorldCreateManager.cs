@@ -17,9 +17,7 @@ public class WorldCreateManager : BaseManager
     public List<BlockBean> listUpdateBlock = new List<BlockBean>();
 
     //世界种子
-    public int worldSeed;
-    //世界随机
-    public System.Random worldRandom;
+    protected int worldSeed;
 
     public int widthChunk = 16;
     public int heightChunk = 256;
@@ -160,6 +158,16 @@ public class WorldCreateManager : BaseManager
     }
 
     /// <summary>
+    /// 获取世界种子
+    /// </summary>
+    /// <returns></returns>
+    public int GetWorldSeed() 
+    {
+        return worldSeed;
+    }
+
+
+    /// <summary>
     /// 设置世界种子
     /// </summary>
     /// <param name="worldSeed"></param>
@@ -168,10 +176,11 @@ public class WorldCreateManager : BaseManager
         this.worldSeed = worldSeed;
         //初始化随机种子
         UnityEngine.Random.InitState(worldSeed);
-        worldRandom = new System.Random(worldSeed);
         //初始化生态种子
         BiomeHandler.Instance.InitWorldBiomeSeed();
     }
+
+
 
     /// <summary>
     /// 增加区域

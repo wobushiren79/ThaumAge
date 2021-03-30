@@ -12,8 +12,8 @@ public class BiomePrairie : Biome
     {
         if (wPos.y == genHeight)
         {
-            AddWeed(wPos);
-            AddTree(wPos);
+            AddWeed(wPos,new WeedData());
+            AddTree(wPos,new TreeData());
             // 地表，使用草
             return BlockTypeEnum.Grass;
         }
