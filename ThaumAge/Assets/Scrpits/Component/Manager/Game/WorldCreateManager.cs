@@ -46,16 +46,13 @@ public class WorldCreateManager : BaseManager
                 Block block = BlockHandler.Instance.CreateBlock(chunk, itemBlock);
                 if (chunk.mapForBlock.TryGetValue(positionBlockLocal, out Block value))
                 {
-                
+                    chunk.mapForBlock.Remove(positionBlockLocal);
                 }
-                else
+                chunk.mapForBlock.Add(positionBlockLocal, block);
+                //添加需要更新的chunk
+                if (!listUpdateChunk.Contains(chunk))
                 {
-                    chunk.mapForBlock.Add(positionBlockLocal, block);
-                    //添加需要更新的chunk
-                    if (!listUpdateChunk.Contains(chunk))
-                    {
-                        listUpdateChunk.Add(chunk);
-                    }
+                    listUpdateChunk.Add(chunk);
                 }
                 //从更新列表中移除
                 listUpdateBlock.Remove(itemBlock);
@@ -72,7 +69,7 @@ public class WorldCreateManager : BaseManager
     /// <summary>
     /// 处理 读取的方块
     /// </summary>
-    public void HandleForLoadBlock(Chunk chunk,Vector3Int chunkPosition)
+    public void HandleForLoadBlock(Chunk chunk, Vector3Int chunkPosition)
     {
         GameDataManager gameDataManager = GameDataHandler.Instance.manager;
         //获取数据中的chunk
@@ -139,10 +136,24 @@ public class WorldCreateManager : BaseManager
     public Chunk GetChunkForWorldPosition(Vector3Int pos)
     {
         int halfWidth = widthChunk / 2;
-
-        int posX = Mathf.FloorToInt((pos.x - halfWidth) / (float)widthChunk) * widthChunk;
-        int posZ = Mathf.FloorToInt((pos.z - halfWidth) / (float)widthChunk) * widthChunk;
-
+        int posX;
+        int posZ;
+        if (pos.x < 0)
+        {
+            posX = Mathf.FloorToInt((pos.x - halfWidth + 1) / widthChunk) * widthChunk;
+        }
+        else
+        {
+            posX = Mathf.FloorToInt((pos.x + halfWidth) / widthChunk) * widthChunk;
+        }
+        if (pos.z < 0)
+        {
+            posZ = Mathf.FloorToInt((pos.z - halfWidth + 1) / widthChunk) * widthChunk;
+        }
+        else
+        {
+            posZ = Mathf.FloorToInt((pos.z + halfWidth) / widthChunk) * widthChunk;
+        }
         return GetChunk(new Vector3Int(posX, 0, posZ));
     }
 
