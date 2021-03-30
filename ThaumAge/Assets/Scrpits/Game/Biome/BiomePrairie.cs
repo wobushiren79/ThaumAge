@@ -12,8 +12,8 @@ public class BiomePrairie : Biome
     {
         if (wPos.y == genHeight)
         {
-            BlockBean blockData = new BlockBean(BlockTypeEnum.Weed_Normal, Vector3Int.zero, wPos + Vector3Int.up);
-            WorldCreateHandler.Instance.manager.listUpdateBlock.Add(blockData);
+            AddWeed(wPos);
+            AddTree(wPos);
             // 地表，使用草
             return BlockTypeEnum.Grass;
         }
