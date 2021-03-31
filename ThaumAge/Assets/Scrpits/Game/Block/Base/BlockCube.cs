@@ -22,36 +22,33 @@ public class BlockCube : Block
     /// <param name="verts"></param>
     /// <param name="uvs"></param>
     /// <param name="tris"></param>
-    public override void BuildBlock(
-        List<Vector3> verts, List<Vector2> uvs, List<int> tris,
-        List<Vector3> vertsCollider, List<int> trisCollider,
-        List<int> trisBothFace)
+    public override void BuildBlock(Chunk.ChunkData chunkData)
     {
-        base.BuildBlock(verts, uvs, tris, vertsCollider, trisCollider, trisBothFace);
+        base.BuildBlock(chunkData);
 
         BlockTypeEnum blockType = blockData.GetBlockType();
         if (blockType != BlockTypeEnum.None)
         {
             //Left
             if (CheckNeedBuildFace(position + new Vector3Int(-1, 0, 0)))
-                BuildFace(DirectionEnum.Left,  blockData, position, Vector3.up, Vector3.forward, false, verts, uvs, tris, vertsCollider, trisCollider);
+                BuildFace(DirectionEnum.Left, blockData, position, Vector3.up, Vector3.forward, false, chunkData);
             //Right
             if (CheckNeedBuildFace(position + new Vector3Int(1, 0, 0)))
-                BuildFace(DirectionEnum.Right, blockData, position + new Vector3Int(1, 0, 0), Vector3.up, Vector3.forward, true, verts, uvs, tris, vertsCollider, trisCollider);
+                BuildFace(DirectionEnum.Right, blockData, position + new Vector3Int(1, 0, 0), Vector3.up, Vector3.forward, true, chunkData);
 
             //Bottom
             if (CheckNeedBuildFace(position + new Vector3Int(0, -1, 0)))
-                BuildFace(DirectionEnum.Down, blockData, position, Vector3.forward, Vector3.right, false, verts, uvs, tris, vertsCollider, trisCollider);
+                BuildFace(DirectionEnum.Down, blockData, position, Vector3.forward, Vector3.right, false, chunkData);
             //Top
             if (CheckNeedBuildFace(position + new Vector3Int(0, 1, 0)))
-                BuildFace(DirectionEnum.UP, blockData, position + new Vector3Int(0, 1, 0), Vector3.forward, Vector3.right, true, verts, uvs, tris, vertsCollider, trisCollider);
+                BuildFace(DirectionEnum.UP, blockData, position + new Vector3Int(0, 1, 0), Vector3.forward, Vector3.right, true, chunkData);
 
             //Front
             if (CheckNeedBuildFace(position + new Vector3Int(0, 0, -1)))
-                BuildFace(DirectionEnum.Front, blockData, position, Vector3.up, Vector3.right, true, verts, uvs, tris, vertsCollider, trisCollider);
+                BuildFace(DirectionEnum.Front, blockData, position, Vector3.up, Vector3.right, true, chunkData);
             //Back
             if (CheckNeedBuildFace(position + new Vector3Int(0, 0, 1)))
-                BuildFace(DirectionEnum.Back, blockData, position + new Vector3Int(0, 0, 1), Vector3.up, Vector3.right, false, verts, uvs, tris, vertsCollider, trisCollider);
+                BuildFace(DirectionEnum.Back, blockData, position + new Vector3Int(0, 0, 1), Vector3.up, Vector3.right, false, chunkData);
         }
     }
 
@@ -69,31 +66,27 @@ public class BlockCube : Block
     /// <param name="tris"></param>
     /// <param name="vertsCollider"></param>
     /// <param name="trisCollider"></param>
-    public void BuildFace(DirectionEnum direction, BlockBean blockData, Vector3 corner, Vector3 up, Vector3 right, bool reversed,
-        List<Vector3> verts, List<Vector2> uvs, List<int> tris, 
-        List<Vector3> vertsCollider, List<int> trisCollider)
+    public void BuildFace(DirectionEnum direction, BlockBean blockData, Vector3 corner, Vector3 up, Vector3 right, bool reversed, Chunk.ChunkData chunkData)
     {
-        int index = verts.Count;
-        int indexCollider = vertsCollider.Count;
-        AddVerts(corner, up, right, verts,vertsCollider);
-        AddUVs(direction, blockData, uvs);
-        AddTris(index, indexCollider, reversed, tris,trisCollider);
+        AddTris(reversed, chunkData);
+        AddVerts(corner, up, right, chunkData);
+        AddUVs(direction, blockData, chunkData);
     }
 
-    public virtual void AddVerts(Vector3 corner, Vector3 up, Vector3 right, List<Vector3> verts, List<Vector3> vertsCollider)
+    public virtual void AddVerts(Vector3 corner, Vector3 up, Vector3 right, Chunk.ChunkData chunkData)
     {
-        verts.Add(corner);
-        verts.Add(corner + up);
-        verts.Add(corner + up + right);
-        verts.Add(corner + right);
+        chunkData.verts.Add(corner);
+        chunkData.verts.Add(corner + up);
+        chunkData.verts.Add(corner + up + right);
+        chunkData.verts.Add(corner + right);
 
-        vertsCollider.Add(corner);
-        vertsCollider.Add(corner + up);
-        vertsCollider.Add(corner + up + right);
-        vertsCollider.Add(corner + right);
+        chunkData.vertsCollider.Add(corner);
+        chunkData.vertsCollider.Add(corner + up);
+        chunkData.vertsCollider.Add(corner + up + right);
+        chunkData.vertsCollider.Add(corner + right);
     }
 
-    public void AddUVs(DirectionEnum direction, BlockBean blockData, List<Vector2> uvs)
+    public void AddUVs(DirectionEnum direction, BlockBean blockData, Chunk.ChunkData chunkData)
     {
         BlockInfoBean blockInfo = BlockHandler.Instance.manager.GetBlockInfo(blockData.GetBlockType());
         List<Vector2Int> listData = blockInfo.GetUVPosition();
@@ -127,49 +120,51 @@ public class BlockCube : Block
         {
             uvStartPosition = Vector2.zero;
         }
-        uvs.Add(uvStartPosition);
-        uvs.Add(uvStartPosition + new Vector2(0, uvWidth));
-        uvs.Add(uvStartPosition + new Vector2(uvWidth, uvWidth));
-        uvs.Add(uvStartPosition + new Vector2(uvWidth, 0));
+        chunkData.uvs.Add(uvStartPosition);
+        chunkData.uvs.Add(uvStartPosition + new Vector2(0, uvWidth));
+        chunkData.uvs.Add(uvStartPosition + new Vector2(uvWidth, uvWidth));
+        chunkData.uvs.Add(uvStartPosition + new Vector2(uvWidth, 0));
     }
 
-    public void AddTris(int index, int indexCollider, bool reversed, List<int> tris, List<int> trisCollider)
+    public void AddTris(bool reversed, Chunk.ChunkData chunkData)
     {
+        int index = chunkData.verts.Count;
+        int indexCollider = chunkData.vertsCollider.Count;
         if (reversed)
         {
-            tris.Add(index + 0);
-            tris.Add(index + 1);
-            tris.Add(index + 2);
+            chunkData.tris.Add(index + 0);
+            chunkData.tris.Add(index + 1);
+            chunkData.tris.Add(index + 2);
 
-            tris.Add(index + 0);
-            tris.Add(index + 2);
-            tris.Add(index + 3);
+            chunkData.tris.Add(index + 0);
+            chunkData.tris.Add(index + 2);
+            chunkData.tris.Add(index + 3);
 
-            trisCollider.Add(indexCollider + 0);
-            trisCollider.Add(indexCollider + 1);
-            trisCollider.Add(indexCollider + 2);
+            chunkData.trisCollider.Add(indexCollider + 0);
+            chunkData.trisCollider.Add(indexCollider + 1);
+            chunkData.trisCollider.Add(indexCollider + 2);
 
-            trisCollider.Add(indexCollider + 0);
-            trisCollider.Add(indexCollider + 2);
-            trisCollider.Add(indexCollider + 3);
+            chunkData.trisCollider.Add(indexCollider + 0);
+            chunkData.trisCollider.Add(indexCollider + 2);
+            chunkData.trisCollider.Add(indexCollider + 3);
         }
         else
         {
-            tris.Add(index + 0);
-            tris.Add(index + 2);
-            tris.Add(index + 1);
+            chunkData.tris.Add(index + 0);
+            chunkData.tris.Add(index + 2);
+            chunkData.tris.Add(index + 1);
 
-            tris.Add(index + 0);
-            tris.Add(index + 3);
-            tris.Add(index + 2);
+            chunkData.tris.Add(index + 0);
+            chunkData.tris.Add(index + 3);
+            chunkData.tris.Add(index + 2);
 
-            trisCollider.Add(indexCollider + 0);
-            trisCollider.Add(indexCollider + 2);
-            trisCollider.Add(indexCollider + 1);
+            chunkData.trisCollider.Add(indexCollider + 0);
+            chunkData.trisCollider.Add(indexCollider + 2);
+            chunkData.trisCollider.Add(indexCollider + 1);
 
-            trisCollider.Add(indexCollider + 0);
-            trisCollider.Add(indexCollider + 3);
-            trisCollider.Add(indexCollider + 2);
+            chunkData.trisCollider.Add(indexCollider + 0);
+            chunkData.trisCollider.Add(indexCollider + 3);
+            chunkData.trisCollider.Add(indexCollider + 2);
         }
     }
 

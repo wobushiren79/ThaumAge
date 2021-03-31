@@ -4,41 +4,43 @@ using UnityEngine;
 
 public class BlockCross : Block
 {
-    public override void BuildBlock(List<Vector3> verts, List<Vector2> uvs, List<int> tris, List<Vector3> vertsCollider, List<int> trisCollider, List<int> trisBothFace)
+    public override void BuildBlock(Chunk.ChunkData chunkData)
     {
-        base.BuildBlock(verts, uvs, tris, vertsCollider, trisCollider, trisBothFace);
+        base.BuildBlock(chunkData);
 
         BlockTypeEnum blockType = blockData.GetBlockType();
         if (blockType != BlockTypeEnum.None)
         {
-            BuildFace(blockData, position, verts, uvs, tris, vertsCollider, trisCollider, trisBothFace);
+            BuildFace(blockData, position, chunkData);
         }
     }
 
-    public override void AddTris(int index, List<int> tris, int indexCollider, List<int> trisCollider, List<int> trisBothFace)
+    public override void AddTris(Chunk.ChunkData chunkData)
     {
-        base.AddTris(index, tris, indexCollider, trisCollider, trisBothFace);
+        base.AddTris(chunkData);
 
-        trisBothFace.Add(index + 0);
-        trisBothFace.Add(index + 1);
-        trisBothFace.Add(index + 2);
+        int index = chunkData.verts.Count;
 
-        trisBothFace.Add(index + 0);
-        trisBothFace.Add(index + 2);
-        trisBothFace.Add(index + 3);
+        chunkData.trisBothFace.Add(index + 0);
+        chunkData.trisBothFace.Add(index + 1);
+        chunkData.trisBothFace.Add(index + 2);
 
-        trisBothFace.Add(index + 4);
-        trisBothFace.Add(index + 5);
-        trisBothFace.Add(index + 6);
+        chunkData.trisBothFace.Add(index + 0);
+        chunkData.trisBothFace.Add(index + 2);
+        chunkData.trisBothFace.Add(index + 3);
 
-        trisBothFace.Add(index + 4);
-        trisBothFace.Add(index + 6);
-        trisBothFace.Add(index + 7);
+        chunkData.trisBothFace.Add(index + 4);
+        chunkData.trisBothFace.Add(index + 5);
+        chunkData.trisBothFace.Add(index + 6);
+
+        chunkData.trisBothFace.Add(index + 4);
+        chunkData.trisBothFace.Add(index + 6);
+        chunkData.trisBothFace.Add(index + 7);
     }
 
-    public override void AddUVs(BlockBean blockData, List<Vector2> uvs)
+    public override void AddUVs(BlockBean blockData, Chunk.ChunkData chunkData)
     {
-        base.AddUVs(blockData, uvs);
+        base.AddUVs(blockData, chunkData);
 
         BlockInfoBean blockInfo = BlockHandler.Instance.manager.GetBlockInfo(blockData.GetBlockType());
         List<Vector2Int> listData = blockInfo.GetUVPosition();
@@ -57,30 +59,30 @@ public class BlockCross : Block
             //随机选一个
             uvStartPosition = Vector2.zero;
         }
-        uvs.Add(uvStartPosition);
-        uvs.Add(uvStartPosition + new Vector2(0, uvWidth));
-        uvs.Add(uvStartPosition + new Vector2(uvWidth, uvWidth));
-        uvs.Add(uvStartPosition + new Vector2(uvWidth, 0));
+        chunkData.uvs.Add(uvStartPosition);
+        chunkData.uvs.Add(uvStartPosition + new Vector2(0, uvWidth));
+        chunkData.uvs.Add(uvStartPosition + new Vector2(uvWidth, uvWidth));
+        chunkData.uvs.Add(uvStartPosition + new Vector2(uvWidth, 0));
 
-        uvs.Add(uvStartPosition);
-        uvs.Add(uvStartPosition + new Vector2(0, uvWidth));
-        uvs.Add(uvStartPosition + new Vector2(uvWidth, uvWidth));
-        uvs.Add(uvStartPosition + new Vector2(uvWidth, 0));
+        chunkData.uvs.Add(uvStartPosition);
+        chunkData.uvs.Add(uvStartPosition + new Vector2(0, uvWidth));
+        chunkData.uvs.Add(uvStartPosition + new Vector2(uvWidth, uvWidth));
+        chunkData.uvs.Add(uvStartPosition + new Vector2(uvWidth, 0));
     }
 
-    public override void AddVerts(Vector3 corner, List<Vector3> verts, List<Vector3> vertsCollider)
+    public override void AddVerts(Vector3 corner, Chunk.ChunkData chunkData)
     {
-        base.AddVerts(corner, verts, vertsCollider);
+        base.AddVerts(corner, chunkData);
 
-        verts.Add(corner + new Vector3(0.5f, 0, 0));
-        verts.Add(corner + new Vector3(0.5f, 1, 0));
-        verts.Add(corner + new Vector3(0.5f, 1, 1));
-        verts.Add(corner + new Vector3(0.5f, 0, 1));
+        chunkData.verts.Add(corner + new Vector3(0.5f, 0, 0));
+        chunkData.verts.Add(corner + new Vector3(0.5f, 1, 0));
+        chunkData.verts.Add(corner + new Vector3(0.5f, 1, 1));
+        chunkData.verts.Add(corner + new Vector3(0.5f, 0, 1));
 
-        verts.Add(corner + new Vector3(0, 0, 0.5f));
-        verts.Add(corner + new Vector3(0, 1, 0.5f));
-        verts.Add(corner + new Vector3(1, 1, 0.5f));
-        verts.Add(corner + new Vector3(1, 0, 0.5f));
+        chunkData.verts.Add(corner + new Vector3(0, 0, 0.5f));
+        chunkData.verts.Add(corner + new Vector3(0, 1, 0.5f));
+        chunkData.verts.Add(corner + new Vector3(1, 1, 0.5f));
+        chunkData.verts.Add(corner + new Vector3(1, 0, 0.5f));
     }
 
 

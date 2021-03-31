@@ -6,6 +6,21 @@ using UnityEngine;
 
 public class Chunk : BaseMonoBehaviour
 {
+    public struct ChunkData
+    {
+        //普通使用的三角形合集
+        public List<Vector3> verts;
+        public List<Vector2> uvs;
+        public List<int> tris;
+
+        //碰撞使用的三角形合集
+        public List<Vector3> vertsCollider;
+        public List<int> trisCollider;
+
+        //两面都渲染的三角形合集
+        public List<int> trisBothFace;
+    }
+
     //材质合集
     public Material[] materials;
 
@@ -77,46 +92,50 @@ public class Chunk : BaseMonoBehaviour
         chunkMesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
         chunkMeshCollider.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
 
-        //普通使用的三角形合集
-        List<Vector3> verts = new List<Vector3>();
-        List<Vector2> uvs = new List<Vector2>();
-        List<int> tris = new List<int>();
 
-        //碰撞使用的三角形合集
-        List<Vector3> vertsCollider = new List<Vector3>();
-        List<int> trisCollider = new List<int>();
+        ChunkData chunkData = new ChunkData
+        {
+            //普通使用的三角形合集
+            verts = new List<Vector3>(),
+            uvs = new List<Vector2>(),
+            tris = new List<int>(),
 
-        //两面都渲染的三角形合集
-        List<int> trisBothFace = new List<int>();
+            //碰撞使用的三角形合集
+            vertsCollider = new List<Vector3>(),
+            trisCollider = new List<int>(),
+
+            //两面都渲染的三角形合集
+            trisBothFace = new List<int>()
+        };
 
         await Task.Run(() =>
         {
             lock (this)
-            {    
+            {
                 //遍历chunk, 生成其中的每一个Block
                 foreach (var itemData in mapForBlock)
                 {
-                    itemData.Value.BuildBlock(verts, uvs, tris, vertsCollider, trisCollider, trisBothFace);
+                    itemData.Value.BuildBlock(chunkData);
                 }
             }
         });
 
         //设置顶点
-        chunkMesh.vertices = verts.ToArray();
+        chunkMesh.vertices = chunkData.verts.ToArray();
         chunkMesh.subMeshCount = materials.Length;
         //设置UV
-        chunkMesh.uv = uvs.ToArray();
+        chunkMesh.uv = chunkData.uvs.ToArray();
         //设置三角（单面渲染，双面渲染）
-        chunkMesh.SetTriangles(tris.ToArray(), 0);
-        chunkMesh.SetTriangles(trisBothFace.ToArray(), 1);
+        chunkMesh.SetTriangles(chunkData.tris.ToArray(), 0);
+        chunkMesh.SetTriangles(chunkData.trisBothFace.ToArray(), 1);
 
         //刷新
         chunkMesh.RecalculateBounds();
         chunkMesh.RecalculateNormals();
 
         //碰撞数据设置
-        chunkMeshCollider.vertices = vertsCollider.ToArray();
-        chunkMeshCollider.triangles = trisCollider.ToArray();
+        chunkMeshCollider.vertices = chunkData.vertsCollider.ToArray();
+        chunkMeshCollider.triangles = chunkData.trisCollider.ToArray();
         //刷新
         chunkMeshCollider.RecalculateBounds();
         chunkMeshCollider.RecalculateNormals();

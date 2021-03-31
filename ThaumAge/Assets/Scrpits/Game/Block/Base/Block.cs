@@ -18,7 +18,7 @@ public abstract class Block
     public Block(BlockTypeEnum blockType)
     {
         if (blockData == null)
-            blockData = new BlockBean(blockType,Vector3Int.zero, Vector3Int.zero);
+            blockData = new BlockBean(blockType, Vector3Int.zero, Vector3Int.zero);
     }
 
     /// <summary>
@@ -60,12 +60,9 @@ public abstract class Block
     /// <param name="verts"></param>
     /// <param name="uvs"></param>
     /// <param name="tris"></param>
-    public virtual void BuildBlock(
-        List<Vector3> verts, List<Vector2> uvs, List<int> tris,
-        List<Vector3> vertsCollider, List<int> trisCollider,
-        List<int> trisBothFace) 
-    { 
-    
+    public virtual void BuildBlock(Chunk.ChunkData chunkData)
+    {
+
     }
 
     /// <summary>
@@ -79,18 +76,11 @@ public abstract class Block
     /// <param name="verts"></param>
     /// <param name="uvs"></param>
     /// <param name="tris"></param>
-    public virtual void BuildFace(
-        BlockBean blockData, Vector3 corner,
-        List<Vector3> verts, List<Vector2> uvs, List<int> tris,
-        List<Vector3> vertsCollider, List<int> trisCollider,
-        List<int> trisBothFace) 
+    public virtual void BuildFace(BlockBean blockData, Vector3 corner, Chunk.ChunkData chunkData)
     {
-
-        int index = verts.Count;
-        int indexCollider = vertsCollider.Count;
-        AddVerts(corner, verts, vertsCollider);
-        AddUVs(blockData, uvs);
-        AddTris(index, tris, indexCollider, trisCollider, trisBothFace);
+        AddTris(chunkData);
+        AddVerts(corner, chunkData);
+        AddUVs(blockData, chunkData);
     }
 
     /// <summary>
@@ -100,8 +90,8 @@ public abstract class Block
     /// <param name="up"></param>
     /// <param name="right"></param>
     /// <param name="verts"></param>
-    public virtual void AddVerts(Vector3 corner, List<Vector3> verts, List<Vector3> vertsCollider) 
-    { 
+    public virtual void AddVerts(Vector3 corner, Chunk.ChunkData chunkData)
+    {
 
     }
 
@@ -110,7 +100,7 @@ public abstract class Block
     /// </summary>
     /// <param name="blockData"></param>
     /// <param name="uvs"></param>
-    public virtual void AddUVs(BlockBean blockData, List<Vector2> uvs)
+    public virtual void AddUVs(BlockBean blockData, Chunk.ChunkData chunkData)
     {
 
     }
@@ -123,8 +113,8 @@ public abstract class Block
     /// <param name="tris"></param>
     /// <param name="indexCollider"></param>
     /// <param name="trisCollider"></param>
-    public virtual void AddTris(int index, List<int> tris, int indexCollider, List<int> trisCollider, List<int> trisBothFace) 
-    { 
+    public virtual void AddTris(Chunk.ChunkData chunkData)
+    {
 
     }
 }
