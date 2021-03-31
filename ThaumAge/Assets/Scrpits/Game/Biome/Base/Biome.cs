@@ -124,7 +124,7 @@ public class Biome
         System.Random random = new System.Random(worldSeed * startPosition.x * startPosition.y * startPosition.z);
         int flowerTypeNumber = random.Next(0, flowerData.listFlowerType.Count);
         float addRate = SimplexNoiseUtil.Generate(new Vector2(startPosition.x, startPosition.z), worldSeed, flowerData.flowerRange);
-        if (addRate >(1- flowerData.addRateMin / flowerData.addRateMax))
+        if (addRate > (float)flowerData.addRateMin / flowerData.addRateMax)
         {
             BlockBean blockData = new BlockBean(flowerData.listFlowerType[flowerTypeNumber], Vector3Int.zero, startPosition + Vector3Int.up);
             WorldCreateHandler.Instance.manager.listUpdateBlock.Add(blockData);
