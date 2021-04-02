@@ -15,13 +15,14 @@ public class WorldCreateManager : BaseManager
 
     //所有待修改的方块
     public List<BlockBean> listUpdateBlock = new List<BlockBean>();
+    //所有待修改的区块
+    public HashSet<Chunk> listUpdateChunk = new HashSet<Chunk>();
 
     //世界种子
     protected int worldSeed;
 
     public int widthChunk = 16;
     public int heightChunk = 256;
-
 
     /// <summary>
     /// 处理 更新方块
@@ -31,7 +32,6 @@ public class WorldCreateManager : BaseManager
         if (listUpdateBlock.Count <= 0)
             return;
         //添加修改的方块信息，用于树木或建筑群等用于多个区块的数据
-        HashSet<Chunk> listUpdateChunk = new HashSet<Chunk>();
         for (int i = 0; i < listUpdateBlock.Count; i++)
         {
             BlockBean itemBlock = listUpdateBlock[i];
@@ -64,6 +64,7 @@ public class WorldCreateManager : BaseManager
         {
             itemChunk.BuildChunkForAsync();
         }
+        listUpdateChunk.Clear();
     }
 
     /// <summary>
@@ -155,6 +156,19 @@ public class WorldCreateManager : BaseManager
             posZ = Mathf.FloorToInt((pos.z + halfWidth) / widthChunk) * widthChunk;
         }
         return GetChunk(new Vector3Int(posX, 0, posZ));
+    }
+
+    /// <summary>
+    /// 获取方块
+    /// </summary>
+    /// <param name="pos">世界坐标</param>
+    /// <returns></returns>
+    public Block GetBlockForWorldPosition(Vector3Int pos)
+    {
+        Chunk chunk = GetChunkForWorldPosition(pos);
+        if (chunk == null)
+            return null;
+        return chunk.GetBlockForWorld(pos);
     }
 
     /// <summary>

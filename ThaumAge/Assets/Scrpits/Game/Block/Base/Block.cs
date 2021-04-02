@@ -34,7 +34,6 @@ public abstract class Block
         this.blockData = blockData;
     }
 
-
     /// <summary>
     /// 检测是否需要构建面
     /// </summary>
@@ -54,6 +53,7 @@ public abstract class Block
                 return true;
         }
     }
+
     /// <summary>
     /// 构建方块
     /// </summary>
@@ -105,7 +105,6 @@ public abstract class Block
 
     }
 
-
     /// <summary>
     /// 添加索引
     /// </summary>
@@ -117,4 +116,5 @@ public abstract class Block
     {
 
     }
+
 }

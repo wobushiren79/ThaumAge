@@ -7,7 +7,7 @@ public class Launcher : BaseMonoBehaviour
         UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();
         userData.userId = "1234";
 
-        WorldCreateHandler.Instance.CreateChunkForRange(1, Vector3Int.zero, 1);
+        WorldCreateHandler.Instance.CreateChunkForRange(1, Vector3Int.zero, 3);
 
         UIHandler.Instance.manager.OpenUIAndCloseOther<UIGameMain>(UIEnum.GameMain);
     }

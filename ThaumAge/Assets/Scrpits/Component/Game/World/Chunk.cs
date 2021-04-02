@@ -34,12 +34,14 @@ public class Chunk : BaseMonoBehaviour
 
     //存储着此Chunk内的所有Block信息
     public Dictionary<Vector3Int, Block> mapForBlock = new Dictionary<Vector3Int, Block>();
-
+    //大小
     public int width = 0;
     public int height = 0;
-
+    //是否初始化
+    public bool isInit = false;
+    //世界坐标
     public Vector3Int worldPosition;
-
+    //存储数据
     protected WorldDataBean worldData;
 
     public void Awake()
@@ -81,17 +83,42 @@ public class Chunk : BaseMonoBehaviour
     }
 
     /// <summary>
+    /// 异步构建范围内的chunk
+    /// </summary>
+    public void BuildChunkRangeForAsync()
+    {
+        BuildChunkForAsync();
+        Chunk leftChunk = WorldCreateHandler.Instance.manager.GetChunk(worldPosition - new Vector3Int(-width, 0, 0));
+        Chunk rightChunk = WorldCreateHandler.Instance.manager.GetChunk(worldPosition - new Vector3Int(width, 0, 0));
+        Chunk upChunk = WorldCreateHandler.Instance.manager.GetChunk(worldPosition - new Vector3Int(0, 0, width));
+        Chunk downChunk = WorldCreateHandler.Instance.manager.GetChunk(worldPosition - new Vector3Int(0, 0, -width));
+        if (leftChunk && leftChunk.mapForBlock.Count > 0)
+            leftChunk.BuildChunkForAsync();
+        if (rightChunk && rightChunk.mapForBlock.Count > 0)
+            rightChunk.BuildChunkForAsync();
+        if (upChunk && upChunk.mapForBlock.Count > 0)
+            upChunk.BuildChunkForAsync();
+        if (downChunk && downChunk.mapForBlock.Count > 0)
+            downChunk.BuildChunkForAsync();
+    }
+
+    /// <summary>
     /// 异步构建chunk
     /// </summary>
     public async void BuildChunkForAsync()
     {
+        //只有初始化之后的chunk才能刷新
+        if (!isInit)
+            return;
         chunkMesh = new Mesh();
         chunkMeshCollider = new Mesh();
 
         //设置mesh的三角形上限
         chunkMesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
         chunkMeshCollider.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
-
+        //设置为动态变更，理论上可以提高效率
+        chunkMesh.MarkDynamic();
+        chunkMeshCollider.MarkDynamic();
 
         ChunkData chunkData = new ChunkData
         {
@@ -144,10 +171,9 @@ public class Chunk : BaseMonoBehaviour
         meshCollider.sharedMesh = chunkMeshCollider;
     }
 
-    public BlockTypeEnum GetBlockTypeForWorld(Vector3Int worldPosition)
+    public Block GetBlockForWorld(Vector3Int blockWorldPosition)
     {
-        Vector3Int localPosition = worldPosition - Vector3Int.CeilToInt(transform.position);
-        return GetBlockTypeForLocal(localPosition);
+        return GetBlockForLocal(blockWorldPosition - worldPosition);
     }
 
     public Block GetBlockForLocal(Vector3Int localPosition)
@@ -160,57 +186,27 @@ public class Chunk : BaseMonoBehaviour
         //当前位置是否在Chunk内
         if ((localPosition.x < -halfWidth) || (localPosition.z < -halfWidth) || (localPosition.x >= halfWidth) || (localPosition.z >= halfWidth))
         {
+            Vector3Int blockWorldPosition = localPosition + worldPosition;
+            Block tempBlock = WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(blockWorldPosition);
+            if (tempBlock == null)
+            {
+                return new BlockCube(BlockTypeEnum.None);
+            }
+            else
+            {
+                return tempBlock;
+            }
+        }
+        if (mapForBlock.TryGetValue(localPosition, out Block value))
+        {
+            return value;
+        }
+        else
+        {
             return new BlockCube(BlockTypeEnum.None);
         }
-        Block block = mapForBlock[localPosition];
-        return block;
     }
 
-    public BlockTypeEnum GetBlockTypeForLocal(Vector3Int localPosition)
-    {
-        if (localPosition.y < 0 || localPosition.y > height - 1)
-        {
-            return BlockTypeEnum.None;
-        }
-        int halfWidth = width / 2;
-        //当前位置是否在Chunk内
-        if ((localPosition.x < -halfWidth) || (localPosition.z < -halfWidth) || (localPosition.x >= halfWidth) || (localPosition.z >= halfWidth))
-        {
-            //查询旁边的方块坐标 但需要处理旁边区块方块的刷新问题
-            //Chunk chunkOther = null;
-            //Vector3Int otherWorldPosition = Vector3Int.zero;
-            //if (localPosition.x < -halfWidth)
-            //{
-            //    chunkOther = WorldCreateHandler.Instance.manager.GetChunk(worldPosition - Vector3Int.right * width);
-            //    otherWorldPosition = localPosition + worldPosition - Vector3Int.right;
-            //}
-            //else if (localPosition.z < -halfWidth)
-            //{
-            //    chunkOther = WorldCreateHandler.Instance.manager.GetChunk(worldPosition - Vector3Int.forward * width);
-            //    otherWorldPosition = localPosition + worldPosition - Vector3Int.forward;
-            //}
-            //else if (localPosition.x >= halfWidth)
-            //{
-            //    chunkOther = WorldCreateHandler.Instance.manager.GetChunk(worldPosition + Vector3Int.right * width);
-            //    otherWorldPosition = localPosition + worldPosition + Vector3Int.right;
-            //}
-            //else if (localPosition.z >= halfWidth)
-            //{
-            //    chunkOther = WorldCreateHandler.Instance.manager.GetChunk(worldPosition + Vector3Int.forward * width);
-            //    otherWorldPosition = localPosition + worldPosition - Vector3Int.forward;
-            //}
-            //if (chunkOther == null)
-            //{
-            //    return BlockTypeEnum.None;
-            //}
-
-            //BlockTypeEnum blockType = chunkOther.GetBlockTypeForWorld(otherWorldPosition);
-            //return blockType;
-            return BlockTypeEnum.None;
-        }
-        Block block = mapForBlock[localPosition];
-        return block.blockData.GetBlockType();
-    }
 
     /// <summary>
     /// 移除方块
@@ -246,7 +242,7 @@ public class Chunk : BaseMonoBehaviour
         chunkData.dicBlockData.Add(blockLocalPosition.ToString(), newBlock.blockData);
 
         //异步构建chunk
-        BuildChunkForAsync();
+        BuildChunkRangeForAsync();
         //异步保存数据
         GameDataHandler.Instance.manager.SaveGameDataAsync(worldData);
     }
