@@ -41,7 +41,7 @@ public class BiomePrairie : Biome
         TreeData treeData = new TreeData
         {
             addRateMin = 1,
-            addRateMax = 1000,
+            addRateMax = 500,
             minHeight = 4,
             maxHeight = 6,
             treeTrunk = BlockTypeEnum.Oak,
@@ -66,21 +66,10 @@ public class BiomePrairie : Biome
         FlowerData flowersData = new FlowerData
         {
             addRateMin = 1,
-            addRateMax = 20,
+            addRateMax = 50,
             listFlowerType = new List<BlockTypeEnum> { BlockTypeEnum.Sunflower, BlockTypeEnum.Rose, BlockTypeEnum.Chrysanthemum }
         };
         AddFlower(wPos, flowersData);
     }
 
-    protected void AddFlowerRange(Vector3Int wPos)
-    {
-        FlowerData flowersData = new FlowerData
-        {
-            addRateMin = 1,
-            addRateMax = 20,
-            flowerRange = 10,
-            listFlowerType = new List<BlockTypeEnum> { BlockTypeEnum.Sunflower }
-        };
-        AddFlowerRange(wPos, flowersData);
-    }
 }
