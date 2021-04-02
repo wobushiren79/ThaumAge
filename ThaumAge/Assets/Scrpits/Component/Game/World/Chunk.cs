@@ -108,7 +108,7 @@ public class Chunk : BaseMonoBehaviour
     public async void BuildChunkForAsync()
     {
         //只有初始化之后的chunk才能刷新
-        if (!isInit)
+        if (!isInit || mapForBlock.Count <= 0)
             return;
         chunkMesh = new Mesh();
         chunkMeshCollider = new Mesh();

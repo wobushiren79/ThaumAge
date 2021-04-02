@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
@@ -84,7 +85,8 @@ public class Biome
     public virtual void AddWeed(Vector3Int startPosition, WeedData weedData)
     {
         int worldSeed = WorldCreateHandler.Instance.manager.GetWorldSeed();
-        System.Random random = new System.Random(worldSeed * startPosition.x * startPosition.y * startPosition.z);
+        int seed = (int)Math.Sqrt(worldSeed * startPosition.x * startPosition.y * startPosition.z);
+        System.Random random = new System.Random(seed);
         int addRate = random.Next(0, weedData.addRateMax);
         int weedTypeNumber = random.Next(0, weedData.listWeedType.Count);
         if (addRate < weedData.addRateMin)

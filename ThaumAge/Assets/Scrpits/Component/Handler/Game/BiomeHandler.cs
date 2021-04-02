@@ -43,7 +43,7 @@ public class BiomeHandler : BaseHandler<BiomeHandler, BiomeManager>
             Biome itemBiome = listBiome[i];
             BiomeInfoBean tempBiomeInfo = manager.GetBiomeInfo(itemBiome.biomeType);
 
-            float weight = SimplexNoiseUtil.Generate(new Vector2(wPos.x, wPos.z), offsetBiome, tempBiomeInfo.scale);
+            float weight = SimplexNoiseUtil.Generate(new Vector2(wPos.x, wPos.z), offsetBiome * tempBiomeInfo.id, tempBiomeInfo.scale);
             if (weight > strongestWeight)
             {
                 strongestWeight = weight;
@@ -94,8 +94,26 @@ public class BiomeHandler : BaseHandler<BiomeHandler, BiomeManager>
         //return Mathf.FloorToInt(noise0 + noise1 + noise2 + biomeInfo.minHeight);
 
         float noise0 = Mathf.PerlinNoise(x0, z0) * biomeInfo.amplitude;
-        return Mathf.FloorToInt(noise0  + biomeInfo.minHeight);
+        return Mathf.FloorToInt(noise0 + biomeInfo.minHeight);
     }
 
-
+    public List<Vector3Int> GetBiomeCenterPosition(Chunk currentChunk, int range,int rate)
+    {
+        List<Vector3Int> listData = new List<Vector3Int>();
+        int worldSeed = WorldCreateHandler.Instance.manager.GetWorldSeed();
+        for (int x = -range; x < range; x++)
+        {
+            for (int z = -range; z < range; z++)
+            {
+                Vector3Int currentPosition = new Vector3Int(currentChunk.worldPosition.x + x * currentChunk.width * rate, 0, currentChunk.worldPosition.z + z * currentChunk.width* rate);
+                System.Random random = new System.Random(worldSeed * currentPosition.x * currentPosition.z);
+                int addRate = random.Next(0, 100);
+                if (addRate <= 1)
+                {
+                    listData.Add(currentPosition);
+                }
+            }
+        }
+        return listData;
+    }
 }
