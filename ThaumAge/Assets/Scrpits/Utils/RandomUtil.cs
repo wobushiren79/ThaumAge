@@ -5,6 +5,19 @@ using System.Text;
 
 public class RandomUtil
 {
+
+    public static RandomTools GetRandom(int seed, int offset1, int offset2, int offset3)
+    {
+        RandomTools randomTools = new RandomTools((ulong)(seed == 0 ? seed + 1 : seed) * (ulong)(offset1 == 0 ? offset1 + 1 : offset1) * (ulong)(offset2 == 0 ? offset2 + 1 : offset2) * (ulong)(offset3 == 0 ? offset3 + 1 : offset3));
+        return randomTools;
+    }
+
+    public static RandomTools GetRandom(int seed, int offset1, int offset2)
+    {
+        RandomTools randomTools = new RandomTools((ulong)(seed == 0 ? seed + 1 : seed) * (ulong)(offset1 == 0 ? offset1 + 1 : offset1) * (ulong)(offset2 == 0 ? offset2 + 1 : offset2));
+        return randomTools;
+    }
+
     /// <summary>
     /// 随机获取枚举的一个值
     /// </summary>
@@ -42,12 +55,12 @@ public class RandomUtil
         List<T> listData = new List<T>();
         if (CheckUtil.ListIsNull(list))
             return listData;
-        if (list.Count< number)
+        if (list.Count < number)
         {
             number = list.Count;
         }
         List<int> tempList = new List<int>();
-        for(int i = 0; i < number; i++)
+        for (int i = 0; i < number; i++)
         {
             int position = Random.Range(0, list.Count);
             if (!tempList.Contains(position))
@@ -95,9 +108,9 @@ public class RandomUtil
     /// <param name="list"></param>
     /// <param name="expelNameStr"></param>
     /// <returns></returns>
-    public static IconBean GetRandomDataByIconBeanDictionaryExpel(IconBeanDictionary list,string expelNameStr)
+    public static IconBean GetRandomDataByIconBeanDictionaryExpel(IconBeanDictionary list, string expelNameStr)
     {
-        IconBean iconData= GetRandomDataByIconBeanDictionary(list);
+        IconBean iconData = GetRandomDataByIconBeanDictionary(list);
         if (iconData.key.Contains(expelNameStr))
         {
             return GetRandomDataByIconBeanDictionaryExpel(list, expelNameStr);
@@ -202,7 +215,7 @@ public class RandomUtil
             return "";
 
         string chineseWords = "";
-       // Encoding gb = Encoding.GetEncoding("gb2312");
+        // Encoding gb = Encoding.GetEncoding("gb2312");
         //添加姓
         chineseWords += GetRandomDataByArray(GeneralDataUtil.ChinesNameWords);
         //添加名

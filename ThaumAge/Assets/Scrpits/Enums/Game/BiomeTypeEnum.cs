@@ -3,7 +3,10 @@ using UnityEngine;
 
 public enum BiomeTypeEnum
 {
-    Prairie = 1,//草原
+    Prairie = 1,//平原
     Forest = 2,//森林
     Desert = 3,//沙漠
+    Mountain = 4,//高山
+    Volcano = 5,//火山
+    MagicForest = 11,//魔法森林
 }

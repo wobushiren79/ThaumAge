@@ -1,16 +1,15 @@
 ﻿using UnityEditor;
 using UnityEngine;
 
-public class BiomeForest : Biome
+public class BiomeMountain : Biome
 {
-    //森林
-    public BiomeForest() : base(BiomeTypeEnum.Forest)
+    //高山
+    public BiomeMountain() : base(BiomeTypeEnum.Mountain)
     {
-
     }
 
     public override BlockTypeEnum GetBlockType(int genHeight, Vector3Int localPos, Vector3Int wPos)
     {
-        return BlockTypeEnum.Foundation;
+        return BlockTypeEnum.Oak;
     }
 }

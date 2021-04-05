@@ -175,7 +175,7 @@ public class WorldCreateManager : BaseManager
     /// 获取世界种子
     /// </summary>
     /// <returns></returns>
-    public int GetWorldSeed() 
+    public int GetWorldSeed()
     {
         return worldSeed;
     }
@@ -220,16 +220,19 @@ public class WorldCreateManager : BaseManager
 
         Vector3Int chunkPosition = Vector3Int.CeilToInt(chunk.transform.position);
 
-        List<Biome> listBiome = new List<Biome>();
-        listBiome.Add(new BiomeDesert());
-        listBiome.Add(new BiomeForest());
-        listBiome.Add(new BiomePrairie());
-
         await Task.Run(() =>
         {
             lock (this)
             {
-                //chunk.mapForBlock.Clear();
+                List<Biome> listBiome = new List<Biome>();
+                listBiome.Add(new BiomePrairie());
+                listBiome.Add(new BiomeForest());
+                listBiome.Add(new BiomeDesert());
+                listBiome.Add(new BiomeMagicForest());
+                listBiome.Add(new BiomeVolcano());
+                listBiome.Add(new BiomeMountain());
+
+                List<Vector3Int> listBiomeCenter = BiomeHandler.Instance.GetBiomeCenterPosition(chunk, 5, 10);
                 //遍历map，生成其中每个Block的信息 
                 //生成基础地形数据
                 for (int x = 0; x < widthChunk; x++)
@@ -241,7 +244,7 @@ public class WorldCreateManager : BaseManager
                             Vector3Int position = new Vector3Int(x - halfWidth, y, z - halfWidth);
 
                             //获取方块类型
-                            BlockTypeEnum blockType = BiomeHandler.Instance.CreateBiomeBlockType(chunk, listBiome, position);
+                            BlockTypeEnum blockType = BiomeHandler.Instance.CreateBiomeBlockType(chunk, listBiomeCenter, listBiome, position);
                             //生成方块
                             Block block = BlockHandler.Instance.CreateBlock(chunk, position, blockType);
                             //TODO 还可以检测方块的优先级

@@ -13,7 +13,7 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
     /// <param name="width"></param>
     /// <param name="height"></param>
     /// <param name="minHeight"></param>
-    public void CreateChunk(int worldSeed, Vector3Int position)
+    public void CreateChunk(Vector3Int position)
     {
         //检测当前位置是否有区块
         Chunk chunk = manager.GetChunk(position);
@@ -21,8 +21,6 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
         {
             return;
         }
-        //设置种子
-        manager.SetWorldSeed(worldSeed);
         //生成区块
         GameObject objModel = manager.GetChunkModel();
         GameObject objChunk = Instantiate(gameObject, objModel);
@@ -50,7 +48,7 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
     /// <param name="worldSeed"></param>
     /// <param name="centerPosition"></param>
     /// <param name="range"></param>
-    public void CreateChunkForRange(int worldSeed, Vector3Int centerPosition, int range)
+    public void CreateChunkForRange(Vector3Int centerPosition, int range)
     {
         Vector3Int startPosition = -manager.widthChunk * range * new Vector3Int(1, 0, 1) + centerPosition;
         Vector3Int currentPosition = startPosition;
@@ -58,7 +56,7 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
         {
             for (int f = 0; f <= range * 2; f++)
             {
-                CreateChunk(worldSeed, currentPosition);
+                CreateChunk(currentPosition);
                 currentPosition += new Vector3Int(0, 0, manager.widthChunk);
             }
             currentPosition.z = startPosition.z;
@@ -66,12 +64,12 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
         }
     }
 
-    public void CreateChunkForRange(int worldSeed, Vector3 position, int range)
+    public void CreateChunkForRange(Vector3 position, int range)
     {
         int positionX = (int)(position.x / manager.widthChunk) * manager.widthChunk;
         int positionZ = (int)(position.z / manager.widthChunk) * manager.widthChunk;
         Vector3Int centerPosition = new Vector3Int(positionX, 0, positionZ);
-        CreateChunkForRange(worldSeed, centerPosition, range);
+        CreateChunkForRange(centerPosition, range);
     }
 
 }

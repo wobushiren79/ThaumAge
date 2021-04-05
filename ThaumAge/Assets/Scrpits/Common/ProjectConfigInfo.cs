@@ -16,7 +16,7 @@ public class ProjectConfigInfo
     /// <summary>
     /// 游戏生成版本
     /// </summary>
-    public readonly static ProjectBuildTypeEnum BUILD_TYPE = ProjectBuildTypeEnum.Release;
+    public readonly static ProjectBuildTypeEnum BUILD_TYPE = ProjectBuildTypeEnum.Debug;
 
     /// <summary>
     /// steamAppId

@@ -47,7 +47,7 @@ public class LogUtil
     private static string  BaseDebugLog(string title,string content,LogEnum type)
     {
         //如果没有开启日志输出 则放弃打印
-        if (!ProjectConfigInfo.IS_OPEN_LOG_MSG)
+        if (ProjectConfigInfo.BUILD_TYPE ==  ProjectBuildTypeEnum.Release)
             return null;
         string logMsg = title + content;
         //根据不同的日志类型答应不同的日志

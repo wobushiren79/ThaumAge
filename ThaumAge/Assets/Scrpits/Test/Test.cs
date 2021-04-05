@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -26,11 +27,28 @@ public class Test : BaseMonoBehaviour
         //GetBiomeCenterPosition(new Vector3Int(5, 0, 5));
         //GetBiomeCenterPosition(new Vector3Int(10, 0, 10));
         //GetBiomeCenterPosition(new Vector3Int(15, 0, 15));
-        int a = 10123145;
-        int b = 1243154;
-        int c = 2;
-        int test = a * b * b;
-        LogUtil.Log(test+"");
+        //GetBiomeCenterPosition(new Vector3Int(0,0,0));
+        Test2();
+    }
+
+
+    public void Test2()
+    {
+        for (int i = -50; i < 50; i++)
+        {
+            for (int f = -50; f < 50; f++)
+            {
+
+                RandomTools random = RandomUtil.GetRandom(1,i,f);
+                int addRate1 = random.NextInt(100);
+                LogUtil.Log("addRate:" + addRate1);
+                if (addRate1 < 50)
+                {
+                    GameObject obj = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+                    obj.transform.position = new Vector3Int(i, 0, f);
+                }
+            }
+        }
     }
 
     public List<Vector3Int> GetBiomeCenterPosition(Vector3Int wPos)
@@ -42,9 +60,10 @@ public class Test : BaseMonoBehaviour
             for (int z = -5; z < 5; z++)
             {
                 Vector3Int currentPosition = new Vector3Int(wPos.x + x, 0, wPos.z + z);
-                System.Random random = new System.Random(31 * (currentPosition.x ) * (currentPosition.z));
-                int addRate = random.Next(0, 100);
-                if (addRate <= 5)
+                RandomTools random = RandomUtil.GetRandom(int.MaxValue, currentPosition.x, currentPosition.z);
+                int addRate = random.NextInt(100);
+                LogUtil.Log("addRate:" + addRate);
+                if (addRate <= 10)
                 {
                     listData.Add(currentPosition);
                 }
@@ -56,7 +75,7 @@ public class Test : BaseMonoBehaviour
 
             Vector3Int itemData = listData[i];
             LogUtil.Log("x,z:" + itemData.x + " " + itemData.z);
-            GameObject obj=  GameObject.CreatePrimitive(PrimitiveType.Sphere);
+            GameObject obj = GameObject.CreatePrimitive(PrimitiveType.Sphere);
             obj.transform.position = itemData;
         }
         LogUtil.Log("------------------------------");

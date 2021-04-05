@@ -24,7 +24,7 @@ public class BiomeHandler : BaseHandler<BiomeHandler, BiomeManager>
     /// <param name="width"></param>
     /// <param name="height"></param>
     /// <returns></returns>
-    public BlockTypeEnum CreateBiomeBlockType(Chunk chunk, List<Biome> listBiome, Vector3Int blockLocPosition)
+    public BlockTypeEnum CreateBiomeBlockType(Chunk chunk, List<Vector3Int> listBiomeCenterPosition, List<Biome> listBiome, Vector3Int blockLocPosition)
     {
         Vector3Int wPos = blockLocPosition + chunk.worldPosition;
         //y坐标是否在Chunk内
@@ -33,24 +33,25 @@ public class BiomeHandler : BaseHandler<BiomeHandler, BiomeManager>
             return BlockTypeEnum.None;
         }
 
-        float strongestWeight = float.MinValue;
-        int strongestBiomeIndex = 0;
-
-        BiomeInfoBean biomeInfo = null;
-
-        for (int i = 0; i < listBiome.Count; i++)
+        float minDis = float.MaxValue;
+        Vector3Int biomeCenterPosition = Vector3Int.zero;
+        //便利中心点，寻找最靠近的生态点（维诺图）
+        for (int i = 0; i < listBiomeCenterPosition.Count; i++)
         {
-            Biome itemBiome = listBiome[i];
-            BiomeInfoBean tempBiomeInfo = manager.GetBiomeInfo(itemBiome.biomeType);
-
-            float weight = SimplexNoiseUtil.Generate(new Vector2(wPos.x, wPos.z), offsetBiome * tempBiomeInfo.id, tempBiomeInfo.scale);
-            if (weight > strongestWeight)
+            Vector3Int itemCenterPosition = listBiomeCenterPosition[i];
+            float tempDis = Vector3Int.Distance(itemCenterPosition, new Vector3Int(wPos.x, 0, wPos.z));
+            if (tempDis < minDis)
             {
-                strongestWeight = weight;
-                strongestBiomeIndex = i;
-                biomeInfo = tempBiomeInfo;
+                biomeCenterPosition = itemCenterPosition;
+                minDis = tempDis;
             }
         }
+        //获取该点的生态信息
+        int worldSeed = WorldCreateHandler.Instance.manager.GetWorldSeed();
+        RandomTools biomeRandom = RandomUtil.GetRandom(worldSeed, biomeCenterPosition.x, biomeCenterPosition.z);
+        int biomeIndex = biomeRandom.NextInt(listBiome.Count);
+        Biome biome = listBiome[biomeIndex];
+        BiomeInfoBean biomeInfo = manager.GetBiomeInfo(biome.biomeType);
 
         //获取当前位置方块随机生成的高度值
         int genHeight = GetHeightData(wPos, biomeInfo);
@@ -59,7 +60,6 @@ public class BiomeHandler : BaseHandler<BiomeHandler, BiomeManager>
         {
             return BlockTypeEnum.None;
         }
-        Biome biome = listBiome[strongestBiomeIndex];
         //获取方块
         return biome.GetBlockType(genHeight, blockLocPosition, wPos);
     }
@@ -97,17 +97,27 @@ public class BiomeHandler : BaseHandler<BiomeHandler, BiomeManager>
         return Mathf.FloorToInt(noise0 + biomeInfo.minHeight);
     }
 
-    public List<Vector3Int> GetBiomeCenterPosition(Chunk currentChunk, int range,int rate)
+    /// <summary>
+    /// 获取生态中心点
+    /// </summary>
+    /// <param name="currentChunk"></param>
+    /// <param name="range">范围</param>
+    /// <param name="rate">倍数</param>
+    /// <returns></returns>
+    public List<Vector3Int> GetBiomeCenterPosition(Chunk currentChunk, int range, int rate)
     {
         List<Vector3Int> listData = new List<Vector3Int>();
         int worldSeed = WorldCreateHandler.Instance.manager.GetWorldSeed();
+        int unitSize = currentChunk.width * rate;
+        int startX = Mathf.FloorToInt(currentChunk.worldPosition.x / (float)unitSize) * unitSize;
+        int startZ = Mathf.FloorToInt(currentChunk.worldPosition.z / (float)unitSize) * unitSize;
         for (int x = -range; x < range; x++)
         {
             for (int z = -range; z < range; z++)
             {
-                Vector3Int currentPosition = new Vector3Int(currentChunk.worldPosition.x + x * currentChunk.width * rate, 0, currentChunk.worldPosition.z + z * currentChunk.width* rate);
-                System.Random random = new System.Random(worldSeed * currentPosition.x * currentPosition.z);
-                int addRate = random.Next(0, 100);
+                Vector3Int currentPosition = new Vector3Int(x * unitSize + startX, 0, z * unitSize + startZ);
+                RandomTools random = RandomUtil.GetRandom(worldSeed, currentPosition.x, currentPosition.z);
+                int addRate = random.NextInt(50);
                 if (addRate <= 1)
                 {
                     listData.Add(currentPosition);

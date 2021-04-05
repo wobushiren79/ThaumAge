@@ -61,11 +61,11 @@ public class Biome
     public virtual void AddTree(Vector3Int startPosition, TreeData treeData)
     {
         int worldSeed = WorldCreateHandler.Instance.manager.GetWorldSeed();
-        System.Random random = new System.Random(worldSeed * startPosition.x * startPosition.y * startPosition.z);
+        RandomTools random = RandomUtil.GetRandom(worldSeed, startPosition.x, startPosition.y, startPosition.z);
         //生成概率
-        int addRate = random.Next(0, treeData.addRateMax);
+        int addRate = random.NextInt(treeData.addRateMax);
         //高度
-        int treeHeight = random.Next(treeData.minHeight, treeData.maxHeight + 1);
+        int treeHeight = 4;
 
         if (addRate < treeData.addRateMin)
         {
@@ -85,10 +85,10 @@ public class Biome
     public virtual void AddWeed(Vector3Int startPosition, WeedData weedData)
     {
         int worldSeed = WorldCreateHandler.Instance.manager.GetWorldSeed();
-        int seed = (int)Math.Sqrt(worldSeed * startPosition.x * startPosition.y * startPosition.z);
-        System.Random random = new System.Random(seed);
-        int addRate = random.Next(0, weedData.addRateMax);
-        int weedTypeNumber = random.Next(0, weedData.listWeedType.Count);
+        RandomTools random = RandomUtil.GetRandom(worldSeed, startPosition.x, startPosition.y, startPosition.z);
+        //生成概率
+        int addRate = random.NextInt(weedData.addRateMax);
+        int weedTypeNumber = random.NextInt(weedData.listWeedType.Count);
         if (addRate < weedData.addRateMin)
         {
             BlockBean blockData = new BlockBean(weedData.listWeedType[weedTypeNumber], Vector3Int.zero, startPosition + Vector3Int.up);
@@ -105,9 +105,9 @@ public class Biome
     public virtual void AddFlower(Vector3Int startPosition, FlowerData flowerData)
     {
         int worldSeed = WorldCreateHandler.Instance.manager.GetWorldSeed();
-        System.Random random = new System.Random(worldSeed * startPosition.x * startPosition.y * startPosition.z);
-        int addRate = random.Next(0, flowerData.addRateMax);
-        int flowerTypeNumber = random.Next(0, flowerData.listFlowerType.Count);
+        RandomTools random = RandomUtil.GetRandom(worldSeed, startPosition.x, startPosition.y, startPosition.z);
+        int addRate = random.NextInt(flowerData.addRateMax);
+        int flowerTypeNumber = random.NextInt(flowerData.listFlowerType.Count);
         if (addRate < flowerData.addRateMin)
         {
             BlockBean blockData = new BlockBean(flowerData.listFlowerType[flowerTypeNumber], Vector3Int.zero, startPosition + Vector3Int.up);
@@ -120,16 +120,16 @@ public class Biome
     /// </summary>
     /// <param name="startPosition"></param>
     /// <param name="flowerData"></param>
-    public virtual void AddFlowerRange(Vector3Int startPosition, FlowerData flowerData)
-    {
-        int worldSeed = WorldCreateHandler.Instance.manager.GetWorldSeed();
-        System.Random random = new System.Random(worldSeed * startPosition.x * startPosition.y * startPosition.z);
-        int flowerTypeNumber = random.Next(0, flowerData.listFlowerType.Count);
-        float addRate = SimplexNoiseUtil.Generate(new Vector2(startPosition.x, startPosition.z), worldSeed, flowerData.flowerRange);
-        if (addRate > (float)flowerData.addRateMin / flowerData.addRateMax)
-        {
-            BlockBean blockData = new BlockBean(flowerData.listFlowerType[flowerTypeNumber], Vector3Int.zero, startPosition + Vector3Int.up);
-            WorldCreateHandler.Instance.manager.listUpdateBlock.Add(blockData);
-        }
-    }
+    //public virtual void AddFlowerRange(Vector3Int startPosition, FlowerData flowerData)
+    //{
+    //    int worldSeed = WorldCreateHandler.Instance.manager.GetWorldSeed();
+    //    System.Random random = new System.Random(worldSeed + startPosition.x * startPosition.y * startPosition.z);
+    //    int flowerTypeNumber = random.Next(0, flowerData.listFlowerType.Count);
+    //    float addRate = SimplexNoiseUtil.Generate(new Vector2(startPosition.x, startPosition.z), worldSeed, flowerData.flowerRange);
+    //    if (addRate > (float)flowerData.addRateMin / flowerData.addRateMax)
+    //    {
+    //        BlockBean blockData = new BlockBean(flowerData.listFlowerType[flowerTypeNumber], Vector3Int.zero, startPosition + Vector3Int.up);
+    //        WorldCreateHandler.Instance.manager.listUpdateBlock.Add(blockData);
+    //    }
+    //}
 }
