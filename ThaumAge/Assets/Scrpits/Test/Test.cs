@@ -41,7 +41,6 @@ public class Test : BaseMonoBehaviour
 
                 RandomTools random = RandomUtil.GetRandom(1,i,f);
                 int addRate1 = random.NextInt(100);
-                LogUtil.Log("addRate:" + addRate1);
                 if (addRate1 < 50)
                 {
                     GameObject obj = GameObject.CreatePrimitive(PrimitiveType.Sphere);

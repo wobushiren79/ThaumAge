@@ -32,8 +32,11 @@ public class BiomeHandler : BaseHandler<BiomeHandler, BiomeManager>
         {
             return BlockTypeEnum.None;
         }
-
+        //最近的距离
         float minDis = float.MaxValue;
+        //第二靠近的生态点 用于生态边缘处理
+        float secondDis = float.MaxValue;
+        //最靠近的生态点
         Vector3Int biomeCenterPosition = Vector3Int.zero;
         //便利中心点，寻找最靠近的生态点（维诺图）
         for (int i = 0; i < listBiomeCenterPosition.Count; i++)
@@ -42,10 +45,21 @@ public class BiomeHandler : BaseHandler<BiomeHandler, BiomeManager>
             float tempDis = Vector3Int.Distance(itemCenterPosition, new Vector3Int(wPos.x, 0, wPos.z));
             if (tempDis < minDis)
             {
+                //如果小于最小距离
                 biomeCenterPosition = itemCenterPosition;
+                secondDis = minDis;
                 minDis = tempDis;
             }
+            else
+            {
+                //如果大于最小距离 并且小于第二小距离
+                if (tempDis < secondDis)
+                {
+                    secondDis = tempDis;
+                }
+            }
         }
+
         //获取该点的生态信息
         int worldSeed = WorldCreateHandler.Instance.manager.GetWorldSeed();
         RandomTools biomeRandom = RandomUtil.GetRandom(worldSeed, biomeCenterPosition.x, biomeCenterPosition.z);
@@ -55,6 +69,12 @@ public class BiomeHandler : BaseHandler<BiomeHandler, BiomeManager>
 
         //获取当前位置方块随机生成的高度值
         int genHeight = GetHeightData(wPos, biomeInfo);
+        //边缘处理 逐渐减缓到最低高度
+        if (genHeight - biomeInfo.minHeight > 2//高度大于3格
+            && secondDis - minDis <= 10) //在10范围以内
+        {
+            genHeight = ((genHeight - biomeInfo.minHeight) / 10) * Mathf.CeilToInt(secondDis - minDis) + biomeInfo.minHeight;
+        }
         //当前方块位置高于随机生成的高度值时，当前方块类型为空
         if (wPos.y > genHeight)
         {
