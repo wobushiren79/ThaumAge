@@ -18,7 +18,7 @@ public class Player : BaseMonoBehaviour
         timeForWorldUpdate -= Time.deltaTime;
         if (timeForWorldUpdate <= 0)
         {
-            WorldCreateHandler.Instance.CreateChunkForRange(transform.position, 1);
+            WorldCreateHandler.Instance.CreateChunkForRange(transform.position, 0);
             timeForWorldUpdate = 1;
         }
     }

@@ -73,6 +73,9 @@ public class ControlForCamera : ControlForBase
         InitOffsetDistance();
     }
 
+    /// <summary>
+    /// 距离更新处理
+    /// </summary>
     public void HandleForDistanceUpdate()
     {
         //获得由物体射向摄像机的射线以及碰到的所有物体hits

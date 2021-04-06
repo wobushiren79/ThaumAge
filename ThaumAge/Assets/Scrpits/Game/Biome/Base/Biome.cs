@@ -20,6 +20,7 @@ public class Biome
         public int maxHeight;
         public BlockTypeEnum treeTrunk;//树干
         public BlockTypeEnum treeLeaves;//树叶
+        public int trunkRange;//躯干范围
         public int leavesRange;//树叶范围
     }
 
@@ -89,7 +90,7 @@ public class Biome
                     if (i >= treeHeight)
                     {
                         //叶子在最顶层递减
-                        range = range - (i - treeHeight);
+                        range -= (i - treeHeight);
                         if (range < 0)
                             range = 0;
                     }
@@ -101,10 +102,70 @@ public class Biome
                         {
                             if (x == startPosition.x && z == startPosition.z)
                                 continue;
-                            BlockBean blockData = new BlockBean(treeData.treeLeaves, treeTrunkPosition+ new Vector3Int(x,0,z));
+                            if (Math.Abs(x) == range || Math.Abs(z) == range)
+                            {
+                                //如果是边界 则有几率不生成
+                                int randomLeaves = random.NextInt(3);
+                                if (randomLeaves == 0)
+                                    continue;
+                            }
+                            BlockBean blockData = new BlockBean(treeData.treeLeaves, treeTrunkPosition + new Vector3Int(x, 0, z));
                             WorldCreateHandler.Instance.manager.listUpdateBlock.Add(blockData);
                         }
                     }
+                }
+            }
+        }
+    }
+
+
+    public virtual void AddBigTree(Vector3Int startPosition, TreeData treeData)
+    {
+        int worldSeed = WorldCreateHandler.Instance.manager.GetWorldSeed();
+        RandomTools random = RandomUtil.GetRandom(worldSeed, startPosition.x, startPosition.y, startPosition.z);
+        //生成概率
+        int addRate = random.NextInt(treeData.addRateMax);
+        //高度
+        int treeHeight = random.NextInt(treeData.maxHeight - treeData.minHeight) + treeData.minHeight;
+
+        if (addRate < treeData.addRateMin)
+        {
+            for (int i = 0; i < treeHeight + 5; i++)
+            {
+                Vector3Int treeTrunkPosition = startPosition + Vector3Int.up * (i + 1);
+                //生成树干
+                if (i < treeHeight)
+                {
+                    //最底层树干会有扩散
+                    int range = treeData.trunkRange;
+                    int baseHeight = 3;
+                    if (i < baseHeight)
+                    {
+                        range += (baseHeight - i);
+                        if (range < 0)
+                            range = 0;
+                    }
+                    for (int x = -range; x <= range; x++)
+                    {
+                        for (int z = -range; z <= range; z++)
+                        {
+                            if (x == startPosition.x && z == startPosition.z)
+                                continue;
+                            if (Math.Abs(x) == range || Math.Abs(z) == range)
+                            {
+                                //如果是边界 则有几率不生成
+                                int randomLeaves = random.NextInt(3);
+                                if (randomLeaves == 0)
+                                    continue;
+                            }
+                            BlockBean blockData = new BlockBean(treeData.treeLeaves, treeTrunkPosition + new Vector3Int(x, 0, z));
+                            WorldCreateHandler.Instance.manager.listUpdateBlock.Add(blockData);
+                        }
+                    }
+                }
+                if (i > 2)
+                {
+
                 }
             }
         }

@@ -8,7 +8,7 @@ public class Launcher : BaseMonoBehaviour
         userData.userId = "Test";
         //…Ë÷√÷÷◊”
         WorldCreateHandler.Instance.manager.SetWorldSeed(132349);
-        WorldCreateHandler.Instance.CreateChunkForRange(Vector3Int.zero, 2);
+        WorldCreateHandler.Instance.CreateChunkForRange(Vector3Int.zero, 0);
         UIHandler.Instance.manager.OpenUIAndCloseOther<UIGameMain>(UIEnum.GameMain);
     }
 
