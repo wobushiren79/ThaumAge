@@ -20,6 +20,7 @@ public class Biome
         public int maxHeight;
         public BlockTypeEnum treeTrunk;//树干
         public BlockTypeEnum treeLeaves;//树叶
+        public int leavesRange;//树叶范围
     }
 
     public struct WeedData
@@ -33,6 +34,9 @@ public class Biome
     {
         public int addRateMin;
         public int addRateMax;
+        public int minHeight;
+        public int maxHeight;
+        public BlockTypeEnum cactusType;
     }
 
     public struct FlowerData
@@ -65,14 +69,43 @@ public class Biome
         //生成概率
         int addRate = random.NextInt(treeData.addRateMax);
         //高度
-        int treeHeight = 4;
+        int treeHeight = random.NextInt(treeData.maxHeight - treeData.minHeight) + treeData.minHeight;
 
         if (addRate < treeData.addRateMin)
         {
-            for (int i = 0; i < treeHeight; i++)
+            for (int i = 0; i < treeHeight + 2; i++)
             {
-                BlockBean blockData = new BlockBean(treeData.treeTrunk, Vector3Int.zero, startPosition + Vector3Int.up * (i + 1));
-                WorldCreateHandler.Instance.manager.listUpdateBlock.Add(blockData);
+                Vector3Int treeTrunkPosition = startPosition + Vector3Int.up * (i + 1);
+                //生成树干
+                if (i < treeHeight)
+                {
+                    BlockBean blockData = new BlockBean(treeData.treeTrunk, treeTrunkPosition);
+                    WorldCreateHandler.Instance.manager.listUpdateBlock.Add(blockData);
+                }
+                if (i > 2)
+                {
+                    //最大范围
+                    int range = treeData.leavesRange;
+                    if (i >= treeHeight)
+                    {
+                        //叶子在最顶层递减
+                        range = range - (i - treeHeight);
+                        if (range < 0)
+                            range = 0;
+                    }
+
+                    //生成叶子
+                    for (int x = -range; x <= range; x++)
+                    {
+                        for (int z = -range; z <= range; z++)
+                        {
+                            if (x == startPosition.x && z == startPosition.z)
+                                continue;
+                            BlockBean blockData = new BlockBean(treeData.treeLeaves, treeTrunkPosition+ new Vector3Int(x,0,z));
+                            WorldCreateHandler.Instance.manager.listUpdateBlock.Add(blockData);
+                        }
+                    }
+                }
             }
         }
     }
@@ -91,11 +124,40 @@ public class Biome
         int weedTypeNumber = random.NextInt(weedData.listWeedType.Count);
         if (addRate < weedData.addRateMin)
         {
-            BlockBean blockData = new BlockBean(weedData.listWeedType[weedTypeNumber], Vector3Int.zero, startPosition + Vector3Int.up);
+            BlockBean blockData = new BlockBean(weedData.listWeedType[weedTypeNumber], startPosition + Vector3Int.up);
             WorldCreateHandler.Instance.manager.listUpdateBlock.Add(blockData);
         }
     }
 
+
+    /// <summary>
+    /// 增加仙人掌
+    /// </summary>
+    /// <param name="startPosition"></param>
+    /// <param name="cactusData"></param>
+    public virtual void AddCactus(Vector3Int startPosition, CactusData cactusData)
+    {
+        int worldSeed = WorldCreateHandler.Instance.manager.GetWorldSeed();
+        RandomTools random = RandomUtil.GetRandom(worldSeed, startPosition.x, startPosition.y, startPosition.z);
+        //生成概率
+        int addRate = random.NextInt(cactusData.addRateMax);
+        //高度
+        int treeHeight = random.NextInt(cactusData.maxHeight - cactusData.minHeight) + cactusData.minHeight;
+
+        if (addRate < cactusData.addRateMin)
+        {
+            for (int i = 0; i < treeHeight; i++)
+            {
+                Vector3Int treeTrunkPosition = startPosition + Vector3Int.up * (i + 1);
+                //生成树干
+                if (i < treeHeight)
+                {
+                    BlockBean blockData = new BlockBean(cactusData.cactusType, treeTrunkPosition);
+                    WorldCreateHandler.Instance.manager.listUpdateBlock.Add(blockData);
+                }
+            }
+        }
+    }
 
     /// <summary>
     /// 增加鲜花
@@ -110,7 +172,7 @@ public class Biome
         int flowerTypeNumber = random.NextInt(flowerData.listFlowerType.Count);
         if (addRate < flowerData.addRateMin)
         {
-            BlockBean blockData = new BlockBean(flowerData.listFlowerType[flowerTypeNumber], Vector3Int.zero, startPosition + Vector3Int.up);
+            BlockBean blockData = new BlockBean(flowerData.listFlowerType[flowerTypeNumber], startPosition + Vector3Int.up);
             WorldCreateHandler.Instance.manager.listUpdateBlock.Add(blockData);
         }
     }

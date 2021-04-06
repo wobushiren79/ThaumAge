@@ -18,11 +18,27 @@ public class BlockBean
 
     }
 
+    public BlockBean(BlockTypeEnum blockType, Vector3Int worldPosition)
+    {
+        SetData(blockType, Vector3Int.zero, worldPosition);
+    }
+
     public BlockBean(BlockTypeEnum blockType, Vector3Int localposition,Vector3Int worldPosition)
+    {
+        SetData(blockType, localposition, worldPosition);
+    }
+
+    /// <summary>
+    /// 设置数据
+    /// </summary>
+    /// <param name="blockType"></param>
+    /// <param name="localposition"></param>
+    /// <param name="worldPosition"></param>
+    public void SetData(BlockTypeEnum blockType, Vector3Int localposition, Vector3Int worldPosition)
     {
         this.blockId = (long)blockType;
         this.localPosition = new Vector3IntBean(localposition);
-        this.worldPosition= new Vector3IntBean(worldPosition);
+        this.worldPosition = new Vector3IntBean(worldPosition);
     }
 
     /// <summary>

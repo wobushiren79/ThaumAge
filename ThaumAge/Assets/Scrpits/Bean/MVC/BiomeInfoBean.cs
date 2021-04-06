@@ -11,6 +11,7 @@ using System;
 [Serializable]
 public class BiomeInfoBean : BaseBean
 {
+    public long link_id;
     //频率
     public float frequency;
     //振幅
@@ -19,6 +20,8 @@ public class BiomeInfoBean : BaseBean
     public int minHeight;
     //大小
     public float scale;
+    //名字
+    public string name;
 
     public BiomeTypeEnum GetBiomeType()
     {

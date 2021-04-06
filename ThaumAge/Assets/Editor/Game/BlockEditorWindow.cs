@@ -143,6 +143,7 @@ public class BlockEditorWindow : EditorWindow
         {
             if (EditorUI.GUIButton("更新方块", 150))
             {
+                blockInfo.link_id = blockInfo.id;
                 bool isSuccess = serviceForBlockInfo.UpdateData(blockInfo);
                 if (!isSuccess)
                 {
