@@ -145,7 +145,6 @@ public class WorldCreateManager : BaseManager
 
                 //处理更新方块
                 HandleForUpdateBlock();
-
                 //处理存档方块 优先使用存档方块
                 HandleForLoadBlock(chunk, chunkPosition);
             }
@@ -170,6 +169,7 @@ public class WorldCreateManager : BaseManager
         listBiome.Add(new BiomeMountain());
 
         List<Vector3Int> listBiomeCenter = BiomeHandler.Instance.GetBiomeCenterPosition(chunk, 5, 10);
+
         //遍历map，生成其中每个Block的信息 
         //生成基础地形数据
         for (int x = 0; x < widthChunk; x++)
@@ -179,7 +179,6 @@ public class WorldCreateManager : BaseManager
                 for (int z = 0; z < widthChunk; z++)
                 {
                     Vector3Int position = new Vector3Int(x - halfWidth, y, z - halfWidth);
-
                     //获取方块类型
                     BlockTypeEnum blockType = BiomeHandler.Instance.CreateBiomeBlockType(chunk, listBiomeCenter, listBiome, position);
                     //生成方块
@@ -193,6 +192,7 @@ public class WorldCreateManager : BaseManager
                 }
             }
         }
+
     }
 
     /// <summary>
@@ -256,10 +256,11 @@ public class WorldCreateManager : BaseManager
             worldData.workdType = (int)WorldTypeEnum.Main;
             worldData.userId = userData.userId;
         }
-        Dictionary<string, BlockBean> dicBlockData = new Dictionary<string, BlockBean>();
+        Dictionary<Vector3Int, BlockBean> dicBlockData = new Dictionary<Vector3Int, BlockBean>();
         //如果有数据 则读取数据
         if (worldData.chunkData != null)
         {
+            worldData.chunkData.InitData();
             dicBlockData = worldData.chunkData.dicBlockData;
         }
         else

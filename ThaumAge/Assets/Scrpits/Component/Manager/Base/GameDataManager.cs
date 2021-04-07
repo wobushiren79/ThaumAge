@@ -68,8 +68,12 @@ public class GameDataManager : BaseManager,
     {
         await Task.Run(() =>
         {
-            controllerForUserData.SetUserData(userData);
-            controllerForWorldData.SetWorldData(worldData, null);
+            lock (this)
+            {
+                worldData.chunkData.SaveData();
+                controllerForUserData.SetUserData(userData);
+                controllerForWorldData.SetWorldData(worldData, null);
+            }
         });
     }
 

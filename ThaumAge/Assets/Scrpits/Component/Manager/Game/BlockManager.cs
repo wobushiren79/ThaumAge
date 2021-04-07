@@ -7,13 +7,69 @@ public class BlockManager : BaseManager, IBlockInfoView
 {
     protected BlockInfoController controllerForBlock;
 
+    //方块信息列表
     protected Dictionary<BlockTypeEnum, BlockInfoBean> dicBlockInfo = new Dictionary<BlockTypeEnum, BlockInfoBean>();
+    //注册方块列表
+    protected Dictionary<int, Block> dicBlockRegister = new Dictionary<int, Block>();
 
     public virtual void Awake()
     {
         controllerForBlock = new BlockInfoController(this, this);
         controllerForBlock.GetAllBlockInfoData(InitBlockInfo);
+        RegisterBlock();
     }
+
+    /// <summary>
+    /// 获取注册的方块
+    /// </summary>
+    /// <param name="blockId"></param>
+    /// <returns></returns>
+    public Block GetRegisterBlock(int blockId)
+    {
+        if (dicBlockRegister.TryGetValue(blockId, out Block value))
+        {
+            return value;
+        }
+        return null;
+    }
+    public Block GetRegisterBlock(BlockTypeEnum blockType)
+    {
+        return GetRegisterBlock((int)blockType);
+    }
+
+    /// <summary>
+    /// 注册所有方块
+    /// </summary>
+    public void RegisterBlock()
+    {
+        List<BlockTypeEnum> listBlockType = EnumUtil.GetEnumValue<BlockTypeEnum>();
+        for (int i = 0; i < listBlockType.Count; i++)
+        {
+            BlockTypeEnum blockType = listBlockType[i];
+            //获取方块数据
+            BlockInfoBean blockInfo = GetBlockInfo(blockType);
+            string blockTypeName = EnumUtil.GetEnumName(blockType);
+            //通过反射获取类
+            Block block = ReflexUtil.CreateInstance<Block>("Block" + blockTypeName);
+            if (block == null)
+            {
+                //如果没有指定类 则根据形状使用基础方块类
+                BlockShapeEnum blockShape = blockInfo.GetBlockShape();
+                string blockShapeName = EnumUtil.GetEnumName(blockShape);
+                block = ReflexUtil.CreateInstance<Block>("Block" + blockShapeName);
+            }
+            RegisterBlock((int)blockType, block);
+        }
+    }
+
+    public void RegisterBlock(int blockId, Block block)
+    {
+        if (!dicBlockRegister.ContainsKey(blockId))
+        {
+            dicBlockRegister.Add(blockId, block);
+        }
+    }
+
 
     /// <summary>
     /// 初始化方块信息
@@ -42,11 +98,11 @@ public class BlockManager : BaseManager, IBlockInfoView
         }
         return null;
     }
-    
+
 
     public BlockInfoBean GetBlockInfo(long blockId)
     {
-       return GetBlockInfo((BlockTypeEnum)blockId);
+        return GetBlockInfo((BlockTypeEnum)blockId);
     }
 
     #region 方块数据回调
