@@ -70,10 +70,11 @@ public class BiomeHandler : BaseHandler<BiomeHandler, BiomeManager>
         //获取当前位置方块随机生成的高度值
         int genHeight = GetHeightData(wPos, biomeInfo);
         //边缘处理 逐渐减缓到最低高度
+        float offsetDis = secondDis - minDis;
         if (genHeight - biomeInfo.minHeight > 2//高度大于3格
-            && secondDis - minDis <= 10) //在10范围以内
+            && offsetDis <= 10) //在10范围以内
         {
-            genHeight = ((genHeight - biomeInfo.minHeight) / 10) * Mathf.CeilToInt(secondDis - minDis) + biomeInfo.minHeight;
+            genHeight = Mathf.CeilToInt((genHeight - biomeInfo.minHeight) / 10) * Mathf.CeilToInt(offsetDis) + biomeInfo.minHeight;
         }
         //当前方块位置高于随机生成的高度值时，当前方块类型为空
         if (wPos.y > genHeight)

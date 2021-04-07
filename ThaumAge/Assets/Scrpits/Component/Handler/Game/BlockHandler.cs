@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq.Expressions;
 using System.Reflection;
+using System.Reflection.Emit;
 using UnityEditor;
 using UnityEngine;
 
@@ -31,62 +34,38 @@ public class BlockHandler : BaseHandler<BlockHandler, BlockManager>
     public Block CreateBlock(Chunk chunk, BlockBean blockData)
     {
         BlockTypeEnum blockType = blockData.GetBlockType();
-        //获取方块数据
-        //BlockInfoBean blockInfo = manager.GetBlockInfo(blockType);
-
-        //string blockTypeName = EnumUtil.GetEnumName(blockType);
-        ////通过反射获取类
-        //Block block = ReflexUtil.CreateInstance<Block>("Block" + blockTypeName);
-        //if (block == null)
-        //{
-        //    //如果没有指定类 则根据形状使用基础方块类
-        //    BlockShapeEnum blockShape = blockInfo.GetBlockShape();
-        //    string blockShapeName = EnumUtil.GetEnumName(blockShape);
-        //    block = ReflexUtil.CreateInstance<Block>("Block" + blockShapeName);
-        //}
-
-        //Block block;
-        //BlockShapeEnum blockShape = blockInfo.GetBlockShape();
-        //switch (blockShape)
-        //{
-        //    case BlockShapeEnum.Cross:
-        //        block = new BlockCross();
-        //        break;
-        //    case BlockShapeEnum.CrossOblique:
-        //        block = new BlockCrossOblique();
-        //        break;
-        //    case BlockShapeEnum.Cube:
-        //        block = new BlockCube();
-        //        break;
-        //    case BlockShapeEnum.CubeCuboid:
-        //        block = new BlockCubeCuboid();
-        //        break;
-        //    case BlockShapeEnum.CubeTransparent:
-        //        block = new BlockCubeTransparent();
-        //        break;
-        //    case BlockShapeEnum.Custom:
-        //        block = new BlockCustom();
-        //        break;
-        //    case BlockShapeEnum.None:
-        //        block = new BlockNone();
-        //        break;
-        //    default:
-        //        block = new BlockCube();
-        //        break;
-        //}
-        //block.SetData(chunk, blockData.localPosition.GetVector3Int(), blockData);
-
         Type type = manager.GetRegisterBlock(blockType).GetType();
+        Block block = CreateInstance<Block>(type);
 
-        //System.Reflection.Assembly asm = System.Reflection.Assembly.GetExecutingAssembly();
-        //Block block = asm.CreateInstance(type.FullName) as Block;
+        //Block block = Activator.CreateInstance(type) as Block;
 
-        //ConstructorInfo conStruct = type.GetConstructor(new Type[] {  });
-        //Block block = conStruct.Invoke(new object[] { }) as Block;
-
-        Block block = Activator.CreateInstance(type) as Block;
         block.SetData(chunk, blockData.localPosition.GetVector3Int(), blockData);
         return block;
+    }
+
+    /// <summary>
+    /// 用于快速实例化方块
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="objType"></param>
+    /// <returns></returns>
+    public static T CreateInstance<T>(Type objType) where T : class
+    {
+        Func<T> returnFunc;
+        if (!DelegateStore<T>.Store.TryGetValue(objType.FullName, out returnFunc))
+        {
+            var dynMethod = new DynamicMethod("DM$OBJ_FACTORY_" + objType.Name, objType, null, objType);
+            ILGenerator ilGen = dynMethod.GetILGenerator();
+            ilGen.Emit(OpCodes.Newobj, objType.GetConstructor(Type.EmptyTypes));
+            ilGen.Emit(OpCodes.Ret);
+            returnFunc = (Func<T>)dynMethod.CreateDelegate(typeof(Func<T>));
+            DelegateStore<T>.Store[objType.FullName] = returnFunc;
+        }
+        return returnFunc();
+    }
+    internal static class DelegateStore<T>
+    {
+        internal static IDictionary<string, Func<T>> Store = new ConcurrentDictionary<string, Func<T>>();
     }
 
 }
