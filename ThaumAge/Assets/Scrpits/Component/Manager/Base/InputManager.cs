@@ -51,6 +51,15 @@ public class InputManager : BaseManager
         return inputActions.Player.Use;
     }
 
+    /// <summary>
+    /// 获取取消数据
+    /// </summary>
+    /// <returns></returns>
+    public InputAction GetCancelData()
+    {
+        return inputActions.Player.Cancel;
+    }
+
 
     /// <summary>
     /// 获取摄像头距离数据

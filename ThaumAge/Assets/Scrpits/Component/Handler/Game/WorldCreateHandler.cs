@@ -32,7 +32,7 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
         //回调
         Action callBack = () =>
         {
-            chunk.isInit = true;
+            chunk.SetInitState(true);
             //设置数据
             chunk.BuildChunkRangeForAsync();
         };

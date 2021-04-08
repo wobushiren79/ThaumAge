@@ -22,6 +22,9 @@ public class ControlForPlayer : ControlForBase
         jumpAction.started += HandlerForJumpStart;
         InputAction useAction = InputHandler.Instance.manager.GetUseData();
         useAction.started += HandlerForUse;
+        InputAction cancelAction = InputHandler.Instance.manager.GetCancelData();
+        cancelAction.started += HandleForCancel;
+
     }
 
     private void Update()
@@ -88,37 +91,86 @@ public class ControlForPlayer : ControlForBase
             Chunk chunk = hit.collider.GetComponent<Chunk>();
             if (chunk)
             {
+                Vector3Int position = Vector3Int.zero;
+                Vector3Int addPosition = Vector3Int.zero;
+                if (hit.normal.y > 0)
+                {
+                    position = new Vector3Int((int)Mathf.Floor(hit.point.x), (int)Mathf.Floor(hit.point.y) - 1, (int)Mathf.Floor(hit.point.z));
+                    addPosition = position + Vector3Int.up;
+                }
+                else if (hit.normal.y < 0)
+                {
+                    position = new Vector3Int((int)Mathf.Floor(hit.point.x), (int)Mathf.Floor(hit.point.y), (int)Mathf.Floor(hit.point.z));
+                    addPosition = position + Vector3Int.down;
+                }
+                else if (hit.normal.x > 0)
+                {
+                    position = new Vector3Int((int)Mathf.Floor(hit.point.x) - 1, (int)Mathf.Floor(hit.point.y), (int)Mathf.Floor(hit.point.z));
+                    addPosition = position + Vector3Int.right;
+                }
+                else if (hit.normal.x < 0)
+                {
+                    position = new Vector3Int((int)Mathf.Floor(hit.point.x), (int)Mathf.Floor(hit.point.y), (int)Mathf.Floor(hit.point.z));
+                    addPosition = position + Vector3Int.left;
+                }
+                else if (hit.normal.z > 0)
+                {
+                    position = new Vector3Int((int)Mathf.Floor(hit.point.x), (int)Mathf.Floor(hit.point.y), (int)Mathf.Floor(hit.point.z) - 1);
+                    addPosition = position + Vector3Int.forward;
+                }
+                else if (hit.normal.z < 0)
+                {
+                    position = new Vector3Int((int)Mathf.Floor(hit.point.x), (int)Mathf.Floor(hit.point.y), (int)Mathf.Floor(hit.point.z));
+                    addPosition = position + Vector3Int.back;
+                }
+                chunk = WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(position).chunk;
+                chunk.SetBlockForWorld(addPosition, BlockTypeEnum.Water);
+            }
+        }
+    }
+
+    public void HandleForCancel(CallbackContext callback)
+    {
+        //获取摄像头到角色的距离
+        Vector3 cameraPosition = CameraHandler.Instance.manager.mainCamera.transform.position;
+        float disMax = Vector3.Distance(cameraPosition, transform.position);
+        //发射射线检测
+        RayUtil.RayToScreenPointForScreenCenter(disMax + 2, 1 << LayerInfo.Chunk, out bool isCollider, out RaycastHit hit);
+        if (isCollider)
+        {
+            Chunk chunk = hit.collider.GetComponent<Chunk>();
+            if (chunk)
+            {
 
                 if (hit.normal.y > 0)
                 {
                     Vector3Int position = new Vector3Int((int)Mathf.Floor(hit.point.x), (int)Mathf.Floor(hit.point.y) - 1, (int)Mathf.Floor(hit.point.z));
-                    //chunk.RemoveBlock(position);
-                    chunk.SetBlock(position + Vector3Int.up, BlockTypeEnum.Cactus);
+                    chunk.RemoveBlockForWorld(position);
                 }
                 else if (hit.normal.y < 0)
                 {
                     Vector3Int position = new Vector3Int((int)Mathf.Floor(hit.point.x), (int)Mathf.Floor(hit.point.y), (int)Mathf.Floor(hit.point.z));
-                    chunk.RemoveBlock(position);
+                    chunk.RemoveBlockForWorld(position);
                 }
                 else if (hit.normal.x > 0)
                 {
                     Vector3Int position = new Vector3Int((int)Mathf.Floor(hit.point.x) - 1, (int)Mathf.Floor(hit.point.y), (int)Mathf.Floor(hit.point.z));
-                    chunk.RemoveBlock(position);
+                    chunk.RemoveBlockForWorld(position);
                 }
                 else if (hit.normal.x < 0)
                 {
                     Vector3Int position = new Vector3Int((int)Mathf.Floor(hit.point.x), (int)Mathf.Floor(hit.point.y), (int)Mathf.Floor(hit.point.z));
-                    chunk.RemoveBlock(position);
+                    chunk.RemoveBlockForWorld(position);
                 }
                 else if (hit.normal.z > 0)
                 {
                     Vector3Int position = new Vector3Int((int)Mathf.Floor(hit.point.x), (int)Mathf.Floor(hit.point.y), (int)Mathf.Floor(hit.point.z) - 1);
-                    chunk.RemoveBlock(position);
+                    chunk.RemoveBlockForWorld(position);
                 }
                 else if (hit.normal.z < 0)
                 {
                     Vector3Int position = new Vector3Int((int)Mathf.Floor(hit.point.x), (int)Mathf.Floor(hit.point.y), (int)Mathf.Floor(hit.point.z));
-                    chunk.RemoveBlock(position);
+                    chunk.RemoveBlockForWorld(position);
                 }
             }
         }
@@ -172,5 +224,9 @@ public class ControlForPlayer : ControlForBase
         Quaternion rotate = Quaternion.Euler(rotateAngles);
         //朝摄像头方向移动
         characterController.transform.rotation = Quaternion.Slerp(transform.rotation, rotate, rotateSpeed * Time.deltaTime);
+    }
+
+    private void BlockChange()
+    {
     }
 }

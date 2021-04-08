@@ -98,8 +98,10 @@ MonoBehaviour:
   materials:
   - {fileID: 2100000, guid: 4d18b1a7b676b8047b2489b426fae9c7, type: 2}
   - {fileID: 2100000, guid: 8d068167d5d02e24bafe921fa7108554, type: 2}
+  - {fileID: 2100000, guid: 817aa751700b1214ab736177d67b4ff4, type: 2}
   width: 0
   height: 0
+  isInit: 0
   worldPosition: {x: 0, y: 0, z: 0}
 --- !u!64 &7675334834579374582
 MeshCollider:

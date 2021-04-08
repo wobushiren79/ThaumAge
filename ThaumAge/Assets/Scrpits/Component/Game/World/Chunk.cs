@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using UnityEditor;
@@ -19,7 +20,12 @@ public class Chunk : BaseMonoBehaviour
 
         //两面都渲染的三角形合集
         public List<int> trisBothFace;
+
+        //液体三角型合集
+        public List<int> trisLiquid;
     }
+
+    public Action eventUpdate;
 
     //材质合集
     public Material[] materials;
@@ -34,6 +40,9 @@ public class Chunk : BaseMonoBehaviour
 
     //存储着此Chunk内的所有Block信息
     public Dictionary<Vector3Int, Block> mapForBlock = new Dictionary<Vector3Int, Block>();
+    //待更新方块
+    public List<Block> listUpdateBlock = new List<Block>();
+
     //大小
     public int width = 0;
     public int height = 0;
@@ -59,6 +68,24 @@ public class Chunk : BaseMonoBehaviour
         meshCollider.cookingOptions = MeshColliderCookingOptions.WeldColocatedVertices;
     }
 
+    protected float eventUpdateTime = 0;
+    private void Update()
+    {
+        if (!isInit)
+            return;
+        eventUpdateTime -= Time.deltaTime;
+        if (eventUpdateTime < 0)
+        {
+            eventUpdateTime = 1;
+            eventUpdate?.Invoke();
+            if (listUpdateBlock.Count > 0)
+            {
+                BuildChunkForAsync();
+                listUpdateBlock.Clear();
+            }
+        }
+    }
+
     /// <summary>
     /// 设置数据
     /// </summary>
@@ -80,6 +107,14 @@ public class Chunk : BaseMonoBehaviour
     public void SetWorldData(WorldDataBean worldData)
     {
         this.worldData = worldData;
+    }
+
+    /// <summary>
+    /// 设置初始化状态
+    /// </summary>
+    public void SetInitState(bool isInit)
+    {
+        this.isInit = isInit;
     }
 
     /// <summary>
@@ -110,15 +145,6 @@ public class Chunk : BaseMonoBehaviour
         //只有初始化之后的chunk才能刷新
         if (!isInit || mapForBlock.Count <= 0)
             return;
-        chunkMesh = new Mesh();
-        chunkMeshCollider = new Mesh();
-
-        //设置mesh的三角形上限
-        chunkMesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
-        chunkMeshCollider.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
-        //设置为动态变更，理论上可以提高效率
-        chunkMesh.MarkDynamic();
-        chunkMeshCollider.MarkDynamic();
 
         ChunkData chunkData = new ChunkData
         {
@@ -132,7 +158,10 @@ public class Chunk : BaseMonoBehaviour
             trisCollider = new List<int>(),
 
             //两面都渲染的三角形合集
-            trisBothFace = new List<int>()
+            trisBothFace = new List<int>(),
+
+            //液体三角型合集
+            trisLiquid = new List<int>()
         };
 
         await Task.Run(() =>
@@ -140,21 +169,49 @@ public class Chunk : BaseMonoBehaviour
             lock (this)
             {
                 //遍历chunk, 生成其中的每一个Block
-                foreach (var itemData in mapForBlock)
+                try
                 {
-                    itemData.Value.BuildBlock(chunkData);
+                    foreach (Block itemData in mapForBlock.Values)
+                    {
+                        itemData.BuildBlock(chunkData);
+                    }
+                }
+                catch (Exception)
+                {
+                    return;
                 }
             }
         });
 
+        chunkMesh = new Mesh();
+        chunkMeshCollider = new Mesh();
+
+        //设置mesh的三角形上限
+        chunkMesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
+        chunkMeshCollider.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
+
+        //设置为动态变更，理论上可以提高效率
+        chunkMesh.MarkDynamic();
+        chunkMeshCollider.MarkDynamic();
+
+        //定点数判断
+        if (chunkData.verts.Count <= 3)
+        {
+            return;
+        }
+
         //设置顶点
         chunkMesh.vertices = chunkData.verts.ToArray();
+
+        //设置子mesh数量
         chunkMesh.subMeshCount = materials.Length;
         //设置UV
         chunkMesh.uv = chunkData.uvs.ToArray();
-        //设置三角（单面渲染，双面渲染）
+
+        //设置三角（单面渲染，双面渲染,液体）
         chunkMesh.SetTriangles(chunkData.tris.ToArray(), 0);
         chunkMesh.SetTriangles(chunkData.trisBothFace.ToArray(), 1);
+        chunkMesh.SetTriangles(chunkData.trisLiquid.ToArray(), 2);
 
         //刷新
         chunkMesh.RecalculateBounds();
@@ -163,6 +220,7 @@ public class Chunk : BaseMonoBehaviour
         //碰撞数据设置
         chunkMeshCollider.vertices = chunkData.vertsCollider.ToArray();
         chunkMeshCollider.triangles = chunkData.trisCollider.ToArray();
+
         //刷新
         chunkMeshCollider.RecalculateBounds();
         chunkMeshCollider.RecalculateNormals();
@@ -212,9 +270,13 @@ public class Chunk : BaseMonoBehaviour
     /// 移除方块
     /// </summary>
     /// <param name="position"></param>
-    public void RemoveBlock(Vector3Int position)
+    public void RemoveBlockForWorld(Vector3Int worldPosition)
     {
-        SetBlock(position, BlockTypeEnum.None);
+        SetBlockForWorld(worldPosition, BlockTypeEnum.None);
+    }
+    public void RemoveBlockForLocal(Vector3Int localPosition)
+    {
+        SetBlockForLocal(localPosition, BlockTypeEnum.None);
     }
 
     /// <summary>
@@ -222,29 +284,59 @@ public class Chunk : BaseMonoBehaviour
     /// </summary>
     /// <param name="worldPosition"></param>
     /// <param name="blockType"></param>
-    public void SetBlock(Vector3Int worldPosition, BlockTypeEnum blockType)
+    public Block SetBlockForWorld(Vector3Int worldPosition, BlockTypeEnum blockType)
     {
         Vector3Int blockLocalPosition = worldPosition - this.worldPosition;
+        return SetBlockForLocal(blockLocalPosition, blockType);
+    }
+
+    public Block SetBlockForLocal(Vector3Int localPosition, BlockTypeEnum blockType)
+    {
+        BlockBean blockData = new BlockBean(blockType, localPosition, localPosition + worldPosition);
+        return SetBlock(blockData,true);
+    }
+
+    public Block SetBlock(BlockBean blockData,bool isRefresh)
+    {
         ChunkBean chunkData = worldData.chunkData;
+        Vector3Int localPosition = blockData.localPosition.GetVector3Int();
         //首先移除方块
-        if (mapForBlock.TryGetValue(blockLocalPosition, out Block block))
+        if (mapForBlock.TryGetValue(localPosition, out Block valueBlock))
         {
-            mapForBlock.Remove(blockLocalPosition);
+            mapForBlock.Remove(localPosition);
         }
-        if (chunkData.dicBlockData.TryGetValue(blockLocalPosition, out BlockBean blockData))
+        if (chunkData.dicBlockData.TryGetValue(localPosition, out BlockBean valueBlockData))
         {
-            chunkData.dicBlockData.Remove(blockLocalPosition);
+            chunkData.dicBlockData.Remove(localPosition);
         }
 
         //再添加新方块
-        Block newBlock = BlockHandler.Instance.CreateBlock(this, blockLocalPosition, blockType);
-        mapForBlock.Add(blockLocalPosition, newBlock);
-        chunkData.dicBlockData.Add(blockLocalPosition, newBlock.blockData);
+        Block newBlock = BlockHandler.Instance.CreateBlock(this, blockData);
 
-        //异步构建chunk
-        BuildChunkRangeForAsync();
-        //异步保存数据
-        GameDataHandler.Instance.manager.SaveGameDataAsync(worldData);
+        mapForBlock.Add(localPosition, newBlock);
+        chunkData.dicBlockData.Add(localPosition, newBlock.blockData);
+
+  
+        if (isRefresh)
+        {
+            //异步构建chunk
+            BuildChunkRangeForAsync();
+            //异步保存数据
+            GameDataHandler.Instance.manager.SaveGameDataAsync(worldData);
+        }     
+
+        return newBlock;
     }
 
+    #region 事件注册
+    public void RegisterEventUpdate(Action action)
+    {
+        eventUpdate += action;
+    }
+
+    public void UnRegisterEventUpdate(Action action)
+    {
+        eventUpdate -= action;
+    }
+    #endregion
 }

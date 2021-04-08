@@ -16,6 +16,7 @@ public class BiomePrairie : Biome
             AddWeed(wPos);
             AddFlower(wPos);
             AddTree(wPos);
+            AddBigTree(wPos);
             // 地表，使用草
             return BlockTypeEnum.Grass;
         }
@@ -46,9 +47,24 @@ public class BiomePrairie : Biome
             maxHeight = 7,
             treeTrunk = BlockTypeEnum.Oak,
             treeLeaves = BlockTypeEnum.LeavesOak,
-            leavesRange=2,
+            leavesRange = 2,
         };
         AddTree(wPos, treeData);
+    }
+    protected void AddBigTree(Vector3Int wPos)
+    {
+        TreeData treeData = new TreeData
+        {
+            addRateMin = 1,
+            addRateMax = 100,
+            minHeight = 10,
+            maxHeight = 15,
+            treeTrunk = BlockTypeEnum.Oak,
+            treeLeaves = BlockTypeEnum.LeavesOak,
+            trunkRange = 2,
+            leavesRange = 2,
+        };
+        AddBigTree(wPos, treeData);
     }
 
     protected void AddWeed(Vector3Int wPos)

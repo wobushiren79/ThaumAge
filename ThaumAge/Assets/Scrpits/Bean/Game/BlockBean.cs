@@ -10,6 +10,8 @@ public class BlockBean
     public Vector3IntBean localPosition;
     //方块的世界坐标
     public Vector3IntBean worldPosition;
+    //方块联系等级
+    public int contactLevel;
     //方块数据
     public string meta;
 

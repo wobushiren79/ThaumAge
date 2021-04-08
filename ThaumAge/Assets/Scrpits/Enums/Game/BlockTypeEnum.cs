@@ -19,4 +19,6 @@ public enum BlockTypeEnum
     Chrysanthemum = 3013,    //æ’ª®
 
     Cactus = 4001,    //œ…»À’∆
+
+    Water=9001,//ÀÆ
 }

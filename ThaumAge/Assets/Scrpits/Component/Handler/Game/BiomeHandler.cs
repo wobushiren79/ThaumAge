@@ -74,7 +74,12 @@ public class BiomeHandler : BaseHandler<BiomeHandler, BiomeManager>
         if (genHeight - biomeInfo.minHeight > 2//高度大于3格
             && offsetDis <= 10) //在10范围以内
         {
-            genHeight = Mathf.CeilToInt((genHeight - biomeInfo.minHeight) / 10) * Mathf.CeilToInt(offsetDis) + biomeInfo.minHeight;
+            int edgeHeight = Mathf.CeilToInt((genHeight - biomeInfo.minHeight)/10f) * Mathf.CeilToInt(offsetDis) + biomeInfo.minHeight;
+            //只有当小于最大高度时才使用生成边缘高度
+            if(edgeHeight < genHeight)
+            {
+                genHeight = edgeHeight;
+            }
         }
         //当前方块位置高于随机生成的高度值时，当前方块类型为空
         if (wPos.y > genHeight)

@@ -5,7 +5,8 @@ using UnityEngine;
 public abstract class Block
 {
     public Chunk chunk;    //所属Chunk
-    public Vector3Int position; //所属Chunk内的坐标
+    public Vector3Int localPosition; //Chunk内的坐标
+    public Vector3Int worldPosition; //世界坐标
     public BlockBean blockData; //方框数据
 
     protected float uvWidth = 1 / 128f;
@@ -27,10 +28,11 @@ public abstract class Block
     /// <param name="chunk"></param>
     /// <param name="position"></param>
     /// <param name="blockData"></param>
-    public void SetData(Chunk chunk, Vector3Int position, BlockBean blockData)
+    public virtual void SetData(Chunk chunk, Vector3Int localPosition, BlockBean blockData)
     {
         this.chunk = chunk;
-        this.position = position;
+        this.localPosition = localPosition;
+        this.worldPosition = localPosition + chunk.worldPosition;
         this.blockData = blockData;
     }
 
@@ -39,7 +41,7 @@ public abstract class Block
     /// </summary>
     /// <param name="position"></param>
     /// <returns></returns>
-    public bool CheckNeedBuildFace(Vector3Int position)
+    public virtual bool CheckNeedBuildFace(Vector3Int position)
     {
         if (position.y < 0) return false;
         Block block = chunk.GetBlockForLocal(position);

@@ -119,6 +119,11 @@ public class Biome
     }
 
 
+    /// <summary>
+    /// 生成大树
+    /// </summary>
+    /// <param name="startPosition"></param>
+    /// <param name="treeData"></param>
     public virtual void AddBigTree(Vector3Int startPosition, TreeData treeData)
     {
         int worldSeed = WorldCreateHandler.Instance.manager.GetWorldSeed();
@@ -151,21 +156,15 @@ public class Biome
                         {
                             if (x == startPosition.x && z == startPosition.z)
                                 continue;
-                            if (Math.Abs(x) == range || Math.Abs(z) == range)
+                            if (Math.Abs(x) == range && Math.Abs(z) == range)
                             {
-                                //如果是边界 则有几率不生成
-                                int randomLeaves = random.NextInt(3);
-                                if (randomLeaves == 0)
+                                //如果是边界 则不生成     
                                     continue;
                             }
-                            BlockBean blockData = new BlockBean(treeData.treeLeaves, treeTrunkPosition + new Vector3Int(x, 0, z));
+                            BlockBean blockData = new BlockBean(treeData.treeTrunk, treeTrunkPosition + new Vector3Int(x, 0, z));
                             WorldCreateHandler.Instance.manager.listUpdateBlock.Add(blockData);
                         }
                     }
-                }
-                if (i > 2)
-                {
-
                 }
             }
         }

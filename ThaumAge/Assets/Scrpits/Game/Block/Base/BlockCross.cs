@@ -11,7 +11,7 @@ public class BlockCross : Block
         BlockTypeEnum blockType = blockData.GetBlockType();
         if (blockType != BlockTypeEnum.None)
         {
-            BuildFace(blockData, position, chunkData);
+            BuildFace(blockData, localPosition, chunkData);
         }
     }
 
