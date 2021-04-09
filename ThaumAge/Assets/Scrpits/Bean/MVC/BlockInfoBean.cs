@@ -20,6 +20,10 @@ public class BlockInfoBean : BaseBean
 
     public string uv_position;
 
+    public float weight;
+
+    public int rotate_state;
+
     /// <summary>
     /// 获取方块类型
     /// </summary>

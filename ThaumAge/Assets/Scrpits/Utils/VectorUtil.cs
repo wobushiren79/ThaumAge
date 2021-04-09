@@ -35,4 +35,19 @@ public class VectorUtil
         Vector2 circlePosition = new Vector2(x,y);
         return circlePosition;
     }
+
+    /// <summary>
+    /// 获取绕某点旋转之后的点
+    /// </summary>
+    /// <param name="centerPosition">中心点</param>
+    /// <param name="position">旋转点</param>
+    /// <param name="angles">角度</param>
+    /// <returns></returns>
+    public static Vector3 GetRotatedPosition(Vector3 centerPosition, Vector3 position, Vector3 angles)
+    {
+        Vector3 direction = position - centerPosition;
+        direction = Quaternion.Euler(angles) * direction;
+        return direction + centerPosition;
+    }
+
 }

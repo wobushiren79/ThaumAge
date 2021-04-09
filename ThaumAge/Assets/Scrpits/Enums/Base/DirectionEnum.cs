@@ -3,10 +3,11 @@ using UnityEngine;
 
 public enum DirectionEnum
 {
-    Left = 1,
-    Right = 2,
-    UP = 3,
-    Down = 4,
-    Front= 5,
-    Back= 6,
+    None = 0,
+    UP = 1,
+    Down = 2,
+    Left = 3,
+    Right = 4,
+    Front = 5,
+    Back = 6,
 }

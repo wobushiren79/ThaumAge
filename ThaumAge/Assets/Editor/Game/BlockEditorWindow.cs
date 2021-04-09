@@ -171,6 +171,10 @@ public class BlockEditorWindow : EditorWindow
         EditorUI.GUIText("名字",50);
         blockInfo.name = EditorUI.GUIEditorText(blockInfo.name);
         blockInfo.shape = (int)EditorUI.GUIEnum<BlockShapeEnum>("方块形状：",blockInfo.shape);
+        EditorUI.GUIText("重量", 50);
+        blockInfo.weight = EditorUI.GUIEditorText(blockInfo.weight);
+        EditorUI.GUIText("旋转状态（0不能旋转 1可以旋转）", 200);
+        blockInfo.rotate_state = EditorUI.GUIEditorText(blockInfo.rotate_state);
         EditorUI.GUIText("图片", 50);
         blockInfo.uv_position = EditorUI.GUIEditorText(blockInfo.uv_position);
         string[] uvStr = StringUtil.SplitBySubstringForArrayStr(blockInfo.uv_position, '|');
@@ -192,7 +196,6 @@ public class BlockEditorWindow : EditorWindow
                 }
             }
         }
-
         GUILayout.EndHorizontal();
     }
 

@@ -75,15 +75,17 @@ public class BlockCube : Block
 
     public virtual void AddVerts(Vector3 corner, Vector3 up, Vector3 right, Chunk.ChunkData chunkData)
     {
-        chunkData.verts.Add(corner);
-        chunkData.verts.Add(corner + up);
-        chunkData.verts.Add(corner + up + right);
-        chunkData.verts.Add(corner + right);
+        base.AddVerts(corner, chunkData);
 
-        chunkData.vertsCollider.Add(corner);
-        chunkData.vertsCollider.Add(corner + up);
-        chunkData.vertsCollider.Add(corner + up + right);
-        chunkData.vertsCollider.Add(corner + right);
+        chunkData.verts.Add(RotatePosition(corner, centerPosition));
+        chunkData.verts.Add(RotatePosition(corner + up, centerPosition));
+        chunkData.verts.Add(RotatePosition(corner + up + right, centerPosition));
+        chunkData.verts.Add(RotatePosition(corner + right, centerPosition));
+
+        chunkData.vertsCollider.Add(RotatePosition(corner, centerPosition));
+        chunkData.vertsCollider.Add(RotatePosition(corner + up, centerPosition));
+        chunkData.vertsCollider.Add(RotatePosition(corner + up + right, centerPosition));
+        chunkData.vertsCollider.Add(RotatePosition(corner + right, centerPosition));
     }
 
     public void AddUVs(DirectionEnum direction, BlockBean blockData, Chunk.ChunkData chunkData)

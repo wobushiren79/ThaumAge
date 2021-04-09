@@ -13,9 +13,11 @@ public class BlockLiquid : Block
     public override bool CheckNeedBuildFace(Vector3Int position)
     {
         if (position.y < 0) return false;
-        Block block = chunk.GetBlockForLocal(position);
-        BlockInfoBean blockInfo = BlockHandler.Instance.manager.GetBlockInfo(block.blockData.blockId);
-        BlockShapeEnum blockShape = blockInfo.GetBlockShape();
+        //检测旋转
+        Vector3Int checkPosition =Vector3Int.RoundToInt(RotatePosition(position, localPosition));
+        //获取方块
+        Block block = chunk.GetBlockForLocal(checkPosition);
+        BlockShapeEnum blockShape = block.blockInfo.GetBlockShape();
         switch (blockShape)
         {
             case BlockShapeEnum.Cube:

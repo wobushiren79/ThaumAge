@@ -316,7 +316,12 @@ public class Chunk : BaseMonoBehaviour
         mapForBlock.Add(localPosition, newBlock);
         chunkData.dicBlockData.Add(localPosition, newBlock.blockData);
 
-  
+        //刷新六个方向的方块
+
+
+
+
+        //是否实时刷新
         if (isRefresh)
         {
             //异步构建chunk
@@ -327,6 +332,7 @@ public class Chunk : BaseMonoBehaviour
 
         return newBlock;
     }
+
 
     #region 事件注册
     public void RegisterEventUpdate(Action action)

@@ -8,8 +8,21 @@ public abstract class Block
     public Vector3Int localPosition; //Chunk内的坐标
     public Vector3Int worldPosition; //世界坐标
     public BlockBean blockData; //方框数据
-
+    protected BlockInfoBean _blockInfo;//方块信息
+    public Vector3 centerPosition;
+    public BlockInfoBean blockInfo
+    {
+        get
+        {
+            if (_blockInfo == null)
+            {
+                _blockInfo = BlockHandler.Instance.manager.GetBlockInfo(blockData.blockId);
+            }
+            return _blockInfo;
+        }
+    }
     protected float uvWidth = 1 / 128f;
+
 
     public Block()
     {
@@ -20,6 +33,27 @@ public abstract class Block
     {
         if (blockData == null)
             blockData = new BlockBean(blockType, Vector3Int.zero, Vector3Int.zero);
+    }
+
+    public virtual void RefreshBlock()
+    {
+
+    }
+
+    public virtual void RefreshBlockRange()
+    {
+        Block upBlock = WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(worldPosition + Vector3Int.up);
+        upBlock.RefreshBlock();
+        Block downBlock = WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(worldPosition + Vector3Int.down);
+        downBlock.RefreshBlock();
+        Block leftBlock = WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(worldPosition + Vector3Int.left);
+        leftBlock.RefreshBlock();
+        Block rightBlock = WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(worldPosition + Vector3Int.right);
+        rightBlock.RefreshBlock();
+        Block forwardBlock = WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(worldPosition + Vector3Int.forward);
+        forwardBlock.RefreshBlock();
+        Block backBlock = WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(worldPosition + Vector3Int.back);
+        backBlock.RefreshBlock();
     }
 
     /// <summary>
@@ -34,6 +68,7 @@ public abstract class Block
         this.localPosition = localPosition;
         this.worldPosition = localPosition + chunk.worldPosition;
         this.blockData = blockData;
+        this.centerPosition = localPosition + new Vector3(0.5f, 0.5f, 0.5f);
     }
 
     /// <summary>
@@ -44,9 +79,11 @@ public abstract class Block
     public virtual bool CheckNeedBuildFace(Vector3Int position)
     {
         if (position.y < 0) return false;
-        Block block = chunk.GetBlockForLocal(position);
-        BlockInfoBean blockInfo = BlockHandler.Instance.manager.GetBlockInfo(block.blockData.blockId);
-        BlockShapeEnum blockShape = blockInfo.GetBlockShape();
+        //检测旋转
+        Vector3Int checkPosition = Vector3Int.RoundToInt(RotatePosition(position, localPosition));
+        //获取方块
+        Block block = chunk.GetBlockForLocal(checkPosition);
+        BlockShapeEnum blockShape = block.blockInfo.GetBlockShape();
         switch (blockShape)
         {
             case BlockShapeEnum.Cube:
@@ -96,6 +133,11 @@ public abstract class Block
     {
 
     }
+    public virtual void AddVert(List<Vector3> listVerts, Vector3 vert)
+    {
+        Vector3 centerPosition = localPosition + new Vector3(0.5f,0.5f,0.5f);
+        listVerts.Add(RotatePosition(vert, centerPosition));
+    }
 
     /// <summary>
     /// 添加UV
@@ -118,5 +160,55 @@ public abstract class Block
     {
 
     }
+
+    /// <summary>
+    /// 旋转点位
+    /// </summary>
+    /// <param name="vert"></param>
+    /// <returns></returns>
+    public virtual Vector3 RotatePosition(Vector3 position, Vector3 centerPosition)
+    {
+        if (blockInfo.rotate_state == 0)
+        {
+            //不旋转
+            return position;
+        }
+        else if (blockInfo.rotate_state == 1)
+        {
+            //已中心点旋转
+            DirectionEnum direction = blockData.GetDirection();
+            Vector3 angles;
+            switch (direction)
+            {
+                case DirectionEnum.UP:
+                    angles = new Vector3(0, 0, 0);
+                    break;
+                case DirectionEnum.Down:
+                    angles = new Vector3(0, 0, 180);
+                    break;
+                case DirectionEnum.Left:
+                    angles = new Vector3(0, 0, -90);
+                    break;
+                case DirectionEnum.Right:
+                    angles = new Vector3(0, 0, 90);
+                    break;
+                case DirectionEnum.Front:
+                    angles = new Vector3(90, 0, 0);
+                    break;
+                case DirectionEnum.Back:
+                    angles = new Vector3(-90, 0, 0);
+                    break;
+                default:
+                    angles = new Vector3(0, 0, 0);
+                    break;
+            }
+            //旋转6面
+            Vector3 rotatePosition = VectorUtil.GetRotatedPosition(centerPosition, position, angles);
+            return rotatePosition;
+        }
+        return position;
+    }
+
+
 
 }
