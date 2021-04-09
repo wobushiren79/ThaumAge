@@ -40,8 +40,6 @@ public class Chunk : BaseMonoBehaviour
 
     //存储着此Chunk内的所有Block信息
     public Dictionary<Vector3Int, Block> mapForBlock = new Dictionary<Vector3Int, Block>();
-    //待更新方块
-    public List<Block> listUpdateBlock = new List<Block>();
 
     //大小
     public int width = 0;
@@ -78,11 +76,6 @@ public class Chunk : BaseMonoBehaviour
         {
             eventUpdateTime = 1;
             eventUpdate?.Invoke();
-            if (listUpdateBlock.Count > 0)
-            {
-                BuildChunkForAsync();
-                listUpdateBlock.Clear();
-            }
         }
     }
 
@@ -178,6 +171,7 @@ public class Chunk : BaseMonoBehaviour
                 }
                 catch (Exception)
                 {
+                    BuildChunkForAsync();
                     return;
                 }
             }
@@ -293,40 +287,46 @@ public class Chunk : BaseMonoBehaviour
     public Block SetBlockForLocal(Vector3Int localPosition, BlockTypeEnum blockType)
     {
         BlockBean blockData = new BlockBean(blockType, localPosition, localPosition + worldPosition);
-        return SetBlock(blockData,true);
+        return SetBlock(blockData, true, true);
     }
 
-    public Block SetBlock(BlockBean blockData,bool isRefresh)
+    public Block SetBlock(BlockBean blockData, bool isRefreshChunk, bool isRefreshBlockRange)
     {
-        ChunkBean chunkData = worldData.chunkData;
         Vector3Int localPosition = blockData.localPosition.GetVector3Int();
         //首先移除方块
         if (mapForBlock.TryGetValue(localPosition, out Block valueBlock))
         {
             mapForBlock.Remove(localPosition);
         }
-        if (chunkData.dicBlockData.TryGetValue(localPosition, out BlockBean valueBlockData))
+        //添加数据
+        Block newBlock = BlockHandler.Instance.CreateBlock(this, blockData);
+        mapForBlock.Add(localPosition, newBlock);
+
+        //保存数据
+        if (worldData != null && worldData.chunkData != null)
         {
-            chunkData.dicBlockData.Remove(localPosition);
+            ChunkBean chunkData = worldData.chunkData;
+            if (chunkData.dicBlockData.TryGetValue(localPosition, out BlockBean valueBlockData))
+            {
+                chunkData.dicBlockData.Remove(localPosition);
+            }
+            chunkData.dicBlockData.Add(localPosition, newBlock.blockData);
         }
 
-        //再添加新方块
-        Block newBlock = BlockHandler.Instance.CreateBlock(this, blockData);
-
-        mapForBlock.Add(localPosition, newBlock);
-        chunkData.dicBlockData.Add(localPosition, newBlock.blockData);
-
         //刷新六个方向的方块
-        newBlock.RefreshBlockRange();
+        if (isRefreshBlockRange)
+        {
+            newBlock.RefreshBlockRange();
+        }
 
         //是否实时刷新
-        if (isRefresh)
+        if (isRefreshChunk)
         {
             //异步构建chunk
             BuildChunkRangeForAsync();
             //异步保存数据
             GameDataHandler.Instance.manager.SaveGameDataAsync(worldData);
-        }     
+        }
 
         return newBlock;
     }

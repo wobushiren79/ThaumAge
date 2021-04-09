@@ -12,6 +12,7 @@ public class InputManager : BaseManager
         inputActions.Player.Jump.Enable();
         inputActions.Player.Look.Enable();
         inputActions.Player.Use.Enable();
+        inputActions.Player.Cancel.Enable();
         inputActions.Player.CameraDistance.Enable();
     }
 

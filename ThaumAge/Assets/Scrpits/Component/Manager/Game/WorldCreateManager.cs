@@ -25,6 +25,7 @@ public class WorldCreateManager : BaseManager
     public int widthChunk = 16;
     public int heightChunk = 256;
 
+
     /// <summary>
     /// 获取区块模型
     /// </summary>
@@ -139,7 +140,7 @@ public class WorldCreateManager : BaseManager
             lock (this)
             {
                 //生成基础地形数据
-                HandleForBaseBlock( chunk);
+                HandleForBaseBlock(chunk);
                 //处理更新方块
                 HandleForUpdateBlock();
                 //处理存档方块 优先使用存档方块
@@ -210,13 +211,10 @@ public class WorldCreateManager : BaseManager
                 Vector3Int positionBlockLocal = itemBlock.worldPosition.GetVector3Int() - chunk.worldPosition;
                 //需要重新设置一下本地坐标 之前没有记录本地坐标
                 itemBlock.localPosition = new Vector3IntBean(positionBlockLocal);
-                //生成方块
-                Block block = BlockHandler.Instance.CreateBlock(chunk, itemBlock);
-                if (chunk.mapForBlock.TryGetValue(positionBlockLocal, out Block value))
-                {
-                    chunk.mapForBlock.Remove(positionBlockLocal);
-                }
-                chunk.mapForBlock.Add(positionBlockLocal, block);
+
+                //设置方块
+                chunk.SetBlock(itemBlock, false, false);
+
                 //添加需要更新的chunk
                 if (!listUpdateChunk.Contains(chunk))
                 {
@@ -230,7 +228,7 @@ public class WorldCreateManager : BaseManager
         //构建修改过的区块
         foreach (var itemChunk in listUpdateChunk)
         {
-            itemChunk.BuildChunkForAsync();
+            itemChunk.BuildChunkRangeForAsync();
         }
         listUpdateChunk.Clear();
     }

@@ -26,8 +26,7 @@ public class BlockWater : BlockLiquid
             if (!CheckHasHeightContactLevel())
             {
                 BlockBean newBlockData = new BlockBean(BlockTypeEnum.None, localPosition, worldPosition);
-                Block newBlock = chunk.SetBlock(newBlockData, false);
-                chunk.listUpdateBlock.Add(newBlock);
+                WorldCreateHandler.Instance.manager.listUpdateBlock.Add(newBlockData);
                 return;
             }
         }
@@ -64,9 +63,7 @@ public class BlockWater : BlockLiquid
             }
             BlockBean newBlockData = new BlockBean(BlockTypeEnum.Water, worldPosition - closeBlock.chunk.worldPosition, worldPosition);
             newBlockData.contactLevel = contactLevel;
-
-            Block newBlock = closeBlock.chunk.SetBlock(newBlockData, false);
-            closeBlock.chunk.listUpdateBlock.Add(newBlock);
+            WorldCreateHandler.Instance.manager.listUpdateBlock.Add(newBlockData);
             return true;
         }
         return false;
@@ -115,6 +112,7 @@ public class BlockWater : BlockLiquid
         if (blockData.contactLevel <= 3)
         {
             chunk.RegisterEventUpdate(WaterUpdate);
+
         }
     }
 }
