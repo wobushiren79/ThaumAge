@@ -317,9 +317,7 @@ public class Chunk : BaseMonoBehaviour
         chunkData.dicBlockData.Add(localPosition, newBlock.blockData);
 
         //刷新六个方向的方块
-
-
-
+        newBlock.RefreshBlockRange();
 
         //是否实时刷新
         if (isRefresh)

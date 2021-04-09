@@ -28,21 +28,19 @@ public class BlockWater : BlockLiquid
                 BlockBean newBlockData = new BlockBean(BlockTypeEnum.None, localPosition, worldPosition);
                 Block newBlock = chunk.SetBlock(newBlockData, false);
                 chunk.listUpdateBlock.Add(newBlock);
+                return;
             }
         }
-        else
-        {
-            //添加水方块
-            Vector3Int downBlockWorldPosition = worldPosition + Vector3Int.down;
-            //设置下方方块
-            bool isSuccess = SetCloseWaterBlock(downBlockWorldPosition, 0);
-            if (isSuccess)
-                return;
-            SetCloseWaterBlock(worldPosition + Vector3Int.left, blockData.contactLevel + 1);
-            SetCloseWaterBlock(worldPosition + Vector3Int.right, blockData.contactLevel + 1);
-            SetCloseWaterBlock(worldPosition + Vector3Int.back, blockData.contactLevel + 1);
-            SetCloseWaterBlock(worldPosition + Vector3Int.forward, blockData.contactLevel + 1);
-        }
+        //添加水方块
+        Vector3Int downBlockWorldPosition = worldPosition + Vector3Int.down;
+        //设置下方方块
+        bool isSuccess = SetCloseWaterBlock(downBlockWorldPosition, 0);
+        if (isSuccess)
+            return;
+        SetCloseWaterBlock(worldPosition + Vector3Int.left, blockData.contactLevel + 1);
+        SetCloseWaterBlock(worldPosition + Vector3Int.right, blockData.contactLevel + 1);
+        SetCloseWaterBlock(worldPosition + Vector3Int.back, blockData.contactLevel + 1);
+        SetCloseWaterBlock(worldPosition + Vector3Int.forward, blockData.contactLevel + 1);
     }
 
     /// <summary>
@@ -82,8 +80,8 @@ public class BlockWater : BlockLiquid
     {
         if (CheckHasHeightContactLevel(worldPosition + Vector3Int.left)
             || CheckHasHeightContactLevel(worldPosition + Vector3Int.right)
-             || CheckHasHeightContactLevel(worldPosition + Vector3Int.forward)
-              || CheckHasHeightContactLevel(worldPosition + Vector3Int.back))
+            || CheckHasHeightContactLevel(worldPosition + Vector3Int.forward)
+            || CheckHasHeightContactLevel(worldPosition + Vector3Int.back))
         {
             return true;
         }
