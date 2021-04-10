@@ -25,6 +25,7 @@ public class WorldCreateManager : BaseManager
     public int widthChunk = 16;
     public int heightChunk = 256;
 
+    public float time;
 
     /// <summary>
     /// 获取区块模型
@@ -213,7 +214,7 @@ public class WorldCreateManager : BaseManager
                 itemBlock.localPosition = new Vector3IntBean(positionBlockLocal);
 
                 //设置方块
-                chunk.SetBlock(itemBlock, false, false);
+                chunk.SetBlock(itemBlock, false, false, false);
 
                 //添加需要更新的chunk
                 if (!listUpdateChunk.Contains(chunk))

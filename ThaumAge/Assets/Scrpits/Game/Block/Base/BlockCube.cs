@@ -45,7 +45,7 @@ public class BlockCube : Block
 
             //Front
             if (CheckNeedBuildFace(localPosition + new Vector3Int(0, 0, -1)))
-                BuildFace(DirectionEnum.Front, blockData, localPosition, Vector3.up, Vector3.right, true, chunkData);
+                BuildFace(DirectionEnum.Forward, blockData, localPosition, Vector3.up, Vector3.right, true, chunkData);
             //Back
             if (CheckNeedBuildFace(localPosition + new Vector3Int(0, 0, 1)))
                 BuildFace(DirectionEnum.Back, blockData, localPosition + new Vector3Int(0, 0, 1), Vector3.up, Vector3.right, false, chunkData);

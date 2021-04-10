@@ -30,9 +30,6 @@ public class Chunk : BaseMonoBehaviour
     //材质合集
     public Material[] materials;
 
-    //Chunk的网格
-    protected Mesh chunkMesh;
-    protected Mesh chunkMeshCollider;
 
     protected MeshRenderer meshRenderer;
     protected MeshCollider meshCollider;
@@ -40,7 +37,8 @@ public class Chunk : BaseMonoBehaviour
 
     //存储着此Chunk内的所有Block信息
     public Dictionary<Vector3Int, Block> mapForBlock = new Dictionary<Vector3Int, Block>();
-
+    //待更新方块
+    public List<BlockBean> listUpdateBlock = new List<BlockBean>();
     //大小
     public int width = 0;
     public int height = 0;
@@ -67,6 +65,7 @@ public class Chunk : BaseMonoBehaviour
     }
 
     protected float eventUpdateTime = 0;
+
     private void Update()
     {
         if (!isInit)
@@ -76,6 +75,27 @@ public class Chunk : BaseMonoBehaviour
         {
             eventUpdateTime = 1;
             eventUpdate?.Invoke();
+            if (listUpdateBlock.Count > 0)
+            {
+                for (int i = 0; i < listUpdateBlock.Count; i++)
+                {
+                    BlockBean itemBlock = listUpdateBlock[i];
+                    Vector3Int positionBlockWorld = itemBlock.worldPosition.GetVector3Int();
+                    Vector3Int positionBlockLocal = positionBlockWorld - worldPosition;
+                    //需要重新设置一下本地坐标 之前没有记录本地坐标
+                    itemBlock.localPosition = new Vector3IntBean(positionBlockLocal);
+
+                    //设置方块
+                    SetBlock(itemBlock,false, false, false);
+                    //从更新列表中移除
+                    listUpdateBlock.Remove(itemBlock);
+                    i--;
+                }
+                //异步保存数据
+                GameDataHandler.Instance.manager.SaveGameDataAsync(worldData);
+                //异步刷新
+                BuildChunkForAsync();
+            }
         }
     }
 
@@ -138,7 +158,6 @@ public class Chunk : BaseMonoBehaviour
         //只有初始化之后的chunk才能刷新
         if (!isInit || mapForBlock.Count <= 0)
             return;
-
         ChunkData chunkData = new ChunkData
         {
             //普通使用的三角形合集
@@ -177,8 +196,8 @@ public class Chunk : BaseMonoBehaviour
             }
         });
 
-        chunkMesh = new Mesh();
-        chunkMeshCollider = new Mesh();
+        Mesh chunkMesh = new Mesh();
+        Mesh chunkMeshCollider = new Mesh();
 
         //设置mesh的三角形上限
         chunkMesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
@@ -220,6 +239,7 @@ public class Chunk : BaseMonoBehaviour
         chunkMeshCollider.RecalculateNormals();
 
         meshFilter.mesh = chunkMesh;
+        meshCollider.sharedMesh = null;
         meshCollider.sharedMesh = chunkMeshCollider;
     }
 
@@ -232,7 +252,7 @@ public class Chunk : BaseMonoBehaviour
     {
         if (localPosition.y < 0 || localPosition.y > height - 1)
         {
-            return new BlockCube(BlockTypeEnum.None);
+            return null;
         }
         int halfWidth = width / 2;
         //当前位置是否在Chunk内
@@ -240,14 +260,7 @@ public class Chunk : BaseMonoBehaviour
         {
             Vector3Int blockWorldPosition = localPosition + worldPosition;
             Block tempBlock = WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(blockWorldPosition);
-            if (tempBlock == null)
-            {
-                return new BlockCube(BlockTypeEnum.None);
-            }
-            else
-            {
-                return tempBlock;
-            }
+            return tempBlock;
         }
         if (mapForBlock.TryGetValue(localPosition, out Block value))
         {
@@ -255,7 +268,7 @@ public class Chunk : BaseMonoBehaviour
         }
         else
         {
-            return new BlockCube(BlockTypeEnum.None);
+            return null;
         }
     }
 
@@ -273,26 +286,39 @@ public class Chunk : BaseMonoBehaviour
         SetBlockForLocal(localPosition, BlockTypeEnum.None);
     }
 
+
     /// <summary>
     /// 设置方块
     /// </summary>
     /// <param name="worldPosition"></param>
     /// <param name="blockType"></param>
+    /// <returns></returns>
     public Block SetBlockForWorld(Vector3Int worldPosition, BlockTypeEnum blockType)
     {
         Vector3Int blockLocalPosition = worldPosition - this.worldPosition;
         return SetBlockForLocal(blockLocalPosition, blockType);
     }
 
+    public Block SetBlockForWorld(Vector3Int worldPosition, BlockTypeEnum blockType, DirectionEnum direction)
+    {
+        Vector3Int blockLocalPosition = worldPosition - this.worldPosition;
+        return SetBlockForLocal(blockLocalPosition, blockType, direction);
+    }
+
     public Block SetBlockForLocal(Vector3Int localPosition, BlockTypeEnum blockType)
     {
         BlockBean blockData = new BlockBean(blockType, localPosition, localPosition + worldPosition);
-        return SetBlock(blockData, true, true);
+        return SetBlock(blockData, true, true, true);
+    }
+    public Block SetBlockForLocal(Vector3Int localPosition, BlockTypeEnum blockType, DirectionEnum direction)
+    {
+        BlockBean blockData = new BlockBean(blockType, localPosition, localPosition + worldPosition, direction);
+        return SetBlock(blockData,true, true, true);
     }
 
-    public Block SetBlock(BlockBean blockData, bool isRefreshChunk, bool isRefreshBlockRange)
+    public Block SetBlock(BlockBean blockData,bool isSaveData, bool isRefreshChunkRange, bool isRefreshBlockRange)
     {
-        Vector3Int localPosition = blockData.localPosition.GetVector3Int();
+        Vector3Int localPosition = blockData.localPosition.GetVector3Int();    
         //首先移除方块
         if (mapForBlock.TryGetValue(localPosition, out Block valueBlock))
         {
@@ -320,10 +346,14 @@ public class Chunk : BaseMonoBehaviour
         }
 
         //是否实时刷新
-        if (isRefreshChunk)
+        if (isRefreshChunkRange)
         {
             //异步构建chunk
             BuildChunkRangeForAsync();
+        }
+
+        if (isSaveData)
+        {
             //异步保存数据
             GameDataHandler.Instance.manager.SaveGameDataAsync(worldData);
         }

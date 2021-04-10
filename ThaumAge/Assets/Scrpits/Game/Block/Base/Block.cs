@@ -8,8 +8,10 @@ public abstract class Block
     public Vector3Int localPosition; //Chunk内的坐标
     public Vector3Int worldPosition; //世界坐标
     public BlockBean blockData; //方框数据
-    protected BlockInfoBean _blockInfo;//方块信息
+
     public Vector3 centerPosition;
+
+    protected BlockInfoBean _blockInfo;//方块信息
     public BlockInfoBean blockInfo
     {
         get
@@ -43,17 +45,17 @@ public abstract class Block
     public virtual void RefreshBlockRange()
     {
         Block upBlock = WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(worldPosition + Vector3Int.up);
-        upBlock.RefreshBlock();
+        upBlock?.RefreshBlock();
         Block downBlock = WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(worldPosition + Vector3Int.down);
-        downBlock.RefreshBlock();
+        downBlock?.RefreshBlock();
         Block leftBlock = WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(worldPosition + Vector3Int.left);
-        leftBlock.RefreshBlock();
+        leftBlock?.RefreshBlock();
         Block rightBlock = WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(worldPosition + Vector3Int.right);
-        rightBlock.RefreshBlock();
+        rightBlock?.RefreshBlock();
         Block forwardBlock = WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(worldPosition + Vector3Int.forward);
-        forwardBlock.RefreshBlock();
+        forwardBlock?.RefreshBlock();
         Block backBlock = WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(worldPosition + Vector3Int.back);
-        backBlock.RefreshBlock();
+        backBlock?.RefreshBlock();
     }
 
     /// <summary>
@@ -83,6 +85,8 @@ public abstract class Block
         Vector3Int checkPosition = Vector3Int.RoundToInt(RotatePosition(position, localPosition));
         //获取方块
         Block block = chunk.GetBlockForLocal(checkPosition);
+        if (block == null)
+            return false;
         BlockShapeEnum blockShape = block.blockInfo.GetBlockShape();
         switch (blockShape)
         {
@@ -187,12 +191,12 @@ public abstract class Block
                     angles = new Vector3(0, 0, 180);
                     break;
                 case DirectionEnum.Left:
-                    angles = new Vector3(0, 0, -90);
-                    break;
-                case DirectionEnum.Right:
                     angles = new Vector3(0, 0, 90);
                     break;
-                case DirectionEnum.Front:
+                case DirectionEnum.Right:
+                    angles = new Vector3(0, 0, -90);
+                    break;
+                case DirectionEnum.Forward:
                     angles = new Vector3(90, 0, 0);
                     break;
                 case DirectionEnum.Back:

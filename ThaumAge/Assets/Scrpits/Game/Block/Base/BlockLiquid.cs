@@ -17,6 +17,8 @@ public class BlockLiquid : Block
         Vector3Int checkPosition =Vector3Int.RoundToInt(RotatePosition(position, localPosition));
         //获取方块
         Block block = chunk.GetBlockForLocal(checkPosition);
+        if (block == null)
+            return false;
         BlockShapeEnum blockShape = block.blockInfo.GetBlockShape();
         switch (blockShape)
         {
@@ -60,7 +62,7 @@ public class BlockLiquid : Block
 
             //Front
             if (CheckNeedBuildFace(localPosition + new Vector3Int(0, 0, -1)))
-                BuildFace(DirectionEnum.Front, blockData, localPosition, Vector3.up, Vector3.right, chunkData);
+                BuildFace(DirectionEnum.Forward, blockData, localPosition, Vector3.up, Vector3.right, chunkData);
             //Back
             if (CheckNeedBuildFace(localPosition + new Vector3Int(0, 0, 1)))
                 BuildFace(DirectionEnum.Back, blockData, localPosition + new Vector3Int(0, 0, 1), Vector3.up, Vector3.right, chunkData);

@@ -33,7 +33,7 @@ public class BlockCubeCuboid : BlockCube
                 BuildFace(DirectionEnum.UP, blockData, localPosition + new Vector3Int(0, 1, 0), Vector3.forward, Vector3.right, true, chunkData);
 
             //Front
-                BuildFace(DirectionEnum.Front, blockData, localPosition + new Vector3(0, 0, 1f / 16f), Vector3.up, Vector3.right, true, chunkData);
+                BuildFace(DirectionEnum.Forward, blockData, localPosition + new Vector3(0, 0, 1f / 16f), Vector3.up, Vector3.right, true, chunkData);
             //Back
                 BuildFace(DirectionEnum.Back, blockData, localPosition + new Vector3(0, 0, 15f / 16f), Vector3.up, Vector3.right, false, chunkData);
         }

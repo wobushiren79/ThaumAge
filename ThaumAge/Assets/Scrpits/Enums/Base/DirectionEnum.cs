@@ -8,6 +8,6 @@ public enum DirectionEnum
     Down = 2,
     Left = 3,
     Right = 4,
-    Front = 5,
+    Forward = 5,
     Back = 6,
 }

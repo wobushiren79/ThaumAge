@@ -8,10 +8,7 @@ public class BlockWater : BlockLiquid
     public override void SetData(Chunk chunk, Vector3Int position, BlockBean blockData)
     {
         base.SetData(chunk, position, blockData);
-        if (blockData.contactLevel <= 3)
-        {
-            chunk.RegisterEventUpdate(WaterUpdate);
-        }
+        chunk.RegisterEventUpdate(WaterUpdate);
     }
 
     /// <summary>
@@ -26,7 +23,7 @@ public class BlockWater : BlockLiquid
             if (!CheckHasHeightContactLevel())
             {
                 BlockBean newBlockData = new BlockBean(BlockTypeEnum.None, localPosition, worldPosition);
-                WorldCreateHandler.Instance.manager.listUpdateBlock.Add(newBlockData);
+                chunk.listUpdateBlock.Add(newBlockData);
                 return;
             }
         }
@@ -35,6 +32,8 @@ public class BlockWater : BlockLiquid
         //设置下方方块
         bool isSuccess = SetCloseWaterBlock(downBlockWorldPosition, 0);
         if (isSuccess)
+            return;
+        if (blockData.contactLevel > 2)
             return;
         SetCloseWaterBlock(worldPosition + Vector3Int.left, blockData.contactLevel + 1);
         SetCloseWaterBlock(worldPosition + Vector3Int.right, blockData.contactLevel + 1);
@@ -51,19 +50,22 @@ public class BlockWater : BlockLiquid
     public bool SetCloseWaterBlock(Vector3Int worldPosition, int contactLevel)
     {
         Block closeBlock = WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(worldPosition);
+        if (closeBlock == null)
+            return false;
         BlockTypeEnum closeBlockType = closeBlock.blockData.GetBlockType();
         BlockInfoBean closeBlockInfo = BlockHandler.Instance.manager.GetBlockInfo(closeBlockType);
         //如果是空方块或者重量等于1
         if (closeBlockType == BlockTypeEnum.None || closeBlockType == BlockTypeEnum.Water || closeBlockInfo.weight == 1)
         {
-            if (closeBlockType == BlockTypeEnum.Water && contactLevel > closeBlock.blockData.contactLevel)
+            if (closeBlockType == BlockTypeEnum.Water && blockData.contactLevel > closeBlock.blockData.contactLevel)
             {
                 //如果相邻都是水 需要根据关联等级设置
                 return false;
             }
             BlockBean newBlockData = new BlockBean(BlockTypeEnum.Water, worldPosition - closeBlock.chunk.worldPosition, worldPosition);
+           
             newBlockData.contactLevel = contactLevel;
-            WorldCreateHandler.Instance.manager.listUpdateBlock.Add(newBlockData);
+            closeBlock.chunk.listUpdateBlock.Add(newBlockData);
             return true;
         }
         return false;
@@ -96,7 +98,9 @@ public class BlockWater : BlockLiquid
     public bool CheckHasHeightContactLevel(Vector3Int wPos)
     {
         Block closeBlock = WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(wPos);
-        if (closeBlock.blockData.contactLevel < blockData.contactLevel)
+        if (closeBlock == null)
+            return false;
+        if (blockData.contactLevel > closeBlock.blockData.contactLevel)
         {
             return true;
         }
@@ -109,10 +113,6 @@ public class BlockWater : BlockLiquid
     public override void RefreshBlock()
     {
         base.RefreshBlock();
-        if (blockData.contactLevel <= 3)
-        {
-            chunk.RegisterEventUpdate(WaterUpdate);
-
-        }
+        chunk.RegisterEventUpdate(WaterUpdate);
     }
 }
