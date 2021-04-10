@@ -8,5 +8,6 @@ public enum BiomeTypeEnum
     Desert = 3,//沙漠
     Mountain = 4,//高山
     Volcano = 5,//火山
+    Ocean = 6,//海洋
     MagicForest = 11,//魔法森林
 }

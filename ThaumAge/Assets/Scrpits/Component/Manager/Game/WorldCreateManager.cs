@@ -166,7 +166,7 @@ public class WorldCreateManager : BaseManager
         listBiome.Add(new BiomeMagicForest());
         listBiome.Add(new BiomeVolcano());
         listBiome.Add(new BiomeMountain());
-
+        listBiome.Add(new BiomeOcean());
         List<Vector3Int> listBiomeCenter = BiomeHandler.Instance.GetBiomeCenterPosition(chunk, 5, 10);
 
         //遍历map，生成其中每个Block的信息 

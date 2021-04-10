@@ -84,7 +84,7 @@ public abstract class Block
         //检测旋转
         Vector3Int checkPosition = Vector3Int.RoundToInt(RotatePosition(position, localPosition));
         //获取方块
-        Block block = chunk.GetBlockForLocal(checkPosition);
+        Block block = WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(checkPosition + chunk.worldPosition);
         if (block == null)
             return false;
         BlockShapeEnum blockShape = block.blockInfo.GetBlockShape();
@@ -139,7 +139,6 @@ public abstract class Block
     }
     public virtual void AddVert(List<Vector3> listVerts, Vector3 vert)
     {
-        Vector3 centerPosition = localPosition + new Vector3(0.5f,0.5f,0.5f);
         listVerts.Add(RotatePosition(vert, centerPosition));
     }
 

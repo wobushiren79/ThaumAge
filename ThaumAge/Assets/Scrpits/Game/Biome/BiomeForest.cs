@@ -17,6 +17,7 @@ public class BiomeForest : Biome
             AddWeed(wPos);
             AddFlower(wPos);
             AddTree(wPos);
+            AddBigTree(wPos);
             // 地表，使用草
             return BlockTypeEnum.Grass;
         }
@@ -35,6 +36,21 @@ public class BiomeForest : Biome
             //其他石头
             return BlockTypeEnum.Stone;
         }
+    }
+    protected void AddBigTree(Vector3Int wPos)
+    {
+        TreeData treeData = new TreeData
+        {
+            addRateMin = 1,
+            addRateMax = 100,
+            minHeight = 10,
+            maxHeight = 15,
+            treeTrunk = BlockTypeEnum.Oak,
+            treeLeaves = BlockTypeEnum.LeavesOak,
+            trunkRange = 2,
+            leavesRange = 2,
+        };
+        AddBigTree(wPos, treeData);
     }
 
     protected void AddTree(Vector3Int wPos)

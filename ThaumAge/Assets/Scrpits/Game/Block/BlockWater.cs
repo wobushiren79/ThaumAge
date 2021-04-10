@@ -55,13 +55,15 @@ public class BlockWater : BlockLiquid
         BlockTypeEnum closeBlockType = closeBlock.blockData.GetBlockType();
         BlockInfoBean closeBlockInfo = BlockHandler.Instance.manager.GetBlockInfo(closeBlockType);
         //如果是空方块或者重量等于1
-        if (closeBlockType == BlockTypeEnum.None || closeBlockType == BlockTypeEnum.Water || closeBlockInfo.weight == 1)
+        if (closeBlockType == BlockTypeEnum.None 
+            //|| closeBlockType == BlockTypeEnum.Water
+            || closeBlockInfo.weight == 1)
         {
-            if (closeBlockType == BlockTypeEnum.Water && blockData.contactLevel > closeBlock.blockData.contactLevel)
-            {
-                //如果相邻都是水 需要根据关联等级设置
-                return false;
-            }
+            //if (closeBlockType == BlockTypeEnum.Water && blockData.contactLevel > closeBlock.blockData.contactLevel)
+            //{
+            //    //如果相邻都是水 需要根据关联等级设置
+            //    return false;
+            //}
             BlockBean newBlockData = new BlockBean(BlockTypeEnum.Water, worldPosition - closeBlock.chunk.worldPosition, worldPosition);
            
             newBlockData.contactLevel = contactLevel;

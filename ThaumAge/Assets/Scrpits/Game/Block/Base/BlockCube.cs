@@ -77,15 +77,15 @@ public class BlockCube : Block
     {
         base.AddVerts(corner, chunkData);
 
-        chunkData.verts.Add(RotatePosition(corner, centerPosition));
-        chunkData.verts.Add(RotatePosition(corner + up, centerPosition));
-        chunkData.verts.Add(RotatePosition(corner + up + right, centerPosition));
-        chunkData.verts.Add(RotatePosition(corner + right, centerPosition));
+        AddVert(chunkData.verts, corner);
+        AddVert(chunkData.verts, corner + up);
+        AddVert(chunkData.verts, corner + up + right);
+        AddVert(chunkData.verts, corner + right);
 
-        chunkData.vertsCollider.Add(RotatePosition(corner, centerPosition));
-        chunkData.vertsCollider.Add(RotatePosition(corner + up, centerPosition));
-        chunkData.vertsCollider.Add(RotatePosition(corner + up + right, centerPosition));
-        chunkData.vertsCollider.Add(RotatePosition(corner + right, centerPosition));
+        AddVert(chunkData.vertsCollider, corner);
+        AddVert(chunkData.vertsCollider, corner + up);
+        AddVert(chunkData.vertsCollider, corner + up + right);
+        AddVert(chunkData.vertsCollider, corner + right);
     }
 
     public void AddUVs(DirectionEnum direction, BlockBean blockData, Chunk.ChunkData chunkData)

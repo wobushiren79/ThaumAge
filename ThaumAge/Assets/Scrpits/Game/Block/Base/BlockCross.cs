@@ -73,16 +73,15 @@ public class BlockCross : Block
     public override void AddVerts(Vector3 corner, Chunk.ChunkData chunkData)
     {
         base.AddVerts(corner, chunkData);
+        AddVert(chunkData.verts, corner + new Vector3(0.5f, 0, 0));
+        AddVert(chunkData.verts, corner + new Vector3(0.5f, 1, 0));
+        AddVert(chunkData.verts, corner + new Vector3(0.5f, 1, 1));
+        AddVert(chunkData.verts, corner + new Vector3(0.5f, 0, 1));
 
-        chunkData.verts.Add(RotatePosition(corner + new Vector3(0.5f, 0, 0), centerPosition));
-        chunkData.verts.Add(RotatePosition(corner + new Vector3(0.5f, 1, 0), centerPosition));
-        chunkData.verts.Add(RotatePosition(corner + new Vector3(0.5f, 1, 1), centerPosition));
-        chunkData.verts.Add(RotatePosition(corner + new Vector3(0.5f, 0, 1), centerPosition));
-
-        chunkData.verts.Add(RotatePosition(corner + new Vector3(0, 0, 0.5f), centerPosition));
-        chunkData.verts.Add(RotatePosition(corner + new Vector3(0, 1, 0.5f), centerPosition));
-        chunkData.verts.Add(RotatePosition(corner + new Vector3(1, 1, 0.5f), centerPosition));
-        chunkData.verts.Add(RotatePosition(corner + new Vector3(1, 0, 0.5f), centerPosition));
+        AddVert(chunkData.verts, corner + new Vector3(0, 0, 0.5f));
+        AddVert(chunkData.verts, corner + new Vector3(0, 1, 0.5f));
+        AddVert(chunkData.verts, corner + new Vector3(1, 1, 0.5f));
+        AddVert(chunkData.verts, corner + new Vector3(1, 0, 0.5f));
     }
 
 

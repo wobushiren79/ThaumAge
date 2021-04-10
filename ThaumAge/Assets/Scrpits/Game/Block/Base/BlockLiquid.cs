@@ -14,9 +14,9 @@ public class BlockLiquid : Block
     {
         if (position.y < 0) return false;
         //检测旋转
-        Vector3Int checkPosition =Vector3Int.RoundToInt(RotatePosition(position, localPosition));
+        Vector3Int checkPosition = Vector3Int.RoundToInt(RotatePosition(position, localPosition));
         //获取方块
-        Block block = chunk.GetBlockForLocal(checkPosition);
+        Block block = WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(checkPosition + chunk.worldPosition);
         if (block == null)
             return false;
         BlockShapeEnum blockShape = block.blockInfo.GetBlockShape();
@@ -132,10 +132,15 @@ public class BlockLiquid : Block
         {
             uvStartPosition = Vector2.zero;
         }
-        chunkData.uvs.Add(uvStartPosition);
-        chunkData.uvs.Add(uvStartPosition + new Vector2(0, uvWidth));
-        chunkData.uvs.Add(uvStartPosition + new Vector2(uvWidth, uvWidth));
-        chunkData.uvs.Add(uvStartPosition + new Vector2(uvWidth, 0));
+        //chunkData.uvs.Add(uvStartPosition);
+        //chunkData.uvs.Add(uvStartPosition + new Vector2(0, uvWidth));
+        //chunkData.uvs.Add(uvStartPosition + new Vector2(uvWidth, uvWidth));
+        //chunkData.uvs.Add(uvStartPosition + new Vector2(uvWidth, 0));
+
+        chunkData.uvs.Add(Vector2.zero);
+        chunkData.uvs.Add(Vector2.zero + new Vector2(0, 1));
+        chunkData.uvs.Add(Vector2.zero + new Vector2(1, 1));
+        chunkData.uvs.Add(Vector2.zero + new Vector2(1, 0));
     }
 
     public override void AddTris(Chunk.ChunkData chunkData)

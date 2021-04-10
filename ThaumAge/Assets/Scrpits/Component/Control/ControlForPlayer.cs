@@ -133,7 +133,7 @@ public class ControlForPlayer : ControlForBase
                 Block block = WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(addPosition);
                 if(block != null)
                 {
-                    block.chunk.SetBlockForWorld(addPosition, BlockTypeEnum.Sunflower, direction);
+                    block.chunk.SetBlockForWorld(addPosition, BlockTypeEnum.Water, direction);
                 }    
             }
         }
