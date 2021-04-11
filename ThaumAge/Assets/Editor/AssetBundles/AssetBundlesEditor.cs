@@ -25,7 +25,7 @@ public class AssetBundlesEditor : Editor
 
     protected static void BuildAssetBundle(BuildAssetBundleOptions options, BuildTarget buildTarget)
     {
-        string dir = "Assets/StreamingAssets";
+        string dir = "Assets/StreamingAssets/AssetBundles";
         if (Directory.Exists(dir) == false)
         {
             Directory.CreateDirectory(dir);

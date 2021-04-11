@@ -6,7 +6,7 @@ using UnityEditor;
 
 public class LoadAssetUtil
 {
-    public static readonly string PathURL = Application.streamingAssetsPath + "/";
+    public static readonly string PathURL = Application.streamingAssetsPath + "/AssetBundles/";
 
 #if UNITY_EDITOR
     /// <summary>

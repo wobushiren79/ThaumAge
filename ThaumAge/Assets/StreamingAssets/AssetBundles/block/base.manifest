@@ -31,4 +31,4 @@ SerializeReferenceClassIdentifiers: []
 Assets:
 - Assets/Prefabs/Game/Chunk.prefab
 Dependencies:
-- F:/Unity/UnityProject/ThumAge/ThaumAge/Assets/StreamingAssets/block/mats
+- F:/Unity/UnityProject/ThumAge/ThaumAge/Assets/StreamingAssets/AssetBundles/block/mats

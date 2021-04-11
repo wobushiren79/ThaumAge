@@ -196,6 +196,16 @@ public class WorldCreateManager : BaseManager
             }
         });
 
+        if (listUpdateChunk.Count > 0)
+        {
+            //构建修改过的区块
+            foreach (var itemChunk in listUpdateChunk)
+            {
+                itemChunk.BuildChunkRangeForAsync();
+            }
+            listUpdateChunk.Clear();
+        }
+
         callBack?.Invoke();
     }
 
@@ -273,12 +283,6 @@ public class WorldCreateManager : BaseManager
                 i--;
             }
         }
-        //构建修改过的区块
-        foreach (var itemChunk in listUpdateChunk)
-        {
-            itemChunk.BuildChunkRangeForAsync();
-        }
-        listUpdateChunk.Clear();
     }
 
     /// <summary>

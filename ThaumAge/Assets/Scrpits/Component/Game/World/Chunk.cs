@@ -184,7 +184,7 @@ public class Chunk : BaseMonoBehaviour
             }
             catch (Exception)
             {
-                BuildChunkForAsync();
+                //BuildChunkForAsync();
             }
         });
 
