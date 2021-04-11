@@ -13,7 +13,7 @@ public class BiomeForest : Biome
     public override BlockTypeEnum GetBlockType(int genHeight, Vector3Int localPos, Vector3Int wPos)
     {
         if (wPos.y == genHeight)
-        {
+        { 
             AddWeed(wPos);
             AddFlower(wPos);
             AddTree(wPos);
@@ -42,13 +42,12 @@ public class BiomeForest : Biome
         TreeData treeData = new TreeData
         {
             addRateMin = 1,
-            addRateMax = 100,
-            minHeight = 10,
-            maxHeight = 15,
+            addRateMax = 200,
+            minHeight = 6,
+            maxHeight = 10,
             treeTrunk = BlockTypeEnum.Oak,
             treeLeaves = BlockTypeEnum.LeavesOak,
-            trunkRange = 2,
-            leavesRange = 2,
+            leavesRange = 4,
         };
         AddBigTree(wPos, treeData);
     }
@@ -58,9 +57,9 @@ public class BiomeForest : Biome
         TreeData treeData = new TreeData
         {
             addRateMin = 1,
-            addRateMax = 100,
+            addRateMax = 50,
             minHeight = 3,
-            maxHeight = 7,
+            maxHeight = 6,
             treeTrunk = BlockTypeEnum.Oak,
             treeLeaves = BlockTypeEnum.LeavesOak,
             leavesRange = 2,
@@ -73,7 +72,7 @@ public class BiomeForest : Biome
         WeedData weedData = new WeedData
         {
             addRateMin = 1,
-            addRateMax = 10,
+            addRateMax = 3,
             listWeedType = new List<BlockTypeEnum> { BlockTypeEnum.Weed_Long, BlockTypeEnum.Weed_Normal, BlockTypeEnum.Weed_Short }
         };
         AddWeed(wPos, weedData);

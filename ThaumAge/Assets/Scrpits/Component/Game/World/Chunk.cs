@@ -12,24 +12,16 @@ public class Chunk : BaseMonoBehaviour
         //普通使用的三角形合集
         public List<Vector3> verts;
         public List<Vector2> uvs;
-        public List<int> tris;
 
         //碰撞使用的三角形合集
         public List<Vector3> vertsCollider;
         public List<int> trisCollider;
 
-        //两面都渲染的三角形合集
-        public List<int> trisBothFace;
-
-        //液体三角型合集
-        public List<int> trisLiquid;
+        //所有三角形合集，根据材质球区分
+        public Dictionary<BlockMaterialEnum, List<int>> dicTris;
     }
 
     public Action eventUpdate;
-
-    //材质合集
-    public Material[] materials;
-
 
     protected MeshRenderer meshRenderer;
     protected MeshCollider meshCollider;
@@ -56,7 +48,7 @@ public class Chunk : BaseMonoBehaviour
         meshCollider = GetComponent<MeshCollider>();
         meshFilter = GetComponent<MeshFilter>();
 
-        meshRenderer.materials = materials;
+        meshRenderer.materials = WorldCreateHandler.Instance.manager.GetAllMaterial();
         //设置mesh的三角形上限
         meshFilter.mesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
         meshCollider.sharedMesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
@@ -94,7 +86,7 @@ public class Chunk : BaseMonoBehaviour
                 //异步保存数据
                 GameDataHandler.Instance.manager.SaveGameDataAsync(worldData);
                 //异步刷新
-                BuildChunkForAsync();
+                BuildChunkRangeForAsync();
             }
         }
     }
@@ -163,38 +155,39 @@ public class Chunk : BaseMonoBehaviour
             //普通使用的三角形合集
             verts = new List<Vector3>(),
             uvs = new List<Vector2>(),
-            tris = new List<int>(),
 
             //碰撞使用的三角形合集
             vertsCollider = new List<Vector3>(),
             trisCollider = new List<int>(),
 
-            //两面都渲染的三角形合集
-            trisBothFace = new List<int>(),
-
-            //液体三角型合集
-            trisLiquid = new List<int>()
+            //三角型合集
+            dicTris = new Dictionary<BlockMaterialEnum, List<int>>()
         };
+        //初始化数据
+        List<BlockMaterialEnum> blockMaterialsEnum = EnumUtil.GetEnumValue<BlockMaterialEnum>();
+        for (int i=0;i< blockMaterialsEnum.Count;i++)
+        {
+            BlockMaterialEnum blockMaterial = blockMaterialsEnum[i];
+            chunkData.dicTris.Add(blockMaterial, new List<int>());
+        }
 
         await Task.Run(() =>
         {
-            lock (this)
+
+            //遍历chunk, 生成其中的每一个Block
+            try
             {
-                //遍历chunk, 生成其中的每一个Block
-                try
+                foreach (Block itemData in mapForBlock.Values)
                 {
-                    foreach (Block itemData in mapForBlock.Values)
-                    {
-                        itemData.BuildBlock(chunkData);
-                    }
-                }
-                catch (Exception)
-                {
-                    BuildChunkForAsync();
-                    return;
+                    itemData.BuildBlock(chunkData);
                 }
             }
+            catch (Exception)
+            {
+                BuildChunkForAsync();
+            }
         });
+
 
         Mesh chunkMesh = new Mesh();
         Mesh chunkMeshCollider = new Mesh();
@@ -217,14 +210,15 @@ public class Chunk : BaseMonoBehaviour
         chunkMesh.vertices = chunkData.verts.ToArray();
 
         //设置子mesh数量
-        chunkMesh.subMeshCount = materials.Length;
+        chunkMesh.subMeshCount = meshRenderer.materials.Length;
         //设置UV
         chunkMesh.uv = chunkData.uvs.ToArray();
 
         //设置三角（单面渲染，双面渲染,液体）
-        chunkMesh.SetTriangles(chunkData.tris.ToArray(), 0);
-        chunkMesh.SetTriangles(chunkData.trisBothFace.ToArray(), 1);
-        chunkMesh.SetTriangles(chunkData.trisLiquid.ToArray(), 2);
+        foreach (var itemTris in chunkData.dicTris)
+        {
+            chunkMesh.SetTriangles(itemTris.Value.ToArray(), (int)itemTris.Key);
+        }
 
         //刷新
         chunkMesh.RecalculateBounds();

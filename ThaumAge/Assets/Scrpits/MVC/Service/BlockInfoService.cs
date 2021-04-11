@@ -62,7 +62,7 @@ public class BlockInfoService : BaseMVCService
     /// <returns></returns>
     public List<BlockInfoBean> QueryDataByName(string name)
     {
-        return BaseQueryData<BlockInfoBean>("link_id", "name", name);
+        return BaseQueryData<BlockInfoBean>("link_id", tableNameForLeft + ".name", "'" + name + "'");
     }
 
     /// <summary>

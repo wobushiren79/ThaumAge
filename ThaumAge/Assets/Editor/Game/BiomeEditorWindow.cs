@@ -26,6 +26,7 @@ public class BiomeEditorWindow : EditorWindow
     private void OnDisable()
     {
         DestroyImmediate(GameDataHandler.Instance.gameObject);
+        DestroyImmediate(WorldCreateHandler.Instance.gameObject);
     }
 
     public void OnGUI()

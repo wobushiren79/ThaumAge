@@ -236,7 +236,4 @@ public class ControlForPlayer : ControlForBase
         characterController.transform.rotation = Quaternion.Slerp(transform.rotation, rotate, rotateSpeed * Time.deltaTime);
     }
 
-    private void BlockChange()
-    {
-    }
 }

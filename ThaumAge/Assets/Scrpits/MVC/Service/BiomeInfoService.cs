@@ -62,7 +62,7 @@ public class BiomeInfoService : BaseMVCService
     /// <returns></returns>
     public List<BiomeInfoBean> QueryDataByName(string name)
     {
-        return BaseQueryData<BiomeInfoBean>("link_id", "name", name);
+        return BaseQueryData<BiomeInfoBean>("link_id", tableNameForLeft + ".name", "'" + name + "'");
     }
 
     /// <summary>

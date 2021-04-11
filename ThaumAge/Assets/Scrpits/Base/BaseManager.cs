@@ -7,6 +7,29 @@ using RotaryHeart.Lib.SerializableDictionary;
 
 public class BaseManager : BaseMonoBehaviour
 {
+    protected List<T> GetAllModel<T>(string assetBundlePath) where T : Object
+    {
+        return GetAllModel<T>(assetBundlePath, null);
+    }
+    protected List<T> GetAllModel<T>(string assetBundlePath, string remarkResourcesPath) where T : Object
+    {
+        List<T> models = null;
+#if UNITY_EDITOR
+        //编辑器模式下直接加载资源
+        if (!CheckUtil.StringIsNull(remarkResourcesPath))
+        {
+            models = LoadAssetUtil.LoadAllAssetAtPathForEditor<T>(remarkResourcesPath);
+        }
+        else
+        {
+            models = LoadAssetUtil.SyncLoadAllAsset<T>(assetBundlePath);
+        }
+#else
+        models = LoadAssetUtil.SyncLoadAllAsset<T>(assetBundlePath);
+#endif
+        return models;
+    }
+
     protected T GetModel<T>(string assetBundlePath, string name) where T : Object
     {
         return GetModel<T>(assetBundlePath, name, null);

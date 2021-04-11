@@ -66,7 +66,7 @@ public class Biome
     public virtual void AddTree(Vector3Int startPosition, TreeData treeData)
     {
         int worldSeed = WorldCreateHandler.Instance.manager.GetWorldSeed();
-        RandomTools random = RandomUtil.GetRandom(worldSeed, startPosition.x, startPosition.y, startPosition.z);
+        RandomTools random = RandomUtil.GetRandom(worldSeed + 1, startPosition.x, startPosition.y, startPosition.z);
         //生成概率
         int addRate = random.NextInt(treeData.addRateMax);
         //高度
@@ -127,7 +127,7 @@ public class Biome
     public virtual void AddBigTree(Vector3Int startPosition, TreeData treeData)
     {
         int worldSeed = WorldCreateHandler.Instance.manager.GetWorldSeed();
-        RandomTools random = RandomUtil.GetRandom(worldSeed, startPosition.x, startPosition.y, startPosition.z);
+        RandomTools random = RandomUtil.GetRandom(worldSeed + 2, startPosition.x, startPosition.y, startPosition.z);
         //生成概率
         int addRate = random.NextInt(treeData.addRateMax);
         //高度
@@ -135,38 +135,119 @@ public class Biome
 
         if (addRate < treeData.addRateMin)
         {
-            for (int i = 0; i < treeHeight + 5; i++)
+
+            for (int i = 5; i < treeHeight + 3; i++)
             {
+                //生成树叶
                 Vector3Int treeTrunkPosition = startPosition + Vector3Int.up * (i + 1);
-                //生成树干
-                if (i < treeHeight)
+                int range = treeData.leavesRange;
+                if (i == treeHeight + 2)
                 {
-                    //最底层树干会有扩散
-                    int range = treeData.trunkRange;
-                    int baseHeight = 3;
-                    if (i < baseHeight)
+                    range -= 1;
+                }
+                else if (i == 5)
+                {
+                    range -= 1;
+                }
+
+                for (int x = -range; x <= range; x++)
+                {
+                    for (int z = -range; z <= range; z++)
                     {
-                        range += (baseHeight - i);
-                        if (range < 0)
-                            range = 0;
-                    }
-                    for (int x = -range; x <= range; x++)
-                    {
-                        for (int z = -range; z <= range; z++)
+                        //生成概率
+                        if (x == -range || x == range || z == -range || z == range)
                         {
-                            if (x == startPosition.x && z == startPosition.z)
+                            int leavesRate = random.NextInt(4);
+                            if (leavesRate == 0)
                                 continue;
-                            if (Math.Abs(x) == range && Math.Abs(z) == range)
-                            {
-                                //如果是边界 则不生成     
-                                    continue;
-                            }
-                            BlockBean blockData = new BlockBean(treeData.treeTrunk, treeTrunkPosition + new Vector3Int(x, 0, z));
-                            WorldCreateHandler.Instance.manager.listUpdateBlock.Add(blockData);
                         }
+                        BlockBean blockData = new BlockBean(treeData.treeLeaves, treeTrunkPosition + new Vector3Int(x, 0, z));
+                        WorldCreateHandler.Instance.manager.listUpdateBlock.Add(blockData);
                     }
                 }
             }
+
+
+            //生成树干
+            for (int i = 0; i < treeHeight; i++)
+            {
+                Vector3Int treeTrunkPosition = startPosition + Vector3Int.up * (i + 1);
+     
+                if (i == 0 || i == 1)
+                {
+                    if (i == 0)
+                    {
+                        BlockBean leftData_1 = new BlockBean(treeData.treeTrunk, treeTrunkPosition + Vector3Int.left * 2, DirectionEnum.Left);
+                        WorldCreateHandler.Instance.manager.listUpdateBlock.Add(leftData_1);
+
+                        BlockBean rightData_1 = new BlockBean(treeData.treeTrunk, treeTrunkPosition + Vector3Int.right * 2, DirectionEnum.Right);
+                        WorldCreateHandler.Instance.manager.listUpdateBlock.Add(rightData_1);
+
+                        BlockBean forwardData_1 = new BlockBean(treeData.treeTrunk, treeTrunkPosition + Vector3Int.forward * 2, DirectionEnum.Forward);
+                        WorldCreateHandler.Instance.manager.listUpdateBlock.Add(forwardData_1);
+
+                        BlockBean backData_1 = new BlockBean(treeData.treeTrunk, treeTrunkPosition + Vector3Int.back * 2, DirectionEnum.Back);
+                        WorldCreateHandler.Instance.manager.listUpdateBlock.Add(backData_1);
+                    }
+
+
+                    BlockBean leftData_2 = new BlockBean(treeData.treeTrunk, treeTrunkPosition + new Vector3Int(1, 0, 1));
+                    WorldCreateHandler.Instance.manager.listUpdateBlock.Add(leftData_2);
+
+                    BlockBean rightData_2 = new BlockBean(treeData.treeTrunk, treeTrunkPosition + new Vector3Int(-1, 0, -1));
+                    WorldCreateHandler.Instance.manager.listUpdateBlock.Add(rightData_2);
+
+                    BlockBean forwardData_2 = new BlockBean(treeData.treeTrunk, treeTrunkPosition + new Vector3Int(1, 0, -1));
+                    WorldCreateHandler.Instance.manager.listUpdateBlock.Add(forwardData_2);
+
+                    BlockBean backData_2 = new BlockBean(treeData.treeTrunk, treeTrunkPosition + new Vector3Int(-1, 0, 1));
+                    WorldCreateHandler.Instance.manager.listUpdateBlock.Add(backData_2);
+                }
+
+                if (i > treeHeight - 3)
+                {
+                    int isCreate = random.NextInt(4);
+                    if (isCreate == 1)
+                    {
+                        BlockBean leftData_1 = new BlockBean(treeData.treeTrunk, treeTrunkPosition + Vector3Int.left * 2, DirectionEnum.Left);
+                        WorldCreateHandler.Instance.manager.listUpdateBlock.Add(leftData_1);
+                    }
+                    isCreate = random.NextInt(4);
+                    if (isCreate == 1)
+                    {
+                        BlockBean rightData_1 = new BlockBean(treeData.treeTrunk, treeTrunkPosition + Vector3Int.right * 2, DirectionEnum.Right);
+                        WorldCreateHandler.Instance.manager.listUpdateBlock.Add(rightData_1);
+                    }
+                    isCreate = random.NextInt(4);
+                    if (isCreate == 1)
+                    {
+                        BlockBean forwardData_1 = new BlockBean(treeData.treeTrunk, treeTrunkPosition + Vector3Int.forward * 2, DirectionEnum.Forward);
+                        WorldCreateHandler.Instance.manager.listUpdateBlock.Add(forwardData_1);
+                    }
+                    isCreate = random.NextInt(4);
+                    if (isCreate == 1)
+                    {
+                        BlockBean backData_1 = new BlockBean(treeData.treeTrunk, treeTrunkPosition + Vector3Int.back * 2, DirectionEnum.Back);
+                        WorldCreateHandler.Instance.manager.listUpdateBlock.Add(backData_1);
+                    }
+                }
+
+                BlockBean blockData = new BlockBean(treeData.treeTrunk, treeTrunkPosition);
+                WorldCreateHandler.Instance.manager.listUpdateBlock.Add(blockData);
+
+                BlockBean leftData = new BlockBean(treeData.treeTrunk, treeTrunkPosition + Vector3Int.left);
+                WorldCreateHandler.Instance.manager.listUpdateBlock.Add(leftData);
+
+                BlockBean rightData = new BlockBean(treeData.treeTrunk, treeTrunkPosition + Vector3Int.right);
+                WorldCreateHandler.Instance.manager.listUpdateBlock.Add(rightData);
+
+                BlockBean forwardData = new BlockBean(treeData.treeTrunk, treeTrunkPosition + Vector3Int.forward);
+                WorldCreateHandler.Instance.manager.listUpdateBlock.Add(forwardData);
+
+                BlockBean backData = new BlockBean(treeData.treeTrunk, treeTrunkPosition + Vector3Int.back);
+                WorldCreateHandler.Instance.manager.listUpdateBlock.Add(backData);
+            }
+
         }
     }
 
@@ -178,7 +259,7 @@ public class Biome
     public virtual void AddWeed(Vector3Int startPosition, WeedData weedData)
     {
         int worldSeed = WorldCreateHandler.Instance.manager.GetWorldSeed();
-        RandomTools random = RandomUtil.GetRandom(worldSeed, startPosition.x, startPosition.y, startPosition.z);
+        RandomTools random = RandomUtil.GetRandom(worldSeed + 3, startPosition.x, startPosition.y, startPosition.z);
         //生成概率
         int addRate = random.NextInt(weedData.addRateMax);
         int weedTypeNumber = random.NextInt(weedData.listWeedType.Count);
@@ -198,7 +279,7 @@ public class Biome
     public virtual void AddCactus(Vector3Int startPosition, CactusData cactusData)
     {
         int worldSeed = WorldCreateHandler.Instance.manager.GetWorldSeed();
-        RandomTools random = RandomUtil.GetRandom(worldSeed, startPosition.x, startPosition.y, startPosition.z);
+        RandomTools random = RandomUtil.GetRandom(worldSeed + 4, startPosition.x, startPosition.y, startPosition.z);
         //生成概率
         int addRate = random.NextInt(cactusData.addRateMax);
         //高度
@@ -227,7 +308,7 @@ public class Biome
     public virtual void AddFlower(Vector3Int startPosition, FlowerData flowerData)
     {
         int worldSeed = WorldCreateHandler.Instance.manager.GetWorldSeed();
-        RandomTools random = RandomUtil.GetRandom(worldSeed, startPosition.x, startPosition.y, startPosition.z);
+        RandomTools random = RandomUtil.GetRandom(worldSeed + 5, startPosition.x, startPosition.y, startPosition.z);
         int addRate = random.NextInt(flowerData.addRateMax);
         int flowerTypeNumber = random.NextInt(flowerData.listFlowerType.Count);
         if (addRate < flowerData.addRateMin)

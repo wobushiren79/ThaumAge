@@ -14,6 +14,10 @@ public class WorldCreateManager : BaseManager
     //存储着世界中所有的Chunk
     public Dictionary<Vector3Int, Chunk> dicChunk = new Dictionary<Vector3Int, Chunk>();
 
+    //存储着所有的材质
+    public Material[] arrayBlockMat = new Material[16];
+
+
     //所有待修改的方块
     public List<BlockBean> listUpdateBlock = new List<BlockBean>();
     //所有待修改的区块
@@ -26,6 +30,28 @@ public class WorldCreateManager : BaseManager
     public int heightChunk = 256;
 
     public float time;
+
+    protected void Awake()
+    {
+        List<Material> listData = GetAllModel<Material>("block/mats");
+        for (int i = 0; i < listData.Count; i++)
+        {
+            //按照名字中的下标 确认每个材质球的顺序
+            Material itemMat = listData[i];
+            string[] nameList = StringUtil.SplitBySubstringForArrayStr(itemMat.name, '_');
+            int indexMat = int.Parse(nameList[1]);
+            arrayBlockMat[indexMat] = itemMat;
+        }
+    }
+
+    /// <summary>
+    /// 获取所有材质
+    /// </summary>
+    /// <returns></returns>
+    public Material[] GetAllMaterial()
+    {
+        return arrayBlockMat;
+    }
 
     /// <summary>
     /// 获取区块模型
@@ -97,6 +123,29 @@ public class WorldCreateManager : BaseManager
         return worldSeed;
     }
 
+    /// <summary>
+    /// 获取某一点的最高坐标
+    /// </summary>
+    /// <param name="pos"></param>
+    public int GetMaxHeightForWorldPosition(int x, int z)
+    {
+        int maxHeight = 100;
+        Chunk chunk = GetChunkForWorldPosition(new Vector3Int(x, 0, z));
+        if (chunk == null)
+            return maxHeight;
+        maxHeight = int.MinValue;
+        for (int y = 0; y < heightChunk; y++)
+        {
+            Block itemBlock = chunk.GetBlockForWorld(new Vector3Int(x, y, z));
+            if (itemBlock == null)
+                continue;
+            if (itemBlock.blockData.GetBlockType() != BlockTypeEnum.None && y > maxHeight)
+            {
+                maxHeight = y;
+            }
+        }
+        return maxHeight;
+    }
 
     /// <summary>
     /// 设置世界种子
@@ -110,8 +159,6 @@ public class WorldCreateManager : BaseManager
         //初始化生态种子
         BiomeHandler.Instance.InitWorldBiomeSeed();
     }
-
-
 
     /// <summary>
     /// 增加区域

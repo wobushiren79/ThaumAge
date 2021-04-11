@@ -21,21 +21,21 @@ public class BlockCross : Block
 
         int index = chunkData.verts.Count;
 
-        chunkData.trisBothFace.Add(index + 0);
-        chunkData.trisBothFace.Add(index + 1);
-        chunkData.trisBothFace.Add(index + 2);
+        chunkData.dicTris[BlockMaterialEnum.BothFace].Add(index + 0);
+        chunkData.dicTris[BlockMaterialEnum.BothFace].Add(index + 1);
+        chunkData.dicTris[BlockMaterialEnum.BothFace].Add(index + 2);
 
-        chunkData.trisBothFace.Add(index + 0);
-        chunkData.trisBothFace.Add(index + 2);
-        chunkData.trisBothFace.Add(index + 3);
+        chunkData.dicTris[BlockMaterialEnum.BothFace].Add(index + 0);
+        chunkData.dicTris[BlockMaterialEnum.BothFace].Add(index + 2);
+        chunkData.dicTris[BlockMaterialEnum.BothFace].Add(index + 3);
 
-        chunkData.trisBothFace.Add(index + 4);
-        chunkData.trisBothFace.Add(index + 5);
-        chunkData.trisBothFace.Add(index + 6);
+        chunkData.dicTris[BlockMaterialEnum.BothFace].Add(index + 4);
+        chunkData.dicTris[BlockMaterialEnum.BothFace].Add(index + 5);
+        chunkData.dicTris[BlockMaterialEnum.BothFace].Add(index + 6);
 
-        chunkData.trisBothFace.Add(index + 4);
-        chunkData.trisBothFace.Add(index + 6);
-        chunkData.trisBothFace.Add(index + 7);
+        chunkData.dicTris[BlockMaterialEnum.BothFace].Add(index + 4);
+        chunkData.dicTris[BlockMaterialEnum.BothFace].Add(index + 6);
+        chunkData.dicTris[BlockMaterialEnum.BothFace].Add(index + 7);
     }
 
     public override void AddUVs(BlockBean blockData, Chunk.ChunkData chunkData)

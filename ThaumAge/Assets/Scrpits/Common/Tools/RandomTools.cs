@@ -39,7 +39,7 @@ public class RandomTools
     {
         return ((long)Next(32) << 32) + Next(32);
     }
-    public bool nextBoolean()
+    public bool NextBoolean()
     {
         return Next(1) != 0;
     }

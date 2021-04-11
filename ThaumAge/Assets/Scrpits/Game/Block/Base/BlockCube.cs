@@ -134,13 +134,13 @@ public class BlockCube : Block
         int indexCollider = chunkData.vertsCollider.Count;
         if (reversed)
         {
-            chunkData.tris.Add(index + 0);
-            chunkData.tris.Add(index + 1);
-            chunkData.tris.Add(index + 2);
+            chunkData.dicTris[BlockMaterialEnum.Normal].Add(index + 0);
+            chunkData.dicTris[BlockMaterialEnum.Normal].Add(index + 1);
+            chunkData.dicTris[BlockMaterialEnum.Normal].Add(index + 2);
 
-            chunkData.tris.Add(index + 0);
-            chunkData.tris.Add(index + 2);
-            chunkData.tris.Add(index + 3);
+            chunkData.dicTris[BlockMaterialEnum.Normal].Add(index + 0);
+            chunkData.dicTris[BlockMaterialEnum.Normal].Add(index + 2);
+            chunkData.dicTris[BlockMaterialEnum.Normal].Add(index + 3);
 
             chunkData.trisCollider.Add(indexCollider + 0);
             chunkData.trisCollider.Add(indexCollider + 1);
@@ -152,13 +152,13 @@ public class BlockCube : Block
         }
         else
         {
-            chunkData.tris.Add(index + 0);
-            chunkData.tris.Add(index + 2);
-            chunkData.tris.Add(index + 1);
+            chunkData.dicTris[BlockMaterialEnum.Normal].Add(index + 0);
+            chunkData.dicTris[BlockMaterialEnum.Normal].Add(index + 2);
+            chunkData.dicTris[BlockMaterialEnum.Normal].Add(index + 1);
 
-            chunkData.tris.Add(index + 0);
-            chunkData.tris.Add(index + 3);
-            chunkData.tris.Add(index + 2);
+            chunkData.dicTris[BlockMaterialEnum.Normal].Add(index + 0);
+            chunkData.dicTris[BlockMaterialEnum.Normal].Add(index + 3);
+            chunkData.dicTris[BlockMaterialEnum.Normal].Add(index + 2);
 
             chunkData.trisCollider.Add(indexCollider + 0);
             chunkData.trisCollider.Add(indexCollider + 2);

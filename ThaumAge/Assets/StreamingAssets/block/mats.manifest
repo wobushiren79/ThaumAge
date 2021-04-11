@@ -1,0 +1,23 @@
+ManifestFileVersion: 0
+CRC: 2649720393
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: b18a410e4af8de5ec8f4e8354e205cb3
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: b48f5048164b4cd7f73cc9f8cf76aa5d
+HashAppended: 0
+ClassTypes:
+- Class: 21
+  Script: {instanceID: 0}
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 48
+  Script: {instanceID: 0}
+SerializeReferenceClassIdentifiers: []
+Assets:
+- Assets/Prefabs/Mats/BlockMatBoth_2.mat
+- Assets/Prefabs/Mats/BlockMat_1.mat
+- Assets/Prefabs/Mats/BlockMatWater_3.mat
+Dependencies: []

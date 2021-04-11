@@ -147,12 +147,12 @@ public class BlockLiquid : Block
     {
         int index = chunkData.verts.Count;
 
-        chunkData.trisLiquid.Add(index + 0);
-        chunkData.trisLiquid.Add(index + 1);
-        chunkData.trisLiquid.Add(index + 2);
+        chunkData.dicTris[BlockMaterialEnum.Water].Add(index + 0);
+        chunkData.dicTris[BlockMaterialEnum.Water].Add(index + 1);
+        chunkData.dicTris[BlockMaterialEnum.Water].Add(index + 2);
 
-        chunkData.trisLiquid.Add(index + 0);
-        chunkData.trisLiquid.Add(index + 2);
-        chunkData.trisLiquid.Add(index + 3);
+        chunkData.dicTris[BlockMaterialEnum.Water].Add(index + 0);
+        chunkData.dicTris[BlockMaterialEnum.Water].Add(index + 2);
+        chunkData.dicTris[BlockMaterialEnum.Water].Add(index + 3);
     }
 }
