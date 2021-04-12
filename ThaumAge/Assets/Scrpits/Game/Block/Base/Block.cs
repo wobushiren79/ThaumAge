@@ -12,6 +12,8 @@ public abstract class Block
     public Vector3 centerPosition;
 
     protected BlockInfoBean _blockInfo;//∑ΩøÈ–≈œ¢
+    protected float uvWidth;
+
     public BlockInfoBean blockInfo
     {
         get
@@ -23,12 +25,11 @@ public abstract class Block
             return _blockInfo;
         }
     }
-    protected float uvWidth = 1 / 128f;
-
 
     public Block()
     {
-
+        if (blockData == null)
+            blockData = new BlockBean();
     }
 
     public Block(BlockTypeEnum blockType)
@@ -71,6 +72,7 @@ public abstract class Block
         this.worldPosition = localPosition + chunk.worldPosition;
         this.blockData = blockData;
         this.centerPosition = localPosition + new Vector3(0.5f, 0.5f, 0.5f);
+        uvWidth = 1 / 128f;
     }
 
     /// <summary>

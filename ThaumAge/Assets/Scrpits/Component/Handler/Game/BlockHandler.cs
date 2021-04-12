@@ -1,6 +1,9 @@
 ﻿using System;
-using UnityEditor;
+using System.Runtime.Serialization;
 using UnityEngine;
+using UnityEngine.Scripting;
+
+[assembly: Preserve]
 
 public class BlockHandler : BaseHandler<BlockHandler, BlockManager>
 {
@@ -30,8 +33,8 @@ public class BlockHandler : BaseHandler<BlockHandler, BlockManager>
         BlockTypeEnum blockType = blockData.GetBlockType();
         Type type = manager.GetRegisterBlock(blockType).GetType();
         //Block block = CreateInstance<Block>(type);
-        Block block = Activator.CreateInstance(type) as Block;
-
+        //Block block = Activator.CreateInstance(type) as Block;
+        Block block = FormatterServices.GetUninitializedObject(type) as Block;
         block.SetData(chunk, blockData.localPosition.GetVector3Int(), blockData);
         return block;
     }
@@ -47,12 +50,9 @@ public class BlockHandler : BaseHandler<BlockHandler, BlockManager>
     //    Func<T> returnFunc;
     //    if (!DelegateStore<T>.Store.TryGetValue(objType.FullName, out returnFunc))
     //    {
-    //        var dynMethod = new DynamicMethod("DM$OBJ_FACTORY_" + objType.Name, objType, null, objType);
-    //        ILGenerator ilGen = dynMethod.GetILGenerator();
-    //        ilGen.Emit(OpCodes.Newobj, objType.GetConstructor(Type.EmptyTypes));
-    //        ilGen.Emit(OpCodes.Ret);
-    //        returnFunc = (Func<T>)dynMethod.CreateDelegate(typeof(Func<T>));
-    //        DelegateStore<T>.Store[objType.FullName] = returnFunc;
+    //        Func<T> a0l = Expression.Lambda<Func<T>>(Expression.New(objType)).Compile();
+    //        DelegateStore<T>.Store[objType.FullName] = a0l;
+    //        returnFunc = a0l;
     //    }
     //    return returnFunc();
     //}

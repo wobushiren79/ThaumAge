@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Diagnostics;
-using System.Threading.Tasks;
+using System.Linq.Expressions;
+using System.Runtime.Serialization;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class Test : BaseMonoBehaviour
 {
@@ -13,16 +15,53 @@ public class Test : BaseMonoBehaviour
 
     private void Start()
     {
-        Vector3 data = GetRotatedPosition(new Vector3(1f,0,1f),new Vector3(1,0,-1), new Vector3(0,90,0));
-        LogUtil.Log(data+"");
+        Stopwatch stopwatch = TimeUtil.GetMethodTimeStart();
+        for (int i = 0; i < 100000; i++)
+        {
+            Block block = Activator.CreateInstance(typeof(BlockCube)) as Block;
+        }
+        TimeUtil.GetMethodTimeEnd("1", stopwatch);
+        stopwatch = TimeUtil.GetMethodTimeStart();
+        for (int i = 0; i < 100000; i++)
+        {
+            Block block = CreateInstance<Block>(typeof(BlockCube)) as Block;
+        }
+        TimeUtil.GetMethodTimeEnd("2", stopwatch);
+        stopwatch = TimeUtil.GetMethodTimeStart();
+        for (int i = 0; i < 100000; i++)
+        {
+            BlockCube block = new BlockCube();
+        }
+        TimeUtil.GetMethodTimeEnd("3", stopwatch);
+        stopwatch = TimeUtil.GetMethodTimeStart();
+        for (int i = 0; i < 100000; i++)
+        {
+            BlockCube block = (BlockCube)FormatterServices.GetUninitializedObject(typeof(BlockCube));
+        }
+        TimeUtil.GetMethodTimeEnd("4", stopwatch);
+
     }
 
-
-    public Vector3 GetRotatedPosition(Vector3 position,Vector3 centerPosition, Vector3 angles)
+    public static T CreateInstance<T>(Type objType) where T : class
     {
-        Vector3 direction = position - centerPosition;
-        direction = Quaternion.Euler(angles) * direction; 
-        return direction + centerPosition;
+        Func<T> returnFunc;
+        if (!DelegateStore<T>.Store.TryGetValue(objType.FullName, out returnFunc))
+        {
+            Func<T> a0l = Expression.Lambda<Func<T>>(Expression.New(objType)).Compile();
+            DelegateStore<T>.Store[objType.FullName] = a0l;
+            returnFunc = a0l;
+            //var dynMethod = new DynamicMethod("DM$OBJ_FACTORY_" + objType.Name, objType, null, objType);
+            //ILGenerator ilGen = dynMethod.GetILGenerator();
+            //ilGen.Emit(OpCodes.Newobj, objType.GetConstructor(Type.EmptyTypes));
+            //ilGen.Emit(OpCodes.Ret);
+            //returnFunc = (Func<T>)dynMethod.CreateDelegate(typeof(Func<T>));
+            //DelegateStore<T>.Store[objType.FullName] = returnFunc;
+        }
+        return returnFunc();
+    }
+    internal static class DelegateStore<T>
+    {
+        internal static IDictionary<string, Func<T>> Store = new ConcurrentDictionary<string, Func<T>>();
     }
 
 }
