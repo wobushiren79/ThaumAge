@@ -3,7 +3,7 @@ CRC: 2400173292
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 0ad077ffa854e41398fb14d1acbc9d3e
+    Hash: b949f4c37bc4c650bfe828f60044fc2b
   TypeTreeHash:
     serializedVersion: 2
     Hash: b8b4d38e35af53453cb324d7ffea02b2
@@ -31,4 +31,4 @@ SerializeReferenceClassIdentifiers: []
 Assets:
 - Assets/Prefabs/Game/Chunk.prefab
 Dependencies:
-- D:/UnityProjects/ThaumAge/ThaumAge/Assets/StreamingAssets/AssetBundles/block/mats
+- F:/Unity/UnityProject/ThumAge/ThaumAge/Assets/StreamingAssets/AssetBundles/block/mats
