@@ -1,5 +1,6 @@
 ﻿using UnityEditor;
 using UnityEngine;
+using static BiomeCreateTool;
 
 public class BiomeDesert : Biome
 {
@@ -41,6 +42,6 @@ public class BiomeDesert : Biome
         cactusData.minHeight = 1;
         cactusData.minHeight = 5;
         cactusData.cactusType = BlockTypeEnum.Cactus;
-        base.AddCactus(startPosition, cactusData);
+        BiomeCreateTool.AddCactus(startPosition, cactusData);
     }
 }

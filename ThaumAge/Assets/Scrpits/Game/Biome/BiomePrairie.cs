@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using static BiomeCreateTool;
+
 public class BiomePrairie : Biome
 {
     //草原
@@ -48,18 +50,18 @@ public class BiomePrairie : Biome
             treeLeaves = BlockTypeEnum.LeavesOak,
             leavesRange = 2,
         };
-        AddTree(wPos, treeData);
+        BiomeCreateTool.AddTree(wPos, treeData);
     }
 
     protected void AddWeed(Vector3Int wPos)
     {
-        WeedData weedData = new WeedData
+        PlantData weedData = new PlantData
         {
             addRateMin = 3,
             addRateMax = 10,
-            listWeedType = new List<BlockTypeEnum>{ BlockTypeEnum.Weed_Long, BlockTypeEnum.Weed_Normal, BlockTypeEnum.Weed_Short }
+            listPlantType = new List<BlockTypeEnum>{ BlockTypeEnum.Weed_Long, BlockTypeEnum.Weed_Normal, BlockTypeEnum.Weed_Short }
         };
-        AddWeed(wPos, weedData);
+        BiomeCreateTool.AddPlant(wPos, weedData);
     }
 
     protected void AddFlower(Vector3Int wPos)
@@ -70,7 +72,7 @@ public class BiomePrairie : Biome
             addRateMax = 50,
             listFlowerType = new List<BlockTypeEnum> { BlockTypeEnum.Sunflower, BlockTypeEnum.Rose, BlockTypeEnum.Chrysanthemum }
         };
-        AddFlower(wPos, flowersData);
+        BiomeCreateTool.AddFlower(wPos, flowersData);
     }
 
 }

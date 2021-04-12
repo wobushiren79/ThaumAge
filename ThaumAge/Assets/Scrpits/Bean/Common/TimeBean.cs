@@ -64,6 +64,32 @@ public class TimeBean
         hour += addHour;
     }
 
+    public void AddTimeForYMHMS(int addYear,int addMonth,int addDay, int addHour, int addMin, int Addsecond)
+    {
+        AddTimeForHMS(addHour, addMin, Addsecond);
+        if (hour >= 24)
+        {
+            day += (hour / 24);
+            hour = hour % 24;
+        }
+
+        day += addDay;
+        if (day >= 30)
+        {
+            month += (day / 30);
+            day = day % 30;
+        }
+
+        month += addMonth;
+        if (month >= 4)
+        {
+            year += (month / 4);
+            month = month % 4;
+        }
+
+        year += addYear;
+    }
+
     /// <summary>
     /// 获取时间-秒
     /// </summary>

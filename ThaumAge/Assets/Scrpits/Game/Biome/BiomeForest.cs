@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using static BiomeCreateTool;
 
 public class BiomeForest : Biome
 {
@@ -49,7 +50,7 @@ public class BiomeForest : Biome
             treeLeaves = BlockTypeEnum.LeavesOak,
             leavesRange = 4,
         };
-        AddBigTree(wPos, treeData);
+        BiomeCreateTool.AddBigTree(wPos, treeData);
     }
 
     protected void AddTree(Vector3Int wPos)
@@ -64,18 +65,18 @@ public class BiomeForest : Biome
             treeLeaves = BlockTypeEnum.LeavesOak,
             leavesRange = 2,
         };
-        AddTree(wPos, treeData);
+        BiomeCreateTool.AddTree(wPos, treeData);
     }
 
     protected void AddWeed(Vector3Int wPos)
     {
-        WeedData weedData = new WeedData
+        PlantData weedData = new PlantData
         {
             addRateMin = 1,
             addRateMax = 3,
-            listWeedType = new List<BlockTypeEnum> { BlockTypeEnum.Weed_Long, BlockTypeEnum.Weed_Normal, BlockTypeEnum.Weed_Short }
+            listPlantType = new List<BlockTypeEnum> { BlockTypeEnum.Weed_Long, BlockTypeEnum.Weed_Normal, BlockTypeEnum.Weed_Short }
         };
-        AddWeed(wPos, weedData);
+        BiomeCreateTool.AddPlant(wPos, weedData);
     }
 
     protected void AddFlower(Vector3Int wPos)
@@ -86,7 +87,7 @@ public class BiomeForest : Biome
             addRateMax = 100,
             listFlowerType = new List<BlockTypeEnum> { BlockTypeEnum.Sunflower, BlockTypeEnum.Rose, BlockTypeEnum.Chrysanthemum }
         };
-        AddFlower(wPos, flowersData);
+        BiomeCreateTool.AddFlower(wPos, flowersData);
     }
 
 }

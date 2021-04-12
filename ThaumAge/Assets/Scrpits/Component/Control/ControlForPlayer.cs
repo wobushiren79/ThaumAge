@@ -83,9 +83,9 @@ public class ControlForPlayer : ControlForBase
     {
         //获取摄像头到角色的距离
         Vector3 cameraPosition = CameraHandler.Instance.manager.mainCamera.transform.position;
-        float disMax = Vector3.Distance(cameraPosition, transform.position);
+        //float disMax = Vector3.Distance(cameraPosition, transform.position);
         //发射射线检测
-        RayUtil.RayToScreenPointForScreenCenter(disMax + 2, 1 << LayerInfo.Chunk, out bool isCollider, out RaycastHit hit);
+        RayUtil.RayToScreenPointForScreenCenter(transform.position, 2, 1 << LayerInfo.Chunk, out bool isCollider, out RaycastHit hit);
         if (isCollider)
         {
             Chunk chunk = hit.collider.GetComponent<Chunk>();
@@ -143,9 +143,9 @@ public class ControlForPlayer : ControlForBase
     {
         //获取摄像头到角色的距离
         Vector3 cameraPosition = CameraHandler.Instance.manager.mainCamera.transform.position;
-        float disMax = Vector3.Distance(cameraPosition, transform.position);
+        //float disMax = Vector3.Distance(cameraPosition, transform.position);
         //发射射线检测
-        RayUtil.RayToScreenPointForScreenCenter(disMax + 2, 1 << LayerInfo.Chunk, out bool isCollider, out RaycastHit hit);
+        RayUtil.RayToScreenPointForScreenCenter(transform.position, 2, 1 << LayerInfo.Chunk, out bool isCollider, out RaycastHit hit);
         if (isCollider)
         {
             Chunk chunk = hit.collider.GetComponent<Chunk>();

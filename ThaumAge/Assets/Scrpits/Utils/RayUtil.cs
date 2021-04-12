@@ -3,6 +3,10 @@ using UnityEngine;
 
 public class RayUtil
 {
+    public static void RayToScreenPointForScreenCenter(Vector3 startPosition, float maxDistance, int layerMask, out bool isCollider, out RaycastHit hit)
+    {
+        RayToScreenPoint(startPosition,new Vector3(Screen.width / 2, Screen.height / 2, 0), maxDistance, layerMask, out isCollider, out hit);
+    }
 
     /// <summary>
     /// 屏幕中心射线检测
@@ -11,7 +15,7 @@ public class RayUtil
     /// <param name="hit"></param>
     public static void RayToScreenPointForScreenCenter(float maxDistance, int layerMask, out bool isCollider, out RaycastHit hit)
     {
-        RayToScreenPoint(new Vector3(Screen.width / 2, Screen.height / 2, 0), maxDistance, layerMask, out isCollider, out hit);
+        RayToScreenPoint(Vector3.zero, new Vector3(Screen.width / 2, Screen.height / 2, 0), maxDistance, layerMask, out isCollider, out hit);
     }
 
     /// <summary>
@@ -21,12 +25,16 @@ public class RayUtil
     /// <param name="hit"></param>
     public static void RayToScreenPoint(float maxDistance, int layerMask, out bool isCollider, out RaycastHit hit)
     {
-        RayToScreenPoint(Input.mousePosition, maxDistance, layerMask, out isCollider, out hit);
+        RayToScreenPoint(Vector3.zero, Input.mousePosition, maxDistance, layerMask, out isCollider, out hit);
     }
 
-    public static void RayToScreenPoint(Vector3 position, float maxDistance, int layerMask, out bool isCollider, out RaycastHit hit)
+    public static void RayToScreenPoint(Vector3 startPosition, Vector3 position, float maxDistance, int layerMask, out bool isCollider, out RaycastHit hit)
     {
         Ray ray = Camera.main.ScreenPointToRay(position);
+        if (startPosition != Vector3.zero)
+        {
+            ray.origin = startPosition;
+        }
         isCollider = Physics.Raycast(ray, out hit, maxDistance, layerMask);
     }
 
