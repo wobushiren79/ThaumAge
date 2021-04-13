@@ -24,10 +24,17 @@ public class ChunkBean
 
     public void SaveData()
     {
-        listBlockData.Clear();
-        foreach (var itemData in dicBlockData)
+        try
         {
-            listBlockData.Add(itemData.Value);
+            listBlockData.Clear();
+            foreach (var itemData in dicBlockData)
+            {
+                listBlockData.Add(itemData.Value);
+            }
+        }
+        catch
+        {
+
         }
     }
 }

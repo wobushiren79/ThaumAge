@@ -26,7 +26,6 @@ public class Chunk : BaseMonoBehaviour
     protected MeshRenderer meshRenderer;
     protected MeshCollider meshCollider;
     protected MeshFilter meshFilter;
-
     //存储着此Chunk内的所有Block信息
     public Dictionary<Vector3Int, Block> mapForBlock = new Dictionary<Vector3Int, Block>();
     //待更新方块
@@ -36,10 +35,14 @@ public class Chunk : BaseMonoBehaviour
     public int height = 0;
     //是否初始化
     public bool isInit = false;
+    public bool isBake = false;
     //世界坐标
     public Vector3Int worldPosition;
     //存储数据
     protected WorldDataBean worldData;
+
+    protected Mesh chunkMesh;
+    protected Mesh chunkMeshCollider;
 
     public void Awake()
     {
@@ -48,15 +51,22 @@ public class Chunk : BaseMonoBehaviour
         meshCollider = GetComponent<MeshCollider>();
         meshFilter = GetComponent<MeshFilter>();
 
+        chunkMesh = new Mesh();
+        chunkMeshCollider = new Mesh();
+
         meshRenderer.materials = WorldCreateHandler.Instance.manager.GetAllMaterial();
+
+        //设置为动态变更，理论上可以提高效率
+        chunkMesh.MarkDynamic();
+        chunkMeshCollider.MarkDynamic();
+        
         //设置mesh的三角形上限
         meshFilter.mesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
         meshCollider.sharedMesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
-        //设置碰撞和去除多余的顶点
-        meshCollider.cookingOptions = MeshColliderCookingOptions.WeldColocatedVertices;
     }
 
     protected float eventUpdateTime = 0;
+
 
     private void Update()
     {
@@ -67,27 +77,35 @@ public class Chunk : BaseMonoBehaviour
         {
             eventUpdateTime = 1;
             eventUpdate?.Invoke();
-            if (listUpdateBlock.Count > 0)
-            {
-                for (int i = 0; i < listUpdateBlock.Count; i++)
-                {
-                    BlockBean itemBlock = listUpdateBlock[i];
-                    Vector3Int positionBlockWorld = itemBlock.worldPosition.GetVector3Int();
-                    Vector3Int positionBlockLocal = positionBlockWorld - worldPosition;
-                    //需要重新设置一下本地坐标 之前没有记录本地坐标
-                    itemBlock.localPosition = new Vector3IntBean(positionBlockLocal);
+            HandleForUpdateBlock();
+        }
+    }
 
-                    //设置方块
-                    SetBlock(itemBlock,false, false, false);
-                    //从更新列表中移除
-                    listUpdateBlock.Remove(itemBlock);
-                    i--;
-                }
-                //异步保存数据
-                GameDataHandler.Instance.manager.SaveGameDataAsync(worldData);
-                //异步刷新
-                BuildChunkRangeForAsync();
+    /// <summary>
+    /// 处理-更新的方块
+    /// </summary>
+    public void HandleForUpdateBlock()
+    {
+        if (listUpdateBlock.Count > 0)
+        {
+            for (int i = 0; i < listUpdateBlock.Count; i++)
+            {
+                BlockBean itemBlock = listUpdateBlock[i];
+                Vector3Int positionBlockWorld = itemBlock.worldPosition.GetVector3Int();
+                Vector3Int positionBlockLocal = positionBlockWorld - worldPosition;
+                //需要重新设置一下本地坐标 之前没有记录本地坐标
+                itemBlock.localPosition = new Vector3IntBean(positionBlockLocal);
+
+                //设置方块
+                SetBlock(itemBlock, false, false, false);
+                //从更新列表中移除
+                listUpdateBlock.Remove(itemBlock);
+                i--;
             }
+            //异步保存数据
+            GameDataHandler.Instance.manager.SaveGameDataAsync(worldData);
+            //异步刷新
+            BuildChunkRangeForAsync();
         }
     }
 
@@ -171,9 +189,9 @@ public class Chunk : BaseMonoBehaviour
             chunkData.dicTris.Add(blockMaterial, new List<int>());
         }
 
+        bool isSuccessInit = false;
         await Task.Run(() =>
         {
-
             //遍历chunk, 生成其中的每一个Block
             try
             {
@@ -181,24 +199,26 @@ public class Chunk : BaseMonoBehaviour
                 {
                     itemData.BuildBlock(chunkData);
                 }
+                isSuccessInit = true;
             }
             catch (Exception)
             {
-                //BuildChunkForAsync();
+        
             }
         });
 
+        if (!isSuccessInit)
+            return;
 
-        Mesh chunkMesh = new Mesh();
-        Mesh chunkMeshCollider = new Mesh();
+        chunkMesh = new Mesh();
+        chunkMeshCollider = new Mesh();
 
         //设置mesh的三角形上限
         chunkMesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
         chunkMeshCollider.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
 
-        //设置为动态变更，理论上可以提高效率
-        chunkMesh.MarkDynamic();
-        chunkMeshCollider.MarkDynamic();
+        //设置子mesh数量
+        chunkMesh.subMeshCount = meshRenderer.materials.Length;
 
         //定点数判断
         if (chunkData.verts.Count <= 3)
@@ -208,9 +228,6 @@ public class Chunk : BaseMonoBehaviour
 
         //设置顶点
         chunkMesh.vertices = chunkData.verts.ToArray();
-
-        //设置子mesh数量
-        chunkMesh.subMeshCount = meshRenderer.materials.Length;
         //设置UV
         chunkMesh.uv = chunkData.uvs.ToArray();
 
@@ -232,8 +249,10 @@ public class Chunk : BaseMonoBehaviour
         chunkMeshCollider.RecalculateBounds();
         chunkMeshCollider.RecalculateNormals();
 
+        Physics.BakeMesh(chunkMesh.GetInstanceID(), false);
+        Physics.BakeMesh(chunkMeshCollider.GetInstanceID(), false);
+
         meshFilter.mesh = chunkMesh;
-        meshCollider.sharedMesh = null;
         meshCollider.sharedMesh = chunkMeshCollider;
     }
 

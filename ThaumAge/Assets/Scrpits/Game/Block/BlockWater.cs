@@ -64,7 +64,7 @@ public class BlockWater : BlockLiquid
             //    //如果相邻都是水 需要根据关联等级设置
             //    return false;
             //}
-            BlockBean newBlockData = new BlockBean(BlockTypeEnum.Water, worldPosition - closeBlock.chunk.worldPosition, worldPosition);
+            BlockBean newBlockData = new BlockBean(blockData.GetBlockType(), worldPosition - closeBlock.chunk.worldPosition, worldPosition);
            
             newBlockData.contactLevel = contactLevel;
             closeBlock.chunk.listUpdateBlock.Add(newBlockData);

@@ -1,9 +1,9 @@
 ManifestFileVersion: 0
-CRC: 1545678385
+CRC: 3210420486
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 75ce1779b2d763566c201470daa0be61
+    Hash: 1d1658a107a78ebb599a5581c203a99b
   TypeTreeHash:
     serializedVersion: 2
     Hash: b48f5048164b4cd7f73cc9f8cf76aa5d
@@ -19,5 +19,6 @@ SerializeReferenceClassIdentifiers: []
 Assets:
 - Assets/Prefabs/Mats/BlockMatBoth_2.mat
 - Assets/Prefabs/Mats/BlockMat_1.mat
+- Assets/Prefabs/Mats/BlockMatWater_4.mat
 - Assets/Prefabs/Mats/BlockMatWater_3.mat
 Dependencies: []

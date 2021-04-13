@@ -1,9 +1,9 @@
 ManifestFileVersion: 0
-CRC: 2400173292
+CRC: 1504278471
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: b949f4c37bc4c650bfe828f60044fc2b
+    Hash: e8116dc9900f786887b5f012f4549b09
   TypeTreeHash:
     serializedVersion: 2
     Hash: b8b4d38e35af53453cb324d7ffea02b2
@@ -31,4 +31,4 @@ SerializeReferenceClassIdentifiers: []
 Assets:
 - Assets/Prefabs/Game/Chunk.prefab
 Dependencies:
-- F:/Unity/UnityProject/ThumAge/ThaumAge/Assets/StreamingAssets/AssetBundles/block/mats
+- D:/UnityProjects/ThaumAge/ThaumAge/Assets/StreamingAssets/AssetBundles/block/mats

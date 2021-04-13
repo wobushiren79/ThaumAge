@@ -21,7 +21,7 @@ public class ControlForPlayer : ControlForBase
         InputAction jumpAction = InputHandler.Instance.manager.GetJumpData();
         jumpAction.started += HandlerForJumpStart;
         InputAction useAction = InputHandler.Instance.manager.GetUseData();
-        useAction.started += HandlerForUse;
+        useAction.started += HandleForCancel;
         InputAction cancelAction = InputHandler.Instance.manager.GetCancelData();
         cancelAction.started += HandleForCancel;
 
@@ -136,7 +136,7 @@ public class ControlForPlayer : ControlForBase
                 Block block = WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(addPosition);
                 if(block != null)
                 {
-                    block.chunk.SetBlockForWorld(addPosition, BlockTypeEnum.Water, direction);
+                    block.chunk.SetBlockForWorld(addPosition, BlockTypeEnum.Magma, direction);
                 }    
             }
         }
