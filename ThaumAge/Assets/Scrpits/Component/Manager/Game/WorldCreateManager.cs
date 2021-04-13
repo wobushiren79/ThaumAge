@@ -183,20 +183,31 @@ public class WorldCreateManager : BaseManager
 
         Vector3Int chunkPosition = Vector3Int.CeilToInt(chunk.transform.position);
 
+        bool isSuccessInit = false;
         await Task.Run(() =>
         {
             lock (this)
             {
-                //生成基础地形数据
-                Stopwatch stopwatch = TimeUtil.GetMethodTimeStart();
-                HandleForBaseBlock(chunk);
-                TimeUtil.GetMethodTimeEnd("1", stopwatch);
-                //处理更新方块
-                HandleForUpdateBlock();
-                //处理存档方块 优先使用存档方块
-                HandleForLoadBlock(chunk, chunkPosition);
+                try
+                {
+                    //生成基础地形数据
+                    Stopwatch stopwatch = TimeUtil.GetMethodTimeStart();
+                    HandleForBaseBlock(chunk);
+                    TimeUtil.GetMethodTimeEnd("1", stopwatch);
+                    //处理更新方块
+                    HandleForUpdateBlock();
+                    //处理存档方块 优先使用存档方块
+                    HandleForLoadBlock(chunk, chunkPosition);
+                    isSuccessInit = true;
+                }
+                catch
+                {
+                    isSuccessInit = false;
+                }
             }
         });
+        if (!isSuccessInit)
+            return;
 
         if (listUpdateChunk.Count > 0)
         {

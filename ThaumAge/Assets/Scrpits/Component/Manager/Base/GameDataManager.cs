@@ -7,8 +7,8 @@ public class GameDataManager : BaseManager,
     IGameConfigView, IWorldDataView, IUserDataView
 {
     //游戏设置
-    protected GameConfigBean gameConfig;
-    protected UserDataBean userData;
+    public GameConfigBean gameConfig;
+    public UserDataBean userData;
 
     public GameConfigController controllerForGameConfig;
     public WorldDataController controllerForWorldData;

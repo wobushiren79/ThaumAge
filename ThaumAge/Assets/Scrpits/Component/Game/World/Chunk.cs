@@ -203,11 +203,11 @@ public class Chunk : BaseMonoBehaviour
             }
             catch (Exception)
             {
-        
+                isSuccessInit = false;
             }
         });
 
-        if (!isSuccessInit)
+        if (!isSuccessInit || this == null)
             return;
 
         chunkMesh = new Mesh();
