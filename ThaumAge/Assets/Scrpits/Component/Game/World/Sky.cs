@@ -39,6 +39,6 @@ public class Sky : BaseMonoBehaviour
         timeForAngle = (currentTime / totalTime * 360) + 180;
 
         Quaternion rotate = Quaternion.AngleAxis(timeForAngle, new Vector3(1, 0, 1));
-        transform.rotation = Quaternion.Lerp(rotate, transform.rotation, 0.02f);
+        transform.rotation = Quaternion.Lerp(transform.rotation,rotate, Time.deltaTime);
     }
 }
