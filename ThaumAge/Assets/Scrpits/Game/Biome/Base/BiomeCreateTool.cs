@@ -46,7 +46,7 @@ public class BiomeCreateTool
     /// </summary>
     /// <param name="startPosition"></param>
     /// <param name="treeData"></param>
-    public static  void AddTree(Vector3Int startPosition, TreeData treeData)
+    public static void AddTree(Vector3Int startPosition, TreeData treeData)
     {
         int worldSeed = WorldCreateHandler.Instance.manager.GetWorldSeed();
         RandomTools random = RandomUtil.GetRandom(worldSeed + 1, startPosition.x, startPosition.y, startPosition.z);
@@ -234,6 +234,113 @@ public class BiomeCreateTool
         }
     }
 
+
+
+    public static void AddWorldTree(Vector3Int startPosition, TreeData treeData)
+    {
+        Dictionary<Vector3Int, BlockBean> dicData = new Dictionary<Vector3Int, BlockBean>();
+        int worldSeed = WorldCreateHandler.Instance.manager.GetWorldSeed();
+        RandomTools random = RandomUtil.GetRandom(worldSeed + 3, startPosition.x, startPosition.y, startPosition.z);
+        //生成概率
+        int addRate = random.NextInt(treeData.addRateMax);
+        //高度
+        int treeHeight = random.NextInt(treeData.maxHeight - treeData.minHeight) + treeData.minHeight;
+
+        if (addRate < treeData.addRateMin)
+        {
+            for (int i = 0; i < treeHeight; i++)
+            {
+                Vector3Int treeTrunkPosition = startPosition + Vector3Int.up * (i + 1);
+                int trunkRnage = treeData.trunkRange;
+
+                for (int x = -trunkRnage; x <= trunkRnage; x++)
+                {
+                    for (int z = -trunkRnage; z <= trunkRnage; z++)
+                    {
+                        if ((x == -trunkRnage || x == trunkRnage) && (z == -trunkRnage || z == trunkRnage))
+                        {
+                            continue;
+                        }
+                        else
+                        {
+                            //生成树干
+                            BlockBean blockData = new BlockBean(treeData.treeTrunk, treeTrunkPosition + new Vector3Int(x, 0, z));
+                            dicData.Add(blockData.worldPosition.GetVector3Int(), blockData);
+
+                        }
+
+                        if (x == -trunkRnage || x == trunkRnage || z == -trunkRnage || z == trunkRnage)
+                        {
+                            if (i > treeHeight / 2)
+                            {
+                                //生成树枝
+                                int addBranchRate = random.NextInt(5);
+                                if (addBranchRate == 0)
+                                {
+                                    int branchWith = random.NextInt(treeHeight / 2);
+                                    Vector3Int branchStartPosition = treeTrunkPosition + new Vector3Int(x, 0, z);
+                                    Vector3 branchNormal = Vector3.Normalize(new Vector3(x, 0, z));
+                                    for (int b = 0; b < branchWith; b++)
+                                    {
+                                        int branchDirectionY = random.NextInt(2);
+                                        int branchDirection = random.NextInt(3);
+                                        if (branchDirection == 0)
+                                        {
+                                            branchStartPosition += new Vector3Int((int)branchNormal.x, branchDirectionY, 0);
+                                        }
+                                        else if (branchDirection == 1)
+                                        {
+                                            branchStartPosition += new Vector3Int(0, branchDirectionY, (int)branchNormal.z);
+                                        }
+                                        else if (branchDirection == 2)
+                                        {
+                                            branchStartPosition += new Vector3Int((int)branchNormal.x, branchDirectionY, (int)branchNormal.z);
+                                        }
+                                        //生成树干
+                                        if (dicData.TryGetValue(branchStartPosition, out BlockBean valueTrunk))
+                                        {
+                                            dicData.Remove(branchStartPosition);
+                                        }
+                                        BlockBean blockData = new BlockBean(treeData.treeTrunk, branchStartPosition, DirectionEnum.Left);
+                                        dicData.Add(blockData.worldPosition.GetVector3Int(), blockData);
+                                        //生成树叶
+                                        if (b % 5 == 0)
+                                        {
+                                            for (int leavesX = -3; leavesX <= 3; leavesX++)
+                                            {
+                                                for (int leavesY = -3; leavesY <= 3; leavesY++)
+                                                {
+                                                    for (int leavesZ = -3; leavesZ <= 3; leavesZ++)
+                                                    {
+                                                        Vector3Int leavesPosition = branchStartPosition + new Vector3Int(leavesX, leavesY, leavesZ);
+                                                        if (!dicData.TryGetValue(leavesPosition, out BlockBean valueLeaves))
+                                                        {
+                                                            BlockBean blockLeavesData = new BlockBean(treeData.treeLeaves, branchStartPosition);
+                                                            dicData.Add(blockData.worldPosition.GetVector3Int(), blockLeavesData);
+                                                        }
+                                                    }
+                                                }
+                                            }
+
+                                        }
+
+                                    }
+
+                                }
+                            }
+                        }
+                    }
+                }
+
+            }
+        }
+
+        foreach (var item in dicData.Values)
+        {
+            WorldCreateHandler.Instance.manager.listUpdateBlock.Add(item);
+        }
+
+    }
     /// <summary>
     /// 增加植物
     /// </summary>
@@ -242,7 +349,7 @@ public class BiomeCreateTool
     public static void AddPlant(Vector3Int startPosition, PlantData plantData)
     {
         int worldSeed = WorldCreateHandler.Instance.manager.GetWorldSeed();
-        RandomTools random = RandomUtil.GetRandom(worldSeed + 3, startPosition.x, startPosition.y, startPosition.z);
+        RandomTools random = RandomUtil.GetRandom(worldSeed + 101, startPosition.x, startPosition.y, startPosition.z);
         //生成概率
         int addRate = random.NextInt(plantData.addRateMax);
         int weedTypeNumber = random.NextInt(plantData.listPlantType.Count);
@@ -262,7 +369,7 @@ public class BiomeCreateTool
     public static void AddCactus(Vector3Int startPosition, CactusData cactusData)
     {
         int worldSeed = WorldCreateHandler.Instance.manager.GetWorldSeed();
-        RandomTools random = RandomUtil.GetRandom(worldSeed + 4, startPosition.x, startPosition.y, startPosition.z);
+        RandomTools random = RandomUtil.GetRandom(worldSeed + 201, startPosition.x, startPosition.y, startPosition.z);
         //生成概率
         int addRate = random.NextInt(cactusData.addRateMax);
         //高度
@@ -291,7 +398,7 @@ public class BiomeCreateTool
     public static void AddFlower(Vector3Int startPosition, FlowerData flowerData)
     {
         int worldSeed = WorldCreateHandler.Instance.manager.GetWorldSeed();
-        RandomTools random = RandomUtil.GetRandom(worldSeed + 5, startPosition.x, startPosition.y, startPosition.z);
+        RandomTools random = RandomUtil.GetRandom(worldSeed + 301, startPosition.x, startPosition.y, startPosition.z);
         int addRate = random.NextInt(flowerData.addRateMax);
         int flowerTypeNumber = random.NextInt(flowerData.listFlowerType.Count);
         if (addRate < flowerData.addRateMin)

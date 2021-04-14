@@ -15,6 +15,18 @@ public class BlockCross : Block
         }
     }
 
+    public override void RefreshBlock()
+    {
+        base.RefreshBlock();
+        Block blockDown = chunk.GetBlockForLocal(localPosition + Vector3Int.down);
+        //如果下方方块为NONE或者为液体
+        if (blockDown.blockData.GetBlockType() == BlockTypeEnum.None || blockDown.blockInfo.GetBlockShape() == BlockShapeEnum.Liquid)
+        {
+            BlockBean newBlockData = new BlockBean(BlockTypeEnum.None, localPosition, worldPosition);
+            chunk.listUpdateBlock.Add(newBlockData);
+        }
+    }
+
     public override void AddTris(Chunk.ChunkData chunkData)
     {
         base.AddTris(chunkData);
@@ -82,6 +94,17 @@ public class BlockCross : Block
         AddVert(chunkData.verts, corner + new Vector3(0, 1, 0.5f));
         AddVert(chunkData.verts, corner + new Vector3(1, 1, 0.5f));
         AddVert(chunkData.verts, corner + new Vector3(1, 0, 0.5f));
+
+
+        AddVert(chunkData.vertsTrigger, corner + new Vector3(0.5f, 0, 0));
+        AddVert(chunkData.vertsTrigger, corner + new Vector3(0.5f, 1, 0));
+        AddVert(chunkData.vertsTrigger, corner + new Vector3(0.5f, 1, 1));
+        AddVert(chunkData.vertsTrigger, corner + new Vector3(0.5f, 0, 1));
+
+        AddVert(chunkData.vertsTrigger, corner + new Vector3(0, 0, 0.5f));
+        AddVert(chunkData.vertsTrigger, corner + new Vector3(0, 1, 0.5f));
+        AddVert(chunkData.vertsTrigger, corner + new Vector3(1, 1, 0.5f));
+        AddVert(chunkData.vertsTrigger, corner + new Vector3(1, 0, 0.5f));
     }
 
 

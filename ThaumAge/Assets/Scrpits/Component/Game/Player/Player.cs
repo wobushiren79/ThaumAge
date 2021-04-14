@@ -40,4 +40,14 @@ public class Player : BaseMonoBehaviour
             transform.position = new Vector3(transform.position.x, maxHeight + 5, transform.position.z);
         }
     }
+
+    public void OnCollisionStay(Collision collision)
+    {
+        LogUtil.Log("OnCollisionStay:"+ collision.gameObject.name);
+    }
+
+    public void OnTriggerEnter(Collider other)
+    {
+        LogUtil.Log("OnTriggerEnter:" + other.gameObject.name);
+    }
 }

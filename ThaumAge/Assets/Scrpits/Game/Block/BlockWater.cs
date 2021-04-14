@@ -33,7 +33,7 @@ public class BlockWater : BlockLiquid
         bool isSuccess = SetCloseWaterBlock(downBlockWorldPosition, 0);
         if (isSuccess)
             return;
-        if (blockData.contactLevel > 2)
+        if (blockData.contactLevel > 3)
             return;
         SetCloseWaterBlock(worldPosition + Vector3Int.left, blockData.contactLevel + 1);
         SetCloseWaterBlock(worldPosition + Vector3Int.right, blockData.contactLevel + 1);

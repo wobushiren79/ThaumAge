@@ -3,13 +3,13 @@ using UnityEditor;
 using UnityEngine;
 
 public class BlockLiquid : Block
-{   
-    
+{
+
     /// <summary>
-     /// 检测是否需要构建面
-     /// </summary>
-     /// <param name="position"></param>
-     /// <returns></returns>
+    /// 检测是否需要构建面
+    /// </summary>
+    /// <param name="position"></param>
+    /// <returns></returns>
     public override bool CheckNeedBuildFace(Vector3Int position)
     {
         if (position.y < 0) return false;
@@ -46,26 +46,29 @@ public class BlockLiquid : Block
         BlockTypeEnum blockType = blockData.GetBlockType();
         if (blockType != BlockTypeEnum.None)
         {
+            int contactLevel = blockData.contactLevel;
+            float itemContactHeight = 1f / 4f;
+            float subHeight = (contactLevel * itemContactHeight);
             //Left
             if (CheckNeedBuildFace(localPosition + new Vector3Int(-1, 0, 0)))
-                BuildFace(DirectionEnum.Left, blockData, localPosition, Vector3.up, Vector3.forward, chunkData);
+                BuildFace(DirectionEnum.Left, blockData, localPosition, Vector3.up - new Vector3(0, subHeight, 0), Vector3.forward - new Vector3(0, subHeight, 0), chunkData);
             //Right
             if (CheckNeedBuildFace(localPosition + new Vector3Int(1, 0, 0)))
-                BuildFace(DirectionEnum.Right, blockData, localPosition + new Vector3Int(1, 0, 0), Vector3.up, Vector3.forward, chunkData);
+                BuildFace(DirectionEnum.Right, blockData, localPosition + new Vector3Int(1, 0, 0), Vector3.up - new Vector3(0, subHeight, 0), Vector3.forward - new Vector3(0, subHeight, 0), chunkData);
 
             //Bottom
             if (CheckNeedBuildFace(localPosition + new Vector3Int(0, -1, 0)))
                 BuildFace(DirectionEnum.Down, blockData, localPosition, Vector3.forward, Vector3.right, chunkData);
             //Top
             if (CheckNeedBuildFace(localPosition + new Vector3Int(0, 1, 0)))
-                BuildFace(DirectionEnum.UP, blockData, localPosition + new Vector3Int(0, 1, 0), Vector3.forward, Vector3.right, chunkData);
+                BuildFace(DirectionEnum.UP, blockData, localPosition + new Vector3Int(0, 1, 0) - new Vector3(0, subHeight, 0), Vector3.forward - new Vector3(0, subHeight, 0), Vector3.right - new Vector3(0, subHeight, 0), chunkData);
 
             //Front
             if (CheckNeedBuildFace(localPosition + new Vector3Int(0, 0, -1)))
-                BuildFace(DirectionEnum.Forward, blockData, localPosition, Vector3.up, Vector3.right, chunkData);
+                BuildFace(DirectionEnum.Forward, blockData, localPosition, Vector3.up - new Vector3(0, subHeight, 0), Vector3.right - new Vector3(0, subHeight, 0), chunkData);
             //Back
             if (CheckNeedBuildFace(localPosition + new Vector3Int(0, 0, 1)))
-                BuildFace(DirectionEnum.Back, blockData, localPosition + new Vector3Int(0, 0, 1), Vector3.up, Vector3.right, chunkData);
+                BuildFace(DirectionEnum.Back, blockData, localPosition + new Vector3Int(0, 0, 1), Vector3.up - new Vector3(0, subHeight, 0), Vector3.right - new Vector3(0, subHeight, 0), chunkData);
         }
     }
 
@@ -83,7 +86,7 @@ public class BlockLiquid : Block
     /// <param name="tris"></param>
     /// <param name="vertsCollider"></param>
     /// <param name="trisCollider"></param>
-    public void BuildFace(DirectionEnum direction, BlockBean blockData, Vector3 corner, Vector3 up, Vector3 right,Chunk.ChunkData chunkData)
+    public void BuildFace(DirectionEnum direction, BlockBean blockData, Vector3 corner, Vector3 up, Vector3 right, Chunk.ChunkData chunkData)
     {
         AddTris(chunkData);
         AddVerts(corner, up, right, chunkData);
@@ -96,6 +99,11 @@ public class BlockLiquid : Block
         chunkData.verts.Add(corner + up);
         chunkData.verts.Add(corner + up + right);
         chunkData.verts.Add(corner + right);
+
+        chunkData.vertsTrigger.Add(corner);
+        chunkData.vertsTrigger.Add(corner + up);
+        chunkData.vertsTrigger.Add(corner + up + right);
+        chunkData.vertsTrigger.Add(corner + right);
     }
 
     public void AddUVs(DirectionEnum direction, BlockBean blockData, Chunk.ChunkData chunkData)

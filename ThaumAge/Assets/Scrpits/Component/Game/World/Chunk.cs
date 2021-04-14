@@ -17,15 +17,22 @@ public class Chunk : BaseMonoBehaviour
         public List<Vector3> vertsCollider;
         public List<int> trisCollider;
 
+        //出发使用的三角形合集
+        public List<Vector3> vertsTrigger;
+        public List<int> trisTrigger;
+
         //所有三角形合集，根据材质球区分
         public Dictionary<BlockMaterialEnum, List<int>> dicTris;
     }
 
     public Action eventUpdate;
 
+    public MeshCollider meshCollider;
+    public MeshCollider meshTrigger;
+
     protected MeshRenderer meshRenderer;
-    protected MeshCollider meshCollider;
     protected MeshFilter meshFilter;
+
     //存储着此Chunk内的所有Block信息
     public Dictionary<Vector3Int, Block> mapForBlock = new Dictionary<Vector3Int, Block>();
     //待更新方块
@@ -43,26 +50,32 @@ public class Chunk : BaseMonoBehaviour
 
     protected Mesh chunkMesh;
     protected Mesh chunkMeshCollider;
+    protected Mesh chunkMeshTrigger;
 
     public void Awake()
     {
         //获取自身相关组件引用
         meshRenderer = GetComponent<MeshRenderer>();
-        meshCollider = GetComponent<MeshCollider>();
         meshFilter = GetComponent<MeshFilter>();
+
+        meshCollider.isTrigger = false;
+        meshTrigger.isTrigger = true;
 
         chunkMesh = new Mesh();
         chunkMeshCollider = new Mesh();
+        chunkMeshTrigger = new Mesh();
 
         meshRenderer.materials = WorldCreateHandler.Instance.manager.GetAllMaterial();
 
         //设置为动态变更，理论上可以提高效率
         chunkMesh.MarkDynamic();
         chunkMeshCollider.MarkDynamic();
-        
+        chunkMeshTrigger.MarkDynamic();
+
         //设置mesh的三角形上限
         meshFilter.mesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
         meshCollider.sharedMesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
+        meshTrigger.sharedMesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
     }
 
     protected float eventUpdateTime = 0;
@@ -178,6 +191,10 @@ public class Chunk : BaseMonoBehaviour
             vertsCollider = new List<Vector3>(),
             trisCollider = new List<int>(),
 
+            //碰撞使用的三角形合集
+            vertsTrigger = new List<Vector3>(),
+            trisTrigger = new List<int>(),
+
             //三角型合集
             dicTris = new Dictionary<BlockMaterialEnum, List<int>>()
         };
@@ -212,10 +229,12 @@ public class Chunk : BaseMonoBehaviour
 
         chunkMesh = new Mesh();
         chunkMeshCollider = new Mesh();
+        chunkMeshTrigger = new Mesh();
 
         //设置mesh的三角形上限
         chunkMesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
         chunkMeshCollider.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
+        chunkMeshTrigger.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
 
         //设置子mesh数量
         chunkMesh.subMeshCount = meshRenderer.materials.Length;
@@ -244,16 +263,23 @@ public class Chunk : BaseMonoBehaviour
         //碰撞数据设置
         chunkMeshCollider.vertices = chunkData.vertsCollider.ToArray();
         chunkMeshCollider.triangles = chunkData.trisCollider.ToArray();
-
         //刷新
         chunkMeshCollider.RecalculateBounds();
         chunkMeshCollider.RecalculateNormals();
+
+        //出发数据设置
+        chunkMeshTrigger.vertices = chunkData.vertsTrigger.ToArray();
+        chunkMeshTrigger.triangles= chunkData.trisTrigger.ToArray();
+        //刷新
+        chunkMeshTrigger.RecalculateBounds();
+        chunkMeshTrigger.RecalculateNormals();
 
         Physics.BakeMesh(chunkMesh.GetInstanceID(), false);
         Physics.BakeMesh(chunkMeshCollider.GetInstanceID(), false);
 
         meshFilter.mesh = chunkMesh;
         meshCollider.sharedMesh = chunkMeshCollider;
+        meshTrigger.sharedMesh = chunkMeshTrigger;
     }
 
     public Block GetBlockForWorld(Vector3Int blockWorldPosition)
