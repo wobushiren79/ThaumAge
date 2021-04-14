@@ -51,24 +51,24 @@ public class BlockLiquid : Block
             float subHeight = (contactLevel * itemContactHeight);
             //Left
             if (CheckNeedBuildFace(localPosition + new Vector3Int(-1, 0, 0)))
-                BuildFace(DirectionEnum.Left, blockData, localPosition, Vector3.up - new Vector3(0, subHeight, 0), Vector3.forward - new Vector3(0, subHeight, 0), chunkData);
+                BuildFace(DirectionEnum.Left, blockData, localPosition, Vector3.up - new Vector3(0, subHeight, 0), Vector3.forward, chunkData);
             //Right
             if (CheckNeedBuildFace(localPosition + new Vector3Int(1, 0, 0)))
-                BuildFace(DirectionEnum.Right, blockData, localPosition + new Vector3Int(1, 0, 0), Vector3.up - new Vector3(0, subHeight, 0), Vector3.forward - new Vector3(0, subHeight, 0), chunkData);
+                BuildFace(DirectionEnum.Right, blockData, localPosition + new Vector3Int(1, 0, 0), Vector3.up - new Vector3(0, subHeight, 0), Vector3.forward, chunkData);
 
             //Bottom
             if (CheckNeedBuildFace(localPosition + new Vector3Int(0, -1, 0)))
                 BuildFace(DirectionEnum.Down, blockData, localPosition, Vector3.forward, Vector3.right, chunkData);
             //Top
             if (CheckNeedBuildFace(localPosition + new Vector3Int(0, 1, 0)))
-                BuildFace(DirectionEnum.UP, blockData, localPosition + new Vector3Int(0, 1, 0) - new Vector3(0, subHeight, 0), Vector3.forward - new Vector3(0, subHeight, 0), Vector3.right - new Vector3(0, subHeight, 0), chunkData);
+                BuildFace(DirectionEnum.UP, blockData, localPosition + new Vector3Int(0, 1, 0) - new Vector3(0, subHeight, 0), Vector3.forward, Vector3.right, chunkData);
 
             //Front
             if (CheckNeedBuildFace(localPosition + new Vector3Int(0, 0, -1)))
-                BuildFace(DirectionEnum.Forward, blockData, localPosition, Vector3.up - new Vector3(0, subHeight, 0), Vector3.right - new Vector3(0, subHeight, 0), chunkData);
+                BuildFace(DirectionEnum.Forward, blockData, localPosition, Vector3.up - new Vector3(0, subHeight, 0), Vector3.right, chunkData);
             //Back
             if (CheckNeedBuildFace(localPosition + new Vector3Int(0, 0, 1)))
-                BuildFace(DirectionEnum.Back, blockData, localPosition + new Vector3Int(0, 0, 1), Vector3.up - new Vector3(0, subHeight, 0), Vector3.right - new Vector3(0, subHeight, 0), chunkData);
+                BuildFace(DirectionEnum.Back, blockData, localPosition + new Vector3Int(0, 0, 1), Vector3.up - new Vector3(0, subHeight, 0), Vector3.right , chunkData);
         }
     }
 
@@ -147,13 +147,14 @@ public class BlockLiquid : Block
 
         chunkData.uvs.Add(Vector2.zero);
         chunkData.uvs.Add(Vector2.zero + new Vector2(0, 1));
-        chunkData.uvs.Add(Vector2.zero + new Vector2(1, 1));
+         chunkData.uvs.Add(Vector2.zero + new Vector2(1, 1));
         chunkData.uvs.Add(Vector2.zero + new Vector2(1, 0));
     }
 
     public override void AddTris(Chunk.ChunkData chunkData)
     {
         int index = chunkData.verts.Count;
+        int triggerIndex = chunkData.vertsTrigger.Count;
 
         chunkData.dicTris[BlockMaterialEnum.Water].Add(index + 0);
         chunkData.dicTris[BlockMaterialEnum.Water].Add(index + 1);
@@ -162,5 +163,13 @@ public class BlockLiquid : Block
         chunkData.dicTris[BlockMaterialEnum.Water].Add(index + 0);
         chunkData.dicTris[BlockMaterialEnum.Water].Add(index + 2);
         chunkData.dicTris[BlockMaterialEnum.Water].Add(index + 3);
+
+        chunkData.trisTrigger.Add(triggerIndex + 0);
+        chunkData.trisTrigger.Add(triggerIndex + 1);
+        chunkData.trisTrigger.Add(triggerIndex + 2);
+
+        chunkData.trisTrigger.Add(triggerIndex + 0);
+        chunkData.trisTrigger.Add(triggerIndex + 2);
+        chunkData.trisTrigger.Add(triggerIndex + 3);
     }
 }

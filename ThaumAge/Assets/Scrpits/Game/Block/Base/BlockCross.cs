@@ -32,6 +32,7 @@ public class BlockCross : Block
         base.AddTris(chunkData);
 
         int index = chunkData.verts.Count;
+        int triggerIndex = chunkData.vertsTrigger.Count;
 
         chunkData.dicTris[BlockMaterialEnum.BothFace].Add(index + 0);
         chunkData.dicTris[BlockMaterialEnum.BothFace].Add(index + 1);
@@ -48,6 +49,22 @@ public class BlockCross : Block
         chunkData.dicTris[BlockMaterialEnum.BothFace].Add(index + 4);
         chunkData.dicTris[BlockMaterialEnum.BothFace].Add(index + 6);
         chunkData.dicTris[BlockMaterialEnum.BothFace].Add(index + 7);
+
+        chunkData.trisTrigger.Add(triggerIndex + 0);
+        chunkData.trisTrigger.Add(triggerIndex + 1);
+        chunkData.trisTrigger.Add(triggerIndex + 2);
+
+        chunkData.trisTrigger.Add(triggerIndex + 0);
+        chunkData.trisTrigger.Add(triggerIndex + 2);
+        chunkData.trisTrigger.Add(triggerIndex + 3);
+
+        chunkData.trisTrigger.Add(triggerIndex + 4);
+        chunkData.trisTrigger.Add(triggerIndex + 5);
+        chunkData.trisTrigger.Add(triggerIndex + 6);
+
+        chunkData.trisTrigger.Add(triggerIndex + 4);
+        chunkData.trisTrigger.Add(triggerIndex + 6);
+        chunkData.trisTrigger.Add(triggerIndex + 7);
     }
 
     public override void AddUVs(BlockBean blockData, Chunk.ChunkData chunkData)

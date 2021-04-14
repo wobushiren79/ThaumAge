@@ -58,9 +58,6 @@ public class Chunk : BaseMonoBehaviour
         meshRenderer = GetComponent<MeshRenderer>();
         meshFilter = GetComponent<MeshFilter>();
 
-        meshCollider.isTrigger = false;
-        meshTrigger.isTrigger = true;
-
         chunkMesh = new Mesh();
         chunkMeshCollider = new Mesh();
         chunkMeshTrigger = new Mesh();

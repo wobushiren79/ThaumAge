@@ -91,7 +91,7 @@ public class ControlForPlayer : ControlForBase
             float disHit = Vector3.Distance(cameraPosition, hit.point);
             if (disHit < disMax)
                 return;
-            Chunk chunk = hit.collider.GetComponent<Chunk>();
+            Chunk chunk = hit.collider.GetComponentInParent<Chunk>();
             if (chunk)
             {
                 Vector3Int position = Vector3Int.zero;
@@ -136,7 +136,7 @@ public class ControlForPlayer : ControlForBase
                 Block block = WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(addPosition);
                 if(block != null)
                 {
-                    block.chunk.SetBlockForWorld(addPosition, BlockTypeEnum.Water, direction);
+                    block.chunk.SetBlockForWorld(addPosition, BlockTypeEnum.Water);
                 }    
             }
         }
@@ -154,7 +154,7 @@ public class ControlForPlayer : ControlForBase
             float disHit = Vector3.Distance(cameraPosition, hit.point);
             if (disHit < disMax)
                 return;
-            Chunk chunk = hit.collider.GetComponent<Chunk>();
+            Chunk chunk = hit.collider.GetComponentInParent<Chunk>();
             if (chunk)
             {
 

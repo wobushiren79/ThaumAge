@@ -263,10 +263,14 @@ public class BiomeCreateTool
                         }
                         else
                         {
+                            Vector3Int tempTrunkPosition= treeTrunkPosition + new Vector3Int(x, 0, z);
                             //生成树干
-                            BlockBean blockData = new BlockBean(treeData.treeTrunk, treeTrunkPosition + new Vector3Int(x, 0, z));
-                            dicData.Add(blockData.worldPosition.GetVector3Int(), blockData);
-
+                            if (dicData.TryGetValue(tempTrunkPosition, out BlockBean valueTrunk))
+                            {
+                                dicData.Remove(tempTrunkPosition);
+                            }
+                            BlockBean blockData = new BlockBean(treeData.treeTrunk, tempTrunkPosition);
+                            dicData.Add(tempTrunkPosition, blockData);
                         }
 
                         if (x == -trunkRnage || x == trunkRnage || z == -trunkRnage || z == trunkRnage)
@@ -302,7 +306,7 @@ public class BiomeCreateTool
                                             dicData.Remove(branchStartPosition);
                                         }
                                         BlockBean blockData = new BlockBean(treeData.treeTrunk, branchStartPosition, DirectionEnum.Left);
-                                        dicData.Add(blockData.worldPosition.GetVector3Int(), blockData);
+                                        dicData.Add(branchStartPosition, blockData);
                                         //生成树叶
                                         if (b % 5 == 0)
                                         {
@@ -313,11 +317,11 @@ public class BiomeCreateTool
                                                     for (int leavesZ = -3; leavesZ <= 3; leavesZ++)
                                                     {
                                                         Vector3Int leavesPosition = branchStartPosition + new Vector3Int(leavesX, leavesY, leavesZ);
-                                                        if (!dicData.TryGetValue(leavesPosition, out BlockBean valueLeaves))
-                                                        {
-                                                            BlockBean blockLeavesData = new BlockBean(treeData.treeLeaves, branchStartPosition);
-                                                            dicData.Add(blockData.worldPosition.GetVector3Int(), blockLeavesData);
-                                                        }
+                                                        //if (!dicData.TryGetValue(leavesPosition, out BlockBean valueLeaves))
+                                                        //{
+                                                        //    BlockBean blockLeavesData = new BlockBean(treeData.treeLeaves, leavesPosition);
+                                                        //    dicData.Add(leavesPosition, blockLeavesData);
+                                                        //}
                                                     }
                                                 }
                                             }
