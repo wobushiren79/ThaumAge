@@ -8,60 +8,51 @@ using UnityEngine;
 
 public class Test : BaseMonoBehaviour
 {
-    public Vector2Int imageDim;
-    public int regionAmount;
-    public bool drawByDistance = false;
 
 
     private void Start()
     {
-        Stopwatch stopwatch = TimeUtil.GetMethodTimeStart();
-        for (int i = 0; i < 100000; i++)
+        Dictionary<int, string> list = new Dictionary<int, string>();
+        for (int i = 0; i < 9999999; i++)
         {
-            Block block = Activator.CreateInstance(typeof(BlockCube)) as Block;
+            list.Add(i, "i");
+        }
+        //3.0以上版本
+        Stopwatch stopwatch = TimeUtil.GetMethodTimeStart();
+        foreach (var item in list)
+        {
+            string value = item.Value;
         }
         TimeUtil.GetMethodTimeEnd("1", stopwatch);
         stopwatch = TimeUtil.GetMethodTimeStart();
-        for (int i = 0; i < 100000; i++)
+        foreach (KeyValuePair<int, string> item in list)
         {
-            Block block = CreateInstance<Block>(typeof(BlockCube)) as Block;
+            string value = item.Value;
         }
         TimeUtil.GetMethodTimeEnd("2", stopwatch);
         stopwatch = TimeUtil.GetMethodTimeStart();
-        for (int i = 0; i < 100000; i++)
+        //通过键的集合取
+        foreach (var key in list.Keys)
         {
-            BlockCube block = new BlockCube();
+            string value = list[key];
         }
         TimeUtil.GetMethodTimeEnd("3", stopwatch);
         stopwatch = TimeUtil.GetMethodTimeStart();
-        for (int i = 0; i < 100000; i++)
+        //直接取值
+        foreach (var val in list.Values)
         {
-            BlockCube block = (BlockCube)FormatterServices.GetUninitializedObject(typeof(BlockCube));
+            string value = val;
         }
         TimeUtil.GetMethodTimeEnd("4", stopwatch);
-
-    }
-
-    public static T CreateInstance<T>(Type objType) where T : class
-    {
-        Func<T> returnFunc;
-        if (!DelegateStore<T>.Store.TryGetValue(objType.FullName, out returnFunc))
+        stopwatch = TimeUtil.GetMethodTimeStart();
+        //非要采用for的方法也可
+        List<int> test = new List<int>(list.Keys);
+        for (int i = 0; i < test.Count; i++)
         {
-            Func<T> a0l = Expression.Lambda<Func<T>>(Expression.New(objType)).Compile();
-            DelegateStore<T>.Store[objType.FullName] = a0l;
-            returnFunc = a0l;
-            //var dynMethod = new DynamicMethod("DM$OBJ_FACTORY_" + objType.Name, objType, null, objType);
-            //ILGenerator ilGen = dynMethod.GetILGenerator();
-            //ilGen.Emit(OpCodes.Newobj, objType.GetConstructor(Type.EmptyTypes));
-            //ilGen.Emit(OpCodes.Ret);
-            //returnFunc = (Func<T>)dynMethod.CreateDelegate(typeof(Func<T>));
-            //DelegateStore<T>.Store[objType.FullName] = returnFunc;
+            string value = list[test[i]];
         }
-        return returnFunc();
+        TimeUtil.GetMethodTimeEnd("5", stopwatch);
     }
-    internal static class DelegateStore<T>
-    {
-        internal static IDictionary<string, Func<T>> Store = new ConcurrentDictionary<string, Func<T>>();
-    }
+
 
 }

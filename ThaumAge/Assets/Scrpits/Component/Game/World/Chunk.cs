@@ -48,26 +48,13 @@ public class Chunk : BaseMonoBehaviour
     //存储数据
     protected WorldDataBean worldData;
 
-    protected Mesh chunkMesh;
-    protected Mesh chunkMeshCollider;
-    protected Mesh chunkMeshTrigger;
-
     public void Awake()
     {
         //获取自身相关组件引用
         meshRenderer = GetComponent<MeshRenderer>();
         meshFilter = GetComponent<MeshFilter>();
 
-        chunkMesh = new Mesh();
-        chunkMeshCollider = new Mesh();
-        chunkMeshTrigger = new Mesh();
-
         meshRenderer.materials = WorldCreateHandler.Instance.manager.GetAllMaterial();
-
-        //设置为动态变更，理论上可以提高效率
-        chunkMesh.MarkDynamic();
-        chunkMeshCollider.MarkDynamic();
-        chunkMeshTrigger.MarkDynamic();
 
         //设置mesh的三角形上限
         meshFilter.mesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
@@ -155,25 +142,55 @@ public class Chunk : BaseMonoBehaviour
     /// </summary>
     public void BuildChunkRangeForAsync()
     {
-        BuildChunkForAsync();
-        Chunk leftChunk = WorldCreateHandler.Instance.manager.GetChunk(worldPosition - new Vector3Int(-width, 0, 0));
-        Chunk rightChunk = WorldCreateHandler.Instance.manager.GetChunk(worldPosition - new Vector3Int(width, 0, 0));
-        Chunk upChunk = WorldCreateHandler.Instance.manager.GetChunk(worldPosition - new Vector3Int(0, 0, width));
-        Chunk downChunk = WorldCreateHandler.Instance.manager.GetChunk(worldPosition - new Vector3Int(0, 0, -width));
-        if (leftChunk && leftChunk.mapForBlock.Count > 0)
-            leftChunk.BuildChunkForAsync();
-        if (rightChunk && rightChunk.mapForBlock.Count > 0)
-            rightChunk.BuildChunkForAsync();
-        if (upChunk && upChunk.mapForBlock.Count > 0)
-            upChunk.BuildChunkForAsync();
-        if (downChunk && downChunk.mapForBlock.Count > 0)
-            downChunk.BuildChunkForAsync();
+        lock (this)
+        {
+            Chunk leftChunk = WorldCreateHandler.Instance.manager.GetChunk(worldPosition - new Vector3Int(-width, 0, 0));
+            Chunk rightChunk = WorldCreateHandler.Instance.manager.GetChunk(worldPosition - new Vector3Int(width, 0, 0));
+            Chunk upChunk = WorldCreateHandler.Instance.manager.GetChunk(worldPosition - new Vector3Int(0, 0, width));
+            Chunk downChunk = WorldCreateHandler.Instance.manager.GetChunk(worldPosition - new Vector3Int(0, 0, -width));
+            //先更新周边 再更新自身
+            bool leftReady = false;
+            bool rightReady = false;
+            bool upReady = false;
+            bool downReady = false;
+            Action<Chunk> callBack = (updateChunk) =>
+            {
+                if (updateChunk == leftChunk)
+                {
+                    leftReady = true;
+                }
+                else if (updateChunk == rightChunk)
+                {
+                    rightReady = true;
+                }
+                else if (updateChunk == upChunk)
+                {
+                    upReady = true;
+                }
+                else if (updateChunk == downChunk)
+                {
+                    downReady = true;
+                }
+                if (leftReady && rightReady && upReady && downReady)
+                {
+                    BuildChunkForAsync(null);
+                }
+            };
+            if (leftChunk)
+                leftChunk.BuildChunkForAsync(callBack);
+            if (rightChunk)
+                rightChunk.BuildChunkForAsync(callBack);
+            if (upChunk)
+                upChunk.BuildChunkForAsync(callBack);
+            if (downChunk)
+                downChunk.BuildChunkForAsync(callBack);
+        }
     }
 
     /// <summary>
     /// 异步构建chunk
     /// </summary>
-    public async void BuildChunkForAsync()
+    public async void BuildChunkForAsync(Action<Chunk> callBack)
     {
         //只有初始化之后的chunk才能刷新
         if (!isInit || mapForBlock.Count <= 0)
@@ -197,7 +214,7 @@ public class Chunk : BaseMonoBehaviour
         };
         //初始化数据
         List<BlockMaterialEnum> blockMaterialsEnum = EnumUtil.GetEnumValue<BlockMaterialEnum>();
-        for (int i=0;i< blockMaterialsEnum.Count;i++)
+        for (int i = 0; i < blockMaterialsEnum.Count; i++)
         {
             BlockMaterialEnum blockMaterial = blockMaterialsEnum[i];
             chunkData.dicTris.Add(blockMaterial, new List<int>());
@@ -209,9 +226,11 @@ public class Chunk : BaseMonoBehaviour
             //遍历chunk, 生成其中的每一个Block
             try
             {
-                foreach (Block itemData in mapForBlock.Values)
+                List<Vector3Int> listKey = new List<Vector3Int>(mapForBlock.Keys);
+                for (int i = 0; i < listKey.Count; i++)
                 {
-                    itemData.BuildBlock(chunkData);
+                    Vector3Int itemKey = listKey[i];
+                    mapForBlock[itemKey].BuildBlock(chunkData);
                 }
                 isSuccessInit = true;
             }
@@ -224,9 +243,14 @@ public class Chunk : BaseMonoBehaviour
         if (!isSuccessInit || this == null)
             return;
 
-        chunkMesh = new Mesh();
-        chunkMeshCollider = new Mesh();
-        chunkMeshTrigger = new Mesh();
+        Mesh chunkMesh = new Mesh();
+        Mesh chunkMeshCollider = new Mesh();
+        Mesh chunkMeshTrigger = new Mesh();
+
+        //设置为动态变更，理论上可以提高效率
+        chunkMesh.MarkDynamic();
+        chunkMeshCollider.MarkDynamic();
+        chunkMeshTrigger.MarkDynamic();
 
         //设置mesh的三角形上限
         chunkMesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
@@ -252,31 +276,37 @@ public class Chunk : BaseMonoBehaviour
         {
             chunkMesh.SetTriangles(itemTris.Value.ToArray(), (int)itemTris.Key);
         }
+        //碰撞数据设置
+        chunkMeshCollider.vertices = chunkData.vertsCollider.ToArray();
+        chunkMeshCollider.triangles = chunkData.trisCollider.ToArray();
+
+        //出发数据设置
+        chunkMeshTrigger.vertices = chunkData.vertsTrigger.ToArray();
+        chunkMeshTrigger.triangles = chunkData.trisTrigger.ToArray();
+
+        Physics.BakeMesh(chunkMesh.GetInstanceID(), false);
+        Physics.BakeMesh(chunkMeshCollider.GetInstanceID(), false);
+        Physics.BakeMesh(chunkMeshTrigger.GetInstanceID(), false);
+
+        chunkMesh.Optimize();
+        chunkMeshCollider.Optimize();
+        chunkMeshTrigger.Optimize();
 
         //刷新
         chunkMesh.RecalculateBounds();
         chunkMesh.RecalculateNormals();
-
-        //碰撞数据设置
-        chunkMeshCollider.vertices = chunkData.vertsCollider.ToArray();
-        chunkMeshCollider.triangles = chunkData.trisCollider.ToArray();
         //刷新
         chunkMeshCollider.RecalculateBounds();
         chunkMeshCollider.RecalculateNormals();
-
-        //出发数据设置
-        chunkMeshTrigger.vertices = chunkData.vertsTrigger.ToArray();
-        chunkMeshTrigger.triangles= chunkData.trisTrigger.ToArray();
         //刷新
         chunkMeshTrigger.RecalculateBounds();
         chunkMeshTrigger.RecalculateNormals();
 
-        Physics.BakeMesh(chunkMesh.GetInstanceID(), false);
-        Physics.BakeMesh(chunkMeshCollider.GetInstanceID(), false);
-
         meshFilter.mesh = chunkMesh;
         meshCollider.sharedMesh = chunkMeshCollider;
         meshTrigger.sharedMesh = chunkMeshTrigger;
+
+        callBack?.Invoke(this);
     }
 
     public Block GetBlockForWorld(Vector3Int blockWorldPosition)
@@ -349,12 +379,12 @@ public class Chunk : BaseMonoBehaviour
     public Block SetBlockForLocal(Vector3Int localPosition, BlockTypeEnum blockType, DirectionEnum direction)
     {
         BlockBean blockData = new BlockBean(blockType, localPosition, localPosition + worldPosition, direction);
-        return SetBlock(blockData,true, true, true);
+        return SetBlock(blockData, true, true, true);
     }
 
-    public Block SetBlock(BlockBean blockData,bool isSaveData, bool isRefreshChunkRange, bool isRefreshBlockRange)
+    public Block SetBlock(BlockBean blockData, bool isSaveData, bool isRefreshChunkRange, bool isRefreshBlockRange)
     {
-        Vector3Int localPosition = blockData.localPosition.GetVector3Int();    
+        Vector3Int localPosition = blockData.localPosition.GetVector3Int();
         //首先移除方块
         if (mapForBlock.TryGetValue(localPosition, out Block valueBlock))
         {

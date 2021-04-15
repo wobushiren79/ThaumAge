@@ -350,9 +350,9 @@ public class WorldCreateManager : BaseManager
     /// </summary>
     public void RefreshAllChunk()
     {
-        foreach (var itemChunk in dicChunk)
+        foreach (var itemChunk in dicChunk.Values)
         {
-            itemChunk.Value.BuildChunkForAsync();
+            itemChunk.BuildChunkForAsync(null);
         }
     }
 }

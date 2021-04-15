@@ -80,16 +80,17 @@ public abstract class Block
     /// </summary>
     /// <param name="position"></param>
     /// <returns></returns>
-    public virtual bool CheckNeedBuildFace(Vector3Int position)
+    public virtual bool CheckNeedBuildFace(Vector3Int position, out Block closeBlock)
     {
+        closeBlock = null;
         if (position.y < 0) return false;
         //检测旋转
         Vector3Int checkPosition = Vector3Int.RoundToInt(RotatePosition(position, localPosition));
         //获取方块
-        Block block = WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(checkPosition + chunk.worldPosition);
-        if (block == null)
+        closeBlock = WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(checkPosition + chunk.worldPosition);
+        if (closeBlock == null)
             return false;
-        BlockShapeEnum blockShape = block.blockInfo.GetBlockShape();
+        BlockShapeEnum blockShape = closeBlock.blockInfo.GetBlockShape();
         switch (blockShape)
         {
             case BlockShapeEnum.Cube:
@@ -97,6 +98,11 @@ public abstract class Block
             default:
                 return true;
         }
+    }
+
+    public virtual bool CheckNeedBuildFace(Vector3Int position)
+    {
+        return CheckNeedBuildFace(position,out Block value);
     }
 
     /// <summary>
