@@ -34,7 +34,7 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
         {
             chunk.SetInitState(true);
             //设置数据
-            chunk.BuildChunkRangeForAsync();
+            chunk.BuildChunkForAsync(null);
         };
         //生成方块数据
         manager.CreateChunkBlockDataForAsync(chunk, callBack);

@@ -214,7 +214,7 @@ public class WorldCreateManager : BaseManager
             //构建修改过的区块
             foreach (var itemChunk in listUpdateChunk)
             {
-                itemChunk.BuildChunkRangeForAsync();
+                itemChunk.BuildChunkForAsync(null);
             }
             listUpdateChunk.Clear();
         }

@@ -48,6 +48,10 @@ public class Chunk : BaseMonoBehaviour
     //存储数据
     protected WorldDataBean worldData;
 
+    protected Mesh chunkMesh;
+    protected Mesh chunkMeshCollider;
+    protected Mesh chunkMeshTrigger;
+
     public void Awake()
     {
         //获取自身相关组件引用
@@ -56,10 +60,32 @@ public class Chunk : BaseMonoBehaviour
 
         meshRenderer.materials = WorldCreateHandler.Instance.manager.GetAllMaterial();
 
+        chunkMesh = new Mesh();
+        chunkMeshCollider = new Mesh();
+        chunkMeshTrigger = new Mesh();
+
+        //设置为动态变更，理论上可以提高效率
+        chunkMesh.MarkDynamic();
+        chunkMeshCollider.MarkDynamic();
+        chunkMeshTrigger.MarkDynamic();
+
+        //设置mesh的三角形上限
+        chunkMesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
+        chunkMeshCollider.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
+        chunkMeshTrigger.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
+
+        chunkMesh.Optimize();
+        chunkMeshCollider.Optimize();
+        chunkMeshTrigger.Optimize();
+
         //设置mesh的三角形上限
         meshFilter.mesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
         meshCollider.sharedMesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
         meshTrigger.sharedMesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
+
+        meshFilter.mesh = chunkMesh;
+        meshCollider.sharedMesh = chunkMeshCollider;
+        meshTrigger.sharedMesh = chunkMeshTrigger;
     }
 
     protected float eventUpdateTime = 0;
@@ -102,7 +128,7 @@ public class Chunk : BaseMonoBehaviour
             //异步保存数据
             GameDataHandler.Instance.manager.SaveGameDataAsync(worldData);
             //异步刷新
-            BuildChunkRangeForAsync();
+            BuildChunkForAsync(null);
         }
     }
 
@@ -187,6 +213,32 @@ public class Chunk : BaseMonoBehaviour
         }
     }
 
+    public void BuildChunkRangeForAsync(Block changeBlock)
+    {
+        lock (this)
+        {
+            HashSet<Chunk> listUpdateData = new HashSet<Chunk>();
+            Chunk leftChunk = WorldCreateHandler.Instance.manager.GetChunkForWorldPosition(changeBlock.worldPosition - new Vector3Int(-1, 0, 0));
+            Chunk rightChunk = WorldCreateHandler.Instance.manager.GetChunkForWorldPosition(changeBlock.worldPosition - new Vector3Int(1, 0, 0));
+            Chunk upChunk = WorldCreateHandler.Instance.manager.GetChunkForWorldPosition(changeBlock.worldPosition - new Vector3Int(0, 0, 1));
+            Chunk downChunk = WorldCreateHandler.Instance.manager.GetChunkForWorldPosition(changeBlock.worldPosition - new Vector3Int(0, 0, -1));
+            if (!listUpdateData.Contains(leftChunk))
+                listUpdateData.Add(leftChunk);
+            if (!listUpdateData.Contains(rightChunk))
+                listUpdateData.Add(rightChunk);
+            if (!listUpdateData.Contains(upChunk))
+                listUpdateData.Add(upChunk);
+            if (!listUpdateData.Contains(downChunk))
+                listUpdateData.Add(downChunk);
+            if (!listUpdateData.Contains(changeBlock.chunk))
+                listUpdateData.Add(changeBlock.chunk);
+            foreach (Chunk updateChunk in listUpdateData)
+            {
+                updateChunk.BuildChunkForAsync(null);
+            }
+        }
+    }
+
     /// <summary>
     /// 异步构建chunk
     /// </summary>
@@ -243,22 +295,9 @@ public class Chunk : BaseMonoBehaviour
         if (!isSuccessInit || this == null)
             return;
 
-        Mesh chunkMesh = new Mesh();
-        Mesh chunkMeshCollider = new Mesh();
-        Mesh chunkMeshTrigger = new Mesh();
-
-        //设置为动态变更，理论上可以提高效率
-        chunkMesh.MarkDynamic();
-        chunkMeshCollider.MarkDynamic();
-        chunkMeshTrigger.MarkDynamic();
-
-        //设置mesh的三角形上限
-        chunkMesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
-        chunkMeshCollider.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
-        chunkMeshTrigger.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
-
-        //设置子mesh数量
-        chunkMesh.subMeshCount = meshRenderer.materials.Length;
+        chunkMesh.Clear();
+        chunkMeshCollider.Clear();
+        chunkMeshTrigger.Clear();
 
         //定点数判断
         if (chunkData.verts.Count <= 3)
@@ -288,21 +327,21 @@ public class Chunk : BaseMonoBehaviour
         Physics.BakeMesh(chunkMeshCollider.GetInstanceID(), false);
         Physics.BakeMesh(chunkMeshTrigger.GetInstanceID(), false);
 
-        chunkMesh.Optimize();
-        chunkMeshCollider.Optimize();
-        chunkMeshTrigger.Optimize();
+        ////刷新
+        //chunkMesh.RecalculateBounds();
+        //chunkMesh.RecalculateNormals();
+        ////刷新
+        //chunkMeshCollider.RecalculateBounds();
+        //chunkMeshCollider.RecalculateNormals();
+        ////刷新
+        //chunkMeshTrigger.RecalculateBounds();
+        //chunkMeshTrigger.RecalculateNormals();
 
-        //刷新
-        chunkMesh.RecalculateBounds();
-        chunkMesh.RecalculateNormals();
-        //刷新
-        chunkMeshCollider.RecalculateBounds();
-        chunkMeshCollider.RecalculateNormals();
-        //刷新
-        chunkMeshTrigger.RecalculateBounds();
-        chunkMeshTrigger.RecalculateNormals();
+        chunkMesh.UploadMeshData(false);
+        chunkMeshCollider.UploadMeshData(false);
+        chunkMeshTrigger.UploadMeshData(false);
 
-        meshFilter.mesh = chunkMesh;
+        //meshFilter.mesh = chunkMesh;
         meshCollider.sharedMesh = chunkMeshCollider;
         meshTrigger.sharedMesh = chunkMeshTrigger;
 
@@ -415,7 +454,7 @@ public class Chunk : BaseMonoBehaviour
         if (isRefreshChunkRange)
         {
             //异步构建chunk
-            BuildChunkRangeForAsync();
+            BuildChunkRangeForAsync(newBlock);
         }
 
         if (isSaveData)
