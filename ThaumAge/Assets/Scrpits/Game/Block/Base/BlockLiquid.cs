@@ -55,73 +55,62 @@ public class BlockLiquid : Block
         BlockTypeEnum blockType = blockData.GetBlockType();
         if (blockType != BlockTypeEnum.None)
         {
-            //int contactLevel = blockData.contactLevel;
-            //float itemContactHeight = 1f / 4f;
-            // float subHeight = (contactLevel * itemContactHeight);
-            float subHeight = 0;
-            float leftSubHeight = subHeight;
-            float rightSubHeight = subHeight;
-            float frontSubHeight = subHeight;
-            float backSubHeight = subHeight;
-            //Left
+            float itemContactHeight = 1f / 4f;
+
             bool isBuildLeftFace = CheckNeedBuildFace(localPosition + new Vector3Int(-1, 0, 0), out Block leftCloseBlock);
-            //if (leftCloseBlock.blockData.GetBlockType() == blockData.GetBlockType() && leftCloseBlock.blockData.contactLevel > contactLevel)
-            //{
-            //    leftSubHeight += ((leftCloseBlock.blockData.contactLevel - blockData.contactLevel) * itemContactHeight);
-            //}
+            bool isBuildRightFace = CheckNeedBuildFace(localPosition + new Vector3Int(1, 0, 0), out Block rightCloseBlock);
+            bool isBuildFrontFace = CheckNeedBuildFace(localPosition + new Vector3Int(0, 0, -1), out Block frontCloseBlock);
+            bool isBuildBackFace = CheckNeedBuildFace(localPosition + new Vector3Int(0, 0, 1), out Block backCloseBlock);
+
+            bool isBuildlfFace = CheckNeedBuildFace(localPosition + new Vector3Int(-1, 0, -1), out Block lfCloseBlock);
+            bool isBuildlbFace = CheckNeedBuildFace(localPosition + new Vector3Int(-1, 0, 1), out Block lbCloseBlock);
+            bool isBuildrfFace = CheckNeedBuildFace(localPosition + new Vector3Int(1, 0, -1), out Block rfCloseBlock);
+            bool isBuildrbFace = CheckNeedBuildFace(localPosition + new Vector3Int(1, 0, 1), out Block rbCloseBlock);
+
+            float lfSubHeight = GetAverageHeightForRange(itemContactHeight, leftCloseBlock, frontCloseBlock, lfCloseBlock);
+            float lbSubHeight = GetAverageHeightForRange(itemContactHeight, leftCloseBlock, backCloseBlock, lbCloseBlock);
+            float rfSubHeight = GetAverageHeightForRange(itemContactHeight, rightCloseBlock, frontCloseBlock, rfCloseBlock);
+            float rbSubHeight = GetAverageHeightForRange(itemContactHeight, rightCloseBlock, backCloseBlock, rbCloseBlock);
+
+            //Left
             if (isBuildLeftFace)
-            {  
+            {
                 BuildFace(DirectionEnum.Left, blockData,
                     localPosition,
-                    localPosition + Vector3.up - new Vector3(0, leftSubHeight, 0),
-                    localPosition + Vector3.up - new Vector3(0, leftSubHeight, 0) + Vector3.forward,
+                    localPosition + Vector3.up - new Vector3(0, lfSubHeight, 0),
+                    localPosition + Vector3.up - new Vector3(0, lbSubHeight, 0) + Vector3.forward,
                     localPosition + Vector3.forward,
                     chunkData);
             }
             //Right
-            bool isBuildRightFace = CheckNeedBuildFace(localPosition + new Vector3Int(1, 0, 0), out Block rightCloseBlock);
-            //if (rightCloseBlock.blockData.GetBlockType() == blockData.GetBlockType() && rightCloseBlock.blockData.contactLevel > contactLevel)
-            //{
-            //    rightSubHeight += ((rightCloseBlock.blockData.contactLevel - blockData.contactLevel) * itemContactHeight);
-            //}
             if (isBuildRightFace)
             {
-           
+
                 BuildFace(DirectionEnum.Right, blockData,
                     localPosition + Vector3Int.right,
-                    localPosition + Vector3Int.right + Vector3.up - new Vector3(0, rightSubHeight, 0),
-                    localPosition + Vector3Int.right + Vector3.up - new Vector3(0, rightSubHeight, 0) + Vector3.forward,
+                    localPosition + Vector3Int.right + Vector3.up - new Vector3(0, rfSubHeight, 0),
+                    localPosition + Vector3Int.right + Vector3.up - new Vector3(0, rbSubHeight, 0) + Vector3.forward,
                     localPosition + Vector3Int.right + Vector3.forward,
                     chunkData);
             }
             //Front
-            bool isBuildFrontFace = CheckNeedBuildFace(localPosition + new Vector3Int(0, 0, -1), out Block frontCloseBlock);
-            //if (frontCloseBlock.blockData.GetBlockType() == blockData.GetBlockType() && frontCloseBlock.blockData.contactLevel > contactLevel)
-            //{
-            //    frontSubHeight += ((frontCloseBlock.blockData.contactLevel - blockData.contactLevel) * itemContactHeight);
-            //}
             if (isBuildFrontFace)
             {
-        
+
                 BuildFace(DirectionEnum.Forward, blockData,
                     localPosition,
-                    localPosition + Vector3.up - new Vector3(0, frontSubHeight, 0),
-                    localPosition + Vector3.up - new Vector3(0, frontSubHeight, 0) + Vector3.right,
+                    localPosition + Vector3.up - new Vector3(0, lfSubHeight, 0),
+                    localPosition + Vector3.up - new Vector3(0, rfSubHeight, 0) + Vector3.right,
                     localPosition + Vector3.right,
                     chunkData);
             }
             //Back
-            bool isBuildBackFace = CheckNeedBuildFace(localPosition + new Vector3Int(0, 0, 1), out Block backCloseBlock);
-            //if (backCloseBlock.blockData.GetBlockType() == blockData.GetBlockType() && backCloseBlock.blockData.contactLevel > contactLevel)
-            //{
-            //    backSubHeight += ((backCloseBlock.blockData.contactLevel - blockData.contactLevel) * itemContactHeight);
-            //}
             if (isBuildBackFace)
-            {    
+            {
                 BuildFace(DirectionEnum.Back, blockData,
                     localPosition + Vector3Int.forward,
-                    localPosition + Vector3Int.forward + Vector3.up - new Vector3(0, backSubHeight, 0),
-                    localPosition + Vector3Int.forward + Vector3.up - new Vector3(0, backSubHeight, 0) + Vector3.right,
+                    localPosition + Vector3Int.forward + Vector3.up - new Vector3(0, lbSubHeight, 0),
+                    localPosition + Vector3Int.forward + Vector3.up - new Vector3(0, rbSubHeight, 0) + Vector3.right,
                     localPosition + Vector3Int.forward + Vector3.right,
                     chunkData);
             }
@@ -138,34 +127,45 @@ public class BlockLiquid : Block
             //Top
             if (CheckNeedBuildFace(localPosition + new Vector3Int(0, 1, 0)))
             {
-                float subOneHeight = subHeight;
-                float subTwoHeight = subHeight;
-                float subThreeHeight = subHeight;
-                float subFourHeight = subHeight;
-                //if (leftSubHeight> subHeight || frontSubHeight > subHeight)
-                //{
-                //    subOneHeight = leftSubHeight > frontSubHeight ? leftSubHeight : frontSubHeight;
-                //}
-                //if (leftSubHeight > subHeight || backSubHeight > subHeight)
-                //{
-                //    subTwoHeight = leftSubHeight > backSubHeight ? leftSubHeight : backSubHeight;
-                //}
-                //if (backSubHeight > subHeight || rightSubHeight > subHeight)
-                //{
-                //    subThreeHeight = backSubHeight > rightSubHeight ? backSubHeight : rightSubHeight;
-                //}
-                //if (rightSubHeight > subHeight || frontSubHeight > subHeight)
-                //{
-                //    subFourHeight = rightSubHeight > frontSubHeight ? rightSubHeight : frontSubHeight;
-                //}
                 BuildFace(DirectionEnum.UP, blockData,
-                    localPosition + new Vector3Int(0, 1, 0) - new Vector3(0, subOneHeight, 0),
-                    localPosition + new Vector3Int(0, 1, 0) - new Vector3(0, subTwoHeight, 0) + Vector3.forward,
-                    localPosition + new Vector3Int(0, 1, 0) - new Vector3(0, subThreeHeight, 0) + Vector3.right + Vector3.forward,
-                    localPosition + new Vector3Int(0, 1, 0) - new Vector3(0, subFourHeight, 0) + Vector3.right,
+                    localPosition + new Vector3Int(0, 1, 0) - new Vector3(0, lfSubHeight, 0),
+                    localPosition + new Vector3Int(0, 1, 0) - new Vector3(0, lbSubHeight, 0) + Vector3.forward,
+                    localPosition + new Vector3Int(0, 1, 0) - new Vector3(0, rbSubHeight, 0) + Vector3.right + Vector3.forward,
+                    localPosition + new Vector3Int(0, 1, 0) - new Vector3(0, rfSubHeight, 0) + Vector3.right,
                     chunkData);
             }
         }
+    }
+
+    private float GetAverageHeightForRange(float itemContactHeight, Block one, Block two, Block three)
+    {
+        BlockTypeEnum blockType = blockData.GetBlockType();
+        int number = 1;
+        float subHeightThis = 0;
+        float subHeightOne = 0;
+        float subHeightTwo = 0;
+        float subHeightThree = 0;
+        if (blockData.contactLevel != 0)
+        {
+            subHeightThis = (this.blockData.contactLevel * itemContactHeight);
+        }
+        if (one.blockData.GetBlockType() == blockType)
+        {
+            subHeightOne = (one.blockData.contactLevel * itemContactHeight);
+            number++;
+        }
+        if (two.blockData.GetBlockType() == blockType)
+        {
+            subHeightTwo = (two.blockData.contactLevel * itemContactHeight);
+            number++;
+        }
+        if (three.blockData.GetBlockType() == blockType)
+        {
+            subHeightThree = (three.blockData.contactLevel * itemContactHeight);
+            number++;
+        }
+        float subHeight = (subHeightOne + subHeightTwo + subHeightThree + subHeightThis) / number;
+        return subHeight;
     }
 
     /// <summary>

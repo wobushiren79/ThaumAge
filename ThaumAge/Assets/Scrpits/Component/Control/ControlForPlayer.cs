@@ -157,37 +157,36 @@ public class ControlForPlayer : ControlForBase
             Chunk chunk = hit.collider.GetComponentInParent<Chunk>();
             if (chunk)
             {
-
+                Vector3Int position = Vector3Int.zero; ;
                 if (hit.normal.y > 0)
                 {
-                    Vector3Int position = new Vector3Int((int)Mathf.Floor(hit.point.x), (int)Mathf.Floor(hit.point.y) - 1, (int)Mathf.Floor(hit.point.z));
-                    chunk.RemoveBlockForWorld(position);
+                     position = new Vector3Int((int)Mathf.Floor(hit.point.x), (int)Mathf.Floor(hit.point.y) - 1, (int)Mathf.Floor(hit.point.z));
                 }
                 else if (hit.normal.y < 0)
                 {
-                    Vector3Int position = new Vector3Int((int)Mathf.Floor(hit.point.x), (int)Mathf.Floor(hit.point.y), (int)Mathf.Floor(hit.point.z));
-                    chunk.RemoveBlockForWorld(position);
+                     position = new Vector3Int((int)Mathf.Floor(hit.point.x), (int)Mathf.Floor(hit.point.y), (int)Mathf.Floor(hit.point.z));
                 }
                 else if (hit.normal.x > 0)
                 {
-                    Vector3Int position = new Vector3Int((int)Mathf.Floor(hit.point.x) - 1, (int)Mathf.Floor(hit.point.y), (int)Mathf.Floor(hit.point.z));
-                    chunk.RemoveBlockForWorld(position);
+                     position = new Vector3Int((int)Mathf.Floor(hit.point.x) - 1, (int)Mathf.Floor(hit.point.y), (int)Mathf.Floor(hit.point.z));
                 }
                 else if (hit.normal.x < 0)
                 {
-                    Vector3Int position = new Vector3Int((int)Mathf.Floor(hit.point.x), (int)Mathf.Floor(hit.point.y), (int)Mathf.Floor(hit.point.z));
-                    chunk.RemoveBlockForWorld(position);
+                     position = new Vector3Int((int)Mathf.Floor(hit.point.x), (int)Mathf.Floor(hit.point.y), (int)Mathf.Floor(hit.point.z));
                 }
                 else if (hit.normal.z > 0)
                 {
-                    Vector3Int position = new Vector3Int((int)Mathf.Floor(hit.point.x), (int)Mathf.Floor(hit.point.y), (int)Mathf.Floor(hit.point.z) - 1);
-                    chunk.RemoveBlockForWorld(position);
+                     position = new Vector3Int((int)Mathf.Floor(hit.point.x), (int)Mathf.Floor(hit.point.y), (int)Mathf.Floor(hit.point.z) - 1);
                 }
                 else if (hit.normal.z < 0)
                 {
-                    Vector3Int position = new Vector3Int((int)Mathf.Floor(hit.point.x), (int)Mathf.Floor(hit.point.y), (int)Mathf.Floor(hit.point.z));
-                    chunk.RemoveBlockForWorld(position);
+                     position = new Vector3Int((int)Mathf.Floor(hit.point.x), (int)Mathf.Floor(hit.point.y), (int)Mathf.Floor(hit.point.z)); 
                 }
+                chunk.RemoveBlockForWorld(position);
+                chunk.RemoveBlockForWorld(position);
+                chunk.RemoveBlockForWorld(position);
+                chunk.RemoveBlockForWorld(position);
+                chunk.RemoveBlockForWorld(position);
             }
         }
     }
