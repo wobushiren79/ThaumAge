@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Threading;
 using System.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
@@ -17,11 +18,12 @@ public class WorldCreateManager : BaseManager
     //存储着所有的材质
     public Material[] arrayBlockMat = new Material[16];
 
-
     //所有待修改的方块
     public List<BlockBean> listUpdateBlock = new List<BlockBean>();
     //所有待修改的区块
-    public HashSet<Chunk> listUpdateChunk = new HashSet<Chunk>();
+    public Queue<Chunk> listUpdateChunk = new Queue<Chunk>();
+    //待绘制的区块
+    public Queue<Chunk> listUpdateDrawChunk = new Queue<Chunk>();
 
     //世界种子
     protected int worldSeed;
@@ -41,6 +43,35 @@ public class WorldCreateManager : BaseManager
             string[] nameList = StringUtil.SplitBySubstringForArrayStr(itemMat.name, '_');
             int indexMat = int.Parse(nameList[1]);
             arrayBlockMat[indexMat] = itemMat;
+        }
+    }
+
+    private void Update()
+    {
+        HandleForUpdateChunk();
+    }
+
+    /// <summary>
+    /// 增加需要更新的区块
+    /// </summary>
+    /// <param name="chunk"></param>
+    public void AddUpdateChunk(Chunk chunk)
+    {
+        if (!listUpdateChunk.Contains(chunk))
+        {
+            listUpdateChunk.Enqueue(chunk);
+        }
+    }
+    
+    /// <summary>
+    /// 增加待绘制区块
+    /// </summary>
+    /// <param name="chunk"></param>
+    public void AddUpdateDrawChunk(Chunk chunk)
+    {
+        if (!listUpdateDrawChunk.Contains(chunk))
+        {
+            listUpdateDrawChunk.Enqueue(chunk);
         }
     }
 
@@ -191,35 +222,57 @@ public class WorldCreateManager : BaseManager
                 try
                 {
                     //生成基础地形数据
-                    Stopwatch stopwatch = TimeUtil.GetMethodTimeStart();
                     HandleForBaseBlock(chunk);
-                    TimeUtil.GetMethodTimeEnd("1", stopwatch);
                     //处理更新方块
                     HandleForUpdateBlock();
                     //处理存档方块 优先使用存档方块
                     HandleForLoadBlock(chunk, chunkPosition);
                     isSuccessInit = true;
                 }
-                catch
+                catch(Exception e)
                 {
+                    LogUtil.Log(e.ToString());
                     isSuccessInit = false;
                 }
             }
         });
         if (!isSuccessInit)
             return;
+        callBack?.Invoke();
+    }
 
+    int chunkUpdateNumber = 0;
+
+    /// <summary>
+    /// 处理 待更新区块
+    /// </summary>
+    public void HandleForUpdateChunk()
+    {
         if (listUpdateChunk.Count > 0)
         {
-            //构建修改过的区块
-            foreach (var itemChunk in listUpdateChunk)
+            Chunk updateChunk = listUpdateChunk.Dequeue();
+            if (updateChunk != null)
             {
-                itemChunk.BuildChunkForAsync(null);
+                WorldCreateHandler.Instance.manager.AddUpdateDrawChunk(updateChunk);
+                chunkUpdateNumber++;
+                //构建修改过的区块
+                updateChunk.BuildChunkForAsync((data)=> {
+                    chunkUpdateNumber--;
+                });
             }
-            listUpdateChunk.Clear();
+        } 
+        else
+        {
+            if (listUpdateDrawChunk.Count > 0 && chunkUpdateNumber == 0)
+            {
+                Chunk updateDrawChunk = listUpdateDrawChunk.Dequeue();
+                if (updateDrawChunk != null)
+                {
+                    //构建修改过的区块
+                    updateDrawChunk.RefreshMesh();
+                }
+            }
         }
-
-        callBack?.Invoke();
     }
 
     /// <summary>
@@ -282,15 +335,10 @@ public class WorldCreateManager : BaseManager
                 Vector3Int positionBlockLocal = itemBlock.worldPosition.GetVector3Int() - chunk.worldPosition;
                 //需要重新设置一下本地坐标 之前没有记录本地坐标
                 itemBlock.localPosition = new Vector3IntBean(positionBlockLocal);
-
                 //设置方块
                 chunk.SetBlock(itemBlock, false, false, false);
-
                 //添加需要更新的chunk
-                if (!listUpdateChunk.Contains(chunk))
-                {
-                    listUpdateChunk.Add(chunk);
-                }
+                AddUpdateChunk( chunk);
                 //从更新列表中移除
                 listUpdateBlock.Remove(itemBlock);
                 i--;

@@ -183,10 +183,6 @@ public class ControlForPlayer : ControlForBase
                      position = new Vector3Int((int)Mathf.Floor(hit.point.x), (int)Mathf.Floor(hit.point.y), (int)Mathf.Floor(hit.point.z)); 
                 }
                 chunk.RemoveBlockForWorld(position);
-                chunk.RemoveBlockForWorld(position);
-                chunk.RemoveBlockForWorld(position);
-                chunk.RemoveBlockForWorld(position);
-                chunk.RemoveBlockForWorld(position);
             }
         }
     }

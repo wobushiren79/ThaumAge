@@ -22,7 +22,7 @@ public class BlockCube : Block
     /// <param name="verts"></param>
     /// <param name="uvs"></param>
     /// <param name="tris"></param>
-    public override void BuildBlock(Chunk.ChunkData chunkData)
+    public override void BuildBlock(Chunk.ChunkRenderData chunkData)
     {
         base.BuildBlock(chunkData);
 
@@ -31,24 +31,24 @@ public class BlockCube : Block
         {
             //Left
             if (CheckNeedBuildFace(localPosition + new Vector3Int(-1, 0, 0)))
-                BuildFace(DirectionEnum.Left, blockData, localPosition, Vector3.up, Vector3.forward, false, chunkData);
+                BuildFace(DirectionEnum.Left, localPosition, Vector3.up, Vector3.forward, false, chunkData);
             //Right
             if (CheckNeedBuildFace(localPosition + new Vector3Int(1, 0, 0)))
-                BuildFace(DirectionEnum.Right, blockData, localPosition + new Vector3Int(1, 0, 0), Vector3.up, Vector3.forward, true, chunkData);
+                BuildFace(DirectionEnum.Right, localPosition + new Vector3Int(1, 0, 0), Vector3.up, Vector3.forward, true, chunkData);
 
             //Bottom
             if (CheckNeedBuildFace(localPosition + new Vector3Int(0, -1, 0)))
-                BuildFace(DirectionEnum.Down, blockData, localPosition, Vector3.forward, Vector3.right, false, chunkData);
+                BuildFace(DirectionEnum.Down, localPosition, Vector3.forward, Vector3.right, false, chunkData);
             //Top
             if (CheckNeedBuildFace(localPosition + new Vector3Int(0, 1, 0)))
-                BuildFace(DirectionEnum.UP, blockData, localPosition + new Vector3Int(0, 1, 0), Vector3.forward, Vector3.right, true, chunkData);
+                BuildFace(DirectionEnum.UP, localPosition + new Vector3Int(0, 1, 0), Vector3.forward, Vector3.right, true, chunkData);
 
             //Front
             if (CheckNeedBuildFace(localPosition + new Vector3Int(0, 0, -1)))
-                BuildFace(DirectionEnum.Forward, blockData, localPosition, Vector3.up, Vector3.right, true, chunkData);
+                BuildFace(DirectionEnum.Forward, localPosition, Vector3.up, Vector3.right, true, chunkData);
             //Back
             if (CheckNeedBuildFace(localPosition + new Vector3Int(0, 0, 1)))
-                BuildFace(DirectionEnum.Back, blockData, localPosition + new Vector3Int(0, 0, 1), Vector3.up, Vector3.right, false, chunkData);
+                BuildFace(DirectionEnum.Back, localPosition + new Vector3Int(0, 0, 1), Vector3.up, Vector3.right, false, chunkData);
         }
     }
 
@@ -66,14 +66,14 @@ public class BlockCube : Block
     /// <param name="tris"></param>
     /// <param name="vertsCollider"></param>
     /// <param name="trisCollider"></param>
-    public void BuildFace(DirectionEnum direction, BlockBean blockData, Vector3 corner, Vector3 up, Vector3 right, bool reversed, Chunk.ChunkData chunkData)
+    public void BuildFace(DirectionEnum direction, Vector3 corner, Vector3 up, Vector3 right, bool reversed, Chunk.ChunkRenderData chunkData)
     {
         AddTris(reversed, chunkData);
         AddVerts(corner, up, right, chunkData);
-        AddUVs(direction, blockData, chunkData);
+        AddUVs(direction, chunkData);
     }
 
-    public virtual void AddVerts(Vector3 corner, Vector3 up, Vector3 right, Chunk.ChunkData chunkData)
+    public virtual void AddVerts(Vector3 corner, Vector3 up, Vector3 right, Chunk.ChunkRenderData chunkData)
     {
         base.AddVerts(corner, chunkData);
 
@@ -88,9 +88,10 @@ public class BlockCube : Block
         AddVert(chunkData.vertsCollider, corner + right);
     }
 
-    public void AddUVs(DirectionEnum direction, BlockBean blockData, Chunk.ChunkData chunkData)
+    public void AddUVs(DirectionEnum direction, Chunk.ChunkRenderData chunkData)
     {
-        BlockInfoBean blockInfo = BlockHandler.Instance.manager.GetBlockInfo(blockData.GetBlockType());
+        base.AddUVs(chunkData);
+
         List<Vector2Int> listData = blockInfo.GetUVPosition();
         Vector2 uvStartPosition;
         if (CheckUtil.ListIsNull(listData))
@@ -128,8 +129,10 @@ public class BlockCube : Block
         chunkData.uvs.Add(uvStartPosition + new Vector2(uvWidth, 0));
     }
 
-    public void AddTris(bool reversed, Chunk.ChunkData chunkData)
+    public void AddTris(bool reversed, Chunk.ChunkRenderData chunkData)
     {
+        base.AddTris(chunkData);
+
         int index = chunkData.verts.Count;
         int indexCollider = chunkData.vertsCollider.Count;
         if (reversed)

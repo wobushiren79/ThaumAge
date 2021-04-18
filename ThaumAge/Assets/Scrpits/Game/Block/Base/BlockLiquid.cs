@@ -48,7 +48,7 @@ public class BlockLiquid : Block
     /// <param name="verts"></param>
     /// <param name="uvs"></param>
     /// <param name="tris"></param>
-    public override void BuildBlock(Chunk.ChunkData chunkData)
+    public override void BuildBlock(Chunk.ChunkRenderData chunkData)
     {
         base.BuildBlock(chunkData);
 
@@ -75,7 +75,7 @@ public class BlockLiquid : Block
             //Left
             if (isBuildLeftFace)
             {
-                BuildFace(DirectionEnum.Left, blockData,
+                BuildFace(
                     localPosition,
                     localPosition + Vector3.up - new Vector3(0, lfSubHeight, 0),
                     localPosition + Vector3.up - new Vector3(0, lbSubHeight, 0) + Vector3.forward,
@@ -86,7 +86,7 @@ public class BlockLiquid : Block
             if (isBuildRightFace)
             {
 
-                BuildFace(DirectionEnum.Right, blockData,
+                BuildFace(
                     localPosition + Vector3Int.right,
                     localPosition + Vector3Int.right + Vector3.up - new Vector3(0, rfSubHeight, 0),
                     localPosition + Vector3Int.right + Vector3.up - new Vector3(0, rbSubHeight, 0) + Vector3.forward,
@@ -97,7 +97,7 @@ public class BlockLiquid : Block
             if (isBuildFrontFace)
             {
 
-                BuildFace(DirectionEnum.Forward, blockData,
+                BuildFace(
                     localPosition,
                     localPosition + Vector3.up - new Vector3(0, lfSubHeight, 0),
                     localPosition + Vector3.up - new Vector3(0, rfSubHeight, 0) + Vector3.right,
@@ -107,7 +107,7 @@ public class BlockLiquid : Block
             //Back
             if (isBuildBackFace)
             {
-                BuildFace(DirectionEnum.Back, blockData,
+                BuildFace(
                     localPosition + Vector3Int.forward,
                     localPosition + Vector3Int.forward + Vector3.up - new Vector3(0, lbSubHeight, 0),
                     localPosition + Vector3Int.forward + Vector3.up - new Vector3(0, rbSubHeight, 0) + Vector3.right,
@@ -117,7 +117,7 @@ public class BlockLiquid : Block
             //Bottom
             if (CheckNeedBuildFace(localPosition + new Vector3Int(0, -1, 0)))
             {
-                BuildFace(DirectionEnum.Down, blockData,
+                BuildFace(
                    localPosition,
                    localPosition + Vector3.forward,
                    localPosition + Vector3.forward + Vector3.right,
@@ -127,7 +127,7 @@ public class BlockLiquid : Block
             //Top
             if (CheckNeedBuildFace(localPosition + new Vector3Int(0, 1, 0)))
             {
-                BuildFace(DirectionEnum.UP, blockData,
+                BuildFace(
                     localPosition + new Vector3Int(0, 1, 0) - new Vector3(0, lfSubHeight, 0),
                     localPosition + new Vector3Int(0, 1, 0) - new Vector3(0, lbSubHeight, 0) + Vector3.forward,
                     localPosition + new Vector3Int(0, 1, 0) - new Vector3(0, rbSubHeight, 0) + Vector3.right + Vector3.forward,
@@ -137,6 +137,14 @@ public class BlockLiquid : Block
         }
     }
 
+    /// <summary>
+    /// 获取平均高度
+    /// </summary>
+    /// <param name="itemContactHeight"></param>
+    /// <param name="one"></param>
+    /// <param name="two"></param>
+    /// <param name="three"></param>
+    /// <returns></returns>
     private float GetAverageHeightForRange(float itemContactHeight, Block one, Block two, Block three)
     {
         BlockTypeEnum blockType = blockData.GetBlockType();
@@ -182,15 +190,17 @@ public class BlockLiquid : Block
     /// <param name="tris"></param>
     /// <param name="vertsCollider"></param>
     /// <param name="trisCollider"></param>
-    public void BuildFace(DirectionEnum direction, BlockBean blockData, Vector3 corner, Vector3 one, Vector3 two, Vector3 three, Chunk.ChunkData chunkData)
+    public void BuildFace(Vector3 corner, Vector3 one, Vector3 two, Vector3 three, Chunk.ChunkRenderData chunkData)
     {
         AddTris(chunkData);
         AddVerts(corner, one, two, three, chunkData);
-        AddUVs(direction, blockData, chunkData);
+        AddUVs(chunkData);
     }
 
-    public virtual void AddVerts(Vector3 corner, Vector3 one, Vector3 two, Vector3 three, Chunk.ChunkData chunkData)
+    public virtual void AddVerts(Vector3 corner, Vector3 one, Vector3 two, Vector3 three, Chunk.ChunkRenderData chunkData)
     {
+        base.AddVerts(corner, chunkData);
+
         chunkData.verts.Add(corner);
         chunkData.verts.Add(one);
         chunkData.verts.Add(two);
@@ -202,40 +212,41 @@ public class BlockLiquid : Block
         chunkData.vertsTrigger.Add(three);
     }
 
-    public void AddUVs(DirectionEnum direction, BlockBean blockData, Chunk.ChunkData chunkData)
+    public override void AddUVs(Chunk.ChunkRenderData chunkData)
     {
-        BlockInfoBean blockInfo = BlockHandler.Instance.manager.GetBlockInfo(blockData.GetBlockType());
-        List<Vector2Int> listData = blockInfo.GetUVPosition();
-        Vector2 uvStartPosition;
-        if (CheckUtil.ListIsNull(listData))
-        {
-            uvStartPosition = Vector2.zero;
-        }
-        else if (listData.Count == 1)
-        {
-            //只有一种面
-            uvStartPosition = new Vector2(uvWidth * listData[0].y, uvWidth * listData[0].x);
-        }
-        else if (listData.Count == 3)
-        {
-            //3种面  上 中 下
-            switch (direction)
-            {
-                case DirectionEnum.UP:
-                    uvStartPosition = new Vector2(uvWidth * listData[0].y, uvWidth * listData[0].x);
-                    break;
-                case DirectionEnum.Down:
-                    uvStartPosition = new Vector2(uvWidth * listData[2].y, uvWidth * listData[2].x);
-                    break;
-                default:
-                    uvStartPosition = new Vector2(uvWidth * listData[1].y, uvWidth * listData[1].x);
-                    break;
-            }
-        }
-        else
-        {
-            uvStartPosition = Vector2.zero;
-        }
+        base.AddUVs(chunkData);
+
+        //List<Vector2Int> listData = blockInfo.GetUVPosition();
+        //Vector2 uvStartPosition;
+        //if (CheckUtil.ListIsNull(listData))
+        //{
+        //    uvStartPosition = Vector2.zero;
+        //}
+        //else if (listData.Count == 1)
+        //{
+        //    //只有一种面
+        //    uvStartPosition = new Vector2(uvWidth * listData[0].y, uvWidth * listData[0].x);
+        //}
+        //else if (listData.Count == 3)
+        //{
+        //    //3种面  上 中 下
+        //    switch (direction)
+        //    {
+        //        case DirectionEnum.UP:
+        //            uvStartPosition = new Vector2(uvWidth * listData[0].y, uvWidth * listData[0].x);
+        //            break;
+        //        case DirectionEnum.Down:
+        //            uvStartPosition = new Vector2(uvWidth * listData[2].y, uvWidth * listData[2].x);
+        //            break;
+        //        default:
+        //            uvStartPosition = new Vector2(uvWidth * listData[1].y, uvWidth * listData[1].x);
+        //            break;
+        //    }
+        //}
+        //else
+        //{
+        //    uvStartPosition = Vector2.zero;
+        //}
         //chunkData.uvs.Add(uvStartPosition);
         //chunkData.uvs.Add(uvStartPosition + new Vector2(0, uvWidth));
         //chunkData.uvs.Add(uvStartPosition + new Vector2(uvWidth, uvWidth));
@@ -247,8 +258,10 @@ public class BlockLiquid : Block
         chunkData.uvs.Add(Vector2.zero + new Vector2(1, 0));
     }
 
-    public override void AddTris(Chunk.ChunkData chunkData)
+    public override void AddTris(Chunk.ChunkRenderData chunkData)
     {
+        base.AddTris(chunkData);
+
         int index = chunkData.verts.Count;
         int triggerIndex = chunkData.vertsTrigger.Count;
 

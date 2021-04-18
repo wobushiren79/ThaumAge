@@ -11,7 +11,7 @@ public class Launcher : BaseMonoBehaviour
         GameHandler.Instance.manager.ChangeGameState(GameStateEnum.Gaming);
         WorldCreateHandler.Instance.CreateChunkForRange(Vector3Int.zero, 3);
         //UIHandler.Instance.manager.OpenUIAndCloseOther<UIGameMain>(UIEnum.GameMain);
-        FPSHandler.Instance.SetData(true, 60);
+        FPSHandler.Instance.SetData(true, 120);
     }
 
 }

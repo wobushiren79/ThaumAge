@@ -4,14 +4,14 @@ using UnityEngine;
 
 public class BlockCross : Block
 {
-    public override void BuildBlock(Chunk.ChunkData chunkData)
+    public override void BuildBlock(Chunk.ChunkRenderData chunkData)
     {
         base.BuildBlock(chunkData);
 
         BlockTypeEnum blockType = blockData.GetBlockType();
         if (blockType != BlockTypeEnum.None)
         {
-            BuildFace(blockData, localPosition, chunkData);
+            BuildFace(localPosition, chunkData);
         }
     }
 
@@ -27,7 +27,7 @@ public class BlockCross : Block
         }
     }
 
-    public override void AddTris(Chunk.ChunkData chunkData)
+    public override void AddTris(Chunk.ChunkRenderData chunkData)
     {
         base.AddTris(chunkData);
 
@@ -67,11 +67,10 @@ public class BlockCross : Block
         chunkData.trisTrigger.Add(triggerIndex + 7);
     }
 
-    public override void AddUVs(BlockBean blockData, Chunk.ChunkData chunkData)
+    public override void AddUVs(Chunk.ChunkRenderData chunkData)
     {
-        base.AddUVs(blockData, chunkData);
+        base.AddUVs(chunkData);
 
-        BlockInfoBean blockInfo = BlockHandler.Instance.manager.GetBlockInfo(blockData.GetBlockType());
         List<Vector2Int> listData = blockInfo.GetUVPosition();
         Vector2 uvStartPosition;
         if (CheckUtil.ListIsNull(listData))
@@ -99,7 +98,7 @@ public class BlockCross : Block
         chunkData.uvs.Add(uvStartPosition + new Vector2(uvWidth, 0));
     }
 
-    public override void AddVerts(Vector3 corner, Chunk.ChunkData chunkData)
+    public override void AddVerts(Vector3 corner, Chunk.ChunkRenderData chunkData)
     {
         base.AddVerts(corner, chunkData);
         AddVert(chunkData.verts, corner + new Vector3(0.5f, 0, 0));

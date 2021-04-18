@@ -88,6 +88,8 @@ public abstract class Block
         Vector3Int checkPosition = Vector3Int.RoundToInt(RotatePosition(position, localPosition));
         //»ñÈ¡·½¿é
         closeBlock = WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(checkPosition + chunk.worldPosition);
+        //if (closeBlock.chunk != chunk)
+        //    return true;
         if (closeBlock == null)
             return false;
         BlockShapeEnum blockShape = closeBlock.blockInfo.GetBlockShape();
@@ -111,7 +113,7 @@ public abstract class Block
     /// <param name="verts"></param>
     /// <param name="uvs"></param>
     /// <param name="tris"></param>
-    public virtual void BuildBlock(Chunk.ChunkData chunkData)
+    public virtual void BuildBlock(Chunk.ChunkRenderData chunkData)
     {
 
     }
@@ -127,11 +129,11 @@ public abstract class Block
     /// <param name="verts"></param>
     /// <param name="uvs"></param>
     /// <param name="tris"></param>
-    public virtual void BuildFace(BlockBean blockData, Vector3 corner, Chunk.ChunkData chunkData)
+    public virtual void BuildFace(Vector3 corner, Chunk.ChunkRenderData chunkData)
     {
         AddTris(chunkData);
         AddVerts(corner, chunkData);
-        AddUVs(blockData, chunkData);
+        AddUVs(chunkData);
     }
 
     /// <summary>
@@ -141,7 +143,7 @@ public abstract class Block
     /// <param name="up"></param>
     /// <param name="right"></param>
     /// <param name="verts"></param>
-    public virtual void AddVerts(Vector3 corner, Chunk.ChunkData chunkData)
+    public virtual void AddVerts(Vector3 corner, Chunk.ChunkRenderData chunkData)
     {
 
     }
@@ -155,7 +157,7 @@ public abstract class Block
     /// </summary>
     /// <param name="blockData"></param>
     /// <param name="uvs"></param>
-    public virtual void AddUVs(BlockBean blockData, Chunk.ChunkData chunkData)
+    public virtual void AddUVs(Chunk.ChunkRenderData chunkData)
     {
 
     }
@@ -167,7 +169,7 @@ public abstract class Block
     /// <param name="tris"></param>
     /// <param name="indexCollider"></param>
     /// <param name="trisCollider"></param>
-    public virtual void AddTris(Chunk.ChunkData chunkData)
+    public virtual void AddTris(Chunk.ChunkRenderData chunkData)
     {
 
     }

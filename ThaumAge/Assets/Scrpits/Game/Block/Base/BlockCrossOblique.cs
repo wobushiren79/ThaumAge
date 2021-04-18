@@ -5,7 +5,7 @@ using UnityEngine;
 public class BlockCrossOblique : BlockCross
 {
 
-    public override void AddVerts(Vector3 corner, Chunk.ChunkData chunkData)
+    public override void AddVerts(Vector3 corner, Chunk.ChunkRenderData chunkData)
     {
         AddVert(chunkData.verts, corner);
         AddVert(chunkData.verts, corner + new Vector3(0, 1, 0));

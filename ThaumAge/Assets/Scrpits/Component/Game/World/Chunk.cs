@@ -7,7 +7,7 @@ using UnityEngine;
 
 public class Chunk : BaseMonoBehaviour
 {
-    public struct ChunkData
+    public class ChunkRenderData
     {
         //普通使用的三角形合集
         public List<Vector3> verts;
@@ -47,6 +47,7 @@ public class Chunk : BaseMonoBehaviour
     public Vector3Int worldPosition;
     //存储数据
     protected WorldDataBean worldData;
+    protected ChunkRenderData chunkRenderData;
 
     protected Mesh chunkMesh;
     protected Mesh chunkMeshCollider;
@@ -74,12 +75,8 @@ public class Chunk : BaseMonoBehaviour
         chunkMeshCollider.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
         chunkMeshTrigger.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
 
-        chunkMesh.Optimize();
-        chunkMeshCollider.Optimize();
-        chunkMeshTrigger.Optimize();
-
         //设置mesh的三角形上限
-        meshFilter.mesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
+        meshFilter.sharedMesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
         meshCollider.sharedMesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
         meshTrigger.sharedMesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
 
@@ -89,7 +86,6 @@ public class Chunk : BaseMonoBehaviour
     }
 
     protected float eventUpdateTime = 0;
-
 
     private void Update()
     {
@@ -128,7 +124,7 @@ public class Chunk : BaseMonoBehaviour
             //异步保存数据
             GameDataHandler.Instance.manager.SaveGameDataAsync(worldData);
             //异步刷新
-            BuildChunkForAsync(null);
+            BuildChunkRangeForAsync();
         }
     }
 
@@ -168,75 +164,32 @@ public class Chunk : BaseMonoBehaviour
     /// </summary>
     public void BuildChunkRangeForAsync()
     {
-        lock (this)
-        {
-            Chunk leftChunk = WorldCreateHandler.Instance.manager.GetChunk(worldPosition - new Vector3Int(-width, 0, 0));
-            Chunk rightChunk = WorldCreateHandler.Instance.manager.GetChunk(worldPosition - new Vector3Int(width, 0, 0));
-            Chunk upChunk = WorldCreateHandler.Instance.manager.GetChunk(worldPosition - new Vector3Int(0, 0, width));
-            Chunk downChunk = WorldCreateHandler.Instance.manager.GetChunk(worldPosition - new Vector3Int(0, 0, -width));
-            //先更新周边 再更新自身
-            bool leftReady = false;
-            bool rightReady = false;
-            bool upReady = false;
-            bool downReady = false;
-            Action<Chunk> callBack = (updateChunk) =>
-            {
-                if (updateChunk == leftChunk)
-                {
-                    leftReady = true;
-                }
-                else if (updateChunk == rightChunk)
-                {
-                    rightReady = true;
-                }
-                else if (updateChunk == upChunk)
-                {
-                    upReady = true;
-                }
-                else if (updateChunk == downChunk)
-                {
-                    downReady = true;
-                }
-                if (leftReady && rightReady && upReady && downReady)
-                {
-                    BuildChunkForAsync(null);
-                }
-            };
-            if (leftChunk)
-                leftChunk.BuildChunkForAsync(callBack);
-            if (rightChunk)
-                rightChunk.BuildChunkForAsync(callBack);
-            if (upChunk)
-                upChunk.BuildChunkForAsync(callBack);
-            if (downChunk)
-                downChunk.BuildChunkForAsync(callBack);
-        }
+        Chunk leftChunk = WorldCreateHandler.Instance.manager.GetChunk(worldPosition - new Vector3Int(-width, 0, 0));
+        Chunk rightChunk = WorldCreateHandler.Instance.manager.GetChunk(worldPosition - new Vector3Int(width, 0, 0));
+        Chunk upChunk = WorldCreateHandler.Instance.manager.GetChunk(worldPosition - new Vector3Int(0, 0, width));
+        Chunk downChunk = WorldCreateHandler.Instance.manager.GetChunk(worldPosition - new Vector3Int(0, 0, -width));
+        WorldCreateHandler.Instance.manager.AddUpdateChunk(leftChunk);
+        WorldCreateHandler.Instance.manager.AddUpdateChunk(rightChunk);
+        WorldCreateHandler.Instance.manager.AddUpdateChunk(upChunk);
+        WorldCreateHandler.Instance.manager.AddUpdateChunk(downChunk);
+        WorldCreateHandler.Instance.manager.AddUpdateChunk(this);
     }
 
     public void BuildChunkRangeForAsync(Block changeBlock)
     {
-        lock (this)
-        {
-            HashSet<Chunk> listUpdateData = new HashSet<Chunk>();
-            Chunk leftChunk = WorldCreateHandler.Instance.manager.GetChunkForWorldPosition(changeBlock.worldPosition - new Vector3Int(-1, 0, 0));
-            Chunk rightChunk = WorldCreateHandler.Instance.manager.GetChunkForWorldPosition(changeBlock.worldPosition - new Vector3Int(1, 0, 0));
-            Chunk upChunk = WorldCreateHandler.Instance.manager.GetChunkForWorldPosition(changeBlock.worldPosition - new Vector3Int(0, 0, 1));
-            Chunk downChunk = WorldCreateHandler.Instance.manager.GetChunkForWorldPosition(changeBlock.worldPosition - new Vector3Int(0, 0, -1));
-            if (!listUpdateData.Contains(leftChunk))
-                listUpdateData.Add(leftChunk);
-            if (!listUpdateData.Contains(rightChunk))
-                listUpdateData.Add(rightChunk);
-            if (!listUpdateData.Contains(upChunk))
-                listUpdateData.Add(upChunk);
-            if (!listUpdateData.Contains(downChunk))
-                listUpdateData.Add(downChunk);
-            if (!listUpdateData.Contains(changeBlock.chunk))
-                listUpdateData.Add(changeBlock.chunk);
-            foreach (Chunk updateChunk in listUpdateData)
-            {
-                updateChunk.BuildChunkForAsync(null);
-            }
-        }
+        Chunk leftChunk = WorldCreateHandler.Instance.manager.GetChunkForWorldPosition(changeBlock.worldPosition - new Vector3Int(-1, 0, 0));
+        Chunk rightChunk = WorldCreateHandler.Instance.manager.GetChunkForWorldPosition(changeBlock.worldPosition - new Vector3Int(1, 0, 0));
+        Chunk upChunk = WorldCreateHandler.Instance.manager.GetChunkForWorldPosition(changeBlock.worldPosition - new Vector3Int(0, 0, 1));
+        Chunk downChunk = WorldCreateHandler.Instance.manager.GetChunkForWorldPosition(changeBlock.worldPosition - new Vector3Int(0, 0, -1));
+        if (leftChunk != this)
+            WorldCreateHandler.Instance.manager.AddUpdateChunk(leftChunk);
+        if (rightChunk != this)
+            WorldCreateHandler.Instance.manager.AddUpdateChunk(rightChunk);
+        if (upChunk != this)
+            WorldCreateHandler.Instance.manager.AddUpdateChunk(upChunk);
+        if (downChunk != this)
+            WorldCreateHandler.Instance.manager.AddUpdateChunk(downChunk);
+        WorldCreateHandler.Instance.manager.AddUpdateChunk(this);
     }
 
     /// <summary>
@@ -246,106 +199,120 @@ public class Chunk : BaseMonoBehaviour
     {
         //只有初始化之后的chunk才能刷新
         if (!isInit || mapForBlock.Count <= 0)
+        {
+            callBack?.Invoke(this);
             return;
-        ChunkData chunkData = new ChunkData
-        {
-            //普通使用的三角形合集
-            verts = new List<Vector3>(),
-            uvs = new List<Vector2>(),
-
-            //碰撞使用的三角形合集
-            vertsCollider = new List<Vector3>(),
-            trisCollider = new List<int>(),
-
-            //碰撞使用的三角形合集
-            vertsTrigger = new List<Vector3>(),
-            trisTrigger = new List<int>(),
-
-            //三角型合集
-            dicTris = new Dictionary<BlockMaterialEnum, List<int>>()
-        };
-        //初始化数据
-        List<BlockMaterialEnum> blockMaterialsEnum = EnumUtil.GetEnumValue<BlockMaterialEnum>();
-        for (int i = 0; i < blockMaterialsEnum.Count; i++)
-        {
-            BlockMaterialEnum blockMaterial = blockMaterialsEnum[i];
-            chunkData.dicTris.Add(blockMaterial, new List<int>());
         }
 
-        bool isSuccessInit = false;
         await Task.Run(() =>
         {
-            //遍历chunk, 生成其中的每一个Block
-            try
+            lock (this)
             {
-                List<Vector3Int> listKey = new List<Vector3Int>(mapForBlock.Keys);
-                for (int i = 0; i < listKey.Count; i++)
+                //遍历chunk, 生成其中的每一个Block
+                try
                 {
-                    Vector3Int itemKey = listKey[i];
-                    mapForBlock[itemKey].BuildBlock(chunkData);
+                    chunkRenderData = new ChunkRenderData
+                    {
+                        //普通使用的三角形合集
+                        verts = new List<Vector3>(),
+                        uvs = new List<Vector2>(),
+
+                        //碰撞使用的三角形合集
+                        vertsCollider = new List<Vector3>(),
+                        trisCollider = new List<int>(),
+
+                        //碰撞使用的三角形合集
+                        vertsTrigger = new List<Vector3>(),
+                        trisTrigger = new List<int>(),
+
+                        //三角型合集
+                        dicTris = new Dictionary<BlockMaterialEnum, List<int>>()
+                    };
+
+                    //初始化数据
+                    List<BlockMaterialEnum> blockMaterialsEnum = EnumUtil.GetEnumValue<BlockMaterialEnum>();
+
+                    for (int i = 0; i < blockMaterialsEnum.Count; i++)
+                    {
+                        BlockMaterialEnum blockMaterial = blockMaterialsEnum[i];
+                        chunkRenderData.dicTris.Add(blockMaterial, new List<int>());
+                    }
+
+                    List<Vector3Int> listKey = new List<Vector3Int>(mapForBlock.Keys);
+                    for (int i = 0; i < listKey.Count; i++)
+                    {
+                        Vector3Int itemKey = listKey[i];
+                        if (mapForBlock.TryGetValue(itemKey, out Block value))
+                        {
+                            if (value != null)
+                                value.BuildBlock(chunkRenderData);
+                        }
+                    }
                 }
-                isSuccessInit = true;
-            }
-            catch (Exception)
-            {
-                isSuccessInit = false;
+                catch (Exception e)
+                {
+                    LogUtil.Log(e.ToString());
+                }
             }
         });
-
-        if (!isSuccessInit || this == null)
-            return;
-
-        chunkMesh.Clear();
-        chunkMeshCollider.Clear();
-        chunkMeshTrigger.Clear();
-
-        //定点数判断
-        if (chunkData.verts.Count <= 3)
-        {
-            return;
-        }
-
-        //设置顶点
-        chunkMesh.vertices = chunkData.verts.ToArray();
-        //设置UV
-        chunkMesh.uv = chunkData.uvs.ToArray();
-
-        //设置三角（单面渲染，双面渲染,液体）
-        foreach (var itemTris in chunkData.dicTris)
-        {
-            chunkMesh.SetTriangles(itemTris.Value.ToArray(), (int)itemTris.Key);
-        }
-        //碰撞数据设置
-        chunkMeshCollider.vertices = chunkData.vertsCollider.ToArray();
-        chunkMeshCollider.triangles = chunkData.trisCollider.ToArray();
-
-        //出发数据设置
-        chunkMeshTrigger.vertices = chunkData.vertsTrigger.ToArray();
-        chunkMeshTrigger.triangles = chunkData.trisTrigger.ToArray();
-
-        Physics.BakeMesh(chunkMesh.GetInstanceID(), false);
-        Physics.BakeMesh(chunkMeshCollider.GetInstanceID(), false);
-        Physics.BakeMesh(chunkMeshTrigger.GetInstanceID(), false);
-
-        ////刷新
-        //chunkMesh.RecalculateBounds();
-        //chunkMesh.RecalculateNormals();
-        ////刷新
-        //chunkMeshCollider.RecalculateBounds();
-        //chunkMeshCollider.RecalculateNormals();
-        ////刷新
-        //chunkMeshTrigger.RecalculateBounds();
-        //chunkMeshTrigger.RecalculateNormals();
-
-        chunkMesh.UploadMeshData(false);
-        chunkMeshCollider.UploadMeshData(false);
-        chunkMeshTrigger.UploadMeshData(false);
-
-        //meshFilter.mesh = chunkMesh;
-        meshCollider.sharedMesh = chunkMeshCollider;
-        meshTrigger.sharedMesh = chunkMeshTrigger;
-
         callBack?.Invoke(this);
+    }
+
+    /// <summary>
+    /// 刷新网格
+    /// </summary>
+    public void RefreshMesh()
+    {
+        lock (this)
+        {
+            chunkMesh.Clear();
+            chunkMeshCollider.Clear();
+            chunkMeshTrigger.Clear();
+
+            chunkMesh.subMeshCount = meshRenderer.materials.Length;
+            //定点数判断
+            if (chunkRenderData.verts.Count <= 3)
+            {
+                return;
+            }
+
+            //设置顶点
+            chunkMesh.SetVertices(chunkRenderData.verts);
+            //设置UV
+            chunkMesh.SetUVs(0, chunkRenderData.uvs);
+            //设置三角（单面渲染，双面渲染,液体）
+            foreach (var itemTris in chunkRenderData.dicTris)
+            {
+                chunkMesh.SetTriangles(itemTris.Value.ToArray(), (int)itemTris.Key);
+            }
+
+            //碰撞数据设置
+            chunkMeshCollider.SetVertices(chunkRenderData.vertsCollider);
+            chunkMeshCollider.SetTriangles(chunkRenderData.trisCollider, 0);
+
+            //出发数据设置
+            chunkMeshTrigger.SetVertices(chunkRenderData.vertsTrigger);
+            chunkMeshTrigger.SetTriangles(chunkRenderData.trisTrigger, 0);
+
+            Physics.BakeMesh(chunkMeshCollider.GetInstanceID(), false);
+            Physics.BakeMesh(chunkMeshTrigger.GetInstanceID(), false);
+
+            //刷新
+            chunkMesh.RecalculateBounds();
+            chunkMesh.RecalculateNormals();
+            //刷新
+            chunkMeshCollider.RecalculateBounds();
+            chunkMeshCollider.RecalculateNormals();
+            //刷新
+            chunkMeshTrigger.RecalculateBounds();
+            chunkMeshTrigger.RecalculateNormals();
+
+            meshFilter.mesh.Optimize();
+
+            meshFilter.mesh = chunkMesh;
+            meshCollider.sharedMesh = chunkMeshCollider;
+            meshTrigger.sharedMesh = chunkMeshTrigger;
+        }
     }
 
     public Block GetBlockForWorld(Vector3Int blockWorldPosition)

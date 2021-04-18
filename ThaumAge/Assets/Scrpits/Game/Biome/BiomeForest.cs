@@ -59,7 +59,7 @@ public class BiomeForest : Biome
         TreeData treeData = new TreeData
         {
             addRateMin = 1,
-            addRateMax = 1000,
+            addRateMax = 100,
             minHeight = 30,
             maxHeight = 50,
             treeTrunk = BlockTypeEnum.Oak,
