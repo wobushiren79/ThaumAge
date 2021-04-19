@@ -589,54 +589,30 @@ public class BiomeCreateTool
         int addRate = random.NextInt(caveData.addRateMax);
         if (addRate < caveData.addRateMin)
         {
-            int caveLenth = random.NextInt(caveData.maxLength - caveData.minLength) + caveData.minLength;
+            int caveLength = random.NextInt(caveData.maxLength - caveData.minLength) + caveData.minLength;
             int caveOffset = caveData.offsetLength;
-            Vector3Int cavePosition;
-            for (int i = 0; i < caveLenth; i++)
+            Vector3Int cavePosition= startPosition;
+            for (int i = 0; i < caveLength; i++)
             {
                 int addPositionX;
                 int addPositionY;
                 int addPositionZ;
                 int randomX = random.NextInt(3);
-                int randomY = random.NextInt(2);
+                int randomY = random.NextInt(3);
                 int randomZ = random.NextInt(3);
 
-                if (randomX == 0)
-                {
-                    addPositionX = 0;
-                }
-                else if (randomX == 1)
-                {
-                    addPositionX = caveOffset;
-                }
-                else
-                {
-                    addPositionX = -caveOffset;
-                }
-
-                if (randomY == 0)
-                {
-                    addPositionY = 0;
-                }
-                else
-                {
-                    addPositionY = caveOffset;
-                }
-
-                if (randomZ == 0)
-                {
-                    addPositionZ = 0;
-                }
-                else if (randomZ == 1)
-                {
-                    addPositionZ = caveOffset;
-                }
-                else
-                {
-                    addPositionZ = -caveOffset;
-                }
-
-                cavePosition = startPosition + new Vector3Int(addPositionX, addPositionY, addPositionZ);
+                addPositionX = 0;
+                addPositionZ = 0;
+                addPositionY = -caveOffset;
+                //if (randomY == 0)
+                //{
+                //    addPositionY = 0;
+                //}
+                //else
+                //{
+                //    addPositionY = caveOffset;
+                //}
+                cavePosition += new Vector3Int(addPositionX, addPositionY, addPositionZ);
 
                 int size = caveData.size;
                 for (int sizeX = -size; sizeX <= size; sizeX++)
@@ -648,9 +624,11 @@ public class BiomeCreateTool
                             if (((sizeX == -size || sizeX == size) && (sizeY == -size || sizeY == size))
                                 || ((sizeX == -size || sizeX == size) && (sizeZ == -size || sizeZ == size))
                                 || ((sizeY == -size || sizeY == size) && (sizeZ == -size || sizeZ == size)))
+                            {
                                 continue;
+                            }         
                             Vector3Int tempPosition = cavePosition + new Vector3Int(sizeX, sizeY, sizeZ);
-                            BlockBean blockData = new BlockBean(BlockTypeEnum.None, tempPosition);
+                            BlockBean blockData = new BlockBean(BlockTypeEnum.None, tempPosition, DirectionEnum.UP);
                             WorldCreateHandler.Instance.manager.listUpdateBlock.Add(blockData);
                         }
                     }

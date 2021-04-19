@@ -36,11 +36,11 @@ public class Biome
         BiomeForCaveData caveData = new BiomeForCaveData
         {
             addRateMin = 1,
-            addRateMax = 100,
+            addRateMax = 50000,
             minLength = 5,
-            maxLength = 15,
-            size = 3,
-            offsetLength = 6,
+            maxLength = 10,
+            size = 2,
+            offsetLength = 3,
         };
         BiomeCreateTool.AddCave(startPosition, caveData);
     }
