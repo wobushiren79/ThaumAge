@@ -13,6 +13,7 @@ public class BiomePrairie : Biome
 
     public override BlockTypeEnum GetBlockType(int genHeight, Vector3Int localPos, Vector3Int wPos)
     {
+        base.GetBlockType(genHeight, localPos, wPos);
         if (wPos.y == genHeight)
         {
             AddWeed(wPos);
@@ -40,7 +41,7 @@ public class BiomePrairie : Biome
 
     protected void AddTree(Vector3Int wPos)
     {
-        TreeData treeData = new TreeData
+        BiomeForTreeData treeData = new BiomeForTreeData
         {
             addRateMin = 1,
             addRateMax = 500,
@@ -55,7 +56,7 @@ public class BiomePrairie : Biome
 
     protected void AddWeed(Vector3Int wPos)
     {
-        PlantData weedData = new PlantData
+        BiomeForPlantData weedData = new BiomeForPlantData
         {
             addRateMin = 3,
             addRateMax = 10,
@@ -66,7 +67,7 @@ public class BiomePrairie : Biome
 
     protected void AddFlower(Vector3Int wPos)
     {
-        FlowerData flowersData = new FlowerData
+        BiomeForFlowerData flowersData = new BiomeForFlowerData
         {
             addRateMin = 1,
             addRateMax = 50,

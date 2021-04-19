@@ -222,6 +222,12 @@ public abstract class Block
         return position;
     }
 
+    /// <summary>
+    /// ´Ý»Ù·½¿é
+    /// </summary>
+    public virtual void DestoryBlock()
+    {
 
+    }
 
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using static BiomeCreateTool;
 
 public class Biome
 {
@@ -19,7 +20,29 @@ public class Biome
     /// <returns></returns>
     public virtual BlockTypeEnum GetBlockType(int genHeight, Vector3Int localPos, Vector3Int wPos)
     {
+        if (wPos.y < genHeight - 1)
+        {
+            AddCave(wPos);
+        }
         return BlockTypeEnum.Stone;
+    }
+
+    /// <summary>
+    /// 增加洞穴
+    /// </summary>
+    /// <param name="startPosition"></param>
+    public void AddCave(Vector3Int startPosition)
+    {
+        BiomeForCaveData caveData = new BiomeForCaveData
+        {
+            addRateMin = 1,
+            addRateMax = 100,
+            minLength = 5,
+            maxLength = 15,
+            size = 3,
+            offsetLength = 6,
+        };
+        BiomeCreateTool.AddCave(startPosition, caveData);
     }
 
     /// <summary>

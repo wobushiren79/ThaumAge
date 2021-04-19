@@ -11,6 +11,7 @@ public class BiomeDesert : Biome
 
     public override BlockTypeEnum GetBlockType(int genHeight, Vector3Int localPos, Vector3Int wPos)
     {
+        base.GetBlockType(genHeight, localPos, wPos);
         if (wPos.y == genHeight)
         {
             AddCactus(wPos);
@@ -36,7 +37,7 @@ public class BiomeDesert : Biome
 
     public void AddCactus(Vector3Int startPosition)
     {
-        CactusData cactusData = new CactusData(); 
+        BiomeForCactusData cactusData = new BiomeForCactusData(); 
         cactusData.addRateMin = 1;
         cactusData.addRateMax = 100;
         cactusData.minHeight = 1;

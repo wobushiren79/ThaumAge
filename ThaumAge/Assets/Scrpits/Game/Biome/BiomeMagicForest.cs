@@ -10,6 +10,7 @@ public class BiomeMagicForest : Biome
 
     public override BlockTypeEnum GetBlockType(int genHeight, Vector3Int localPos, Vector3Int wPos)
     {
+        base.GetBlockType(genHeight, localPos, wPos);
         return BlockTypeEnum.Dirt;
     }
 }

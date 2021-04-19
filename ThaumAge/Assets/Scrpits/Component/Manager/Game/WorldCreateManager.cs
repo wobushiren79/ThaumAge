@@ -253,8 +253,8 @@ public class WorldCreateManager : BaseManager
             Chunk updateChunk = listUpdateChunk.Dequeue();
             if (updateChunk != null)
             {
-                WorldCreateHandler.Instance.manager.AddUpdateDrawChunk(updateChunk);
                 chunkUpdateNumber++;
+                WorldCreateHandler.Instance.manager.AddUpdateDrawChunk(updateChunk);
                 //构建修改过的区块
                 updateChunk.BuildChunkForAsync((data)=> {
                     chunkUpdateNumber--;

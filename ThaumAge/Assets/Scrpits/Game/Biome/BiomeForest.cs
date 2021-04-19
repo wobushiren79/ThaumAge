@@ -13,13 +13,14 @@ public class BiomeForest : Biome
 
     public override BlockTypeEnum GetBlockType(int genHeight, Vector3Int localPos, Vector3Int wPos)
     {
+        base.GetBlockType(genHeight, localPos, wPos);
         if (wPos.y == genHeight)
         { 
             AddWeed(wPos);
             AddFlower(wPos);
-            //AddTree(wPos);
-            //AddBigTree(wPos);
-            AddWorldTree(wPos);
+            AddTree(wPos);
+            AddBigTree(wPos);
+            //AddWorldTree(wPos);
             // 地表，使用草
             return BlockTypeEnum.Grass;
         }
@@ -41,7 +42,7 @@ public class BiomeForest : Biome
     }
     protected void AddBigTree(Vector3Int wPos)
     {
-        TreeData treeData = new TreeData
+        BiomeForTreeData treeData = new BiomeForTreeData
         {
             addRateMin = 1,
             addRateMax = 200,
@@ -56,10 +57,10 @@ public class BiomeForest : Biome
 
     protected void AddWorldTree(Vector3Int wPos)
     {
-        TreeData treeData = new TreeData
+        BiomeForTreeData treeData = new BiomeForTreeData
         {
             addRateMin = 1,
-            addRateMax = 100,
+            addRateMax = 2000,
             minHeight = 30,
             maxHeight = 50,
             treeTrunk = BlockTypeEnum.Oak,
@@ -72,7 +73,7 @@ public class BiomeForest : Biome
 
     protected void AddTree(Vector3Int wPos)
     {
-        TreeData treeData = new TreeData
+        BiomeForTreeData treeData = new BiomeForTreeData
         {
             addRateMin = 1,
             addRateMax = 50,
@@ -87,7 +88,7 @@ public class BiomeForest : Biome
 
     protected void AddWeed(Vector3Int wPos)
     {
-        PlantData weedData = new PlantData
+        BiomeForPlantData weedData = new BiomeForPlantData
         {
             addRateMin = 1,
             addRateMax = 3,
@@ -98,7 +99,7 @@ public class BiomeForest : Biome
 
     protected void AddFlower(Vector3Int wPos)
     {
-        FlowerData flowersData = new FlowerData
+        BiomeForFlowerData flowersData = new BiomeForFlowerData
         {
             addRateMin = 1,
             addRateMax = 100,

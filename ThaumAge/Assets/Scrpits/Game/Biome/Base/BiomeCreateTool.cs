@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class BiomeCreateTool
 {
-    public struct TreeData
+    public struct BiomeForTreeData
     {
         public int addRateMin;
         public int addRateMax;
@@ -17,14 +17,14 @@ public class BiomeCreateTool
         public int leavesRange;//树叶范围
     }
 
-    public struct PlantData
+    public struct BiomeForPlantData
     {
         public int addRateMin;
         public int addRateMax;
         public List<BlockTypeEnum> listPlantType;
     }
 
-    public struct CactusData
+    public struct BiomeForCactusData
     {
         public int addRateMin;
         public int addRateMax;
@@ -33,7 +33,7 @@ public class BiomeCreateTool
         public BlockTypeEnum cactusType;
     }
 
-    public struct FlowerData
+    public struct BiomeForFlowerData
     {
         public int addRateMin;
         public int addRateMax;
@@ -41,12 +41,23 @@ public class BiomeCreateTool
         public List<BlockTypeEnum> listFlowerType;
     }
 
+    public struct BiomeForCaveData
+    {
+        public int addRateMin;
+        public int addRateMax;
+        public int minLength;
+        public int maxLength;
+        public int size;
+        public int offsetLength;
+
+    }
+
     /// <summary>
     /// 增加普通的树
     /// </summary>
     /// <param name="startPosition"></param>
     /// <param name="treeData"></param>
-    public static void AddTree(Vector3Int startPosition, TreeData treeData)
+    public static void AddTree(Vector3Int startPosition, BiomeForTreeData treeData)
     {
         int worldSeed = WorldCreateHandler.Instance.manager.GetWorldSeed();
         RandomTools random = RandomUtil.GetRandom(worldSeed + 1, startPosition.x, startPosition.y, startPosition.z);
@@ -101,13 +112,12 @@ public class BiomeCreateTool
         }
     }
 
-
     /// <summary>
     /// 生成大树
     /// </summary>
     /// <param name="startPosition"></param>
     /// <param name="treeData"></param>
-    public static void AddBigTree(Vector3Int startPosition, TreeData treeData)
+    public static void AddBigTree(Vector3Int startPosition, BiomeForTreeData treeData)
     {
         int worldSeed = WorldCreateHandler.Instance.manager.GetWorldSeed();
         RandomTools random = RandomUtil.GetRandom(worldSeed + 2, startPosition.x, startPosition.y, startPosition.z);
@@ -235,8 +245,12 @@ public class BiomeCreateTool
     }
 
 
-
-    public static void AddWorldTree(Vector3Int startPosition, TreeData treeData)
+    /// <summary>
+    /// 增加世界之树
+    /// </summary>
+    /// <param name="startPosition"></param>
+    /// <param name="treeData"></param>
+    public static void AddWorldTree(Vector3Int startPosition, BiomeForTreeData treeData)
     {
         Dictionary<Vector3Int, BlockBean> dicData = new Dictionary<Vector3Int, BlockBean>();
         int worldSeed = WorldCreateHandler.Instance.manager.GetWorldSeed();
@@ -248,22 +262,30 @@ public class BiomeCreateTool
 
         if (addRate < treeData.addRateMin)
         {
-            for (int i = 0; i < treeHeight; i++)
+            for (int y = 0; y < treeHeight; y++)
             {
-                Vector3Int treeTrunkPosition = startPosition + Vector3Int.up * (i + 1);
-                int trunkRnage = treeData.trunkRange;
-
-                for (int x = -trunkRnage; x <= trunkRnage; x++)
+                Vector3Int treeTrunkPosition = startPosition + Vector3Int.up * (y + 1);
+                int trunkRange = treeData.trunkRange;
+                for (int x = -trunkRange; x <= trunkRange; x++)
                 {
-                    for (int z = -trunkRnage; z <= trunkRnage; z++)
+                    for (int z = -trunkRange; z <= trunkRange; z++)
                     {
-                        if ((x == -trunkRnage || x == trunkRnage) && (z == -trunkRnage || z == trunkRnage))
+                        if ((x == -trunkRange || x == trunkRange) && (z == -trunkRange || z == trunkRange))
+                        {
+                            continue;
+                        }
+                        else if ((x == -trunkRange + 1 || x == trunkRange - 1) && (z == -trunkRange || z == trunkRange))
+                        {
+                            continue;
+                        }
+                        else if ((z == -trunkRange + 1 || z == trunkRange - 1) && (x == -trunkRange || x == trunkRange))
                         {
                             continue;
                         }
                         else
                         {
-                            Vector3Int tempTrunkPosition= treeTrunkPosition + new Vector3Int(x, 0, z);
+
+                            Vector3Int tempTrunkPosition = treeTrunkPosition + new Vector3Int(x, 0, z);
                             //生成树干
                             if (dicData.TryGetValue(tempTrunkPosition, out BlockBean valueTrunk))
                             {
@@ -273,55 +295,195 @@ public class BiomeCreateTool
                             dicData.Add(tempTrunkPosition, blockData);
                         }
 
-                        if (x == -trunkRnage || x == trunkRnage || z == -trunkRnage || z == trunkRnage)
+                        if ((x == -trunkRange || x == trunkRange || z == -trunkRange || z == trunkRange)
+                            || ((x == -trunkRange + 1 || x == trunkRange - 1) && (z == -trunkRange || z == trunkRange))
+                            || ((z == -trunkRange + 1 || z == trunkRange - 1) && (x == -trunkRange || x == trunkRange))
+                            || ((x == -trunkRange + 2 || x == trunkRange - 2) && (z == -trunkRange || z == trunkRange))
+                            || ((z == -trunkRange + 2 || z == trunkRange - 2) && (x == -trunkRange || x == trunkRange)))
                         {
-                            if (i > treeHeight / 2)
+                            //树盘
+                            if (y == 0 || y == 1)
                             {
-                                //生成树枝
-                                int addBranchRate = random.NextInt(5);
+                                Vector3Int baseStartPosition = treeTrunkPosition + new Vector3Int(x, -1, z);
+                                int baseWith = random.NextInt(3) + 3;
+                                for (int b = 0; b < baseWith; b++)
+                                {
+
+                                    DirectionEnum baseDirection =
+                                        (x == -trunkRange ? DirectionEnum.Left
+                                        : x == trunkRange ? DirectionEnum.Right
+                                        : z == -trunkRange ? DirectionEnum.Forward
+                                        : z == trunkRange ? DirectionEnum.Back
+                                        : DirectionEnum.Left);
+
+                                    int branchDirectionX = random.NextInt(2);
+                                    int branchDirectionY = random.NextInt(2);
+                                    int branchDirectionZ = random.NextInt(2);
+
+                                    int addPositionX;
+                                    if (x == -trunkRange || x == trunkRange)
+                                    {
+                                        addPositionX = x > 0 ? 1 : -1;
+                                    }
+                                    else if (x == -trunkRange + 1 || x == trunkRange - 1 || x == -trunkRange + 2 || x == trunkRange - 2)
+                                    {
+                                        int tempRandom = random.NextInt(2);
+                                        if (tempRandom == 0)
+                                        {
+                                            addPositionX = x > 0 ? 1 : -1;
+                                        }
+                                        else
+                                        {
+                                            addPositionX = (branchDirectionX == 0 ? -1 : 1);
+                                        }
+                                    }
+                                    else
+                                    {
+                                        addPositionX = (branchDirectionX == 0 ? -1 : 1);
+                                    }
+
+                                    int addPositionZ;
+                                    if (z == -trunkRange || z == trunkRange)
+                                    {
+                                        addPositionZ = z > 0 ? 1 : -1;
+                                    }
+                                    else if (z == -trunkRange + 1 || z == trunkRange - 1 || z == -trunkRange + 2 || z == trunkRange - 2)
+                                    {
+                                        int tempRandom = random.NextInt(2);
+                                        if (tempRandom == 0)
+                                        {
+                                            addPositionZ = z > 0 ? 1 : -1;
+                                        }
+                                        else
+                                        {
+                                            addPositionZ = (branchDirectionZ == 0 ? -1 : 1);
+                                        }
+                                    }
+                                    else
+                                    {
+                                        addPositionZ = (branchDirectionZ == 0 ? -1 : 1);
+                                    }
+
+                                    int addPositionY = (branchDirectionY == 0 ? -1 : 0);
+                                    if (addPositionY == -1)
+                                    {
+                                        addPositionX = 0;
+                                        addPositionZ = 0;
+                                        baseDirection = DirectionEnum.UP;
+                                    }
+
+                                    Vector3Int addPosition = new Vector3Int(addPositionX, addPositionY, addPositionZ);
+                                    baseStartPosition += addPosition;
+                                    //干
+                                    if (dicData.TryGetValue(baseStartPosition, out BlockBean valueTrunk))
+                                    {
+                                        dicData.Remove(baseStartPosition);
+                                    }
+                                    BlockBean blockData = new BlockBean(treeData.treeTrunk, baseStartPosition, baseDirection);
+                                    dicData.Add(baseStartPosition, blockData);
+                                }
+                            }
+
+                            //枝
+                            if (y > treeHeight / 2)
+                            {
+
+                                int addBranchRate = random.NextInt(3);
                                 if (addBranchRate == 0)
                                 {
-                                    int branchWith = random.NextInt(treeHeight / 2);
+                                    int branchWith = random.NextInt(treeHeight / 2) + treeHeight / 4;
                                     Vector3Int branchStartPosition = treeTrunkPosition + new Vector3Int(x, 0, z);
-                                    Vector3 branchNormal = Vector3.Normalize(new Vector3(x, 0, z));
+
                                     for (int b = 0; b < branchWith; b++)
                                     {
-                                        int branchDirectionY = random.NextInt(2);
-                                        int branchDirection = random.NextInt(3);
-                                        if (branchDirection == 0)
+                                        DirectionEnum branchDirection =
+                                            (x == -trunkRange ? DirectionEnum.Left
+                                            : x == trunkRange ? DirectionEnum.Right
+                                            : z == -trunkRange ? DirectionEnum.Forward
+                                            : z == trunkRange ? DirectionEnum.Back
+                                            : DirectionEnum.Left);
+
+                                        int branchDirectionX = random.NextInt(2);
+                                        int branchDirectionY = random.NextInt(4);
+                                        int branchDirectionZ = random.NextInt(2);
+
+                                        int addPositionX;
+                                        if (x == -trunkRange || x == trunkRange)
                                         {
-                                            branchStartPosition += new Vector3Int((int)branchNormal.x, branchDirectionY, 0);
+                                            addPositionX = x > 0 ? 1 : -1;
                                         }
-                                        else if (branchDirection == 1)
+                                        else if (x == -trunkRange + 1 || x == trunkRange - 1 || x == -trunkRange + 2 || x == trunkRange - 2)
                                         {
-                                            branchStartPosition += new Vector3Int(0, branchDirectionY, (int)branchNormal.z);
+                                            int tempRandom = random.NextInt(2);
+                                            if (tempRandom == 0)
+                                            {
+                                                addPositionX = x > 0 ? 1 : -1;
+                                            }
+                                            else
+                                            {
+                                                addPositionX = (branchDirectionX == 0 ? -1 : 1);
+                                            }
                                         }
-                                        else if (branchDirection == 2)
+                                        else
                                         {
-                                            branchStartPosition += new Vector3Int((int)branchNormal.x, branchDirectionY, (int)branchNormal.z);
+                                            addPositionX = (branchDirectionX == 0 ? -1 : 1);
                                         }
-                                        //生成树干
+
+                                        int addPositionZ;
+                                        if (z == -trunkRange || z == trunkRange)
+                                        {
+                                            addPositionZ = z > 0 ? 1 : -1;
+                                        }
+                                        else if (z == -trunkRange + 1 || z == trunkRange - 1 || z == -trunkRange + 2 || z == trunkRange - 2)
+                                        {
+                                            int tempRandom = random.NextInt(2);
+                                            if (tempRandom == 0)
+                                            {
+                                                addPositionZ = z > 0 ? 1 : -1;
+                                            }
+                                            else
+                                            {
+                                                addPositionZ = (branchDirectionZ == 0 ? -1 : 1);
+                                            }
+                                        }
+                                        else
+                                        {
+                                            addPositionZ = (branchDirectionZ == 0 ? -1 : 1);
+                                        }
+
+                                        int addPositionY = (branchDirectionY == 0 ? 1 : 0);
+
+                                        Vector3Int addPosition = new Vector3Int(addPositionX, addPositionY, addPositionZ);
+                                        branchStartPosition += addPosition;
+                                        //干
                                         if (dicData.TryGetValue(branchStartPosition, out BlockBean valueTrunk))
                                         {
                                             dicData.Remove(branchStartPosition);
                                         }
-                                        BlockBean blockData = new BlockBean(treeData.treeTrunk, branchStartPosition, DirectionEnum.Left);
+                                        BlockBean blockData = new BlockBean(treeData.treeTrunk, branchStartPosition, branchDirection);
                                         dicData.Add(branchStartPosition, blockData);
-                                        //生成树叶
-                                        if (b % 5 == 0)
+                                        //叶
+                                        if (b % 4 == 0)
                                         {
-                                            for (int leavesX = -3; leavesX <= 3; leavesX++)
+                                            int leavesRange = 2;
+                                            for (int leavesX = -leavesRange; leavesX <= leavesRange; leavesX++)
                                             {
-                                                for (int leavesY = -3; leavesY <= 3; leavesY++)
+                                                for (int leavesY = -leavesRange; leavesY <= leavesRange; leavesY++)
                                                 {
-                                                    for (int leavesZ = -3; leavesZ <= 3; leavesZ++)
+                                                    for (int leavesZ = -leavesRange; leavesZ <= leavesRange; leavesZ++)
                                                     {
+                                                        if (((leavesX == leavesRange || leavesX == -leavesRange) && (leavesY == leavesRange || leavesY == -leavesRange))
+                                                            || ((leavesY == leavesRange || leavesY == -leavesRange) && (leavesZ == leavesRange || leavesZ == -leavesRange))
+                                                            || ((leavesX == leavesRange || leavesX == -leavesRange) && (leavesZ == leavesRange || leavesZ == -leavesRange)))
+                                                        {
+                                                            continue;
+                                                        }
                                                         Vector3Int leavesPosition = branchStartPosition + new Vector3Int(leavesX, leavesY, leavesZ);
-                                                        //if (!dicData.TryGetValue(leavesPosition, out BlockBean valueLeaves))
-                                                        //{
-                                                        //    BlockBean blockLeavesData = new BlockBean(treeData.treeLeaves, leavesPosition);
-                                                        //    dicData.Add(leavesPosition, blockLeavesData);
-                                                        //}
+                                                        if (!dicData.TryGetValue(leavesPosition, out BlockBean valueLeaves))
+                                                        {
+                                                            BlockBean blockLeavesData = new BlockBean(treeData.treeLeaves, leavesPosition);
+                                                            dicData.Add(leavesPosition, blockLeavesData);
+                                                        }
                                                     }
                                                 }
                                             }
@@ -337,6 +499,7 @@ public class BiomeCreateTool
                 }
 
             }
+
         }
 
         foreach (var item in dicData.Values)
@@ -345,12 +508,13 @@ public class BiomeCreateTool
         }
 
     }
+
     /// <summary>
     /// 增加植物
     /// </summary>
     /// <param name="startPosition"></param>
     /// <param name="weedData"></param>
-    public static void AddPlant(Vector3Int startPosition, PlantData plantData)
+    public static void AddPlant(Vector3Int startPosition, BiomeForPlantData plantData)
     {
         int worldSeed = WorldCreateHandler.Instance.manager.GetWorldSeed();
         RandomTools random = RandomUtil.GetRandom(worldSeed + 101, startPosition.x, startPosition.y, startPosition.z);
@@ -370,7 +534,7 @@ public class BiomeCreateTool
     /// </summary>
     /// <param name="startPosition"></param>
     /// <param name="cactusData"></param>
-    public static void AddCactus(Vector3Int startPosition, CactusData cactusData)
+    public static void AddCactus(Vector3Int startPosition, BiomeForCactusData cactusData)
     {
         int worldSeed = WorldCreateHandler.Instance.manager.GetWorldSeed();
         RandomTools random = RandomUtil.GetRandom(worldSeed + 201, startPosition.x, startPosition.y, startPosition.z);
@@ -399,7 +563,7 @@ public class BiomeCreateTool
     /// </summary>
     /// <param name="startPosition"></param>
     /// <param name="flowerData"></param>
-    public static void AddFlower(Vector3Int startPosition, FlowerData flowerData)
+    public static void AddFlower(Vector3Int startPosition, BiomeForFlowerData flowerData)
     {
         int worldSeed = WorldCreateHandler.Instance.manager.GetWorldSeed();
         RandomTools random = RandomUtil.GetRandom(worldSeed + 301, startPosition.x, startPosition.y, startPosition.z);
@@ -409,6 +573,89 @@ public class BiomeCreateTool
         {
             BlockBean blockData = new BlockBean(flowerData.listFlowerType[flowerTypeNumber], startPosition + Vector3Int.up);
             WorldCreateHandler.Instance.manager.listUpdateBlock.Add(blockData);
+        }
+    }
+
+
+    /// <summary>
+    /// 增加山洞
+    /// </summary>
+    /// <param name="startPosition"></param>
+    /// <param name="caveData"></param>
+    public static void AddCave(Vector3Int startPosition, BiomeForCaveData caveData)
+    {
+        int worldSeed = WorldCreateHandler.Instance.manager.GetWorldSeed();
+        RandomTools random = RandomUtil.GetRandom(worldSeed + 901, startPosition.x, startPosition.y, startPosition.z);
+        int addRate = random.NextInt(caveData.addRateMax);
+        if (addRate < caveData.addRateMin)
+        {
+            int caveLenth = random.NextInt(caveData.maxLength - caveData.minLength) + caveData.minLength;
+            int caveOffset = caveData.offsetLength;
+            Vector3Int cavePosition;
+            for (int i = 0; i < caveLenth; i++)
+            {
+                int addPositionX;
+                int addPositionY;
+                int addPositionZ;
+                int randomX = random.NextInt(3);
+                int randomY = random.NextInt(2);
+                int randomZ = random.NextInt(3);
+
+                if (randomX == 0)
+                {
+                    addPositionX = 0;
+                }
+                else if (randomX == 1)
+                {
+                    addPositionX = caveOffset;
+                }
+                else
+                {
+                    addPositionX = -caveOffset;
+                }
+
+                if (randomY == 0)
+                {
+                    addPositionY = 0;
+                }
+                else
+                {
+                    addPositionY = caveOffset;
+                }
+
+                if (randomZ == 0)
+                {
+                    addPositionZ = 0;
+                }
+                else if (randomZ == 1)
+                {
+                    addPositionZ = caveOffset;
+                }
+                else
+                {
+                    addPositionZ = -caveOffset;
+                }
+
+                cavePosition = startPosition + new Vector3Int(addPositionX, addPositionY, addPositionZ);
+
+                int size = caveData.size;
+                for (int sizeX = -size; sizeX <= size; sizeX++)
+                {
+                    for (int sizeY = -size; sizeY <= size; sizeY++)
+                    {
+                        for (int sizeZ = -size; sizeZ <= size; sizeZ++)
+                        {
+                            if (((sizeX == -size || sizeX == size) && (sizeY == -size || sizeY == size))
+                                || ((sizeX == -size || sizeX == size) && (sizeZ == -size || sizeZ == size))
+                                || ((sizeY == -size || sizeY == size) && (sizeZ == -size || sizeZ == size)))
+                                continue;
+                            Vector3Int tempPosition = cavePosition + new Vector3Int(sizeX, sizeY, sizeZ);
+                            BlockBean blockData = new BlockBean(BlockTypeEnum.None, tempPosition);
+                            WorldCreateHandler.Instance.manager.listUpdateBlock.Add(blockData);
+                        }
+                    }
+                }
+            }
         }
     }
 }
