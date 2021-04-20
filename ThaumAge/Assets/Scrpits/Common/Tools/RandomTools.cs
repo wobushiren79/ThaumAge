@@ -5,7 +5,7 @@ using UnityEngine;
 [Serializable]
 public class RandomTools
 {
-    private UInt64 seed;
+    public UInt64 seed;
 
     public RandomTools(UInt64 seed)
     {
@@ -35,6 +35,13 @@ public class RandomTools
 
         return (int)val;
     }
+
+    public int NextInt(int start,int end)
+    {
+        int randomData = NextInt(end - start);
+        return randomData + start;
+    }
+
     public long NextLong()
     {
         return ((long)Next(32) << 32) + Next(32);

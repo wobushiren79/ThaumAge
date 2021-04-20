@@ -153,9 +153,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b3f86ef755432fc42beb635c70ec056b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  imageDim: {x: 1000, y: 1000}
-  regionAmount: 4
-  drawByDistance: 1
 --- !u!4 &643679029
 Transform:
   m_ObjectHideFlags: 0

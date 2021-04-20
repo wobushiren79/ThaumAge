@@ -34,21 +34,21 @@ public class BlockCross : Block
         int index = chunkData.verts.Count;
         int triggerIndex = chunkData.vertsTrigger.Count;
 
-        chunkData.dicTris[BlockMaterialEnum.BothFace].Add(index + 0);
-        chunkData.dicTris[BlockMaterialEnum.BothFace].Add(index + 1);
-        chunkData.dicTris[BlockMaterialEnum.BothFace].Add(index + 2);
+        chunkData.dicTris[BlockMaterialEnum.BothFaceSwing].Add(index + 0);
+        chunkData.dicTris[BlockMaterialEnum.BothFaceSwing].Add(index + 1);
+        chunkData.dicTris[BlockMaterialEnum.BothFaceSwing].Add(index + 2);
 
-        chunkData.dicTris[BlockMaterialEnum.BothFace].Add(index + 0);
-        chunkData.dicTris[BlockMaterialEnum.BothFace].Add(index + 2);
-        chunkData.dicTris[BlockMaterialEnum.BothFace].Add(index + 3);
+        chunkData.dicTris[BlockMaterialEnum.BothFaceSwing].Add(index + 0);
+        chunkData.dicTris[BlockMaterialEnum.BothFaceSwing].Add(index + 2);
+        chunkData.dicTris[BlockMaterialEnum.BothFaceSwing].Add(index + 3);
 
-        chunkData.dicTris[BlockMaterialEnum.BothFace].Add(index + 4);
-        chunkData.dicTris[BlockMaterialEnum.BothFace].Add(index + 5);
-        chunkData.dicTris[BlockMaterialEnum.BothFace].Add(index + 6);
+        chunkData.dicTris[BlockMaterialEnum.BothFaceSwing].Add(index + 4);
+        chunkData.dicTris[BlockMaterialEnum.BothFaceSwing].Add(index + 5);
+        chunkData.dicTris[BlockMaterialEnum.BothFaceSwing].Add(index + 6);
 
-        chunkData.dicTris[BlockMaterialEnum.BothFace].Add(index + 4);
-        chunkData.dicTris[BlockMaterialEnum.BothFace].Add(index + 6);
-        chunkData.dicTris[BlockMaterialEnum.BothFace].Add(index + 7);
+        chunkData.dicTris[BlockMaterialEnum.BothFaceSwing].Add(index + 4);
+        chunkData.dicTris[BlockMaterialEnum.BothFaceSwing].Add(index + 6);
+        chunkData.dicTris[BlockMaterialEnum.BothFaceSwing].Add(index + 7);
 
         chunkData.trisTrigger.Add(triggerIndex + 0);
         chunkData.trisTrigger.Add(triggerIndex + 1);

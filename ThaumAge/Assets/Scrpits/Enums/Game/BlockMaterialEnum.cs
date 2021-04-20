@@ -5,6 +5,8 @@ public enum BlockMaterialEnum
 {
     Normal = 1,
     BothFace = 2,
-    Water = 3,
-    Magma=4,
+    BothFaceSwing = 3,
+    Water = 4,
+    Magma = 5,
+
 }

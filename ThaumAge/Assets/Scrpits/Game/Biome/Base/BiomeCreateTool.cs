@@ -45,10 +45,10 @@ public class BiomeCreateTool
     {
         public int addRateMin;
         public int addRateMax;
-        public int minLength;
-        public int maxLength;
+        public int minDepth;
+        public int maxDepth;
+        public int offset;
         public int size;
-        public int offsetLength;
 
     }
 
@@ -589,51 +589,122 @@ public class BiomeCreateTool
         int addRate = random.NextInt(caveData.addRateMax);
         if (addRate < caveData.addRateMin)
         {
-            int caveLength = random.NextInt(caveData.maxLength - caveData.minLength) + caveData.minLength;
-            int caveOffset = caveData.offsetLength;
-            Vector3Int cavePosition= startPosition;
-            for (int i = 0; i < caveLength; i++)
+            int caveSize = caveData.size;
+            int offset = caveData.offset;
+            int depth = random.NextInt(caveData.minDepth, caveData.maxDepth);
+            Queue<Vector3Int> path = new Queue<Vector3Int>();
+            Vector3Int pathPosition = startPosition;
+
+            int directionX = (random.NextInt(2) == 0 ? 1 : -1);
+            int directionZ = (random.NextInt(2) == 0 ? 1 : -1);
+
+            for (int d = 0; d < depth; d++)
             {
-                int addPositionX;
-                int addPositionY;
-                int addPositionZ;
-                int randomX = random.NextInt(3);
-                int randomY = random.NextInt(3);
-                int randomZ = random.NextInt(3);
+                int randomY = random.NextInt(4);
+                int addPositionX = directionX * offset;
+                int addPositionZ = directionZ * offset;
+                int addPositionY = randomY == 0 ? 0 : - offset;
 
-                addPositionX = 0;
-                addPositionZ = 0;
-                addPositionY = -caveOffset;
-                //if (randomY == 0)
-                //{
-                //    addPositionY = 0;
-                //}
-                //else
-                //{
-                //    addPositionY = caveOffset;
-                //}
-                cavePosition += new Vector3Int(addPositionX, addPositionY, addPositionZ);
+                pathPosition += new Vector3Int(addPositionX, -addPositionY, addPositionZ);
 
-                int size = caveData.size;
-                for (int sizeX = -size; sizeX <= size; sizeX++)
+                path.Enqueue(pathPosition);
+            }
+
+            //遍历每个路径点
+            while (path.Count > 0)
+            {
+                pathPosition = path.Dequeue();
+                for (int z = -caveSize; z <= caveSize; z++)
                 {
-                    for (int sizeY = -size; sizeY <= size; sizeY++)
+                    for (int y = -caveSize; y <= caveSize; y++)
                     {
-                        for (int sizeZ = -size; sizeZ <= size; sizeZ++)
+                        for (int x = -caveSize; x <= caveSize; x++)
                         {
-                            if (((sizeX == -size || sizeX == size) && (sizeY == -size || sizeY == size))
-                                || ((sizeX == -size || sizeX == size) && (sizeZ == -size || sizeZ == size))
-                                || ((sizeY == -size || sizeY == size) && (sizeZ == -size || sizeZ == size)))
+
+                            Vector3Int tempPosition = pathPosition + new Vector3Int(x, y, z);
+                            float dis = Vector3.Distance(tempPosition, pathPosition);
+                            if (tempPosition.y <= 0 || dis >= caveSize)
                             {
                                 continue;
-                            }         
-                            Vector3Int tempPosition = cavePosition + new Vector3Int(sizeX, sizeY, sizeZ);
-                            BlockBean blockData = new BlockBean(BlockTypeEnum.None, tempPosition, DirectionEnum.UP);
+                            }
+                            BlockBean blockData = new BlockBean(BlockTypeEnum.None, tempPosition);
                             WorldCreateHandler.Instance.manager.listUpdateBlock.Add(blockData);
                         }
                     }
                 }
             }
+
         }
+
+        //if (addRate < caveData.addRateMin)
+        //{
+        //    int caveSize = caveData.size;
+        //    Vector3Int cavePosition= startPosition;
+
+        //    byte[,,] caveMap = new byte[16, 48, 16];
+        //    Queue<Vector3Int> path = new Queue<Vector3Int>();
+        //    int depth = random.NextInt(caveData.minDepth, caveData.maxDepth);
+        //    for (int i = 0; i < depth; i++)
+        //    {
+        //        path.Enqueue(new Vector3Int(
+        //            random.NextInt(2, 13),
+        //            44 - (i * 4),
+        //            random.NextInt(2, 13)
+        //        ));
+        //    }
+        //    Vector3Int currentPos = Vector3Int.zero;
+        //    Vector3Int nextPos = path.Dequeue();
+        //    float d = 0;
+        //    while (path.Count > 0)
+        //    {
+        //        currentPos = nextPos;
+        //        nextPos = path.Dequeue();
+        //        float size = Mathf.Lerp(caveSize, 0.75f, d / depth);
+
+        //        for (int i = 0; i < 16; ++i)
+        //        {
+        //            float lerpPos = i / 15f;
+        //            Vector3 lerped = Vector3.Lerp(currentPos, nextPos, lerpPos);
+        //            Vector3Int p = new Vector3Int((int)lerped.x, (int)lerped.y, (int)lerped.z);
+        //            for (int z = -caveSize; z <= caveSize; ++z)
+        //            {
+        //                for (int y = -caveSize; y <= caveSize; ++y)
+        //                {
+        //                    for (int x = -caveSize; x <= caveSize; ++x)
+        //                    {
+        //                        Vector3Int b = new Vector3Int(p.x + x, p.y + y, p.z + z);
+        //                        if (Vector3Int.Distance(p, b) > size) continue;
+        //                        if (b.x < 0 || b.x > 15) continue;
+        //                        if (b.y < 0 || b.y > 47) continue;
+        //                        if (b.z < 0 || b.z > 15) continue;
+
+        //                        caveMap[b.x, b.y, b.z] = (byte)1;
+        //                    }
+        //                }
+        //            }
+        //        }
+        //        d++;
+        //    }
+        //    for (int z = 0; z < 16; ++z)
+        //    {
+        //        for (int y = 0; y < 48; ++y)
+        //        {
+        //            for (int x = 0; x < 16; ++x)
+        //            {
+        //                if (caveMap[x, y, z] == 1)
+        //                {            
+        //                    Vector3Int tempPosition = cavePosition + new Vector3Int(x, y - 48, z);
+        //                    if (tempPosition.y <= 0)
+        //                    {
+        //                        continue;
+        //                    }
+        //                    BlockBean blockData = new BlockBean(BlockTypeEnum.None, tempPosition);
+        //                    WorldCreateHandler.Instance.manager.listUpdateBlock.Add(blockData);
+        //                }
+        //            }
+        //        }
+        //    }
+        //}
+
     }
 }
