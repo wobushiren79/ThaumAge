@@ -629,6 +629,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7927601476835618168, guid: e037dc3a0e621a04c98e3b8942856735, type: 3}
+      propertyPath: sunLight
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 7927601476835618168, guid: e037dc3a0e621a04c98e3b8942856735, type: 3}
+      propertyPath: moonLight
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 7927601476835618169, guid: e037dc3a0e621a04c98e3b8942856735, type: 3}
       propertyPath: m_Name
       value: Sky

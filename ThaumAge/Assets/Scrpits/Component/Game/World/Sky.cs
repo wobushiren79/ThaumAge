@@ -5,24 +5,19 @@ using UnityEngine;
 public class Sky : BaseMonoBehaviour
 {
     public GameObject objSun;
-    public Light sunLight;
 
     public Color sunColorStart;
     public Color sunColorEnd;
 
     public GameObject objMoon;
-    public Light moonLight;
+
 
     public Color moonColorStart;
     public Color moonColorEnd;
 
     public float timeForAngle = 0;
 
-    public void Awake()
-    {
-        sunLight = objSun.GetComponent<Light>();
-        moonLight = objMoon.GetComponent<Light>();
-    }
+
 
     public void Update()
     {
@@ -59,13 +54,13 @@ public class Sky : BaseMonoBehaviour
         //光照
         if (gameTime.hour >= 6 && gameTime.hour <= 18)
         {
-            sunLight.gameObject.SetActive(true);
-            moonLight.gameObject.SetActive(false);
+            //light.transform.position = objSun.transform.position;
+            //light.transform.eulerAngles = objSun.transform.eulerAngles;
         }
         else
         {
-            moonLight.gameObject.SetActive(true);
-            sunLight.gameObject.SetActive(false);
+            //light.transform.eulerAngles = objMoon.transform.eulerAngles;
+            //light.transform.position = objMoon.transform.position;
         }
     }
 }
