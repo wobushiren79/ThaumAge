@@ -61,9 +61,11 @@ public class BiomeHandler : BaseHandler<BiomeHandler, BiomeManager>
         }
 
         //获取该点的生态信息
-        int worldSeed = WorldCreateHandler.Instance.manager.GetWorldSeed();
-        RandomTools biomeRandom = RandomUtil.GetRandom(worldSeed, biomeCenterPosition.x, biomeCenterPosition.z);
-        int biomeIndex = biomeRandom.NextInt(listBiome.Count);
+        //int worldSeed = WorldCreateHandler.Instance.manager.GetWorldSeed();
+        //RandomTools biomeRandom = RandomUtil.GetRandom(worldSeed, biomeCenterPosition.x, biomeCenterPosition.z);
+        //int biomeIndex = biomeRandom.NextInt(listBiome.Count);
+        int biomeIndex = WorldRandTools.Range(listBiome.Count, biomeCenterPosition);
+
         Biome biome = listBiome[biomeIndex];
         BiomeInfoBean biomeInfo = manager.GetBiomeInfo(biome.biomeType);
 
@@ -74,9 +76,9 @@ public class BiomeHandler : BaseHandler<BiomeHandler, BiomeManager>
         if (genHeight - biomeInfo.minHeight > 2//高度大于3格
             && offsetDis <= 10) //在10范围以内
         {
-            int edgeHeight = Mathf.CeilToInt((genHeight - biomeInfo.minHeight)/10f) * Mathf.CeilToInt(offsetDis) + biomeInfo.minHeight;
+            int edgeHeight = Mathf.CeilToInt((genHeight - biomeInfo.minHeight) / 10f) * Mathf.CeilToInt(offsetDis) + biomeInfo.minHeight;
             //只有当小于最大高度时才使用生成边缘高度
-            if(edgeHeight < genHeight)
+            if (edgeHeight < genHeight)
             {
                 genHeight = edgeHeight;
             }
@@ -142,8 +144,9 @@ public class BiomeHandler : BaseHandler<BiomeHandler, BiomeManager>
             for (int z = -range; z < range; z++)
             {
                 Vector3Int currentPosition = new Vector3Int(x * unitSize + startX, 0, z * unitSize + startZ);
-                RandomTools random = RandomUtil.GetRandom(worldSeed, currentPosition.x, currentPosition.z);
-                int addRate = random.NextInt(50);
+                //RandomTools random = RandomUtil.GetRandom(worldSeed, currentPosition.x, currentPosition.z);
+                //int addRate = random.NextInt(50);
+                int addRate = WorldRandTools.Range(50, currentPosition * worldSeed);
                 if (addRate <= 1)
                 {
                     listData.Add(currentPosition);
@@ -153,6 +156,32 @@ public class BiomeHandler : BaseHandler<BiomeHandler, BiomeManager>
         return listData;
     }
 
+    /// <summary>
+    /// 根据世界类型获取生态数据
+    /// </summary>
+    /// <param name="worldType"></param>
+    /// <returns></returns>
+    public List<Biome> GetBiomeListByWorldType(WorldTypeEnum worldType)
+    {
+        List<Biome> listBiome = new List<Biome>();
+        switch (worldType)
+        {
+            case WorldTypeEnum.Main:
+                if(CheckUtil.ListIsNull(manager.listBiomeForMain))
+                {
+                    manager.listBiomeForMain.Add(new BiomePrairie());
+                    manager.listBiomeForMain.Add(new BiomeForest());
+                    manager.listBiomeForMain.Add(new BiomeDesert());
+                    manager.listBiomeForMain.Add(new BiomeMagicForest());
+                    manager.listBiomeForMain.Add(new BiomeVolcano());
+                    manager.listBiomeForMain.Add(new BiomeMountain());
+                    manager.listBiomeForMain.Add(new BiomeOcean());
+                }
+                listBiome = manager.listBiomeForMain;
+                break;
+        }
+        return listBiome;
+    }
 
-  
+
 }

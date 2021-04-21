@@ -209,11 +209,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f32ae47904596c40baff66bcc088874, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  light: {fileID: 0}
   objSun: {fileID: 7927601475628692815}
-  sunColorStart: {r: 0, g: 0, b: 0, a: 0}
-  sunColorEnd: {r: 0, g: 0, b: 0, a: 0}
   objMoon: {fileID: 7927601476382213094}
-  moonColorStart: {r: 0, g: 0, b: 0, a: 0}
-  moonColorEnd: {r: 0, g: 0, b: 0, a: 0}
+  mainLightStart: {r: 1, g: 1, b: 1, a: 1}
+  mainLightEnd: {r: 0, g: 0.021720065, b: 0.103773594, a: 1}
   timeForAngle: 0

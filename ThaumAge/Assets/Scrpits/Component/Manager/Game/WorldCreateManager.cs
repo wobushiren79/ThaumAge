@@ -30,6 +30,7 @@ public class WorldCreateManager : BaseManager
 
     public int widthChunk = 16;
     public int heightChunk = 256;
+    public WorldTypeEnum worldType = WorldTypeEnum.Main;
 
     public float time;
 
@@ -62,7 +63,7 @@ public class WorldCreateManager : BaseManager
             listUpdateChunk.Enqueue(chunk);
         }
     }
-    
+
     /// <summary>
     /// 增加待绘制区块
     /// </summary>
@@ -189,6 +190,8 @@ public class WorldCreateManager : BaseManager
         UnityEngine.Random.InitState(worldSeed);
         //初始化生态种子
         BiomeHandler.Instance.InitWorldBiomeSeed();
+        //初始化随机种子
+        WorldRandTools.Randomize(worldSeed);
     }
 
     /// <summary>
@@ -215,6 +218,7 @@ public class WorldCreateManager : BaseManager
         Vector3Int chunkPosition = Vector3Int.CeilToInt(chunk.transform.position);
 
         bool isSuccessInit = false;
+
         await Task.Run(() =>
         {
             lock (this)
@@ -229,7 +233,7 @@ public class WorldCreateManager : BaseManager
                     HandleForLoadBlock(chunk, chunkPosition);
                     isSuccessInit = true;
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
                     LogUtil.Log(e.ToString());
                     isSuccessInit = false;
@@ -256,11 +260,12 @@ public class WorldCreateManager : BaseManager
                 chunkUpdateNumber++;
                 WorldCreateHandler.Instance.manager.AddUpdateDrawChunk(updateChunk);
                 //构建修改过的区块
-                updateChunk.BuildChunkForAsync((data)=> {
+                updateChunk.BuildChunkForAsync((data) =>
+                {
                     chunkUpdateNumber--;
                 });
             }
-        } 
+        }
         else
         {
             if (listUpdateDrawChunk.Count > 0 && chunkUpdateNumber == 0)
@@ -282,14 +287,9 @@ public class WorldCreateManager : BaseManager
     public void HandleForBaseBlock(Chunk chunk)
     {
         int halfWidth = widthChunk / 2;
-        List<Biome> listBiome = new List<Biome>();
-        listBiome.Add(new BiomePrairie());
-        listBiome.Add(new BiomeForest());
-        listBiome.Add(new BiomeDesert());
-        listBiome.Add(new BiomeMagicForest());
-        listBiome.Add(new BiomeVolcano());
-        listBiome.Add(new BiomeMountain());
-        listBiome.Add(new BiomeOcean());
+        //获取该世界的所有生态
+        List<Biome> listBiome = BiomeHandler.Instance.GetBiomeListByWorldType(worldType);
+        //获取一定范围内的生态点
         List<Vector3Int> listBiomeCenter = BiomeHandler.Instance.GetBiomeCenterPosition(chunk, 5, 10);
 
         //遍历map，生成其中每个Block的信息 
@@ -314,7 +314,6 @@ public class WorldCreateManager : BaseManager
                 }
             }
         }
-
     }
 
     /// <summary>
@@ -338,7 +337,7 @@ public class WorldCreateManager : BaseManager
                 //设置方块
                 chunk.SetBlock(itemBlock, false, false, false);
                 //添加需要更新的chunk
-                AddUpdateChunk( chunk);
+                AddUpdateChunk(chunk);
                 //从更新列表中移除
                 listUpdateBlock.Remove(itemBlock);
                 i--;

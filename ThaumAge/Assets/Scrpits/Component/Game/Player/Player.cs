@@ -27,7 +27,7 @@ public class Player : BaseMonoBehaviour
     /// </summary>
     public void HandleForWorldUpdate()
     {
-        WorldCreateHandler.Instance.CreateChunkForRange(transform.position, 1);
+        WorldCreateHandler.Instance.CreateChunkForRange(transform.position, 3);
     }
 
     /// <summary>

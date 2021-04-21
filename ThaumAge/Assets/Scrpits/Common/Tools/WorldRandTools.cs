@@ -39,6 +39,18 @@ public class WorldRandTools
     /// </summary>
     public static float GetValue(Vector3 position)
     {
+        if (position.x == 0)
+        {
+            position.x = 1;
+        }
+        if (position.y == 0)
+        {
+            position.y = 1;
+        }
+        if (position.z == 0)
+        {
+            position.z = 1;
+        }
         uint hash = MAGIC1;
         hash = hash * MAGIC2 ^ (uint)position.x;
         hash = hash * MAGIC2 ^ (uint)position.y;
@@ -53,6 +65,14 @@ public class WorldRandTools
     /// </summary>
     public static float GetValue(float x, float z)
     {
+        if (x == 0)
+        {
+            x = 1;
+        }
+        if (z == 0)
+        {
+            z = 1;
+        }
         uint hash = MAGIC1;
         hash = hash * MAGIC2 ^ (uint)x;
         hash = hash * MAGIC2 ^ (uint)z;
@@ -78,9 +98,14 @@ public class WorldRandTools
         float v = GetValue(position);
         return (int)(min + (max - min) * 0.99999f * v);
     }
+    public static int Range(int max, Vector3 position)
+    {
+        return Range(0, max, position);
+    }
 
     /// <summary>
-    /// Returns a random value between min (inclusive) and max (exclusive)
+    /// Returns a r
+    /// andom value between min (inclusive) and max (exclusive)
     /// </summary>
     public static int Range(int min, int max)
     {

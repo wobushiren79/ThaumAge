@@ -10,60 +10,41 @@ public class Test : BaseMonoBehaviour
 {
     private void Start()
     {
-        int seed = int.MaxValue/2;
+        int seed = int.MaxValue/4;
 
-
-
-        //for (int x = -100; x <= 100; x++)
-        //{
-        //    for (int z = -100; z <= 100; z++)
-        //    {
-        //        Stopwatch stopwatch = TimeUtil.GetMethodTimeStart();
-        //        RandomTools randomTools = RandomUtil.GetRandom(seed, x, 1, z);
-        //        TimeUtil.GetMethodTimeEnd("1", stopwatch);
-
-        //        stopwatch = TimeUtil.GetMethodTimeStart();
-        //        int data = randomTools.NextInt(2);
-        //        TimeUtil.GetMethodTimeEnd("2", stopwatch);
-
-        //        //if (data == 0)
-        //        //{
-        //        //    GameObject obj = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-        //        //    obj.transform.position = new Vector3(x, 0, z);
-        //        //}
-
-        //    }
-        //}
-
-        for (int x = -10; x <= 10; x++)
+        WorldRandTools.Randomize(seed);
+        Stopwatch stopwatch = TimeUtil.GetMethodTimeStart();
+        for (int x = -100; x <= 100; x++)
         {
-            for (int z = -10; z <= 10; z++)
+            for (int z = -100; z <= 100; z++)
             {
-                Stopwatch stopwatch = TimeUtil.GetMethodTimeStart();
-                string dataRandomStr = (seed.ToString() + x.ToString() + z.ToString());
-                TimeUtil.GetMethodTimeEnd("1", stopwatch);
-
-                stopwatch = TimeUtil.GetMethodTimeStart();
-                int dataRandom = dataRandomStr.GetHashCode();
-                TimeUtil.GetMethodTimeEnd("2", stopwatch);
-
-                stopwatch = TimeUtil.GetMethodTimeStart();
-                System.Random random = new System.Random(dataRandom);
-                TimeUtil.GetMethodTimeEnd("3", stopwatch);
-
-                stopwatch = TimeUtil.GetMethodTimeStart();
-                int data = random.Next(0, 2);
-                TimeUtil.GetMethodTimeEnd("4", stopwatch);
-
-                if (data == 0)
+                RandomTools randomTools = RandomUtil.GetRandom(seed, x, 1, z);
+                for (int i = 0; i < 100; i++)
                 {
-                    GameObject obj = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-                    obj.transform.position = new Vector3(x, 0, z);
+                    int data = randomTools.NextInt(2);
                 }
+
+                //if (data == 0)
+                //{
+                //    GameObject obj = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+                //    obj.transform.position = new Vector3(x, 0, z);
+                //}
 
             }
         }
-
+        TimeUtil.GetMethodTimeEnd("1", stopwatch);
+        stopwatch = TimeUtil.GetMethodTimeStart();
+        for (int x = -100; x <= 100; x++)
+        {
+            for (int z = -100; z <= 100; z++)
+            {
+                for (int i=0;i<100;i++)
+                {
+                    float data = WorldRandTools.GetValue(new Vector3(x, 0, z));
+                }
+            }
+        }
+        TimeUtil.GetMethodTimeEnd("2", stopwatch);
     }
 
 

@@ -9,6 +9,8 @@ public class BiomeManager : BaseManager,IBiomeInfoView
 
     protected Dictionary<BiomeTypeEnum, BiomeInfoBean> dicBiomeInfo = new Dictionary<BiomeTypeEnum, BiomeInfoBean>();
 
+    public List<Biome> listBiomeForMain = new List<Biome>();
+
     public virtual void Awake()
     {
         controllerForBiome = new BiomeInfoController(this, this);

@@ -56,5 +56,5 @@ Material:
     - _Rotation: 0
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
-    - _Tint: {r: 0.6132076, g: 0.5929602, b: 0.5929602, a: 0.5}
+    - _Tint: {r: 0.0027777778, g: 0.02443751, b: 0.10626311, a: 1}
   m_BuildTextureStacks: []

@@ -44,8 +44,8 @@ public class BiomeForest : Biome
     {
         BiomeForTreeData treeData = new BiomeForTreeData
         {
-            addRateMin = 1,
-            addRateMax = 200,
+            addRateMin = 100,
+            addRateMax = 20000,
             minHeight = 6,
             maxHeight = 10,
             treeTrunk = BlockTypeEnum.Oak,
@@ -59,8 +59,8 @@ public class BiomeForest : Biome
     {
         BiomeForTreeData treeData = new BiomeForTreeData
         {
-            addRateMin = 1,
-            addRateMax = 2000,
+            addRateMin = 100,
+            addRateMax = 200000,
             minHeight = 30,
             maxHeight = 50,
             treeTrunk = BlockTypeEnum.Oak,
@@ -75,8 +75,8 @@ public class BiomeForest : Biome
     {
         BiomeForTreeData treeData = new BiomeForTreeData
         {
-            addRateMin = 1,
-            addRateMax = 50,
+            addRateMin = 100,
+            addRateMax = 5000,
             minHeight = 3,
             maxHeight = 6,
             treeTrunk = BlockTypeEnum.Oak,

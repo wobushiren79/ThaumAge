@@ -5,19 +5,12 @@ using UnityEngine;
 public class Sky : BaseMonoBehaviour
 {
     public GameObject objSun;
-
-    public Color sunColorStart;
-    public Color sunColorEnd;
-
     public GameObject objMoon;
 
-
-    public Color moonColorStart;
-    public Color moonColorEnd;
+    public Color mainLightStart;
+    public Color mainLightEnd;
 
     public float timeForAngle = 0;
-
-
 
     public void Update()
     {
@@ -51,16 +44,34 @@ public class Sky : BaseMonoBehaviour
         Quaternion rotate = Quaternion.AngleAxis(timeForAngle, new Vector3(1, 0, 1));
         transform.rotation = Quaternion.Lerp(transform.rotation, rotate, Time.deltaTime);
 
+        Light mainLight = LightHandler.Instance.manager.mainLight;
         //光照
         if (gameTime.hour >= 6 && gameTime.hour <= 18)
         {
-            //light.transform.position = objSun.transform.position;
-            //light.transform.eulerAngles = objSun.transform.eulerAngles;
+            mainLight.transform.position = objSun.transform.position;
+            mainLight.transform.eulerAngles = objSun.transform.eulerAngles;
         }
         else
         {
-            //light.transform.eulerAngles = objMoon.transform.eulerAngles;
-            //light.transform.position = objMoon.transform.position;
+            mainLight.transform.eulerAngles = objMoon.transform.eulerAngles;
+            mainLight.transform.position = objMoon.transform.position;
         }
+
+        float lerpColor;
+        Color lightColor;
+        if (gameTime.hour >= 0 && gameTime.hour < 12)
+        {
+            lerpColor = (gameTime.hour * 60 + gameTime.minute) / (float)(12 * 60);
+            lightColor = Color.Lerp(mainLightEnd, mainLightStart, lerpColor);
+        }
+        else
+        {
+            lerpColor = ((gameTime.hour - 12) * 60 + gameTime.minute) / (float)(12 * 60);
+            lightColor = Color.Lerp(mainLightStart, mainLightEnd, lerpColor);
+        }
+        //天空盒颜色
+        LightHandler.Instance.manager.SetSkyBoxColor(lightColor);
+        //设置主光照颜色
+        LightHandler.Instance.manager.SetMainLightColor(lightColor);
     }
 }
