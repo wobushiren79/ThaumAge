@@ -62,4 +62,8 @@ public class LightManager : BaseManager
         mainLight.color = color;
     }
 
+    public void SetData()
+    {
+        RenderSettings.
+    }
 }

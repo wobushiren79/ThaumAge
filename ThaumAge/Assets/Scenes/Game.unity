@@ -23,7 +23,7 @@ RenderSettings:
   m_AmbientSkyColor: {r: 0.212, g: 0.227, b: 0.259, a: 1}
   m_AmbientEquatorColor: {r: 0.114, g: 0.125, b: 0.133, a: 1}
   m_AmbientGroundColor: {r: 0.047, g: 0.043, b: 0.035, a: 1}
-  m_AmbientIntensity: 1
+  m_AmbientIntensity: 0.3
   m_AmbientMode: 0
   m_SubtractiveShadowColor: {r: 1, g: 1, b: 1, a: 1}
   m_SkyboxMaterial: {fileID: 2100000, guid: 34efd2e58712d2c4cb444736594e5f67, type: 2}
@@ -550,9 +550,10 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
-  listUpdateBlock: []
+  listUpdateDrawChunk: []
   widthChunk: 16
   heightChunk: 256
+  worldType: 0
   time: 0
 --- !u!114 &1623360059
 MonoBehaviour:
@@ -713,6 +714,18 @@ PrefabInstance:
     - target: {fileID: 7927601476835618168, guid: e037dc3a0e621a04c98e3b8942856735, type: 3}
       propertyPath: moonLight
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 7927601476835618168, guid: e037dc3a0e621a04c98e3b8942856735, type: 3}
+      propertyPath: mainLightEnd.b
+      value: 0.0754717
+      objectReference: {fileID: 0}
+    - target: {fileID: 7927601476835618168, guid: e037dc3a0e621a04c98e3b8942856735, type: 3}
+      propertyPath: mainLightEnd.g
+      value: 0.024712365
+      objectReference: {fileID: 0}
+    - target: {fileID: 7927601476835618168, guid: e037dc3a0e621a04c98e3b8942856735, type: 3}
+      propertyPath: mainLightEnd.r
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7927601476835618169, guid: e037dc3a0e621a04c98e3b8942856735, type: 3}
       propertyPath: m_Name
