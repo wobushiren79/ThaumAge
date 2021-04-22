@@ -203,7 +203,7 @@ public class Chunk : BaseMonoBehaviour
             callBack?.Invoke(this);
             return;
         }
-
+        isBake = true;
         await Task.Run(() =>
         {
             lock (this)
@@ -211,6 +211,7 @@ public class Chunk : BaseMonoBehaviour
                 //遍历chunk, 生成其中的每一个Block
                 try
                 {
+                   Stopwatch stopwatch= TimeUtil.GetMethodTimeStart();
                     chunkRenderData = new ChunkRenderData
                     {
                         //普通使用的三角形合集
@@ -255,6 +256,7 @@ public class Chunk : BaseMonoBehaviour
                 }
             }
         });
+        isBake = false;
         callBack?.Invoke(this);
     }
 
@@ -271,7 +273,7 @@ public class Chunk : BaseMonoBehaviour
 
             chunkMesh.subMeshCount = meshRenderer.materials.Length;
             //定点数判断
-            if (chunkRenderData.verts.Count <= 3)
+            if (chunkRenderData==null || chunkRenderData.verts.Count <= 3)
             {
                 return;
             }
@@ -392,19 +394,20 @@ public class Chunk : BaseMonoBehaviour
     {
         Vector3Int localPosition = blockData.localPosition.GetVector3Int();
         //首先移除方块
-        if (mapForBlock.TryGetValue(localPosition, out Block valueBlock))
-        {
-            mapForBlock.Remove(localPosition);
-        }
+
         //添加数据
         Block newBlock = BlockHandler.Instance.CreateBlock(this, blockData);
-        mapForBlock.Add(localPosition, newBlock);
+        if (mapForBlock.ContainsKey(localPosition))
+        {
+            mapForBlock[localPosition] = newBlock;
+        }
+
 
         //保存数据
         if (worldData != null && worldData.chunkData != null)
         {
             ChunkBean chunkData = worldData.chunkData;
-            if (chunkData.dicBlockData.TryGetValue(localPosition, out BlockBean valueBlockData))
+            if (chunkData.dicBlockData.ContainsKey(localPosition))
             {
                 chunkData.dicBlockData.Remove(localPosition);
             }

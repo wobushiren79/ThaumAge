@@ -42,22 +42,26 @@ public class BlockInfoBean : BaseBean
         return (BlockShapeEnum)shape;
     }
 
+    protected List<Vector2Int> listUVData = new List<Vector2Int>();
     /// <summary>
     /// 获取UV坐标点
     /// </summary>
     /// <returns></returns>
     public List<Vector2Int> GetUVPosition()
     {
-        List<Vector2Int> listData = new List<Vector2Int>();
-        if (CheckUtil.StringIsNull(uv_position))
-            return listData;
-        string[] uvArrary = StringUtil.SplitBySubstringForArrayStr(uv_position, '|');
-        for (int i = 0; i < uvArrary.Length; i++)
+        if (CheckUtil.ListIsNull(listUVData))
         {
-            string uvItemStr = uvArrary[i];
-            int[] uvPositionArray = StringUtil.SplitBySubstringForArrayInt(uvItemStr, ',');
-            listData.Add(new Vector2Int(uvPositionArray[0], uvPositionArray[1]));
+            listUVData = new List<Vector2Int>();
+            if (CheckUtil.StringIsNull(uv_position))
+                return listUVData;
+            string[] uvArrary = StringUtil.SplitBySubstringForArrayStr(uv_position, '|');
+            for (int i = 0; i < uvArrary.Length; i++)
+            {
+                string uvItemStr = uvArrary[i];
+                int[] uvPositionArray = StringUtil.SplitBySubstringForArrayInt(uvItemStr, ',');
+                listUVData.Add(new Vector2Int(uvPositionArray[0], uvPositionArray[1]));
+            }
         }
-        return listData;
+        return listUVData;
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using UnityEditor;
 using UnityEngine;
 public class BlockCube : Block
@@ -93,6 +94,7 @@ public class BlockCube : Block
         base.AddUVs(chunkData);
 
         List<Vector2Int> listData = blockInfo.GetUVPosition();
+
         Vector2 uvStartPosition;
         if (CheckUtil.ListIsNull(listData))
         {

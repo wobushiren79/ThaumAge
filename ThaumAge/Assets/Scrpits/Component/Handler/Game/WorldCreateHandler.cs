@@ -29,6 +29,8 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
         chunk.name = "Chunk_X:" + position.x + "_Y:" + position.y + "_Z:" + position.z;
         //设置数据
         chunk.SetData(position, manager.widthChunk, manager.heightChunk);
+        //添加区块
+        manager.AddChunk(position, chunk);
         //回调
         Action callBack = () =>
         {
@@ -38,8 +40,7 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
         };
         //生成方块数据
         manager.CreateChunkBlockDataForAsync(chunk, callBack);
-        //添加区块
-        manager.AddChunk(position, chunk);
+
     }
 
     /// <summary>

@@ -19,11 +19,11 @@ public class WorldCreateManager : BaseManager
     public Material[] arrayBlockMat = new Material[16];
 
     //所有待修改的方块
-    public List<BlockBean> listUpdateBlock = new List<BlockBean>();
+    public Queue<BlockBean> listUpdateBlock = new Queue<BlockBean>();
     //所有待修改的区块
     public Queue<Chunk> listUpdateChunk = new Queue<Chunk>();
     //待绘制的区块
-    public Queue<Chunk> listUpdateDrawChunk = new Queue<Chunk>();
+    public List<Chunk> listUpdateDrawChunk = new List<Chunk>();
 
     //世界种子
     protected int worldSeed;
@@ -72,7 +72,7 @@ public class WorldCreateManager : BaseManager
     {
         if (!listUpdateDrawChunk.Contains(chunk))
         {
-            listUpdateDrawChunk.Enqueue(chunk);
+            listUpdateDrawChunk.Add(chunk);
         }
     }
 
@@ -221,23 +221,20 @@ public class WorldCreateManager : BaseManager
 
         await Task.Run(() =>
         {
-            lock (this)
+            try
             {
-                try
-                {
-                    //生成基础地形数据
-                    HandleForBaseBlock(chunk);
-                    //处理更新方块
-                    HandleForUpdateBlock();
-                    //处理存档方块 优先使用存档方块
-                    HandleForLoadBlock(chunk, chunkPosition);
-                    isSuccessInit = true;
-                }
-                catch (Exception e)
-                {
-                    LogUtil.Log(e.ToString());
-                    isSuccessInit = false;
-                }
+                //生成基础地形数据
+                HandleForBaseBlock(chunk);
+                //处理更新方块
+                HandleForUpdateBlock();
+                //处理存档方块 优先使用存档方块
+                HandleForLoadBlock(chunk, chunkPosition);
+                isSuccessInit = true;
+            }
+            catch (Exception e)
+            {
+                LogUtil.Log(e.ToString());
+                isSuccessInit = false;
             }
         });
         if (!isSuccessInit)
@@ -245,7 +242,6 @@ public class WorldCreateManager : BaseManager
         callBack?.Invoke();
     }
 
-    int chunkUpdateNumber = 0;
 
     /// <summary>
     /// 处理 待更新区块
@@ -257,25 +253,32 @@ public class WorldCreateManager : BaseManager
             Chunk updateChunk = listUpdateChunk.Dequeue();
             if (updateChunk != null)
             {
-                chunkUpdateNumber++;
                 WorldCreateHandler.Instance.manager.AddUpdateDrawChunk(updateChunk);
                 //构建修改过的区块
                 updateChunk.BuildChunkForAsync((data) =>
                 {
-                    chunkUpdateNumber--;
+                    
                 });
             }
         }
         else
         {
-            if (listUpdateDrawChunk.Count > 0 && chunkUpdateNumber == 0)
+            if (listUpdateDrawChunk.Count > 0)
             {
-                Chunk updateDrawChunk = listUpdateDrawChunk.Dequeue();
+                Chunk updateDrawChunk = listUpdateDrawChunk[0];
                 if (updateDrawChunk != null)
                 {
-                    //构建修改过的区块
-                    updateDrawChunk.RefreshMesh();
+                    if (!updateDrawChunk.isBake)
+                    {
+                        //构建修改过的区块
+                        updateDrawChunk.RefreshMesh();
+                        listUpdateDrawChunk.RemoveAt(0);
+                    }
                 }
+                else
+                {
+                    listUpdateDrawChunk.RemoveAt(0);
+                }    
             }
         }
     }
@@ -324,9 +327,13 @@ public class WorldCreateManager : BaseManager
         if (listUpdateBlock.Count <= 0)
             return;
         //添加修改的方块信息，用于树木或建筑群等用于多个区块的数据
-        for (int i = 0; i < listUpdateBlock.Count; i++)
+        while (listUpdateBlock.Count > 0)
         {
-            BlockBean itemBlock = listUpdateBlock[i];
+            BlockBean itemBlock = listUpdateBlock.Dequeue();
+            if (itemBlock == null || itemBlock.worldPosition == null)
+            {
+                continue;
+            }
             Vector3Int positionBlockWorld = itemBlock.worldPosition.GetVector3Int();
             Chunk chunk = GetChunkForWorldPosition(positionBlockWorld);
             if (chunk != null)
@@ -338,11 +345,9 @@ public class WorldCreateManager : BaseManager
                 chunk.SetBlock(itemBlock, false, false, false);
                 //添加需要更新的chunk
                 AddUpdateChunk(chunk);
-                //从更新列表中移除
-                listUpdateBlock.Remove(itemBlock);
-                i--;
             }
         }
+       
     }
 
     /// <summary>
