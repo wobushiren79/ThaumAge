@@ -409,9 +409,8 @@ public class Chunk : BaseMonoBehaviour
             ChunkBean chunkData = worldData.chunkData;
             if (chunkData.dicBlockData.ContainsKey(localPosition))
             {
-                chunkData.dicBlockData.Remove(localPosition);
+                chunkData.dicBlockData[localPosition]= newBlock.blockData;
             }
-            chunkData.dicBlockData.Add(localPosition, newBlock.blockData);
         }
 
         //刷新六个方向的方块

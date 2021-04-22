@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using UnityEditor;
@@ -19,9 +21,9 @@ public class WorldCreateManager : BaseManager
     public Material[] arrayBlockMat = new Material[16];
 
     //所有待修改的方块
-    public Queue<BlockBean> listUpdateBlock = new Queue<BlockBean>();
+    public ConcurrentQueue<BlockBean> listUpdateBlock = new ConcurrentQueue<BlockBean>();
     //所有待修改的区块
-    public Queue<Chunk> listUpdateChunk = new Queue<Chunk>();
+    public ConcurrentQueue<Chunk> listUpdateChunk = new ConcurrentQueue<Chunk>();
     //待绘制的区块
     public List<Chunk> listUpdateDrawChunk = new List<Chunk>();
 
@@ -250,15 +252,14 @@ public class WorldCreateManager : BaseManager
     {
         if (listUpdateChunk.Count > 0)
         {
-            Chunk updateChunk = listUpdateChunk.Dequeue();
-            if (updateChunk != null)
+            if (listUpdateChunk.TryDequeue(out Chunk updateChunk)) 
             {
-                WorldCreateHandler.Instance.manager.AddUpdateDrawChunk(updateChunk);
-                //构建修改过的区块
-                updateChunk.BuildChunkForAsync((data) =>
+                if (updateChunk != null)
                 {
-                    
-                });
+                    WorldCreateHandler.Instance.manager.AddUpdateDrawChunk(updateChunk);
+                    //构建修改过的区块
+                    updateChunk.BuildChunkForAsync(null);
+                }
             }
         }
         else
@@ -329,23 +330,25 @@ public class WorldCreateManager : BaseManager
         //添加修改的方块信息，用于树木或建筑群等用于多个区块的数据
         while (listUpdateBlock.Count > 0)
         {
-            BlockBean itemBlock = listUpdateBlock.Dequeue();
-            if (itemBlock == null || itemBlock.worldPosition == null)
+            if (listUpdateBlock.TryDequeue(out BlockBean itemBlock))
             {
-                continue;
-            }
-            Vector3Int positionBlockWorld = itemBlock.worldPosition.GetVector3Int();
-            Chunk chunk = GetChunkForWorldPosition(positionBlockWorld);
-            if (chunk != null)
-            {
-                Vector3Int positionBlockLocal = itemBlock.worldPosition.GetVector3Int() - chunk.worldPosition;
-                //需要重新设置一下本地坐标 之前没有记录本地坐标
-                itemBlock.localPosition = new Vector3IntBean(positionBlockLocal);
-                //设置方块
-                chunk.SetBlock(itemBlock, false, false, false);
-                //添加需要更新的chunk
-                AddUpdateChunk(chunk);
-            }
+                if (itemBlock == null || itemBlock.worldPosition == null)
+                {
+                    continue;
+                }
+                Vector3Int positionBlockWorld = itemBlock.worldPosition.GetVector3Int();
+                Chunk chunk = GetChunkForWorldPosition(positionBlockWorld);
+                if (chunk != null)
+                {
+                    Vector3Int positionBlockLocal = itemBlock.worldPosition.GetVector3Int() - chunk.worldPosition;
+                    //需要重新设置一下本地坐标 之前没有记录本地坐标
+                    itemBlock.localPosition = new Vector3IntBean(positionBlockLocal);
+                    //设置方块
+                    chunk.SetBlock(itemBlock, false, false, false);
+                    //添加需要更新的chunk
+                    AddUpdateChunk(chunk);
+                }
+            }  
         }
        
     }

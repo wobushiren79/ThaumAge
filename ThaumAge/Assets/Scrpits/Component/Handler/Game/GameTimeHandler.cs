@@ -3,11 +3,14 @@ using UnityEngine;
 
 public class GameTimeHandler : BaseHandler<GameTimeHandler, GameTimeManager>
 {
+    public float timeScale = 1;
+
     protected float timeOffset = 0;
     protected float timeOffsetForUnscaled = 0;
 
     public void Update()
     {
+        Time.timeScale = timeScale;
         //受缩放时间影响
         if (timeOffset >= 1)
         {
