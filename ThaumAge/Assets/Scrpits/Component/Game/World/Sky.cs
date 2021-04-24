@@ -45,17 +45,24 @@ public class Sky : BaseMonoBehaviour
         transform.rotation = Quaternion.Lerp(transform.rotation, rotate, Time.deltaTime);
 
         Light mainLight = LightHandler.Instance.manager.mainLight;
+
+        Vector3 mainLightPosition;
+        Vector3 mainLightAnagles;
+
         //光照
         if (gameTime.hour >= 6 && gameTime.hour <= 18)
         {
-            mainLight.transform.position = objSun.transform.position;
-            mainLight.transform.eulerAngles = objSun.transform.eulerAngles;
+            mainLightPosition = objSun.transform.position;
+            mainLightAnagles = objSun.transform.eulerAngles;
         }
         else
         {
-            mainLight.transform.eulerAngles = objMoon.transform.eulerAngles;
-            mainLight.transform.position = objMoon.transform.position;
+            mainLightPosition = objMoon.transform.position;
+            mainLightAnagles = objMoon.transform.eulerAngles;
         }
+
+        mainLight.transform.position = Vector3.Lerp(mainLight.transform.position, mainLightPosition, Time.deltaTime);
+        mainLight.transform.eulerAngles = Vector3.Lerp(mainLight.transform.eulerAngles, mainLightAnagles, Time.deltaTime);
 
         float lerpColor;
         Color lightColor;
@@ -73,5 +80,7 @@ public class Sky : BaseMonoBehaviour
         LightHandler.Instance.manager.SetSkyBoxColor(lightColor);
         //设置主光照颜色
         LightHandler.Instance.manager.SetMainLightColor(lightColor);
+        //设置环境光颜色
+        LightHandler.Instance.manager.SetAmbientLight(lightColor * 0.7f);
     }
 }

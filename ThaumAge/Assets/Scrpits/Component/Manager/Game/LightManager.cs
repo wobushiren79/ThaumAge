@@ -62,4 +62,13 @@ public class LightManager : BaseManager
         mainLight.color = color;
     }
 
+    /// <summary>
+    /// 设置环境光
+    /// </summary>
+    /// <param name="color"></param>
+    public void SetAmbientLight(Color color)
+    {
+        RenderSettings.ambientLight = color;
+    }
+
 }

@@ -21,11 +21,11 @@ public class WorldCreateManager : BaseManager
     public Material[] arrayBlockMat = new Material[16];
 
     //所有待修改的方块
-    public ConcurrentQueue<BlockBean> listUpdateBlock = new ConcurrentQueue<BlockBean>();
+    protected ConcurrentQueue<BlockBean> listUpdateBlock = new ConcurrentQueue<BlockBean>();
     //所有待修改的区块
-    public ConcurrentQueue<Chunk> listUpdateChunk = new ConcurrentQueue<Chunk>();
+    protected ConcurrentQueue<Chunk> listUpdateChunk = new ConcurrentQueue<Chunk>();
     //待绘制的区块
-    public List<Chunk> listUpdateDrawChunk = new List<Chunk>();
+    protected List<Chunk> listUpdateDrawChunk = new List<Chunk>();
 
     //世界种子
     protected int worldSeed;
@@ -55,6 +55,15 @@ public class WorldCreateManager : BaseManager
     }
 
     /// <summary>
+    /// 增加区域
+    /// </summary>
+    /// <param name="chunk"></param>
+    public void AddChunk(Vector3Int position, Chunk chunk)
+    {
+        dicChunk.Add(position, chunk);
+    }
+
+    /// <summary>
     /// 增加需要更新的区块
     /// </summary>
     /// <param name="chunk"></param>
@@ -76,6 +85,15 @@ public class WorldCreateManager : BaseManager
         {
             listUpdateDrawChunk.Add(chunk);
         }
+    }
+
+    /// <summary>
+    /// 增加需要更新的方块
+    /// </summary>
+    /// <param name="blockData"></param>
+    public void AddUpdateBlock(BlockBean blockData)
+    {
+        listUpdateBlock.Enqueue(blockData);
     }
 
     /// <summary>
@@ -113,6 +131,12 @@ public class WorldCreateManager : BaseManager
 
     public Chunk GetChunkForWorldPosition(Vector3Int pos)
     {
+        Vector3Int chunkPosition = GetChunkPositionForWorldPosition(pos);
+        return GetChunk(chunkPosition);
+    }
+
+    public Vector3Int GetChunkPositionForWorldPosition(Vector3Int pos)
+    {
         int halfWidth = widthChunk / 2;
         int posX;
         int posZ;
@@ -132,7 +156,7 @@ public class WorldCreateManager : BaseManager
         {
             posZ = Mathf.FloorToInt((pos.z + halfWidth) / widthChunk) * widthChunk;
         }
-        return GetChunk(new Vector3Int(posX, 0, posZ));
+        return new Vector3Int(posX, 0, posZ);
     }
 
     /// <summary>
@@ -196,14 +220,6 @@ public class WorldCreateManager : BaseManager
         WorldRandTools.Randomize(worldSeed);
     }
 
-    /// <summary>
-    /// 增加区域
-    /// </summary>
-    /// <param name="chunk"></param>
-    public void AddChunk(Vector3Int position, Chunk chunk)
-    {
-        dicChunk.Add(position, chunk);
-    }
 
     /// <summary>
     /// 异步创建区块方块数据
@@ -252,7 +268,7 @@ public class WorldCreateManager : BaseManager
     {
         if (listUpdateChunk.Count > 0)
         {
-            if (listUpdateChunk.TryDequeue(out Chunk updateChunk)) 
+            if (listUpdateChunk.TryDequeue(out Chunk updateChunk))
             {
                 if (updateChunk != null)
                 {
@@ -279,7 +295,7 @@ public class WorldCreateManager : BaseManager
                 else
                 {
                     listUpdateDrawChunk.RemoveAt(0);
-                }    
+                }
             }
         }
     }
@@ -325,12 +341,11 @@ public class WorldCreateManager : BaseManager
     /// </summary>
     public void HandleForUpdateBlock()
     {
-        if (listUpdateBlock.Count <= 0)
-            return;
         //添加修改的方块信息，用于树木或建筑群等用于多个区块的数据
-        while (listUpdateBlock.Count > 0)
+        lock (this)
         {
-            if (listUpdateBlock.TryDequeue(out BlockBean itemBlock))
+            List<BlockBean> listNoChunkBlock = new List<BlockBean>();
+            while (listUpdateBlock.TryDequeue(out BlockBean itemBlock))
             {
                 if (itemBlock == null || itemBlock.worldPosition == null)
                 {
@@ -348,9 +363,16 @@ public class WorldCreateManager : BaseManager
                     //添加需要更新的chunk
                     AddUpdateChunk(chunk);
                 }
-            }  
+                else
+                {
+                    listNoChunkBlock.Add(itemBlock);
+                }
+            }
+            for (int i = 0; i < listNoChunkBlock.Count; i++)
+            {
+                listUpdateBlock.Enqueue(listNoChunkBlock[i]);
+            }
         }
-       
     }
 
     /// <summary>

@@ -47,7 +47,7 @@ public class BiomePrairie : Biome
             addRateMax = 500,
             minHeight = 4,
             maxHeight = 7,
-            treeTrunk = BlockTypeEnum.Oak,
+            treeTrunk = BlockTypeEnum.TreeOak,
             treeLeaves = BlockTypeEnum.LeavesOak,
             leavesRange = 2,
         };

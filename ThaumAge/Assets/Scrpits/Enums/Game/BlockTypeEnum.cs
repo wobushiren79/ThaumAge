@@ -7,8 +7,13 @@ public enum BlockTypeEnum
     Dirt = 4,    //泥土
     Stone = 5,    //石头
 
-    Oak = 1001,//橡木
-    LeavesOak = 2001,    //橡木叶子
+    TreeOak = 1001,//橡木
+    TreeSilver = 1002,//银树
+    TreeWorld = 1003,//世界树
+
+    LeavesOak = 2001, //橡木叶子
+    LeavesSilver = 2002,//银树叶子
+    LeavesWorld = 2003,//世界树叶子
 
     Weed_Long = 3001,    //杂草长
     Weed_Normal = 3002,    //杂草中等

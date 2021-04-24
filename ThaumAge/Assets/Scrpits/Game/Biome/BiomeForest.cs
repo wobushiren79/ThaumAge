@@ -48,7 +48,7 @@ public class BiomeForest : Biome
             addRateMax = 20000,
             minHeight = 6,
             maxHeight = 10,
-            treeTrunk = BlockTypeEnum.Oak,
+            treeTrunk = BlockTypeEnum.TreeOak,
             treeLeaves = BlockTypeEnum.LeavesOak,
             leavesRange = 4,
         };
@@ -63,7 +63,7 @@ public class BiomeForest : Biome
             addRateMax = 200000,
             minHeight = 30,
             maxHeight = 50,
-            treeTrunk = BlockTypeEnum.Oak,
+            treeTrunk = BlockTypeEnum.TreeOak,
             treeLeaves = BlockTypeEnum.LeavesOak,
             leavesRange = 4,
             trunkRange = 3,
@@ -79,7 +79,7 @@ public class BiomeForest : Biome
             addRateMax = 5000,
             minHeight = 3,
             maxHeight = 6,
-            treeTrunk = BlockTypeEnum.Oak,
+            treeTrunk = BlockTypeEnum.TreeOak,
             treeLeaves = BlockTypeEnum.LeavesOak,
             leavesRange = 2,
         };
