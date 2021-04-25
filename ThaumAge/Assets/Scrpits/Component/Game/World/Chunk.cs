@@ -129,6 +129,15 @@ public class Chunk : BaseMonoBehaviour
     }
 
     /// <summary>
+    /// 获取存储数据
+    /// </summary>
+    /// <returns></returns>
+    public WorldDataBean GetWorldData()
+    {
+        return worldData;
+    }
+
+    /// <summary>
     /// 设置数据
     /// </summary>
     /// <param name="mapForBlock"></param>

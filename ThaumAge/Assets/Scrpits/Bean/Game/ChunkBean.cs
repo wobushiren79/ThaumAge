@@ -37,4 +37,13 @@ public class ChunkBean
 
         }
     }
+
+    public BlockBean GetBlockData(Vector3Int localPosition)
+    {
+        if(dicBlockData.TryGetValue(localPosition,out BlockBean blockData))
+        {
+            return blockData;     
+        }
+        return null;
+    }
 }
