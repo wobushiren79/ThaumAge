@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using UnityEditor;
 using UnityEngine;
+
 public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateManager>
 {
     /// <summary>
@@ -13,7 +11,7 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
     /// <param name="width"></param>
     /// <param name="height"></param>
     /// <param name="minHeight"></param>
-    public void CreateChunk(Vector3Int position)
+    public void CreateChunk(Vector3Int position, Action callback)
     {
         //检测当前位置是否有区块
         Chunk chunk = manager.GetChunk(position);
@@ -37,6 +35,8 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
             chunk.SetInitState(true);
             //设置数据
             chunk.BuildChunkRangeForAsync();
+
+            callback?.Invoke();
         };
         //生成方块数据
         manager.CreateChunkBlockDataForAsync(chunk, callBack);
@@ -46,18 +46,26 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
     /// <summary>
     /// 根据中心位置创建区域chunk
     /// </summary>
-    /// <param name="worldSeed"></param>
     /// <param name="centerPosition"></param>
     /// <param name="range"></param>
-    public void CreateChunkForRange(Vector3Int centerPosition, int range)
+    /// <param name="callback"></param>
+    public void CreateChunkForRangeForCenterPosition(Vector3Int centerPosition, int range, Action callback)
     {
         Vector3Int startPosition = -manager.widthChunk * range * new Vector3Int(1, 0, 1) + centerPosition;
         Vector3Int currentPosition = startPosition;
+        int totalNumber = 0;
         for (int i = 0; i <= range * 2; i++)
         {
             for (int f = 0; f <= range * 2; f++)
             {
-                CreateChunk(currentPosition);
+                CreateChunk(currentPosition, () =>
+                 {
+                     totalNumber++;
+                     if (totalNumber >= (range * 2 + 1) * (range * 2 + 1))
+                     {
+                         callback?.Invoke();
+                     }
+                 });
                 currentPosition += new Vector3Int(0, 0, manager.widthChunk);
             }
             currentPosition.z = startPosition.z;
@@ -65,12 +73,12 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
         }
     }
 
-    public void CreateChunkForRange(Vector3 position, int range)
+    public void CreateChunkForRangeForWorldPostion(Vector3 position, int range, Action callback)
     {
         int positionX = (int)(position.x / manager.widthChunk) * manager.widthChunk;
         int positionZ = (int)(position.z / manager.widthChunk) * manager.widthChunk;
         Vector3Int centerPosition = new Vector3Int(positionX, 0, positionZ);
-        CreateChunkForRange(centerPosition, range);
+        CreateChunkForRangeForCenterPosition(centerPosition, range, callback);
     }
 
 }
