@@ -9,6 +9,7 @@ public enum NatureTypeEnum
     Water,//水
     Fire,//火
     Earth,//土
+
     Light,//光
     Dark,//暗
 }

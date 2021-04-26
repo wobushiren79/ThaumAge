@@ -6,6 +6,7 @@ TagManager:
   tags:
   - GameControl
   - MainLight
+  - Clouds
   layers:
   - Default
   - TransparentFX
