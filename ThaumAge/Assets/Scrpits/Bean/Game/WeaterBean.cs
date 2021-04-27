@@ -6,6 +6,7 @@ using UnityEngine;
 public class WeatherBean 
 {
     public int weatherType;
+    public float timeForWeather;
     public float timeMaxForWeather;
 
     public WeatherTypeEnum GetWeatherType()

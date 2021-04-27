@@ -51,6 +51,33 @@ public class BiomeManager : BaseManager,IBiomeInfoView
         return GetBiomeInfo((BiomeTypeEnum)biomeId);
     }
 
+    /// <summary>
+    /// 根据世界类型获取生态数据
+    /// </summary>
+    /// <param name="worldType"></param>
+    /// <returns></returns>
+    public List<Biome> GetBiomeListByWorldType(WorldTypeEnum worldType)
+    {
+        List<Biome> listBiome = new List<Biome>();
+        switch (worldType)
+        {
+            case WorldTypeEnum.Main:
+                if (CheckUtil.ListIsNull(listBiomeForMain))
+                {
+                    listBiomeForMain.Add(new BiomePrairie());
+                    listBiomeForMain.Add(new BiomeForest());
+                    listBiomeForMain.Add(new BiomeDesert());
+                    listBiomeForMain.Add(new BiomeMagicForest());
+                    listBiomeForMain.Add(new BiomeVolcano());
+                    listBiomeForMain.Add(new BiomeMountain());
+                    listBiomeForMain.Add(new BiomeOcean());
+                }
+                listBiome = listBiomeForMain;
+                break;
+        }
+        return listBiome;
+    }
+
     #region 方块数据回调
     public void GetBiomeInfoSuccess<T>(T data, Action<T> action)
     {

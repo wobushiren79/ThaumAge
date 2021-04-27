@@ -1,10 +1,9 @@
-﻿using UnityEditor;
+﻿using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 public class WeatherHandler : BaseHandler<WeatherHandler, WeatherManager>
 {
-    public float timeForWeather = 0;
-
     private void Update()
     {
         if (GameHandler.Instance.manager.GetGameState() == GameStateEnum.Gaming)
@@ -15,13 +14,17 @@ public class WeatherHandler : BaseHandler<WeatherHandler, WeatherManager>
 
     public void HandleForWeather()
     {
-        WeatherBean weatherData = manager.GetWeatherData();
-        timeForWeather -= Time.deltaTime;
-        if (timeForWeather <= 0)
+        WeatherBase weather = manager.GetWeather();
+        weather.weatherData.timeForWeather -= Time.deltaTime;
+        if (weather.weatherData.timeForWeather <= 0)
         {
-
-            timeForWeather = weatherData.timeMaxForWeather;
+            //根据世界类型获取天气
+            List<WeatherTypeEnum> weatherTypes = manager.GetWeatherTypeListByWorldType(WorldTypeEnum.Main);
+            ChangeWeather(RandomUtil.GetRandomDataByList(weatherTypes), 2000);
+            SystemUtil.GCCollect();
         }
+        //天气更新
+        weather.Update();
     }
 
     /// <summary>
@@ -33,6 +36,7 @@ public class WeatherHandler : BaseHandler<WeatherHandler, WeatherManager>
     {
         WeatherBean weatherData = new WeatherBean();
         weatherData.SetWeatherType(weatherType);
+        weatherData.timeForWeather = timeMaxForWeather;
         weatherData.timeMaxForWeather = timeMaxForWeather;
         manager.SetWeatherData(weatherData);
     }

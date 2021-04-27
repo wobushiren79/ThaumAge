@@ -75,14 +75,14 @@ public class Chunk : BaseMonoBehaviour
         chunkMeshCollider.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
         chunkMeshTrigger.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
 
-        //设置mesh的三角形上限
-        meshFilter.sharedMesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
-        meshCollider.sharedMesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
-        meshTrigger.sharedMesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
-
         meshFilter.mesh = chunkMesh;
         meshCollider.sharedMesh = chunkMeshCollider;
         meshTrigger.sharedMesh = chunkMeshTrigger;
+
+        //设置mesh的三角形上限
+        meshFilter.mesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
+        meshCollider.sharedMesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
+        meshTrigger.sharedMesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
     }
 
     protected float eventUpdateTime = 0;

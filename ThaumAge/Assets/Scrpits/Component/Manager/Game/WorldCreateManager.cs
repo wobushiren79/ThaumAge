@@ -8,6 +8,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
+using Pathfinding;
 
 public class WorldCreateManager : BaseManager
 {
@@ -26,12 +27,15 @@ public class WorldCreateManager : BaseManager
     protected ConcurrentQueue<Chunk> listUpdateChunk = new ConcurrentQueue<Chunk>();
     //待绘制的区块
     protected List<Chunk> listUpdateDrawChunk = new List<Chunk>();
-
+    
     //世界种子
     protected int worldSeed;
 
     public int widthChunk = 16;
     public int heightChunk = 256;
+    //世界范围
+    public int worldRefreshRange = 1;
+
     public WorldTypeEnum worldType = WorldTypeEnum.Main;
 
     public float time;
@@ -53,7 +57,6 @@ public class WorldCreateManager : BaseManager
     {
         if (GameHandler.Instance.manager.GetGameState() == GameStateEnum.Gaming)
         {
-            HandleForUpdateBlock();
             HandleForUpdateChunk();
         }
     }
@@ -240,23 +243,18 @@ public class WorldCreateManager : BaseManager
         BlockManager blockManager = BlockHandler.Instance.manager;
         GameDataManager gameDataManager = GameDataHandler.Instance.manager;
 
-        Vector3Int chunkPosition = Vector3Int.CeilToInt(chunk.transform.position);
-
         await Task.Run(() =>
         {
-            lock (this)
+            try
             {
-                try
-                {
-                    //生成基础地形数据
-                    HandleForBaseBlock(chunk);
-                    //处理存档方块 优先使用存档方块
-                    HandleForLoadBlock(chunk, chunkPosition);
-                }
-                catch (Exception e)
-                {
-                    LogUtil.Log(e.ToString());
-                }
+                //生成基础地形数据
+                HandleForBaseBlock(chunk);
+                //处理存档方块 优先使用存档方块
+                HandleForLoadBlock(chunk);
+            }
+            catch (Exception e)
+            {
+                LogUtil.Log(e.ToString());
             }
         });
         callBack?.Invoke();
@@ -310,7 +308,7 @@ public class WorldCreateManager : BaseManager
     {
         int halfWidth = widthChunk / 2;
         //获取该世界的所有生态
-        List<Biome> listBiome = BiomeHandler.Instance.GetBiomeListByWorldType(worldType);
+        List<Biome> listBiome = BiomeHandler.Instance.manager.GetBiomeListByWorldType(worldType);
         //获取一定范围内的生态点
         List<Vector3Int> listBiomeCenter = BiomeHandler.Instance.GetBiomeCenterPosition(chunk, 5, 10);
 
@@ -338,19 +336,15 @@ public class WorldCreateManager : BaseManager
         }
     }
 
-    public bool isUpdateBlocking = false;
-
     /// <summary>
     /// 处理 更新方块
     /// </summary>
     public async void HandleForUpdateBlock()
     {
-        if (isUpdateBlocking || listUpdateBlock.Count <= 0)
+        if (listUpdateBlock.Count <= 0)
             return;
-        isUpdateBlocking = true;
         await Task.Run(() =>
         {
-            Thread.Sleep(1000);
             lock (this)
             {
                 List<BlockBean> listNoChunkBlock = new List<BlockBean>();
@@ -389,21 +383,19 @@ public class WorldCreateManager : BaseManager
                     AddUpdateBlock(listNoChunkBlock[i]);
                 }
             }
-
         });
-        isUpdateBlocking = false;
     }
 
     /// <summary>
     /// 处理 读取的方块
     /// </summary>
-    public void HandleForLoadBlock(Chunk chunk, Vector3Int chunkPosition)
+    public void HandleForLoadBlock(Chunk chunk)
     {
         GameDataManager gameDataManager = GameDataHandler.Instance.manager;
         //获取数据中的chunk
         UserDataBean userData = gameDataManager.GetUserData();
 
-        WorldDataBean worldData = gameDataManager.GetWorldData(userData.userId, WorldTypeEnum.Main, chunkPosition);
+        WorldDataBean worldData = gameDataManager.GetWorldData(userData.userId, WorldTypeEnum.Main, chunk.worldPosition);
 
         //如果没有世界数据 则创建一个
         if (worldData == null)
@@ -422,7 +414,7 @@ public class WorldCreateManager : BaseManager
         else
         {
             worldData.chunkData = new ChunkBean();
-            worldData.chunkData.position = new Vector3IntBean(chunkPosition);
+            worldData.chunkData.position = new Vector3IntBean(chunk.worldPosition);
         }
         foreach (var itemData in dicBlockData)
         {

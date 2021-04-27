@@ -11,7 +11,6 @@ public class Player : BaseMonoBehaviour
         if (timeForWorldUpdate <= 0)
         {
             timeForWorldUpdate = 0.2f;
-            HandleForWorldUpdate();
             HandleForBeyondBorder();
             HandleForColliderTrigger();
         }
@@ -22,16 +21,6 @@ public class Player : BaseMonoBehaviour
 
     }
 
-    /// <summary>
-    /// 处理-世界刷新
-    /// </summary>
-    public void HandleForWorldUpdate()
-    {
-        WorldCreateHandler.Instance.CreateChunkForRangeForWorldPostion(transform.position, 3,()=> 
-        {
-
-        });
-    }
 
     /// <summary>
     /// 处理超出边界

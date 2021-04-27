@@ -3,6 +3,29 @@ using UnityEngine;
 
 public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateManager>
 {
+    protected float timeForWorldUpdate = 0;
+
+    protected void Update()
+    {
+        timeForWorldUpdate -= Time.deltaTime;
+        if (timeForWorldUpdate <= 0)
+        {
+            timeForWorldUpdate = 0.2f;
+            HandleForWorldUpdate();
+        }
+    }
+
+    /// <summary>
+    /// 处理-世界刷新
+    /// </summary>
+    public void HandleForWorldUpdate()
+    {
+        CreateChunkForRangeForWorldPostion(transform.position, manager.worldRefreshRange, () =>
+        {
+
+        });
+    }
+
     /// <summary>
     /// 建造区块
     /// </summary>
@@ -32,11 +55,12 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
         //回调
         Action callBack = () =>
         {
-            chunk.SetInitState(true);
             //设置数据
             chunk.BuildChunkRangeForAsync();
-
+            //设置回调
             callback?.Invoke();
+            //初始化完毕
+            chunk.SetInitState(true);
         };
         //生成方块数据
         manager.CreateChunkBlockDataForAsync(chunk, callBack);
@@ -51,6 +75,8 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
     /// <param name="callback"></param>
     public void CreateChunkForRangeForCenterPosition(Vector3Int centerPosition, int range, Action callback)
     {
+        manager.worldRefreshRange = range;
+
         Vector3Int startPosition = -manager.widthChunk * range * new Vector3Int(1, 0, 1) + centerPosition;
         Vector3Int currentPosition = startPosition;
         int totalNumber = 0;
@@ -59,10 +85,11 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
             for (int f = 0; f <= range * 2; f++)
             {
                 CreateChunk(currentPosition, () =>
-                 {
+                {
                      totalNumber++;
                      if (totalNumber >= (range * 2 + 1) * (range * 2 + 1))
                      {
+                         manager.HandleForUpdateBlock();
                          callback?.Invoke();
                      }
                  });

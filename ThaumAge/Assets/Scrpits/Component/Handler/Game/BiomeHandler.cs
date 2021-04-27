@@ -156,32 +156,7 @@ public class BiomeHandler : BaseHandler<BiomeHandler, BiomeManager>
         return listData;
     }
 
-    /// <summary>
-    /// 根据世界类型获取生态数据
-    /// </summary>
-    /// <param name="worldType"></param>
-    /// <returns></returns>
-    public List<Biome> GetBiomeListByWorldType(WorldTypeEnum worldType)
-    {
-        List<Biome> listBiome = new List<Biome>();
-        switch (worldType)
-        {
-            case WorldTypeEnum.Main:
-                if(CheckUtil.ListIsNull(manager.listBiomeForMain))
-                {
-                    manager.listBiomeForMain.Add(new BiomePrairie());
-                    manager.listBiomeForMain.Add(new BiomeForest());
-                    manager.listBiomeForMain.Add(new BiomeDesert());
-                    manager.listBiomeForMain.Add(new BiomeMagicForest());
-                    manager.listBiomeForMain.Add(new BiomeVolcano());
-                    manager.listBiomeForMain.Add(new BiomeMountain());
-                    manager.listBiomeForMain.Add(new BiomeOcean());
-                }
-                listBiome = manager.listBiomeForMain;
-                break;
-        }
-        return listBiome;
-    }
+
 
 
 }

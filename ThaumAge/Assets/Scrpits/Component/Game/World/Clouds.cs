@@ -59,7 +59,7 @@ public class Clouds : BaseMonoBehaviour
         materialForCloud.color = lerpColorCloud;
     }
 
-    public void CreateCloud(Vector3 startPosition, Vector3 size)
+    public void CreateCloud(Vector3 startPosition, Vector3 size,Color colorClouds)
     {
         GameObject objCloud;
         if (listHideCloudObj.Count > 0)
@@ -71,8 +71,11 @@ public class Clouds : BaseMonoBehaviour
         {
             objCloud = Instantiate(gameObject, objCloudModel);
         }
-        objCloud.transform.position = startPosition;
+        listShowCloudObj.Add(objCloud);
+        objCloud.transform.position = new Vector3(startPosition.x, heightForCloud, startPosition.z);
         objCloud.transform.localScale = size;
+
+        ChangeCloudsColor(colorClouds);
     }
 
     public void ChangeCloudsColor(Color color)
