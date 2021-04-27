@@ -6,8 +6,7 @@ public class Clouds : BaseMonoBehaviour
 {
     //高度
     public int heightForCloud = 200;
-    //范围
-    public float rangeForHide = 100;
+
     //速度
     public float speedForCloud = 1;
     //颜色
@@ -15,6 +14,8 @@ public class Clouds : BaseMonoBehaviour
     //模型
     public GameObject objCloudModel;
 
+    //范围
+    protected float rangeForHide = 500;
     //材质
     protected Material materialForCloud;
 
@@ -59,7 +60,7 @@ public class Clouds : BaseMonoBehaviour
         materialForCloud.color = lerpColorCloud;
     }
 
-    public void CreateCloud(Vector3 startPosition, Vector3 size,Color colorClouds)
+    public void CreateCloud(Vector3 size,Color colorClouds)
     {
         GameObject objCloud;
         if (listHideCloudObj.Count > 0)
@@ -72,6 +73,8 @@ public class Clouds : BaseMonoBehaviour
             objCloud = Instantiate(gameObject, objCloudModel);
         }
         listShowCloudObj.Add(objCloud);
+        
+        Vector3 startPosition = GameHandler.Instance.manager.player.transform.position + new Vector3(rangeForHide, 0, Random.Range(-rangeForHide, rangeForHide));
         objCloud.transform.position = new Vector3(startPosition.x, heightForCloud, startPosition.z);
         objCloud.transform.localScale = size;
 

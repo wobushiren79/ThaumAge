@@ -19,9 +19,8 @@ public class WeatherBase
 
     public virtual void CreateClouds(Color colorCloud, int minSize, int maxSize)
     {
-        Vector3 startPosition = GameHandler.Instance.manager.player.transform.position + new Vector3(100, 0, Random.Range(-100, 100));
         Vector3 size = new Vector3(Random.Range(minSize, maxSize), 1, Random.Range(minSize, maxSize));
-        WeatherHandler.Instance.manager.clouds.CreateCloud(startPosition, size, colorCloud);
+        WeatherHandler.Instance.manager.clouds.CreateCloud(size, colorCloud);
         timeForCloud = timeMaxForCloud;
     }
 }

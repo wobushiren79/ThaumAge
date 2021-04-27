@@ -16,7 +16,7 @@ public class WeatherRain : WeatherBase
         timeForCloud -= Time.deltaTime;
         if (timeForCloud <= 0)
         {
-            CreateClouds(new Color(0, 0, 0, 0.5f), 10, 30);
+            CreateClouds(new Color(0, 0, 0, 0.5f), 15, 50);
             timeForCloud = timeMaxForCloud;
         }
     }

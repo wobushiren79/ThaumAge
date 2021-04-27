@@ -20,7 +20,7 @@ public class WeatherCloudy : WeatherBase
         timeForCloud -= Time.deltaTime;
         if (timeForCloud <= 0)
         {
-            CreateClouds(new Color(1, 1, 1, 0.5f), 10, 30);
+            CreateClouds(new Color(1, 1, 1, 0.5f), 15, 50);
             timeForCloud = timeMaxForCloud;
         }
     }
