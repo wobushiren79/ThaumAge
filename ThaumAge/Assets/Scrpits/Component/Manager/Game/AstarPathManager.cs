@@ -5,6 +5,20 @@ using UnityEngine;
 
 public class AstarPathManager : BaseManager
 {
+    protected ProceduralGridMover _proceduralGridMover;
+
+    public ProceduralGridMover proceduralGridMover
+    {
+        get
+        {
+            if (_proceduralGridMover == null)
+            {
+                _proceduralGridMover = FindWithTag<ProceduralGridMover>(TagInfo.Tag_AstarPath);
+            }
+            return _proceduralGridMover;
+        }
+    }
+
     protected Dictionary<Vector3Int, GridGraph> dicGridGraph = new Dictionary<Vector3Int, GridGraph>();
 
     /// <summary>
@@ -12,9 +26,9 @@ public class AstarPathManager : BaseManager
     /// </summary>
     /// <param name="center"></param>
     /// <param name="width"></param>
-    /// <param name="depth"></param>
+    /// <param name="height"></param>
     /// <param name="nodeSize"></param>
-    public void CreateGridGraph(Vector3Int center, int width, int depth, float nodeSize)
+    public void CreateGridGraph(Vector3Int center, int width, int height)
     {
         if (dicGridGraph.TryGetValue(center,out  GridGraph  value))
         {
@@ -25,7 +39,14 @@ public class AstarPathManager : BaseManager
             AstarData astarData = AstarPath.active.data;
             GridGraph gridGraph = astarData.AddGraph(typeof(GridGraph)) as GridGraph;
             gridGraph.center = center;
-            gridGraph.SetDimensions(width, depth, nodeSize);
+            gridGraph.SetDimensions(width, width, 0.5f);
+            gridGraph.name = center + "";
+            gridGraph.maxClimb = 1.5f;
+            gridGraph.maxSlope = 90;
+            GraphCollision graphCollision= gridGraph.collision;
+            graphCollision.collisionCheck = false;
+            graphCollision.fromHeight = height;
+            graphCollision.mask = (1 << LayerInfo.Chunk);
             dicGridGraph.Add(center, gridGraph);
             gridGraph.Scan();
         }

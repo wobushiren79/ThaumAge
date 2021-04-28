@@ -289,6 +289,7 @@ public class WorldCreateManager : BaseManager
                     {
                         //构建修改过的区块
                         updateDrawChunk.RefreshMesh();
+                        AstarPathHandler.Instance.RefreshPath();
                         listUpdateDrawChunk.RemoveAt(0);
                     }
                 }

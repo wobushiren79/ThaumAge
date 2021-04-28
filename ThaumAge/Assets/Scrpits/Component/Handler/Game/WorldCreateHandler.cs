@@ -52,6 +52,9 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
         chunk.SetData(position, manager.widthChunk, manager.heightChunk);
         //添加区块
         manager.AddChunk(position, chunk);
+        //添加寻路
+        //AstarPathHandler.Instance.manager.CreateGridGraph(position, manager.widthChunk, manager.heightChunk + 1);
+
         //回调
         Action callBack = () =>
         {
@@ -86,13 +89,13 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
             {
                 CreateChunk(currentPosition, () =>
                 {
-                     totalNumber++;
-                     if (totalNumber >= (range * 2 + 1) * (range * 2 + 1))
-                     {
-                         manager.HandleForUpdateBlock();
-                         callback?.Invoke();
-                     }
-                 });
+                    totalNumber++;
+                    if (totalNumber >= (range * 2 + 1) * (range * 2 + 1))
+                    {
+                        manager.HandleForUpdateBlock();
+                        callback?.Invoke();
+                    }
+                });
                 currentPosition += new Vector3Int(0, 0, manager.widthChunk);
             }
             currentPosition.z = startPosition.z;

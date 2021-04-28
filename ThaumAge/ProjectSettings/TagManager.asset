@@ -7,7 +7,7 @@ TagManager:
   - GameControl
   - MainLight
   - Clouds
-  - PathFinder
+  - AstarPath
   layers:
   - Default
   - TransparentFX
