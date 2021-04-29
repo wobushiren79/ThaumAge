@@ -1,6 +1,8 @@
 using UnityEngine;
 
 namespace Pathfinding {
+	using Pathfinding.Drawing;
+
 	/// <summary>
 	/// Pruning of recast navmesh regions.
 	/// A RelevantGraphSurface component placed in the scene specifies that
@@ -81,14 +83,11 @@ namespace Pathfinding {
 			}
 		}
 
-		public void OnDrawGizmos () {
-			Gizmos.color = new Color(57/255f, 211/255f, 46/255f, 0.4f);
-			Gizmos.DrawLine(transform.position - Vector3.up*maxRange, transform.position + Vector3.up*maxRange);
-		}
+		public override void DrawGizmos () {
+			var color = new Color(57/255f, 211/255f, 46/255f);
 
-		public void OnDrawGizmosSelected () {
-			Gizmos.color = new Color(57/255f, 211/255f, 46/255f);
-			Gizmos.DrawLine(transform.position - Vector3.up*maxRange, transform.position + Vector3.up*maxRange);
+			if (!GizmoContext.InActiveSelection(this)) color.a *= 0.4f;
+			Draw.Line(transform.position - Vector3.up*maxRange, transform.position + Vector3.up*maxRange, color);
 		}
 	}
 }

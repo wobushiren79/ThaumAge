@@ -170,7 +170,7 @@ namespace Pathfinding.Util {
 			else MoveToSegment(segmentIndex, factor2);
 		}
 
-		public void MoveToCircleIntersection2D (Vector3 circleCenter3D, float radius, IMovementPlane transform) {
+		public void MoveToCircleIntersection2D<T>(Vector3 circleCenter3D, float radius, T transform) where T : IMovementPlane {
 			if (path == null) return;
 
 			// Move forwards as long as we are getting closer to circleCenter3D

@@ -1,12 +1,14 @@
 using UnityEngine;
 
 namespace Pathfinding.Examples {
+	using Pathfinding.Drawing;
+
 	/// <summary>
 	/// Moves an object along a spline.
 	/// Helper script in the example scene called 'Moving'.
 	/// </summary>
 	[HelpURL("http://arongranberg.com/astar/docs/class_pathfinding_1_1_examples_1_1_bezier_mover.php")]
-	public class BezierMover : MonoBehaviour {
+	public class BezierMover : VersionedMonoBehaviour {
 		public Transform[] points;
 
 		public float speed = 1;
@@ -54,16 +56,15 @@ namespace Pathfinding.Examples {
 			transform.rotation = Quaternion.LookRotation(p2 - p1, up);
 		}
 
-		void OnDrawGizmos () {
+		public override void DrawGizmos () {
 			if (points.Length >= 3) {
 				for (int i = 0; i < points.Length; i++) if (points[i] == null) return;
 
-				Gizmos.color = Color.white;
 				Vector3 pp = Position(0);
 				for (int pt = 0; pt < points.Length; pt++) {
 					for (int i = 1; i <= 100; i++) {
 						var p = Position(pt + (i / 100f));
-						Gizmos.DrawLine(pp, p);
+						Draw.Line(pp, p, Color.white);
 						pp = p;
 					}
 				}

@@ -4,6 +4,8 @@ public class Launcher : BaseMonoBehaviour
 {
     void Start()
     {
+
+        AstarPathHandler.Instance.RefreshAllGraph();
         UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();
         userData.userId = "Test";
         //ÉèÖÃÖÖ×Ó

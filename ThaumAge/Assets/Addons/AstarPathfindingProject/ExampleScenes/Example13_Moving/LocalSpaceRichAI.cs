@@ -1,6 +1,7 @@
 using UnityEngine;
-
 namespace Pathfinding.Examples {
+	using Pathfinding.Util;
+
 	/// <summary>
 	/// RichAI for local space (pathfinding on moving graphs).
 	///
@@ -38,7 +39,7 @@ namespace Pathfinding.Examples {
 		void RefreshTransform () {
 			graph.Refresh();
 			richPath.transform = graph.transformation;
-			movementPlane = graph.transformation;
+			movementPlane = graph.transformation.ToSimpleMovementPlane();
 		}
 
 		protected override void Start () {
@@ -53,9 +54,9 @@ namespace Pathfinding.Examples {
 			end = graph.transformation.InverseTransform(end);
 		}
 
-		protected override void Update () {
+		protected override void OnUpdate (float dt) {
 			RefreshTransform();
-			base.Update();
+			base.OnUpdate(dt);
 		}
 	}
 }

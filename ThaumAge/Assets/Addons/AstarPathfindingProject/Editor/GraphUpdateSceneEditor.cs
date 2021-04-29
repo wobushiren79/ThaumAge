@@ -160,7 +160,7 @@ namespace Pathfinding {
 				EditorGUI.indentLevel++;
 				EditorGUI.showMixedValue = tagValue.hasMultipleDifferentValues;
 				EditorGUI.BeginChangeCheck();
-				var newTag = EditorGUILayoutx.TagField("Tag Value", tagValue.intValue, () => AstarPathEditor.EditTags());
+				var newTag = Util.EditorGUILayoutHelper.TagField("Tag Value", tagValue.intValue, () => AstarPathEditor.EditTags());
 				if (EditorGUI.EndChangeCheck()) {
 					tagValue.intValue = newTag;
 				}
@@ -192,7 +192,7 @@ namespace Pathfinding {
 				EditorUtility.SetDirty(script);
 			}
 
-			List<Vector3> points = Pathfinding.Util.ListPool<Vector3>.Claim ();
+			List<Vector3> points = Pathfinding.Util.ListPool<Vector3>.Claim();
 			points.AddRange(script.points);
 
 			Matrix4x4 invMatrix = script.transform.worldToLocalMatrix;
@@ -201,13 +201,19 @@ namespace Pathfinding {
 			for (int i = 0; i < points.Count; i++) points[i] = matrix.MultiplyPoint3x4(points[i]);
 
 
+			float minScreenDist = float.PositiveInfinity;
 			if (Tools.current != Tool.View && Event.current.type == EventType.Layout) {
 				for (int i = 0; i < script.points.Length; i++) {
-					HandleUtility.AddControl(-i - 1, HandleUtility.DistanceToLine(points[i], points[i]));
+					float dist = HandleUtility.DistanceToLine(points[i], points[i]);
+					HandleUtility.AddControl(-i - 1, dist);
+					minScreenDist = Mathf.Min(dist, minScreenDist);
 				}
 			}
 
-			if (Tools.current != Tool.View)
+			// If there is a point sort of close to the cursor, but not close enough
+			// to receive a click event, then prevent the user from accidentally clicking
+			// which would deselect the current object and be kinda annoying.
+			if (Tools.current != Tool.View && minScreenDist < 50)
 				HandleUtility.AddDefaultControl(0);
 
 			for (int i = 0; i < points.Count; i++) {
@@ -233,73 +239,86 @@ namespace Pathfinding {
 				if (pre != selectedPoint) GUI.changed = true;
 			}
 
+			if (Tools.current == Tool.Move) {
+				var darkSkin = EditorGUIUtility.GetBuiltinSkin(EditorSkin.Scene);
+
+				Handles.BeginGUI();
+				float width = 220;
+				float height = 76;
+				float margin = 10;
+
+				AstarPathEditor.LoadStyles();
+				GUILayout.BeginArea(new Rect(Camera.current.pixelWidth - width, Camera.current.pixelHeight - height, width - margin, height - margin), "Shortcuts", AstarPathEditor.astarSkin.FindStyle("SceneBoxDark"));
+
+				GUILayout.Label("Shift+Click: Add new point", darkSkin.label);
+				GUILayout.Label("Backspace: Delete selected point", darkSkin.label);
+
+				// Invisible button to capture clicks. This prevents a click inside the box from causing some other GameObject to be selected.
+				GUI.Button(new Rect(0, 0, width - margin, height - margin), "", GUIStyle.none);
+				GUILayout.EndArea();
+
+				Handles.EndGUI();
+			}
+
+			if (Tools.current == Tool.Move && Event.current.type == EventType.KeyDown && Event.current.keyCode == KeyCode.Backspace && selectedPoint >= 0 && selectedPoint < points.Count) {
+				Undo.RecordObject(script, "Removed Point");
+				var arr = new List<Vector3>(script.points);
+				arr.RemoveAt(selectedPoint);
+				points.RemoveAt(selectedPoint);
+				script.points = arr.ToArray();
+				GUI.changed = true;
+			}
+
 			if (Event.current.shift && Tools.current == Tool.Move) {
 				HandleUtility.Repaint();
 
-				if (((int)Event.current.modifiers & (int)EventModifiers.Alt) != 0) {
-					if (Event.current.type == EventType.MouseDown && selectedPoint >= 0 && selectedPoint < points.Count) {
-						Undo.RecordObject(script, "Removed Point");
+				// Find the closest segment
+				int insertionIndex = points.Count;
+				float minDist = float.PositiveInfinity;
+				for (int i = 0; i < points.Count; i++) {
+					float dist = HandleUtility.DistanceToLine(points[i], points[(i+1)%points.Count]);
+					if (dist < minDist) {
+						insertionIndex = i + 1;
+						minDist = dist;
+					}
+				}
+
+				var ray = HandleUtility.GUIPointToWorldRay(Event.current.mousePosition);
+				System.Object hit = HandleUtility.RaySnap(ray);
+				Vector3 rayhit = Vector3.zero;
+				bool didHit = false;
+				if (hit != null) {
+					rayhit = ((RaycastHit)hit).point;
+					didHit = true;
+				} else {
+					var plane = new Plane(script.transform.up, script.transform.position);
+					float distance;
+					plane.Raycast(ray, out distance);
+					if (distance > 0) {
+						rayhit = ray.GetPoint(distance);
+						didHit = true;
+					}
+				}
+
+				if (didHit) {
+					if (Event.current.type == EventType.MouseDown) {
+						points.Insert(insertionIndex, rayhit);
+
+						Undo.RecordObject(script, "Added Point");
 						var arr = new List<Vector3>(script.points);
-						arr.RemoveAt(selectedPoint);
-						points.RemoveAt(selectedPoint);
+						arr.Insert(insertionIndex, invMatrix.MultiplyPoint3x4(rayhit));
 						script.points = arr.ToArray();
 						GUI.changed = true;
 					} else if (points.Count > 0) {
-						var index = -(HandleUtility.nearestControl+1);
-						if (index >= 0 && index < points.Count) {
-							Handles.color = Color.red;
-							SphereCap(0, points[index], Quaternion.identity, HandleUtility.GetHandleSize(points[index])*2f*pointGizmosRadius);
-						}
-					}
-				} else {
-					// Find the closest segment
-					int insertionIndex = points.Count;
-					float minDist = float.PositiveInfinity;
-					for (int i = 0; i < points.Count; i++) {
-						float dist = HandleUtility.DistanceToLine(points[i], points[(i+1)%points.Count]);
-						if (dist < minDist) {
-							insertionIndex = i + 1;
-							minDist = dist;
-						}
-					}
-
-					var ray = HandleUtility.GUIPointToWorldRay(Event.current.mousePosition);
-					System.Object hit = HandleUtility.RaySnap(ray);
-					Vector3 rayhit = Vector3.zero;
-					bool didHit = false;
-					if (hit != null) {
-						rayhit = ((RaycastHit)hit).point;
-						didHit = true;
-					} else {
-						var plane = new Plane(script.transform.up, script.transform.position);
-						float distance;
-						plane.Raycast(ray, out distance);
-						if (distance > 0) {
-							rayhit = ray.GetPoint(distance);
-							didHit = true;
-						}
-					}
-
-					if (didHit) {
-						if (Event.current.type == EventType.MouseDown) {
-							points.Insert(insertionIndex, rayhit);
-
-							Undo.RecordObject(script, "Added Point");
-							var arr = new List<Vector3>(script.points);
-							arr.Insert(insertionIndex, invMatrix.MultiplyPoint3x4(rayhit));
-							script.points = arr.ToArray();
-							GUI.changed = true;
-						} else if (points.Count > 0) {
-							Handles.color = Color.green;
-							Handles.DrawDottedLine(points[(insertionIndex-1 + points.Count) % points.Count], rayhit, 8);
-							Handles.DrawDottedLine(points[insertionIndex % points.Count], rayhit, 8);
-							SphereCap(0, rayhit, Quaternion.identity, HandleUtility.GetHandleSize(rayhit)*pointGizmosRadius);
-							// Project point down onto a plane
-							var zeroed = invMatrix.MultiplyPoint3x4(rayhit);
-							zeroed.y = 0;
-							Handles.color = new Color(1, 1, 1, 0.5f);
-							Handles.DrawDottedLine(matrix.MultiplyPoint3x4(zeroed), rayhit, 4);
-						}
+						Handles.color = Color.green;
+						Handles.DrawDottedLine(points[(insertionIndex-1 + points.Count) % points.Count], rayhit, 8);
+						Handles.DrawDottedLine(points[insertionIndex % points.Count], rayhit, 8);
+						SphereCap(0, rayhit, Quaternion.identity, HandleUtility.GetHandleSize(rayhit)*pointGizmosRadius);
+						// Project point down onto a plane
+						var zeroed = invMatrix.MultiplyPoint3x4(rayhit);
+						zeroed.y = 0;
+						Handles.color = new Color(1, 1, 1, 0.5f);
+						Handles.DrawDottedLine(matrix.MultiplyPoint3x4(zeroed), rayhit, 4);
 					}
 				}
 
@@ -310,7 +329,7 @@ namespace Pathfinding {
 
 			// Make sure the convex hull stays up to date
 			script.RecalcConvex();
-			Pathfinding.Util.ListPool<Vector3>.Release (ref points);
+			Pathfinding.Util.ListPool<Vector3>.Release(ref points);
 
 			if (GUI.changed) HandleUtility.Repaint();
 		}

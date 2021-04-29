@@ -35,7 +35,7 @@ namespace Pathfinding {
 		public static List<PathPart> SplitIntoParts (Path path) {
 			var nodes = path.path;
 
-			var result = ListPool<PathPart>.Claim ();
+			var result = ListPool<PathPart>.Claim();
 
 			if (nodes == null || nodes.Count == 0) {
 				return result;
@@ -108,16 +108,180 @@ namespace Pathfinding {
 			return result;
 		}
 
+
+		public static void Simplify (List<PathPart> parts, ref List<GraphNode> nodes) {
+			List<GraphNode> resultNodes = ListPool<GraphNode>.Claim();
+
+			for (int i = 0; i < parts.Count; i++) {
+				var part = parts[i];
+
+				// We are changing the nodes list, so indices may change
+				var newPart = part;
+				newPart.startIndex = resultNodes.Count;
+
+				if (!part.isLink) {
+					var graph = nodes[part.startIndex].Graph as IRaycastableGraph;
+					if (graph != null) {
+						Simplify(part, graph, nodes, resultNodes, Path.ZeroTagPenalties, -1);
+						newPart.endIndex = resultNodes.Count - 1;
+						parts[i] = newPart;
+						continue;
+					}
+				}
+
+				for (int j = part.startIndex; j <= part.endIndex; j++) {
+					resultNodes.Add(nodes[j]);
+				}
+				newPart.endIndex = resultNodes.Count - 1;
+				parts[i] = newPart;
+			}
+
+			ListPool<GraphNode>.Release(ref nodes);
+			nodes = resultNodes;
+		}
+
+		/// <summary>
+		/// Simplifies a funnel path using linecasting.
+		/// Running time is roughly O(n^2 log n) in the worst case (where n = end-start)
+		/// Actually it depends on how the graph looks, so in theory the actual upper limit on the worst case running time is O(n*m log n) (where n = end-start and m = nodes in the graph)
+		/// but O(n^2 log n) is a much more realistic worst case limit.
+		///
+		/// Requires <see cref="graph"/> to implement IRaycastableGraph
+		/// </summary>
+		public static void Simplify (PathPart part, IRaycastableGraph graph, List<GraphNode> nodes, List<GraphNode> result, int[] tagPenalties, int traversableTags) {
+			var start = part.startIndex;
+			var end = part.endIndex;
+			var startPoint = part.startPoint;
+			var endPoint = part.endPoint;
+
+			if (graph == null) throw new System.ArgumentNullException(nameof(graph));
+
+			if (start > end) {
+				throw new System.ArgumentException("start > end");
+			}
+
+			// Do a straight line of sight check to see if the path can be simplified to a single line
+			{
+				GraphHitInfo hit;
+				if (!graph.Linecast(startPoint, endPoint, nodes[start], out hit) && hit.node == nodes[end]) {
+					graph.Linecast(startPoint, endPoint, nodes[start], out hit, result);
+
+					long penaltySum = 0;
+					long penaltySum2 = 0;
+					for (int i = start; i <= end; i++) {
+						penaltySum += nodes[i].Penalty + tagPenalties[nodes[i].Tag];
+					}
+
+					bool walkable = true;
+					for (int i = 0; i < result.Count; i++) {
+						penaltySum2 += result[i].Penalty + tagPenalties[result[i].Tag];
+						walkable &= ((traversableTags >> (int)result[i].Tag) & 1) == 1;
+					}
+
+					// Allow 40% more penalty on average per node
+					if (!walkable || (penaltySum*1.4*result.Count) < (penaltySum2*(end-start+1))) {
+						// The straight line penalties are much higher than the original path.
+						// Revert the simplification
+						result.Clear();
+					} else {
+						// The straight line simplification looks good.
+						// We are done here.
+						return;
+					}
+				}
+			}
+
+			int ostart = start;
+
+			int count = 0;
+			while (true) {
+				if (count++ > 1000) {
+					Debug.LogError("Was the path really long or have we got cought in an infinite loop?");
+					break;
+				}
+
+				if (start == end) {
+					result.Add(nodes[end]);
+					return;
+				}
+
+				int resCount = result.Count;
+
+				// Run a binary search to find the furthest node that we have a clear line of sight to
+				int mx = end+1;
+				int mn = start+1;
+				bool anySucceded = false;
+				while (mx > mn+1) {
+					int mid = (mx+mn)/2;
+
+					GraphHitInfo hit;
+					Vector3 sp = start == ostart ? startPoint : (Vector3)nodes[start].position;
+					Vector3 ep = mid == end ? endPoint : (Vector3)nodes[mid].position;
+
+					// Check if there is an obstacle between these points, or if there is no obstacle, but we didn't end up at the right node.
+					// The second case can happen for example in buildings with multiple floors.
+					if (graph.Linecast(sp, ep, nodes[start], out hit) || hit.node != nodes[mid]) {
+						mx = mid;
+					} else {
+						anySucceded = true;
+						mn = mid;
+					}
+				}
+
+				if (!anySucceded) {
+					result.Add(nodes[start]);
+
+					// It is guaranteed that mn = start+1
+					start = mn;
+				} else {
+					// Replace a part of the path with the straight path to the furthest node we had line of sight to.
+					// Need to redo the linecast to get the trace (i.e. list of nodes along the line of sight).
+					GraphHitInfo hit;
+					Vector3 sp = start == ostart ? startPoint : (Vector3)nodes[start].position;
+					Vector3 ep = mn == end ? endPoint : (Vector3)nodes[mn].position;
+					graph.Linecast(sp, ep, nodes[start], out hit, result);
+
+					long penaltySum = 0;
+					long penaltySum2 = 0;
+					for (int i = start; i <= mn; i++) {
+						penaltySum += nodes[i].Penalty + tagPenalties[nodes[i].Tag];
+					}
+
+					bool walkable = true;
+					for (int i = resCount; i < result.Count; i++) {
+						penaltySum2 += result[i].Penalty + tagPenalties[result[i].Tag];
+						walkable &= ((traversableTags >> (int)result[i].Tag) & 1) == 1;
+					}
+
+					// Allow 40% more penalty on average per node
+					if (!walkable || (penaltySum*1.4*(result.Count-resCount)) < (penaltySum2*(mn-start+1)) || result[result.Count-1] != nodes[mn]) {
+						//Debug.DrawLine ((Vector3)nodes[start].Position, (Vector3)nodes[mn].Position, Color.red);
+						// Linecast hit the wrong node or it is a lot more expensive than the original path
+						result.RemoveRange(resCount, result.Count-resCount);
+
+						result.Add(nodes[start]);
+						//Debug.Break();
+						start = start+1;
+					} else {
+						//Debug.DrawLine ((Vector3)nodes[start].Position, (Vector3)nodes[mn].Position, Color.green);
+						//Remove nodes[end]
+						result.RemoveAt(result.Count-1);
+						start = mn;
+					}
+				}
+			}
+		}
+
 		public static FunnelPortals ConstructFunnelPortals (List<GraphNode> nodes, PathPart part) {
 			if (nodes == null || nodes.Count == 0) {
-				return new FunnelPortals { left = ListPool<Vector3>.Claim (0), right = ListPool<Vector3>.Claim (0) };
+				return new FunnelPortals { left = ListPool<Vector3>.Claim(0), right = ListPool<Vector3>.Claim(0) };
 			}
 
 			if (part.endIndex < part.startIndex || part.startIndex < 0 || part.endIndex > nodes.Count) throw new System.ArgumentOutOfRangeException();
 
 			// Claim temporary lists and try to find lists with a high capacity
-			var left = ListPool<Vector3>.Claim (nodes.Count+1);
-			var right = ListPool<Vector3>.Claim (nodes.Count+1);
+			var left = ListPool<Vector3>.Claim(nodes.Count+1);
+			var right = ListPool<Vector3>.Claim(nodes.Count+1);
 
 			// Add start point
 			left.Add(part.startPoint);
@@ -300,8 +464,8 @@ namespace Pathfinding {
 			if (funnel.left.Count != funnel.right.Count) throw new System.ArgumentException("funnel.left.Count != funnel.right.Count");
 
 			// Get arrays at least as large as the number of portals
-			var leftArr = ArrayPool<Vector2>.Claim (funnel.left.Count);
-			var rightArr = ArrayPool<Vector2>.Claim (funnel.left.Count);
+			var leftArr = ArrayPool<Vector2>.Claim(funnel.left.Count);
+			var rightArr = ArrayPool<Vector2>.Claim(funnel.left.Count);
 
 			if (unwrap) {
 				Unwrap(funnel, leftArr, rightArr);
@@ -314,7 +478,7 @@ namespace Pathfinding {
 			}
 
 			int startIndex = FixFunnel(leftArr, rightArr, funnel.left.Count);
-			var intermediateResult = ListPool<int>.Claim ();
+			var intermediateResult = ListPool<int>.Claim();
 			if (startIndex == -1) {
 				// If funnel algorithm failed, fall back to a simple line
 				intermediateResult.Add(0);
@@ -325,7 +489,7 @@ namespace Pathfinding {
 			}
 
 			// Get list for the final result
-			var result = ListPool<Vector3>.Claim (intermediateResult.Count);
+			var result = ListPool<Vector3>.Claim(intermediateResult.Count);
 
 			Vector2 prev2D = leftArr[0];
 			var prevIdx = 0;
@@ -352,9 +516,9 @@ namespace Pathfinding {
 			}
 
 			// Release lists back to the pool
-			ListPool<int>.Release (ref intermediateResult);
-			ArrayPool<Vector2>.Release (ref leftArr);
-			ArrayPool<Vector2>.Release (ref rightArr);
+			ListPool<int>.Release(ref intermediateResult);
+			ArrayPool<Vector2>.Release(ref leftArr);
+			ArrayPool<Vector2>.Release(ref rightArr);
 			return result;
 		}
 

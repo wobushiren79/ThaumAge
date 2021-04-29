@@ -44,8 +44,8 @@ namespace Pathfinding.Legacy {
 		static float deltaTime;
 
 		/// <summary>Update is called once per frame</summary>
-		protected override void Update () {
-			deltaTime = Mathf.Min(Time.smoothDeltaTime*2, Time.deltaTime);
+		protected override void OnUpdate (float dt) {
+			deltaTime = dt;
 
 			if (richPath != null) {
 				//System.Diagnostics.Stopwatch w = new System.Diagnostics.Stopwatch();
@@ -253,7 +253,7 @@ namespace Pathfinding.Legacy {
 			}
 
 			UpdateVelocity();
-			lastDeltaTime = Time.deltaTime;
+			lastDeltaTime = dt;
 		}
 
 		new Vector3 RaycastPosition (Vector3 position, float lasty) {

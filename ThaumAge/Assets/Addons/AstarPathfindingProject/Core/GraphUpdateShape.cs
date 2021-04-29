@@ -1,3 +1,5 @@
+using Unity.Collections;
+using Unity.Mathematics;
 using UnityEngine;
 
 namespace Pathfinding {
@@ -21,6 +23,59 @@ namespace Pathfinding {
 		Vector3 up = Vector3.up;
 		Vector3 origin;
 		public float minimumHeight;
+
+		/// <summary>Shape optimized for burst</summary>
+		public struct BurstShape {
+			[DeallocateOnJobCompletion]
+			NativeArray<Vector3> points;
+			float3 origin, right, forward;
+			bool containsEverything;
+
+			public BurstShape(GraphUpdateShape scene, Allocator allocator) {
+				var pts = scene.convex ? scene._convexPoints : scene._points;
+
+				if (pts == null) points = new NativeArray<Vector3>(0, allocator);
+				else points = new NativeArray<Vector3>(pts, allocator);
+
+				origin = scene.origin;
+				right = scene.right;
+				forward = scene.forward;
+
+				// Speeds up calculations below
+				var mgn = scene.right.sqrMagnitude;
+				if (mgn > 0) right /= mgn;
+				mgn = scene.forward.sqrMagnitude;
+				if (mgn > 0) forward /= mgn;
+				containsEverything = false;
+			}
+
+			/// <summary>Shape that contains everything</summary>
+			public static BurstShape Everything => new BurstShape {
+				points = new NativeArray<Vector3>(0, Allocator.Persistent),
+				origin = float3.zero,
+				right = float3.zero,
+				forward = float3.zero,
+				containsEverything = true,
+			};
+
+			public bool Contains (float3 point) {
+				if (containsEverything) return true;
+				// Transform to local space (shape in the XZ plane)
+				point -= origin;
+				// Point in local space
+				var p = new float3(math.dot(point, right), 0, math.dot(point, forward));
+
+				int j = points.Length-1;
+				bool inside = false;
+
+				for (int i = 0; i < points.Length; j = i++) {
+					if (((points[i].z <= p.z && p.z < points[j].z) || (points[j].z <= p.z && p.z < points[i].z)) &&
+						(p.x < (points[j].x - points[i].x) * (p.z - points[i].z) / (points[j].z - points[i].z) + points[i].x))
+						inside = !inside;
+				}
+				return inside;
+			}
+		}
 
 		/// <summary>
 		/// Gets or sets the points of the polygon in the shape.
@@ -77,7 +132,7 @@ namespace Pathfinding {
 		}
 
 		void CalculateConvexHull () {
-			_convexPoints = points != null? Polygon.ConvexHullXZ (points) : null;
+			_convexPoints = points != null? Polygon.ConvexHullXZ(points) : null;
 		}
 
 		/// <summary>World space bounding box of this shape</summary>

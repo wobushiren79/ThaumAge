@@ -2,14 +2,16 @@ using UnityEngine;
 using System.Collections.Generic;
 
 namespace Pathfinding {
-	using Pathfinding.Util;
+	using Pathfinding.Drawing;
 
 	public class NodeLink3Node : PointNode {
 		public NodeLink3 link;
 		public Vector3 portalA;
 		public Vector3 portalB;
 
-		public NodeLink3Node (AstarPath active) : base(active) {}
+		public NodeLink3Node (AstarPath astar) {
+			astar.InitializeNode(this);
+		}
 
 		public override bool GetPortal (GraphNode other, List<Vector3> left, List<Vector3> right, bool backwards) {
 			if (this.connections.Length < 2) return false;
@@ -127,7 +129,7 @@ namespace Pathfinding {
 			Apply(true);
 		}
 
-		public override void OnGraphsPostUpdate () {
+		public override void OnGraphsPostUpdateBeforeAreaRecalculation () {
 			if (!AstarPath.active.isScanning) {
 				if (connectedNode1 != null && connectedNode1.Destroyed) {
 					connectedNode1 = null;
@@ -282,30 +284,23 @@ namespace Pathfinding {
 		private readonly static Color GizmosColor = new Color(206.0f/255.0f, 136.0f/255.0f, 48.0f/255.0f, 0.5f);
 		private readonly static Color GizmosColorSelected = new Color(235.0f/255.0f, 123.0f/255.0f, 32.0f/255.0f, 1.0f);
 
-		public virtual void OnDrawGizmosSelected () {
-			OnDrawGizmos(true);
-		}
-
-		public void OnDrawGizmos () {
-			OnDrawGizmos(false);
-		}
-
-		public void OnDrawGizmos (bool selected) {
-			Color col = selected ? GizmosColorSelected : GizmosColor;
+		public override void DrawGizmos () {
+			bool selected = GizmoContext.InActiveSelection(this);
+			Color color = selected ? GizmosColorSelected : GizmosColor;
 
 			if (StartTransform != null) {
-				Draw.Gizmos.CircleXZ(StartTransform.position, 0.4f, col);
+				Draw.CircleXZ(StartTransform.position, 0.4f, color);
 			}
 			if (EndTransform != null) {
-				Draw.Gizmos.CircleXZ(EndTransform.position, 0.4f, col);
+				Draw.CircleXZ(EndTransform.position, 0.4f, color);
 			}
 
 			if (StartTransform != null && EndTransform != null) {
-				Draw.Gizmos.Bezier(StartTransform.position, EndTransform.position, col);
+				NodeLink.DrawArch(StartTransform.position, EndTransform.position, color);
 				if (selected) {
 					Vector3 cross = Vector3.Cross(Vector3.up, (EndTransform.position-StartTransform.position)).normalized;
-					Draw.Gizmos.Bezier(StartTransform.position+cross*0.1f, EndTransform.position+cross*0.1f, col);
-					Draw.Gizmos.Bezier(StartTransform.position-cross*0.1f, EndTransform.position-cross*0.1f, col);
+					NodeLink.DrawArch(StartTransform.position+cross*0.1f, EndTransform.position+cross*0.1f, color);
+					NodeLink.DrawArch(StartTransform.position-cross*0.1f, EndTransform.position-cross*0.1f, color);
 				}
 			}
 		}

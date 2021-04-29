@@ -186,7 +186,7 @@ namespace Pathfinding {
 
 		/// <summary>Has the ending condition been fulfilled.</summary>
 		/// <param name="node">The current node.</param>
-		public abstract bool TargetFound (PathNode node);
+		public abstract bool TargetFound(PathNode node);
 	}
 
 	/// <summary>Ending condition which emulates the default one for the ABPath</summary>

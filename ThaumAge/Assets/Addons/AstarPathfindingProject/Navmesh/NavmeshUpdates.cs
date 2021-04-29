@@ -88,10 +88,35 @@ namespace Pathfinding {
 				}
 			}
 
+			public void DiscardPending () {
+				if (handler != null) {
+					for (int j = 0; j < NavmeshClipper.allEnabled.Count; j++) {
+						var cut = NavmeshClipper.allEnabled[j];
+						var root = handler.cuts.GetRoot(cut);
+						if (root != null) cut.NotifyUpdated(root);
+					}
+				}
+
+				forcedReloadRects.Clear();
+			}
+
 			/// <summary>Called when some tiles in a recast graph have been completely recalculated (e.g from scanning the graph)</summary>
 			public void OnRecalculatedTiles (NavmeshTile[] tiles) {
 				Refresh();
 				if (handler != null) handler.OnRecalculatedTiles(tiles);
+
+				// If the whole graph was updated then mark all navmesh cuts as being up to date.
+				// If only a part of the graph was updated then a navmesh cut might be over the non-updated part
+				// as well, and in that case we don't want to mark it as fully updated.
+				if (graph.GetTiles().Length == tiles.Length) {
+					DiscardPending();
+				}
+			}
+
+			public void Dirty (NavmeshClipper obj) {
+				// If we have no handler then we can ignore this. If we would later create a handler the object would be automatically dirtied anyway.
+				if (handler == null) return;
+				handler.cuts.Dirty(obj);
 			}
 
 			/// <summary>Called when a NavmeshCut or NavmeshAdd is enabled</summary>
@@ -126,16 +151,24 @@ namespace Pathfinding {
 			NavmeshClipper.RemoveEnableCallback(HandleOnEnableCallback, HandleOnDisableCallback);
 		}
 
+		public void ForceUpdateAround (NavmeshClipper clipper) {
+			var graphs = AstarPath.active.graphs;
+
+			if (graphs == null) return;
+
+			for (int i = 0; i < graphs.Length; i++) {
+				if (graphs[i] is NavmeshBase navmeshBase) navmeshBase.navmeshUpdateData.Dirty(clipper);
+			}
+		}
+
 		/// <summary>Discards all pending updates caused by moved or modified navmesh cuts</summary>
 		public void DiscardPending () {
-			for (int i = 0; i < NavmeshClipper.allEnabled.Count; i++) {
-				NavmeshClipper.allEnabled[i].NotifyUpdated();
-			}
-
 			var graphs = AstarPath.active.graphs;
+
+			if (graphs == null) return;
+
 			for (int i = 0; i < graphs.Length; i++) {
-				var navmeshBase = graphs[i] as NavmeshBase;
-				if (navmeshBase != null) navmeshBase.navmeshUpdateData.forcedReloadRects.Clear();
+				if (graphs[i] is NavmeshBase navmeshBase) navmeshBase.navmeshUpdateData.DiscardPending();
 			}
 		}
 
@@ -143,20 +176,22 @@ namespace Pathfinding {
 		void HandleOnEnableCallback (NavmeshClipper obj) {
 			var graphs = AstarPath.active.graphs;
 
+			if (graphs == null) return;
+
 			for (int i = 0; i < graphs.Length; i++) {
-				var navmeshBase = graphs[i] as NavmeshBase;
-				if (navmeshBase != null) navmeshBase.navmeshUpdateData.AddClipper(obj);
+				// Add the clipper to the individual graphs. Note that this automatically marks the clipper as dirty for that particular graph.
+				if (graphs[i] is NavmeshBase navmeshBase) navmeshBase.navmeshUpdateData.AddClipper(obj);
 			}
-			obj.ForceUpdate();
 		}
 
 		/// <summary>Called when a NavmeshCut or NavmeshAdd is disabled</summary>
 		void HandleOnDisableCallback (NavmeshClipper obj) {
 			var graphs = AstarPath.active.graphs;
 
+			if (graphs == null) return;
+
 			for (int i = 0; i < graphs.Length; i++) {
-				var navmeshBase = graphs[i] as NavmeshBase;
-				if (navmeshBase != null) navmeshBase.navmeshUpdateData.RemoveClipper(obj);
+				if (graphs[i] is NavmeshBase navmeshBase) navmeshBase.navmeshUpdateData.RemoveClipper(obj);
 			}
 			lastUpdateTime = float.NegativeInfinity;
 		}
@@ -167,16 +202,19 @@ namespace Pathfinding {
 			Profiler.BeginSample("Navmesh cutting");
 			bool anyInvalidHandlers = false;
 			var graphs = AstarPath.active.graphs;
-			for (int i = 0; i < graphs.Length; i++) {
-				var navmeshBase = graphs[i] as NavmeshBase;
-				if (navmeshBase != null) {
-					navmeshBase.navmeshUpdateData.Refresh();
-					anyInvalidHandlers = navmeshBase.navmeshUpdateData.forcedReloadRects.Count > 0;
-				}
-			}
 
-			if ((updateInterval >= 0 && Time.realtimeSinceStartup - lastUpdateTime > updateInterval) || anyInvalidHandlers) {
-				ForceUpdate();
+			if (graphs != null) {
+				for (int i = 0; i < graphs.Length; i++) {
+					var navmeshBase = graphs[i] as NavmeshBase;
+					if (navmeshBase != null) {
+						navmeshBase.navmeshUpdateData.Refresh();
+						anyInvalidHandlers = navmeshBase.navmeshUpdateData.forcedReloadRects.Count > 0;
+					}
+				}
+
+				if ((updateInterval >= 0 && Time.realtimeSinceStartup - lastUpdateTime > updateInterval) || anyInvalidHandlers) {
+					ForceUpdate();
+				}
 			}
 			Profiler.EndSample();
 		}
@@ -201,9 +239,9 @@ namespace Pathfinding {
 		public void ForceUpdate () {
 			lastUpdateTime = Time.realtimeSinceStartup;
 
-			List<NavmeshClipper> hasBeenUpdated = null;
-
 			var graphs = AstarPath.active.graphs;
+			if (graphs == null) return;
+
 			for (int graphIndex = 0; graphIndex < graphs.Length; graphIndex++) {
 				var navmeshBase = graphs[graphIndex] as NavmeshBase;
 				if (navmeshBase == null) continue;
@@ -225,7 +263,7 @@ namespace Pathfinding {
 
 					// Check if any navmesh cuts need updating
 					for (var cut = allCuts; cut != null; cut = cut.next) {
-						if (cut.obj.RequiresUpdate()) {
+						if (cut.obj.RequiresUpdate(cut)) {
 							any = true;
 							break;
 						}
@@ -244,12 +282,10 @@ namespace Pathfinding {
 				}
 				forcedReloadRects.ClearFast();
 
-				if (hasBeenUpdated == null) hasBeenUpdated = ListPool<NavmeshClipper>.Claim ();
-
 				// Reload all bounds touching the previous bounds and current bounds
 				// of navmesh cuts that have moved or changed in some other way
 				for (var cut = allCuts; cut != null; cut = cut.next) {
-					if (cut.obj.RequiresUpdate()) {
+					if (cut.obj.RequiresUpdate(cut)) {
 						// Make sure the tile where it was is updated
 						handler.ReloadInBounds(cut.previousBounds);
 
@@ -258,24 +294,14 @@ namespace Pathfinding {
 						handler.cuts.Move(cut.obj, newTouchingTiles);
 						handler.ReloadInBounds(newTouchingTiles);
 
-						hasBeenUpdated.Add(cut.obj);
+						// Notify the navmesh cut that it has been updated in this graph
+						// This will cause RequiresUpdate to return false
+						// until it is changed again.
+						cut.obj.NotifyUpdated(cut);
 					}
 				}
 
 				handler.EndBatchLoad();
-			}
-
-			if (hasBeenUpdated != null) {
-				// Notify navmesh cuts that they have been updated
-				// This will cause RequiresUpdate to return false
-				// until it is changed again.
-				// Note: This is not as efficient as it could be when multiple graphs are used
-				// because every navmesh cut will be added to the list once for every graph.
-				for (int i = 0; i < hasBeenUpdated.Count; i++) {
-					hasBeenUpdated[i].NotifyUpdated();
-				}
-
-				ListPool<NavmeshClipper>.Release (ref hasBeenUpdated);
 			}
 		}
 	}

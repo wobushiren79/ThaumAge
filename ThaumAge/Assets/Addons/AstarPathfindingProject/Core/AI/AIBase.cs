@@ -1,10 +1,13 @@
 using UnityEngine;
 using System.Collections;
 using UnityEngine.Serialization;
+using Unity.Jobs;
 
 namespace Pathfinding {
 	using Pathfinding.RVO;
 	using Pathfinding.Util;
+	using Pathfinding.Jobs;
+	using Pathfinding.Drawing;
 
 	/// <summary>
 	/// Base class for AIPath and RichAI.
@@ -30,12 +33,31 @@ namespace Pathfinding {
 		///
 		/// See: <see cref="shouldRecalculatePath"/>
 		/// See: <see cref="SearchPath"/>
+		///
+		/// Deprecated: This has been renamed to \reflink{autoRepath.interval}.
+		/// See: \reflink{AutoRepathPolicy}
 		/// </summary>
-		public float repathRate = 0.5f;
+		public float repathRate {
+			get {
+				return this.autoRepath.interval;
+			}
+			set {
+				this.autoRepath.interval = value;
+			}
+		}
 
-		/// <summary>\copydoc Pathfinding::IAstarAI::canSearch</summary>
-		[UnityEngine.Serialization.FormerlySerializedAs("repeatedlySearchPaths")]
-		public bool canSearch = true;
+		/// <summary>
+		/// \copydoc Pathfinding::IAstarAI::canSearch
+		/// Deprecated: This has been superseded by \reflink{autoRepath.mode}.
+		/// </summary>
+		public bool canSearch {
+			get {
+				return this.autoRepath.mode != AutoRepathPolicy.Mode.Never;
+			}
+			set {
+				this.autoRepath.mode = value ? AutoRepathPolicy.Mode.EveryNSeconds : AutoRepathPolicy.Mode.Never;
+			}
+		}
 
 		/// <summary>\copydoc Pathfinding::IAstarAI::canMove</summary>
 		public bool canMove = true;
@@ -61,6 +83,41 @@ namespace Pathfinding {
 		public LayerMask groundMask = -1;
 
 		/// <summary>
+		/// Distance to the end point to consider the end of path to be reached.
+		///
+		/// When the end of the path is within this distance then <see cref="reachedEndOfPath"/> will return true.
+		/// When the <see cref="destination"/> is within this distance then <see cref="reachedDestination"/> will return true.
+		///
+		/// Note that the <see cref="destination"/> may not be reached just because the end of the path was reached. The <see cref="destination"/> may not be reachable at all.
+		///
+		/// See: <see cref="reachedEndOfPath"/>
+		/// See: <see cref="reachedDestination"/>
+		/// </summary>
+		public float endReachedDistance = 0.2f;
+
+		/// <summary>
+		/// What to do when within <see cref="endReachedDistance"/> units from the destination.
+		/// The character can either stop immediately when it comes within that distance, which is useful for e.g archers
+		/// or other ranged units that want to fire on a target. Or the character can continue to try to reach the exact
+		/// destination point and come to a full stop there. This is useful if you want the character to reach the exact
+		/// point that you specified.
+		///
+		/// Note: <see cref="reachedEndOfPath"/> will become true when the character is within <see cref="endReachedDistance"/> units from the destination
+		/// regardless of what this field is set to.
+		/// </summary>
+		public CloseToDestinationMode whenCloseToDestination = CloseToDestinationMode.Stop;
+
+		/// <summary>
+		/// Controls if the agent slows down to a stop if the area around the destination is crowded.
+		///
+		/// Using this module requires that local avoidance is used: i.e. that an RVOController is attached to the GameObject.
+		///
+		/// See: <see cref="Pathfinding.RVO.RVODestinationCrowdedBehavior"/>
+		/// See: local-avoidance (view in online documentation for working links)
+		/// </summary>
+		public RVODestinationCrowdedBehavior rvoDensityBehavior = new RVODestinationCrowdedBehavior(true, 0.5f, false);
+
+		/// <summary>
 		/// Offset along the Y coordinate for the ground raycast start position.
 		/// Normally the pivot of the character is at the character's feet, but you usually want to fire the raycast
 		/// from the character's center, so this value should be half of the character's height.
@@ -79,6 +136,17 @@ namespace Pathfinding {
 		[HideInInspector]
 		[FormerlySerializedAs("centerOffset")]
 		float centerOffsetCompatibility = float.NaN;
+
+		[SerializeField]
+		[HideInInspector]
+		[UnityEngine.Serialization.FormerlySerializedAs("repathRate")]
+		float repathRateCompatibility = float.NaN;
+
+		[SerializeField]
+		[HideInInspector]
+		[UnityEngine.Serialization.FormerlySerializedAs("canSearch")]
+		[UnityEngine.Serialization.FormerlySerializedAs("repeatedlySearchPaths")]
+		bool canSearchCompability = false;
 
 		/// <summary>
 		/// Determines which direction the agent moves in.
@@ -136,7 +204,16 @@ namespace Pathfinding {
 		/// Rotation of the agent.
 		/// If <see cref="updateRotation"/> is true then this value is identical to transform.rotation.
 		/// </summary>
-		public Quaternion rotation { get { return updateRotation ? tr.rotation : simulatedRotation; } }
+		public Quaternion rotation {
+			get { return updateRotation ? tr.rotation : simulatedRotation; }
+			set {
+				if (updateRotation) {
+					tr.rotation = value;
+				} else {
+					simulatedRotation = value;
+				}
+			}
+		}
 
 		/// <summary>Accumulated movement deltas from the <see cref="Move"/> method</summary>
 		Vector3 accumulatedMovementDelta = Vector3.zero;
@@ -179,7 +256,7 @@ namespace Pathfinding {
 		/// This is used to convert between world space and a movement plane to make it possible to use this script in
 		/// both 2D games and 3D games.
 		/// </summary>
-		public IMovementPlane movementPlane = GraphTransform.identityTransform;
+		public SimpleMovementPlane movementPlane = new SimpleMovementPlane(Quaternion.identity);
 
 		/// <summary>
 		/// Determines if the character's position should be coupled to the Transform's position.
@@ -205,6 +282,12 @@ namespace Pathfinding {
 		/// </summary>
 		[System.NonSerialized]
 		public bool updateRotation = true;
+
+		/// <summary>
+		/// Determines how the agent recalculates its path automatically.
+		/// This corresponds to the settings under the "Recalculate Paths Automatically" field in the inspector.
+		/// </summary>
+		public AutoRepathPolicy autoRepath = new AutoRepathPolicy();
 
 		/// <summary>Indicates if gravity is used during this frame</summary>
 		protected bool usingGravity { get; set; }
@@ -252,20 +335,32 @@ namespace Pathfinding {
 		[System.Obsolete("Use the destination property or the AIDestinationSetter component instead")]
 		public Transform target {
 			get {
-				var setter = GetComponent<AIDestinationSetter>();
-				return setter != null ? setter.target : null;
+				return TryGetComponent(out AIDestinationSetter setter) ? setter.target : null;
 			}
 			set {
 				targetCompatibility = null;
-				var setter = GetComponent<AIDestinationSetter>();
-				if (setter == null) setter = gameObject.AddComponent<AIDestinationSetter>();
+				if (!TryGetComponent(out AIDestinationSetter setter)) setter = gameObject.AddComponent<AIDestinationSetter>();
 				setter.target = value;
 				destination = value != null ? value.position : new Vector3(float.PositiveInfinity, float.PositiveInfinity, float.PositiveInfinity);
 			}
 		}
 
+		/// <summary>Backing field for <see cref="destination"/></summary>
+		Vector3 destinationBackingField = new Vector3(float.PositiveInfinity, float.PositiveInfinity, float.PositiveInfinity);
+
 		/// <summary>\copydoc Pathfinding::IAstarAI::destination</summary>
-		public Vector3 destination { get; set; }
+		public Vector3 destination {
+			get { return destinationBackingField; }
+			set {
+				// Note: vector3 equality operator will return false if both are (inf,inf,inf). So do the extra check to see if both are infinity.
+				if (rvoDensityBehavior.enabled && !(value == destinationBackingField || (float.IsPositiveInfinity(value.x) && float.IsPositiveInfinity(destinationBackingField.x)))) {
+					destinationBackingField = value;
+					rvoDensityBehavior.OnDestinationChanged(value, reachedDestination);
+				} else {
+					destinationBackingField = value;
+				}
+			}
+		}
 
 		/// <summary>\copydoc Pathfinding::IAstarAI::velocity</summary>
 		public Vector3 velocity {
@@ -274,11 +369,22 @@ namespace Pathfinding {
 			}
 		}
 
-		/// <summary>
-		/// Velocity that this agent wants to move with.
-		/// Includes gravity and local avoidance if applicable.
-		/// </summary>
-		public Vector3 desiredVelocity { get { return lastDeltaTime > 0.00001f ? movementPlane.ToWorld(lastDeltaPosition / lastDeltaTime, verticalVelocity) : Vector3.zero; } }
+		/// <summary>\copydoc Pathfinding::IAstarAI::desiredVelocity</summary>
+		public Vector3 desiredVelocity {
+			get { return lastDeltaTime > 0.00001f ? movementPlane.ToWorld(lastDeltaPosition / lastDeltaTime, verticalVelocity) : Vector3.zero; }
+		}
+
+		/// <summary>\copydoc Pathfinding::IAstarAI::desiredVelocityWithoutLocalAvoidance</summary>
+		public Vector3 desiredVelocityWithoutLocalAvoidance {
+			get { return movementPlane.ToWorld(velocity2D, verticalVelocity); }
+			set { velocity2D = movementPlane.ToPlane(value, out verticalVelocity); }
+		}
+
+		/// <summary>\copydoc Pathfinding::IAstarAI::endOfPath</summary>
+		public abstract Vector3 endOfPath { get; }
+
+		/// <summary>\copydoc Pathfinding::IAstarAI::reachedDestination</summary>
+		public abstract bool reachedDestination { get; }
 
 		/// <summary>\copydoc Pathfinding::IAstarAI::isStopped</summary>
 		public bool isStopped { get; set; }
@@ -289,15 +395,8 @@ namespace Pathfinding {
 		/// <summary>True if the path should be automatically recalculated as soon as possible</summary>
 		protected virtual bool shouldRecalculatePath {
 			get {
-				return Time.time - lastRepath >= repathRate && !waitingForPathCalculation && canSearch && !float.IsPositiveInfinity(destination.x);
+				return !waitingForPathCalculation && autoRepath.ShouldRecalculatePath((IAstarAI)this);
 			}
-		}
-
-		protected AIBase () {
-			// Note that this needs to be set here in the constructor and not in e.g Awake
-			// because it is possible that other code runs and sets the destination property
-			// before the Awake method on this script runs.
-			destination = new Vector3(float.PositiveInfinity, float.PositiveInfinity, float.PositiveInfinity);
 		}
 
 		/// <summary>
@@ -308,12 +407,15 @@ namespace Pathfinding {
 		/// </summary>
 		public virtual void FindComponents () {
 			tr = transform;
-			seeker = GetComponent<Seeker>();
-			rvoController = GetComponent<RVOController>();
+			// GetComponent is a bit slow, so only call it if we don't know about the component already.
+			// This is important when selecting a lot of objects in the editor as OnDrawGizmos will call
+			// this method every frame when outside of play mode.
+			if (!seeker) TryGetComponent(out seeker);
+			if (!rvoController) TryGetComponent(out rvoController);
 			// Find attached movement components
-			controller = GetComponent<CharacterController>();
-			rigid = GetComponent<Rigidbody>();
-			rigid2D = GetComponent<Rigidbody2D>();
+			if (!controller) TryGetComponent(out controller);
+			if (!rigid) TryGetComponent(out rigid);
+			if (!rigid2D) TryGetComponent(out rigid2D);
 		}
 
 		/// <summary>Called when the component is enabled</summary>
@@ -322,6 +424,66 @@ namespace Pathfinding {
 			// Make sure we receive callbacks when paths are calculated
 			seeker.pathCallback += OnPathComplete;
 			Init();
+
+			// When using rigidbodies all movement is done inside FixedUpdate instead of Update
+			bool fixedUpdate = rigid != null || rigid2D != null;
+			BatchedEvents.Add(this, fixedUpdate ? BatchedEvents.Event.FixedUpdate : BatchedEvents.Event.Update, OnUpdate);
+		}
+
+		/// <summary>
+		/// Called every frame.
+		/// This may be called during FixedUpdate or Update depending on if a rigidbody is attached to the GameObject.
+		/// </summary>
+		static void OnUpdate (AIBase[] components, int count, BatchedEvents.Event ev) {
+			float dt = ev == BatchedEvents.Event.FixedUpdate ? Time.fixedDeltaTime : Time.deltaTime;
+
+			if (RVOSimulator.active != null) {
+				int agentsWithRVOControllers = 0;
+				for (int i = 0; i < count; i++) agentsWithRVOControllers += (components[i].rvoController != null && components[i].rvoController.enabled ? 1 : 0);
+				RVODestinationCrowdedBehavior.JobDensityCheck densityJobData = new RVODestinationCrowdedBehavior.JobDensityCheck(agentsWithRVOControllers, dt);
+
+				for (int i = 0, j = 0; i < count; i++) {
+					var agent = components[i];
+					if (agent.rvoController != null && agent.rvoController.enabled) {
+						densityJobData.Set(j, agent.rvoController.rvoAgent.AgentIndex, agent.endOfPath, agent.rvoDensityBehavior.densityThreshold, agent.rvoDensityBehavior.progressAverage);
+						j++;
+					}
+				}
+				var densityJob = densityJobData.ScheduleBatch(agentsWithRVOControllers, agentsWithRVOControllers / 16);
+				densityJob.Complete();
+
+				for (int i = 0, j = 0; i < count; i++) {
+					var agent = components[i];
+					if (agent.rvoController != null && agent.rvoController.enabled) {
+						agent.rvoDensityBehavior.ReadJobResult(ref densityJobData, j);
+						j++;
+					}
+				}
+
+				densityJobData.Dispose();
+			}
+
+			for (int i = 0; i < count; i++) {
+				var agent = components[i];
+				agent.OnUpdate(dt);
+			}
+		}
+
+		/// <summary>Called every frame</summary>
+		protected virtual void OnUpdate (float dt) {
+			// If gravity is used depends on a lot of things.
+			// For example when a non-kinematic rigidbody is used then the rigidbody will apply the gravity itself
+			// Note that the gravity can contain NaN's, which is why the comparison uses !(a==b) instead of just a!=b.
+			usingGravity = !(gravity == Vector3.zero) && (!updatePosition || ((rigid == null || rigid.isKinematic) && (rigid2D == null || rigid2D.isKinematic)));
+
+			if (shouldRecalculatePath) SearchPath();
+
+			if (canMove) {
+				Vector3 nextPosition;
+				Quaternion nextRotation;
+				MovementUpdate(dt, out nextPosition, out nextRotation);
+				FinalizeMovement(nextPosition, nextRotation);
+			}
 		}
 
 		/// <summary>
@@ -338,8 +500,8 @@ namespace Pathfinding {
 			if (startHasRun) {
 				// Clamp the agent to the navmesh (which is what the Teleport call will do essentially. Though only some movement scripts require this, like RichAI).
 				// The Teleport call will also make sure some variables are properly initialized (like #prevPosition1 and #prevPosition2)
-				Teleport(position, false);
-				lastRepath = float.NegativeInfinity;
+				if (canMove) Teleport(position, false);
+				autoRepath.Reset();
 				if (shouldRecalculatePath) SearchPath();
 			}
 		}
@@ -360,6 +522,7 @@ namespace Pathfinding {
 		}
 
 		protected virtual void OnDisable () {
+			BatchedEvents.Remove(this);
 			ClearPath();
 
 			// Make sure we no longer receive callbacks when paths complete
@@ -371,38 +534,6 @@ namespace Pathfinding {
 			lastDeltaTime = 0;
 		}
 
-		/// <summary>
-		/// Called every frame.
-		/// If no rigidbodies are used then all movement happens here.
-		/// </summary>
-		protected virtual void Update () {
-			if (shouldRecalculatePath) SearchPath();
-
-			// If gravity is used depends on a lot of things.
-			// For example when a non-kinematic rigidbody is used then the rigidbody will apply the gravity itself
-			// Note that the gravity can contain NaN's, which is why the comparison uses !(a==b) instead of just a!=b.
-			usingGravity = !(gravity == Vector3.zero) && (!updatePosition || ((rigid == null || rigid.isKinematic) && (rigid2D == null || rigid2D.isKinematic)));
-			if (rigid == null && rigid2D == null && canMove) {
-				Vector3 nextPosition;
-				Quaternion nextRotation;
-				MovementUpdate(Time.deltaTime, out nextPosition, out nextRotation);
-				FinalizeMovement(nextPosition, nextRotation);
-			}
-		}
-
-		/// <summary>
-		/// Called every physics update.
-		/// If rigidbodies are used then all movement happens here.
-		/// </summary>
-		protected virtual void FixedUpdate () {
-			if (!(rigid == null && rigid2D == null) && canMove) {
-				Vector3 nextPosition;
-				Quaternion nextRotation;
-				MovementUpdate(Time.fixedDeltaTime, out nextPosition, out nextRotation);
-				FinalizeMovement(nextPosition, nextRotation);
-			}
-		}
-
 		/// <summary>\copydoc Pathfinding::IAstarAI::MovementUpdate</summary>
 		public void MovementUpdate (float deltaTime, out Vector3 nextPosition, out Quaternion nextRotation) {
 			lastDeltaTime = deltaTime;
@@ -410,7 +541,7 @@ namespace Pathfinding {
 		}
 
 		/// <summary>Called during either Update or FixedUpdate depending on if rigidbodies are used for movement or not</summary>
-		protected abstract void MovementUpdateInternal (float deltaTime, out Vector3 nextPosition, out Quaternion nextRotation);
+		protected abstract void MovementUpdateInternal(float deltaTime, out Vector3 nextPosition, out Quaternion nextRotation);
 
 		/// <summary>
 		/// Outputs the start point and end point of the next automatic path request.
@@ -428,21 +559,13 @@ namespace Pathfinding {
 			if (float.IsPositiveInfinity(destination.x)) return;
 			if (onSearchPath != null) onSearchPath();
 
-			lastRepath = Time.time;
-			waitingForPathCalculation = true;
-
-			seeker.CancelCurrentPathRequest();
-
+			// Find out where we are and where we are going
 			Vector3 start, end;
 			CalculatePathRequestEndpoints(out start, out end);
 
-			// Alternative way of requesting the path
-			//ABPath p = ABPath.Construct(start, end, null);
-			//seeker.StartPath(p);
-
-			// This is where we should search to
 			// Request a path to be calculated from our current position to the destination
-			seeker.StartPath(start, end);
+			ABPath p = ABPath.Construct(start, end, null);
+			SetPath(p);
 		}
 
 		/// <summary>
@@ -458,7 +581,7 @@ namespace Pathfinding {
 		}
 
 		/// <summary>Called when a requested path has been calculated</summary>
-		protected abstract void OnPathComplete (Path newPath);
+		protected abstract void OnPathComplete(Path newPath);
 
 		/// <summary>
 		/// Clears the current path of the agent.
@@ -468,7 +591,7 @@ namespace Pathfinding {
 		/// See: <see cref="SetPath"/>
 		/// See: <see cref="isStopped"/>
 		/// </summary>
-		protected abstract void ClearPath ();
+		protected abstract void ClearPath();
 
 		/// <summary>\copydoc Pathfinding::IAstarAI::SetPath</summary>
 		public void SetPath (Path path) {
@@ -477,11 +600,11 @@ namespace Pathfinding {
 				ClearPath();
 			} else if (path.PipelineState == PathState.Created) {
 				// Path has not started calculation yet
-				lastRepath = Time.time;
 				waitingForPathCalculation = true;
 				seeker.CancelCurrentPathRequest();
 				seeker.StartPath(path);
-			} else if (path.PipelineState == PathState.Returned) {
+				autoRepath.DidRecalculatePath(destination);
+			} else if (path.PipelineState >= PathState.Returning) {
 				// Path has already been calculated
 
 				// We might be calculating another path at the same time, and we don't want that path to override this one. So cancel it.
@@ -500,7 +623,7 @@ namespace Pathfinding {
 		/// See: <see cref="verticalVelocity"/>
 		/// See: <see cref="gravity"/>
 		/// </summary>
-		protected void ApplyGravity (float deltaTime) {
+		protected virtual void ApplyGravity (float deltaTime) {
 			// Apply gravity
 			if (usingGravity) {
 				float verticalGravity;
@@ -512,11 +635,11 @@ namespace Pathfinding {
 		}
 
 		/// <summary>Calculates how far to move during a single frame</summary>
-		protected Vector2 CalculateDeltaToMoveThisFrame (Vector2 position, float distanceToEndOfPath, float deltaTime) {
+		protected Vector2 CalculateDeltaToMoveThisFrame (Vector3 position, float distanceToEndOfPath, float deltaTime) {
 			if (rvoController != null && rvoController.enabled) {
 				// Use RVOController to get a processed delta position
 				// such that collisions will be avoided if possible
-				return movementPlane.ToPlane(rvoController.CalculateMovementDelta(movementPlane.ToWorld(position, 0), deltaTime));
+				return movementPlane.ToPlane(rvoController.CalculateMovementDelta(position, deltaTime));
 			}
 			// Direction and distance to move during this frame
 			return Vector2.ClampMagnitude(velocity2D * deltaTime, distanceToEndOfPath);
@@ -533,7 +656,7 @@ namespace Pathfinding {
 		/// <param name="direction">Direction in world space to rotate towards.</param>
 		/// <param name="maxDegrees">Maximum number of degrees to rotate this frame.</param>
 		public Quaternion SimulateRotationTowards (Vector3 direction, float maxDegrees) {
-			return SimulateRotationTowards(movementPlane.ToPlane(direction), maxDegrees);
+			return SimulateRotationTowards(movementPlane.ToPlane(direction), maxDegrees, maxDegrees);
 		}
 
 		/// <summary>
@@ -545,15 +668,46 @@ namespace Pathfinding {
 		/// See: <see cref="movementPlane"/>
 		/// </summary>
 		/// <param name="direction">Direction in the movement plane to rotate towards.</param>
-		/// <param name="maxDegrees">Maximum number of degrees to rotate this frame.</param>
-		protected Quaternion SimulateRotationTowards (Vector2 direction, float maxDegrees) {
-			if (direction != Vector2.zero) {
-				Quaternion targetRotation = Quaternion.LookRotation(movementPlane.ToWorld(direction, 0), movementPlane.ToWorld(Vector2.zero, 1));
-				// This causes the character to only rotate around the Z axis
-				if (orientation == OrientationMode.YAxisForward) targetRotation *= Quaternion.Euler(90, 0, 0);
-				return Quaternion.RotateTowards(simulatedRotation, targetRotation, maxDegrees);
+		/// <param name="maxDegreesMainAxis">Maximum number of degrees to rotate this frame around the character's main axis. This is rotating left and right as a character normally does.</param>
+		/// <param name="maxDegreesOffAxis">Maximum number of degrees to rotate this frame around other axes. This is used to ensure the character's up direction is correct.
+		/// 		It is only used for non-planar worlds where the up direction changes depending on the position of the character.
+		///      More precisely a faster code path which ignores this parameter is used whenever the current #movementPlane is exactly the XZ or XY plane.
+		/// 		This must be at least as large as maxDegreesMainAxis.</param>
+		protected Quaternion SimulateRotationTowards (Vector2 direction, float maxDegreesMainAxis, float maxDegreesOffAxis = float.PositiveInfinity) {
+			Quaternion targetRotation;
+
+			if (movementPlane.isXY || movementPlane.isXZ) {
+				if (direction == Vector2.zero) return simulatedRotation;
+
+				// Common fast path.
+				// A standard XY or XZ movement plane indicates that the character is moving in a normal planar world.
+				// We will use a much faster code path for this case since we don't have to deal with changing the 'up' direction of the character all the time.
+				// This code path mostly works for non-planar worlds too, but it will fail in some cases.
+				// In particular it will not be able to adjust the up direction of the character while it is standing still (because then a zero maxDegreesMainAxis is usually passed).
+				// That case may be important, especially when the character has just been spawned and does not have a destination yet.
+				targetRotation = Quaternion.LookRotation(movementPlane.ToWorld(direction, 0), movementPlane.ToWorld(Vector2.zero, 1));
+				maxDegreesOffAxis = maxDegreesMainAxis;
+			} else {
+				// Decompose the rotation into two parts: a rotation around the main axis of the character, and a rotation around the other axes.
+				// Then limit the rotation speed along those two components separately.
+				var forwardInPlane = movementPlane.ToPlane(rotation * (orientation == OrientationMode.YAxisForward ? Vector3.up : Vector3.forward));
+
+				// Can happen if the character is perpendicular to the plane
+				if (forwardInPlane == Vector2.zero) forwardInPlane = Vector2.right;
+
+				var rotationVectorAroundMainAxis = VectorMath.ComplexMultiplyConjugate(direction, forwardInPlane);
+
+				// Note: If the direction is zero, then angle will also be zero since atan2(0,0) = 0
+				var angle = Mathf.Atan2(rotationVectorAroundMainAxis.y, rotationVectorAroundMainAxis.x) * Mathf.Rad2Deg;
+				var rotationAroundMainAxis = Quaternion.AngleAxis(-Mathf.Min(Mathf.Abs(angle), maxDegreesMainAxis) * Mathf.Sign(angle), Vector3.up);
+
+				targetRotation = Quaternion.LookRotation(movementPlane.ToWorld(forwardInPlane, 0), movementPlane.ToWorld(Vector2.zero, 1));
+				targetRotation = targetRotation * rotationAroundMainAxis;
 			}
-			return simulatedRotation;
+
+			// This causes the character to only rotate around the Z axis
+			if (orientation == OrientationMode.YAxisForward) targetRotation *= Quaternion.Euler(90, 0, 0);
+			return Quaternion.RotateTowards(simulatedRotation, targetRotation, maxDegreesOffAxis);
 		}
 
 		/// <summary>\copydoc Pathfinding::IAstarAI::Move</summary>
@@ -656,6 +810,14 @@ namespace Pathfinding {
 		}
 
 		/// <summary>
+		/// Hit info from the last raycast done for ground placement.
+		/// Will not update unless gravity is used (if no gravity is used, then raycasts are disabled).
+		///
+		/// See: <see cref="RaycastPosition"/>
+		/// </summary>
+		protected RaycastHit lastRaycastHit;
+
+		/// <summary>
 		/// Checks if the character is grounded and prevents ground penetration.
 		///
 		/// Sets <see cref="verticalVelocity"/> to zero if the character is grounded.
@@ -665,14 +827,13 @@ namespace Pathfinding {
 		/// <param name="position">Position of the character in the world.</param>
 		/// <param name="lastElevation">Elevation coordinate before the agent was moved. This is along the 'up' axis of the #movementPlane.</param>
 		protected Vector3 RaycastPosition (Vector3 position, float lastElevation) {
-			RaycastHit hit;
 			float elevation;
 
 			movementPlane.ToPlane(position, out elevation);
 			float rayLength = tr.localScale.y * height * 0.5f + Mathf.Max(0, lastElevation-elevation);
 			Vector3 rayOffset = movementPlane.ToWorld(Vector2.zero, rayLength);
 
-			if (Physics.Raycast(position + rayOffset, -rayOffset, out hit, rayLength, groundMask, QueryTriggerInteraction.Ignore)) {
+			if (Physics.Raycast(position + rayOffset, -rayOffset, out lastRaycastHit, rayLength, groundMask, QueryTriggerInteraction.Ignore)) {
 				// Grounded
 				// Make the vertical velocity fall off exponentially. This is reasonable from a physical standpoint as characters
 				// are not completely stiff and touching the ground will not immediately negate all velocity downwards. The AI will
@@ -682,7 +843,7 @@ namespace Pathfinding {
 				// use a more physically correct formula but this is a good approximation and is much more performant. The constant
 				// '5' in the expression below determines how quickly it converges but high values can lead to too much noise.
 				verticalVelocity *= System.Math.Max(0, 1 - 5 * lastDeltaTime);
-				return hit.point;
+				return lastRaycastHit.point;
 			}
 			return position;
 		}
@@ -696,18 +857,20 @@ namespace Pathfinding {
 
 		public static readonly Color ShapeGizmoColor = new Color(240/255f, 213/255f, 30/255f);
 
-		protected virtual void OnDrawGizmos () {
+		public override void DrawGizmos () {
 			if (!Application.isPlaying || !enabled) FindComponents();
 
 			var color = ShapeGizmoColor;
 			if (rvoController != null && rvoController.locked) color *= 0.5f;
 			if (orientation == OrientationMode.YAxisForward) {
-				Draw.Gizmos.Cylinder(position, Vector3.forward, 0, radius * tr.localScale.x, color);
+				Draw.WireCylinder(position, Vector3.forward, 0, radius * tr.localScale.x, color);
 			} else {
-				Draw.Gizmos.Cylinder(position, rotation * Vector3.up, tr.localScale.y * height, radius * tr.localScale.x, color);
+				Draw.WireCylinder(position, rotation * Vector3.up, tr.localScale.y * height, radius * tr.localScale.x, color);
 			}
 
-			if (!float.IsPositiveInfinity(destination.x) && Application.isPlaying) Draw.Gizmos.CircleXZ(destination, 0.2f, Color.blue);
+			if (!float.IsPositiveInfinity(destination.x) && Application.isPlaying) Draw.CircleXZ(destination, 0.2f, Color.blue);
+
+			autoRepath.DrawGizmos((IAstarAI)this);
 		}
 
 		protected override void Reset () {
@@ -716,9 +879,7 @@ namespace Pathfinding {
 		}
 
 		void ResetShape () {
-			var cc = GetComponent<CharacterController>();
-
-			if (cc != null) {
+			if (TryGetComponent(out CharacterController cc)) {
 				radius = cc.radius;
 				height = Mathf.Max(radius*2, cc.height);
 			}
@@ -728,14 +889,19 @@ namespace Pathfinding {
 			if (unityThread && !float.IsNaN(centerOffsetCompatibility)) {
 				height = centerOffsetCompatibility*2;
 				ResetShape();
-				var rvo = GetComponent<RVOController>();
-				if (rvo != null) radius = rvo.radiusBackingField;
+				if (TryGetComponent(out RVOController rvo)) radius = rvo.radiusBackingField;
 				centerOffsetCompatibility = float.NaN;
 			}
 			#pragma warning disable 618
 			if (unityThread && targetCompatibility != null) target = targetCompatibility;
 			#pragma warning restore 618
-			return 1;
+			if (version <= 2) rvoDensityBehavior.enabled = false;
+
+			if (version <= 3) {
+				repathRate = repathRateCompatibility;
+				canSearch = canSearchCompability;
+			}
+			return 4;
 		}
 	}
 }

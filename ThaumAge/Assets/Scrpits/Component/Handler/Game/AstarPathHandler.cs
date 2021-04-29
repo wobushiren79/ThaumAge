@@ -3,7 +3,15 @@ using UnityEngine;
 
 public class AstarPathHandler : BaseHandler<AstarPathHandler, AstarPathManager>
 {
-    public void RefreshPath()
+
+
+    public void RefreshAllGraph()
+    {
+        AstarPath.active.Scan();
+        //AstarPath.active.Scan();
+    }
+
+    public void RefreshGraph()
     {
         manager.proceduralGridMover.UpdateGraph();
         //AstarPath.active.Scan();

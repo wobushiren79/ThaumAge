@@ -5,6 +5,7 @@ using System.Collections.Generic;
 namespace Pathfinding {
 	using Pathfinding.RVO;
 	using Pathfinding.Util;
+	using Pathfinding.Drawing;
 
 	/// <summary>
 	/// AI for following paths.
@@ -101,32 +102,25 @@ namespace Pathfinding {
 		/// </summary>
 		public float pickNextWaypointDist = 2;
 
-		/// <summary>
-		/// Distance to the end point to consider the end of path to be reached.
-		/// When the end is within this distance then <see cref="OnTargetReached"/> will be called and <see cref="reachedEndOfPath"/> will return true.
-		/// </summary>
-		public float endReachedDistance = 0.2F;
-
 		/// <summary>Draws detailed gizmos constantly in the scene view instead of only when the agent is selected and settings are being modified</summary>
 		public bool alwaysDrawGizmos;
 
 		/// <summary>
 		/// Slow down when not facing the target direction.
 		/// Incurs at a small performance overhead.
+		///
+		/// This setting only has an effect if <see cref="enableRotation"/> is enabled.
 		/// </summary>
 		public bool slowWhenNotFacingTarget = true;
 
 		/// <summary>
-		/// What to do when within <see cref="endReachedDistance"/> units from the destination.
-		/// The character can either stop immediately when it comes within that distance, which is useful for e.g archers
-		/// or other ranged units that want to fire on a target. Or the character can continue to try to reach the exact
-		/// destination point and come to a full stop there. This is useful if you want the character to reach the exact
-		/// point that you specified.
+		/// Prevent the velocity from being too far away from the forward direction of the character.
+		/// If the character is ordered to move in the opposite direction from where it is facing
+		/// then enabling this will cause it to make a small loop instead of turning on the spot.
 		///
-		/// Note: <see cref="reachedEndOfPath"/> will become true when the character is within <see cref="endReachedDistance"/> units from the destination
-		/// regardless of what this field is set to.
+		/// This setting only has an effect if <see cref="slowWhenNotFacingTarget"/> is enabled.
 		/// </summary>
-		public CloseToDestinationMode whenCloseToDestination = CloseToDestinationMode.Stop;
+		public bool preventMovingBackwards = false;
 
 		/// <summary>
 		/// Ensure that the character is always on the traversable surface of the navmesh.
@@ -178,7 +172,7 @@ namespace Pathfinding {
 		}
 
 		/// <summary>\copydoc Pathfinding::IAstarAI::reachedDestination</summary>
-		public bool reachedDestination {
+		public override bool reachedDestination {
 			get {
 				if (!reachedEndOfPath) return false;
 				if (remainingDistance + movementPlane.ToPlane(destination - interpolator.endPoint).magnitude > endReachedDistance) return false;
@@ -220,6 +214,13 @@ namespace Pathfinding {
 			}
 		}
 
+		/// <summary>\copydoc Pathfinding::IAstarAI::endOfPath</summary>
+		public override Vector3 endOfPath {
+			get {
+				return interpolator.valid ? interpolator.endPoint : destination;
+			}
+		}
+
 		/// <summary>\copydoc Pathfinding::IAstarAI::radius</summary>
 		float IAstarAI.radius { get { return radius; } set { radius = value; } }
 
@@ -257,6 +258,8 @@ namespace Pathfinding {
 			if (path != null) path.Release(this);
 			path = null;
 			interpolator.SetPath(null);
+			rotationFilterState = Vector2.zero;
+			rotationFilterState2 = Vector2.zero;
 		}
 
 		/// <summary>
@@ -268,6 +271,13 @@ namespace Pathfinding {
 		/// So when the agent is close to the destination this method will typically be called every <see cref="repathRate"/> seconds.
 		/// </summary>
 		public virtual void OnTargetReached () {
+		}
+
+		protected virtual void UpdateMovementPlane () {
+			if (path.path == null || path.path.Count == 0) return;
+			var graph = AstarData.GetGraph(path.path[0]) as ITransformedGraph;
+			IMovementPlane graphTransform = graph != null ? graph.transform : (orientation == OrientationMode.YAxisForward ? new GraphTransform(Matrix4x4.TRS(Vector3.zero, Quaternion.Euler(-90, 270, 90), Vector3.one)) : GraphTransform.identityTransform);
+			movementPlane = graphTransform.ToSimpleMovementPlane();
 		}
 
 		/// <summary>
@@ -290,6 +300,7 @@ namespace Pathfinding {
 			// More info in p.errorLog (debug string)
 			if (p.error) {
 				p.Release(this);
+				SetPath(null);
 				return;
 			}
 
@@ -303,8 +314,7 @@ namespace Pathfinding {
 			if (path.vectorPath.Count == 1) path.vectorPath.Add(path.vectorPath[0]);
 			interpolator.SetPath(path.vectorPath);
 
-			var graph = path.path.Count > 0 ? AstarData.GetGraph(path.path[0]) as ITransformedGraph : null;
-			movementPlane = graph != null ? graph.transform : (orientation == OrientationMode.YAxisForward ? new GraphTransform(Matrix4x4.TRS(Vector3.zero, Quaternion.Euler(-90, 270, 90), Vector3.one)) : GraphTransform.identityTransform);
+			UpdateMovementPlane();
 
 			// Reset some variables
 			reachedEndOfPath = false;
@@ -331,6 +341,8 @@ namespace Pathfinding {
 
 		protected override void ClearPath () {
 			CancelCurrentPathRequest();
+			if (path != null) path.Release(this);
+			path = null;
 			interpolator.SetPath(null);
 			reachedEndOfPath = false;
 		}
@@ -362,31 +374,29 @@ namespace Pathfinding {
 			var prevTargetReached = reachedEndOfPath;
 			reachedEndOfPath = distanceToEnd <= endReachedDistance && interpolator.valid;
 			if (!prevTargetReached && reachedEndOfPath) OnTargetReached();
-			float slowdown;
+			float speedLimitFactor;
 
 			// Normalized direction of where the agent is looking
 			var forwards = movementPlane.ToPlane(simulatedRotation * (orientation == OrientationMode.YAxisForward ? Vector3.up : Vector3.forward));
 
 			// Check if we have a valid path to follow and some other script has not stopped the character
-			if (interpolator.valid && !isStopped) {
+			bool stopped = isStopped || (reachedDestination && whenCloseToDestination == CloseToDestinationMode.Stop);
+			if (rvoController != null) rvoDensityBehavior.Update(reachedDestination, ref stopped, ref rvoController.priorityMultiplier, ref rvoController.flowFollowingStrength);
+
+			if (interpolator.valid && !stopped) {
 				// How fast to move depending on the distance to the destination.
 				// Move slower as the character gets closer to the destination.
 				// This is always a value between 0 and 1.
-				slowdown = distanceToEnd < slowdownDistance? Mathf.Sqrt (distanceToEnd / slowdownDistance) : 1;
-
-				if (reachedEndOfPath && whenCloseToDestination == CloseToDestinationMode.Stop) {
-					// Slow down as quickly as possible
-					velocity2D -= Vector2.ClampMagnitude(velocity2D, currentAcceleration * deltaTime);
-				} else {
-					velocity2D += MovementUtilities.CalculateAccelerationToReachPoint(dir, dir.normalized*maxSpeed, velocity2D, currentAcceleration, rotationSpeed, maxSpeed, forwards) * deltaTime;
-				}
+				speedLimitFactor = distanceToEnd < slowdownDistance? Mathf.Sqrt(distanceToEnd / slowdownDistance) : 1;
+				velocity2D += MovementUtilities.CalculateAccelerationToReachPoint(dir, dir.normalized*maxSpeed, velocity2D, currentAcceleration, rotationSpeed, maxSpeed, forwards) * deltaTime;
 			} else {
-				slowdown = 1;
 				// Slow down as quickly as possible
 				velocity2D -= Vector2.ClampMagnitude(velocity2D, currentAcceleration * deltaTime);
+				// We are already slowing down as quickly as possible. Avoid limiting the speed in other ways.
+				speedLimitFactor = 1;
 			}
 
-			velocity2D = MovementUtilities.ClampVelocity(velocity2D, maxSpeed, slowdown, slowWhenNotFacingTarget && enableRotation, forwards);
+			velocity2D = MovementUtilities.ClampVelocity(velocity2D, maxSpeed, speedLimitFactor, slowWhenNotFacingTarget && enableRotation, preventMovingBackwards, forwards);
 
 			ApplyGravity(deltaTime);
 
@@ -405,29 +415,21 @@ namespace Pathfinding {
 			}
 
 			// Set how much the agent wants to move during this frame
-			var delta2D = lastDeltaPosition = CalculateDeltaToMoveThisFrame(movementPlane.ToPlane(currentPosition), distanceToEnd, deltaTime);
-			nextPosition = currentPosition + movementPlane.ToWorld(delta2D, verticalVelocity * lastDeltaTime);
-			CalculateNextRotation(slowdown, out nextRotation);
+			var delta2D = lastDeltaPosition = CalculateDeltaToMoveThisFrame(currentPosition, distanceToEnd, deltaTime);
+			nextPosition = currentPosition + movementPlane.ToWorld(delta2D, verticalVelocity * deltaTime);
+			CalculateNextRotation(speedLimitFactor, out nextRotation);
 		}
+
+		Vector2 rotationFilterState, rotationFilterState2;
 
 		protected virtual void CalculateNextRotation (float slowdown, out Quaternion nextRotation) {
 			if (lastDeltaTime > 0.00001f && enableRotation) {
-				Vector2 desiredRotationDirection;
-				if (rvoController != null && rvoController.enabled) {
-					// When using local avoidance, use the actual velocity we are moving with if that velocity
-					// is high enough, otherwise fall back to the velocity that we want to move with (velocity2D).
-					// The local avoidance velocity can be very jittery when the character is close to standing still
-					// as it constantly makes small corrections. We do not want the rotation of the character to be jittery.
-					var actualVelocity = lastDeltaPosition/lastDeltaTime;
-					desiredRotationDirection = Vector2.Lerp(velocity2D, actualVelocity, 4 * actualVelocity.magnitude / (maxSpeed + 0.0001f));
-				} else {
-					desiredRotationDirection = velocity2D;
-				}
-
-				// Rotate towards the direction we are moving in.
-				// Don't rotate when we are very close to the target.
-				var currentRotationSpeed = rotationSpeed * Mathf.Max(0, (slowdown - 0.3f) / 0.7f);
-				nextRotation = SimulateRotationTowards(desiredRotationDirection, currentRotationSpeed * lastDeltaTime);
+				// Rotate towards the direction we are moving in
+				// Filter out noise in the movement direction
+				// This is especially important when the agent is almost standing still and when using local avoidance
+				float noiseThreshold = radius * tr.localScale.x * 0.2f;
+				float rotationSpeedFactor = MovementUtilities.FilterRotationDirection(ref rotationFilterState, ref rotationFilterState2, lastDeltaPosition, noiseThreshold, lastDeltaTime);
+				nextRotation = SimulateRotationTowards(rotationFilterState, rotationSpeed * lastDeltaTime * rotationSpeedFactor, rotationSpeed * lastDeltaTime);
 			} else {
 				// TODO: simulatedRotation
 				nextRotation = rotation;
@@ -476,40 +478,31 @@ namespace Pathfinding {
 
 		protected static readonly Color GizmoColor = new Color(46.0f/255, 104.0f/255, 201.0f/255);
 
-		protected override void OnDrawGizmos () {
-			base.OnDrawGizmos();
-			if (alwaysDrawGizmos) OnDrawGizmosInternal();
-		}
-
-		protected override void OnDrawGizmosSelected () {
-			base.OnDrawGizmosSelected();
-			if (!alwaysDrawGizmos) OnDrawGizmosInternal();
-		}
-
-		void OnDrawGizmosInternal () {
+		public override void DrawGizmos () {
+			base.DrawGizmos();
 			var newGizmoHash = pickNextWaypointDist.GetHashCode() ^ slowdownDistance.GetHashCode() ^ endReachedDistance.GetHashCode();
 
 			if (newGizmoHash != gizmoHash && gizmoHash != 0) lastChangedTime = Time.realtimeSinceStartup;
 			gizmoHash = newGizmoHash;
-			float alpha = alwaysDrawGizmos ? 1 : Mathf.SmoothStep(1, 0, (Time.realtimeSinceStartup - lastChangedTime - 5f)/0.5f) * (UnityEditor.Selection.gameObjects.Length == 1 ? 1 : 0);
+			float alpha = alwaysDrawGizmos ? 1 : Mathf.SmoothStep(1, 0, (Time.realtimeSinceStartup - lastChangedTime - 5f)/0.5f) * (GizmoContext.selectionSize == 1 ? 1 : 0);
 
 			if (alpha > 0) {
 				// Make sure the scene view is repainted while the gizmos are visible
 				if (!alwaysDrawGizmos) UnityEditor.SceneView.RepaintAll();
-				Draw.Gizmos.Line(position, steeringTarget, GizmoColor * new Color(1, 1, 1, alpha));
-				Gizmos.matrix = Matrix4x4.TRS(position, transform.rotation * (orientation == OrientationMode.YAxisForward ? Quaternion.Euler(-90, 0, 0) : Quaternion.identity), Vector3.one);
-				Draw.Gizmos.CircleXZ(Vector3.zero, pickNextWaypointDist, GizmoColor * new Color(1, 1, 1, alpha));
-				Draw.Gizmos.CircleXZ(Vector3.zero, slowdownDistance, Color.Lerp(GizmoColor, Color.red, 0.5f) * new Color(1, 1, 1, alpha));
-				Draw.Gizmos.CircleXZ(Vector3.zero, endReachedDistance, Color.Lerp(GizmoColor, Color.red, 0.8f) * new Color(1, 1, 1, alpha));
+				Draw.Line(position, steeringTarget, GizmoColor * new Color(1, 1, 1, alpha));
+				using (Draw.WithMatrix(Matrix4x4.TRS(position, transform.rotation * (orientation == OrientationMode.YAxisForward ? Quaternion.Euler(-90, 0, 0) : Quaternion.identity), Vector3.one))) {
+					Draw.CircleXZ(Vector3.zero, pickNextWaypointDist, GizmoColor * new Color(1, 1, 1, alpha));
+					Draw.CircleXZ(Vector3.zero, slowdownDistance, Color.Lerp(GizmoColor, Color.red, 0.5f) * new Color(1, 1, 1, alpha));
+					Draw.CircleXZ(Vector3.zero, endReachedDistance, Color.Lerp(GizmoColor, Color.red, 0.8f) * new Color(1, 1, 1, alpha));
+				}
 			}
 		}
 #endif
 
 		protected override int OnUpgradeSerializedData (int version, bool unityThread) {
-			base.OnUpgradeSerializedData(version, unityThread);
 			// Approximately convert from a damping value to a degrees per second value.
 			if (version < 1) rotationSpeed *= 90;
-			return 2;
+			return base.OnUpgradeSerializedData(version, unityThread);
 		}
 	}
 }

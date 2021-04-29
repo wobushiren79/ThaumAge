@@ -36,7 +36,7 @@ namespace Pathfinding.RVO {
 		readonly List<ObstacleVertex> obstacles = new List<ObstacleVertex>();
 
 		/// <summary>Last simulator used</summary>
-		Simulator lastSim;
+		ISimulator lastSim;
 
 		public override void OnPostCacheLoad () {
 			OnLatePostScan();
@@ -91,8 +91,8 @@ namespace Pathfinding.RVO {
 		}
 
 		/// <summary>Adds obstacles for a grid graph</summary>
-		void AddGraphObstacles (Pathfinding.RVO.Simulator sim, GridGraph grid) {
-			bool reverse = Vector3.Dot(grid.transform.TransformVector(Vector3.up), sim.movementPlane == MovementPlane.XY ? Vector3.back : Vector3.up) > 0;
+		void AddGraphObstacles (Pathfinding.RVO.ISimulator sim, GridGraph grid) {
+			bool reverse = Vector3.Dot(grid.transform.TransformVector(Vector3.up), sim.MovementPlane == MovementPlane.XY ? Vector3.back : Vector3.up) > 0;
 
 			GraphUtilities.GetContours(grid, vertices => {
 				// Check if the contour is traced in the wrong direction from the one we want it in.
@@ -104,7 +104,7 @@ namespace Pathfinding.RVO {
 		}
 
 		/// <summary>Adds obstacles for a navmesh/recast graph</summary>
-		void AddGraphObstacles (Pathfinding.RVO.Simulator simulator, INavmesh navmesh) {
+		void AddGraphObstacles (Pathfinding.RVO.ISimulator simulator, INavmesh navmesh) {
 			GraphUtilities.GetContours(navmesh, (vertices, cycle) => {
 				var verticesV3 = new Vector3[vertices.Count];
 				for (int i = 0; i < verticesV3.Length; i++) verticesV3[i] = (Vector3)vertices[i];

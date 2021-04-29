@@ -6,13 +6,14 @@ namespace Pathfinding {
 	/// <summary>
 	/// Floods the area completely for easy computation of any path to a single point.
 	/// This path is a bit special, because it does not do anything useful by itself. What it does is that it calculates paths to all nodes it can reach, it floods the graph.
-	/// This data will remain stored in the path. Then you can call a FloodPathTracer path, that path will trace the path from it's starting point all the way to where this path started flooding and thus generating a path extremely quickly.\n
-	/// It is very useful in for example TD (Tower Defence) games where all your AIs will walk to the same point, but from different places, and you do not update the graph or change the target point very often,
-	/// what changes is their positions and new AIs spawn all the time (which makes it hard to use the MultiTargetPath).\n
+	/// This data will remain stored in the path. Then you can calculate a FloodPathTracer path, that path will trace the path from its starting point all the way to where this path started.
+	/// A FloodPathTracer search is extremely quick compared to a normal path request.
+	///
+	/// It is very useful in for example TD (Tower Defence) games where all your AIs will walk to the same point but from different places, and you do not update the graph or change the target point very often.
 	///
 	/// With this path type, it can all be handled easily.
 	/// - At start, you simply start ONE FloodPath and save the reference (it will be needed later).
-	/// - Then when a unit is spawned or needs its path recalculated, start a FloodPathTracer path from it's position.
+	/// - Then when a unit is spawned or needs its path recalculated, start a FloodPathTracer path from the unit's position.
 	/// It will then find the shortest path to the point specified when you called the FloodPath extremely quickly.
 	/// - If you update the graph (for example place a tower in a TD game) or need to change the target point, you simply call a new FloodPath (and store it's reference).
 	///
@@ -39,6 +40,15 @@ namespace Pathfinding {
 	/// Another thing to note is that if you are using NNConstraints on the FloodPathTracer, they must always inherit from Pathfinding.PathIDConstraint.\n
 	/// The easiest is to just modify the instance of PathIDConstraint which is created as the default one.
 	///
+	/// \section flood-path-builtin-movement Integration with the built-in movement scripts
+	/// The built-in movement scripts cannot calculate a FloodPathTracer path themselves, but you can use the SetPath method to assign such a path to them:
+	/// <code>
+	/// var ai = GetComponent<IAstarAI>();
+	/// // Disable the agent's own path recalculation code
+	/// ai.canSearch = false;
+	/// ai.SetPath(FloodPathTracer.Construct(ai.position, floodPath));
+	/// </code>
+	///
 	/// [Open online documentation to see images]
 	///
 	/// \ingroup paths
@@ -56,7 +66,7 @@ namespace Pathfinding {
 
 		protected Dictionary<GraphNode, GraphNode> parents;
 
-		internal override bool FloodingPath {
+		public override bool FloodingPath {
 			get {
 				return true;
 			}

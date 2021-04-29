@@ -119,15 +119,7 @@ namespace Pathfinding {
 		/// <summary>Cleans up editor stuff</summary>
 		public void OnDisable () {
 			Undo.undoRedoPerformed -= OnUndoRedoPerformed;
-
-			if (target == null) {
-				return;
-			}
-
 			SetAstarEditorSettings();
-			CheckGraphEditors();
-
-			SaveGraphsAndUndo();
 		}
 
 		/// <summary>Reads settings frome EditorPrefs</summary>
@@ -238,6 +230,16 @@ namespace Pathfinding {
 				return;
 			}
 
+#if UNITY_2020_1_OR_NEWER
+			if (UnityEditor.EditorSettings.enterPlayModeOptionsEnabled && (UnityEditor.EditorSettings.enterPlayModeOptions & EnterPlayModeOptions.DisableSceneReload) != 0) {
+				EditorGUILayout.HelpBox("The enter play mode option 'Scene Reload' must be enabled. This package does not support it being disabled. Disabling domain reload is supported however.", MessageType.Error);
+				if (GUILayout.Button("Enable the Scene Reload option")) {
+					UnityEditor.EditorSettings.enterPlayModeOptions &= ~EnterPlayModeOptions.DisableSceneReload;
+				}
+				EditorGUILayout.Separator();
+			}
+#endif
+
 #if ASTAR_ATAVISM
 			EditorGUILayout.HelpBox("This is a special version of the A* Pathfinding Project for Atavism. This version only supports scanning recast graphs and exporting them, but no pathfinding during runtime.", MessageType.Info);
 #endif
@@ -288,7 +290,7 @@ namespace Pathfinding {
 		/// See: EditorResourceHelper.LocateEditorAssets
 		/// Returns: True if all styles were found, false if there was an error somewhere
 		/// </summary>
-		static bool LoadStyles () {
+		public static bool LoadStyles () {
 			if (stylesLoaded) return true;
 
 			// Dummy styles in case the loading fails
@@ -358,7 +360,7 @@ namespace Pathfinding {
 				addGraphsArea.Header("Add New Graph");
 
 				if (addGraphsArea.BeginFade()) {
-					if (graphTypes == null) script.data.FindGraphTypes();
+					script.data.FindGraphTypes();
 					for (int i = 0; i < graphTypes.Length; i++) {
 						if (graphEditorTypes.ContainsKey(graphTypes[i].Name)) {
 							if (GUILayout.Button(graphEditorTypes[graphTypes[i].Name].displayName)) {
@@ -466,7 +468,7 @@ namespace Pathfinding {
 			// Check if the latest version is newer than this version
 			if (FullyDefinedVersion(newVersion) > FullyDefinedVersion(AstarPath.Version)) {
 				GUIUtilityx.PushTint(Color.green);
-				if (GUILayout.Button((beta ? "Beta" : "New") + " Version Available! "+newVersion, thinHelpBox, GUILayout.Height(15))) {
+				if (GUILayout.Button((beta ? "Beta" : "New") + " Version Available! "+newVersion, thinHelpBox, GUILayout.Height(21))) {
 					Application.OpenURL(AstarUpdateChecker.GetURL("download"));
 				}
 				GUIUtilityx.PopTint();
@@ -766,7 +768,7 @@ namespace Pathfinding {
 
 			if (script.data.cacheStartup && script.data.file_cachedStartup != null) {
 				GUIUtilityx.PushTint(Color.yellow);
-				GUILayout.Label("Startup cached", thinHelpBox, GUILayout.Height(15));
+				GUILayout.Label("Startup cached", thinHelpBox, GUILayout.Height(21));
 				GUILayout.Space(20);
 				GUIUtilityx.PopTint();
 			}
@@ -1300,12 +1302,11 @@ namespace Pathfinding {
 
 			//Only save undo if the data was different from the last saved undo
 			if (isDifferent) {
+				Undo.RegisterCompleteObjectUndo(script, "A* Graph Settings");
+				Undo.IncrementCurrentGroup();
 				//Assign the new data
 				script.data.SetData(bytes);
-
 				EditorUtility.SetDirty(script);
-				Undo.IncrementCurrentGroup();
-				Undo.RegisterCompleteObjectUndo(script, "A* Graph Settings");
 			}
 		}
 
@@ -1369,6 +1370,7 @@ namespace Pathfinding {
 			byte[] bytes = null;
 			uint tmpChecksum = 0;
 
+			CheckGraphEditors();
 			// Serialize all graph editors
 			var output = new System.Text.StringBuilder();
 			for (int i = 0; i < graphEditors.Length; i++) {
@@ -1402,7 +1404,7 @@ namespace Pathfinding {
 				// Deserialize editor settings
 				for (int i = 0; i < graphEditors.Length; i++) {
 					var data = (graphEditors[i].target as IGraphInternals).SerializedEditorSettings;
-					if (data != null) Pathfinding.Serialization.TinyJsonDeserializer.Deserialize(data, graphEditors[i].GetType(), graphEditors[i]);
+					if (data != null) Pathfinding.Serialization.TinyJsonDeserializer.Deserialize(data, graphEditors[i].GetType(), graphEditors[i], script.gameObject);
 				}
 			} catch (System.Exception e) {
 				Debug.LogError("Failed to deserialize graphs");

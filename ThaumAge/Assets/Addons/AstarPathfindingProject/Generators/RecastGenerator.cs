@@ -4,12 +4,18 @@ using System.Collections.Generic;
 #if UNITY_5_5_OR_NEWER
 using UnityEngine.Profiling;
 #endif
+using Unity.Collections;
+using Unity.Collections.LowLevel.Unsafe;
+using Unity.Jobs;
+using Unity.Burst;
 
 namespace Pathfinding {
 	using Pathfinding.Voxels;
+	using Pathfinding.Voxels.Burst;
 	using Pathfinding.Serialization;
 	using Pathfinding.Recast;
 	using Pathfinding.Util;
+	using Pathfinding.Jobs;
 	using System.Threading;
 
 	/// <summary>
@@ -361,6 +367,8 @@ namespace Pathfinding {
 		/// as other scripts might use the graph data structures at the same time in another thread.
 		/// So the tiles are calculated, but they are not yet connected to the existing tiles
 		/// that will be done in UpdateAreaPost which runs in the Unity thread.
+		///
+		/// Note: Should not contain duplicates.
 		/// </summary>
 		List<NavmeshTile> stagingTiles = new List<NavmeshTile>();
 
@@ -491,6 +499,9 @@ namespace Pathfinding {
 			// all tiles that could be affected by the update are recalculated.
 			var affectedTiles = GetTouchingTiles(guo.bounds, TileBorderSizeInWorldUnits);
 
+			// If the bounding box did not overlap with the graph then just skip the update
+			if (!affectedTiles.IsValid()) return;
+
 			if (!guo.updatePhysics) {
 				for (int z = affectedTiles.ymin; z <= affectedTiles.ymax; z++) {
 					for (int x = affectedTiles.xmin; x <= affectedTiles.xmax; x++) {
@@ -509,12 +520,21 @@ namespace Pathfinding {
 
 			AstarProfiler.StartProfile("Build Tiles");
 
+			var allMeshes = vox.inputMeshes;
 			// Build the new tiles
+			// If we are updating more than one tile it makes sense to do a more optimized pass for assigning each mesh to the buckets that it intersects.
+			var buckets = PutMeshesIntoTileBuckets(vox.inputMeshes, affectedTiles);
 			for (int x = affectedTiles.xmin; x <= affectedTiles.xmax; x++) {
 				for (int z = affectedTiles.ymin; z <= affectedTiles.ymax; z++) {
+					vox.inputMeshes = buckets[(z - affectedTiles.ymin)*affectedTiles.Width + (x - affectedTiles.xmin)];
 					stagingTiles.Add(BuildTileMesh(vox, x, z));
 				}
 			}
+
+			for (int i = 0; i < buckets.Length; i++) ListPool<Voxels.RasterizationMesh>.Release(buckets[i]);
+			for (int i = 0; i < allMeshes.Count; i++) allMeshes[i].Pool();
+			ListPool<Voxels.RasterizationMesh>.Release(ref allMeshes);
+			vox.inputMeshes = null;
 
 			uint graphIndex = (uint)AstarPath.active.data.GetGraphIndex(this);
 
@@ -526,8 +546,6 @@ namespace Pathfinding {
 				for (int j = 0; j < nodes.Length; j++) nodes[j].GraphIndex = graphIndex;
 			}
 
-			for (int i = 0; i < vox.inputMeshes.Count; i++) vox.inputMeshes[i].Pool();
-			ListPool<RasterizationMesh>.Release (ref vox.inputMeshes);
 			AstarProfiler.EndProfile("Build Tiles");
 		}
 
@@ -571,7 +589,7 @@ namespace Pathfinding {
 			Profiler.EndSample();
 		}
 
-		protected override IEnumerable<Progress> ScanInternal () {
+		protected override IEnumerable<Progress> ScanInternal (bool async) {
 			TriangleMeshNode.SetNavmeshHolder(AstarPath.active.data.GetGraphIndex(this), this);
 
 			if (!Application.isPlaying) {
@@ -580,9 +598,16 @@ namespace Pathfinding {
 
 			RelevantGraphSurface.UpdateAllPositions();
 
+#if UNITY_2020_1_OR_NEWER
+			foreach (var progress in ScanAllTilesBurst(async)) {
+				yield return progress;
+			}
+#else
+			Debug.LogWarning("The burstified recast code is only supported in Unity 2020.1 or newer. Falling back to the slower pure C# code.");
 			foreach (var progress in ScanAllTiles()) {
 				yield return progress;
 			}
+#endif
 		}
 
 		public override GraphTransform CalculateTransform () {
@@ -615,14 +640,17 @@ namespace Pathfinding {
 		}
 
 		/// <summary>Creates a list for every tile and adds every mesh that touches a tile to the corresponding list</summary>
-		List<RasterizationMesh>[] PutMeshesIntoTileBuckets (List<RasterizationMesh> meshes) {
-			var result = new List<RasterizationMesh>[tiles.Length];
+		List<Voxels.RasterizationMesh>[] PutMeshesIntoTileBuckets (List<Voxels.RasterizationMesh> meshes, IntRect tileBuckets) {
+			var bucketCount = tileBuckets.Width*tileBuckets.Height;
+			var result = new List<Voxels.RasterizationMesh>[bucketCount];
 			var borderExpansion = new Vector3(1, 0, 1)*TileBorderSizeInWorldUnits*2;
 
 			for (int i = 0; i < result.Length; i++) {
-				result[i] = ListPool<RasterizationMesh>.Claim ();
+				result[i] = ListPool<Voxels.RasterizationMesh>.Claim();
 			}
 
+			var offset = new Int2(-tileBuckets.xmin, -tileBuckets.ymin);
+			var clamp = new IntRect(0, 0, tileBuckets.Width - 1, tileBuckets.Height - 1);
 			for (int i = 0; i < meshes.Count; i++) {
 				var mesh = meshes[i];
 				var bounds = mesh.bounds;
@@ -630,15 +658,321 @@ namespace Pathfinding {
 				bounds.Expand(borderExpansion);
 
 				var rect = GetTouchingTiles(bounds);
+				rect = IntRect.Intersection(rect.Offset(offset), clamp);
 				for (int z = rect.ymin; z <= rect.ymax; z++) {
 					for (int x = rect.xmin; x <= rect.xmax; x++) {
-						result[x + z*tileXCount].Add(mesh);
+						result[x + z*tileBuckets.Width].Add(mesh);
 					}
 				}
 			}
 
 			return result;
 		}
+
+		struct BucketMapping {
+			public NativeArray<Voxels.Burst.RasterizationMesh> meshes;
+			public NativeArray<int> pointers;
+			public NativeArray<int> bucketRanges;
+		}
+
+		/// <summary>Creates a list for every tile and adds every mesh that touches a tile to the corresponding list</summary>
+		BucketMapping PutMeshesIntoTileBuckets (RecastMeshGathererBurst.MeshCollection meshCollection, IntRect tileBuckets) {
+			var bucketCount = tileBuckets.Width*tileBuckets.Height;
+			var buckets = new NativeList<int>[bucketCount];
+			var borderExpansion = new Vector3(1, 0, 1)*TileBorderSizeInWorldUnits*2;
+
+			for (int i = 0; i < buckets.Length; i++) {
+				buckets[i] = new NativeList<int>(Allocator.Persistent);
+			}
+
+			var offset = new Int2(-tileBuckets.xmin, -tileBuckets.ymin);
+			var clamp = new IntRect(0, 0, tileBuckets.Width - 1, tileBuckets.Height - 1);
+			var meshes = meshCollection.meshes;
+			for (int i = 0; i < meshes.Length; i++) {
+				var mesh = meshes[i];
+				var bounds = mesh.bounds;
+				// Expand borderSize voxels on each side
+				bounds.Expand(borderExpansion);
+
+				var rect = GetTouchingTiles(bounds);
+				rect = IntRect.Intersection(rect.Offset(offset), clamp);
+				for (int z = rect.ymin; z <= rect.ymax; z++) {
+					for (int x = rect.xmin; x <= rect.xmax; x++) {
+						buckets[x + z*tileBuckets.Width].Add(i);
+					}
+				}
+			}
+
+			// Concat buckets
+			int allPointersCount = 0;
+			for (int i = 0; i < buckets.Length; i++) allPointersCount += buckets[i].Length;
+			var allPointers = new NativeArray<int>(allPointersCount, Allocator.Persistent, NativeArrayOptions.UninitializedMemory);
+			var bucketRanges = new NativeArray<int>(bucketCount+1, Allocator.Persistent, NativeArrayOptions.UninitializedMemory);
+			allPointersCount = 0;
+			for (int i = 0; i < buckets.Length; i++) {
+				bucketRanges[i] = allPointersCount;
+				// If we have an empty bucket at the end of the array then allPointersCount might be equal to allPointers.Length which would cause an assert to trigger.
+				// So for empty buckets don't call the copy method
+				if (buckets[i].Length > 0) {
+					NativeArray<int>.Copy(buckets[i], 0, allPointers, allPointersCount, buckets[i].Length);
+				}
+				allPointersCount += buckets[i].Length;
+				buckets[i].Dispose();
+			}
+			bucketRanges[buckets.Length] = allPointersCount;
+
+			return new BucketMapping {
+					   meshes = meshCollection.meshes,
+					   pointers = allPointers,
+					   bucketRanges = bucketRanges,
+			};
+		}
+
+		private static T[] ConvertUnsafeBufferToArray<T>(UnsafeAppendBuffer src) where T : unmanaged {
+			var elementCount = src.Length / UnsafeUtility.SizeOf<T>();
+			var dst = new T[elementCount];
+
+			unsafe {
+				var gCHandle = System.Runtime.InteropServices.GCHandle.Alloc(dst, System.Runtime.InteropServices.GCHandleType.Pinned);
+				System.IntPtr value = gCHandle.AddrOfPinnedObject();
+				UnsafeUtility.MemCpy((byte*)(void*)value, src.Ptr, elementCount * UnsafeUtility.SizeOf<T>());
+				gCHandle.Free();
+			}
+			return dst;
+		}
+
+		protected IEnumerable<Progress> ScanAllTilesBurst (bool async) {
+			transform = CalculateTransform();
+			InitializeTileInfo();
+
+			// If this is true, just fill the graph with empty tiles
+			if (scanEmptyGraph) {
+				FillWithEmptyTiles();
+				yield break;
+			}
+
+			// A walkableClimb higher than walkableHeight can cause issues when generating the navmesh since then it can in some cases
+			// Both be valid for a character to walk under an obstacle and climb up on top of it (and that cannot be handled with navmesh without links)
+			// The editor scripts also enforce this but we enforce it here too just to be sure
+			walkableClimb = Mathf.Min(walkableClimb, walkableHeight);
+
+			yield return new Progress(0, "Finding Meshes");
+			var bounds = transform.Transform(new Bounds(forcedBoundsSize*0.5f, forcedBoundsSize));
+			var meshes = CollectMeshesBurst(bounds);
+
+			Profiler.BeginSample("PutMeshesIntoTileBuckets");
+			var buckets = PutMeshesIntoTileBuckets(meshes, new IntRect(0, 0, tileXCount - 1, tileZCount - 1));
+			Profiler.EndSample();
+
+			Queue<Int2> tileQueue = new Queue<Int2>();
+
+			Profiler.BeginSample("Allocating tiles");
+			var tileMeshes = new NativeArray<TileBuilderBurst.TileMesh>(tileXCount*tileZCount, Allocator.Persistent, NativeArrayOptions.ClearMemory);
+
+			int width = tileSizeX + TileBorderSizeInVoxels*2;
+			int depth = tileSizeZ + TileBorderSizeInVoxels*2;
+			// TODO: Move inside BuildTileMeshBurst
+			var voxelWalkableHeight = (uint)(walkableHeight/CellHeight);
+			var voxelWalkableClimb = Mathf.RoundToInt(walkableClimb/CellHeight);
+
+			var tileCoordinates = new NativeArray<Int2>(tileXCount*tileZCount, Allocator.Persistent, NativeArrayOptions.UninitializedMemory);
+			var tileGraphSpaceBounds = new NativeArray<Bounds>(tileXCount*tileZCount, Allocator.Persistent, NativeArrayOptions.UninitializedMemory);
+			var voxelToGraphMatrices = new NativeArray<Matrix4x4>(tileXCount*tileZCount, Allocator.Persistent, NativeArrayOptions.UninitializedMemory);
+
+			for (int z = 0; z < tileZCount; z++) {
+				for (int x = 0; x < tileXCount; x++) {
+					int tileIndex = x + z*tileXCount;
+					tileCoordinates[tileIndex] = new Int2(x, z);
+					tileGraphSpaceBounds[tileIndex] = CalculateTileBoundsWithBorder(x, z);
+					voxelToGraphMatrices[tileIndex] = Matrix4x4.TRS(CalculateTileBoundsWithBorder(x, z).min, Quaternion.identity, Vector3.one) * Matrix4x4.Scale(new Vector3(cellSize, CellHeight, cellSize));
+					tileMeshes[tileIndex] = new TileBuilderBurst.TileMesh {
+						vertices = new UnsafeAppendBuffer(0, 4, Allocator.Persistent),
+						verticesInGraphSpace = new UnsafeAppendBuffer(0, 4, Allocator.Persistent),
+						triangles = new UnsafeAppendBuffer(0, 4, Allocator.Persistent),
+					};
+				}
+			}
+
+			var builders = new TileBuilderBurst[Mathf.Max(1, Mathf.Min(tileXCount*tileZCount, Unity.Jobs.LowLevel.Unsafe.JobsUtility.JobWorkerCount + 1))];
+			var currentTileCounter = new NativeArray<int>(1, Allocator.Persistent);
+			JobHandle dependencies = default;
+			for (int i = 0; i < builders.Length; i++) {
+				builders[i] = new TileBuilderBurst(width, depth, (int)voxelWalkableHeight);
+				var job = new JobBuildTileMesh {
+					tileBuilder = builders[i],
+					inputMeshes = buckets,
+					tileCoordinates = tileCoordinates,
+					tileGraphSpaceBounds = tileGraphSpaceBounds,
+					voxelToGraphMatrices = voxelToGraphMatrices,
+					voxelWalkableClimb = voxelWalkableClimb,
+					voxelWalkableHeight = voxelWalkableHeight,
+					cellSize = cellSize,
+					cellHeight = CellHeight,
+					maxSlope = maxSlope,
+					graphTransform = transform.matrix,
+					characterRadiusInVoxels = CharacterRadiusInVoxels,
+					tileBorderSizeInVoxels = TileBorderSizeInVoxels,
+					minRegionSize = Mathf.RoundToInt(minRegionSize),
+					maxEdgeLength = maxEdgeLength,
+					contourMaxError = contourMaxError,
+					maxTiles = Mathf.CeilToInt(Mathf.Sqrt(tileXCount*tileZCount)),
+				};
+				job.SetOutputMeshes(tileMeshes);
+				job.SetCounter(currentTileCounter);
+				int steps = Mathf.CeilToInt(Mathf.Sqrt(tileXCount*tileZCount));
+				var dep = new JobHandle();
+				for (int j = 0; j < steps; j++) {
+					dep = job.Schedule(dep);
+				}
+				dependencies = JobHandle.CombineDependencies(dependencies, dep);
+			}
+
+			Profiler.EndSample();
+
+			if (async) {
+				while (!dependencies.IsCompleted) {
+					System.Threading.Thread.Sleep(1);
+					yield return new Progress(0.5f, "Scanning tile " + Mathf.Min(tileXCount*tileZCount, currentTileCounter[0]) + " of " + (tileXCount*tileZCount) + " tiles...");
+				}
+			}
+
+			dependencies.Complete();
+
+			Profiler.BeginSample("Disposing temporary data");
+
+			// Dispose the mesh data after all jobs are completed.
+			// Note that the jobs use pointers to this data which is not tracked by the safety system.
+			for (int i = 0; i < builders.Length; i++) {
+				builders[i].Dispose();
+			}
+			tileCoordinates.Dispose();
+			tileGraphSpaceBounds.Dispose();
+			voxelToGraphMatrices.Dispose();
+			currentTileCounter.Dispose();
+			buckets.bucketRanges.Dispose();
+			buckets.pointers.Dispose();
+			meshes.Dispose();
+
+			Profiler.EndSample();
+
+			Profiler.BeginSample("Finalizing individual tiles");
+			for (int z = 0; z < tileZCount; z++) {
+				for (int x = 0; x < tileXCount; x++) {
+					var tileIndex = z*tileXCount + x;
+					var mesh = tileMeshes[tileIndex];
+
+					// Create a new navmesh tile and assign its settings
+					var tile = new NavmeshTile {
+						x = x,
+						z = z,
+						w = 1,
+						d = 1,
+						tris = ConvertUnsafeBufferToArray<int>(mesh.triangles),
+						vertsInGraphSpace = ConvertUnsafeBufferToArray<Int3>(mesh.verticesInGraphSpace),
+						verts = ConvertUnsafeBufferToArray<Int3>(mesh.vertices),
+						bbTree = new BBTree(),
+						graph = this,
+					};
+					tileMeshes[tileIndex].Dispose();
+
+					int threadIndex = 0;
+					// Here we are faking a new graph
+					// The tile is not added to any graphs yet, but to get the position queries from the nodes
+					// to work correctly (not throw exceptions because the tile is not calculated) we fake a new graph
+					// and direct the position queries directly to the tile
+					// The thread index is added to make sure that if multiple threads are calculating tiles at the same time
+					// they will not use the same temporary graph index
+					uint temporaryGraphIndex = (uint)(active.data.graphs.Length + threadIndex);
+
+					if (temporaryGraphIndex > GraphNode.MaxGraphIndex) {
+						// Multithreaded tile calculations use fake graph indices, see above.
+						throw new System.Exception("Graph limit reached. Multithreaded recast calculations cannot be done because a few scratch graph indices are required.");
+					}
+
+					TriangleMeshNode.SetNavmeshHolder((int)temporaryGraphIndex, tile);
+					// We need to lock here because creating nodes is not thread safe
+					// and we may be doing this from multiple threads at the same time
+					tile.nodes = new TriangleMeshNode[tile.tris.Length/3];
+					lock (active) {
+						CreateNodes(tile.nodes, tile.tris, x + z*tileXCount, temporaryGraphIndex);
+					}
+
+					tile.bbTree.RebuildFrom(tile.nodes);
+					CreateNodeConnections(tile.nodes);
+					// Remove the fake graph
+					TriangleMeshNode.SetNavmeshHolder((int)temporaryGraphIndex, null);
+					tiles[tileIndex] = tile;
+				}
+			}
+
+			tileMeshes.Dispose();
+			Profiler.EndSample();
+
+			// Prioritize responsiveness while playing
+			// but when not playing prioritize throughput
+			// (the Unity progress bar is also pretty slow to update)
+			int timeoutMillis = Application.isPlaying ? 1 : 200;
+
+			yield return new Progress(0.9f, "Assigning Graph Indices");
+
+			// Assign graph index to nodes
+			uint graphIndex = (uint)AstarPath.active.data.GetGraphIndex(this);
+
+			GetNodes(node => node.GraphIndex = graphIndex);
+
+			Profiler.BeginSample("Connecting tiles");
+			// First connect all tiles with an EVEN coordinate sum
+			// This would be the white squares on a chess board.
+			// Then connect all tiles with an ODD coordinate sum (which would be all black squares on a chess board).
+			// This will prevent the different threads that do all
+			// this in parallel from conflicting with each other.
+			// The directions are also done separately
+			// first they are connected along the X direction and then along the Z direction.
+			// Looping over 0 and then 1
+			var coordinateDependency = new JobHandle();
+			var tilesHandle = System.Runtime.InteropServices.GCHandle.Alloc(tiles);
+			for (int coordinateSum = 0; coordinateSum <= 1; coordinateSum++) {
+				var dep = new JobHandle();
+				for (int direction = 0; direction <= 1; direction++) {
+					for (int i = 0; i < tiles.Length; i++) {
+						var tile = tiles[i];
+						if ((tile.x + tile.z) % 2 == coordinateSum) {
+							int tileIndex1 = tile.x + tile.z * tileXCount;
+							int tileIndex2;
+							if (direction == 0 && tile.x < tileXCount - 1) {
+								tileIndex2 = tile.x + 1 + tile.z * tileXCount;
+							} else if (direction == 1 && tile.z < tileZCount - 1) {
+								tileIndex2 = tile.x + (tile.z + 1) * tileXCount;
+							} else {
+								continue;
+							}
+
+
+							var job = new JobConnectTiles {
+								tiles = tilesHandle,
+								tileIndex1 = tileIndex1,
+								tileIndex2 = tileIndex2,
+								tileWorldSizeX = TileWorldSizeX,
+								tileWorldSizeZ = TileWorldSizeZ,
+								maxTileConnectionEdgeDistance = MaxTileConnectionEdgeDistance,
+							}.Schedule(coordinateDependency);
+							dep = JobHandle.CombineDependencies(dep, job);
+						}
+					}
+
+					coordinateDependency = dep;
+					// TODO: Yield?
+				}
+			}
+
+			coordinateDependency.Complete();
+			Profiler.EndSample();
+
+			// Signal that tiles have been recalculated to the navmesh cutting system.
+			navmeshUpdateData.OnRecalculatedTiles(tiles);
+			if (OnRecalculatedTiles != null) OnRecalculatedTiles(tiles.Clone() as NavmeshTile[]);
+		}
+
 
 		protected IEnumerable<Progress> ScanAllTiles () {
 			transform = CalculateTransform();
@@ -658,7 +992,7 @@ namespace Pathfinding {
 			yield return new Progress(0, "Finding Meshes");
 			var bounds = transform.Transform(new Bounds(forcedBoundsSize*0.5f, forcedBoundsSize));
 			var meshes = CollectMeshes(bounds);
-			var buckets = PutMeshesIntoTileBuckets(meshes);
+			var buckets = PutMeshesIntoTileBuckets(meshes, new IntRect(0, 0, tileXCount - 1, tileZCount - 1));
 
 			Queue<Int2> tileQueue = new Queue<Int2>();
 
@@ -715,9 +1049,9 @@ namespace Pathfinding {
 					workQueue.action = (tile, threadIndex) => {
 						// Connect with tile at (x+1,z) and (x,z+1)
 						if (direction == 0 && tile.x < tileXCount - 1)
-							ConnectTiles(tiles[tile.x + tile.y * tileXCount], tiles[tile.x + 1 + tile.y * tileXCount]);
+							ConnectTiles(tiles[tile.x + tile.y * tileXCount], tiles[tile.x + 1 + tile.y * tileXCount], TileWorldSizeX, TileWorldSizeZ, MaxTileConnectionEdgeDistance);
 						if (direction == 1 && tile.y < tileZCount - 1)
-							ConnectTiles(tiles[tile.x + tile.y * tileXCount], tiles[tile.x + (tile.y + 1) * tileXCount]);
+							ConnectTiles(tiles[tile.x + tile.y * tileXCount], tiles[tile.x + (tile.y + 1) * tileXCount], TileWorldSizeX, TileWorldSizeZ, MaxTileConnectionEdgeDistance);
 					};
 
 					var numTilesInQueue = tileQueue.Count;
@@ -729,16 +1063,16 @@ namespace Pathfinding {
 			}
 
 			for (int i = 0; i < meshes.Count; i++) meshes[i].Pool();
-			ListPool<RasterizationMesh>.Release (ref meshes);
+			ListPool<Voxels.RasterizationMesh>.Release(ref meshes);
 
 			// Signal that tiles have been recalculated to the navmesh cutting system.
 			navmeshUpdateData.OnRecalculatedTiles(tiles);
 			if (OnRecalculatedTiles != null) OnRecalculatedTiles(tiles.Clone() as NavmeshTile[]);
 		}
 
-		List<RasterizationMesh> CollectMeshes (Bounds bounds) {
+		List<Voxels.RasterizationMesh> CollectMeshes (Bounds bounds) {
 			Profiler.BeginSample("Find Meshes for rasterization");
-			var result = ListPool<RasterizationMesh>.Claim ();
+			var result = ListPool<Voxels.RasterizationMesh>.Claim();
 
 			var meshGatherer = new RecastMeshGatherer(bounds, terrainSampleSize, mask, tagMask, colliderRasterizeDetail);
 
@@ -767,7 +1101,47 @@ namespace Pathfinding {
 			}
 
 			if (result.Count == 0) {
-				Debug.LogWarning("No MeshFilters were found contained in the layers specified by the 'mask' variables");
+				Debug.LogWarning("No rasterizable objects were found contained in the layers specified by the 'mask' variables");
+			}
+
+			Profiler.EndSample();
+			return result;
+		}
+
+		RecastMeshGathererBurst.MeshCollection CollectMeshesBurst (Bounds bounds) {
+			Profiler.BeginSample("Find Meshes for rasterization");
+			var meshGatherer = new RecastMeshGathererBurst(bounds, terrainSampleSize, mask, tagMask, colliderRasterizeDetail);
+
+			if (rasterizeMeshes) {
+				Profiler.BeginSample("Find meshes");
+				meshGatherer.CollectSceneMeshes();
+				Profiler.EndSample();
+			}
+
+			Profiler.BeginSample("Find RecastMeshObj components");
+			meshGatherer.CollectRecastMeshObjs();
+			Profiler.EndSample();
+
+			if (rasterizeTerrain) {
+				Profiler.BeginSample("Find terrains");
+				// Split terrains up into meshes approximately the size of a single chunk
+				var desiredTerrainChunkSize = cellSize*Math.Max(tileSizeX, tileSizeZ);
+				meshGatherer.CollectTerrainMeshes(rasterizeTrees, desiredTerrainChunkSize);
+				Profiler.EndSample();
+			}
+
+			if (rasterizeColliders) {
+				Profiler.BeginSample("Find colliders");
+				meshGatherer.CollectColliderMeshes();
+				Profiler.EndSample();
+			}
+
+			Profiler.BeginSample("Finalizing");
+			var result = meshGatherer.Finalize();
+			Profiler.EndSample();
+
+			if (result.meshes.Length == 0) {
+				Debug.LogWarning("No rasterizable objects were found contained in the layers specified by the 'mask' variables");
 			}
 
 			Profiler.EndSample();
@@ -819,6 +1193,221 @@ namespace Pathfinding {
 			return bounds;
 		}
 
+		protected struct TileBuilderBurst {
+			public LinkedVoxelField linkedVoxelField;
+			public CompactVoxelField compactVoxelField;
+			public NativeList<ushort> distanceField;
+			public NativeQueue<Int3> tmpQueue1;
+			public NativeQueue<Int3> tmpQueue2;
+			public NativeList<Voxels.Burst.VoxelContour> contours;
+			public NativeList<int> contourVertices;
+			public Pathfinding.Voxels.Burst.VoxelMesh voxelMesh;
+
+			public struct TileMesh {
+				public Unity.Collections.LowLevel.Unsafe.UnsafeAppendBuffer vertices;
+				public Unity.Collections.LowLevel.Unsafe.UnsafeAppendBuffer triangles;
+				public Unity.Collections.LowLevel.Unsafe.UnsafeAppendBuffer verticesInGraphSpace;
+
+				public void Dispose () {
+					vertices.Dispose();
+					triangles.Dispose();
+					verticesInGraphSpace.Dispose();
+				}
+			}
+
+			public TileBuilderBurst (int width, int depth, int voxelWalkableHeight) {
+				linkedVoxelField = new LinkedVoxelField(width, depth);
+				compactVoxelField = new CompactVoxelField(width, depth, voxelWalkableHeight, Allocator.Persistent);
+				tmpQueue1 = new NativeQueue<Int3>(Allocator.Persistent);
+				tmpQueue2 = new NativeQueue<Int3>(Allocator.Persistent);
+				distanceField = new NativeList<ushort>(0, Allocator.Persistent);
+				contours = new NativeList<Voxels.Burst.VoxelContour>(Allocator.Persistent);
+				contourVertices = new NativeList<int>(Allocator.Persistent);
+				voxelMesh = new Pathfinding.Voxels.Burst.VoxelMesh {
+					verts = new NativeList<Int3>(Allocator.Persistent),
+					tris = new NativeList<int>(Allocator.Persistent),
+					areas = new NativeList<int>(Allocator.Persistent),
+				};
+			}
+
+			public void Dispose () {
+				linkedVoxelField.Dispose();
+				compactVoxelField.Dispose();
+				distanceField.Dispose();
+				tmpQueue1.Dispose();
+				tmpQueue2.Dispose();
+				contours.Dispose();
+				contourVertices.Dispose();
+				voxelMesh.Dispose();
+			}
+		}
+
+		[BurstCompile(CompileSynchronously = true)]
+		struct JobBuildTileMesh : IJob {
+			public TileBuilderBurst tileBuilder;
+			[ReadOnly]
+			public BucketMapping inputMeshes;
+			[ReadOnly]
+			public NativeArray<Int2> tileCoordinates;
+			[ReadOnly]
+			public NativeArray<Bounds> tileGraphSpaceBounds;
+			[ReadOnly]
+			public NativeArray<Matrix4x4> voxelToGraphMatrices;
+
+			[NativeDisableUnsafePtrRestriction]
+			public unsafe TileBuilderBurst.TileMesh* outputMeshes;
+
+			public int maxTiles;
+
+			public int voxelWalkableClimb;
+			public uint voxelWalkableHeight;
+			public float cellSize;
+			public float cellHeight;
+			public float maxSlope;
+			public Matrix4x4 graphTransform;
+			public int characterRadiusInVoxels;
+			public int tileBorderSizeInVoxels;
+			public int minRegionSize;
+			public float maxEdgeLength;
+			public float contourMaxError;
+
+			[NativeDisableUnsafePtrRestriction]
+			public unsafe int* currentTileCounter;
+
+			public bool allowBoundsChecks => false;
+
+			public void SetOutputMeshes (NativeArray<TileBuilderBurst.TileMesh> arr) {
+				unsafe {
+					outputMeshes = (TileBuilderBurst.TileMesh*)arr.GetUnsafeReadOnlyPtr();
+				}
+			}
+
+			public void SetCounter (NativeArray<int> arr) {
+				unsafe {
+					currentTileCounter = (int*)arr.GetUnsafePtr();
+				}
+			}
+
+			public void Execute () {
+				for (int k = 0; k < maxTiles; k++) {
+#if UNITY_2020_1_OR_NEWER
+					// Grab the next tile index that we should calculate
+					int i;
+					unsafe {
+						i = System.Threading.Interlocked.Increment(ref Unity.Collections.LowLevel.Unsafe.UnsafeUtility.AsRef<int>(currentTileCounter)) - 1;
+					}
+					if (i >= tileCoordinates.Length) return;
+#else
+					int i = -1;
+					// if statement throws off the unreachable code warning
+					if (k == 0) throw new System.Exception("Only supported in Unity 2020.1 or newer");
+#endif
+
+					var bucketStart = inputMeshes.bucketRanges[i];
+					var bucketEnd = inputMeshes.bucketRanges[i+1];
+					new JobVoxelize {
+						inputMeshes = inputMeshes.meshes,
+						bucket = inputMeshes.pointers.GetSubArray(bucketStart, bucketEnd - bucketStart),
+						voxelWalkableClimb = voxelWalkableClimb,
+						voxelWalkableHeight = voxelWalkableHeight,
+						cellSize = cellSize,
+						cellHeight = cellHeight,
+						maxSlope = maxSlope,
+						graphTransform = graphTransform,
+						graphSpaceBounds = tileGraphSpaceBounds[i],
+						voxelArea = tileBuilder.linkedVoxelField,
+					}.Execute();
+
+					new JobFilterLedges {
+						field = tileBuilder.linkedVoxelField,
+						voxelWalkableClimb = voxelWalkableClimb,
+						voxelWalkableHeight = voxelWalkableHeight,
+						cellSize = cellSize,
+						cellHeight = cellHeight,
+					}.Execute();
+
+					new JobFilterLowHeightSpans {
+						field = tileBuilder.linkedVoxelField,
+						voxelWalkableHeight = voxelWalkableHeight,
+					}.Execute();
+
+					new JobBuildCompactField {
+						input = tileBuilder.linkedVoxelField,
+						output = tileBuilder.compactVoxelField,
+					}.Execute();
+
+					new JobBuildConnections {
+						field = tileBuilder.compactVoxelField,
+						voxelWalkableHeight = (int)voxelWalkableHeight,
+						voxelWalkableClimb = voxelWalkableClimb,
+					}.Execute();
+
+					new JobErodeWalkableArea {
+						field = tileBuilder.compactVoxelField,
+						radius = characterRadiusInVoxels,
+					}.Execute();
+
+					new JobBuildDistanceField {
+						field = tileBuilder.compactVoxelField,
+						output = tileBuilder.distanceField,
+					}.Execute();
+
+					new JobBuildRegions {
+						field = tileBuilder.compactVoxelField,
+						distanceField = tileBuilder.distanceField,
+						borderSize = tileBorderSizeInVoxels,
+						minRegionSize = Mathf.RoundToInt(minRegionSize),
+						srcQue = tileBuilder.tmpQueue1,
+						dstQue = tileBuilder.tmpQueue2,
+					}.Execute();
+
+					// var draw = Pathfinding.Drawing.DrawingManager.GetBuilder(true);
+					// new JobVisualizeVoxels {
+					// 	field = tileBuilder.compactVoxelField,
+					// 	draw = draw,
+					// 	voxel2world = this.transform.matrix * voxelToGraphMatrix,
+					// }.Execute();
+					// job.Complete();
+					// draw.Dispose();
+
+					new JobBuildContours {
+						field = tileBuilder.compactVoxelField,
+						maxError = contourMaxError,
+						maxEdgeLength = maxEdgeLength,
+						buildFlags = Voxelize.RC_CONTOUR_TESS_WALL_EDGES | Voxelize.RC_CONTOUR_TESS_TILE_EDGES,
+						cellSize = cellSize,
+						outputContours = tileBuilder.contours,
+						outputVerts = tileBuilder.contourVertices,
+					}.Execute();
+
+					new JobBuildMesh {
+						contours = tileBuilder.contours,
+						contourVertices = tileBuilder.contourVertices,
+						mesh = tileBuilder.voxelMesh,
+						field = tileBuilder.compactVoxelField,
+					}.Execute();
+
+					unsafe {
+						TileBuilderBurst.TileMesh* outputTileMesh = outputMeshes + i;
+
+						new Pathfinding.Voxels.Utility.JobRemoveDuplicateVertices {
+							vertices = tileBuilder.voxelMesh.verts,
+							triangles = tileBuilder.voxelMesh.tris,
+							outputVertices = &outputTileMesh->vertices,
+							outputTriangles = &outputTileMesh->triangles,
+						}.Execute();
+
+						new Pathfinding.Voxels.Utility.JobTransformTileCoordinates {
+							vertices = &outputTileMesh->vertices,
+							verticesInGraphSpace = &outputTileMesh->verticesInGraphSpace,
+							voxelToGraphSpace = voxelToGraphMatrices[i],
+							voxelToWorldSpace = graphTransform * voxelToGraphMatrices[i],
+						}.Execute();
+					}
+				}
+			}
+		}
+
 		protected NavmeshTile BuildTileMesh (Voxelize vox, int x, int z, int threadIndex = 0) {
 			AstarProfiler.StartProfile("Build Tile");
 			AstarProfiler.StartProfile("Init");
@@ -861,10 +1450,10 @@ namespace Pathfinding {
 			vox.BuildDistanceField();
 			vox.BuildRegions();
 
-			var cset = new VoxelContourSet();
+			var cset = new Voxels.VoxelContourSet();
 			vox.BuildContours(contourMaxError, 1, cset, Voxelize.RC_CONTOUR_TESS_WALL_EDGES | Voxelize.RC_CONTOUR_TESS_TILE_EDGES);
 
-			VoxelMesh mesh;
+			Voxels.VoxelMesh mesh;
 			vox.BuildPolyMesh(cset, 3, out mesh);
 
 			AstarProfiler.StartProfile("Build Nodes");
@@ -875,7 +1464,7 @@ namespace Pathfinding {
 			}
 			vox.transformVoxel2Graph.Transform(mesh.verts);
 
-			NavmeshTile tile = CreateTile(vox, mesh, x, z, threadIndex);
+			NavmeshTile tile = CreateTile(mesh, x, z, threadIndex);
 
 			AstarProfiler.EndProfile("Build Nodes");
 
@@ -887,7 +1476,7 @@ namespace Pathfinding {
 		/// Create a tile at tile index x, z from the mesh.
 		/// Version: Since version 3.7.6 the implementation is thread safe
 		/// </summary>
-		NavmeshTile CreateTile (Voxelize vox, VoxelMesh mesh, int x, int z, int threadIndex) {
+		NavmeshTile CreateTile (Voxels.VoxelMesh mesh, int x, int z, int threadIndex) {
 			if (mesh.tris == null) throw new System.ArgumentNullException("mesh.tris");
 			if (mesh.verts == null) throw new System.ArgumentNullException("mesh.verts");
 			if (mesh.tris.Length % 3 != 0) throw new System.ArgumentException("Indices array's length must be a multiple of 3 (mesh.tris)");

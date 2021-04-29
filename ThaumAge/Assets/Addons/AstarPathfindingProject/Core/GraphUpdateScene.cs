@@ -1,6 +1,8 @@
 using UnityEngine;
 
 namespace Pathfinding {
+	using Pathfinding.Drawing;
+
 	[AddComponentMenu("Pathfinding/GraphUpdateScene")]
 	/// <summary>
 	/// Helper class for easily updating graphs.
@@ -247,7 +249,7 @@ namespace Pathfinding {
 					}
 
 					var mat = transform.localToWorldMatrix * Matrix4x4.TRS(Vector3.zero, Quaternion.Euler(-90, 0, 0), Vector3.one);
-					var shape = new GraphUpdateShape(points, convex, mat, minBoundsHeight);
+					var shape = new GraphUpdateShape(pts, convex, mat, minBoundsHeight);
 					guo = new GraphUpdateObject(GetBounds());
 					guo.shape = shape;
 				} else {
@@ -290,32 +292,21 @@ namespace Pathfinding {
 		}
 
 		/// <summary>Draws some gizmos</summary>
-		void OnDrawGizmos () {
-			OnDrawGizmos(false);
-		}
-
-		/// <summary>Draws some gizmos</summary>
-		void OnDrawGizmosSelected () {
-			OnDrawGizmos(true);
-		}
-
-		/// <summary>Draws some gizmos</summary>
-		void OnDrawGizmos (bool selected) {
+		public override void DrawGizmos () {
+			bool selected = GizmoContext.InActiveSelection(this);
 			Color c = selected ? new Color(227/255f, 61/255f, 22/255f, 1.0f) : new Color(227/255f, 61/255f, 22/255f, 0.9f);
 
 			if (selected) {
-				Gizmos.color = Color.Lerp(c, new Color(1, 1, 1, 0.2f), 0.9f);
+				var col = Color.Lerp(c, new Color(1, 1, 1, 0.2f), 0.9f);
 
 				Bounds b = GetBounds();
-				Gizmos.DrawCube(b.center, b.size);
-				Gizmos.DrawWireCube(b.center, b.size);
+				Draw.SolidBox(b.center, b.size, col);
+				Draw.WireBox(b.center, b.size, col);
 			}
 
 			if (points == null) return;
 
 			if (convex) c.a *= 0.5f;
-
-			Gizmos.color = c;
 
 			Matrix4x4 matrix = legacyMode && legacyUseWorldSpace ? Matrix4x4.identity : transform.localToWorldMatrix;
 
@@ -323,48 +314,42 @@ namespace Pathfinding {
 				c.r -= 0.1f;
 				c.g -= 0.2f;
 				c.b -= 0.1f;
-
-				Gizmos.color = c;
 			}
 
-			if (selected || !convex) {
-				for (int i = 0; i < points.Length; i++) {
-					Gizmos.DrawLine(matrix.MultiplyPoint3x4(points[i]), matrix.MultiplyPoint3x4(points[(i+1)%points.Length]));
+			using (Draw.WithMatrix(matrix)) {
+				if (selected || !convex) {
+					Draw.Polyline(points, true, c);
 				}
-			}
 
-			if (convex) {
-				if (convexPoints == null) RecalcConvex();
-
-				Gizmos.color = selected ? new Color(227/255f, 61/255f, 22/255f, 1.0f) : new Color(227/255f, 61/255f, 22/255f, 0.9f);
-
-				for (int i = 0; i < convexPoints.Length; i++) {
-					Gizmos.DrawLine(matrix.MultiplyPoint3x4(convexPoints[i]), matrix.MultiplyPoint3x4(convexPoints[(i+1)%convexPoints.Length]));
+				if (convex) {
+					if (convexPoints == null) RecalcConvex();
+					Draw.Polyline(convexPoints, true, selected ? new Color(227/255f, 61/255f, 22/255f, 1.0f) : new Color(227/255f, 61/255f, 22/255f, 0.9f));
 				}
-			}
 
-			// Draw the full 3D shape
-			var pts = convex ? convexPoints : points;
-			if (selected && pts != null && pts.Length > 0) {
-				Gizmos.color = new Color(1, 1, 1, 0.2f);
-				float miny = pts[0].y, maxy = pts[0].y;
-				for (int i = 0; i < pts.Length; i++) {
-					miny = Mathf.Min(miny, pts[i].y);
-					maxy = Mathf.Max(maxy, pts[i].y);
-				}
-				var extraHeight = Mathf.Max(minBoundsHeight - (maxy - miny), 0) * 0.5f;
-				miny -= extraHeight;
-				maxy += extraHeight;
+				// Draw the full 3D shape
+				var pts = convex ? convexPoints : points;
+				if (selected && pts != null && pts.Length > 0) {
+					float miny = pts[0].y, maxy = pts[0].y;
+					for (int i = 0; i < pts.Length; i++) {
+						miny = Mathf.Min(miny, pts[i].y);
+						maxy = Mathf.Max(maxy, pts[i].y);
+					}
+					var extraHeight = Mathf.Max(minBoundsHeight - (maxy - miny), 0) * 0.5f;
+					miny -= extraHeight;
+					maxy += extraHeight;
 
-				for (int i = 0; i < pts.Length; i++) {
-					var next = (i+1) % pts.Length;
-					var p1 = matrix.MultiplyPoint3x4(pts[i] + Vector3.up*(miny - pts[i].y));
-					var p2 = matrix.MultiplyPoint3x4(pts[i] + Vector3.up*(maxy - pts[i].y));
-					var p1n = matrix.MultiplyPoint3x4(pts[next] + Vector3.up*(miny - pts[next].y));
-					var p2n = matrix.MultiplyPoint3x4(pts[next] + Vector3.up*(maxy - pts[next].y));
-					Gizmos.DrawLine(p1, p2);
-					Gizmos.DrawLine(p1, p1n);
-					Gizmos.DrawLine(p2, p2n);
+					using (Draw.WithColor(new Color(1, 1, 1, 0.2f))) {
+						for (int i = 0; i < pts.Length; i++) {
+							var next = (i+1) % pts.Length;
+							var p1 = pts[i] + Vector3.up*(miny - pts[i].y);
+							var p2 = pts[i] + Vector3.up*(maxy - pts[i].y);
+							var p1n = pts[next] + Vector3.up*(miny - pts[next].y);
+							var p2n = pts[next] + Vector3.up*(maxy - pts[next].y);
+							Draw.Line(p1, p2);
+							Draw.Line(p1, p1n);
+							Draw.Line(p2, p2n);
+						}
+					}
 				}
 			}
 		}

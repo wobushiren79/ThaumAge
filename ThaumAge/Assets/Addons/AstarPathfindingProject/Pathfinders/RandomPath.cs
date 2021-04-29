@@ -26,18 +26,26 @@ namespace Pathfinding {
 	/// seeker.StartPath(path, MyCompleteFunction);
 	///
 	/// </code>
+	///
+	/// [Open online documentation to see videos]
+	///
+	/// See: wander (view in online documentation for working links)
 	/// </summary>
 	public class RandomPath : ABPath {
 		/// <summary>
 		/// G score to stop searching at.
-		/// The G score is rougly the distance to get from the start node to a node multiplied by 1000 (per default, see Pathfinding.Int3.Precision), plus any penalties
+		/// The G score is rougly the distance to get from the start node to a node multiplied by 1000 (per default, see Pathfinding.Int3.Precision), plus any penalties.
+		///
+		/// [Open online documentation to see videos]
 		/// </summary>
 		public int searchLength;
 
 		/// <summary>
 		/// All G scores between <see cref="searchLength"/> and <see cref="searchLength"/>+<see cref="spread"/> are valid end points, a random one of them is chosen as the final point.
 		/// On grid graphs a low spread usually works (but keep it higher than nodeSize*1000 since that it the default cost of moving between two nodes), on NavMesh graphs
-		/// I would recommend a higher spread so it can evaluate more nodes
+		/// I would recommend a higher spread so it can evaluate more nodes.
+		///
+		/// [Open online documentation to see videos]
 		/// </summary>
 		public int spread = 5000;
 
@@ -69,7 +77,7 @@ namespace Pathfinding {
 		/// <summary>Random number generator</summary>
 		readonly System.Random rnd = new System.Random();
 
-		internal override bool FloodingPath {
+		public override bool FloodingPath {
 			get {
 				return true;
 			}

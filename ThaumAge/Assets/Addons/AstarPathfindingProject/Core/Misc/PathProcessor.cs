@@ -2,9 +2,11 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
+using Unity.Mathematics;
 #if UNITY_5_5_OR_NEWER
 using UnityEngine.Profiling;
 #endif
+using Unity.Jobs;
 
 namespace Pathfinding {
 #if NETFX_CORE
@@ -12,6 +14,8 @@ namespace Pathfinding {
 #else
 	using Thread = System.Threading.Thread;
 #endif
+	using Pathfinding.Jobs;
+	using Pathfinding.Util;
 
 	public class PathProcessor {
 		public event System.Action<Path> OnPathPreSearch;
@@ -44,11 +48,44 @@ namespace Pathfinding {
 		int nextNodeIndex = 1;
 
 		/// <summary>
+		/// The number of nodes for which path node data has been reserved.
+		/// Will be at least as high as nextNodeIndex
+		/// </summary>
+		int reservedPathNodeData = 0;
+
+		/// <summary>
 		/// Holds indices for nodes that have been destroyed.
 		/// To avoid trashing a lot of memory structures when nodes are
 		/// frequently deleted and created, node indices are reused.
 		/// </summary>
-		readonly Stack<int> nodeIndexPool = new Stack<int>();
+		readonly IndexedStack<int> nodeIndexPool = new IndexedStack<int>();
+
+		class IndexedStack<T> {
+			T[] buffer = new T[4];
+
+			public int Count { get; private set; }
+
+			public void Push (T v) {
+				if (Count == buffer.Length) {
+					Util.Memory.Realloc(ref buffer, buffer.Length * 2);
+				}
+
+				buffer[Count] = v;
+				Count++;
+			}
+
+			public T Pop () {
+				Count--;
+				return buffer[Count];
+			}
+
+			/// <summary>Pop the last N elements and store them in the buffer. The items will be in insertion order.</summary>
+			public void PopMany (T[] resultBuffer, int popCount) {
+				if (popCount > Count) throw new System.IndexOutOfRangeException();
+				System.Array.Copy(buffer, Count - popCount, resultBuffer, 0, popCount);
+				Count -= popCount;
+			}
+		}
 
 		readonly List<int> locks = new List<int>();
 		int nextLockID = 0;
@@ -235,6 +272,7 @@ namespace Pathfinding {
 			}
 		}
 
+		// TODO: Remove
 		/// <summary>
 		/// Returns a new global node index.
 		/// Warning: This method should not be called directly. It is used by the GraphNode constructor.
@@ -245,11 +283,30 @@ namespace Pathfinding {
 
 		/// <summary>
 		/// Initializes temporary path data for a node.
-		/// Warning: This method should not be called directly. It is used by the GraphNode constructor.
+		/// Warning: This method should not be called directly.
+		///
+		/// See: <see cref="AstarPath.AllocateNode"/>
 		/// </summary>
 		public void InitializeNode (GraphNode node) {
 			if (!queue.AllReceiversBlocked) {
 				throw new System.Exception("Trying to initialize a node when it is not safe to initialize any nodes. Must be done during a graph update. See http://arongranberg.com/astar/docs/graph-updates.php#direct");
+			}
+
+			if (nodeIndexPool.Count > 0) {
+				node.NodeIndex = nodeIndexPool.Pop();
+			} else {
+				// Highest node index in the new list of nodes
+				node.NodeIndex = nextNodeIndex;
+				nextNodeIndex++;
+				if (nextNodeIndex >= reservedPathNodeData) {
+					reservedPathNodeData = math.max(reservedPathNodeData, math.ceilpow2(nextNodeIndex));
+
+					// Allocate more internal pathfinding data for the new nodes
+					astar.hierarchicalGraph.ReserveNodeIndices(reservedPathNodeData);
+					for (int i = 0; i < pathHandlers.Length; i++) {
+						pathHandlers[i].ReserveNodeIndices(reservedPathNodeData);
+					}
+				}
 			}
 
 			for (int i = 0; i < pathHandlers.Length; i++) {
@@ -257,6 +314,82 @@ namespace Pathfinding {
 			}
 
 			astar.hierarchicalGraph.OnCreatedNode(node);
+		}
+
+		struct JobAllocateNodes<T> : IJob where T : GraphNode {
+			public T[] result;
+			public int count;
+			public PathProcessor pathProcessor;
+			public int[] recyledNodeIndices;
+			public int numRecycledNodeIndices;
+			public int startingNodeIndex;
+			public int reservedPathNodeData;
+			public System.Func<T> createNode;
+
+			public bool allowBoundsChecks => false;
+
+			public void Execute () {
+				Profiler.BeginSample("Allocating nodes");
+				var hierarchicalGraph = pathProcessor.astar.hierarchicalGraph;
+				// Allocate more internal pathfinding data for the new nodes
+				hierarchicalGraph.ReserveNodeIndices(reservedPathNodeData);
+				for (int i = 0; i < pathProcessor.pathHandlers.Length; i++) pathProcessor.pathHandlers[i].ReserveNodeIndices(reservedPathNodeData);
+
+				// Allocate the actual nodes
+				for (int i = 0; i < count; i++) {
+					if (result[i] != null) continue;
+					var node = result[i] = createNode();
+
+					// Get a new node index. Re-use one from a previously destroyed node if possible
+					if (i < numRecycledNodeIndices) node.NodeIndex = recyledNodeIndices[i];
+					else node.NodeIndex = startingNodeIndex + i - numRecycledNodeIndices;
+
+					for (int j = pathProcessor.pathHandlers.Length - 1; j >= 0; j--) {
+						pathProcessor.pathHandlers[j].InitializeNode(node);
+					}
+				}
+
+				for (int i = 0; i < count; i++) hierarchicalGraph.AddDirtyNode(result[i]);
+				ArrayPool<int>.Release(ref recyledNodeIndices);
+				Profiler.EndSample();
+			}
+		}
+
+		Unity.Jobs.JobHandle lastAllocationJob;
+
+		public Unity.Jobs.JobHandle AllocateNodesJob<T>(T[] result, int count, System.Func<T> createNode) where T : GraphNode {
+			if (!queue.AllReceiversBlocked) {
+				throw new System.Exception("Trying to initialize a node when it is not safe to initialize any nodes. Must be done during a graph update. See http://arongranberg.com/astar/docs/graph-updates.php#direct");
+			}
+
+			// Get all node indices that we are going to recycle and store them in a new buffer.
+			// It's best to store them in a new buffer to avoid multithreading issues.
+			var numRecycledNodeIndices = math.min(nodeIndexPool.Count, count);
+			var recyledNodeIndices = ArrayPool<int>.Claim(numRecycledNodeIndices);
+			nodeIndexPool.PopMany(recyledNodeIndices, numRecycledNodeIndices);
+
+			// Highest node index + 1 in the new list of nodes
+			var newNextNodeIndex = nextNodeIndex + (count - numRecycledNodeIndices);
+			reservedPathNodeData = math.max(reservedPathNodeData, math.ceilpow2(newNextNodeIndex));
+
+			// It may be tempting to use a parallel job for this
+			// but it seems like allocation (new) in C# uses some kind of locking.
+			// Therefore it is not faster (it may even be slower) to try to allocate the nodes in multiple threads in parallel.
+			lastAllocationJob = new JobAllocateNodes<T> {
+				result = result,
+				count = count,
+				pathProcessor = this,
+				recyledNodeIndices = recyledNodeIndices,
+				numRecycledNodeIndices = numRecycledNodeIndices,
+				startingNodeIndex = nextNodeIndex,
+				reservedPathNodeData = reservedPathNodeData,
+				createNode = createNode,
+			}.ScheduleManaged(lastAllocationJob);
+
+			// Mark the node indices as used
+			nextNodeIndex = newNextNodeIndex;
+
+			return lastAllocationJob;
 		}
 
 		/// <summary>
@@ -275,7 +408,7 @@ namespace Pathfinding {
 				pathHandlers[i].DestroyNode(node);
 			}
 
-			astar.hierarchicalGraph.AddDirtyNode(node);
+			astar.hierarchicalGraph.OnDestroyedNode(node);
 		}
 
 		/// <summary>

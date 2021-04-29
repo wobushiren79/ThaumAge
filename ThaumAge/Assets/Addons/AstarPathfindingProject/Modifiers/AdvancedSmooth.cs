@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace Pathfinding {
-	[AddComponentMenu("Pathfinding/Modifiers/Advanced Smooth")]
+	[AddComponentMenu("Pathfinding/Modifiers/Advanced Smooth Modifier")]
 	[System.Serializable]
 	/// <summary>
 	/// \ingroup modifiers
@@ -211,7 +211,7 @@ namespace Pathfinding {
 				if (leftMagn < turningRadius)
 					noLeft = true;
 
-				double alfa = noRight  ? 0 : Atan2(prev-rightCircleCenter);
+				double alfa = noRight ? 0 : Atan2(prev-rightCircleCenter);
 				double delta = noRight ? 0 : (ThreeSixtyRadians * 0.25) - Math.Asin(turningRadius / (prev-rightCircleCenter).magnitude);
 
 				//Angle to the point where turning ends on the right circle
@@ -391,12 +391,12 @@ namespace Pathfinding {
 
 			public static bool changedPreviousTangent = false;
 
-			public abstract void Prepare (int i, Vector3[] vectorPath);
+			public abstract void Prepare(int i, Vector3[] vectorPath);
 			public virtual void  OnTangentUpdate () {}
 			public virtual void  PointToTangent (List<Turn> turnList) {}
 			public virtual void  TangentToPoint (List<Turn> turnList) {}
 			public virtual void TangentToTangent (List<Turn> turnList) {}
-			public abstract void GetPath (Turn turn, List<Vector3> output);
+			public abstract void GetPath(Turn turn, List<Vector3> output);
 			//abstract void Evaluate (Turn turn);
 
 			public static void Setup (int i, Vector3[] vectorPath) {

@@ -42,7 +42,9 @@ namespace Pathfinding {
 			position = value;
 		}
 
-		public PointNode (AstarPath astar) : base(astar) {
+		public PointNode() { }
+		public PointNode (AstarPath astar) {
+			astar.InitializeNode(this);
 		}
 
 		public override void GetConnections (System.Action<GraphNode> action) {
@@ -66,11 +68,13 @@ namespace Pathfinding {
 
 			handler.heap.Add(pathNode);
 
-			for (int i = 0; i < connections.Length; i++) {
-				GraphNode other = connections[i].node;
-				PathNode otherPN = handler.GetPathNode(other);
-				if (otherPN.parent == pathNode && otherPN.pathID == handler.PathID) {
-					other.UpdateRecursiveG(path, otherPN, handler);
+			if (connections != null) {
+				for (int i = 0; i < connections.Length; i++) {
+					GraphNode other = connections[i].node;
+					PathNode otherPN = handler.GetPathNode(other);
+					if (otherPN.parent == pathNode && otherPN.pathID == handler.PathID) {
+						other.UpdateRecursiveG(path, otherPN, handler);
+					}
 				}
 			}
 		}
@@ -185,7 +189,7 @@ namespace Pathfinding {
 			for (int i = 0; i < connections.Length; i++) {
 				GraphNode other = connections[i].node;
 
-				if (path.CanTraverse(other)) {
+				if (path.CanTraverse(this, other)) {
 					PathNode pathOther = handler.GetPathNode(other);
 
 					if (pathOther.pathID != handler.PathID) {

@@ -1,6 +1,8 @@
 using UnityEngine;
 
 namespace Pathfinding {
+	using Pathfinding.Drawing;
+
 	/// <summary>
 	/// Adds new geometry to a recast graph.
 	///
@@ -78,16 +80,14 @@ namespace Pathfinding {
 
 		/// <summary>cached transform component</summary>
 		protected Transform tr;
-		Vector3 lastPosition;
-		Quaternion lastRotation;
 
 		/// <summary>
 		/// Returns true if this object has moved so much that it requires an update.
 		/// When an update to the navmesh has been done, call NotifyUpdated to be able to get
 		/// relavant output from this method again.
 		/// </summary>
-		public override bool RequiresUpdate () {
-			return (tr.position-lastPosition).sqrMagnitude > updateDistance*updateDistance || (useRotationAndScale && (Quaternion.Angle(lastRotation, tr.rotation) > updateRotationDistance));
+		public override bool RequiresUpdate (Pathfinding.Util.GridLookup<NavmeshClipper>.Root previousState) {
+			return (tr.position-previousState.previousPosition).sqrMagnitude > updateDistance*updateDistance || (useRotationAndScale && (Quaternion.Angle(previousState.previousRotation, tr.rotation) > updateRotationDistance));
 		}
 
 		/// <summary>
@@ -98,7 +98,7 @@ namespace Pathfinding {
 		/// See: <see cref="Pathfinding.NavmeshUpdates.ForceUpdate()"/>
 		/// </summary>
 		public override void ForceUpdate () {
-			lastPosition = new Vector3(float.PositiveInfinity, float.PositiveInfinity, float.PositiveInfinity);
+			AstarPath.active.navmeshUpdates.ForceUpdateAround(this);
 		}
 
 		protected override void Awake () {
@@ -107,11 +107,11 @@ namespace Pathfinding {
 		}
 
 		/// <summary>Internal method to notify the NavmeshAdd that it has just been used to update the navmesh</summary>
-		internal override void NotifyUpdated () {
-			lastPosition = tr.position;
+		internal override void NotifyUpdated (Pathfinding.Util.GridLookup<NavmeshClipper>.Root previousState) {
+			previousState.previousPosition = tr.position;
 
 			if (useRotationAndScale) {
-				lastRotation = tr.rotation;
+				previousState.previousRotation = tr.rotation;
 			}
 		}
 
@@ -156,9 +156,9 @@ namespace Pathfinding {
 		/// The transformation will typically transform the vertices to graph space and this is used to
 		/// figure out which tiles the add intersects.
 		/// </summary>
-		internal override Rect GetBounds (Pathfinding.Util.GraphTransform inverseTransform) {
+		public override Rect GetBounds (Pathfinding.Util.GraphTransform inverseTransform) {
 			if (this.verts == null) RebuildMesh();
-			var verts = Pathfinding.Util.ArrayPool<Int3>.Claim (this.verts != null? this.verts.Length : 0);
+			var verts = Pathfinding.Util.ArrayPool<Int3>.Claim(this.verts != null? this.verts.Length : 0);
 			int[] tris;
 			GetMesh(ref verts, out tris, inverseTransform);
 
@@ -175,7 +175,7 @@ namespace Pathfinding {
 				}
 			}
 
-			Pathfinding.Util.ArrayPool<Int3>.Release (ref verts);
+			Pathfinding.Util.ArrayPool<Int3>.Release(ref verts);
 			return r;
 		}
 
@@ -190,13 +190,13 @@ namespace Pathfinding {
 			if (verts == null) RebuildMesh();
 
 			if (verts == null) {
-				tbuffer = Util.ArrayPool<int>.Claim (0);
+				tbuffer = Util.ArrayPool<int>.Claim(0);
 				return;
 			}
 
 			if (vbuffer == null || vbuffer.Length < verts.Length) {
-				if (vbuffer != null) Util.ArrayPool<Int3>.Release (ref vbuffer);
-				vbuffer = Util.ArrayPool<Int3>.Claim (verts.Length);
+				if (vbuffer != null) Util.ArrayPool<Int3>.Release(ref vbuffer);
+				vbuffer = Util.ArrayPool<Int3>.Claim(verts.Length);
 			}
 			tbuffer = tris;
 
@@ -223,23 +223,20 @@ namespace Pathfinding {
 #if UNITY_EDITOR
 		public static Int3[] gizmoBuffer;
 
-		public void OnDrawGizmos () {
+		public override void DrawGizmos () {
 			if (tr == null) tr = transform;
-
 
 			int[] tbuffer;
 			GetMesh(ref gizmoBuffer, out tbuffer);
-
-			Gizmos.color = GizmoColor;
 
 			for (int i = 0; i < tbuffer.Length; i += 3) {
 				var v1 = (Vector3)gizmoBuffer[tbuffer[i+0]];
 				var v2 = (Vector3)gizmoBuffer[tbuffer[i+1]];
 				var v3 = (Vector3)gizmoBuffer[tbuffer[i+2]];
 
-				Gizmos.DrawLine(v1, v2);
-				Gizmos.DrawLine(v2, v3);
-				Gizmos.DrawLine(v3, v1);
+				Draw.Line(v1, v2, GizmoColor);
+				Draw.Line(v2, v3, GizmoColor);
+				Draw.Line(v3, v1, GizmoColor);
 			}
 		}
 #endif

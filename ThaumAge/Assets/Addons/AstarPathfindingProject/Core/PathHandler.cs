@@ -1,4 +1,5 @@
 #define DECREASE_KEY
+#define PREALLOCATE_NODES
 using System.Collections.Generic;
 
 namespace Pathfinding {
@@ -163,6 +164,9 @@ namespace Pathfinding {
 
 		/// <summary>Internal method to initialize node data</summary>
 		public void InitializeNode (GraphNode node) {
+#if PREALLOCATE_NODES
+			nodes[node.NodeIndex].node = node;
+#else
 			//Get the index of the node
 			int ind = node.NodeIndex;
 
@@ -181,6 +185,23 @@ namespace Pathfinding {
 			}
 
 			nodes[ind].node = node;
+#endif
+		}
+
+		public void ReserveNodeIndices (int nodeIndexCount) {
+			if (nodeIndexCount > nodes.Length) {
+				// Grow by a factor of 2
+				PathNode[] newNodes = new PathNode[System.Math.Max(128, nodeIndexCount)];
+				nodes.CopyTo(newNodes, 0);
+				// Initialize all PathNode instances at once
+				// It is important that we do this here and don't for example leave the entries as NULL and initialize
+				// them lazily. By allocating them all at once we are much more likely to allocate the PathNodes close
+				// to each other in memory (most systems use some kind of bumb-allocator) and this improves cache locality
+				// and reduces false sharing (which would happen if we allocated PathNodes for the different threads close
+				// to each other). This has been profiled to give around a 4% difference in overall pathfinding performance.
+				for (int i = nodes.Length; i < newNodes.Length; i++) newNodes[i] = new PathNode();
+				nodes = newNodes;
+			}
 		}
 
 		public PathNode GetPathNode (int nodeIndex) {

@@ -1,6 +1,11 @@
 using Pathfinding.Util;
 using System.Collections.Generic;
+using Unity.Burst;
+using Unity.Collections;
+using Unity.Jobs;
+using Unity.Mathematics;
 using UnityEngine;
+using System.Linq;
 
 namespace Pathfinding {
 	/// <summary>
@@ -27,18 +32,18 @@ namespace Pathfinding {
 		///
 		/// See: graph-updates (view in online documentation for working links)
 		/// See: <see cref="AstarPath.GetNearest"/>
+		/// See: <see cref="Pathfinding.HierarchicalGraph"/>
 		/// </summary>
 		public static bool IsPathPossible (GraphNode node1, GraphNode node2) {
 			return node1.Walkable && node2.Walkable && node1.Area == node2.Area;
 		}
 
 		/// <summary>
-		/// Returns if there are walkable paths between all nodes.
-		///
-		/// See: graph-updates (view in online documentation for working links)
+		/// Returns if there are walkable paths between all nodes in the list.
 		///
 		/// Returns true for empty lists.
 		///
+		/// See: graph-updates (view in online documentation for working links)
 		/// See: <see cref="AstarPath.GetNearest"/>
 		/// </summary>
 		public static bool IsPathPossible (List<GraphNode> nodes) {
@@ -50,8 +55,7 @@ namespace Pathfinding {
 		}
 
 		/// <summary>
-		/// Returns if there are walkable paths between all nodes.
-		/// See: graph-updates (view in online documentation for working links)
+		/// Returns if there are walkable paths between all nodes in the list.
 		///
 		/// This method will actually only check if the first node can reach all other nodes. However this is
 		/// equivalent in 99% of the cases since almost always the graph connections are bidirectional.
@@ -62,6 +66,7 @@ namespace Pathfinding {
 		///
 		/// Warning: This method is significantly slower than the IsPathPossible method which does not take a tagMask
 		///
+		/// See: graph-updates (view in online documentation for working links)
 		/// See: <see cref="AstarPath.GetNearest"/>
 		/// </summary>
 		public static bool IsPathPossible (List<GraphNode> nodes, int tagMask) {
@@ -86,7 +91,7 @@ namespace Pathfinding {
 			}
 
 			// Pool the temporary list
-			ListPool<GraphNode>.Release (ref reachable);
+			ListPool<GraphNode>.Release(ref reachable);
 
 			return result;
 		}
@@ -114,8 +119,8 @@ namespace Pathfinding {
 		/// <param name="filter">Optional filter for which nodes to search. You can combine this with tagMask = -1 to make the filter determine everything.
 		///      Only walkable nodes are searched regardless of the filter. If the filter function returns false the node will be treated as unwalkable.</param>
 		public static List<GraphNode> GetReachableNodes (GraphNode seed, int tagMask = -1, System.Func<GraphNode, bool> filter = null) {
-			Stack<GraphNode> dfsStack = StackPool<GraphNode>.Claim ();
-			List<GraphNode> reachable = ListPool<GraphNode>.Claim ();
+			Stack<GraphNode> dfsStack = StackPool<GraphNode>.Claim();
+			List<GraphNode> reachable = ListPool<GraphNode>.Claim();
 
 			/// <summary>TODO: Pool</summary>
 			var map = new HashSet<GraphNode>();
@@ -146,7 +151,7 @@ namespace Pathfinding {
 				dfsStack.Pop().GetConnections(callback);
 			}
 
-			StackPool<GraphNode>.Release (dfsStack);
+			StackPool<GraphNode>.Release(dfsStack);
 			return reachable;
 		}
 
@@ -200,7 +205,7 @@ namespace Pathfinding {
 			que.Clear();
 			map.Clear();
 
-			List<GraphNode> result = ListPool<GraphNode>.Claim ();
+			List<GraphNode> result = ListPool<GraphNode>.Claim();
 
 			int currentDist = -1;
 			System.Action<GraphNode> callback;
@@ -260,7 +265,7 @@ namespace Pathfinding {
 		/// See: Pathfinding.Util.ListPool
 		/// </summary>
 		public static List<Vector3> GetSpiralPoints (int count, float clearance) {
-			List<Vector3> pts = ListPool<Vector3>.Claim (count);
+			List<Vector3> pts = ListPool<Vector3>.Claim(count);
 
 			// The radius of the smaller circle used for generating the involute of a circle
 			// Calculated from the separation distance between the turns
@@ -425,10 +430,180 @@ namespace Pathfinding {
 					// the chances next time
 					clearanceRadius *= 0.9f;
 					// This will pick points in 2D closer to the edge of the circle with a higher probability
-					dir = Random.onUnitSphere * Mathf.Lerp(newMagn, radius, tests / 5);
+					dir = UnityEngine.Random.onUnitSphere * Mathf.Lerp(newMagn, radius, tests / 5);
 					dir.y = 0;
 					tests++;
 				}
+			}
+		}
+
+		[BurstCompile(FloatMode = FloatMode.Fast)]
+		struct JobFormationPacked : IJob {
+			public NativeArray<float3> positions;
+			public float3 destination;
+			public float agentRadius;
+
+			public float CollisionTime (float2 pos1, float2 pos2, float2 v1, float2 v2, float r1, float r2) {
+				var relativeVelocity = v1 - v2;
+
+				if (math.all(relativeVelocity == float2.zero)) {
+					// No collision
+					return float.MaxValue;
+				}
+				var radius = r1 + r2;
+				var relativePos = pos2 - pos1;
+				var relativeDir = math.normalize(relativeVelocity);
+				var d1 = math.dot(relativePos, relativeDir);
+				var d2sq = math.lengthsq(relativePos - relativeDir * d1);
+				var offsetSq = radius*radius - d2sq;
+				if (offsetSq <= 0) {
+					// No collision
+					return float.MaxValue;
+				}
+				var offset = math.sqrt(offsetSq);
+				var collisionDistance = d1 - offset;
+				if (collisionDistance < -radius) {
+					// No collision (collision is in the imagined past)
+					return float.MaxValue;
+				}
+				return collisionDistance * math.rsqrt(math.lengthsq(relativeVelocity));
+				//return collisionDistance / math.length(relativeVelocity);
+			}
+
+			struct DistanceComparer : IComparer<int> {
+				public NativeArray<float2> positions;
+
+				public int Compare (int x, int y) {
+					return (int)math.sign(math.lengthsq(positions[x]) - math.lengthsq(positions[y]));
+				}
+			}
+
+			public void Execute () {
+				if (positions.Length == 0) return;
+
+				NativeArray<float2> positions2D = new NativeArray<float2>(positions.Length, Allocator.Temp, NativeArrayOptions.UninitializedMemory);
+				NativeArray<int> indices = new NativeArray<int>(positions.Length, Allocator.Temp, NativeArrayOptions.UninitializedMemory);
+				for (int i = 0; i < positions.Length; i++) {
+					positions2D[i] = new float2(positions[i].x, positions[i].z);
+					indices[i] = i;
+				}
+
+				float2 mean = float2.zero;
+				for (int i = 0; i < positions2D.Length; i++) {
+					mean += positions2D[i];
+				}
+				mean /= positions2D.Length;
+
+				for (int i = 0; i < positions2D.Length; i++) {
+					positions2D[i] -= mean;
+				}
+
+				// Sort agents by their distance to the center
+				indices.Sort(new DistanceComparer { positions = positions2D });
+
+				NativeArray<float> minTimes = new NativeArray<float>(positions.Length, Allocator.Temp, NativeArrayOptions.UninitializedMemory);
+				for (int a = 0; a < positions.Length; a++) {
+					var ta = float.MaxValue;
+					var ia = indices[a];
+					for (int b = 0; b < a; b++) {
+						var ib = indices[b];
+						//float tb = CollisionTime(positions2D[ia], positions2D[ib], -positions2D[ia], -positions2D[ib], agentRadius, agentRadius);
+						float tb = CollisionTime(positions2D[ia], positions2D[ib], -positions2D[ia], float2.zero, agentRadius, agentRadius);
+						ta = math.min(ta, tb);
+					}
+					minTimes[ia] = ta;
+					positions2D[ia] -= positions2D[ia] * math.min(1.0f, minTimes[indices[a]]);
+				}
+
+				for (int i = 0; i < positions.Length; i++) {
+					var p = positions2D[i];
+					positions[i] = new float3(p.x, 0, p.y) + destination;
+				}
+			}
+		}
+
+		public static void FormationPacked (List<Vector3> currentPositions, Vector3 destination, float clearanceRadius) {
+			var positions = new NativeArray<float3>(currentPositions.Count, Allocator.TempJob, NativeArrayOptions.UninitializedMemory);
+
+			for (int i = 0; i < positions.Length; i++) positions[i] = currentPositions[i];
+			new JobFormationPacked {
+				positions = positions,
+				destination = destination,
+				agentRadius = clearanceRadius,
+			}.Schedule().Complete();
+			for (int i = 0; i < positions.Length; i++) currentPositions[i] = positions[i];
+			positions.Dispose();
+		}
+
+		class ConstrainToSet : NNConstraint {
+			public HashSet<GraphNode> nodes;
+
+			public override bool Suitable (GraphNode node) {
+				return nodes.Contains(node);
+			}
+		}
+
+		public static void GetPointsAroundPointWorldFlexible (Vector3 center, Quaternion rotation, List<Vector3> positions) {
+			if (positions.Count == 0) return;
+
+			var snapped = AstarPath.active.GetNearest(center, NNConstraint.Default);
+
+			// Move slightly toward the node center just to avoid the group center being on a node edge
+			var groupPos = Vector3.Lerp(snapped.position, (Vector3)snapped.node.position, 0.001f);
+
+			var previousMean = Vector3.zero;
+			for (int i = 0; i < positions.Count; i++) previousMean += positions[i];
+			previousMean /= positions.Count;
+
+			var maxSqrDistance = 0f;
+			for (int i = 0; i < positions.Count; i++) {
+				positions[i] -= previousMean;
+				maxSqrDistance = Mathf.Max(maxSqrDistance, positions[i].sqrMagnitude);
+			}
+
+			// Multiplying by 4 doubles the normal distance
+			maxSqrDistance *= 2*2;
+
+			// Search at least this number of nodes regardless of the distance to the nodes
+			int minNodes = 10;
+
+			var nodes = PathUtilities.BFS(snapped.node, int.MaxValue, -1, node => {
+				minNodes--;
+				return minNodes > 0 || ((Vector3)node.position - groupPos).sqrMagnitude < maxSqrDistance;
+			});
+
+			NNConstraint nn = new ConstrainToSet() {
+				nodes = new HashSet<GraphNode>(nodes)
+			};
+
+			int iterations = 3;
+			for (int k = 0; k < iterations; k++) {
+				float totalWeight = 0f;
+				Vector3 totalSum = Vector3.zero;
+
+				for (int i = 0; i < positions.Count; i++) {
+					var rel = rotation * positions[i];
+					var p = groupPos + rel;
+
+					var near = AstarPath.active.GetNearest(p, nn).position;
+					// TODO: Handle case when no close node was found
+
+					var weight = Vector3.Distance(p, near);
+
+					totalSum += (near - rel) * weight;
+					totalWeight += weight;
+				}
+
+				// If no changes were required, then break early
+				if (totalWeight <= 0.0000001f) break;
+
+				var newCenter = totalSum / totalWeight;
+
+				groupPos = AstarPath.active.GetNearest(newCenter, nn).position;
+			}
+
+			for (int i = 0; i < positions.Count; i++) {
+				positions[i] = groupPos + rotation * positions[i];
 			}
 		}
 
@@ -448,7 +623,7 @@ namespace Pathfinding {
 			if (nodes == null) throw new System.ArgumentNullException("nodes");
 			if (nodes.Count == 0) throw new System.ArgumentException("no nodes passed");
 
-			List<Vector3> pts = ListPool<Vector3>.Claim (count);
+			List<Vector3> pts = ListPool<Vector3>.Claim(count);
 
 			// Square
 			clearanceRadius *= clearanceRadius;
@@ -459,7 +634,7 @@ namespace Pathfinding {
 #endif
 				) {
 				// Accumulated area of all nodes
-				List<float> accs = ListPool<float>.Claim (nodes.Count);
+				List<float> accs = ListPool<float>.Claim(nodes.Count);
 
 				// Total area of all nodes so far
 				float tot = 0;
@@ -491,7 +666,7 @@ namespace Pathfinding {
 						}
 
 						// Pick a random node among the ones in the list weighted by their area
-						float tg = Random.value*tot;
+						float tg = UnityEngine.Random.value*tot;
 						int v = accs.BinarySearch(tg);
 						if (v < 0) v = ~v;
 
@@ -522,11 +697,11 @@ namespace Pathfinding {
 					}
 				}
 
-				ListPool<float>.Release (ref accs);
+				ListPool<float>.Release(ref accs);
 			} else {
 				// Fast path, assumes all nodes have the same area (usually zero)
 				for (int i = 0; i < count; i++) {
-					pts.Add((Vector3)nodes[Random.Range(0, nodes.Count)].RandomPointOnSurface());
+					pts.Add((Vector3)nodes[UnityEngine.Random.Range(0, nodes.Count)].RandomPointOnSurface());
 				}
 			}
 

@@ -5,6 +5,7 @@ using UnityEditor;
 
 namespace Pathfinding {
 	using Pathfinding.Util;
+	using Pathfinding.Drawing;
 
 	/// <summary>
 	/// Connects two nodes with a direct connection.
@@ -41,30 +42,42 @@ namespace Pathfinding {
 			get { return end; }
 		}
 
-		public override void OnPostScan () {
-			if (AstarPath.active.isScanning) {
-				InternalOnPostScan();
-			} else {
-				AstarPath.active.AddWorkItem(new AstarWorkItem(force => {
-					InternalOnPostScan();
-					return true;
-				}));
-			}
-		}
-
-		public void InternalOnPostScan () {
+		public override void OnGraphsPostUpdateBeforeAreaRecalculation () {
 			Apply();
 		}
 
-		public override void OnGraphsPostUpdate () {
-			if (!AstarPath.active.isScanning) {
-				AstarPath.active.AddWorkItem(new AstarWorkItem(force => {
-					InternalOnPostScan();
-					return true;
-				}));
+		public static void DrawArch (Vector3 a, Vector3 b, Color color) {
+			Vector3 dir = b - a;
+
+			if (dir == Vector3.zero) return;
+
+			var normal = Vector3.Cross(new Vector3(0, 1, 0), dir);
+			var normalUp = Vector3.Cross(dir, normal).normalized;
+
+			normalUp *= dir.magnitude*0.1f;
+
+			var p1c = a + normalUp;
+			var p2c = b + normalUp;
+
+			var prev = a;
+			using (Draw.WithColor(color)) {
+				for (int i = 1; i <= 20; i++) {
+					float t = i/20.0f;
+					Vector3 p = CommandBuilder.EvaluateCubicBezier(a, p1c, p2c, b, t);
+					Draw.Line(prev, p);
+					prev = p;
+				}
 			}
 		}
 
+		/// <summary>
+		/// Connects the start and end points using a link or refreshes the existing link.
+		///
+		/// If you have moved the link or otherwise modified it you need to call this method.
+		///
+		/// Warning: This must only be done when it is safe to update the graph structure.
+		/// The easiest is to do it inside a work item. See <see cref="AstarPath.active.AddWorkItem"/>.
+		/// </summary>
 		public virtual void Apply () {
 			if (Start == null || End == null || AstarPath.active == null) return;
 
@@ -87,10 +100,10 @@ namespace Pathfinding {
 			}
 		}
 
-		public void OnDrawGizmos () {
+		public override void DrawGizmos () {
 			if (Start == null || End == null) return;
 
-			Draw.Gizmos.Bezier(Start.position, End.position, deleteConnection ? Color.red : Color.green);
+			NodeLink.DrawArch(Start.position, End.position, deleteConnection ? Color.red : Color.green);
 		}
 
 #if UNITY_EDITOR

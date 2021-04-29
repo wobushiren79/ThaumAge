@@ -2,6 +2,8 @@ using UnityEngine;
 using System.Collections.Generic;
 
 namespace Pathfinding.RVO {
+	using Pathfinding.Drawing;
+
 	/// <summary>
 	/// Base class for simple RVO colliders.
 	///
@@ -34,7 +36,7 @@ namespace Pathfinding.RVO {
 		}
 
 		/// <summary>Reference to simulator</summary>
-		protected Pathfinding.RVO.Simulator sim;
+		protected Pathfinding.RVO.ISimulator sim;
 
 		/// <summary>All obstacles added</summary>
 		private List<ObstacleVertex> addedObstacles;
@@ -49,7 +51,7 @@ namespace Pathfinding.RVO {
 		///
 		/// See: AddObstacle
 		/// </summary>
-		protected abstract void CreateObstacles ();
+		protected abstract void CreateObstacles();
 
 		/// <summary>
 		/// Enable executing in editor to draw gizmos.
@@ -74,7 +76,7 @@ namespace Pathfinding.RVO {
 		/// This function should return true if any variables which can change the shape or position of the obstacle
 		/// has changed since the last call to this function. Take a look at the RVOSquareObstacle for an example.
 		/// </summary>
-		protected abstract bool AreGizmosDirty ();
+		protected abstract bool AreGizmosDirty();
 
 		/// <summary>Enabled if currently in OnDrawGizmos</summary>
 		private bool gizmoDrawing = false;
@@ -95,20 +97,9 @@ namespace Pathfinding.RVO {
 		private Matrix4x4 prevUpdateMatrix;
 
 		/// <summary>Draws Gizmos</summary>
-		public void OnDrawGizmos () {
-			OnDrawGizmos(false);
-		}
-
-		/// <summary>Draws Gizmos</summary>
-		public void OnDrawGizmosSelected () {
-			OnDrawGizmos(true);
-		}
-
-		/// <summary>Draws Gizmos</summary>
-		public void OnDrawGizmos (bool selected) {
+		public override void DrawGizmos () {
 			gizmoDrawing = true;
-
-			Gizmos.color = new Color(0.615f, 1, 0.06f, selected ? 1.0f : 0.7f);
+			bool selected = GizmoContext.InActiveSelection(this);
 			var movementPlane = RVOSimulator.active != null ? RVOSimulator.active.movementPlane : MovementPlane.XZ;
 			var up = movementPlane == MovementPlane.XZ ? Vector3.up : -Vector3.forward;
 
@@ -123,31 +114,33 @@ namespace Pathfinding.RVO {
 
 			Matrix4x4 m = GetMatrix();
 
-			for (int i = 0; i < gizmoVerts.Count; i++) {
-				Vector3[] verts = gizmoVerts[i];
-				for (int j = 0, q = verts.Length-1; j < verts.Length; q = j++) {
-					Gizmos.DrawLine(m.MultiplyPoint3x4(verts[j]), m.MultiplyPoint3x4(verts[q]));
-				}
-
-				if (selected) {
+			using (Draw.WithColor(new Color(0.615f, 1, 0.06f, selected ? 1.0f : 0.7f))) {
+				for (int i = 0; i < gizmoVerts.Count; i++) {
+					Vector3[] verts = gizmoVerts[i];
 					for (int j = 0, q = verts.Length-1; j < verts.Length; q = j++) {
-						Vector3 a = m.MultiplyPoint3x4(verts[q]);
-						Vector3 b = m.MultiplyPoint3x4(verts[j]);
+						Draw.Line(m.MultiplyPoint3x4(verts[j]), m.MultiplyPoint3x4(verts[q]));
+					}
 
-						if (movementPlane != MovementPlane.XY) {
-							Gizmos.DrawLine(a + up*Height, b + up*Height);
-							Gizmos.DrawLine(a, a + up*Height);
+					if (selected) {
+						for (int j = 0, q = verts.Length-1; j < verts.Length; q = j++) {
+							Vector3 a = m.MultiplyPoint3x4(verts[q]);
+							Vector3 b = m.MultiplyPoint3x4(verts[j]);
+
+							if (movementPlane != MovementPlane.XY) {
+								Draw.Line(a + up*Height, b + up*Height);
+								Draw.Line(a, a + up*Height);
+							}
+
+							Vector3 avg = (a + b) * 0.5f;
+							Vector3 tang = (b - a).normalized;
+							if (tang == Vector3.zero) continue;
+
+							Vector3 normal = Vector3.Cross(up, tang);
+
+							Draw.Line(avg, avg+normal);
+							Draw.Line(avg+normal, avg+normal*0.5f+tang*0.5f);
+							Draw.Line(avg+normal, avg+normal*0.5f-tang*0.5f);
 						}
-
-						Vector3 avg = (a + b) * 0.5f;
-						Vector3 tang = (b - a).normalized;
-						if (tang == Vector3.zero) continue;
-
-						Vector3 normal = Vector3.Cross(up, tang);
-
-						Gizmos.DrawLine(avg, avg+normal);
-						Gizmos.DrawLine(avg+normal, avg+normal*0.5f+tang*0.5f);
-						Gizmos.DrawLine(avg+normal, avg+normal*0.5f-tang*0.5f);
 					}
 				}
 			}
@@ -296,7 +289,7 @@ namespace Pathfinding.RVO {
 			var p3 = matrix.MultiplyPoint3x4(vertices[(leftmost+1) % vertices.Length]);
 
 			MovementPlane movementPlane;
-			if (sim != null) movementPlane = sim.movementPlane;
+			if (sim != null) movementPlane = sim.MovementPlane;
 			else if (RVOSimulator.active) movementPlane = RVOSimulator.active.movementPlane;
 			else movementPlane = MovementPlane.XZ;
 

@@ -3,6 +3,9 @@ using UnityEngine;
 using System.Collections.Generic;
 
 namespace Pathfinding {
+	using Pathfinding.Drawing;
+	using Pathfinding.Util;
+
 	/// <summary>Base class for the NavmeshCut and NavmeshAdd components</summary>
 	public abstract class NavmeshClipper : VersionedMonoBehaviour {
 		/// <summary>Called every time a NavmeshCut/NavmeshAdd component is enabled.</summary>
@@ -32,8 +35,8 @@ namespace Pathfinding {
 		public static List<NavmeshClipper> allEnabled { get { return all; } }
 
 		protected virtual void OnEnable () {
-			listIndex = all.Count;
 			if (OnEnableCallback != null) OnEnableCallback(this);
+			listIndex = all.Count;
 			all.Add(this);
 		}
 
@@ -48,10 +51,10 @@ namespace Pathfinding {
 			if (OnDisableCallback != null) OnDisableCallback(this);
 		}
 
-		internal abstract void NotifyUpdated ();
-		internal abstract Rect GetBounds (Pathfinding.Util.GraphTransform transform);
-		public abstract bool RequiresUpdate ();
-		public abstract void ForceUpdate ();
+		internal abstract void NotifyUpdated(GridLookup<NavmeshClipper>.Root previousState);
+		public abstract Rect GetBounds(GraphTransform transform);
+		public abstract bool RequiresUpdate(GridLookup<NavmeshClipper>.Root previousState);
+		public abstract void ForceUpdate();
 	}
 
 	/// <summary>
@@ -218,18 +221,10 @@ namespace Pathfinding {
 		/// <summary>cached transform component</summary>
 		protected Transform tr;
 		Mesh lastMesh;
-		Vector3 lastPosition;
-		Quaternion lastRotation;
 
 		protected override void Awake () {
 			base.Awake();
 			tr = transform;
-		}
-
-		protected override void OnEnable () {
-			base.OnEnable();
-			lastPosition = new Vector3(float.PositiveInfinity, float.PositiveInfinity, float.PositiveInfinity);
-			lastRotation = tr.rotation;
 		}
 
 		/// <summary>Cached variable, to avoid allocations</summary>
@@ -245,7 +240,7 @@ namespace Pathfinding {
 		/// See: <see cref="Pathfinding.NavmeshUpdates.ForceUpdate()"/>
 		/// </summary>
 		public override void ForceUpdate () {
-			lastPosition = new Vector3(float.PositiveInfinity, float.PositiveInfinity, float.PositiveInfinity);
+			AstarPath.active.navmeshUpdates.ForceUpdateAround(this);
 		}
 
 		/// <summary>
@@ -253,8 +248,8 @@ namespace Pathfinding {
 		/// When an update to the navmesh has been done, call NotifyUpdated to be able to get
 		/// relavant output from this method again.
 		/// </summary>
-		public override bool RequiresUpdate () {
-			return (tr.position-lastPosition).sqrMagnitude > updateDistance*updateDistance || (useRotationAndScale && (Quaternion.Angle(lastRotation, tr.rotation) > updateRotationDistance));
+		public override bool RequiresUpdate (GridLookup<NavmeshClipper>.Root previousState) {
+			return (tr.position-previousState.previousPosition).sqrMagnitude > updateDistance*updateDistance || (useRotationAndScale && (Quaternion.Angle(previousState.previousRotation, tr.rotation) > updateRotationDistance));
 		}
 
 		/// <summary>
@@ -266,11 +261,11 @@ namespace Pathfinding {
 		}
 
 		/// <summary>Internal method to notify the NavmeshCut that it has just been used to update the navmesh</summary>
-		internal override void NotifyUpdated () {
-			lastPosition = tr.position;
+		internal override void NotifyUpdated (GridLookup<NavmeshClipper>.Root previousState) {
+			previousState.previousPosition = tr.position;
 
 			if (useRotationAndScale) {
-				lastRotation = tr.rotation;
+				previousState.previousRotation = tr.rotation;
 			}
 		}
 
@@ -306,7 +301,7 @@ namespace Pathfinding {
 
 			var contourBuffer = new List<Vector3[]>();
 
-			List<Vector3> buffer = Pathfinding.Util.ListPool<Vector3>.Claim ();
+			List<Vector3> buffer = ListPool<Vector3>.Claim();
 
 			// Follow edge pointers to generate the contours
 			for (int i = 0; i < verts.Length; i++) {
@@ -335,7 +330,7 @@ namespace Pathfinding {
 			}
 
 			// Return lists to the pool
-			Pathfinding.Util.ListPool<Vector3>.Release (ref buffer);
+			ListPool<Vector3>.Release(ref buffer);
 
 			contours = contourBuffer.ToArray();
 		}
@@ -345,8 +340,8 @@ namespace Pathfinding {
 		/// The transformation will typically transform the vertices to graph space and this is used to
 		/// figure out which tiles the cut intersects.
 		/// </summary>
-		internal override Rect GetBounds (Pathfinding.Util.GraphTransform inverseTransform) {
-			var buffers = Pathfinding.Util.ListPool<List<Vector3> >.Claim ();
+		public override Rect GetBounds (GraphTransform inverseTransform) {
+			var buffers = ListPool<List<Vector3> >.Claim();
 
 			GetContour(buffers);
 
@@ -366,7 +361,7 @@ namespace Pathfinding {
 				}
 			}
 
-			Pathfinding.Util.ListPool<List<Vector3> >.Release (ref buffers);
+			ListPool<List<Vector3> >.Release(ref buffers);
 			return r;
 		}
 
@@ -381,7 +376,7 @@ namespace Pathfinding {
 			bool reverse;
 			switch (type) {
 			case MeshType.Rectangle:
-				List<Vector3> buffer0 = Pathfinding.Util.ListPool<Vector3>.Claim ();
+				List<Vector3> buffer0 = ListPool<Vector3>.Claim();
 
 				buffer0.Add(new Vector3(-rectangleSize.x, 0, -rectangleSize.y)*0.5f);
 				buffer0.Add(new Vector3(rectangleSize.x, 0, -rectangleSize.y)*0.5f);
@@ -393,7 +388,7 @@ namespace Pathfinding {
 				buffer.Add(buffer0);
 				break;
 			case MeshType.Circle:
-				buffer0 = Pathfinding.Util.ListPool<Vector3>.Claim (circleResolution);
+				buffer0 = ListPool<Vector3>.Claim(circleResolution);
 
 				for (int i = 0; i < circleResolution; i++) {
 					buffer0.Add(new Vector3(Mathf.Cos((i*2*Mathf.PI)/circleResolution), 0, Mathf.Sin((i*2*Mathf.PI)/circleResolution))*circleRadius);
@@ -415,7 +410,7 @@ namespace Pathfinding {
 					for (int i = 0; i < contours.Length; i++) {
 						Vector3[] contour = contours[i];
 
-						buffer0 = Pathfinding.Util.ListPool<Vector3>.Claim (contour.Length);
+						buffer0 = ListPool<Vector3>.Claim(contour.Length);
 						for (int x = 0; x < contour.Length; x++) {
 							buffer0.Add(contour[x]*meshScale);
 						}
@@ -446,63 +441,55 @@ namespace Pathfinding {
 
 		public static readonly Color GizmoColor = new Color(37.0f/255, 184.0f/255, 239.0f/255);
 
-		public void OnDrawGizmos () {
-			if (tr == null) tr = transform;
-
-			var buffer = Pathfinding.Util.ListPool<List<Vector3> >.Claim ();
-			GetContour(buffer);
-			Gizmos.color = GizmoColor;
-
-			// Draw all contours
-			for (int i = 0; i < buffer.Count; i++) {
-				var cont = buffer[i];
-				for (int j = 0; j < cont.Count; j++) {
-					Vector3 p1 = cont[j];
-					Vector3 p2 = cont[(j+1) % cont.Count];
-					Gizmos.DrawLine(p1, p2);
-				}
-			}
-
-			Pathfinding.Util.ListPool<List<Vector3> >.Release (ref buffer);
-		}
-
 		/// <summary>Y coordinate of the center of the bounding box in graph space</summary>
-		internal float GetY (Pathfinding.Util.GraphTransform transform) {
+		internal float GetY (GraphTransform transform) {
 			return transform.InverseTransform(useRotationAndScale ? tr.TransformPoint(center) : tr.position + center).y;
 		}
 
-		public void OnDrawGizmosSelected () {
-			var buffer = Pathfinding.Util.ListPool<List<Vector3> >.Claim ();
+		public override void DrawGizmos () {
+			if (tr == null) tr = transform;
 
+			bool selected = GizmoContext.InActiveSelection(tr);
+
+			var buffer = ListPool<List<Vector3> >.Claim();
 			GetContour(buffer);
-			var col = Color.Lerp(GizmoColor, Color.white, 0.5f);
-			col.a *= 0.5f;
-			Gizmos.color = col;
 
 			var graph = AstarPath.active != null ? (AstarPath.active.data.recastGraph as NavmeshBase ?? AstarPath.active.data.navmesh) : null;
-			var transform = graph != null ? graph.transform : Pathfinding.Util.GraphTransform.identityTransform;
-			float ymid = GetY(transform);
+			var matrix = graph != null ? graph.transform : GraphTransform.identityTransform;
+			float ymid = GetY(matrix);
 			float ymin = ymid - height*0.5f;
 			float ymax = ymid + height*0.5f;
 
-			// Draw all contours
-			for (int i = 0; i < buffer.Count; i++) {
-				var cont = buffer[i];
-				for (int j = 0; j < cont.Count; j++) {
-					Vector3 p1 = transform.InverseTransform(cont[j]);
-					Vector3 p2 = transform.InverseTransform(cont[(j+1) % cont.Count]);
+			var col = Color.Lerp(GizmoColor, Color.white, 0.5f);
+			col.a *= 0.5f;
+			using (Draw.WithColor(col)) {
+				// Draw all contours
+				for (int i = 0; i < buffer.Count; i++) {
+					var cont = buffer[i];
+					for (int j = 0; j < cont.Count; j++) {
+						var p1world = cont[j];
+						var p2world = cont[(j+1) % cont.Count];
+						// Note: Drawn with a stronger color
+						Draw.Line(p1world, p2world, GizmoColor);
 
-					Vector3 p1low = p1, p2low = p2, p1high = p1, p2high = p2;
-					p1low.y = p2low.y = ymin;
-					p1high.y = p2high.y = ymax;
+						if (selected) {
+							Vector3 p1 = matrix.InverseTransform(p1world);
+							Vector3 p2 = matrix.InverseTransform(p2world);
 
-					Gizmos.DrawLine(transform.Transform(p1low), transform.Transform(p2low));
-					Gizmos.DrawLine(transform.Transform(p1high), transform.Transform(p2high));
-					Gizmos.DrawLine(transform.Transform(p1low), transform.Transform(p1high));
+							Vector3 p1low = p1, p2low = p2, p1high = p1, p2high = p2;
+							p1low.y = p2low.y = ymin;
+							p1high.y = p2high.y = ymax;
+
+							Draw.Line(matrix.Transform(p1low), matrix.Transform(p2low));
+							Draw.Line(matrix.Transform(p1high), matrix.Transform(p2high));
+							Draw.Line(matrix.Transform(p1low), matrix.Transform(p1high));
+						}
+					}
 				}
 			}
 
-			Pathfinding.Util.ListPool<List<Vector3> >.Release (ref buffer);
+			for (int i = 0; i < buffer.Count; i++) ListPool<Vector3>.Release(buffer[i]);
+			ListPool<List<Vector3> >.Release(ref buffer);
 		}
 	}
 }

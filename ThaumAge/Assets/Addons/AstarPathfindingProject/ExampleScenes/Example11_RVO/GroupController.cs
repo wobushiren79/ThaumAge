@@ -19,13 +19,13 @@ namespace Pathfinding.Examples {
 
 		List<RVOExampleAgent> selection = new List<RVOExampleAgent>();
 
-		Simulator sim;
+		ISimulator sim;
 
 		Camera cam;
 
 		public void Start () {
 			cam = Camera.main;
-			var simu = FindObjectOfType(typeof(RVOSimulator)) as RVOSimulator;
+			var simu = RVOSimulator.active;
 			if (simu == null) {
 				this.enabled = false;
 				throw new System.Exception("No RVOSimulator in the scene. Please add one");
@@ -35,27 +35,17 @@ namespace Pathfinding.Examples {
 		}
 
 		public void Update () {
-			if (Screen.fullScreen && Screen.width != Screen.resolutions[Screen.resolutions.Length-1].width) {
-				Screen.SetResolution(Screen.resolutions[Screen.resolutions.Length-1].width, Screen.resolutions[Screen.resolutions.Length-1].height, true);
-			}
-
 			if (adjustCamera) {
-				//Adjust camera
-				List<Agent> agents = sim.GetAgents();
-
-				float max = 0;
-				for (int i = 0; i < agents.Count; i++) {
-					float d = Mathf.Max(Mathf.Abs(agents[i].Position.x), Mathf.Abs(agents[i].Position.y));
-					if (d > max) {
-						max = d;
-					}
-				}
+				// Adjust camera
+				var bounds = (sim as SimulatorBurst).AgentBounds;
+				float max = Mathf.Max(Mathf.Max(bounds.xMax, -bounds.xMin), Mathf.Max(bounds.yMax, -bounds.yMin));
 
 				float hh = max / Mathf.Tan((cam.fieldOfView*Mathf.Deg2Rad/2.0f));
 				float hv = max / Mathf.Tan(Mathf.Atan(Mathf.Tan(cam.fieldOfView*Mathf.Deg2Rad/2.0f)*cam.aspect));
 
 				var yCoord = Mathf.Max(hh, hv)*1.1f;
 				yCoord = Mathf.Max(yCoord, 20);
+				yCoord = Mathf.Min(yCoord, cam.farClipPlane - 1f);
 				cam.transform.position = Vector3.Lerp(cam.transform.position, new Vector3(0, yCoord, 0), Time.smoothDeltaTime*2);
 			}
 

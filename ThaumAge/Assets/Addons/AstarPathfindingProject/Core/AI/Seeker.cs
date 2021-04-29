@@ -1,10 +1,13 @@
 using UnityEngine;
 using System.Collections.Generic;
+using Pathfinding.Util;
 #if UNITY_5_5_OR_NEWER
 using UnityEngine.Profiling;
 #endif
 
 namespace Pathfinding {
+	using Pathfinding.Drawing;
+
 	/// <summary>
 	/// Handles path calls for a single unit.
 	/// \ingroup relevant
@@ -277,11 +280,12 @@ namespace Pathfinding {
 		/// Note: Do not confuse this with Pathfinding.Path.IsDone. They usually return the same value, but not always
 		/// since the path might be completely calculated, but it has not yet been processed by the Seeker.
 		///
-		/// \since Added in 3.0.8
-		/// Version: Behaviour changed in 3.2
+		/// Inside the OnPathComplete callback this method will return true.
+		///
+		/// Version: Before version 4.2.13 this would return false inside the OnPathComplete callback. However this behaviour was unintuitive.
 		/// </summary>
 		public bool IsDone () {
-			return path == null || path.PipelineState >= PathState.Returned;
+			return path == null || path.PipelineState >= PathState.Returning;
 		}
 
 		/// <summary>
@@ -566,26 +570,24 @@ namespace Pathfinding {
 		}
 
 		/// <summary>Draws gizmos for the Seeker</summary>
-		public void OnDrawGizmos () {
+		public override void DrawGizmos () {
 			if (lastCompletedNodePath == null || !drawGizmos) {
 				return;
 			}
 
-			if (detailedGizmos) {
-				Gizmos.color = new Color(0.7F, 0.5F, 0.1F, 0.5F);
-
-				if (lastCompletedNodePath != null) {
+			if (detailedGizmos && lastCompletedNodePath != null) {
+				using (Draw.WithColor(new Color(0.7F, 0.5F, 0.1F, 0.5F))) {
 					for (int i = 0; i < lastCompletedNodePath.Count-1; i++) {
-						Gizmos.DrawLine((Vector3)lastCompletedNodePath[i].position, (Vector3)lastCompletedNodePath[i+1].position);
+						Draw.Line((Vector3)lastCompletedNodePath[i].position, (Vector3)lastCompletedNodePath[i+1].position);
 					}
 				}
 			}
 
-			Gizmos.color = new Color(0, 1F, 0, 1F);
-
 			if (lastCompletedVectorPath != null) {
-				for (int i = 0; i < lastCompletedVectorPath.Count-1; i++) {
-					Gizmos.DrawLine(lastCompletedVectorPath[i], lastCompletedVectorPath[i+1]);
+				using (Draw.WithColor(new Color(0, 1F, 0, 1F))) {
+					for (int i = 0; i < lastCompletedVectorPath.Count-1; i++) {
+						Draw.Line(lastCompletedVectorPath[i], lastCompletedVectorPath[i+1]);
+					}
 				}
 			}
 		}

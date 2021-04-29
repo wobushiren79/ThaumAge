@@ -1,8 +1,11 @@
 using UnityEngine;
 using System.Collections.Generic;
 using Pathfinding.Serialization;
+using Pathfinding.Util;
 
 namespace Pathfinding {
+	using Pathfinding.Drawing;
+
 	/// <summary>
 	/// Basic point graph.
 	/// \ingroup graphs
@@ -408,7 +411,7 @@ namespace Pathfinding {
 
 			if (root == null) {
 				// If there is no root object, try to find nodes with the specified tag instead
-				GameObject[] gos = searchTag != null? GameObject.FindGameObjectsWithTag (searchTag) : null;
+				GameObject[] gos = searchTag != null? GameObject.FindGameObjectsWithTag(searchTag) : null;
 
 				if (gos == null) {
 					nodes = new PointNode[0];
@@ -619,7 +622,7 @@ namespace Pathfinding {
 				}
 
 				// Create a temporary list used for holding connection data
-				List<Connection> tmpList = Pathfinding.Util.ListPool<Connection>.Claim ();
+				List<Connection> tmpList = Pathfinding.Util.ListPool<Connection>.Claim();
 
 				for (int i = 0; i < nodeCount; i++) {
 					PointNode node = nodes[i];
@@ -671,32 +674,34 @@ namespace Pathfinding {
 				}
 
 				// Release buffers back to the pool
-				Pathfinding.Util.ListPool<Connection>.Release (ref tmpList);
+				Pathfinding.Util.ListPool<Connection>.Release(ref tmpList);
 			}
 		}
 
 #if UNITY_EDITOR
-		public override void OnDrawGizmos (Pathfinding.Util.RetainedGizmos gizmos, bool drawNodes) {
-			base.OnDrawGizmos(gizmos, drawNodes);
+		public override void OnDrawGizmos (DrawingData gizmos, bool drawNodes, RedrawScope redrawScope) {
+			base.OnDrawGizmos(gizmos, drawNodes, redrawScope);
 
 			if (!drawNodes) return;
 
-			Gizmos.color = new Color(0.161f, 0.341f, 1f, 0.5f);
-
-			if (root != null) {
-				DrawChildren(this, root);
-			} else if (!string.IsNullOrEmpty(searchTag)) {
-				GameObject[] gos = GameObject.FindGameObjectsWithTag(searchTag);
-				for (int i = 0; i < gos.Length; i++) {
-					Gizmos.DrawCube(gos[i].transform.position, Vector3.one*UnityEditor.HandleUtility.GetHandleSize(gos[i].transform.position)*0.1F);
+			using (var draw = gizmos.GetBuilder()) {
+				using (draw.WithColor(new Color(0.161f, 0.341f, 1f, 0.5f))) {
+					if (root != null) {
+						DrawChildren(draw, this, root);
+					} else if (!string.IsNullOrEmpty(searchTag)) {
+						GameObject[] gos = GameObject.FindGameObjectsWithTag(searchTag);
+						for (int i = 0; i < gos.Length; i++) {
+							draw.SolidBox(gos[i].transform.position, Vector3.one*UnityEditor.HandleUtility.GetHandleSize(gos[i].transform.position)*0.1F);
+						}
+					}
 				}
 			}
 		}
 
-		static void DrawChildren (PointGraph graph, Transform tr) {
+		static void DrawChildren (CommandBuilder draw, PointGraph graph, Transform tr) {
 			foreach (Transform child in tr) {
-				Gizmos.DrawCube(child.position, Vector3.one*UnityEditor.HandleUtility.GetHandleSize(child.position)*0.1F);
-				if (graph.recursive) DrawChildren(graph, child);
+				draw.SolidBox(child.position, Vector3.one*UnityEditor.HandleUtility.GetHandleSize(child.position)*0.1F);
+				if (graph.recursive) DrawChildren(draw, graph, child);
 			}
 		}
 #endif

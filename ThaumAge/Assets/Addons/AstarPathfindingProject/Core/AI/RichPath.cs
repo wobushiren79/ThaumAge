@@ -52,8 +52,8 @@ namespace Pathfinding {
 			for (int i = 0; i < parts.Count; i++) {
 				var funnelPart = parts[i] as RichFunnel;
 				var specialPart = parts[i] as RichSpecial;
-				if (funnelPart != null) ObjectPool<RichFunnel>.Release (ref funnelPart);
-				else if (specialPart != null) ObjectPool<RichSpecial>.Release (ref specialPart);
+				if (funnelPart != null) ObjectPool<RichFunnel>.Release(ref funnelPart);
+				else if (specialPart != null) ObjectPool<RichSpecial>.Release(ref specialPart);
 			}
 
 			Clear();
@@ -67,7 +67,7 @@ namespace Pathfinding {
 					var graph = AstarData.GetGraph(nodes[i]) as NavmeshBase;
 					if (graph == null) throw new System.Exception("Found a TriangleMeshNode that was not in a NavmeshBase graph");
 
-					RichFunnel f = ObjectPool<RichFunnel>.Claim ().Initialize(this, graph);
+					RichFunnel f = ObjectPool<RichFunnel>.Claim().Initialize(this, graph);
 
 					f.funnelSimplification = simplificationMode;
 
@@ -117,8 +117,11 @@ namespace Pathfinding {
 						continue;
 					}
 
-					RichSpecial rps = ObjectPool<RichSpecial>.Claim ().Initialize(nl, nodes[sIndex]);
+					RichSpecial rps = ObjectPool<RichSpecial>.Claim().Initialize(nl, nodes[sIndex]);
 					parts.Add(rps);
+				} else if (!(nodes[i] is PointNode)) {
+					// Some other graph type which we do not have support for
+					throw new System.InvalidOperationException("The RichAI movment script can only be used on recast/navmesh graphs. A node of type " + nodes[i].GetType().Name + " was in the path.");
 				}
 			}
 		}
@@ -173,7 +176,7 @@ namespace Pathfinding {
 	}
 
 	public abstract class RichPathPart : Pathfinding.Util.IAstarPooledObject {
-		public abstract void OnEnterPool ();
+		public abstract void OnEnterPool();
 	}
 
 	public class RichFunnel : RichPathPart {
@@ -193,8 +196,8 @@ namespace Pathfinding {
 		public bool funnelSimplification = true;
 
 		public RichFunnel () {
-			left = Pathfinding.Util.ListPool<Vector3>.Claim ();
-			right = Pathfinding.Util.ListPool<Vector3>.Claim ();
+			left = Pathfinding.Util.ListPool<Vector3>.Claim();
+			right = Pathfinding.Util.ListPool<Vector3>.Claim();
 			nodes = new List<TriangleMeshNode>();
 			this.graph = null;
 		}
@@ -248,19 +251,28 @@ namespace Pathfinding {
 			this.nodes.Clear();
 
 			if (funnelSimplification) {
-				List<GraphNode> tmp = Pathfinding.Util.ListPool<GraphNode>.Claim (end-start);
+				List<GraphNode> tmp = ListPool<GraphNode>.Claim(end-start);
 
-				SimplifyPath(graph, nodes, start, end, tmp, exactStart, exactEnd);
+				var tagPenalties = path.seeker != null ? path.seeker.tagPenalties : Path.ZeroTagPenalties;
+				var traversableTags = path.seeker != null ? path.seeker.traversableTags : -1;
+
+				Funnel.Simplify(new Funnel.PathPart {
+					startIndex = start,
+					endIndex = end,
+					startPoint = exactStart,
+					endPoint = exactEnd,
+					isLink = false,
+				}, graph, nodes, tmp, tagPenalties, traversableTags);
 
 				if (this.nodes.Capacity < tmp.Count) this.nodes.Capacity = tmp.Count;
 
 				for (int i = 0; i < tmp.Count; i++) {
-					//Guaranteed to be TriangleMeshNodes since they are all in the same graph
+					// Guaranteed to be TriangleMeshNodes since they are all in the same graph
 					var node = tmp[i] as TriangleMeshNode;
 					if (node != null) this.nodes.Add(node);
 				}
 
-				Pathfinding.Util.ListPool<GraphNode>.Release (ref tmp);
+				ListPool<GraphNode>.Release(ref tmp);
 			} else {
 				if (this.nodes.Capacity < end-start) this.nodes.Capacity = (end-start);
 				for (int i = start; i <= end; i++) {
@@ -277,129 +289,6 @@ namespace Pathfinding {
 
 			left.Add(exactEnd);
 			right.Add(exactEnd);
-		}
-
-		/// <summary>
-		/// Simplifies a funnel path using linecasting.
-		/// Running time is roughly O(n^2 log n) in the worst case (where n = end-start)
-		/// Actually it depends on how the graph looks, so in theory the actual upper limit on the worst case running time is O(n*m log n) (where n = end-start and m = nodes in the graph)
-		/// but O(n^2 log n) is a much more realistic worst case limit.
-		///
-		/// Requires <see cref="graph"/> to implement IRaycastableGraph
-		/// </summary>
-		void SimplifyPath (IRaycastableGraph graph, List<GraphNode> nodes, int start, int end, List<GraphNode> result, Vector3 startPoint, Vector3 endPoint) {
-			if (graph == null) throw new System.ArgumentNullException("graph");
-
-			if (start > end) {
-				throw new System.ArgumentException("start >= end");
-			}
-
-			// Do a straight line of sight check to see if the path can be simplified to a single line
-			{
-				GraphHitInfo hit;
-				if (!graph.Linecast(startPoint, endPoint, nodes[start], out hit) && hit.node == nodes[end]) {
-					graph.Linecast(startPoint, endPoint, nodes[start], out hit, result);
-
-					long penaltySum = 0;
-					long penaltySum2 = 0;
-					for (int i = start; i <= end; i++) {
-						penaltySum += nodes[i].Penalty + (path.seeker != null ? path.seeker.tagPenalties[nodes[i].Tag] : 0);
-					}
-
-					for (int i = 0; i < result.Count; i++) {
-						penaltySum2 += result[i].Penalty + (path.seeker != null ? path.seeker.tagPenalties[result[i].Tag] : 0);
-					}
-
-					// Allow 40% more penalty on average per node
-					if ((penaltySum*1.4*result.Count) < (penaltySum2*(end-start+1))) {
-						// The straight line penalties are much higher than the original path.
-						// Revert the simplification
-						result.Clear();
-					} else {
-						// The straight line simplification looks good.
-						// We are done here.
-						return;
-					}
-				}
-			}
-
-			int ostart = start;
-
-			int count = 0;
-			while (true) {
-				if (count++ > 1000) {
-					Debug.LogError("Was the path really long or have we got cought in an infinite loop?");
-					break;
-				}
-
-				if (start == end) {
-					result.Add(nodes[end]);
-					return;
-				}
-
-				int resCount = result.Count;
-
-				// Run a binary search to find the furthest node that we have a clear line of sight to
-				int mx = end+1;
-				int mn = start+1;
-				bool anySucceded = false;
-				while (mx > mn+1) {
-					int mid = (mx+mn)/2;
-
-					GraphHitInfo hit;
-					Vector3 sp = start == ostart ? startPoint : (Vector3)nodes[start].position;
-					Vector3 ep = mid == end ? endPoint : (Vector3)nodes[mid].position;
-
-					// Check if there is an obstacle between these points, or if there is no obstacle, but we didn't end up at the right node.
-					// The second case can happen for example in buildings with multiple floors.
-					if (graph.Linecast(sp, ep, nodes[start], out hit) || hit.node != nodes[mid]) {
-						mx = mid;
-					} else {
-						anySucceded = true;
-						mn = mid;
-					}
-				}
-
-				if (!anySucceded) {
-					result.Add(nodes[start]);
-
-					// It is guaranteed that mn = start+1
-					start = mn;
-				} else {
-					// Replace a part of the path with the straight path to the furthest node we had line of sight to.
-					// Need to redo the linecast to get the trace (i.e. list of nodes along the line of sight).
-					GraphHitInfo hit;
-					Vector3 sp = start == ostart ? startPoint : (Vector3)nodes[start].position;
-					Vector3 ep = mn == end ? endPoint : (Vector3)nodes[mn].position;
-					graph.Linecast(sp, ep, nodes[start], out hit, result);
-
-					long penaltySum = 0;
-					long penaltySum2 = 0;
-					for (int i = start; i <= mn; i++) {
-						penaltySum += nodes[i].Penalty + (path.seeker != null ? path.seeker.tagPenalties[nodes[i].Tag] : 0);
-					}
-
-					for (int i = resCount; i < result.Count; i++) {
-						penaltySum2 += result[i].Penalty + (path.seeker != null ? path.seeker.tagPenalties[result[i].Tag] : 0);
-					}
-
-					// Allow 40% more penalty on average per node
-					if ((penaltySum*1.4*(result.Count-resCount)) < (penaltySum2*(mn-start+1)) || result[result.Count-1] != nodes[mn]) {
-						//Debug.DrawLine ((Vector3)nodes[start].Position, (Vector3)nodes[mn].Position, Color.red);
-						// Linecast hit the wrong node
-						result.RemoveRange(resCount, result.Count-resCount);
-
-						result.Add(nodes[start]);
-						//Debug.Break();
-						start = start+1;
-					} else {
-						//Debug.DrawLine ((Vector3)nodes[start].Position, (Vector3)nodes[mn].Position, Color.green);
-						//Remove nodes[end]
-						result.RemoveAt(result.Count-1);
-						start = mn;
-					}
-				}
-			}
 		}
 
 		/// <summary>
@@ -445,7 +334,7 @@ namespace Pathfinding {
 		public float DistanceToEndOfPath {
 			get {
 				var currentNode = CurrentNode;
-				Vector3 closestOnNode = currentNode != null? currentNode.ClosestPointOnNode (currentPosition) : currentPosition;
+				Vector3 closestOnNode = currentNode != null? currentNode.ClosestPointOnNode(currentPosition) : currentPosition;
 				return (exactEnd - closestOnNode).magnitude;
 			}
 		}
@@ -456,8 +345,10 @@ namespace Pathfinding {
 		/// </summary>
 		public Vector3 ClampToNavmesh (Vector3 position) {
 			if (path.transform != null) position = path.transform.InverseTransform(position);
+			UnityEngine.Assertions.Assert.IsFalse(float.IsNaN(position.x));
 			ClampToNavmeshInternal(ref position);
 			if (path.transform != null) position = path.transform.Transform(position);
+			UnityEngine.Assertions.Assert.IsFalse(float.IsNaN(position.x));
 			return position;
 		}
 
@@ -473,6 +364,7 @@ namespace Pathfinding {
 		/// <param name="requiresRepath">True if nodes along the path have been destroyed and a path recalculation is necessary.</param>
 		public Vector3 Update (Vector3 position, List<Vector3> buffer, int numCorners, out bool lastCorner, out bool requiresRepath) {
 			if (path.transform != null) position = path.transform.InverseTransform(position);
+			UnityEngine.Assertions.Assert.IsFalse(float.IsNaN(position.x));
 
 			lastCorner = false;
 			requiresRepath = false;
@@ -506,6 +398,7 @@ namespace Pathfinding {
 				}
 
 				position = path.transform.Transform(position);
+				UnityEngine.Assertions.Assert.IsFalse(float.IsNaN(position.x));
 			}
 
 			return position;
@@ -582,6 +475,12 @@ namespace Pathfinding {
 					}
 				}
 			}
+
+			if (bestNode == null) {
+				Debug.LogError(previousNode.position + " " + previousNode.ClosestPointOnNode(position) + " " + position + " " + bestDistance);
+			}
+
+			UnityEngine.Assertions.Assert.IsNotNull(bestNode);
 
 			for (int i = 0; i < allVisited.Count; i++) allVisited[i].TemporaryFlag1 = false;
 			allVisited.ClearFast();

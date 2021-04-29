@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 namespace Pathfinding {
 	using Pathfinding.Util;
+	using Pathfinding.Drawing;
 
 	/// <summary>
 	/// Connects two nodes via two intermediate point nodes.
@@ -56,7 +57,7 @@ namespace Pathfinding {
 		public PointNode endNode { get; private set; }
 		GraphNode connectedNode1, connectedNode2;
 		Vector3 clamped1, clamped2;
-		bool postScanCalled = false;
+		bool linkCreated = false;
 
 		[System.Obsolete("Use startNode instead (lowercase s)")]
 		public GraphNode StartNode {
@@ -68,16 +69,20 @@ namespace Pathfinding {
 			get { return endNode; }
 		}
 
-		public override void OnPostScan () {
-			InternalOnPostScan();
+		public override void OnGraphsPostUpdateBeforeAreaRecalculation () {
+			// If a graph has just been scanned then do a more thorough check for which nodes the link goes between
+			Apply(AstarPath.active.isScanning);
 		}
 
-		public void InternalOnPostScan () {
+		void CreateLinkNodes () {
 			if (EndTransform == null || StartTransform == null) return;
 
 #if ASTAR_NO_POINT_GRAPH
 			throw new System.Exception("Point graph is not included. Check your A* optimization settings.");
 #else
+			// If no graphs are scanned then just ignore
+			if (AstarPath.active.data.graphs == null) return;
+
 			if (AstarPath.active.data.pointGraph == null) {
 				var graph = AstarPath.active.data.AddGraph(typeof(PointGraph)) as PointGraph;
 				graph.name = "PointGraph (used for node links)";
@@ -94,51 +99,35 @@ namespace Pathfinding {
 			}
 
 			// Create new nodes on the point graph
-			if (startNode == null) startNode = AstarPath.active.data.pointGraph.AddNode((Int3)StartTransform.position);
-			if (endNode == null) endNode = AstarPath.active.data.pointGraph.AddNode((Int3)EndTransform.position);
-
-			connectedNode1 = null;
-			connectedNode2 = null;
-
-			if (startNode == null || endNode == null) {
-				startNode = null;
-				endNode = null;
-				return;
-			}
-
-			postScanCalled = true;
-			reference[startNode] = this;
-			reference[endNode] = this;
-			Apply(true);
-#endif
-		}
-
-		public override void OnGraphsPostUpdate () {
-			// Don't bother running it now since OnPostScan will be called later anyway
-			if (AstarPath.active.isScanning)
-				return;
-
-			if (connectedNode1 != null && connectedNode1.Destroyed) {
+			if (startNode == null) {
+				startNode = AstarPath.active.data.pointGraph.AddNode((Int3)StartTransform.position);
+				// We had to recreate the start node, we should probably search for the closest nodes again
 				connectedNode1 = null;
-			}
-			if (connectedNode2 != null && connectedNode2.Destroyed) {
 				connectedNode2 = null;
+				reference[startNode] = this;
 			}
 
-			if (!postScanCalled) {
-				OnPostScan();
-			} else {
-				Apply(false);
+			if (endNode == null) {
+				endNode = AstarPath.active.data.pointGraph.AddNode((Int3)EndTransform.position);
+				connectedNode1 = null;
+				connectedNode2 = null;
+				reference[endNode] = this;
 			}
+
+			linkCreated = true;
+#endif
 		}
 
 		protected override void OnEnable () {
 			base.OnEnable();
 
 #if !ASTAR_NO_POINT_GRAPH
-			if (Application.isPlaying && AstarPath.active != null && AstarPath.active.data != null && AstarPath.active.data.pointGraph != null && !AstarPath.active.isScanning) {
-				// Call OnGraphsPostUpdate as soon as possible when it is safe to update the graphs
-				AstarPath.active.AddWorkItem(OnGraphsPostUpdate);
+			// Call OnGraphsPostUpdateBeforeAreaRecalculation as soon as possible when it is safe to update the graphs
+			// Make sure to check this.isActiveAndEnabled because OnEnable is also called when some scripts search for all modifiers before OnEnable is called by Unity
+			// If linkCreated is true then we don't have to do this because a graph has already been scanned and picked up this link anyway.
+			if (Application.isPlaying && AstarPath.active != null && AstarPath.active.data != null && !AstarPath.active.isScanning && isActiveAndEnabled && !linkCreated) {
+				// Calling the SetGraphDirty function will ensure that the OnGraphsPostUpdateBeforeAreaRecalculation event is triggered after the work item is done.
+				AstarPath.active.AddWorkItem(context => context.SetGraphDirty(null));
 			}
 #endif
 		}
@@ -146,26 +135,50 @@ namespace Pathfinding {
 		protected override void OnDisable () {
 			base.OnDisable();
 
-			postScanCalled = false;
+			linkCreated = false;
 
-			if (startNode != null) reference.Remove(startNode);
-			if (endNode != null) reference.Remove(endNode);
+			if (this.startNode != null) reference.Remove(this.startNode);
+			if (this.endNode != null) reference.Remove(this.endNode);
 
-			if (startNode != null && endNode != null) {
-				startNode.RemoveConnection(endNode);
-				endNode.RemoveConnection(startNode);
+			if (AstarPath.active != null) {
+				// Copy the variables to make sure they are not updated by something
+				// else before the work item runs.
+				var startNode = this.startNode;
+				var endNode = this.endNode;
+				var connectedNode1 = this.connectedNode1;
+				var connectedNode2 = this.connectedNode2;
 
-				if (connectedNode1 != null && connectedNode2 != null) {
-					startNode.RemoveConnection(connectedNode1);
-					connectedNode1.RemoveConnection(startNode);
-
-					endNode.RemoveConnection(connectedNode2);
-					connectedNode2.RemoveConnection(endNode);
+				// This check is important to avoid dirtying graphs unnecessarily.
+				// In particular if no graphs are scanned since otherwise other node links
+				// may try to create a new point graph.
+				if (startNode != null || endNode != null) {
+					AstarPath.active.AddWorkItem(context => {
+						if (startNode != null) {
+							startNode.RemoveConnection(endNode);
+							if (connectedNode1 != null) {
+								startNode.RemoveConnection(connectedNode1);
+								connectedNode1.RemoveConnection(startNode);
+							}
+						}
+						if (endNode != null) {
+							endNode.RemoveConnection(startNode);
+							if (connectedNode2 != null) {
+								endNode.RemoveConnection(connectedNode2);
+								connectedNode2.RemoveConnection(endNode);
+							}
+						}
+						context.SetGraphDirty(null);
+					});
 				}
 			}
+
+			this.startNode = null;
+			this.endNode = null;
+			this.connectedNode1 = null;
+			this.connectedNode2 = null;
 		}
 
-		void RemoveConnections (GraphNode node) {
+		static void RemoveConnections (GraphNode node) {
 			//TODO, might be better to replace connection
 			node.ClearConnections(true);
 		}
@@ -177,18 +190,38 @@ namespace Pathfinding {
 			}
 		}
 
+		/// <summary>
+		/// Connects the start and end points using a link or refreshes the existing link.
+		///
+		/// If you have moved the link or otherwise modified it you need to call this method.
+		///
+		/// Warning: This must only be done when it is safe to update the graph structure.
+		/// The easiest is to do it inside a work item. See <see cref="AstarPath.active.AddWorkItem"/>.
+		/// </summary>
 		public void Apply (bool forceNewCheck) {
+			CreateLinkNodes();
+
+			if (connectedNode1 != null && connectedNode1.Destroyed) {
+				connectedNode1 = null;
+			}
+			if (connectedNode2 != null && connectedNode2.Destroyed) {
+				connectedNode2 = null;
+			}
+
+			if (startNode == null || endNode == null) return;
+
 			//TODO
-			//This function assumes that connections from the n1,n2 nodes never need to be removed in the future (e.g because the nodes move or something)
+			// This function assumes that connections from the n1,n2 nodes never need to be removed in the future (e.g because the nodes move or something)
 			NNConstraint nn = NNConstraint.None;
 			int graph = (int)startNode.GraphIndex;
 
-			//Search all graphs but the one which start and end nodes are on
+			// Search all graphs but the one which start and end nodes are on
 			nn.graphMask = ~(1 << graph);
 
-			startNode.SetPosition((Int3)StartTransform.position);
-			endNode.SetPosition((Int3)EndTransform.position);
+			startNode.position = (Int3)StartTransform.position;
+			endNode.position = (Int3)EndTransform.position;
 
+			// Clear connections to and from the start and end nodes
 			RemoveConnections(startNode);
 			RemoveConnections(endNode);
 
@@ -210,7 +243,7 @@ namespace Pathfinding {
 
 			if (connectedNode2 == null || connectedNode1 == null) return;
 
-			//Add connections between nodes, or replace old connections if existing
+			// Add connections between nodes, or replace old connections if they exist
 			connectedNode1.AddConnection(startNode, (uint)Mathf.RoundToInt(((Int3)(clamped1 - StartTransform.position)).costMagnitude*costFactor));
 			if (!oneWay) connectedNode2.AddConnection(endNode, (uint)Mathf.RoundToInt(((Int3)(clamped2 - EndTransform.position)).costMagnitude*costFactor));
 
@@ -221,30 +254,23 @@ namespace Pathfinding {
 		private readonly static Color GizmosColor = new Color(206.0f/255.0f, 136.0f/255.0f, 48.0f/255.0f, 0.5f);
 		private readonly static Color GizmosColorSelected = new Color(235.0f/255.0f, 123.0f/255.0f, 32.0f/255.0f, 1.0f);
 
-		public virtual void OnDrawGizmosSelected () {
-			OnDrawGizmos(true);
-		}
-
-		public void OnDrawGizmos () {
-			OnDrawGizmos(false);
-		}
-
-		public void OnDrawGizmos (bool selected) {
+		public override void DrawGizmos () {
+			bool selected = GizmoContext.InActiveSelection(this);
 			Color color = selected ? GizmosColorSelected : GizmosColor;
 
 			if (StartTransform != null) {
-				Draw.Gizmos.CircleXZ(StartTransform.position, 0.4f, color);
+				Draw.CircleXZ(StartTransform.position, 0.4f, color);
 			}
 			if (EndTransform != null) {
-				Draw.Gizmos.CircleXZ(EndTransform.position, 0.4f, color);
+				Draw.CircleXZ(EndTransform.position, 0.4f, color);
 			}
 
 			if (StartTransform != null && EndTransform != null) {
-				Draw.Gizmos.Bezier(StartTransform.position, EndTransform.position, color);
+				NodeLink.DrawArch(StartTransform.position, EndTransform.position, color);
 				if (selected) {
 					Vector3 cross = Vector3.Cross(Vector3.up, (EndTransform.position-StartTransform.position)).normalized;
-					Draw.Gizmos.Bezier(StartTransform.position+cross*0.1f, EndTransform.position+cross*0.1f, color);
-					Draw.Gizmos.Bezier(StartTransform.position-cross*0.1f, EndTransform.position-cross*0.1f, color);
+					NodeLink.DrawArch(StartTransform.position+cross*0.1f, EndTransform.position+cross*0.1f, color);
+					NodeLink.DrawArch(StartTransform.position-cross*0.1f, EndTransform.position-cross*0.1f, color);
 				}
 			}
 		}
@@ -261,7 +287,7 @@ namespace Pathfinding {
 				ctx.SerializeNodeReference(link.connectedNode2);
 				ctx.SerializeVector3(link.clamped1);
 				ctx.SerializeVector3(link.clamped2);
-				ctx.writer.Write(link.postScanCalled);
+				ctx.writer.Write(link.linkCreated);
 			}
 		}
 
@@ -293,7 +319,7 @@ namespace Pathfinding {
 						link2.endNode = endNode as PointNode;
 						link2.connectedNode1 = connectedNode1;
 						link2.connectedNode2 = connectedNode2;
-						link2.postScanCalled = postScanCalled;
+						link2.linkCreated = postScanCalled;
 						link2.clamped1 = clamped1;
 						link2.clamped2 = clamped2;
 					} else {

@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEditor;
 using Pathfinding.Serialization;
+using System.Collections.Generic;
 
 namespace Pathfinding {
 	using Pathfinding.Util;
@@ -22,6 +23,9 @@ namespace Pathfinding {
 		[JsonMember]
 		public GridPivot pivot;
 
+		[JsonMember]
+		public bool collisionPreviewOpen;
+
 		/// <summary>Cached gui style</summary>
 		static GUIStyle lockStyle;
 
@@ -31,9 +35,10 @@ namespace Pathfinding {
 		/// <summary>Cached gui style</summary>
 		static GUIStyle gridPivotSelectButton;
 
-		static readonly float standardIsometric = 90-Mathf.Atan(1/Mathf.Sqrt(2))*Mathf.Rad2Deg;
-		static readonly float standardDimetric = Mathf.Acos(1/2f)*Mathf.Rad2Deg;
-
+		public GridGraphEditor() {
+			// Default value depends on if the game is running or not. Make it hidden in play mode by default.
+			collisionPreviewOpen = !Application.isPlaying;
+		}
 		/// <summary>Rounds a vector's components to multiples of 0.5 (i.e 0.5, 1.0, 1.5, etc.) if very close to them</summary>
 		public static Vector3 RoundVector3 (Vector3 v) {
 			const int Multiplier = 2;
@@ -52,19 +57,14 @@ namespace Pathfinding {
 			DrawMiddleSection(graph);
 			Separator();
 			DrawCollisionEditor(graph.collision);
-
-			if (graph.collision.use2D) {
-				if (Mathf.Abs(Vector3.Dot(Vector3.forward, Quaternion.Euler(graph.rotation) * Vector3.up)) < 0.9f) {
-					EditorGUILayout.HelpBox("When using 2D physics it is recommended to rotate the graph so that it aligns with the 2D plane.", MessageType.Warning);
-				}
-			}
+			DrawRules(graph);
 
 			Separator();
 			DrawLastSection(graph);
 		}
 
 		bool IsHexagonal (GridGraph graph) {
-			return Mathf.Approximately(graph.isometricAngle, standardIsometric) && graph.neighbours == NumNeighbours.Six && graph.uniformEdgeCosts;
+			return Mathf.Approximately(graph.isometricAngle, GridGraph.StandardIsometricAngle) && graph.neighbours == NumNeighbours.Six && graph.uniformEdgeCosts;
 		}
 
 		bool IsIsometric (GridGraph graph) {
@@ -93,31 +93,7 @@ namespace Pathfinding {
 		void DrawInspectorMode (GridGraph graph) {
 			graph.inspectorGridMode = DetermineGridType(graph);
 			var newMode = (InspectorGridMode)EditorGUILayout.EnumPopup("Shape", (System.Enum)graph.inspectorGridMode);
-			if (newMode != graph.inspectorGridMode) {
-				switch (newMode) {
-				case InspectorGridMode.Grid:
-					graph.isometricAngle = 0;
-					graph.aspectRatio = 1;
-					graph.uniformEdgeCosts = false;
-					if (graph.neighbours == NumNeighbours.Six) graph.neighbours = NumNeighbours.Eight;
-					break;
-				case InspectorGridMode.Hexagonal:
-					graph.isometricAngle = standardIsometric;
-					graph.aspectRatio = 1;
-					graph.uniformEdgeCosts = true;
-					graph.neighbours = NumNeighbours.Six;
-					break;
-				case InspectorGridMode.IsometricGrid:
-					graph.uniformEdgeCosts = false;
-					if (graph.neighbours == NumNeighbours.Six) graph.neighbours = NumNeighbours.Eight;
-					graph.isometricAngle = standardIsometric;
-					break;
-				case InspectorGridMode.Advanced:
-				default:
-					break;
-				}
-				graph.inspectorGridMode = newMode;
-			}
+			if (newMode != graph.inspectorGridMode) graph.SetGridShape(newMode);
 
 			if (graph.inspectorGridMode == InspectorGridMode.Hexagonal && graph.useJumpPointSearch) {
 				EditorGUILayout.HelpBox("Jump Point Search does not work with hexagonal graphs.", MessageType.Error);
@@ -190,7 +166,6 @@ namespace Pathfinding {
 				graph.center += worldPoint - newWorldPoint;
 				graph.center = RoundVector3(graph.center);
 				graph.UpdateTransform();
-				AutoScan();
 			}
 
 			if ((nodeSizeChanged && !locked)) {
@@ -257,7 +232,7 @@ namespace Pathfinding {
 		void DrawIsometricField (GridGraph graph) {
 			var isometricGUIContent = new GUIContent("Isometric Angle", "For an isometric 2D game, you can use this parameter to scale the graph correctly.\nIt can also be used to create a hexagonal grid.\nYou may want to rotate the graph 45 degrees around the Y axis to make it line up better.");
 			var isometricOptions = new [] { new GUIContent("None (0°)"), new GUIContent("Isometric (≈54.74°)"), new GUIContent("Dimetric (60°)"), new GUIContent("Custom") };
-			var isometricValues = new [] { 0f, standardIsometric, standardDimetric };
+			var isometricValues = new [] { 0f, GridGraph.StandardIsometricAngle, GridGraph.StandardDimetricAngle };
 			var isometricOption = isometricValues.Length;
 
 			for (int i = 0; i < isometricValues.Length; i++) {
@@ -363,8 +338,13 @@ namespace Pathfinding {
 
 		protected virtual void DrawMaxClimb (GridGraph graph) {
 			if (!graph.collision.use2D) {
-				graph.maxClimb = EditorGUILayout.FloatField(new GUIContent("Max Climb", "How high in world units, relative to the graph, should a climbable level be. A zero (0) indicates infinity"), graph.maxClimb);
-				if (graph.maxClimb < 0) graph.maxClimb = 0;
+				graph.maxStepHeight = EditorGUILayout.FloatField(new GUIContent("Max Step Height", "How high a step can be while still allowing the AI to go up/down it. A zero (0) indicates infinity. This affects for example how the graph is generated around ledges and stairs."), graph.maxStepHeight);
+				if (graph.maxStepHeight < 0) graph.maxStepHeight = 0;
+				if (graph.maxStepHeight > 0) {
+					EditorGUI.indentLevel++;
+					graph.maxStepUsesSlope = EditorGUILayout.Toggle(new GUIContent("Account for slopes", "Account for slopes when calculating the step sizes. See documentation for more info."), graph.maxStepUsesSlope);
+					EditorGUI.indentLevel--;
+				}
 			}
 		}
 
@@ -386,7 +366,7 @@ namespace Pathfinding {
 					graph.erosionUseTags);
 				if (graph.erosionUseTags) {
 					EditorGUI.indentLevel++;
-					graph.erosionFirstTag = EditorGUILayoutx.TagField("First Tag", graph.erosionFirstTag, () => AstarPathEditor.EditTags());
+					graph.erosionFirstTag = EditorGUILayoutHelper.TagField("First Tag", graph.erosionFirstTag, () => AstarPathEditor.EditTags());
 					EditorGUI.indentLevel--;
 				}
 				EditorGUI.indentLevel--;
@@ -403,39 +383,7 @@ namespace Pathfinding {
 
 			GUILayout.Label(new GUIContent("Advanced"), EditorStyles.boldLabel);
 
-			DrawPenaltyModifications(graph);
 			DrawJPS(graph);
-		}
-
-		void DrawPenaltyModifications (GridGraph graph) {
-			showExtra = EditorGUILayout.Foldout(showExtra, "Penalty Modifications");
-
-			if (showExtra) {
-				EditorGUI.indentLevel += 2;
-
-				graph.penaltyAngle = ToggleGroup(new GUIContent("Angle Penalty", "Adds a penalty based on the slope of the node"), graph.penaltyAngle);
-				if (graph.penaltyAngle) {
-					EditorGUI.indentLevel++;
-					graph.penaltyAngleFactor = EditorGUILayout.FloatField(new GUIContent("Factor", "Scale of the penalty. A negative value should not be used"), graph.penaltyAngleFactor);
-					graph.penaltyAnglePower = EditorGUILayout.Slider("Power", graph.penaltyAnglePower, 0.1f, 10f);
-					EditorGUILayout.HelpBox("Applies penalty to nodes based on the angle of the hit surface during the Height Testing\nPenalty applied is: P=(1-cos(angle)^power)*factor.", MessageType.None);
-
-					EditorGUI.indentLevel--;
-				}
-
-				graph.penaltyPosition = ToggleGroup("Position Penalty", graph.penaltyPosition);
-				if (graph.penaltyPosition) {
-					EditorGUI.indentLevel++;
-					graph.penaltyPositionOffset = EditorGUILayout.FloatField("Offset", graph.penaltyPositionOffset);
-					graph.penaltyPositionFactor = EditorGUILayout.FloatField("Factor", graph.penaltyPositionFactor);
-					EditorGUILayout.HelpBox("Applies penalty to nodes based on their Y coordinate\nSampled in Int3 space, i.e it is multiplied with Int3.Precision first ("+Int3.Precision+")\n" +
-						"Be very careful when using negative values since a negative penalty will underflow and instead get really high", MessageType.None);
-					EditorGUI.indentLevel--;
-				}
-
-				DrawTextureData(graph.textureData, graph);
-				EditorGUI.indentLevel -= 2;
-			}
 		}
 
 		protected virtual void DrawJPS (GridGraph graph) {
@@ -468,6 +416,7 @@ namespace Pathfinding {
 
 			collision.collisionCheck = ToggleGroup("Collision testing", collision.collisionCheck);
 			if (collision.collisionCheck) {
+				EditorGUI.indentLevel++;
 				string[] colliderOptions = collision.use2D ? new [] { "Circle", "Point" } : new [] { "Sphere", "Capsule", "Ray" };
 				int[] colliderValues = collision.use2D ? new [] { 0, 2 } : new [] { 0, 1, 2 };
 				// In 2D the Circle (Sphere) mode will replace both the Sphere and the Capsule modes
@@ -481,17 +430,22 @@ namespace Pathfinding {
 				// Only spheres and capsules have a diameter
 				if (collision.type == ColliderType.Capsule || collision.type == ColliderType.Sphere) {
 					collision.diameter = EditorGUILayout.FloatField(new GUIContent("Diameter", "Diameter of the capsule or sphere. 1 equals one node width"), collision.diameter);
+					collision.diameter = Mathf.Max(collision.diameter, 0.01f);
 				}
 
 				if (!collision.use2D) {
 					if (collision.type == ColliderType.Capsule || collision.type == ColliderType.Ray) {
 						collision.height = EditorGUILayout.FloatField(new GUIContent("Height/Length", "Height of cylinder or length of ray in world units"), collision.height);
+						collision.height = Mathf.Max(collision.height, 0.01f);
 					}
 
 					collision.collisionOffset = EditorGUILayout.FloatField(new GUIContent("Offset", "Offset upwards from the node. Can be used so that obstacles can be used as ground and at the same time as obstacles for lower positioned nodes"), collision.collisionOffset);
 				}
 
 				collision.mask = EditorGUILayoutx.LayerMaskField("Obstacle Layer Mask", collision.mask);
+
+				DrawCollisionPreview(collision);
+				EditorGUI.indentLevel--;
 			}
 
 			GUILayout.Space(2);
@@ -503,6 +457,7 @@ namespace Pathfinding {
 			} else {
 				collision.heightCheck = ToggleGroup("Height testing", collision.heightCheck);
 				if (collision.heightCheck) {
+					EditorGUI.indentLevel++;
 					collision.fromHeight = EditorGUILayout.FloatField(new GUIContent("Ray length", "The height from which to check for ground"), collision.fromHeight);
 
 					collision.heightMask = EditorGUILayoutx.LayerMaskField("Mask", collision.heightMask);
@@ -516,12 +471,238 @@ namespace Pathfinding {
 					}
 
 					collision.unwalkableWhenNoGround = EditorGUILayout.Toggle(new GUIContent("Unwalkable when no ground", "Make nodes unwalkable when no ground was found with the height raycast. If height raycast is turned off, this doesn't affect anything"), collision.unwalkableWhenNoGround);
+					EditorGUI.indentLevel--;
 				}
 			}
 		}
 
+		Vector3[] arcBuffer = new Vector3[21];
+		Vector3[] lineBuffer = new Vector3[2];
+		void DrawArc (Vector2 center, float radius, float startAngle, float endAngle) {
+			// The AA line doesn't always properly close the gap even for full circles
+			endAngle += 1*Mathf.Deg2Rad;
+			var width = 4;
+			// The DrawAAPolyLine method does not draw a centered line unfortunately
+			//radius -= width/2;
+			for (int i = 0; i < arcBuffer.Length; i++) {
+				float t = i * 1.0f / (arcBuffer.Length-1);
+				float angle = Mathf.Lerp(startAngle, endAngle, t);
+				arcBuffer[i] = new Vector3(center.x + radius * Mathf.Cos(angle), center.y + radius * Mathf.Sin(angle), 0);
+			}
+			Handles.DrawAAPolyLine(EditorResourceHelper.HandlesAALineTexture, width, arcBuffer);
+		}
+
+		void DrawLine (Vector2 a, Vector2 b) {
+			lineBuffer[0] = a;
+			lineBuffer[1] = b;
+			Handles.DrawAAPolyLine(EditorResourceHelper.HandlesAALineTexture, 4, lineBuffer);
+		}
+
+		void DrawDashedLine (Vector2 a, Vector2 b, float dashLength) {
+			if (dashLength == 0) {
+				DrawLine(a, b);
+			} else {
+				var dist = (b - a).magnitude;
+				int steps = Mathf.RoundToInt(dist / dashLength);
+				for (int i = 0; i < steps; i++) {
+					var t1 = i * 1.0f / (steps-1);
+					var t2 = (i + 0.5f) * 1.0f / (steps-1);
+					DrawLine(Vector2.Lerp(a, b, t1), Vector2.Lerp(a, b, t2));
+				}
+			}
+		}
+
+		static int RoundUpToNextOddNumber (float x) {
+			return Mathf.CeilToInt((x - 1)/2.0f)*2 + 1;
+		}
+
+		float interpolatedGridWidthInNodes = -1;
+		float lastTime = 0;
+
+		void DrawCollisionPreview (GraphCollision collision) {
+			EditorGUILayout.BeginHorizontal();
+			GUILayout.Space(2);
+			collisionPreviewOpen = EditorGUILayout.Foldout(collisionPreviewOpen, "Preview");
+			EditorGUILayout.EndHorizontal();
+			if (!collisionPreviewOpen) return;
+
+			EditorGUILayout.Separator();
+			var rect = EditorGUI.IndentedRect(GUILayoutUtility.GetRect(10, 100));
+			var m = Handles.matrix;
+			Handles.matrix = Handles.matrix * Matrix4x4.Translate(new Vector3(rect.xMin, rect.yMin));
+
+			// Draw NxN grid with circle in the middle
+			// Draw Flat plane with capsule/sphere/line above
+
+			Handles.color = Color.white;
+			int gridWidthInNodes = collision.type == ColliderType.Ray ? 3 : Mathf.Max(3, RoundUpToNextOddNumber(collision.diameter + 0.5f));
+			if (interpolatedGridWidthInNodes == -1) interpolatedGridWidthInNodes = gridWidthInNodes;
+			if (Mathf.Abs(interpolatedGridWidthInNodes - gridWidthInNodes) < 0.01f) interpolatedGridWidthInNodes = gridWidthInNodes;
+			else editor.Repaint();
+
+			var dt = Time.realtimeSinceStartup - lastTime;
+			lastTime = Time.realtimeSinceStartup;
+			interpolatedGridWidthInNodes = Mathf.Lerp(interpolatedGridWidthInNodes, gridWidthInNodes, 5 * dt);
+
+			var gridCenter = new Vector2(rect.width / 3.0f, rect.height * 0.5f);
+			var gridWidth = Mathf.Min(rect.width / 3, rect.height);
+			var nodeSize = (this.target as GridGraph).nodeSize;
+			var scale = gridWidth / (nodeSize * interpolatedGridWidthInNodes);
+			var diameter = collision.type == ColliderType.Ray ? 0.05f : collision.diameter * nodeSize;
+			var interpolatedGridScale = gridWidthInNodes * nodeSize * scale;
+			for (int i = 0; i <= gridWidthInNodes; i++) {
+				var c = i*1.0f/gridWidthInNodes;
+				DrawLine(gridCenter + new Vector2(c - 0.5f, -0.5f) * interpolatedGridScale, gridCenter + new Vector2(c - 0.5f, 0.5f) * interpolatedGridScale);
+				DrawLine(gridCenter + new Vector2(-0.5f, c - 0.5f) * interpolatedGridScale, gridCenter + new Vector2(0.5f, c - 0.5f) * interpolatedGridScale);
+			}
+
+			var sideBase = new Vector2(2*rect.width / 3f, rect.height);
+			float sideScale;
+			if (collision.type == ColliderType.Sphere) {
+				sideScale = scale;
+				// A high collision offset should not cause it to break
+				sideScale = Mathf.Min(sideScale, sideBase.y / (Mathf.Max(0, collision.collisionOffset) + diameter));
+			} else {
+				sideScale = Mathf.Max(scale * 0.5f, Mathf.Min(scale, sideBase.y / (collision.height + collision.collisionOffset + diameter * 0.5f)));
+				// A high collision offset should not cause it to break
+				sideScale = Mathf.Min(sideScale, sideBase.y / (Mathf.Max(0, collision.collisionOffset) + diameter));
+			}
+
+			var interpolatedGridSideScale = gridWidthInNodes * nodeSize * sideScale;
+
+			DrawLine(sideBase + new Vector2(-interpolatedGridSideScale * 0.5f, 0), sideBase + new Vector2(interpolatedGridSideScale * 0.5f, 0));
+			for (int i = 0; i <= gridWidthInNodes; i++) {
+				var c = i*1.0f/gridWidthInNodes;
+				DrawArc(sideBase + new Vector2(c - 0.5f, 0) * interpolatedGridSideScale, 2, 0, Mathf.PI*2);
+			}
+
+			var darkGreen = new Color(9/255f, 150/255f, 23/255f);
+			var lightGreen = new Color(12/255f, 194/255f, 30/255f);
+			Handles.color = EditorGUIUtility.isProSkin ? lightGreen : darkGreen;
+			DrawArc(new Vector2(rect.width/3, 50), diameter * 0.5f * scale, 0, Mathf.PI*2);
+
+			if (collision.type == ColliderType.Ray) {
+				var height = collision.height;
+				var maxHeight = sideBase.y / sideScale - (collision.collisionOffset + diameter*0.5f);
+				float dashLength = 0;
+				if (collision.height > maxHeight + 0.01f) {
+					height = maxHeight;
+					dashLength = 6;
+				}
+
+				var offset = sideBase + new Vector2(0, -collision.collisionOffset) * sideScale;
+				DrawLine(offset + new Vector2(0, -height*0.75f) * sideScale, offset);
+				DrawDashedLine(offset + new Vector2(0, -height) * sideScale, offset + new Vector2(0, -height * 0.75f) * sideScale, dashLength);
+				DrawLine(offset, offset + new Vector2(6, -6));
+				DrawLine(offset, offset + new Vector2(-6, -6));
+			} else {
+				var height = collision.type == ColliderType.Capsule ? collision.height : 0;
+				// sideBase.y - (collision.collisionOffset + height + diameter * 0.5f) * scale < 0
+				var maxHeight = sideBase.y / sideScale - (collision.collisionOffset + diameter*0.5f);
+				float dashLength = 0;
+				if (height > maxHeight + 0.01f) {
+					height = maxHeight;
+					dashLength = 6;
+				}
+				DrawArc(sideBase + new Vector2(0, -collision.collisionOffset * sideScale), diameter * 0.5f * sideScale, 0, Mathf.PI);
+				DrawArc(sideBase + new Vector2(0, -(height + collision.collisionOffset) * sideScale), diameter * 0.5f * sideScale, Mathf.PI, 2*Mathf.PI);
+				DrawDashedLine(sideBase + new Vector2(-diameter * 0.5f, -collision.collisionOffset) * sideScale, sideBase + new Vector2(-diameter * 0.5f, -(height + collision.collisionOffset)) * sideScale, dashLength);
+				DrawDashedLine(sideBase + new Vector2(diameter * 0.5f, -collision.collisionOffset) * sideScale, sideBase + new Vector2(diameter * 0.5f, -(height + collision.collisionOffset)) * sideScale, dashLength);
+			}
+			Handles.matrix = m;
+			EditorGUILayout.Separator();
+		}
+
 		protected virtual void DrawUse2DPhysics (GraphCollision collision) {
 			collision.use2D = EditorGUILayout.Toggle(new GUIContent("Use 2D Physics", "Use the Physics2D API for collision checking"), collision.use2D);
+
+			if (collision.use2D) {
+				var graph = target as GridGraph;
+				if (Mathf.Abs(Vector3.Dot(Vector3.forward, Quaternion.Euler(graph.rotation) * Vector3.up)) < 0.9f) {
+					EditorGUILayout.HelpBox("When using 2D physics it is recommended to rotate the graph so that it aligns with the 2D plane.", MessageType.Warning);
+				}
+			}
+		}
+
+		static Dictionary<System.Type, System.Type> ruleEditors;
+		static Dictionary<System.Type, string> ruleHeaders;
+		static List<System.Type> ruleTypes;
+		Dictionary<GridGraphRule, IGridGraphRuleEditor> ruleEditorInstances = new Dictionary<GridGraphRule, IGridGraphRuleEditor>();
+
+		static void FindRuleEditors () {
+			ruleEditors = new Dictionary<System.Type, System.Type>();
+			ruleHeaders = new Dictionary<System.Type, string>();
+			ruleTypes = new List<System.Type>();
+			foreach (var type in TypeCache.GetTypesWithAttribute<CustomGridGraphRuleEditorAttribute>()) {
+				var attrs = type.GetCustomAttributes(typeof(CustomGridGraphRuleEditorAttribute), false);
+				foreach (CustomGridGraphRuleEditorAttribute attr in attrs) {
+					ruleEditors[attr.type] = type;
+					ruleHeaders[attr.type] = attr.name;
+				}
+			}
+
+			foreach (var type in TypeCache.GetTypesDerivedFrom<GridGraphRule>()) {
+				if (!type.IsAbstract) ruleTypes.Add(type);
+			}
+		}
+
+		IGridGraphRuleEditor GetEditor (GridGraphRule rule) {
+			if (ruleEditors == null) FindRuleEditors();
+			IGridGraphRuleEditor ruleEditor;
+			if (!ruleEditorInstances.TryGetValue(rule, out ruleEditor)) {
+				if (ruleEditors.ContainsKey(rule.GetType())) {
+					ruleEditor = ruleEditorInstances[rule] = (IGridGraphRuleEditor)System.Activator.CreateInstance(ruleEditors[rule.GetType()]);
+				}
+			}
+			return ruleEditor;
+		}
+
+		protected virtual void DrawRules (GridGraph graph) {
+			var rules = graph.rules.GetRules();
+
+			for (int i = 0; i < rules.Count; i++) {
+				var rule = rules[i];
+				if (rule != null) {
+					var ruleEditor = GetEditor(rule);
+					var ruleType = rule.GetType();
+					GUILayout.BeginHorizontal();
+					rule.enabled = ToggleGroup(ruleHeaders.ContainsKey(ruleType) ? ruleHeaders[ruleType] : ruleType.Name, rule.enabled);
+					if (GUILayout.Button("", AstarPathEditor.astarSkin.FindStyle("SimpleDeleteButton"))) {
+						graph.rules.RemoveRule(rule);
+						ruleEditorInstances.Remove(rule);
+						rule.enabled = false;
+						rule.DisposeUnmanagedData();
+					}
+					GUILayout.EndHorizontal();
+
+					if (rule.enabled) {
+						if (ruleEditor != null) {
+							EditorGUI.indentLevel++;
+							EditorGUI.BeginChangeCheck();
+							ruleEditor.OnInspectorGUI(graph, rule);
+							if (EditorGUI.EndChangeCheck()) rule.SetDirty();
+							EditorGUI.indentLevel--;
+						} else {
+							EditorGUILayout.HelpBox("No editor found for " + rule.GetType().Name, MessageType.Error);
+						}
+					}
+				}
+			}
+
+			EditorGUILayout.Separator();
+
+			GUILayout.BeginHorizontal();
+			GUILayout.Space(10);
+			if (GUILayout.Button("Add Rule")) {
+				if (ruleEditors == null) FindRuleEditors();
+				GenericMenu menu = new GenericMenu();
+				foreach (var type in ruleTypes) {
+					menu.AddItem(new GUIContent(ruleHeaders.ContainsKey(type) ? ruleHeaders[type] : type.Name), false, ruleType => graph.rules.AddRule(System.Activator.CreateInstance((System.Type)ruleType) as GridGraphRule), type);
+				}
+				menu.ShowAsContext();
+			}
+			GUILayout.Space(10);
+			GUILayout.EndHorizontal();
 		}
 
 		static void SaveReferenceTexture (GridGraph graph) {
@@ -572,79 +753,6 @@ namespace Pathfinding {
 			Object obj = AssetDatabase.LoadAssetAtPath(path, typeof(Texture));
 
 			EditorGUIUtility.PingObject(obj);
-		}
-
-		protected static readonly string[] ChannelUseNames = { "None", "Penalty", "Height", "Walkability and Penalty" };
-
-		/// <summary>Draws settings for using a texture as source for a grid.</summary>
-		protected virtual void DrawTextureData (GridGraph.TextureData data, GridGraph graph) {
-			if (data == null) {
-				return;
-			}
-
-			data.enabled = ToggleGroup("Use Texture", data.enabled);
-			if (!data.enabled) {
-				return;
-			}
-
-			bool preGUI = GUI.enabled;
-			GUI.enabled = data.enabled && GUI.enabled;
-
-			EditorGUI.indentLevel++;
-			data.source = ObjectField("Source", data.source, typeof(Texture2D), false) as Texture2D;
-
-			if (data.source != null) {
-				string path = AssetDatabase.GetAssetPath(data.source);
-
-				if (path != "") {
-					var importer = AssetImporter.GetAtPath(path) as TextureImporter;
-					if (!importer.isReadable) {
-						if (FixLabel("Texture is not readable")) {
-							importer.isReadable = true;
-							EditorUtility.SetDirty(importer);
-							AssetDatabase.ImportAsset(path);
-						}
-					}
-				}
-			}
-
-			for (int i = 0; i < 3; i++) {
-				string channelName = i == 0 ? "R" : (i == 1 ? "G" : "B");
-				data.channels[i] = (GridGraph.TextureData.ChannelUse)EditorGUILayout.Popup(channelName, (int)data.channels[i], ChannelUseNames);
-
-				if (data.channels[i] != GridGraph.TextureData.ChannelUse.None) {
-					EditorGUI.indentLevel++;
-					data.factors[i] = EditorGUILayout.FloatField("Factor", data.factors[i]);
-
-					string help = "";
-					switch (data.channels[i]) {
-					case GridGraph.TextureData.ChannelUse.Penalty:
-						help = "Nodes are applied penalty according to channel '"+channelName+"', multiplied with factor";
-						break;
-					case GridGraph.TextureData.ChannelUse.Position:
-						help = "Nodes Y position is changed according to channel '"+channelName+"', multiplied with factor";
-
-						if (graph.collision.heightCheck) {
-							EditorGUILayout.HelpBox("Getting position both from raycast and from texture. You should disable one of them", MessageType.Error);
-						}
-						break;
-					case GridGraph.TextureData.ChannelUse.WalkablePenalty:
-						help = "If channel '"+channelName+"' is 0, the node is made unwalkable. Otherwise the node is applied penalty multiplied with factor";
-						break;
-					}
-
-					EditorGUILayout.HelpBox(help, MessageType.None);
-
-					EditorGUI.indentLevel--;
-				}
-			}
-
-			if (GUILayout.Button("Generate Reference")) {
-				SaveReferenceTexture(graph);
-			}
-
-			GUI.enabled = preGUI;
-			EditorGUI.indentLevel--;
 		}
 
 		public static GridPivot PivotPointSelector (GridPivot pivot) {
@@ -710,11 +818,7 @@ namespace Pathfinding {
 
 			Handles.matrix = Matrix4x4.identity;
 			Handles.color = AstarColor.BoundsHandles;
-#if UNITY_5_5_OR_NEWER
 			Handles.CapFunction cap = Handles.CylinderHandleCap;
-#else
-			Handles.DrawCapFunction cap = Handles.CylinderCap;
-#endif
 
 			var center = currentTransform.Transform(new Vector3(0.5f, 0, 0.5f));
 			if (Tools.current == Tool.Scale) {
@@ -759,7 +863,16 @@ namespace Pathfinding {
 				}
 			}
 
-			Handles.matrix = Matrix4x4.identity;
+			var rules = graph.rules.GetRules();
+			for (int i = 0; i < rules.Count; i++) {
+				var rule = rules[i];
+				if (rule != null && rule.enabled) {
+					var ruleEditor = GetEditor(rule);
+					if (ruleEditor != null) {
+						ruleEditor.OnSceneGUI(graph, rule);
+					}
+				}
+			}
 		}
 
 		public enum GridPivot {

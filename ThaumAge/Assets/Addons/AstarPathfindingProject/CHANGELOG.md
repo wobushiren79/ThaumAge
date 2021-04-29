@@ -1,58 +1,408 @@
-## 4.2.15 (2020-03-30)
+## 4.3.41 (2021-02-28)
+- Fixed the graphs would be rendered even when the scene view was in prefab isolation mode and you were viewing an unrelated prefab.
+- Fixed a deprecation warning when using the HDRP package version 9.0 or higher.
+- Fixed a bug in the grid graph rule's helper function \reflink{ForEachNode} which would not work if the normal of the nodes were exactly (0,1,0).
+- Improved error messages when trying to include a non-readable mesh in a recast graph scan.
+
+## 4.3.40 (2021-01-27)
+- Cleaned up some large audio files in the example scenes to reduce the package install size quite significantly.
+- Removed some `.blend1` (blender backup files) that had been accidentally included in the package.
+- The Unity Entities package is no longer a dependency.
+		This previously contained some functionality that was needed, but this has since moved to the smaller Jobs package.
+- Fixed some visual scaling bugs in the collision visualization code for the grid graph.
+- Fixed calling `AstarData.ClearGraphs` and then immediately calling `AstarData.AddGraph` would result in an exception.
+- Fixed \reflink{UpdateGraphsNoBlock(GraphUpdateObject,GraphNode,GraphNode,bool)} could return incorrect results if there were already some pending graph updates.
+
+## 4.3.39 (2020-12-11)
+- Fixed grid graph would see 2D triggers as obstacles. Now all 2D colliders marked as triggers will be ignored by the grid graph.
+- Improved compatibility with some older versions of the Universal Render Pipeline.
+
+## 4.3.38 (2020-11-18)
+- Fixed a memory leak that could happen after switching scenes. Thanks @nGenius for finding it.
+- Fixed compatibility with Unity 2020.2.
+		Note that this package is not compatible with some alpha releases of 2020.2, but it is compatible with the later 2020.2 releases.
+
+## 4.3.37 (2020-11-01)
+- Fixed scanning recast graphs could throw an exception in Unity 2020 or higher if the scene contained a mesh with 0 vertices.
+- Added \reflink{IAstarAI.endOfPath}.
+- Fixed the built-in movement scripts' 'Stop When Destination Is Crowded' behavior would not work well if the destination couldn't be reached, but the agents were still crowding up against the closest point they could reach.
+- Fixed updating layer grid graphs during runtime that had been loaded from a file/cache could throw an exception (bug introduced during the 4.3.x beta). Thanks @Kevin_Jenkins for help with pinning the bug down.
+		- Note: If you are using the \emph{account for slopes} graph option I recommend that you regenerate any caches and re-save any graph files after upgrading (if you are using any caches/graph files).
+		Things will work without doing that, but in some cases it may behave as if \emph{account for slopes} is disabled.
+- Fixed updating grid graphs during runtime could sometimes give you subtly different results if the graph had been loaded from a file/cache (bug introduced during the 4.3.x beta).
+
+## 4.3.36 (2020-10-25)
+- Fixed a major memory leak that could happen if the graph was re-scanned many times. The bug was introduced in 4.3.12.
+- Fixed Unity freezing when scanning grid graphs on some computers.
+- Made it possible to create grid graph rules that run in the main thread instead of using the unity job system. See \ref grid-rules-write.
+- Fixed a bug which could cause a greyed out object called 'RetainedGizmos' to appear in the scene hierarchy.
+- Improved the documentation for writing custom grid graph rules: \ref grid-rules-write.
+
+## 4.3.35 (2020-10-10)
+- Fixed burstified recast code sometimes throwing an exception in standalone IL2CPP builds.
+- Worked around a null reference exception in Unity's ClearPreviewCache that could appear randomly from time to time.
+- Minor reduction in overhead in standalone builds.
+
+## 4.3.34 (2020-09-04)
+- Added a setter for the rotation property of all movement scripts (\reflink{IAstarAI.rotation}).
+- Fixed RichAI always teleporting to the closest point on the navmesh when the script is enabled even if \reflink{RichAI.canMove} is false.
+- Fixed old hidden instances of the BatchedEvents object could be left in the scene. In the editor this could lead to a build-up of hidden objects that were not cleaned up until Unity exited.
+- Fixed grid graph rules would not work in standalone games when using IL2CPP and bytecode stripping was enabled.
+- Changed 'The burstified recast code is only supported in Unity 2020.1 or newer. Falling back to the slower pure C# code.' error to a warning to make it less annoying.
+- Fixed recast graph rasterizing trees with the incorrect rotation sometimes.
+		The Unity terrain system does not support rotations for trees without a LODGroup. However the pathfinding code would still think such
+		trees were rotated even though Unity always rendered them with a rotation of 0.
+
+## 4.3.33 (2020-08-24)
+- Improved rotation handling for characters on non-planar worlds (e.g. spherical ones).
+
+## 4.3.32 (2020-08-12)
+- Fixed graph updates not working properly on grid graphs if the graph was loaded from a file or when using cached startup.
+		This fixes a regression introduced in 4.3.x.
+
+## 4.3.31 (2020-08-09)
+- Breaking changes
+		- Changed when the AIPath/RichAI movement scripts stop when \reflink{AIBase.whenCloseToDestination} is set to Stop.
+			See below for more details. The new behavior is usually what you want.
+			If you really want the old behavior then set \code ai.whenCloseToDestination = CloseToDestinationMode.ContinueToExactDestination\endcode
+			and in a separate script run \code ai.isStopped = ai.reachedEndOfPath\endcode every frame.
+- Fixed incompatibility with the unity.collections-0.11 package.
+- Added warning message when using the Experimental URP 2D Renderer. The URP 2D renderer unfortunately does not have enough features yet
+        to be able to support the gizmo drawing system. It doesn't have an extensible post processing system. The 2D renderer will be supported as soon as it is technically possible.
+		This does not affect any functionality of the A* Pathfinding Project except gizmo drawing and visualization in the editor.
+- Changed when the AIPath/RichAI movement scripts stop when \reflink{AIBase.whenCloseToDestination} is set to Stop.
+		Consider the case when the destination was slightly outside the navmesh and the path instead goes to the closest point it can reach.
+		Previously it would stop up to \reflink{AIBase.endReachedDistance} units from the end of the path.
+		This could lead to unexpected behavior since it may be the case that by just moving a bit closer to the end of the path it would
+		end up within \reflink{AIBase.endReachedDistance} units from the destination.
+		Essentially \reflink{AIBase.reachedDestination} would remain false even though the agent could actually reach the destination by just moving a bit further.
+		So this behavior has been changed so that it now only stops when it is within \reflink{AIBase.endReachedDistance} units from the destination, not the end of the path.
+- Fixed an exception could be thrown when scanning a recast graph and last tile in the graph didn't contain any meshes.
+		This was a regression introduced in 4.3.x.
+
+## 4.3.30 (2020-07-26)
+- Fixed gizmos sometimes not showing up when using a render pipeline (URP or HDRP) or when rendering in VR.
+- Fixed GraphUpdateScene not using the outline from an attached PolygonCollider2D properly.
+
+## 4.3.29 (2020-07-13)
+- Added a new dynamic path recalculation mode to the movement scripts.
+		This mode is smarter about when it recalculates paths. It will recalculate the path often when the destination changes a lot
+		and much less frequently if the destination doesn't change much or if it is very far away.
+		This can help improve both the responsiveness of your agents and the performance if you have many agents that do frequent path recalculations.
+		Any existing agents will still use the old method of recalculating the path every N seconds, but you can change this in the inspector.
+		New agents will by default use the new Dynamic mode.
+- The AIPath/RichAI.canSearch field has been replaced by the \reflink{AIBase.autoRepath.mode} field.
+		For backwards compatibility setting canSearch to false will set the mode to Never and setting it to true will set the mode to EveryNSeconds.
+- The AIPath/RichAI.repathRate field has been replaced by the \reflink{AIBase.autoRepath.interval} field.
+		For backwards compatibility you can both read and write to the old name and it will work as before.
+		Note that this field is not used for the new Dynamic path recalculation mode.
+- Improved performance of the AIPath and RichAI inspectors a bit.
+- The recast graph now supports terrain holes (only when running in Unity 2020 or later).
+- Fixed gizmos not showing up in the editor when using VR rendering.
+- The burstified grid graphs now support the 'erosion uses tags' option (this fixes a 4.3.x regression).
+- Fixed burstified recast code not working when building for IL2CPP (this fixes a regression introduced in 4.3.27).
+
+## 4.3.28 (2020-06-14)
+- Breaking changes
+		- The AIPath script will now clear the path it is following if a path calculation fails.
+			See below for more details.
+- The AIPath script will now clear the path it is following if a path calculation fails.
+		Previously it would continue following its previous path. This could lead to problems if the world had changed so that there was no longer a valid path to the target.
+		The agent could then in some situations just continue trying to walk through obstacles instead of stopping.
+		In pretty much all cases this change in behavior is what you want and will not cause any problems when upgrading.
+- Fixed some cases where graph updates with 2D colliders would not use the most up to date physics engine data.
+		All graph updates are now preceeded by a call to Physics2D.SyncTransforms (in addition to Physics.SyncTransform which was already being called).
+
+## 4.3.27 (2020-06-12)
+- Breaking changes
+		- The \link Pathfinding.ITraversalProvider ITraversalProvider\endlink interface has a new member \link Pathfinding.ITraversalProvider.CanTraverse(PathHandler,GraphNode,GraphNode) CanTraverse(path,from,to)\endlink.
+			Since Unity's C# version does not support default interface implementation this member needs to be implemented if you have been inheriting from the ITraversalProvider interface.
+			Luckily you just need to add a very short and simple implementation to get it working:
+			\snippet MiscSnippets.cs CanTraverseDefault
+		- Convex colliders are now automatically treated as solid by the recast graph.
+			This may lead to a different navmesh being generated, however in pretty much all cases it will be what you want.
+- Improved the accuracy and performance of the RaycastModifier when thick raycasting is enabled.
+- Made GridGraph.GetRectFromBounds public.
+- The Recast graph now uses burst and the Unity Job System when scanning it.
+		This improves the speed of scanning to about 2x to 4x the previous speed.
+		Graph updates still use the C# code, however that too will be ported in a future version.
+		Note that graph updates do not respect the 'solid' option (see below) since the C# backend does not support that feature.
+- The RecastMeshObj now has an option for making a mesh solid. This is useful to prevent a navmesh from being generated inside objects.
+		Convex colliders (box, sphere, capsule and convex mesh colliders) are automatically treated as solid.
+- Recast now has better support for trees
+		- Colliders on child objects will also be taken into account.
+		- You can use the RecastMeshObj component on trees to cutomize how they are rasterized.
+		- Significantly improved performance when you have many trees.
+		- Tree rotation is now taken into account.
+- Right clicking fields in the inspector no longer shows the "Show in online documentation" context menu, instead the normal unity context menu is shown.
+		The previous menu prevented things like resetting individual fields to their prefab values and similar things.
+- Fixed a bug which could cause recast graphs to be generated incorrectly in some very rare circumstances.
+		So rare that nobody has noticed this bug for several years.
+- Fixed LayerCoordinateInGrid was incorrect for layered grid graph nodes. This bug was introduced in the 4.3 beta.
+- The RaycastModifier now respects graphMasks set on paths. Thanks brettkercher for reporting the bug.
+- Added \link Pathfinding.ITraversalProvider ITraversalProvider.CanTraverse(path,from,to)\endlink.
+		This allows you to control not only which nodes are traversable, but also which connections can be used.
+- Changed some 'internal' access modifiers to 'public' or 'protected' on the Path class. This makes it easier to create custom path types.
+
+## 4.3.26 (2020-05-11)
+- Additional fix for gizmos not working in some scripts. Introduced in 4.3.23.
+
+## 4.3.25 (2020-05-08)
+- Fixed no gizmos working in the whole project. Introduced in 4.3.23. This was a very silly bug.
+- Fixed linecasts on navmesh/recast graphs could fail when the start of the line was close to a steep slope.
+- Fixed linecasts on navmesh/recast graphs would incorrectly return no obstructions if for example used between two floors of a building that were not connected.
+
+## 4.3.24 (2020-05-06)
+- Fixed RichAI trying to traverse an off mesh link twice if the path's endpoint was also the endpoint of an off-mesh link.
+- Fixed a missing script in the turnbased example scene causing warnings when opening that scene.
+
+## 4.3.23 (2020-05-04)
+- The \link Pathfinding.ProceduralGridMover ProceduralGridMover\endlink script now has an option for specifying which graph to update.
+- Fixed conflicting assembly names when used in a project that also has the ALINE package installed.
+- Fixed a crash when running on iOS.
+- Fixed opening some example scenes would log a warning about it including the old GUILayer component.
+- Fixed warnings would be logged when first importing the package on recent version of Unity due to a change in how Unity imports fbx files.
+
+## 4.3.22 (2020-04-28)
+- Make DynamicGridObstacle call Physics.SyncTransforms to ensure it has the most up to date data for the collider.
+- Fixed changing the dimensions of a grid graph and then scanning it again could cause an exception to be thrown (beta regression). Thanks eintopffahrer for reporting the bug.
+- Removed 'Upgrading serialized data ...' message as it was mostly just annoying.
+
+## 4.3.21 (2020-04-27)
+- Fixed layer grid graphs would throw an exception if a graph update added new layers. Thanks antvelm for reporting the bug.
+- Fixed a race condition when scanning grid graphs that could cause an exception to be thrown or some node data to be invalid.
+- Fixed Unity would lock up if you tried to scan a grid graph when the Unity Job System was configured to use zero worker threads.
+
+## 4.3.20 (2020-04-24)
+- Added a filter parameter to graph linecast methods. This can be used to mark additional nodes as not being traversable by the linecast.
+		See \link Pathfinding.GridGraph.Linecast(Vector3,Vector3,GraphHitInfo,List<GraphNode>,System.Func<GraphNode,bool>) GridGraph.Linecast\endlink.
+- The \link Pathfinding.RaycastModifier RaycastModifier\endlink now respects which tags are traversable and any ITraversalProvider set on the path.
+- Fixed GameObject references (like the PointGraph's Root field) would not get serialized properly if the AstarPath component was stored in a prefab.
+- Fixed layer grid graphs would throw an error if you tried to scan them on a computer with fewer than 4 cpu cores due to how the number of threads were set.
+- Fixed LayerGridGraphs would throw an error when being scanned for the first time (i.e. they had not existed in the project before). Thanks antvelm for reporting the bug.
+
+## 4.3.19 (2020-03-30)
+- Fixed the Optimization tab not working when installing the package using the unity package manager.
+
+## 4.3.18 (2020-03-30)
 - Added \link Pathfinding.IAstarAI.GetRemainingPath ai.GetRemainingPath\endlink.
+- Fixed version number not being accurate in the built package (introduced in 4.3.17).
+
+## 4.3.17 (2020-03-27)
+- Made the grid graph's collision visualization in the inspector green instead of blue.
+		This is done to make the connection to colliders more clear. The color is also easier to see against the grey background.
 - Fixed importing the package using the unity package manager would cause the A* inspector to not be able to load since it couldn't find the editor resources folder.
-- Fixed the package would report the wrong version number. This could cause the "New Update Available" window to show up unnecessarily.
 
-## 4.2.14 (2020-03-23)
-- Fixed DynamicGridObstacle throwing an exception when scanning sometimes. This bug was introduced in 4.2.13.
+## 4.3.16 (2020-03-23)
+- Fixed AIPath/RichAI throwing exceptions when an RVOController on the same object was disabled.
+- Moved ProceduralGridMover and DynamicGridObstacle out from the ExampleScenes folder to the Utilities folder.
+- Fixed updating a recast graph with a bounding box that was outside the graph would throw an exception (bug introduced in 4.3.13). Thanks antvelm for reporting this.
+- Fixed grid graph erosion not working properly (beta regression).
 
-## 4.2.13 (2020-03-21)
-- This release contains fixes and features that have been backported from the 4.3 beta.
-- Fixed paths could sometimes be cancelled without a reason if 'draw gizmos' was disabled on the Seeker component. Thanks Eran for reporting the bug.
+## 4.3.15 (2020-03-11)
+- Fixed \link Pathfinding.IAstarAI.SetPath ai.SetPath\endlink did not accept paths if you called it from the OnPathComplete callback for the path.
+- Changed \link Pathfinding.Seeker.IsDone Seeker.IsDone\endlink to return true from within the OnPathComplete callback.
+		Previously it would always return false, which was confusing since the callback explicitly indicates that the path has been calculated.
+- Fixed compile errors when using the Unity Collections package version 0.6.0-preview or later.
+- Fixed AIPath/RichAI throwing exceptions when there was an RVOSimulator in the scene but they themselves did not have an RVOController attached (beta regression). Thanks Eran for reporting this.
+- Fixed paths could sometimes be cancelled without a reason if 'draw gizmos' was disabled on the Seeker component. Thanks Eran for reporting this.
+
+## 4.3.14 (2020-02-28)
+- Fixed "Not allowed to access vertices on mesh" exception in Unity 2019.3 which started appearing due to a change in how Unity handles mesh data uploads.
+- Added a mode for the RecastMeshObj to make objects be completely ignored when scanning recast graphs.
+		This is useful if you are running out of layers in your project.
+- Fixed implementations of Object.Equals for Int3, Int2, IntRect, Connection and SimpleMovementPlane would throw an exception if compared to an object of a different type. Thanks SilentSin for reporting this bug.
+
+## 4.3.13 (2020-02-20)
+- Worked around an IL2CPP bug that caused grid graphs not to work in standalone games. Thanks eintopffahrer for reporting the bug.
+- Significantly improved performance when updating recast graphs when you are updating many tiles. Thanks Joel for finding the performance regression.
+- Fixed graphs dissappearing from the scene view during graph updates that take more than one frame. (fixes regression in beta only).
 - Fixed DynamicGridObstacle logging an error about not having a collider attached even outside of play mode.
 
-## 4.2.12 (2020-02-20)
-- Fixed "Not allowed to access vertices on mesh" error which some users are seeing after upgrading to Unity 2019.3.
-
-## 4.2.11 (2019-11-28)
-- Fixed animations for the agent character were missing in the example scenes in some newer versions of Unity. This could cause exceptions to be thrown in some example scenes.
-- Removed some stray uses of the old and deprecated GUIText component. This could cause descriptions for some example scenes not to show up in newer versions of Unity.
-
-## 4.2.10 (2019-11-19)
-- This release contains fixes and features that have been backported from the 4.3 beta.
+## 4.3.12 (2020-02-14)
 - Upgrade notes
-		- This release is supported in Unity 2017.4 LTS and later. Support for earlier versions has been dropped (however it probably still works in all 2017.x releases).
-		- The Unity WebPlayer target is no longer supported. This target was deprecated in Unity 5.4.
+		- GridGraph.nodes now has the type GridNodeBase[] instead of GridNode[]. The same is true for the layered grid graph.
+			In most cases everything should work as normal, however if you have been accessing GridNode specific methods or properties on a node you may need to cast the node to a GridNode (or LevelGridNode) to avoid compile errors.
+		- The LayeredGridGraph now only supports 15 layers by default. This is to reduce memory usage for the common case and to reduce code complexity. If this causes issues for your workflow, please let me know in the forum.
+- The LayeredGridGraph now uses the Burst compiler when scanning.
+- The LayeredGridGraph now supports 8 neighbours per node instead of 4 as was the case previously.
+- Added some helper visualizations for the collision settings for the grid graph.
+		\shadowimage{changelog/grid_graph_collision_visualization.png}
+- Fixed RVOController layers not working properly. Thanks Foulcloud for finding the bug.
+- Fixed clicking the Apply button in the Optimization tab would throw an exception in Unity 2019.3. Thanks rey4033 for reporting the bug.
+- Fixed NodeLink component throwing exceptions when drawing gizmos (beta regression since 4.3.6).
+- Fixed example scene descriptions not showing up in the Example6 (navmesh) example scene due to using the outdated GUIText component.
+- Fixed some multithreading race conditions when scanning and updating grid graphs. This could cause exceptions to be thrown.
+- Better time slicing when scanning grid graphs asynchronously, in particular for large graphs.
+- Fixed an exception could be thrown when resizing a grid graph to make it smaller.
+- Improved performance of making small updates to grid graphs a bit due to improved job scheduling performance.
+- Fixed ProceduralGridMover not working with non-square grid graphs.
+- ProceduralGridMover now uses the burst code for updating grid graphs. The performance is mostly the same, but usually faster when the graph moves a significant amount.
+- Fixed graph updates not always picking up physics changes done during the same frame as the update if "Auto Sync Transforms" has been disabled in the Unity physics settings.
+- Change: LayerGridNode.HasAnyGridConnections is now a property instead of a method.
+- Added GridNodeBase.HasAnyGridConnections
+- Removed LayerGridGraph.mergeSpanRange. This was a rarely used and hard to understand setting. Now it is automatically set to half the LayerGridGraph.characterHeight.
+- Added \link Pathfinding.GridGraph.SetGridShape GridGraph.SetGridShape\endlink.
+- Fixed RVOController.layer showing up as a layer mask instead of a single layer field.
+- Fixed a null reference exception which could happen in rare cases when using one-way links on point graphs. Thanks Andrea for finding the bug.
+- Fixed exceptions could be thrown when reducing the dimensions of a grid graph and then scanning again.
+- Improved performance when scanning graphs in the editor outside of play mode by not searching through assemblies for graph types every time.
+- Fixed changing the scene and scanning a graph in the same frame may cause the graph to not pick up the latest scene changes if <a href="https://docs.unity3d.com/ScriptReference/Physics-autoSyncTransforms.html">Physics.autoSyncTransforms</a> is disabled.
+- Fixed RVOController not working if the x axis scale is negative (e.g. a 2D character which has been flipped).
+- Made AstarData.ClearGraphs public.
+
+## 4.3.11 (2019-11-22)
 - Known bugs
-		- In some versions of Unity the spider bot in the example scenes may be missing its animations. This is due to a bug in how Unity upgrades scenes and is unfortunately tricky to fix for all Unity versions simultaneously. This does not affect any other part of the package.
+		- Layered grid graphs do not work in this release. They need to be rewritten to use burst first.
+- Fixed graphs and other gizmos not rendering when using the High-Definition Render Pipeline.
+- Fixed a crash in the Unity Editor when using a custom render pipeline.
+- Added a helper window with shortcuts when the GraphUpdateScene object is selected and the Move tool is active.
 - Fixed a crash when scanning a graph on the WebGL platform and exception support is disabled.
 
-## 4.2.9 (2019-11-15)
-- This release contains fixes and features that have been backported from the 4.3 beta.
+## 4.3.10 (2019-11-11)
+- Known bugs
+		- Layered grid graphs do not work in this release. They need to be rewritten to use burst first.
+- Fixed gizmos not being rendered when using a scriptable render pipeline (e.g. URP or HDRP) instead of Unity's built-in one.
+- Fixed null reference exception when a navmesh/recast graph is marked as not being affected by navmesh cuts.
+- Fixed collider faces with the exact same y coordinate as the base of a grid graph would sometimes not get detected.
+
+## 4.3.9 (2019-11-08)
 - Upgrade notes
-		- This release is supported in Unity 2017.4 LTS and later. Support for earlier versions has been dropped (however it probably still works in all 2017.x releases).
-		- The Unity WebPlayer target is no longer supported. This target was deprecated in Unity 5.4.
-    - Added a visualization for which dimension of the hexagons that is being edited when using a hexagonal grid graph.
-        \shadowimage{gridgraph/hexagon_dimension.png}
-- RichAI's Funnel Simplification now does a straight line check as the first thing it does.
-		This can help improve both performance and the quality of the path.
-- Added a small helper window to the scene view when the A* Inspector is open.
-	    I think this should work well with the dark Unity theme as well, but please start a thread in the support forum if something looks off.
-	    \shadowimage{changelog/scene_view_helper.png}
-- Using managed code stripping even up to the High level is now supported out of the box.
+		- Due to local avoidance now supporting non-planar worlds many internal coordinates have been changed from float2 to float3.
+			If you have been using the RVOController script then you do not need to do anything, however if you have used the internal IAgent interface
+			then you may have to change your code a bit to pass 3D coordiantes instead of 2D ones.
+- Added support for local avoidance on non-planar worlds (e.g. spherical ones). See \ref spherical.
+- Minor improvements to local avoidance performance.
+- Fixed off-mesh links sometimes throwing exceptions when disabled. Thanks Foulcloud for reporting this.
+
+## 4.3.8 (2019-10-22)
+- Upgrade notes
+		- GraphModifier events and some callbacks on the AstarPath object (e.g. OnGraphsUpdated) have changed semantics. Read below for more info.
+		- OnPostUpdate no longer runs during scan. TODO
+		- Made GridGraph.neighbourGridOffsetsX and neighbourGridOffsetsZ to static readonly members since they data is constant.
+		- Graph updates for grid graphs no longer call the GraphUpdateObject.Apply method, instead the GraphUpdateObject.ApplyJob method is called.
+			If you have been inheriting from the GraphUpdateObject to make custom graph updates you may need to convert your code so that it works with Burst. TODO: Tutorial.
+- When GraphModifier events and some callbacks like AstarPath.OnGraphsUpdated are actually fired has been inconsistent and not very well (or accurately) documented for a long time.
+		This release makes it more consistent and better documented. Note that this is a breaking change so if you have used any of those callbacks in your code
+		you may want to have a look at the #Pathfinding.GraphModifier documentation which describes when all events are fired.
+- Fixed a number of edge cases with node applying node links and simplified the code for links quite a lot. Hopefully they are more stable now.
+
+## 4.3.7 (2019-10-21)
+- Fixed upgrading from an earlier version could cause compiler errors due to UnityPackages not deleting files properly.
+- Added an \link Pathfinding.FunnelModifier.quality option\endlink to try harder to simplify the path when using the FunnelModifier.
+		This is the same type of simplification that the \link Pathfinding.RichAI.funnelSimplification RichAI.funnelSimplification\endlink option is using.
+- To be more descriptive all modifiers have had their visible names changed to include "Modifier" (unless it was already included).
+- Fixed AstarPath.OnGraphsUpdated and GraphModifier.OnGraphsPostUpdate being called before area (see HierarchicalGraph) information had been updated.
+- Fixed AstarPath.OnGraphsUpdated not being called after NavmeshCut updates.
+- Fixed GraphModifier.OnGraphsPreUpdate could be called multiple times per update when using navmesh cutting.
+- Fixed GraphModifier.OnGraphsPreUpdate could be called in the middle of a graph scan. Now graph scans will only send PreScan, PostScan and LatePostScan events.
+
+## 4.3.6 (2019-10-20)
+- Note: AIPath/RichAI scripts are a bit slow to turn around in some cases right now due to the new rotation filtering.
+- Upgrade notes
+		- OnPostUpdate no longer runs during scan. TODO
+		- Made GridGraph.neighbourGridOffsetsX and neighbourGridOffsetsZ to static readonly members since they data is constant.
+		- Graph updates for grid graphs no longer call the GraphUpdateObject.Apply method, instead the GraphUpdateObject.ApplyJob method is called.
+			If you have been inheriting from the GraphUpdateObject to make custom graph updates you may need to convert your code so that it works with Burst. TODO: Tutorial.
+- Added a new system for grid graph rules. See \ref grid-rules.
+- Removed GraphCollision.rayDirection. This option has never been exposed in the inspector and it's not that useful.
+- Added the property \link Pathfinding.IAstarAI.desiredVelocityWithoutLocalAvoidance desiredVelocityWithoutLocalAvoidance\endlink to the AIPath and RichAI components.
+		This allows you to both read and write the internal velocity of the agent.
+- The recast graph's position/rotation and size can now be edited using handles in the scene view. Thanks SeithCG for the suggestion.
+- Fixed weird undo/redo behaviour when editing graph settings. Previously some undo events would not be saved and sometimes you would have to press ctrl+z twice in order to undo a change.
+- Improved local avoidance performance significantly.
+		This was done both by optimizing some internal algorithms and by switching to using the ORCA algorithm instead of RVO2.
+		The behaviour of agents should remain similar, however a higher symmetry breaking bias may be required in some cases. (setting on the RVOSimulator component).
+- Switched some components (e.g. AIPath/RichAI/Seeker) to use a custom gizmo drawing library instead of Unity's internal one.
+		This improved performance when you have a lot of agents and makes the lines use high quality anti-aliasing even if the camera does not use any anti-aliasing itself.
+		Please post in the forum if you see any bugs related to this. Gizmo drawing has a surprising number of edge cases.
+- Optimized graph rendering a bit if multiple scene views/in game cameras are used.
+- Improved rotation filtering for AIPath/RichAI components.
+		This reduces jitter in the agent's rotation when they are close to standing still. This is particularly important when using local avoidance.
+- Fixed GraphUpdateScene editor preventing selection of another object by clicking in the scene view. Thanks SeithCG for reporting this.
+
+## 4.3.5 (2019-08-06)
+- Note: Some grid graph features are broken at the moment. Primarily the ones involving setting node tags when scanning or updating the graph.
+- Note: All graphs other than grid graphs may be broken at the moment. This beta is primarily for testing the new burst scanning for grid graphs.
+- Upgrade notes
+		- OnPostUpdate no longer runs during scan. TODO
+		- Made GridGraph.neighbourGridOffsetsX and neighbourGridOffsetsZ to static readonly members since they data is constant.
+		- Graph updates for grid graphs no longer call the GraphUpdateObject.Apply method, instead the GraphUpdateObject.ApplyJob method is called.
+			If you have been inheriting from the GraphUpdateObject to make custom graph updates you may need to convert your code so that it works with Burst. TODO: Tutorial.
+- Improved GridGraph performance when scanning and updating.
+		In particular when using the Ray collision testing mode the performance is much better since that can be fully jobified, but other modes are roughly twice as fast as before 4.3 now.
+		Large graph updates are much faster, however really small ones take about the same time or may even be slightly slower due to the overhead of jobifying all the code.
 - If an RVOController was attached to a GameObject with an AIPath/RichAI component during runtime after the movement script had been initialized then the movement script would previously possibly not find it.
 		This is fixed now and the RVOController notifies the AIPath/RichAI script that it has been attached.
-- The \link Pathfinding.IAstarAI.SetPath SetPath\endlink method on all built-in movement scripts can now be passed a null parameter. This will clear the current path of the agent.
-		In earlier versions this caused an exception to be thrown.
+
+## 4.3.4 (2019-07-25)
+- Upgrade notes
+		- Fixed hexagon connection costs were sqrt(3/2)≈1.22 times too large.
+			The connection costs are now approximately 1000*the distance between the nodes, as it should be.
+			For example if you have set the hexagon width to 1 then the cost to move between two adjacent hexagons is now 1000 instead of 1224 like it was before.
+			For almost all users this will not affect anything, however it may improve pathfinding performance a bit.
+			If you have been using penalties on your graph then you may have to divide them by 1.22 to get the same behavior.
+			Similarly if you have been using the ConstantPath to get a set of nodes you may have to divide the maxGScore parameter by 1.22.
+    - Added a visualization for which dimension of the hexagons that is being edited when using a hexagonal grid graph.
+        \shadowimage{gridgraph/hexagon_dimension.png}
+    - Fixed hexagon connection costs were sqrt(3/2)≈1.22 times too large. See the upgrade notes above.
+
+## 4.3.3 (2019-07-23)
+- Added #Pathfinding.GridGraph.maxStepUsesSlope which improves slope handling significantly in some scenarios.
+		When upgrading this field will be disabled for compatibility reasons, but it will be enabled for all new graphs.
+- #Pathfinding.GridGraph.maxClimb has been renamed to the more descriptive name #Pathfinding.GridGraph.maxStepHeight.
+
+## 4.3.2 (2019-07-16)
+- RichAI's Funnel Simplification now does a straight line check as the first thing it does.
+		This can help improve both performance and the quality of the path.
 - Fixed NavmeshBase.Linecast (used by RecastGraph and Navmesh linecast methods) would not fill the \a trace out parameter with the starting node in case the start point of the linecast was identical to the end point.
+- Removed support in some shaders for Unity version 5.5 and earlier.
 - AIPath and RichAI now clear their paths when they are disabled. Not clearing the path has caused some issues when using object pooling and also some other unexpected behavior.
 		If you want to just temporarily disable the movement then use the \link Pathfinding.IAstarAI.canMove canMove\endlink or \link Pathfinding.IAstarAI.isStopped isStopped\endlink properties.
+- The \link Pathfinding.IAstarAI.SetPath SetPath\endlink method on all built-in movement scripts can now be passed a null parameter. This will clear the current path of the agent.
+		In earlier versions this caused an exception to be thrown.
 - Fixed RichAI.remainingDistance could refer to the previous path for one frame after a new path had been calculated.
 - Fixed AIPath and RichAI scripts sometimes starting with a height of 0.01 when creating a new component in the unity inspector.
 		Now they start with a more reasonable height of 2.0.
 - The AIBase.usingGravity setter is now protected instead of private which helps when overriding some methods.
 - The "Show Surface" mode on recast and navmesh graphs is now enabled by default when creating a new graph.
+- Added a small helper window to the scene view when the A* Inspector is open.
+	    I think this should work well with the dark Unity theme as well, but please start a thread in the support forum if something looks off.
+	    \shadowimage{changelog/scene_view_helper.png}
+
+## 4.3.1
+- Fixed local avoidance could throw exceptions when using Burst and there were fewer than 64 agents. Thanks apolybus for reporting this.
+
+## 4.3.0
+- Upgrade notes
+		- This release only works in Unity 2019.3 or later.
+			The code should work in earlier releases, however some example scenes may require unity 2019.3 to load properly.
+		- The AIPath and RichAI scripts no longer use the Update and FixedUpdate methods.
+			Instead a separate script (BatchedEvents) is used which allows all components of a specific type to be processed at once.
+			This is slightly faster and is also required for the \link Pathfinding.AIBase.rvoDensityBehavior AIBase.rvoDensityBehavior\endlink implementation.
+			If you have been overriding the Update or FixedUpdate methods you will need to change your code to instead override the OnUpdate method.
+		- Local avoidance has hard collisions enabled by default. If this is not what you want you can disable this in the RVOSimulator component settings. See below for more details.
+		- The Unity WebPlayer target is no longer supported. This target was deprecated in Unity 5.4.
+- Grid graph scanning now uses the Burst compiler.
+		This improves performance by 10-20% in most cases.
+		The improvement is not that great because the bottleneck is some physics code that can not be put in jobs in the current versions of Unity.
+		The performance of erosion on grid graphs, especially with a large number of iterations, has been greatly increased.
+		This does not affect graph updates at the moment, but in a future update it may.
 - The system no longer destroys itself in OnApplicationQuit and is instead always destroyed during OnDestroy. Using OnApplicationQuit could cause trouble when the quitting process was cancelled (e.g. using Application.wantsToQuit).
+- Using managed code stripping even up to the High level is now supported out of the box.
+- Local avoidance has been rewritten to use the Burst compiler.
+		This greatly improves performance, in many cases by several hundred percent.
+		It is slower to use the burst code with the burst compiler disabled than it is to use the original non-burst code.
+		Since there are still some build targets that can not use the burst compiler, it is possible to disable the burst code and use the old non-burst code.
+- The RVOSimulator inspector has been improved visually.
+- Local avoidance now supports more aggressive collision prevention.
+		This is controlled by the \link Pathfinding.RVO.RVOSimulator.hardCollisions RVOSimulator.hardCollisions\endlink field.
+		Enabling this will cause the system to try very hard to avoid any kind of agent overlap, similar to how a physics engine would do it.
+		This does not influence agent avoidance when the agents are not overlapping.
+- RichAI now has a \link Pathfinding.RichAI.whenReachedDestination whenReachedDestination\endlink field which behaves like the one that the AIPath script has had for some time.
+- AIPath/RichAI now have options for more intelligently stopping earlier if there are already a lot of agents around the destination (see #Pathfinding.AIBase.rvoDensityBehavior).
+		This prevents the agents from walking around endlessly trying to reach the destination when many agents have the same destination.
+		This can only be used together with the local avoidance system, i.e. when there's also an RVOController attached to the character.
 - Fixed exceptions could be thrown in the editor if the project contains some assemblies that can for some reason not be read. Thanks joshcamas for reporting this.
 - Changed the automatic graph coloring limits code to ignore nodes that are unwalkable. This improves the contrast when some unwalkable nodes, that are not visible anyway, have very high penalties (or whatever other value you are visualizing in the scene view).
 - Fixed missing null checks in TriangleMeshNode.GetPortal and TriangleMeshNode.SharedEdge.
@@ -411,7 +761,7 @@
 			If you for some reason have been relying on the old buggy behavior you can emulate it by setting A* Inspector -> Settings -> Max Nearest Node Distance to a very low value.
 		- Fixed connection costs were assumed to be equal in both directions for bidirectional connections.
 		- Fixed a compiler error when building for UWP/HoloLens.
-		- Fixed some cases where circles used for debugging could have a much lower resolution than intended (#Pathfinding.Util.Draw.Debug.CircleXZ).
+		- Fixed some cases where circles used for debugging could have a much lower resolution than intended (#Pathfinding.Util.Draw.CircleXZ).
 		- Fixed RVO agents which were locked but some script sent it movement commands would cause the RVO system to think it was moving
 			even though it was actually stationary, causing some odd behavior. Now locked agents are always treated as stationary.
 		- Fixed RVO obstacles generated from graph borders (using the RVONavmesh component) could be incorrect if a tiled recast graph and navmesh cutting was used.
@@ -1668,13 +2018,13 @@
 			Fixed by casting to long when necessary.
 		- Navmesh2.shader defined "Cull Off" twice.
 		- Pathfinding threads are now background threads. This will prevent them from blocking the process to terminate if they of some reason are still alive (hopefully at least).
- 		- When really high penalties are applied (which could be underflowed negative penalties) a warning message is logged.
- 			Really high penalties (close to max uint value) can otherwise cause overflows and in some cases infinity loops because of that.
- 		- ClosestPointOnTriangle is now spelled correctly.
- 		- MineBotAI now uses Update instead of FixedUpdate.
- 		- Use Dark Skin option is now exposed again since it could be incorrectly set sometimes. Now you can force it to light or dark, or set it to auto.
- 		- Fixed recast graph bug when using multiple terrains. Previously only one terrain would be used.
- 		- Fixed some UI glitches in Unity 4.
+		- When really high penalties are applied (which could be underflowed negative penalties) a warning message is logged.
+			Really high penalties (close to max uint value) can otherwise cause overflows and in some cases infinity loops because of that.
+		- ClosestPointOnTriangle is now spelled correctly.
+		- MineBotAI now uses Update instead of FixedUpdate.
+		- Use Dark Skin option is now exposed again since it could be incorrectly set sometimes. Now you can force it to light or dark, or set it to auto.
+		- Fixed recast graph bug when using multiple terrains. Previously only one terrain would be used.
+		- Fixed some UI glitches in Unity 4.
 - Changes
 		- Removed Pathfinding.NNInfo.priority.
 		- Removed Pathfinding.NearestNodePriority.

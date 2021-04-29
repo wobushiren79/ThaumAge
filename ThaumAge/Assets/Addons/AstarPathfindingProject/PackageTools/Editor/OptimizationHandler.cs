@@ -49,28 +49,29 @@ namespace Pathfinding {
 		};
 
 		static string GetPackageRootDirectory () {
-			var paths = Directory.GetDirectories(Application.dataPath, "AstarPathfindingProject", SearchOption.AllDirectories);
+			var rootDir = EditorResourceHelper.editorAssets + "/../../";
 
-			if (paths.Length > 0) {
-				return paths[0];
-			}
-
-			Debug.LogError("Could not find AstarPathfindingProject root folder");
-			return Application.dataPath + "/AstarPathfindingProject";
+			return rootDir;
 		}
 
 		static Dictionary<BuildTargetGroup, List<string> > GetDefineSymbols () {
 			var result = new Dictionary<BuildTargetGroup, List<string> >();
-			var buildTypes = System.Enum.GetValues(typeof(BuildTargetGroup)) as int[];
 
-			for (int i = 0; i < buildTypes.Length; i++) {
-				if (deprecatedBuildTargets.Contains((BuildTargetGroup)buildTypes[i])) continue;
+			var nonDeprecatedBuildTypes = typeof(BuildTargetGroup)
+										  .GetFields(System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static)
+										  .Where(fieldInfo => fieldInfo.GetCustomAttributes(typeof(System.ObsoleteAttribute), false).Length == 0)
+										  .Select(fieldInfo => (BuildTargetGroup)fieldInfo.GetValue(null)).ToArray();
 
-				string defineString = PlayerSettings.GetScriptingDefineSymbolsForGroup((BuildTargetGroup)buildTypes[i]);
+			for (int i = 0; i < nonDeprecatedBuildTypes.Length; i++) {
+				// Kept for compatibility with older versions of Unity which did not always accurately add Obsolete attributes
+				// (in particular Unity 2017.4 seems to miss marking the PSM build target as obsolete, the other ones seem accurate)
+				if (deprecatedBuildTargets.Contains(nonDeprecatedBuildTypes[i])) continue;
+
+				string defineString = PlayerSettings.GetScriptingDefineSymbolsForGroup(nonDeprecatedBuildTypes[i]);
 				if (defineString == null) continue;
 
 				var defines = defineString.Split(';').Select(s => s.Trim()).ToList();
-				result[(BuildTargetGroup)buildTypes[i]] = defines;
+				result[nonDeprecatedBuildTypes[i]] = defines;
 			}
 			return result;
 		}

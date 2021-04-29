@@ -132,7 +132,7 @@ namespace Pathfinding {
 			graph.forcedBoundsSize = Vector3.Max(graph.forcedBoundsSize, Vector3.one * 0.001f);
 			graph.rotation = EditorGUILayout.Vector3Field("Rotation", graph.rotation);
 
-			if (GUILayout.Button(new GUIContent("Snap bounds to scene", "Will snap the bounds of the graph to exactly contain all meshes that the bounds currently touches"))) {
+			if (GUILayout.Button(new GUIContent("Snap bounds to scene", "Will snap the bounds of the graph to exactly contain all meshes in the scene that matches the masks."))) {
 				graph.SnapForceBoundsToScene();
 				GUI.changed = true;
 			}
@@ -186,6 +186,57 @@ namespace Pathfinding {
 
 			if (graph.nearestSearchOnlyXZ && (Mathf.Abs(graph.rotation.x) > 1 || Mathf.Abs(graph.rotation.z) > 1)) {
 				EditorGUILayout.HelpBox("Nearest node queries in XZ space is not recommended for rotated graphs since XZ space no longer corresponds to the ground plane", MessageType.Warning);
+			}
+		}
+
+		static readonly Vector3[] handlePoints = new [] { new Vector3(-1, 0, 0), new Vector3(1, 0, 0), new Vector3(0, 0, -1), new Vector3(0, 0, 1), new Vector3(0, 1, 0), new Vector3(0, -1, 0) };
+
+		public override void OnSceneGUI (NavGraph target) {
+			var graph = target as RecastGraph;
+
+			Handles.matrix = Matrix4x4.identity;
+			Handles.color = AstarColor.BoundsHandles;
+			Handles.CapFunction cap = Handles.CylinderHandleCap;
+
+			var center = graph.forcedBoundsCenter;
+			Matrix4x4 matrix = Matrix4x4.TRS(center, Quaternion.Euler(graph.rotation), graph.forcedBoundsSize * 0.5f);
+
+			if (Tools.current == Tool.Scale) {
+				const float HandleScale = 0.1f;
+
+				Vector3 mn = Vector3.zero;
+				Vector3 mx = Vector3.zero;
+				EditorGUI.BeginChangeCheck();
+				for (int i = 0; i < handlePoints.Length; i++) {
+					var ps = matrix.MultiplyPoint3x4(handlePoints[i]);
+					Vector3 p = matrix.inverse.MultiplyPoint3x4(Handles.Slider(ps, ps - center, HandleScale*HandleUtility.GetHandleSize(ps), cap, 0));
+
+					if (i == 0) {
+						mn = mx = p;
+					} else {
+						mn = Vector3.Min(mn, p);
+						mx = Vector3.Max(mx, p);
+					}
+				}
+
+				if (EditorGUI.EndChangeCheck()) {
+					graph.forcedBoundsCenter = matrix.MultiplyPoint3x4((mn + mx) * 0.5f);
+					graph.forcedBoundsSize = Vector3.Scale(graph.forcedBoundsSize, (mx - mn) * 0.5f);
+				}
+			} else if (Tools.current == Tool.Move) {
+				EditorGUI.BeginChangeCheck();
+				center = Handles.PositionHandle(center, Tools.pivotRotation == PivotRotation.Global ? Quaternion.identity : Quaternion.Euler(graph.rotation));
+
+				if (EditorGUI.EndChangeCheck() && Tools.viewTool != ViewTool.Orbit) {
+					graph.forcedBoundsCenter = center;
+				}
+			} else if (Tools.current == Tool.Rotate) {
+				EditorGUI.BeginChangeCheck();
+				var rot = Handles.RotationHandle(Quaternion.Euler(graph.rotation), graph.forcedBoundsCenter);
+
+				if (EditorGUI.EndChangeCheck() && Tools.viewTool != ViewTool.Orbit) {
+					graph.rotation = rot.eulerAngles;
+				}
 			}
 		}
 

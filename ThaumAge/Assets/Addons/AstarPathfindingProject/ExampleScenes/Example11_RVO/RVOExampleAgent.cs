@@ -54,29 +54,19 @@ namespace Pathfinding.Examples {
 		/// <summary>Animate the change of color</summary>
 		public void SetColor (Color color) {
 			if (rends == null) rends = GetComponentsInChildren<MeshRenderer>();
-			foreach (MeshRenderer rend in rends) {
-				Color current = rend.material.GetColor("_TintColor");
-				AnimationCurve curveR = AnimationCurve.Linear(0, current.r, 1, color.r);
-				AnimationCurve curveG = AnimationCurve.Linear(0, current.g, 1, color.g);
-				AnimationCurve curveB = AnimationCurve.Linear(0, current.b, 1, color.b);
-
-				AnimationClip clip = new AnimationClip();
-#if !(UNITY_4_3 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8)
-				// Needed to make Unity5 happy
-				clip.legacy = true;
-#endif
-				clip.SetCurve("", typeof(Material), "_TintColor.r", curveR);
-				clip.SetCurve("", typeof(Material), "_TintColor.g", curveG);
-				clip.SetCurve("", typeof(Material), "_TintColor.b", curveB);
-
-				Animation anim = rend.gameObject.GetComponent<Animation>();
-				if (anim == null) {
-					anim = rend.gameObject.AddComponent<Animation>();
-				}
-				clip.wrapMode = WrapMode.Once;
-				anim.AddClip(clip, "ColorAnim");
-				anim.Play("ColorAnim");
+			foreach (var rend in rends) {
+				StartCoroutine(AnimateColor(rend, rend.material.GetColor("_Color"), color));
 			}
+		}
+
+		System.Collections.IEnumerator AnimateColor (MeshRenderer rend, Color startColor, Color endColor) {
+			float t = 0;
+
+			do {
+				t = Mathf.Min(1.0f, t + Time.deltaTime);
+				rend.material.SetColor("_Color", Color.Lerp(startColor, endColor, t));
+				yield return null;
+			} while (t < 1);
 		}
 
 		public void RecalculatePath () {
@@ -177,13 +167,13 @@ namespace Pathfinding.Examples {
 				var rot = transform.rotation;
 				var targetRot = Quaternion.LookRotation(movementDelta, controller.To3D(Vector2.zero, 1));
 				const float RotationSpeed = 5;
-				if (controller.movementPlane == MovementPlane.XY) {
+				if (controller.movementPlaneMode == MovementPlane.XY) {
 					targetRot = targetRot * Quaternion.Euler(-90, 180, 0);
 				}
 				transform.rotation = Quaternion.Slerp(rot, targetRot, Time.deltaTime * RotationSpeed);
 			}
 
-			if (controller.movementPlane == MovementPlane.XZ) {
+			if (controller.movementPlaneMode == MovementPlane.XZ) {
 				RaycastHit hit;
 				if (Physics.Raycast(pos + Vector3.up, Vector3.down, out hit, 2, groundMask)) {
 					pos.y = hit.point.y;

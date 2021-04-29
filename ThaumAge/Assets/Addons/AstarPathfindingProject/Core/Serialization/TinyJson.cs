@@ -2,8 +2,8 @@ using UnityEngine;
 using System.Collections.Generic;
 using Pathfinding.WindowsStore;
 using System;
-#if NETFX_CORE
 using System.Linq;
+#if NETFX_CORE
 using WinRTLegacy;
 #endif
 
@@ -11,6 +11,14 @@ namespace Pathfinding.Serialization {
 	public class JsonMemberAttribute : System.Attribute {
 	}
 	public class JsonOptInAttribute : System.Attribute {
+	}
+	/// <summary>Indicates that the full type of the instance will always be serialized. This allows inheritance to work properly.</summary>
+	public class JsonDynamicTypeAttribute : System.Attribute {
+	}
+
+	class SerializableAnimationCurve {
+		public WrapMode preWrapMode, postWrapMode;
+		public Keyframe[] keys;
 	}
 
 	/// <summary>
@@ -42,7 +50,7 @@ namespace Pathfinding.Serialization {
 			serializers[typeof(LayerMask)] = v => output.AppendFormat("{{ \"value\": {0} }}", ((int)(LayerMask)v).ToString());
 		}
 
-		void Serialize (System.Object obj) {
+		void Serialize (System.Object obj, bool serializePrivateFieldsByDefault = false) {
 			if (obj == null) {
 				output.Append("null");
 				return;
@@ -60,9 +68,12 @@ namespace Pathfinding.Serialization {
 				for (int i = 0; i < arr.Count; i++) {
 					if (i != 0)
 						output.Append(", ");
-					Serialize(arr[i]);
+					Serialize(arr[i], serializePrivateFieldsByDefault);
 				}
 				output.Append("]");
+			} else if (obj is AnimationCurve) {
+				var curve = obj as AnimationCurve;
+				Serialize(new SerializableAnimationCurve { preWrapMode = curve.preWrapMode, postWrapMode = curve.postWrapMode, keys = curve.keys }, true);
 			} else if (obj is UnityEngine.Object) {
 				SerializeUnityObject(obj as UnityEngine.Object);
 			} else {
@@ -74,6 +85,11 @@ namespace Pathfinding.Serialization {
 				output.Append("{");
 				bool earlier = false;
 
+				if (typeInfo.GetCustomAttributes(typeof(JsonDynamicTypeAttribute), true).Length > 0) {
+					output.AppendFormat("\"@type\": \"{0}\"", typeInfo.AssemblyQualifiedName);
+					earlier = true;
+				}
+
 				while (true) {
 #if NETFX_CORE
 					var fields = typeInfo.DeclaredFields.Where(f => !f.IsStatic).ToArray();
@@ -82,7 +98,7 @@ namespace Pathfinding.Serialization {
 #endif
 					foreach (var field in fields) {
 						if (field.DeclaringType != type) continue;
-						if ((!optIn && field.IsPublic) ||
+						if ((!optIn && (field.IsPublic || serializePrivateFieldsByDefault)) ||
 #if NETFX_CORE
 							field.CustomAttributes.Any(attr => attr.GetType() == typeof(JsonMemberAttribute))
 #else
@@ -95,7 +111,7 @@ namespace Pathfinding.Serialization {
 
 							earlier = true;
 							output.AppendFormat("\"{0}\": ", field.Name);
-							Serialize(field.GetValue(obj));
+							Serialize(field.GetValue(obj), serializePrivateFieldsByDefault);
 						}
 					}
 
@@ -168,6 +184,8 @@ namespace Pathfinding.Serialization {
 	/// </summary>
 	public class TinyJsonDeserializer {
 		System.IO.TextReader reader;
+		string fullTextDebug;
+		GameObject contextRoot;
 
 		static readonly System.Globalization.NumberFormatInfo numberFormat = System.Globalization.NumberFormatInfo.InvariantInfo;
 
@@ -175,9 +193,11 @@ namespace Pathfinding.Serialization {
 		/// Deserializes an object of the specified type.
 		/// Will load all fields into the populate object if it is set (only works for classes).
 		/// </summary>
-		public static System.Object Deserialize (string text, Type type, System.Object populate = null) {
+		public static System.Object Deserialize (string text, Type type, System.Object populate = null, GameObject contextRoot = null) {
 			return new TinyJsonDeserializer() {
-					   reader = new System.IO.StringReader(text)
+					   reader = new System.IO.StringReader(text),
+					   fullTextDebug = text,
+					   contextRoot = contextRoot,
 			}.Deserialize(type, populate);
 		}
 
@@ -238,12 +258,13 @@ namespace Pathfinding.Serialization {
 				var result = (LayerMask)int.Parse(EatField());
 				Eat("}");
 				return result;
-			} else if (Type.Equals(tp, typeof(List<string>))) {
-				System.Collections.IList result = new List<string>();
+			} else if (tp.IsGenericType && Type.Equals(tp.GetGenericTypeDefinition(), typeof(List<>))) {
+				System.Collections.IList result = (System.Collections.IList)System.Activator.CreateInstance(tp);
+				var elementType = tp.GetGenericArguments()[0];
 
 				Eat("[");
 				while (!TryEat(']')) {
-					result.Add(Deserialize(typeof(string)));
+					result.Add(Deserialize(elementType));
 					TryEat(',');
 				}
 				return result;
@@ -260,8 +281,21 @@ namespace Pathfinding.Serialization {
 			} else if (Type.Equals(tp, typeof(Mesh)) || Type.Equals(tp, typeof(Texture2D)) || Type.Equals(tp, typeof(Transform)) || Type.Equals(tp, typeof(GameObject))) {
 				return DeserializeUnityObject();
 			} else {
-				var obj = populate ?? Activator.CreateInstance(tp);
 				Eat("{");
+
+				if (tpInfo.GetCustomAttributes(typeof(JsonDynamicTypeAttribute), true).Length > 0) {
+					string name = EatField();
+					if (name != "@type") {
+						throw new System.Exception("Expected field '@type' but found '" + name + "'" + "\n\nWhen trying to deserialize: " + fullTextDebug);
+					}
+
+					string typeName = EatField();
+					var newType = System.Type.GetType(typeName);
+					tp = newType ?? throw new System.Exception("Could not find a type with the name '" + typeName + "'" + "\n\nWhen trying to deserialize: " + fullTextDebug);
+					tpInfo = WindowsStoreCompatibility.GetTypeInfo(tp);
+				}
+
+				var obj = populate ?? Activator.CreateInstance(tp);
 				while (!TryEat('}')) {
 					var name = EatField();
 					var tmpType = tp;
@@ -272,7 +306,19 @@ namespace Pathfinding.Serialization {
 					}
 
 					if (field == null) {
-						SkipFieldData();
+						// Try a property instead
+						System.Reflection.PropertyInfo prop = null;
+						tmpType = tp;
+						while (prop == null && tmpType != null) {
+							prop = tmpType.GetProperty(name, System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic);
+							tmpType = tmpType.BaseType;
+						}
+
+						if (prop == null) {
+							SkipFieldData();
+						} else {
+							prop.SetValue(obj, Deserialize(prop.PropertyType));
+						}
 					} else {
 						field.SetValue(obj, Deserialize(field.FieldType));
 					}
@@ -326,7 +372,24 @@ namespace Pathfinding.Serialization {
 				if (EatField() != "GUID") throw new Exception("Expected 'GUID' field");
 				string guid = EatField();
 
-				foreach (var helper in UnityEngine.Object.FindObjectsOfType<UnityReferenceHelper>()) {
+				if (contextRoot != null) {
+					foreach (var helper in contextRoot.GetComponentsInChildren<UnityReferenceHelper>(true)) {
+						if (helper.GetGUID() == guid) {
+							if (Type.Equals(type, typeof(GameObject))) {
+								return helper.gameObject;
+							} else {
+								return helper.GetComponent(type);
+							}
+						}
+					}
+				}
+
+#if UNITY_2020_1_OR_NEWER
+				foreach (var helper in UnityEngine.Object.FindObjectsOfType<UnityReferenceHelper>(true))
+#else
+				foreach (var helper in UnityEngine.Object.FindObjectsOfType<UnityReferenceHelper>())
+#endif
+				{
 					if (helper.GetGUID() == guid) {
 						if (Type.Equals(type, typeof(GameObject))) {
 							return helper.gameObject;
@@ -362,7 +425,7 @@ namespace Pathfinding.Serialization {
 			for (int i = 0; i < s.Length; i++) {
 				var c = (char)reader.Read();
 				if (c != s[i]) {
-					throw new Exception("Expected '" + s[i] + "' found '" + c + "'\n\n..." + reader.ReadLine());
+					throw new Exception("Expected '" + s[i] + "' found '" + c + "'\n\n..." + reader.ReadLine() + "\n\nWhen trying to deserialize: " + fullTextDebug);
 				}
 			}
 		}
@@ -379,7 +442,7 @@ namespace Pathfinding.Serialization {
 
 				var readChar = (char)readInt;
 				if (readInt == -1) {
-					throw new Exception("Unexpected EOF");
+					throw new Exception("Unexpected EOF" + "\n\nWhen trying to deserialize: " + fullTextDebug);
 				} else if (!escape && readChar == '\\') {
 					escape = true;
 					reader.Read();

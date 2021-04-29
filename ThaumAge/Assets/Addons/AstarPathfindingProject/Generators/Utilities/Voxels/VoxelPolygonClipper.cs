@@ -1,3 +1,6 @@
+using Unity.Collections;
+using Unity.Mathematics;
+
 namespace Pathfinding.Voxels {
 	/// <summary>Utility for clipping polygons</summary>
 	internal struct VoxelPolygonClipper {
@@ -196,6 +199,144 @@ namespace Pathfinding.Voxels {
 			}
 
 			return m;
+		}
+	}
+
+	/// <summary>Utility for clipping polygons</summary>
+	internal struct VoxelPolygonClipperBurst {
+		public unsafe fixed float x[8];
+		public unsafe fixed float y[8];
+		public unsafe fixed float z[8];
+		public int n;
+
+		public UnityEngine.Vector3 this[int i] {
+			set {
+				unsafe {
+					x[i] = value.x;
+					y[i] = value.y;
+					z[i] = value.z;
+				}
+			}
+		}
+
+		/// <summary>
+		/// Clips a polygon against an axis aligned half plane.
+		/// The polygons stored in this object are clipped against the half plane at x = -offset.
+		/// </summary>
+		/// <param name="result">Ouput vertices</param>
+		/// <param name="multi">Scale factor for the input vertices. Should be +1 or -1. If -1 the negative half plane is kept.</param>
+		/// <param name="offset">Offset to move the input vertices with before cutting</param>
+		public void ClipPolygonAlongX (ref VoxelPolygonClipperBurst result, float multi, float offset) {
+			unsafe {
+				// Number of resulting vertices
+				int m = 0;
+				bool prev, curr;
+
+				float dj = multi*x[(n-1)]+offset;
+
+				for (int i = 0, j = n-1; i < n; j = i, i++) {
+					float di = multi*x[i]+offset;
+					prev = dj >= 0;
+					curr = di >= 0;
+
+					if (prev != curr) {
+						float s = dj / (dj - di);
+						result.x[m] = x[j] + (x[i]-x[j])*s;
+						result.y[m] = y[j] + (y[i]-y[j])*s;
+						result.z[m] = z[j] + (z[i]-z[j])*s;
+						m++;
+					}
+
+					if (curr) {
+						result.x[m] = x[i];
+						result.y[m] = y[i];
+						result.z[m] = z[i];
+						m++;
+					}
+
+					dj = di;
+				}
+
+				result.n = m;
+			}
+		}
+
+		/// <summary>
+		/// Clips a polygon against an axis aligned half plane.
+		/// The polygons stored in this object are clipped against the half plane at z = -offset.
+		/// </summary>
+		/// <param name="result">Ouput vertices. Only the Y and Z coordinates are calculated. The X coordinates are undefined.</param>
+		/// <param name="multi">Scale factor for the input vertices. Should be +1 or -1. If -1 the negative half plane is kept.</param>
+		/// <param name="offset">Offset to move the input vertices with before cutting</param>
+		public void ClipPolygonAlongZWithYZ (ref VoxelPolygonClipperBurst result, float multi, float offset) {
+			unsafe {
+				// Number of resulting vertices
+				int m = 0;
+				bool prev, curr;
+
+				float dj = multi*z[(n-1)]+offset;
+
+				for (int i = 0, j = n-1; i < n; j = i, i++) {
+					float di = multi*z[i]+offset;
+					prev = dj >= 0;
+					curr = di >= 0;
+
+					if (prev != curr) {
+						float s = dj / (dj - di);
+						result.y[m] = y[j] + (y[i]-y[j])*s;
+						result.z[m] = z[j] + (z[i]-z[j])*s;
+						m++;
+					}
+
+					if (curr) {
+						result.y[m] = y[i];
+						result.z[m] = z[i];
+						m++;
+					}
+
+					dj = di;
+				}
+
+				result.n = m;
+			}
+		}
+
+		/// <summary>
+		/// Clips a polygon against an axis aligned half plane.
+		/// The polygons stored in this object are clipped against the half plane at z = -offset.
+		/// </summary>
+		/// <param name="result">Ouput vertices. Only the Y coordinates are calculated. The X and Z coordinates are undefined.</param>
+		/// <param name="multi">Scale factor for the input vertices. Should be +1 or -1. If -1 the negative half plane is kept.</param>
+		/// <param name="offset">Offset to move the input vertices with before cutting</param>
+		public void ClipPolygonAlongZWithY (ref VoxelPolygonClipperBurst result, float multi, float offset) {
+			unsafe {
+				// Number of resulting vertices
+				int m = 0;
+				bool prev, curr;
+
+				float dj = multi*z[(n-1)]+offset;
+
+				for (int i = 0, j = n-1; i < n; j = i, i++) {
+					float di = multi*z[i]+offset;
+					prev = dj >= 0;
+					curr = di >= 0;
+
+					if (prev != curr) {
+						float s = dj / (dj - di);
+						result.y[m] = y[j] + (y[i]-y[j])*s;
+						m++;
+					}
+
+					if (curr) {
+						result.y[m] = y[i];
+						m++;
+					}
+
+					dj = di;
+				}
+
+				result.n = m;
+			}
 		}
 	}
 }

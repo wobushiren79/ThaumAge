@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace Pathfinding {
+	using Pathfinding.Drawing;
+
 	public enum HeuristicOptimizationMode {
 		None,
 		Random,
@@ -181,7 +183,7 @@ namespace Pathfinding {
 			rval = (uint)seed;
 
 			// Get a List<GraphNode> from a pool
-			var pivotList = Pathfinding.Util.ListPool<GraphNode>.Claim ();
+			var pivotList = Pathfinding.Util.ListPool<GraphNode>.Claim();
 
 			switch (mode) {
 			case HeuristicOptimizationMode.Custom:
@@ -206,7 +208,7 @@ namespace Pathfinding {
 						pivotList.Add(first);
 					} else {
 						Debug.LogError("Could not find any walkable node in any of the graphs.");
-						Pathfinding.Util.ListPool<GraphNode>.Release (ref pivotList);
+						Pathfinding.Util.ListPool<GraphNode>.Release(ref pivotList);
 						return;
 					}
 				}
@@ -221,7 +223,7 @@ namespace Pathfinding {
 
 			pivots = pivotList.ToArray();
 
-			Pathfinding.Util.ListPool<GraphNode>.Release (ref pivotList);
+			Pathfinding.Util.ListPool<GraphNode>.Release(ref pivotList);
 		}
 
 		public void RecalculateCosts () {
@@ -390,11 +392,11 @@ namespace Pathfinding {
 									int nx, nz;
 									if (gg.neighbours == NumNeighbours.Six) {
 										// Hexagon graph
-										nx = x + gg.neighbourXOffsets[GridGraph.hexagonNeighbourIndices[d]];
-										nz = z + gg.neighbourZOffsets[GridGraph.hexagonNeighbourIndices[d]];
+										nx = x + GridGraph.neighbourXOffsets[GridGraph.hexagonNeighbourIndices[d]];
+										nz = z + GridGraph.neighbourZOffsets[GridGraph.hexagonNeighbourIndices[d]];
 									} else {
-										nx = x + gg.neighbourXOffsets[d];
-										nz = z + gg.neighbourZOffsets[d];
+										nx = x + GridGraph.neighbourXOffsets[d];
+										nz = z + GridGraph.neighbourZOffsets[d];
 									}
 
 									// Check if the position is still inside the grid
@@ -428,10 +430,8 @@ namespace Pathfinding {
 		public void OnDrawGizmos () {
 			if (pivots != null) {
 				for (int i = 0; i < pivots.Length; i++) {
-					Gizmos.color = new Color(159/255.0f, 94/255.0f, 194/255.0f, 0.8f);
-
 					if (pivots[i] != null && !pivots[i].Destroyed) {
-						Gizmos.DrawCube((Vector3)pivots[i].position, Vector3.one);
+						Draw.SolidBox((Vector3)pivots[i].position, Vector3.one, new Color(159/255.0f, 94/255.0f, 194/255.0f, 0.8f));
 					}
 				}
 			}

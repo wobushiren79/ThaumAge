@@ -1,4 +1,5 @@
 using System;
+using Unity.Collections;
 
 namespace Pathfinding.Util {
 	/// <summary>Various utilities for handling arrays and memory</summary>
@@ -104,6 +105,40 @@ namespace Pathfinding.Util {
 
 			a = b;
 			b = tmp;
+		}
+
+		public static void Realloc<T>(ref NativeArray<T> arr, int newSize, Allocator allocator, NativeArrayOptions options = NativeArrayOptions.ClearMemory) where T : struct {
+			if (arr.IsCreated && arr.Length >= newSize) return;
+
+			var newArr = new NativeArray<T>(newSize, allocator, options);
+			if (arr.IsCreated) {
+				// Copy over old data
+				NativeArray<T>.Copy(arr, newArr, arr.Length);
+				arr.Dispose();
+			}
+			arr = newArr;
+		}
+
+		/// <summary>
+		/// Allocate a new array if the size is different than the existing one.
+		/// All data is discarded if the array is resized.
+		/// </summary>
+		public static void Resize<T>(ref NativeArray<T> arr, int newSize, Allocator allocator, NativeArrayOptions options = NativeArrayOptions.ClearMemory) where T : struct {
+			if (arr.IsCreated && arr.Length == newSize) return;
+
+			var newArr = new NativeArray<T>(newSize, allocator, options);
+			if (arr.IsCreated) arr.Dispose();
+			arr = newArr;
+		}
+
+		public static void Realloc<T>(ref T[] arr, int newSize) {
+			if (arr == null) {
+				arr = new T[newSize];
+			} else if (newSize > arr.Length) {
+				var newArr = new T[newSize];
+				arr.CopyTo(newArr, 0);
+				arr = newArr;
+			}
 		}
 	}
 }

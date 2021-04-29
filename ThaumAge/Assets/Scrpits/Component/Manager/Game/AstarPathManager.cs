@@ -1,6 +1,8 @@
-﻿using Pathfinding;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEditor;
+using Pathfinding;
+using Pathfinding.Util;
+
 using UnityEngine;
 
 public class AstarPathManager : BaseManager

@@ -213,7 +213,7 @@ namespace Pathfinding {
 		}
 
 		public override bool Equals (System.Object obj) {
-			if (obj == null) return false;
+			if (!(obj is Int3)) return false;
 
 			var rhs = (Int3)obj;
 
@@ -273,7 +273,7 @@ namespace Pathfinding {
 		}
 
 		public override bool Equals (System.Object o) {
-			if (o == null) return false;
+			if (!(o is Int2)) return false;
 			var rhs = (Int2)o;
 
 			return x == rhs.x && y == rhs.y;

@@ -4,16 +4,6 @@ using UnityEditor;
 namespace Pathfinding {
 	[CustomGraphEditor(typeof(LayerGridGraph), "Layered Grid Graph")]
 	public class LayerGridGraphEditor : GridGraphEditor {
-		public override void OnInspectorGUI (NavGraph target) {
-			var graph = target as LayerGridGraph;
-
-			base.OnInspectorGUI(target);
-
-			if (graph.neighbours != NumNeighbours.Four) {
-				Debug.Log("Note: Only 4 neighbours per grid node is allowed in this graph type");
-			}
-		}
-
 		protected override void DrawJPS (GridGraph graph) {
 			// No JPS for layered grid graph
 		}
@@ -23,39 +13,22 @@ namespace Pathfinding {
 
 			DrawNeighbours(graph);
 
-			layerGridGraph.characterHeight = EditorGUILayout.FloatField("Character Height", layerGridGraph.characterHeight);
+			layerGridGraph.characterHeight = EditorGUILayout.DelayedFloatField("Character Height", layerGridGraph.characterHeight);
 			DrawMaxClimb(graph);
 
 			DrawMaxSlope(graph);
 			DrawErosion(graph);
-
-			layerGridGraph.mergeSpanRange = EditorGUILayout.FloatField("Merge Span Range", layerGridGraph.mergeSpanRange);
 		}
 
 		protected override void DrawMaxClimb (GridGraph graph) {
 			var layerGridGraph = graph as LayerGridGraph;
 
 			base.DrawMaxClimb(graph);
-			layerGridGraph.maxClimb = Mathf.Clamp(layerGridGraph.maxClimb, 0, layerGridGraph.characterHeight);
+			layerGridGraph.maxStepHeight = Mathf.Clamp(layerGridGraph.maxStepHeight, 0, layerGridGraph.characterHeight);
 
-			if (layerGridGraph.maxClimb == layerGridGraph.characterHeight) {
-				EditorGUILayout.HelpBox("Max climb needs to be smaller or equal to character height", MessageType.Info);
+			if (layerGridGraph.maxStepHeight >= layerGridGraph.characterHeight) {
+				EditorGUILayout.HelpBox("Max step height needs to be smaller or equal to character height", MessageType.Info);
 			}
-		}
-
-		protected override void DrawTextureData (GridGraph.TextureData data, GridGraph graph) {
-			// No texture data for layered grid graphs
-		}
-
-		protected override void DrawNeighbours (GridGraph graph) {
-			graph.neighbours = NumNeighbours.Four;
-			EditorGUI.BeginDisabledGroup(true);
-			EditorGUILayout.EnumPopup(new GUIContent("Connections", "Only 4 connections per node is possible on layered grid graphs"), graph.neighbours);
-			EditorGUI.EndDisabledGroup();
-		}
-
-		protected override void DrawCutCorners (GridGraph graph) {
-			// No corner cutting since only 4 neighbours are possible
 		}
 
 		protected override void DrawCollisionEditor (GraphCollision collision) {

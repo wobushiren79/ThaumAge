@@ -135,7 +135,7 @@ namespace Pathfinding.Legacy {
 			}
 		}
 
-		protected override void Update () {
+		protected override void OnUpdate (float dt) {
 			if (!canMove) { return; }
 
 			Vector3 dir = CalculateVelocity(GetFeetPosition());
@@ -151,7 +151,7 @@ namespace Pathfinding.Legacy {
 			} else if (rigid != null) {
 				rigid.AddForce(dir);
 			} else {
-				tr.Translate(dir*Time.deltaTime, Space.World);
+				tr.Translate(dir*dt, Space.World);
 			}
 		}
 

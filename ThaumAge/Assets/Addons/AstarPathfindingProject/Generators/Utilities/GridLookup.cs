@@ -45,6 +45,9 @@ namespace Pathfinding.Util {
 			/// <summary>References to an item in each grid cell that this object is contained inside</summary>
 			internal List<Item> items = new List<Item>();
 			internal bool flag;
+
+			public UnityEngine.Vector3 previousPosition = new UnityEngine.Vector3(float.PositiveInfinity, float.PositiveInfinity, float.PositiveInfinity);
+			public UnityEngine.Quaternion previousRotation;
 		}
 
 		/// <summary>Linked list of all items</summary>
@@ -61,9 +64,7 @@ namespace Pathfinding.Util {
 		}
 
 		public Root GetRoot (T item) {
-			Root root;
-
-			rootLookup.TryGetValue(item, out root);
+			rootLookup.TryGetValue(item, out Root root);
 			return root;
 		}
 
@@ -88,9 +89,7 @@ namespace Pathfinding.Util {
 
 		/// <summary>Removes an item from the lookup data structure</summary>
 		public void Remove (T item) {
-			Root root;
-
-			if (!rootLookup.TryGetValue(item, out root)) {
+			if (!rootLookup.TryGetValue(item, out Root root)) {
 				return;
 			}
 
@@ -101,11 +100,17 @@ namespace Pathfinding.Util {
 			if (root.next != null) root.next.prev = root.prev;
 		}
 
+		public void Dirty (T item) {
+			if (!rootLookup.TryGetValue(item, out Root root)) {
+				return;
+			}
+
+			root.previousPosition = new UnityEngine.Vector3(float.PositiveInfinity, float.PositiveInfinity, float.PositiveInfinity);
+		}
+
 		/// <summary>Move an object to occupy a new set of cells</summary>
 		public void Move (T item, IntRect bounds) {
-			Root root;
-
-			if (!rootLookup.TryGetValue(item, out root)) {
+			if (!rootLookup.TryGetValue(item, out Root root)) {
 				throw new System.ArgumentException("The item has not been added to this object");
 			}
 
@@ -155,7 +160,7 @@ namespace Pathfinding.Util {
 		/// Note: For better memory usage, consider pooling the list using Pathfinding.Util.ListPool after you are done with it
 		/// </summary>
 		public List<U> QueryRect<U>(IntRect r) where U : class, T {
-			List<U> result = Pathfinding.Util.ListPool<U>.Claim ();
+			List<U> result = Pathfinding.Util.ListPool<U>.Claim();
 
 			// Loop through tiles and check which objects are inside them
 			for (int z = r.ymin; z <= r.ymax; z++) {

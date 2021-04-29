@@ -3,6 +3,31 @@ using System.Collections;
 
 namespace Pathfinding.Util {
 	public static class MovementUtilities {
+		public static float FilterRotationDirection (ref Vector2 state, ref Vector2 state2, Vector2 deltaPosition, float threshold, float deltaTime) {
+			const float Decay = 0.5f;
+
+			var lastState = state;
+
+			state += deltaPosition;
+
+			// Decay the state slowly (has the most effect if the agent is standing still)
+			state *= Mathf.Clamp01(1.0f - deltaTime*Decay);
+			float stateLength = state.magnitude;
+
+			if (stateLength > threshold*2f) {
+				state = state * (threshold*2f/stateLength);
+				stateLength = threshold*2f;
+			}
+
+			// TODO: Figure out what to do with
+			state2 += (state - lastState) * Decay;
+			state2 *= Mathf.Clamp01(1.0f - deltaTime*Decay);
+
+			// Prevent rotation if the agent doesn't move much
+			float speed = stateLength > threshold ? 1.0f : 0.0f;
+			return speed;
+		}
+
 		/// <summary>
 		/// Clamps the velocity to the max speed and optionally the forwards direction.
 		///
@@ -12,14 +37,14 @@ namespace Pathfinding.Util {
 		/// </summary>
 		/// <param name="velocity">Desired velocity of the character. In world units per second.</param>
 		/// <param name="maxSpeed">Max speed of the character. In world units per second.</param>
-		/// <param name="slowdownFactor">Value between 0 and 1 which determines how much slower the character should move than normal.
+		/// <param name="speedLimitFactor">Value between 0 and 1 which determines how much slower the character should move than normal.
 		///      Normally 1 but should go to 0 when the character approaches the end of the path.</param>
-		/// <param name="slowWhenNotFacingTarget">Prevent the velocity from being too far away from the forward direction of the character
-		///      and slow the character down if the desired velocity is not in the same direction as the forward vector.</param>
+		/// <param name="slowWhenNotFacingTarget">Slow the character down if the desired velocity is not in the same direction as the forward vector.</param>
+		/// <param name="preventMovingBackwards">Prevent the velocity from being too far away from the forward direction of the character.</param>
 		/// <param name="forward">Forward direction of the character. Used together with the slowWhenNotFacingTarget parameter.</param>
-		public static Vector2 ClampVelocity (Vector2 velocity, float maxSpeed, float slowdownFactor, bool slowWhenNotFacingTarget, Vector2 forward) {
+		public static Vector2 ClampVelocity (Vector2 velocity, float maxSpeed, float speedLimitFactor, bool slowWhenNotFacingTarget, bool preventMovingBackwards, Vector2 forward) {
 			// Max speed to use for this frame
-			var currentMaxSpeed = maxSpeed * slowdownFactor;
+			var currentMaxSpeed = maxSpeed * speedLimitFactor;
 
 			// Check if the agent should slow down in case it is not facing the direction it wants to move in
 			if (slowWhenNotFacingTarget && (forward.x != 0 || forward.y != 0)) {
@@ -34,26 +59,30 @@ namespace Pathfinding.Util {
 				currentMaxSpeed *= directionSpeedFactor;
 				currentSpeed = Mathf.Min(currentSpeed, currentMaxSpeed);
 
-				// Angle between the forwards direction of the character and our desired velocity
-				float angle = Mathf.Acos(Mathf.Clamp(dot, -1, 1));
+				if (preventMovingBackwards) {
+					// Angle between the forwards direction of the character and our desired velocity
+					float angle = Mathf.Acos(Mathf.Clamp(dot, -1, 1));
 
-				// Clamp the angle to 20 degrees
-				// We cannot keep the velocity exactly in the forwards direction of the character
-				// because we use the rotation to determine in which direction to rotate and if
-				// the velocity would always be in the forwards direction of the character then
-				// the character would never rotate.
-				// Allow larger angles when near the end of the path to prevent oscillations.
-				angle = Mathf.Min(angle, (20f + 180f*(1 - slowdownFactor*slowdownFactor))*Mathf.Deg2Rad);
+					// Clamp the angle to 20 degrees
+					// We cannot keep the velocity exactly in the forwards direction of the character
+					// because we use the rotation to determine in which direction to rotate and if
+					// the velocity would always be in the forwards direction of the character then
+					// the character would never rotate.
+					// Allow larger angles when near the end of the path to prevent oscillations.
+					angle = Mathf.Min(angle, (20f + 180f*(1 - speedLimitFactor*speedLimitFactor))*Mathf.Deg2Rad);
 
-				float sin = Mathf.Sin(angle);
-				float cos = Mathf.Cos(angle);
+					float sin = Mathf.Sin(angle);
+					float cos = Mathf.Cos(angle);
 
-				// Determine if we should rotate clockwise or counter-clockwise to move towards the current velocity
-				sin *= Mathf.Sign(normalizedVelocity.x*forward.y - normalizedVelocity.y*forward.x);
-				// Rotate the #forward vector by #angle radians
-				// The rotation is done using an inlined rotation matrix.
-				// See https://en.wikipedia.org/wiki/Rotation_matrix
-				return new Vector2(forward.x*cos + forward.y*sin, forward.y*cos - forward.x*sin) * currentSpeed;
+					// Determine if we should rotate clockwise or counter-clockwise to move towards the current velocity
+					sin *= Mathf.Sign(normalizedVelocity.x*forward.y - normalizedVelocity.y*forward.x);
+					// Rotate the #forward vector by #angle radians
+					// The rotation is done using an inlined rotation matrix.
+					// See https://en.wikipedia.org/wiki/Rotation_matrix
+					return new Vector2(forward.x*cos + forward.y*sin, forward.y*cos - forward.x*sin) * currentSpeed;
+				} else {
+					return normalizedVelocity * currentSpeed;
+				}
 			} else {
 				return Vector2.ClampMagnitude(velocity, currentMaxSpeed);
 			}

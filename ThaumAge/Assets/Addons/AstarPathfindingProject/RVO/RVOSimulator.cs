@@ -5,6 +5,7 @@ using UnityEngine.Profiling;
 
 namespace Pathfinding.RVO {
 	using Pathfinding.Util;
+	using Pathfinding.Drawing;
 
 	/// <summary>
 	/// Unity front end for an RVO simulator.
@@ -60,6 +61,18 @@ namespace Pathfinding.RVO {
 			"It will also reduce the responsiveness of the agents to the commands you send to them.")]
 		public bool doubleBuffering;
 
+		/// <summary>
+		/// Prevent agent overlap more aggressively.
+		/// This will it much harder for agents to overlap, even in crowded scenarios.
+		/// It is particularly noticable when running at a low simulation fps.
+		/// This does not influence agent avoidance when the agents are not overlapping.
+		///
+		/// Enabling this has a small performance penalty, usually not high enough to care about.
+		///
+		/// Disabling this may be beneficial if you want softer behaviour when larger groups of agents collide.
+		/// </summary>
+		public bool hardCollisions = true;
+
 		/// <summary>\copydoc Pathfinding::RVO::Simulator::symmetryBreakingBias</summary>
 		[Tooltip("Bias agents to pass each other on the right side.\n" +
 			"If the desired velocity of an agent puts it on a collision course with another agent or an obstacle " +
@@ -85,30 +98,27 @@ namespace Pathfinding.RVO {
 		/// </summary>
 		public bool drawObstacles;
 
+		public readonly bool burst = true;
+
 		/// <summary>Reference to the internal simulator</summary>
-		Pathfinding.RVO.Simulator simulator;
+		Pathfinding.RVO.SimulatorBurst simulatorBurst;
 
 		/// <summary>
 		/// Get the internal simulator.
 		/// Will never be null when the game is running
 		/// </summary>
-		public Simulator GetSimulator () {
-			if (simulator == null) {
-				Awake();
+		public ISimulator GetSimulator () {
+			var sim = (ISimulator)simulatorBurst;
+
+			if (sim == null && Application.isPlaying) {
+				simulatorBurst = new Pathfinding.RVO.SimulatorBurst(doubleBuffering, movementPlane);
+				return GetSimulator();
 			}
-			return simulator;
+			return sim;
 		}
 
 		void OnEnable () {
 			active = this;
-		}
-
-		protected override void Awake () {
-			base.Awake();
-			if (simulator == null && Application.isPlaying) {
-				int threadCount = AstarPath.CalculateThreadCount(workerThreads);
-				simulator = new Pathfinding.RVO.Simulator(threadCount, doubleBuffering, movementPlane);
-			}
 		}
 
 		/// <summary>Update the simulation</summary>
@@ -119,75 +129,21 @@ namespace Pathfinding.RVO {
 
 			var sim = GetSimulator();
 			sim.DesiredDeltaTime = 1.0f / desiredSimulationFPS;
-			sim.symmetryBreakingBias = symmetryBreakingBias;
+			sim.SymmetryBreakingBias = symmetryBreakingBias;
+			sim.DoubleBuffering = doubleBuffering;
+			sim.HardCollisions = hardCollisions;
 			sim.Update();
 		}
 
 		void OnDestroy () {
 			active = null;
-			if (simulator != null) simulator.OnDestroy();
+			if (simulatorBurst != null) simulatorBurst.OnDestroy();
 		}
 
-#if UNITY_EDITOR
-		[System.NonSerialized]
-		RetainedGizmos gizmos = new RetainedGizmos();
-
-		static Color ObstacleColor = new Color(255/255f, 60/255f, 15/255f, 1.0f);
-		void OnDrawGizmos () {
+		// static Color ObstacleColor = new Color(255/255f, 60/255f, 15/255f, 1.0f);
+		public override void DrawGizmos () {
 			// Prevent interfering with scene view picking
-			if (Event.current.type != EventType.Repaint) return;
-
-			if (drawObstacles && simulator != null && simulator.obstacles != null) {
-				var hasher = new RetainedGizmos.Hasher();
-				var obstacles = simulator.obstacles;
-				int numEdges = 0;
-				for (int i = 0; i < obstacles.Count; i++) {
-					var vertex = obstacles[i];
-					do {
-						hasher.AddHash(vertex.position.GetHashCode() ^ vertex.height.GetHashCode());
-						numEdges++;
-						vertex = vertex.next;
-					} while (vertex != obstacles[i] && vertex != null);
-				}
-
-				if (!gizmos.Draw(hasher)) {
-					Profiler.BeginSample("Rebuild RVO Obstacle Gizmos");
-					using (var helper = gizmos.GetGizmoHelper(null, hasher)) {
-						var up = movementPlane == MovementPlane.XY ? Vector3.back : Vector3.up;
-						var vertices = new Vector3[numEdges*6];
-						var colors = new Color[numEdges*6];
-						int edgeIndex = 0;
-						for (int i = 0; i < obstacles.Count; i++) {
-							var start = obstacles[i];
-							var c = start;
-							do {
-								vertices[edgeIndex*6 + 0] = c.position;
-								vertices[edgeIndex*6 + 1] = c.next.position;
-								vertices[edgeIndex*6 + 2] = c.next.position + up*c.next.height;
-								vertices[edgeIndex*6 + 3] = c.position;
-								vertices[edgeIndex*6 + 4] = c.next.position + up*c.next.height;
-								vertices[edgeIndex*6 + 5] = c.position + up*c.height;
-								edgeIndex++;
-								c = c.next;
-							} while (c != start && c != null && c.next != null);
-						}
-
-						for (int i =  0; i < colors.Length; i++) {
-							colors[i] = ObstacleColor;
-						}
-
-						helper.DrawTriangles(vertices, colors, numEdges * 2);
-					}
-					Profiler.EndSample();
-				}
-
-				gizmos.FinalizeDraw();
-			}
+			//if (Event.current.type != EventType.Repaint) return;
 		}
-
-		void OnDisable () {
-			gizmos.ClearCache();
-		}
-#endif
 	}
 }

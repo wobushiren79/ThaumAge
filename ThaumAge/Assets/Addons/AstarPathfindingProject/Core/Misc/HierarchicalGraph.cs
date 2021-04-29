@@ -3,11 +3,15 @@ using Pathfinding.Util;
 using Pathfinding.Serialization;
 using System.Linq;
 using UnityEngine;
+using Unity.Jobs;
 #if UNITY_5_5_OR_NEWER
 using UnityEngine.Profiling;
 #endif
+using Pathfinding.Jobs;
 
 namespace Pathfinding {
+	using Pathfinding.Drawing;
+
 	/// <summary>
 	/// Holds a hierarchical graph to speed up certain pathfinding queries.
 	///
@@ -85,9 +89,11 @@ namespace Pathfinding {
 
 		int gizmoVersion = 0;
 
+		JobHandle lastJob;
+
 		public HierarchicalGraph () {
 			// Cache this callback to avoid allocating a new one every time the FindHierarchicalNodeChildren method is called.
-			// It is a big ugly to have to use member variables for the state information in that method, but I see no better way.
+			// It is a bit ugly to have to use member variables for the state information in that method, but I see no better way.
 			connectionCallback = (GraphNode neighbour) => {
 				var hIndex = neighbour.HierarchicalNodeIndex;
 				if (hIndex == 0) {
@@ -98,7 +104,7 @@ namespace Pathfinding {
 					}
 				} else if (hIndex != currentHierarchicalNodeIndex && !currentConnections.Contains(hIndex)) {
 					// The Contains call can in theory be very slow as an hierarchical node may be adjacent to an arbitrary number of nodes.
-					// However in practice due to how the nodes are constructed they will only be adjacent to a smallish (≈4-6) number of other nodes.
+					// However in practice due to how the hierarchical nodes are constructed they will only be adjacent to a smallish (≈4-6) number of other nodes.
 					// So a Contains call will be much faster than say a Set lookup.
 					currentConnections.Add(hIndex);
 				}
@@ -118,8 +124,13 @@ namespace Pathfinding {
 			areas.CopyTo(newAreas, 0);
 			dirty.CopyTo(newDirty, 0);
 
-			for (int i = children.Length; i < newChildren.Length; i++) {
-				newChildren[i] = ListPool<GraphNode>.Claim (MaxChildrenPerNode);
+			// Create all necessary lists for the new nodes
+			// Iterate in reverse so that when popping from the freeNodeIndices
+			// stack we get numbers from smallest to largest (this is not
+			// necessary, but it makes the starting colors be a bit nicer when
+			// visualized in the scene view).
+			for (int i = newChildren.Length - 1; i >= children.Length; i--) {
+				newChildren[i] = ListPool<GraphNode>.Claim(MaxChildrenPerNode);
 				newConnections[i] = new List<int>();
 				if (i > 0) freeNodeIndices.Push(i);
 			}
@@ -136,12 +147,33 @@ namespace Pathfinding {
 		}
 
 		internal void OnCreatedNode (GraphNode node) {
-			if (node.NodeIndex >= dirtyNodes.Length) {
-				var newDirty = new GraphNode[System.Math.Max(node.NodeIndex + 1, dirtyNodes.Length*2)];
-				dirtyNodes.CopyTo(newDirty, 0);
-				dirtyNodes = newDirty;
-			}
 			AddDirtyNode(node);
+		}
+
+		internal void OnDestroyedNode (GraphNode node) {
+			AddDirtyNode(node);
+		}
+
+		void CompactifyDirtyNodes () {
+			int k = numDirtyNodes;
+
+			numDirtyNodes = 0;
+			for (int i = 0; i < k; i++) {
+				if (!dirtyNodes[i].Destroyed) {
+					dirtyNodes[numDirtyNodes] = dirtyNodes[i];
+					numDirtyNodes++;
+				} else {
+					// Mark the associated hierarchical node as dirty to ensure it is recalculated or removed later.
+					// If we don't do this then hierarchical nodes in which all nodes are destroyed will leak.
+					dirty[dirtyNodes[i].HierarchicalNodeIndex] = 1;
+				}
+			}
+			// Clear end of array
+			for (int i = numDirtyNodes; i < k; i++) {
+				dirtyNodes[i] = null;
+			}
+
+			if (numDirtyNodes >= dirtyNodes.Length) throw new System.Exception("Failed to compactify dirty nodes array. This should not happen. " + numDirtyNodes + " " + dirtyNodes.Length);
 		}
 
 		internal void AddDirtyNode (GraphNode node) {
@@ -155,21 +187,14 @@ namespace Pathfinding {
 					dirtyNodes[numDirtyNodes] = node;
 					numDirtyNodes++;
 				} else {
-					int maxIndex = 0;
-					for (int i = numDirtyNodes - 1; i >= 0; i--) {
-						if (dirtyNodes[i].Destroyed) {
-							numDirtyNodes--;
-							dirty[dirtyNodes[i].HierarchicalNodeIndex] = 1;
-							dirtyNodes[i] = dirtyNodes[numDirtyNodes];
-							dirtyNodes[numDirtyNodes] = null;
-						} else {
-							maxIndex = System.Math.Max(maxIndex, dirtyNodes[i].NodeIndex);
-						}
-					}
-					if (numDirtyNodes >= dirtyNodes.Length) throw new System.Exception("Failed to compactify dirty nodes array. This should not happen. " + maxIndex + " " + numDirtyNodes + " " + dirtyNodes.Length);
+					CompactifyDirtyNodes();
 					AddDirtyNode(node);
 				}
 			}
+		}
+
+		public void ReserveNodeIndices (int nodeIndexCount) {
+			Memory.Realloc(ref dirtyNodes, nodeIndexCount);
 		}
 
 		public int NumConnectedComponents { get; private set; }
@@ -200,48 +225,71 @@ namespace Pathfinding {
 
 			var nodeChildren = children[hierarchicalNode];
 
+			// Ensure all children of dirty hierarchical nodes are included in the recalculation
 			for (int i = 0; i < nodeChildren.Count; i++) {
-				AddDirtyNode(nodeChildren[i]);
+				if (!nodeChildren[i].Destroyed) AddDirtyNode(nodeChildren[i]);
 			}
 
 			nodeChildren.ClearFast();
 		}
 
+		void JobRecalculate () {
+			Profiler.BeginSample("Recalculate Connected Components");
+
+			for (int i = 0; i < numDirtyNodes; i++) {
+				dirty[dirtyNodes[i].HierarchicalNodeIndex] = 1;
+			}
+
+			Profiler.BeginSample("Remove");
+			// Remove all hierarchical nodes and then build new hierarchical nodes in their place
+			// which take into account the new graph data.
+			for (int i = 1; i < dirty.Length; i++) {
+				if (dirty[i] == 1) RemoveHierarchicalNode(i, true);
+			}
+			for (int i = 1; i < dirty.Length; i++) dirty[i] = 0;
+
+			for (int i = 0; i < numDirtyNodes; i++) {
+				dirtyNodes[i].HierarchicalNodeIndex = 0;
+			}
+			Profiler.EndSample();
+
+			Profiler.BeginSample("Find");
+			for (int i = 0; i < numDirtyNodes; i++) {
+				var node = dirtyNodes[i];
+				// Be nice to the GC
+				dirtyNodes[i] = null;
+				node.IsHierarchicalNodeDirty = false;
+
+				if (node.HierarchicalNodeIndex == 0 && node.Walkable && !node.Destroyed) {
+					FindHierarchicalNodeChildren(GetHierarchicalNodeIndex(), node);
+				}
+			}
+			Profiler.EndSample();
+
+			numDirtyNodes = 0;
+			// Recalculate the connected components of the hierarchical nodes
+			// This is usually very quick compared to the code above
+			FloodFill();
+			Profiler.EndSample();
+			gizmoVersion++;
+		}
+
 		/// <summary>Recalculate the hierarchical graph and the connected components if any nodes have been marked as dirty</summary>
 		public void RecalculateIfNecessary () {
+			lastJob.Complete();
+			if (numDirtyNodes > 0) JobRecalculate();
+		}
+
+		/// <summary>
+		/// Schedule a job to recalculate the hierarchical graph and the connected components if any nodes have been marked as dirty.
+		/// Returns dependsOn if nothing has to be done.
+		/// </summary>
+		public JobHandle JobRecalculateIfNecessary (JobHandle dependsOn = default) {
 			if (numDirtyNodes > 0) {
-				Profiler.BeginSample("Recalculate Connected Components");
-				for (int i = 0; i < numDirtyNodes; i++) {
-					dirty[dirtyNodes[i].HierarchicalNodeIndex] = 1;
-				}
-
-				// Remove all hierarchical nodes and then build new hierarchical nodes in their place
-				// which take into account the new graph data.
-				for (int i = 1; i < dirty.Length; i++) {
-					if (dirty[i] == 1) RemoveHierarchicalNode(i, true);
-				}
-				for (int i = 1; i < dirty.Length; i++) dirty[i] = 0;
-
-				for (int i = 0; i < numDirtyNodes; i++) {
-					dirtyNodes[i].HierarchicalNodeIndex = 0;
-				}
-
-				for (int i = 0; i < numDirtyNodes; i++) {
-					var node = dirtyNodes[i];
-					// Be nice to the GC
-					dirtyNodes[i] = null;
-					node.IsHierarchicalNodeDirty = false;
-
-					if (node.HierarchicalNodeIndex == 0 && node.Walkable && !node.Destroyed) {
-						FindHierarchicalNodeChildren(GetHierarchicalNodeIndex(), node);
-					}
-				}
-
-				numDirtyNodes = 0;
-				// Recalculate the connected components of the hierarchical nodes
-				FloodFill();
-				Profiler.EndSample();
-				gizmoVersion++;
+				lastJob = Pathfinding.Jobs.IJobExtensions.ScheduleManaged(JobRecalculate, JobHandle.CombineDependencies(lastJob, dependsOn));
+				return lastJob;
+			} else {
+				return dependsOn;
 			}
 		}
 
@@ -252,7 +300,7 @@ namespace Pathfinding {
 		/// See: <see cref="RecalculateIfNecessary"/>
 		/// </summary>
 		public void RecalculateAll () {
-			AstarPath.active.data.GetNodes(node => AddDirtyNode(node));
+			AstarPath.active.data.GetNodes(AddDirtyNode);
 			RecalculateIfNecessary();
 		}
 
@@ -311,35 +359,34 @@ namespace Pathfinding {
 			que.Clear();
 		}
 
-		public void OnDrawGizmos (Pathfinding.Util.RetainedGizmos gizmos) {
-			var hasher = new Pathfinding.Util.RetainedGizmos.Hasher(AstarPath.active);
+		public void OnDrawGizmos (DrawingData gizmos, RedrawScope redrawScope) {
+			var hasher = new NodeHasher(AstarPath.active);
 
-			hasher.AddHash(gizmoVersion);
+			hasher.Add(gizmoVersion);
 
-			if (!gizmos.Draw(hasher)) {
-				var builder = ObjectPool<RetainedGizmos.Builder>.Claim ();
-				var centers = ArrayPool<UnityEngine.Vector3>.Claim (areas.Length);
-				for (int i = 0; i < areas.Length; i++) {
-					Int3 center = Int3.zero;
-					var childs = children[i];
-					if (childs.Count > 0) {
-						for (int j = 0; j < childs.Count; j++) center += childs[j].position;
-						center /= childs.Count;
-						centers[i] = (UnityEngine.Vector3)center;
+			if (!gizmos.Draw(hasher, redrawScope)) {
+				using (var builder = gizmos.GetBuilder(hasher, redrawScope)) {
+					var centers = ArrayPool<Vector3>.Claim(areas.Length);
+					for (int i = 0; i < areas.Length; i++) {
+						Int3 center = Int3.zero;
+						var childs = children[i];
+						if (childs.Count > 0) {
+							for (int j = 0; j < childs.Count; j++) center += childs[j].position;
+							center /= childs.Count;
+							centers[i] = (Vector3)center;
+						}
 					}
-				}
 
-				for (int i = 0; i < areas.Length; i++) {
-					if (children[i].Count > 0) {
-						for (int j = 0; j < connections[i].Count; j++) {
-							if (connections[i][j] > i) {
-								builder.DrawLine(centers[i], centers[connections[i][j]], UnityEngine.Color.black);
+					for (int i = 0; i < areas.Length; i++) {
+						if (children[i].Count > 0) {
+							for (int j = 0; j < connections[i].Count; j++) {
+								if (connections[i][j] > i) {
+									builder.Line(centers[i], centers[connections[i][j]], Color.black);
+								}
 							}
 						}
 					}
 				}
-
-				builder.Submit(gizmos, hasher);
 			}
 		}
 	}

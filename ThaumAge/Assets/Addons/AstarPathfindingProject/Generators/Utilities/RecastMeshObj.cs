@@ -76,23 +76,92 @@ namespace Pathfinding {
 		public bool dynamic = true;
 
 		/// <summary>
+		/// If true then the mesh will be treated as solid and its interior will be unwalkable.
+		/// The unwalkable region will be the minimum to maximum y coordinate in each cell.
+		///
+		/// If you enable this on a mesh that is actually hollow then the hollow region will also be treated as unwalkable.
+		/// </summary>
+		public bool solid = false;
+
+		public enum Mode {
+			/// <summary>This object will be completely ignored by the graph</summary>
+			ExcludeFromGraph,
+			/// <summary>All surfaces on this mesh will be made unwalkable</summary>
+			UnwalkableSurface,
+			/// <summary>All surfaces on this mesh will be walkable</summary>
+			WalkableSurface,
+			/// <summary>All surfaces on this mesh will be walkable and a seam will be created between the surfaces on this mesh and the surfaces on other meshes (with a different surface id)</summary>
+			WalkableSurfaceWithCustomID,
+		}
+
+		/// <summary>
 		/// Voxel area for mesh.
 		/// This area (not to be confused with pathfinding areas, this is only used when rasterizing meshes for the recast graph) field
 		/// can be used to explicitly insert edges in the navmesh geometry or to make some parts of the mesh unwalkable.
-		/// If the area is set to -1, it will be removed from the resulting navmesh. This is useful if you have some object that you want to be included in the rasterization,
-		/// but you don't want to let the character walk on it.
 		///
-		/// When rasterizing the world and two objects with different area values are adjacent to each other, a split in the navmesh geometry
+		/// When rasterizing the world and two objects with different surface id values are adjacent to each other, a split in the navmesh geometry
 		/// will be added between them, characters will still be able to walk between them, but this can be useful when working with navmesh updates.
 		///
 		/// Navmesh updates which recalculate a whole tile (updatePhysics=True) are very slow So if there are special places
 		/// which you know are going to be updated quite often, for example at a door opening (opened/closed door) you
-		/// can use areas to create splits on the navmesh for easier updating using normal graph updates (updatePhysics=False).
+		/// can use surface IDs to create splits on the navmesh for easier updating using normal graph updates (updatePhysics=False).
 		/// See the below video for more information.
 		///
 		/// Video: https://www.youtube.com/watch?v=CS6UypuEMwM
+		///
+		/// Deprecated: Use <see cref="mode"/> and <see cref="surfaceID"/> instead
 		/// </summary>
-		public int area = 0;
+		[System.Obsolete("Use mode and surfaceID instead")]
+		public int area {
+			get {
+				switch (mode) {
+				case Mode.ExcludeFromGraph:
+				case Mode.UnwalkableSurface:
+					return -1;
+				case Mode.WalkableSurface:
+				default:
+					return 0;
+				case Mode.WalkableSurfaceWithCustomID:
+					return surfaceID;
+				}
+			}
+			set {
+				if (value <= -1) mode = Mode.UnwalkableSurface;
+				if (value == 0) mode = Mode.WalkableSurface;
+				if (value > 0) {
+					mode = Mode.WalkableSurfaceWithCustomID;
+					surfaceID = value;
+				}
+			}
+		}
+
+		/// <summary>
+		/// Voxel area for mesh.
+		/// This area (not to be confused with pathfinding areas, this is only used when rasterizing meshes for the recast graph) field
+		/// can be used to explicitly insert edges in the navmesh geometry or to make some parts of the mesh unwalkable.
+		///
+		/// When rasterizing the world and two objects with different surface id values are adjacent to each other, a split in the navmesh geometry
+		/// will be added between them, characters will still be able to walk between them, but this can be useful when working with navmesh updates.
+		///
+		/// Navmesh updates which recalculate a whole tile (updatePhysics=True) are very slow So if there are special places
+		/// which you know are going to be updated quite often, for example at a door opening (opened/closed door) you
+		/// can use surface IDs to create splits on the navmesh for easier updating using normal graph updates (updatePhysics=False).
+		/// See the below video for more information.
+		///
+		/// Video: https://www.youtube.com/watch?v=CS6UypuEMwM
+		///
+		/// Note: This only has an effect if <see cref="mode"/> is set to Mode.WalkableSurfaceWithCustomID
+		///
+		/// Note: Only non-negative values are valid.
+		/// </summary>
+		[UnityEngine.Serialization.FormerlySerializedAs("area")]
+		public int surfaceID = 1;
+
+		/// <summary>
+		/// Surface rasterization mode.
+		/// See: <see cref="Mode"/>
+		/// </summary>
+		public Mode mode = Mode.WalkableSurface;
 
 		bool _dynamic;
 		bool registered;
@@ -106,8 +175,8 @@ namespace Pathfinding {
 
 			registered = true;
 
-			//Clamp area, upper limit isn't really a hard limit, but if it gets much higher it will start to interfere with other stuff
-			area = Mathf.Clamp(area, -1, 1 << 25);
+			// Clamp area, upper limit isn't really a hard limit, but if it gets much higher it will start to interfere with other stuff
+			surfaceID = Mathf.Clamp(surfaceID, 0, 1 << 25);
 
 			Renderer rend = GetComponent<Renderer>();
 
@@ -172,6 +241,13 @@ namespace Pathfinding {
 				}
 			}
 			_dynamic = dynamic;
+		}
+
+		protected override int OnUpgradeSerializedData (int version, bool unityThread) {
+			#pragma warning disable 618
+			if (version == 1) area = surfaceID;
+			#pragma warning restore 618
+			return 2;
 		}
 	}
 }

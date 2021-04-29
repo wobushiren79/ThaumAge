@@ -5,6 +5,7 @@ using System.Collections.Generic;
 namespace Pathfinding {
 	using Pathfinding.RVO;
 	using Pathfinding.Util;
+	using Pathfinding.Drawing;
 
 	[AddComponentMenu("Pathfinding/AI/RichAI (3D, for navmesh)")]
 	/// <summary>Advanced AI for navmesh based graphs.</summary>
@@ -42,14 +43,6 @@ namespace Pathfinding {
 		public float slowdownTime = 0.5f;
 
 		/// <summary>
-		/// Max distance to the endpoint to consider it reached.
-		///
-		/// See: <see cref="reachedEndOfPath"/>
-		/// See: <see cref="OnTargetReached"/>
-		/// </summary>
-		public float endReachedDistance = 0.01f;
-
-		/// <summary>
 		/// Force to avoid walls with.
 		/// The agent will try to steer away from walls slightly.
 		///
@@ -84,8 +77,19 @@ namespace Pathfinding {
 		/// <summary>
 		/// Slow down when not facing the target direction.
 		/// Incurs at a small performance overhead.
+		///
+		/// This setting only has an effect if <see cref="enableRotation"/> is enabled.
 		/// </summary>
 		public bool slowWhenNotFacingTarget = true;
+
+		/// <summary>
+		/// Prevent the velocity from being too far away from the forward direction of the character.
+		/// If the character is ordered to move in the opposite direction from where it is facing
+		/// then enabling this will cause it to make a small loop instead of turning on the spot.
+		///
+		/// This setting only has an effect if <see cref="slowWhenNotFacingTarget"/> is enabled.
+		/// </summary>
+		public bool preventMovingBackwards = false;
 
 		/// <summary>
 		/// Called when the agent starts to traverse an off-mesh link.
@@ -124,6 +128,10 @@ namespace Pathfinding {
 		protected bool delayUpdatePath;
 		protected bool lastCorner;
 
+		/// <summary>Internal state used for filtering out noise in the agent's rotation</summary>
+		Vector2 rotationFilterState;
+		Vector2 rotationFilterState2;
+
 		/// <summary>Distance to <see cref="steeringTarget"/> in the movement plane</summary>
 		protected float distanceToSteeringTarget = float.PositiveInfinity;
 
@@ -143,11 +151,16 @@ namespace Pathfinding {
 		public bool reachedEndOfPath { get { return approachingPathEndpoint && distanceToSteeringTarget < endReachedDistance; } }
 
 		/// <summary>\copydoc Pathfinding::IAstarAI::reachedDestination</summary>
-		public bool reachedDestination {
+		public override bool reachedDestination {
 			get {
 				if (!reachedEndOfPath) return false;
-				// Note: distanceToSteeringTarget is the distance to the end of the path when approachingPathEndpoint is true
-				if (approachingPathEndpoint && distanceToSteeringTarget + movementPlane.ToPlane(destination - richPath.Endpoint).magnitude > endReachedDistance) return false;
+				// Distance from our position to the current steering target +
+				// Distance from the steering target to the end of the path +
+				// distance from the end of the path to the destination.
+				// Note that most distance checks are done only in the movement plane (which means in most cases that the y coordinate differences are discarded).
+				// This is because those coordinates are often not very accurate.
+				// A separate check is done below to make sure that the destination y coordinate is correct
+				if (distanceToSteeringTarget + movementPlane.ToPlane(steeringTarget - richPath.Endpoint).magnitude + movementPlane.ToPlane(destination - richPath.Endpoint).magnitude > endReachedDistance) return false;
 
 				// Don't do height checks in 2D mode
 				if (orientation != OrientationMode.YAxisForward) {
@@ -210,6 +223,13 @@ namespace Pathfinding {
 			}
 		}
 
+		/// <summary>\copydoc Pathfinding::IAstarAI::endOfPath</summary>
+		public override Vector3 endOfPath {
+			get {
+				return hasPath ? richPath.Endpoint : destination;
+			}
+		}
+
 		/// <summary>
 		/// \copydoc Pathfinding::IAstarAI::Teleport
 		///
@@ -220,7 +240,7 @@ namespace Pathfinding {
 		/// </summary>
 		public override void Teleport (Vector3 newPosition, bool clearPath = true) {
 			// Clamp the new position to the navmesh
-			var nearest = AstarPath.active != null? AstarPath.active.GetNearest (newPosition) : new NNInfo();
+			var nearest = AstarPath.active != null? AstarPath.active.GetNearest(newPosition) : new NNInfo();
 			float elevation;
 
 			movementPlane.ToPlane(newPosition, out elevation);
@@ -235,6 +255,8 @@ namespace Pathfinding {
 			traversingOffMeshLink = false;
 			// Stop the off mesh link traversal coroutine
 			StopAllCoroutines();
+			rotationFilterState = Vector2.zero;
+			rotationFilterState2 = Vector2.zero;
 		}
 
 		protected override bool shouldRecalculatePath {
@@ -346,7 +368,8 @@ namespace Pathfinding {
 			RichPathPart currentPart = richPath.GetCurrentPart();
 
 			if (currentPart is RichSpecial) {
-				if (!traversingOffMeshLink) {
+				// Start traversing the off mesh link if we haven't done it yet
+				if (!traversingOffMeshLink && !richPath.CompletedAllParts) {
 					StartCoroutine(TraverseSpecial(currentPart as RichSpecial));
 				}
 
@@ -354,7 +377,12 @@ namespace Pathfinding {
 				nextRotation = rotation;
 			} else {
 				var funnel = currentPart as RichFunnel;
-				if (funnel != null && !isStopped) {
+
+				// Check if we have a valid path to follow and some other script has not stopped the character
+				bool stopped = isStopped || (reachedDestination && whenCloseToDestination == CloseToDestinationMode.Stop);
+				if (rvoController != null) rvoDensityBehavior.Update(reachedDestination, ref stopped, ref rvoController.priorityMultiplier, ref rvoController.flowFollowingStrength);
+
+				if (funnel != null && !stopped) {
 					TraverseFunnel(funnel, deltaTime, out nextPosition, out nextRotation);
 				} else {
 					// Unknown, null path part, or the character is stopped
@@ -408,23 +436,28 @@ namespace Pathfinding {
 			}
 
 			var forwards = movementPlane.ToPlane(simulatedRotation * (orientation == OrientationMode.YAxisForward ? Vector3.up : Vector3.forward));
-			Vector2 accel = MovementUtilities.CalculateAccelerationToReachPoint(targetPoint - position, targetVelocity, velocity2D, acceleration, rotationSpeed, maxSpeed, forwards);
 
 			// Update the velocity using the acceleration
+			Vector2 accel = MovementUtilities.CalculateAccelerationToReachPoint(targetPoint - position, targetVelocity, velocity2D, acceleration, rotationSpeed, maxSpeed, forwards);
 			velocity2D += (accel + wallForceVector*wallForce)*deltaTime;
 
 			// Distance to the end of the path (almost as the crow flies)
 			var distanceToEndOfPath = distanceToSteeringTarget + Vector3.Distance(steeringTarget, fn.exactEnd);
-			var slowdownFactor = distanceToEndOfPath < maxSpeed * slowdownTime? Mathf.Sqrt (distanceToEndOfPath / (maxSpeed * slowdownTime)) : 1;
-			FinalMovement(position3D, deltaTime, distanceToEndOfPath, slowdownFactor, out nextPosition, out nextRotation);
+
+			// How fast to move depending on the distance to the destination.
+			// Move slower as the character gets closer to the destination.
+			// This is always a value between 0 and 1.
+			var speedLimitFactor = distanceToEndOfPath < maxSpeed * slowdownTime? Mathf.Sqrt(distanceToEndOfPath / (maxSpeed * slowdownTime)) : 1;
+
+			FinalMovement(position3D, deltaTime, distanceToEndOfPath, speedLimitFactor, out nextPosition, out nextRotation);
 		}
 
-		void FinalMovement (Vector3 position3D, float deltaTime, float distanceToEndOfPath, float slowdownFactor, out Vector3 nextPosition, out Quaternion nextRotation) {
+		void FinalMovement (Vector3 position3D, float deltaTime, float distanceToEndOfPath, float speedLimitFactor, out Vector3 nextPosition, out Quaternion nextRotation) {
 			var forwards = movementPlane.ToPlane(simulatedRotation * (orientation == OrientationMode.YAxisForward ? Vector3.up : Vector3.forward));
 
-			velocity2D = MovementUtilities.ClampVelocity(velocity2D, maxSpeed, slowdownFactor, slowWhenNotFacingTarget && enableRotation, forwards);
-
 			ApplyGravity(deltaTime);
+
+			velocity2D = MovementUtilities.ClampVelocity(velocity2D, maxSpeed, speedLimitFactor, slowWhenNotFacingTarget && enableRotation, preventMovingBackwards, forwards);
 
 			if (rvoController != null && rvoController.enabled) {
 				// Send a message to the RVOController that we want to move
@@ -441,12 +474,18 @@ namespace Pathfinding {
 			}
 
 			// Direction and distance to move during this frame
-			var deltaPosition = lastDeltaPosition = CalculateDeltaToMoveThisFrame(movementPlane.ToPlane(position3D), distanceToEndOfPath, deltaTime);
+			var deltaPosition = lastDeltaPosition = CalculateDeltaToMoveThisFrame(position3D, distanceToEndOfPath, deltaTime);
 
-			// Rotate towards the direction we are moving in
-			// Slow down the rotation of the character very close to the endpoint of the path to prevent oscillations
-			var rotationSpeedFactor = approachingPartEndpoint ? Mathf.Clamp01(1.1f * slowdownFactor - 0.1f) : 1f;
-			nextRotation = enableRotation ? SimulateRotationTowards(deltaPosition, rotationSpeed * rotationSpeedFactor * deltaTime) : simulatedRotation;
+			if (enableRotation) {
+				// Rotate towards the direction we are moving in
+				// Filter out noise in the movement direction
+				// This is especially important when the agent is almost standing still and when using local avoidance
+				float noiseThreshold = radius * tr.localScale.x * 0.2f;
+				float rotationSpeedFactor = MovementUtilities.FilterRotationDirection(ref rotationFilterState, ref rotationFilterState2, deltaPosition, noiseThreshold, deltaTime);
+				nextRotation = SimulateRotationTowards(rotationFilterState, rotationSpeed * deltaTime * rotationSpeedFactor, rotationSpeed * deltaTime);
+			} else {
+				nextRotation = simulatedRotation;
+			}
 
 			nextPosition = position3D + movementPlane.ToWorld(deltaPosition, verticalVelocity * deltaTime);
 		}
@@ -516,7 +555,7 @@ namespace Pathfinding {
 			// The current path part is a special part, for example a link
 			// Movement during this part of the path is handled by the TraverseSpecial coroutine
 			velocity2D = Vector3.zero;
-			var offMeshLinkCoroutine = onTraverseOffMeshLink != null? onTraverseOffMeshLink (link) : TraverseOffMeshLinkFallback(link);
+			var offMeshLinkCoroutine = onTraverseOffMeshLink != null? onTraverseOffMeshLink(link) : TraverseOffMeshLinkFallback(link);
 			yield return StartCoroutine(offMeshLinkCoroutine);
 
 			// Off-mesh link traversal completed
@@ -551,14 +590,13 @@ namespace Pathfinding {
 
 		protected static readonly Color GizmoColorPath = new Color(8.0f/255, 78.0f/255, 194.0f/255);
 
-		protected override void OnDrawGizmos () {
-			base.OnDrawGizmos();
+		public override void DrawGizmos () {
+			base.DrawGizmos();
 
 			if (tr != null) {
-				Gizmos.color = GizmoColorPath;
 				Vector3 lastPosition = position;
 				for (int i = 0; i < nextCorners.Count; lastPosition = nextCorners[i], i++) {
-					Gizmos.DrawLine(lastPosition, nextCorners[i]);
+					Draw.Line(lastPosition, nextCorners[i], GizmoColorPath);
 				}
 			}
 		}

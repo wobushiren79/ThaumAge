@@ -177,7 +177,7 @@ namespace Pathfinding {
 			hTarget = (Int3)end;
 		}
 
-		internal override uint GetConnectionSpecialCost (GraphNode a, GraphNode b, uint currentCost) {
+		public override uint GetConnectionSpecialCost (GraphNode a, GraphNode b, uint currentCost) {
 			if (startNode != null && endNode != null) {
 				if (a == startNode) {
 					return (uint)((startIntPoint - (b == endNode ? hTarget : b.position)).costMagnitude * (currentCost*1.0/(a.position-b.position).costMagnitude));
@@ -303,8 +303,8 @@ namespace Pathfinding {
 					case NumNeighbours.Six:
 						// Hexagon graph
 						for (int i = 0; i < 6; i++) {
-							var nx = x2 + gridGraph.neighbourXOffsets[GridGraph.hexagonNeighbourIndices[i]];
-							var nz = z2 + gridGraph.neighbourZOffsets[GridGraph.hexagonNeighbourIndices[i]];
+							var nx = x2 + GridGraph.neighbourXOffsets[GridGraph.hexagonNeighbourIndices[i]];
+							var nz = z2 + GridGraph.neighbourZOffsets[GridGraph.hexagonNeighbourIndices[i]];
 							if (x1 == nx && z1 == nz) {
 								// If 'O' is gridNode2, then gridNode is one of the nodes marked with an 'x'
 								//    x x
@@ -367,11 +367,11 @@ namespace Pathfinding {
 				int nx, nz;
 				if (gridGraph.neighbours == NumNeighbours.Six) {
 					// Hexagon graph
-					nx = x + gridGraph.neighbourXOffsets[GridGraph.hexagonNeighbourIndices[i]];
-					nz = z + gridGraph.neighbourZOffsets[GridGraph.hexagonNeighbourIndices[i]];
+					nx = x + GridGraph.neighbourXOffsets[GridGraph.hexagonNeighbourIndices[i]];
+					nz = z + GridGraph.neighbourZOffsets[GridGraph.hexagonNeighbourIndices[i]];
 				} else {
-					nx = x + gridGraph.neighbourXOffsets[i];
-					nz = z + gridGraph.neighbourZOffsets[i];
+					nx = x + GridGraph.neighbourXOffsets[i];
+					nz = z + GridGraph.neighbourZOffsets[i];
 				}
 
 				// Check if the position is still inside the grid
@@ -678,7 +678,7 @@ namespace Pathfinding {
 		}
 
 		/// <summary>Returns a debug string for this path.</summary>
-		internal override string DebugString (PathLog logMode) {
+		protected override string DebugString (PathLog logMode) {
 			if (logMode == PathLog.None || (!error && logMode == PathLog.OnlyErrors)) {
 				return "";
 			}

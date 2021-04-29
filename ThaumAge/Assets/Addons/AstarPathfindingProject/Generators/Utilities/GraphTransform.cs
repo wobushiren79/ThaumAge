@@ -1,3 +1,4 @@
+using Unity.Mathematics;
 using UnityEngine;
 
 namespace Pathfinding.Util {
@@ -11,15 +12,138 @@ namespace Pathfinding.Util {
 	/// See: <see cref="Pathfinding.Util.GraphTransform"/>
 	/// </summary>
 	public interface IMovementPlane {
-		Vector2 ToPlane (Vector3 p);
-		Vector2 ToPlane (Vector3 p, out float elevation);
-		Vector3 ToWorld (Vector2 p, float elevation = 0);
+		Vector2 ToPlane(Vector3 p);
+		Vector2 ToPlane(Vector3 p, out float elevation);
+		Vector3 ToWorld(Vector2 p, float elevation = 0);
+		SimpleMovementPlane ToSimpleMovementPlane();
+	}
+
+	public struct SimpleMovementPlane : IMovementPlane {
+		public readonly Quaternion rotation;
+		public readonly Quaternion inverseRotation;
+		public readonly bool isXY;
+		public readonly bool isXZ;
+
+		/// <summary>A plane that spans the X and Y axes</summary>
+		public static readonly SimpleMovementPlane XYPlane = new SimpleMovementPlane(Quaternion.Euler(-90, 0, 0));
+
+		/// <summary>A plane that spans the X and Z axes</summary>
+		public static readonly SimpleMovementPlane XZPlane = new SimpleMovementPlane(Quaternion.identity);
+
+		public SimpleMovementPlane (Quaternion rotation) {
+			this.rotation = rotation;
+			// TODO: Normalize #rotation and compute inverse every time instead (less memory)
+			inverseRotation = Quaternion.Inverse(rotation);
+			// Some short circuiting code for the movement plane calculations
+			isXY = rotation == Quaternion.Euler(-90, 0, 0);
+			isXZ = rotation == Quaternion.Euler(0, 0, 0);
+		}
+
+		/// <summary>
+		/// Transforms from world space to the 'ground' plane of the graph.
+		/// The transformation is purely a rotation so no scale or offset is used.
+		///
+		/// For a graph rotated with the rotation (-90, 0, 0) this will transform
+		/// a coordinate (x,y,z) to (x,y). For a graph with the rotation (0,0,0)
+		/// this will tranform a coordinate (x,y,z) to (x,z). More generally for
+		/// a graph with a quaternion rotation R this will transform a vector V
+		/// to R * V (i.e rotate the vector V using the rotation R).
+		/// </summary>
+		public Vector2 ToPlane (Vector3 point) {
+			// These special cases cover most graph orientations used in practice.
+			// Having them here improves performance in those cases by a factor of
+			// 2.5 without impacting the generic case in any significant way.
+			if (isXY) return new Vector2(point.x, point.y);
+			if (!isXZ) point = inverseRotation * point;
+			return new Vector2(point.x, point.z);
+		}
+
+		/// <summary>
+		/// Transforms from world space to the 'ground' plane of the graph.
+		/// The transformation is purely a rotation so no scale or offset is used.
+		///
+		/// For a graph rotated with the rotation (-90, 0, 0) this will transform
+		/// a coordinate (x,y,z) to (x,y). For a graph with the rotation (0,0,0)
+		/// this will tranform a coordinate (x,y,z) to (x,z). More generally for
+		/// a graph with a quaternion rotation R this will transform a vector V
+		/// to R * V (i.e rotate the vector V using the rotation R).
+		/// </summary>
+		public float2 ToPlane (float3 point) {
+			return ((float3)(inverseRotation * (Vector3)point)).xz;
+		}
+
+		/// <summary>
+		/// Transforms from world space to the 'ground' plane of the graph.
+		/// The transformation is purely a rotation so no scale or offset is used.
+		/// </summary>
+		public Vector2 ToPlane (Vector3 point, out float elevation) {
+			if (!isXZ) point = inverseRotation * point;
+			elevation = point.y;
+			return new Vector2(point.x, point.z);
+		}
+
+		/// <summary>
+		/// Transforms from world space to the 'ground' plane of the graph.
+		/// The transformation is purely a rotation so no scale or offset is used.
+		/// </summary>
+		public float2 ToPlane (float3 point, out float elevation) {
+			point = (float3)(inverseRotation * (Vector3)point);
+			elevation = point.y;
+			return point.xz;
+		}
+
+		/// <summary>
+		/// Transforms from the 'ground' plane of the graph to world space.
+		/// The transformation is purely a rotation so no scale or offset is used.
+		/// </summary>
+		public Vector3 ToWorld (Vector2 point, float elevation = 0) {
+			return rotation * new Vector3(point.x, elevation, point.y);
+		}
+
+		/// <summary>
+		/// Transforms from the 'ground' plane of the graph to world space.
+		/// The transformation is purely a rotation so no scale or offset is used.
+		/// </summary>
+		public float3 ToWorld (float2 point, float elevation = 0) {
+			return rotation * new Vector3(point.x, elevation, point.y);
+		}
+
+		public SimpleMovementPlane ToSimpleMovementPlane () {
+			return this;
+		}
+
+		public static bool operator== (SimpleMovementPlane lhs, SimpleMovementPlane rhs) {
+			return lhs.rotation == rhs.rotation;
+		}
+
+		public static bool operator!= (SimpleMovementPlane lhs, SimpleMovementPlane rhs) {
+			return lhs.rotation != rhs.rotation;
+		}
+
+		public override bool Equals (System.Object other) {
+			if (!(other is SimpleMovementPlane)) return false;
+			return rotation == ((SimpleMovementPlane)other).rotation;
+		}
+
+		public override int GetHashCode () {
+			return rotation.GetHashCode();
+		}
 	}
 
 	/// <summary>Generic 3D coordinate transformation</summary>
 	public interface ITransform {
-		Vector3 Transform (Vector3 position);
-		Vector3 InverseTransform (Vector3 position);
+		Vector3 Transform(Vector3 position);
+		Vector3 InverseTransform(Vector3 position);
+	}
+
+	/// <summary>Like <see cref="Pathfinding.Util.GraphTransform"/>, but mutable</summary>
+	public class MutableGraphTransform : GraphTransform {
+		public MutableGraphTransform (Matrix4x4 matrix) : base(matrix) {}
+
+		/// <summary>Replace this transform with the given matrix transformation</summary>
+		public void SetMatrix (Matrix4x4 matrix) {
+			Set(matrix);
+		}
 	}
 
 	/// <summary>
@@ -28,29 +152,41 @@ namespace Pathfinding.Util {
 	/// </summary>
 	public class GraphTransform : IMovementPlane, ITransform {
 		/// <summary>True if this transform is the identity transform (i.e it does not do anything)</summary>
-		public readonly bool identity;
+		public bool identity { get { return isIdentity; } }
 
 		/// <summary>True if this transform is a pure translation without any scaling or rotation</summary>
-		public readonly bool onlyTranslational;
+		public bool onlyTranslational { get { return isOnlyTranslational; } }
 
-		readonly bool isXY;
-		readonly bool isXZ;
+		bool isXY;
+		bool isXZ;
+		bool isOnlyTranslational;
+		bool isIdentity;
 
-		readonly Matrix4x4 matrix;
-		readonly Matrix4x4 inverseMatrix;
-		readonly Vector3 up;
-		readonly Vector3 translation;
-		readonly Int3 i3translation;
-		readonly Quaternion rotation;
-		readonly Quaternion inverseRotation;
+		public Matrix4x4 matrix { get; private set; }
+		Matrix4x4 inverseMatrix;
+		Vector3 up;
+		Vector3 translation;
+		Int3 i3translation;
+		Quaternion rotation;
+		Quaternion inverseRotation;
 
 		public static readonly GraphTransform identityTransform = new GraphTransform(Matrix4x4.identity);
 
+		/// <summary>Transforms from the XZ plane to the XY plane</summary>
+		public static readonly GraphTransform xyPlane = new GraphTransform(Matrix4x4.TRS(Vector3.zero, Quaternion.Euler(-90, 0, 0), Vector3.one));
+
+		/// <summary>Transforms from the XZ plane to the XZ plane (i.e. an identity transformation)</summary>
+		public static readonly GraphTransform xzPlane = new GraphTransform(Matrix4x4.identity);
+
 		public GraphTransform (Matrix4x4 matrix) {
+			Set(matrix);
+		}
+
+		protected void Set (Matrix4x4 matrix) {
 			this.matrix = matrix;
 			inverseMatrix = matrix.inverse;
-			identity = matrix.isIdentity;
-			onlyTranslational = MatrixIsTranslational(matrix);
+			isIdentity = matrix.isIdentity;
+			isOnlyTranslational = MatrixIsTranslational(matrix);
 			up = matrix.MultiplyVector(Vector3.up).normalized;
 			translation = matrix.MultiplyPoint3x4(Vector3.zero);
 			i3translation = (Int3)translation;
@@ -126,7 +262,7 @@ namespace Pathfinding.Util {
 		public Bounds Transform (Bounds bounds) {
 			if (onlyTranslational) return new Bounds(bounds.center + translation, bounds.size);
 
-			var corners = ArrayPool<Vector3>.Claim (8);
+			var corners = ArrayPool<Vector3>.Claim(8);
 			var extents = bounds.extents;
 			corners[0] = Transform(bounds.center + new Vector3(extents.x, extents.y, extents.z));
 			corners[1] = Transform(bounds.center + new Vector3(extents.x, extents.y, -extents.z));
@@ -143,14 +279,14 @@ namespace Pathfinding.Util {
 				min = Vector3.Min(min, corners[i]);
 				max = Vector3.Max(max, corners[i]);
 			}
-			ArrayPool<Vector3>.Release (ref corners);
+			ArrayPool<Vector3>.Release(ref corners);
 			return new Bounds((min+max)*0.5f, max - min);
 		}
 
 		public Bounds InverseTransform (Bounds bounds) {
 			if (onlyTranslational) return new Bounds(bounds.center - translation, bounds.size);
 
-			var corners = ArrayPool<Vector3>.Claim (8);
+			var corners = ArrayPool<Vector3>.Claim(8);
 			var extents = bounds.extents;
 			corners[0] = InverseTransform(bounds.center + new Vector3(extents.x, extents.y, extents.z));
 			corners[1] = InverseTransform(bounds.center + new Vector3(extents.x, extents.y, -extents.z));
@@ -167,7 +303,7 @@ namespace Pathfinding.Util {
 				min = Vector3.Min(min, corners[i]);
 				max = Vector3.Max(max, corners[i]);
 			}
-			ArrayPool<Vector3>.Release (ref corners);
+			ArrayPool<Vector3>.Release(ref corners);
 			return new Bounds((min+max)*0.5f, max - min);
 		}
 
@@ -210,6 +346,25 @@ namespace Pathfinding.Util {
 			return rotation * new Vector3(point.x, elevation, point.y);
 		}
 
+		public SimpleMovementPlane ToSimpleMovementPlane () {
+			return new SimpleMovementPlane(rotation);
+		}
+
 		#endregion
+
+		/// <summary>Copies the data in this transform to another mutable graph transform</summary>
+		public void CopyTo (MutableGraphTransform graphTransform) {
+			graphTransform.isXY = isXY;
+			graphTransform.isXZ = isXZ;
+			graphTransform.isOnlyTranslational = isOnlyTranslational;
+			graphTransform.isIdentity = isIdentity;
+			graphTransform.matrix = matrix;
+			graphTransform.inverseMatrix = inverseMatrix;
+			graphTransform.up = up;
+			graphTransform.translation = translation;
+			graphTransform.i3translation = i3translation;
+			graphTransform.rotation = rotation;
+			graphTransform.inverseRotation = inverseRotation;
+		}
 	}
 }

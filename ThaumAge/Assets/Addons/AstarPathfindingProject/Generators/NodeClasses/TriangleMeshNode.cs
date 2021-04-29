@@ -5,23 +5,26 @@ namespace Pathfinding {
 	/// <summary>Interface for something that holds a triangle based navmesh</summary>
 	public interface INavmeshHolder : ITransformedGraph, INavmesh {
 		/// <summary>Position of vertex number i in the world</summary>
-		Int3 GetVertex (int i);
+		Int3 GetVertex(int i);
 
 		/// <summary>
 		/// Position of vertex number i in coordinates local to the graph.
 		/// The up direction is always the +Y axis for these coordinates.
 		/// </summary>
-		Int3 GetVertexInGraphSpace (int i);
+		Int3 GetVertexInGraphSpace(int i);
 
-		int GetVertexArrayIndex (int index);
+		int GetVertexArrayIndex(int index);
 
 		/// <summary>Transforms coordinates from graph space to world space</summary>
-		void GetTileCoordinates (int tileIndex, out int x, out int z);
+		void GetTileCoordinates(int tileIndex, out int x, out int z);
 	}
 
 	/// <summary>Node represented by a triangle</summary>
 	public class TriangleMeshNode : MeshNode {
-		public TriangleMeshNode (AstarPath astar) : base(astar) {}
+		public TriangleMeshNode () { }
+		public TriangleMeshNode (AstarPath astar) {
+			astar.InitializeNode(this);
+		}
 
 		/// <summary>Internal vertex index for the first vertex</summary>
 		public int v0;
@@ -242,7 +245,7 @@ namespace Pathfinding {
 				var other = conn.node;
 
 				// Make sure we can traverse the neighbour
-				if (path.CanTraverse(conn.node)) {
+				if (path.CanTraverse(this, conn.node)) {
 					PathNode pathOther = handler.GetPathNode(conn.node);
 
 					// Fast path out, worth it for triangle mesh nodes since they usually have degree 2 or 3

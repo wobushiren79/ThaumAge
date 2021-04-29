@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using Pathfinding.WindowsStore;
+using Pathfinding.Serialization;
 #if UNITY_WINRT && !UNITY_EDITOR
 //using MarkerMetro.Unity.WinLegacy.IO;
 //using MarkerMetro.Unity.WinLegacy.Reflection;
@@ -121,10 +122,10 @@ namespace Pathfinding {
 					data = upgradeData;
 					upgradeData = null;
 				}
-				return dataString != null? System.Convert.FromBase64String (dataString) : null;
+				return dataString != null? System.Convert.FromBase64String(dataString) : null;
 			}
 			set {
-				dataString = value != null? System.Convert.ToBase64String (value) : null;
+				dataString = value != null? System.Convert.ToBase64String(value) : null;
 			}
 		}
 
@@ -281,7 +282,7 @@ namespace Pathfinding {
 		/// See: DeserializeGraphs(byte[])
 		/// </summary>
 		public byte[] SerializeGraphs () {
-			return SerializeGraphs(Pathfinding.Serialization.SerializeSettings.Settings);
+			return SerializeGraphs(SerializeSettings.Settings);
 		}
 
 		/// <summary>
@@ -289,7 +290,7 @@ namespace Pathfinding {
 		/// See: DeserializeGraphs(byte[])
 		/// See: Pathfinding.Serialization.SerializeSettings
 		/// </summary>
-		public byte[] SerializeGraphs (Pathfinding.Serialization.SerializeSettings settings) {
+		public byte[] SerializeGraphs (SerializeSettings settings) {
 			uint checksum;
 
 			return SerializeGraphs(settings, out checksum);
@@ -300,9 +301,9 @@ namespace Pathfinding {
 		/// Serializes all graphs to a byte array
 		/// A similar function exists in the AstarPathEditor.cs script to save additional info
 		/// </summary>
-		public byte[] SerializeGraphs (Pathfinding.Serialization.SerializeSettings settings, out uint checksum) {
+		public byte[] SerializeGraphs (SerializeSettings settings, out uint checksum) {
 			var graphLock = AssertSafe();
-			var sr = new Pathfinding.Serialization.AstarSerializer(this, settings);
+			var sr = new AstarSerializer(this, settings, active.gameObject);
 
 			sr.OpenSerialize();
 			sr.SerializeGraphs(graphs);
@@ -323,8 +324,18 @@ namespace Pathfinding {
 			}
 		}
 
-		/// <summary>Destroys all graphs and sets graphs to null</summary>
-		void ClearGraphs () {
+		/// <summary>
+		/// Destroys all graphs and sets <see cref="graphs"/> to null.
+		/// See: <see cref="RemoveGraph"/>
+		/// </summary>
+		public void ClearGraphs () {
+			var graphLock = AssertSafe();
+
+			ClearGraphsInternal();
+			graphLock.Release();
+		}
+
+		void ClearGraphsInternal () {
 			if (graphs == null) return;
 			for (int i = 0; i < graphs.Length; i++) {
 				if (graphs[i] != null) {
@@ -332,12 +343,22 @@ namespace Pathfinding {
 					graphs[i].active = null;
 				}
 			}
-			graphs = null;
+			graphs = new NavGraph[0];
 			UpdateShortcuts();
 		}
 
+		public void DisposeUnmanagedData () {
+			if (graphs == null) return;
+			AssertSafe();
+			for (int i = 0; i < graphs.Length; i++) {
+				if (graphs[i] != null) {
+					((IGraphInternals)graphs[i]).DisposeUnmanagedData();
+				}
+			}
+		}
+
 		public void OnDestroy () {
-			ClearGraphs();
+			ClearGraphsInternal();
 		}
 
 		/// <summary>
@@ -362,7 +383,7 @@ namespace Pathfinding {
 
 			try {
 				if (bytes != null) {
-					var sr = new Pathfinding.Serialization.AstarSerializer(this);
+					var sr = new AstarSerializer(this, active.gameObject);
 
 					if (sr.OpenDeserialize(bytes)) {
 						DeserializeGraphsPartAdditive(sr);
@@ -371,7 +392,7 @@ namespace Pathfinding {
 						Debug.Log("Invalid data file (cannot read zip).\nThe data is either corrupt or it was saved using a 3.0.x or earlier version of the system");
 					}
 				} else {
-					throw new System.ArgumentNullException("bytes");
+					throw new System.ArgumentNullException(nameof(bytes));
 				}
 				active.VerifyIntegrity();
 			} catch (System.Exception e) {
@@ -380,11 +401,12 @@ namespace Pathfinding {
 			}
 
 			UpdateShortcuts();
+			GraphModifier.TriggerEvent(GraphModifier.EventType.PostGraphLoad);
 			graphLock.Release();
 		}
 
 		/// <summary>Helper function for deserializing graphs</summary>
-		void DeserializeGraphsPartAdditive (Pathfinding.Serialization.AstarSerializer sr) {
+		void DeserializeGraphsPartAdditive (AstarSerializer sr) {
 			if (graphs == null) graphs = new NavGraph[0];
 
 			var gr = new List<NavGraph>(graphs);
@@ -393,7 +415,7 @@ namespace Pathfinding {
 			// the graphs with the correct graph indexes
 			sr.SetGraphIndexOffset(gr.Count);
 
-			if (graphTypes == null) FindGraphTypes();
+			FindGraphTypes();
 			gr.AddRange(sr.DeserializeGraphs(graphTypes));
 			graphs = gr.ToArray();
 
@@ -427,6 +449,8 @@ namespace Pathfinding {
 		/// Using reflection, the assembly is searched for types which inherit from NavGraph.
 		/// </summary>
 		public void FindGraphTypes () {
+			if (graphTypes != null) return;
+
 #if !ASTAR_FAST_NO_EXCEPTIONS && !UNITY_WINRT && !UNITY_WEBGL
 			var graphList = new List<System.Type>();
 			foreach (var assembly in System.AppDomain.CurrentDomain.GetAssemblies()) {
@@ -610,6 +634,8 @@ namespace Pathfinding {
 		///
 		/// Version: Changed in 3.2.5 to call SafeOnDestroy before removing
 		/// and nulling it in the array instead of removing the element completely in the <see cref="graphs"/> array.
+		///
+		/// See: <see cref="ClearGraphs"/>
 		/// </summary>
 		public bool RemoveGraph (NavGraph graph) {
 			// Make sure the pathfinding threads are stopped

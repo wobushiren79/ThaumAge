@@ -1,5 +1,4 @@
 using UnityEngine;
-using System.Collections;
 
 namespace Pathfinding.Examples {
 	/// <summary>Small sample script for placing obstacles</summary>
@@ -17,25 +16,33 @@ namespace Pathfinding.Examples {
 		/// <summary>Issue a graph update object after placement</summary>
 		public bool issueGUOs = true;
 
+		/// <summary>Align created objects to the surface normal where it is created</summary>
+		public bool alignToSurface = false;
+
+		float lastPlacedTime;
+
 		/// <summary>Update is called once per frame</summary>
 		void Update () {
-			if (Input.GetKeyDown("p")) {
+			if (Input.GetKeyDown("p") || (Input.GetKey("p") && Time.time - lastPlacedTime > 0.3f)) {
 				PlaceObject();
 			}
 
 			if (Input.GetKeyDown("r")) {
-				StartCoroutine(RemoveObject());
+				RemoveObject();
 			}
 		}
 
 		public void PlaceObject () {
+			lastPlacedTime = Time.time;
 			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 			RaycastHit hit;
 
 			// Figure out where the ground is
 			if (Physics.Raycast(ray, out hit, Mathf.Infinity)) {
 				Vector3 p = hit.point;
-				GameObject obj = GameObject.Instantiate(go, p, Quaternion.identity) as GameObject;
+				var rot = Quaternion.identity;
+				if (alignToSurface) rot = Quaternion.LookRotation(hit.normal, Vector3.right) * Quaternion.Euler(90, 0, 0);
+				GameObject obj = GameObject.Instantiate(go, p, rot) as GameObject;
 
 				if (issueGUOs) {
 					Bounds b = obj.GetComponent<Collider>().bounds;
@@ -48,24 +55,20 @@ namespace Pathfinding.Examples {
 			}
 		}
 
-		public IEnumerator RemoveObject () {
+		public void RemoveObject () {
 			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 			RaycastHit hit;
 
 			// Check what object is under the mouse cursor
 			if (Physics.Raycast(ray, out hit, Mathf.Infinity)) {
 				// Ignore ground and triggers
-				if (hit.collider.isTrigger || hit.transform.gameObject.name == "Ground") yield break;
+				if (hit.collider.isTrigger || hit.transform.gameObject.name == "Ground") return;
 
 				Bounds b = hit.collider.bounds;
 				Destroy(hit.collider);
 				Destroy(hit.collider.gameObject);
 
 				if (issueGUOs) {
-					// In Unity, object destruction is actually delayed until the end of the Update loop.
-					// This means that we need to wait until the end of the frame (or until the next frame) before
-					// we update the graph. Otherwise the graph would still think that the objects are there.
-					yield return new WaitForEndOfFrame();
 					GraphUpdateObject guo = new GraphUpdateObject(b);
 					AstarPath.active.UpdateGraphs(guo);
 					if (direct) {

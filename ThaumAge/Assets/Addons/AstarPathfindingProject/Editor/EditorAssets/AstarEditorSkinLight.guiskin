@@ -119,7 +119,7 @@ MonoBehaviour:
       m_Background: {fileID: 0}
       m_ScaledBackgrounds:
       - {fileID: 8718812295543890339, guid: 0000000000000000d000000000000000, type: 0}
-      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+      m_TextColor: {r: 0.0627451, g: 0.0627451, b: 0.0627451, a: 1}
     m_Border:
       m_Left: 6
       m_Right: 6
@@ -140,8 +140,7 @@ MonoBehaviour:
       m_Right: 0
       m_Top: 0
       m_Bottom: 1
-    m_Font: {fileID: -2339589663860864360, guid: 0000000000000000d000000000000000,
-      type: 0}
+    m_Font: {fileID: 0}
     m_FontSize: 12
     m_FontStyle: 0
     m_Alignment: 4
@@ -2965,6 +2964,74 @@ MonoBehaviour:
     m_ContentOffset: {x: 0, y: 0}
     m_FixedWidth: 32
     m_FixedHeight: 32
+    m_StretchWidth: 0
+    m_StretchHeight: 0
+  - m_Name: SimpleDeleteButton
+    m_Normal:
+      m_Background: {fileID: 2800000, guid: 168346d70f1fe4211ab22c360451c602, type: 3}
+      m_ScaledBackgrounds:
+      - {fileID: 2800000, guid: 003032829f3e34ba3bbf576dbdbf4961, type: 3}
+      m_TextColor: {r: 1, g: 1, b: 1, a: 1}
+    m_Hover:
+      m_Background: {fileID: 0}
+      m_ScaledBackgrounds: []
+      m_TextColor: {r: 1, g: 1, b: 1, a: 1}
+    m_Active:
+      m_Background: {fileID: 2800000, guid: 3d1e3e2345df94db3be6501151e8db26, type: 3}
+      m_ScaledBackgrounds:
+      - {fileID: 2800000, guid: e95696bf2c915483a965d5b8c7c41fb0, type: 3}
+      m_TextColor: {r: 0.4745098, g: 0.70980394, b: 0.8901961, a: 1}
+    m_Focused:
+      m_Background: {fileID: 0}
+      m_ScaledBackgrounds: []
+      m_TextColor: {r: 0.4745098, g: 0.70980394, b: 0.8901961, a: 1}
+    m_OnNormal:
+      m_Background: {fileID: 0}
+      m_ScaledBackgrounds: []
+      m_TextColor: {r: 0.4745098, g: 0.70980394, b: 0.8901961, a: 1}
+    m_OnHover:
+      m_Background: {fileID: 0}
+      m_ScaledBackgrounds: []
+      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+    m_OnActive:
+      m_Background: {fileID: 0}
+      m_ScaledBackgrounds: []
+      m_TextColor: {r: 0.4745098, g: 0.70980394, b: 0.8901961, a: 1}
+    m_OnFocused:
+      m_Background: {fileID: 0}
+      m_ScaledBackgrounds: []
+      m_TextColor: {r: 0.4745098, g: 0.70980394, b: 0.8901961, a: 1}
+    m_Border:
+      m_Left: 0
+      m_Right: 0
+      m_Top: 0
+      m_Bottom: 0
+    m_Margin:
+      m_Left: 4
+      m_Right: 4
+      m_Top: 4
+      m_Bottom: 4
+    m_Padding:
+      m_Left: 0
+      m_Right: 0
+      m_Top: 0
+      m_Bottom: 0
+    m_Overflow:
+      m_Left: 0
+      m_Right: 0
+      m_Top: 0
+      m_Bottom: 0
+    m_Font: {fileID: 0}
+    m_FontSize: 12
+    m_FontStyle: 0
+    m_Alignment: 0
+    m_WordWrap: 0
+    m_RichText: 1
+    m_TextClipping: 0
+    m_ImagePosition: 2
+    m_ContentOffset: {x: 0, y: 0}
+    m_FixedWidth: 16
+    m_FixedHeight: 16
     m_StretchWidth: 0
     m_StretchHeight: 0
   m_Settings:

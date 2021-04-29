@@ -2,8 +2,13 @@ using UnityEngine;
 using System.Collections.Generic;
 using Pathfinding.Util;
 using Pathfinding.Serialization;
+using Unity.Collections;
 
 namespace Pathfinding {
+	using Pathfinding.Jobs.Grid;
+	using Pathfinding.Jobs;
+	using Pathfinding.Drawing;
+
 	/// <summary>
 	/// Exposes internal methods for graphs.
 	/// This is used to hide methods that should not be used by any user code
@@ -14,13 +19,14 @@ namespace Pathfinding {
 	/// </summary>
 	public interface IGraphInternals {
 		string SerializedEditorSettings { get; set; }
-		void OnDestroy ();
-		void DestroyAllNodes ();
-		IEnumerable<Progress> ScanInternal ();
-		void SerializeExtraInfo (GraphSerializationContext ctx);
-		void DeserializeExtraInfo (GraphSerializationContext ctx);
-		void PostDeserialization (GraphSerializationContext ctx);
-		void DeserializeSettingsCompatibility (GraphSerializationContext ctx);
+		void OnDestroy();
+		void DisposeUnmanagedData();
+		void DestroyAllNodes();
+		IEnumerable<Progress> ScanInternal(bool async);
+		void SerializeExtraInfo(GraphSerializationContext ctx);
+		void DeserializeExtraInfo(GraphSerializationContext ctx);
+		void PostDeserialization(GraphSerializationContext ctx);
+		void DeserializeSettingsCompatibility(GraphSerializationContext ctx);
 	}
 
 	/// <summary>Base class for all graphs</summary>
@@ -121,12 +127,13 @@ namespace Pathfinding {
 		/// var gg = AstarPath.active.data.gridGraph;
 		///
 		/// List<GraphNode> nodes = new List<GraphNode>();
+		///
 		/// gg.GetNodes((System.Action<GraphNode>)nodes.Add);
 		/// </code>
 		///
 		/// See: <see cref="Pathfinding.AstarData.GetNodes"/>
 		/// </summary>
-		public abstract void GetNodes (System.Action<GraphNode> action);
+		public abstract void GetNodes(System.Action<GraphNode> action);
 
 		/// <summary>
 		/// A matrix for translating/rotating/scaling the graph.
@@ -266,6 +273,14 @@ namespace Pathfinding {
 		/// </summary>
 		protected virtual void OnDestroy () {
 			DestroyAllNodes();
+			DisposeUnmanagedData();
+		}
+
+		/// <summary>
+		/// Cleans up any unmanaged data that the graph has.
+		/// Note: The graph has to stay valid after this. However it need not be in a scanned state.
+		/// </summary>
+		protected virtual void DisposeUnmanagedData () {
 		}
 
 		/// <summary>
@@ -297,12 +312,23 @@ namespace Pathfinding {
 
 		/// <summary>
 		/// Internal method to scan the graph.
+		///
+		/// Deprecated: You should use ScanInternal(bool) instead.
+		/// </summary>
+		protected virtual IEnumerable<Progress> ScanInternal () {
+			throw new System.NotImplementedException();
+		}
+
+		/// <summary>
+		/// Internal method to scan the graph.
 		/// Called from AstarPath.ScanAsync.
 		/// Override this function to implement custom scanning logic.
 		/// Progress objects can be yielded to show progress info in the editor and to split up processing
 		/// over several frames when using async scanning.
 		/// </summary>
-		protected abstract IEnumerable<Progress> ScanInternal ();
+		protected virtual IEnumerable<Progress> ScanInternal (bool async) {
+			return ScanInternal();
+		}
 
 		/// <summary>
 		/// Serializes graph type specific node data.
@@ -344,7 +370,7 @@ namespace Pathfinding {
 		}
 
 		/// <summary>Draw gizmos for the graph</summary>
-		public virtual void OnDrawGizmos (RetainedGizmos gizmos, bool drawNodes) {
+		public virtual void OnDrawGizmos (DrawingData gizmos, bool drawNodes, RedrawScope redrawScope) {
 			if (!drawNodes) {
 				return;
 			}
@@ -353,31 +379,44 @@ namespace Pathfinding {
 			// subclasses of the base graph class may override
 			// this method to draw gizmos in a more optimized way
 
-			var hasher = new RetainedGizmos.Hasher(active);
+			var hasher = new NodeHasher(active);
 			GetNodes(node => hasher.HashNode(node));
 
 			// Update the gizmo mesh if necessary
-			if (!gizmos.Draw(hasher)) {
-				using (var helper = gizmos.GetGizmoHelper(active, hasher)) {
+			if (!gizmos.Draw(hasher, redrawScope)) {
+				using (var helper = GraphGizmoHelper.GetGizmoHelper(gizmos, active, hasher, redrawScope)) {
 					GetNodes((System.Action<GraphNode>)helper.DrawConnections);
 				}
 			}
 
-			if (active.showUnwalkableNodes) DrawUnwalkableNodes(active.unwalkableNodeDebugSize);
+			if (active.showUnwalkableNodes) DrawUnwalkableNodes(gizmos, active.unwalkableNodeDebugSize, redrawScope);
 		}
 
-		protected void DrawUnwalkableNodes (float size) {
-			Gizmos.color = AstarColor.UnwalkableNode;
+		protected void DrawUnwalkableNodes (DrawingData gizmos, float size, RedrawScope redrawScope) {
+			var hasher = DrawingData.Hasher.Create(this);
+
 			GetNodes(node => {
-				if (!node.Walkable) Gizmos.DrawCube((Vector3)node.position, Vector3.one*size);
+				hasher.Add(node.Walkable);
+				if (!node.Walkable) hasher.Add(node.position);
 			});
+
+			if (!gizmos.Draw(hasher, redrawScope)) {
+				using (var builder = gizmos.GetBuilder(hasher)) {
+					using (builder.WithColor(AstarColor.UnwalkableNode)) {
+						GetNodes(node => {
+							if (!node.Walkable) builder.SolidBox((Vector3)node.position, new Unity.Mathematics.float3(size, size, size));
+						});
+					}
+				}
+			}
 		}
 
 		#region IGraphInternals implementation
 		string IGraphInternals.SerializedEditorSettings { get { return serializedEditorSettings; } set { serializedEditorSettings = value; } }
 		void IGraphInternals.OnDestroy () { OnDestroy(); }
+		void IGraphInternals.DisposeUnmanagedData () { DisposeUnmanagedData(); }
 		void IGraphInternals.DestroyAllNodes () { DestroyAllNodes(); }
-		IEnumerable<Progress> IGraphInternals.ScanInternal () { return ScanInternal(); }
+		IEnumerable<Progress> IGraphInternals.ScanInternal (bool async) { return ScanInternal(async); }
 		void IGraphInternals.SerializeExtraInfo (GraphSerializationContext ctx) { SerializeExtraInfo(ctx); }
 		void IGraphInternals.DeserializeExtraInfo (GraphSerializationContext ctx) { DeserializeExtraInfo(ctx); }
 		void IGraphInternals.PostDeserialization (GraphSerializationContext ctx) { PostDeserialization(ctx); }
@@ -419,6 +458,9 @@ namespace Pathfinding {
 		/// If <see cref="type"/> is set to Sphere, this does not affect anything.
 		///
 		/// [Open online documentation to see images]
+		///
+		/// Warning: In contrast to Unity's capsule collider and character controller this height does not include the end spheres of the capsule, but only the cylinder part.
+		/// This is mostly for historical reasons.
 		/// </summary>
 		public float height = 2F;
 
@@ -437,7 +479,10 @@ namespace Pathfinding {
 		/// <summary>
 		/// Direction of the ray when checking for collision.
 		/// If <see cref="type"/> is not Ray, this does not affect anything
+		///
+		/// Deprecated: Only the Both mode is supported now.
 		/// </summary>
+		[System.Obsolete("Only the Both mode is supported now")]
 		public RayDirection rayDirection = RayDirection.Both;
 
 		/// <summary>Layers to be treated as obstacles.</summary>
@@ -495,6 +540,15 @@ namespace Pathfinding {
 		/// </summary>
 		private Vector3 upheight;
 
+		/// <summary>Used for 2D collision queries</summary>
+		private ContactFilter2D contactFilter;
+
+		/// <summary>
+		/// Just so that the Physics2D.OverlapPoint method has some buffer to store things in.
+		/// We never actually read from this array, so we don't even care if this is thread safe.
+		/// </summary>
+		private static Collider2D[] dummyArray = new Collider2D[1];
+
 		/// <summary>
 		/// <see cref="diameter"/> * scale * 0.5.
 		/// Where scale usually is \link Pathfinding.GridGraph.nodeSize nodeSize \endlink
@@ -523,10 +577,11 @@ namespace Pathfinding {
 			upheight = up*height;
 			finalRadius = diameter*scale*0.5F;
 			finalRaycastRadius = thickRaycastDiameter*scale*0.5F;
+			contactFilter = new ContactFilter2D { layerMask = mask, useDepth = false, useLayerMask = true, useNormalAngle = false, useTriggers = false };
 		}
 
 		/// <summary>
-		/// Returns if the position is obstructed.
+		/// Returns true if the position is not obstructed.
 		/// If <see cref="collisionCheck"/> is false, this will always return true.\n
 		/// </summary>
 		public bool Check (Vector3 position) {
@@ -538,9 +593,9 @@ namespace Pathfinding {
 				switch (type) {
 				case ColliderType.Capsule:
 				case ColliderType.Sphere:
-					return Physics2D.OverlapCircle(position, finalRadius, mask) == null;
+					return Physics2D.OverlapCircle(position, finalRadius, contactFilter, dummyArray) == 0;
 				default:
-					return Physics2D.OverlapPoint(position, mask) == null;
+					return Physics2D.OverlapPoint(position, contactFilter, dummyArray) == 0;
 				}
 			}
 
@@ -551,14 +606,7 @@ namespace Pathfinding {
 			case ColliderType.Sphere:
 				return !Physics.CheckSphere(position, finalRadius, mask, QueryTriggerInteraction.Ignore);
 			default:
-				switch (rayDirection) {
-				case RayDirection.Both:
-					return !Physics.Raycast(position, up, height, mask, QueryTriggerInteraction.Ignore) && !Physics.Raycast(position+upheight, -up, height, mask, QueryTriggerInteraction.Ignore);
-				case RayDirection.Up:
-					return !Physics.Raycast(position, up, height, mask, QueryTriggerInteraction.Ignore);
-				default:
-					return !Physics.Raycast(position+upheight, -up, height, mask, QueryTriggerInteraction.Ignore);
-				}
+				return !Physics.Raycast(position, up, height, mask, QueryTriggerInteraction.Ignore) && !Physics.Raycast(position+upheight, -up, height, mask, QueryTriggerInteraction.Ignore);
 			}
 		}
 
@@ -643,12 +691,53 @@ namespace Pathfinding {
 #endif
 		}
 
+		/// <summary>
+		/// Returns if the position is obstructed for all nodes using the Ray collision checking method.
+		/// collisionCheckResult[i] = true if there were no obstructions, false otherwise
+		/// </summary>
+		public void JobCollisionRay (NativeArray<Vector3> nodePositions, NativeArray<bool> collisionCheckResult, Vector3 up, Allocator allocationMethod, JobDependencyTracker dependencyTracker) {
+			var collisionRaycastCommands1 = dependencyTracker.NewNativeArray<RaycastCommand>(nodePositions.Length, allocationMethod);
+			var collisionRaycastCommands2 = dependencyTracker.NewNativeArray<RaycastCommand>(nodePositions.Length, allocationMethod);
+			var collisionHits1 = dependencyTracker.NewNativeArray<RaycastHit>(nodePositions.Length, allocationMethod);
+			var collisionHits2 = dependencyTracker.NewNativeArray<RaycastHit>(nodePositions.Length, allocationMethod);
+
+			// Fire rays from above down to the nodes' positions
+			new JobPrepareRaycasts {
+				origins = nodePositions,
+				originOffset = up * (height + collisionOffset),
+				direction = -up,
+				distance = height,
+				mask = mask,
+				raycastCommands = collisionRaycastCommands1,
+			}.Schedule(dependencyTracker);
+
+			// Fire rays from the node up towards the sky
+			new JobPrepareRaycasts {
+				origins = nodePositions,
+				originOffset = up * collisionOffset,
+				direction = up,
+				distance = height,
+				mask = mask,
+				raycastCommands = collisionRaycastCommands2,
+			}.Schedule(dependencyTracker);
+
+			dependencyTracker.ScheduleBatch(collisionRaycastCommands1, collisionHits1, 2048);
+			dependencyTracker.ScheduleBatch(collisionRaycastCommands2, collisionHits2, 2048);
+
+			new JobMergeRaycastCollisionHits {
+				hit1 = collisionHits1,
+				hit2 = collisionHits2,
+				result = collisionCheckResult,
+			}.Schedule(dependencyTracker);
+		}
+
 		public void DeserializeSettingsCompatibility (GraphSerializationContext ctx) {
 			type = (ColliderType)ctx.reader.ReadInt32();
 			diameter = ctx.reader.ReadSingle();
 			height = ctx.reader.ReadSingle();
 			collisionOffset = ctx.reader.ReadSingle();
-			rayDirection = (RayDirection)ctx.reader.ReadInt32();
+			// Obsolete field (rayDirection)
+			ctx.reader.ReadInt32();
 			mask = (LayerMask)ctx.reader.ReadInt32();
 			heightMask = (LayerMask)ctx.reader.ReadInt32();
 			fromHeight = ctx.reader.ReadSingle();

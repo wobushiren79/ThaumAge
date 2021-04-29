@@ -6,7 +6,11 @@ using System.Collections.Generic;
 namespace Pathfinding.RVO {}
 
 namespace Pathfinding {
+	using Pathfinding.Jobs;
 	using Pathfinding.Util;
+	using Unity.Burst;
+	using Unity.Collections;
+	using Unity.Jobs;
 
 #if UNITY_5_0
 	/// <summary>Used in Unity 5.0 since the HelpURLAttribute was first added in Unity 5.1</summary>
@@ -423,21 +427,21 @@ namespace Pathfinding {
 		/// -# Call Apply on the GUO for every node which should be updated with the GUO.
 		/// -# Update connectivity info if appropriate (GridGraphs updates connectivity, but most other graphs don't since then the connectivity cannot be recovered later).
 		/// </summary>
-		void UpdateArea (GraphUpdateObject o);
+		void UpdateArea(GraphUpdateObject o);
 
 		/// <summary>
 		/// May be called on the Unity thread before starting the update.
 		/// See: CanUpdateAsync
 		/// </summary>
-		void UpdateAreaInit (GraphUpdateObject o);
+		void UpdateAreaInit(GraphUpdateObject o);
 
 		/// <summary>
 		/// May be called on the Unity thread after executing the update.
 		/// See: CanUpdateAsync
 		/// </summary>
-		void UpdateAreaPost (GraphUpdateObject o);
+		void UpdateAreaPost(GraphUpdateObject o);
 
-		GraphUpdateThreading CanUpdateAsync (GraphUpdateObject o);
+		GraphUpdateThreading CanUpdateAsync(GraphUpdateObject o);
 	}
 
 	/// <summary>
@@ -473,7 +477,9 @@ namespace Pathfinding {
 		/// with settings from "Collision Testing" and "Height Testing".
 		///
 		/// When updating a PointGraph, setting this to true will make it re-evaluate all connections in the graph which passes through the <see cref="bounds"/>.
+		///
 		/// This has no effect when updating GridGraphs if <see cref="modifyWalkability"/> is turned on.
+		/// You should not combine <see cref="updatePhysics"/> and <see cref="modifyWalkability"/>.
 		///
 		/// On RecastGraphs, having this enabled will trigger a complete recalculation of all tiles intersecting the bounds.
 		/// This is quite slow (but powerful). If you only want to update e.g penalty on existing nodes, leave it disabled.
@@ -496,6 +502,8 @@ namespace Pathfinding {
 		/// area than the original GUO bounds because of the Grid Graph -> Collision Testing -> Diameter setting (it is enlarged by that value). So some extra nodes have their penalties reset.
 		///
 		/// [Open online documentation to see images]
+		///
+		/// \bug Not working with burst
 		/// </summary>
 		public bool resetPenaltyOnPhysics = true;
 
@@ -519,6 +527,8 @@ namespace Pathfinding {
 		/// When updateErosion=False, all nodes walkability are simply set to be walkable in this example.
 		///
 		/// See: Pathfinding.GridGraph
+		///
+		/// \bug Not working with burst
 		/// </summary>
 		public bool updateErosion = true;
 
@@ -535,7 +545,11 @@ namespace Pathfinding {
 		/// </summary>
 		public int addPenalty;
 
-		/// <summary>If true, all nodes' walkable variable will be set to <see cref="setWalkability"/></summary>
+		/// <summary>
+		/// If true, all nodes' walkable variable will be set to <see cref="setWalkability"/>.
+		/// It is not recommended to combine this with <see cref="updatePhysics"/> since then you will just overwrite
+		/// what <see cref="updatePhysics"/> calculated.
+		/// </summary>
 		public bool modifyWalkability;
 
 		/// <summary>If <see cref="modifyWalkability"/> is true, the nodes' walkable variable will be set to this value</summary>
@@ -578,7 +592,7 @@ namespace Pathfinding {
 		/// <param name="node">The node to save fields for. If null, nothing will be done</param>
 		public virtual void WillUpdateNode (GraphNode node) {
 			if (trackChangedNodes && node != null) {
-				if (changedNodes == null) { changedNodes = ListPool<GraphNode>.Claim (); backupData = ListPool<uint>.Claim (); backupPositionData = ListPool<Int3>.Claim (); }
+				if (changedNodes == null) { changedNodes = ListPool<GraphNode>.Claim(); backupData = ListPool<uint>.Claim(); backupPositionData = ListPool<Int3>.Claim(); }
 				changedNodes.Add(node);
 				backupPositionData.Add(node.position);
 				backupData.Add(node.Penalty);
@@ -627,9 +641,9 @@ namespace Pathfinding {
 					changedNodes[i].SetConnectivityDirty();
 				}
 
-				ListPool<GraphNode>.Release (ref changedNodes);
-				ListPool<uint>.Release (ref backupData);
-				ListPool<Int3>.Release (ref backupPositionData);
+				ListPool<GraphNode>.Release(ref changedNodes);
+				ListPool<uint>.Release(ref backupData);
+				ListPool<Int3>.Release(ref backupPositionData);
 			} else {
 				throw new System.InvalidOperationException("Changed nodes have not been tracked, cannot revert from backup. Please set trackChangedNodes to true before applying the update.");
 			}
@@ -649,6 +663,73 @@ namespace Pathfinding {
 			}
 		}
 
+		/// <summary>Provides burst-readable data to a graph update job</summary>
+		public struct GraphUpdateData {
+			public NativeArray<Vector3> nodePositions;
+			public NativeArray<uint> nodePenalties;
+			public NativeArray<bool> nodeWalkable;
+			public NativeArray<int> nodeTags;
+		};
+
+		/// <summary>Helper for iterating through the nodes that should be updated</summary>
+		public interface INodeIndexMapper {
+			int Count { get; }
+			int this[int index] { get; }
+		}
+
+		/// <summary>Job for applying a graph update object</summary>
+		[BurstCompile]
+		public struct JobGraphUpdate<T> : IJob where T : INodeIndexMapper {
+			public T mapper;
+			public GraphUpdateShape.BurstShape shape;
+			public NativeArray<Vector3> nodePositions;
+			public NativeArray<uint> nodePenalties;
+			public NativeArray<bool> nodeWalkable;
+			public NativeArray<int> nodeTags;
+
+			public Bounds bounds;
+			public int penaltyDelta;
+			public bool modifyWalkability;
+			public bool walkabilityValue;
+			public bool modifyTag;
+			public int tagValue;
+
+			public void Execute () {
+				for (int i = 0; i < mapper.Count; i++) {
+					var node = mapper[i];
+					if (bounds.Contains(nodePositions[node]) && shape.Contains(nodePositions[node])) {
+						nodePenalties[node] += (uint)penaltyDelta;
+						if (modifyWalkability) nodeWalkable[node] = walkabilityValue;
+						if (modifyTag) nodeTags[node] = tagValue;
+					}
+				}
+			}
+		};
+
+		/// <summary>
+		/// Update a set of nodes using this GUO's settings.
+		/// This is far more efficient since it can utilize the Burst compiler.
+		///
+		/// This method may be called by graph generators instead of the <see cref="Apply"/> method to update the graph more efficiently.
+		/// </summary>
+		public virtual void ApplyJob<T>(T mapper, GraphUpdateData data, JobDependencyTracker dependencyTracker) where T : INodeIndexMapper {
+			new JobGraphUpdate<T> {
+				mapper = mapper,
+				shape = shape != null ? new GraphUpdateShape.BurstShape(shape, Allocator.Persistent) : GraphUpdateShape.BurstShape.Everything,
+				nodePositions = data.nodePositions,
+				nodePenalties = data.nodePenalties,
+				nodeWalkable = data.nodeWalkable,
+				nodeTags = data.nodeTags,
+
+				bounds = bounds,
+				penaltyDelta = addPenalty,
+				modifyWalkability = modifyWalkability,
+				walkabilityValue = setWalkability,
+				modifyTag = modifyTag,
+				tagValue = setTag,
+			}.Schedule(dependencyTracker);
+		}
+
 		public GraphUpdateObject () {
 		}
 
@@ -665,10 +746,11 @@ namespace Pathfinding {
 
 	/// <summary>Graph which supports the Linecast method</summary>
 	public interface IRaycastableGraph {
-		bool Linecast (Vector3 start, Vector3 end);
-		bool Linecast (Vector3 start, Vector3 end, GraphNode hint);
-		bool Linecast (Vector3 start, Vector3 end, GraphNode hint, out GraphHitInfo hit);
-		bool Linecast (Vector3 start, Vector3 end, GraphNode hint, out GraphHitInfo hit, List<GraphNode> trace);
+		bool Linecast(Vector3 start, Vector3 end);
+		bool Linecast(Vector3 start, Vector3 end, GraphNode hint);
+		bool Linecast(Vector3 start, Vector3 end, GraphNode hint, out GraphHitInfo hit);
+		bool Linecast(Vector3 start, Vector3 end, GraphNode hint, out GraphHitInfo hit, List<GraphNode> trace);
+		bool Linecast(Vector3 start, Vector3 end, out GraphHitInfo hit, List<GraphNode> trace, System.Func<GraphNode, bool> filter);
 	}
 
 	/// <summary>
@@ -690,6 +772,10 @@ namespace Pathfinding {
 			return !(x < xmin || y < ymin || x > xmax || y > ymax);
 		}
 
+		public bool Contains (IntRect other) {
+			return xmin <= other.xmin && xmax >= other.xmax && ymin <= other.ymin && ymax >= other.ymax;
+		}
+
 		public int Width {
 			get {
 				return xmax-xmin+1;
@@ -705,7 +791,7 @@ namespace Pathfinding {
 		/// <summary>
 		/// Returns if this rectangle is valid.
 		/// An invalid rect could have e.g xmin > xmax.
-		/// Rectamgles with a zero area area invalid.
+		/// Rectangles are valid iff they contain at least one point.
 		/// </summary>
 		public bool IsValid () {
 			return xmin <= xmax && ymin <= ymax;
@@ -720,6 +806,7 @@ namespace Pathfinding {
 		}
 
 		public override bool Equals (System.Object obj) {
+			if (!(obj is IntRect)) return false;
 			var rect = (IntRect)obj;
 
 			return xmin == rect.xmin && xmax == rect.xmax && ymin == rect.ymin && ymax == rect.ymax;
@@ -772,6 +859,11 @@ namespace Pathfinding {
 				);
 		}
 
+		/// <summary>Returns a new IntRect which has been moved by an offset</summary>
+		public IntRect Offset (Int2 offset) {
+			return new IntRect(xmin + offset.x, ymin + offset.y, xmax + offset.x, ymax + offset.y);
+		}
+
 		/// <summary>Returns a new rect which is expanded by range in all directions.</summary>
 		/// <param name="range">How far to expand. Negative values are permitted.</param>
 		public IntRect Expand (int range) {
@@ -793,10 +885,10 @@ namespace Pathfinding {
 			Vector3 p3 = transform.Transform(new Vector3(xmax, 0, ymax));
 			Vector3 p4 = transform.Transform(new Vector3(xmax, 0, ymin));
 
-			Debug.DrawLine(p1, p2, color);
-			Debug.DrawLine(p2, p3, color);
-			Debug.DrawLine(p3, p4, color);
-			Debug.DrawLine(p4, p1, color);
+			Drawing.Draw.Line(p1, p2, color);
+			Drawing.Draw.Line(p2, p3, color);
+			Drawing.Draw.Line(p3, p4, color);
+			Drawing.Draw.Line(p4, p1, color);
 		}
 	}
 
@@ -898,19 +990,20 @@ namespace Pathfinding {
 	 * Example function:
 	 * \snippet MiscSnippets.cs OnPathDelegate
 	 */
-	public delegate void OnPathDelegate (Path p);
+	public delegate void OnPathDelegate(Path p);
 
-	public delegate void OnGraphDelegate (NavGraph graph);
+	public delegate void OnGraphDelegate(NavGraph graph);
 
-	public delegate void OnScanDelegate (AstarPath script);
+	public delegate void OnScanDelegate(AstarPath script);
 
 	/// <summary>Deprecated:</summary>
-	public delegate void OnScanStatus (Progress progress);
+	public delegate void OnScanStatus(Progress progress);
 
 	#endregion
 
 	#region Enums
 
+	[System.Flags]
 	public enum GraphUpdateThreading {
 		/// <summary>
 		/// Call UpdateArea in the unity thread.
@@ -1060,12 +1153,20 @@ namespace Pathfinding {
 
 	/// <summary>Internal state of a path in the pipeline</summary>
 	public enum PathState {
+		/// <summary>Path has been created but not yet scheduled</summary>
 		Created = 0,
+		/// <summary>Path is waiting to be calculated</summary>
 		PathQueue = 1,
+		/// <summary>Path is being calculated</summary>
 		Processing = 2,
+		/// <summary>Path is calculated and is waiting to have its callback called</summary>
 		ReturnQueue = 3,
-		Returned = 4
+		/// <summary>The path callback is being called right now (only set inside the callback itself)</summary>
+		Returning = 4,
+		/// <summary>The path has been calculated and its callback has been called</summary>
+		Returned = 5,
 	}
+
 
 	/// <summary>State of a path request</summary>
 	public enum PathCompleteState {

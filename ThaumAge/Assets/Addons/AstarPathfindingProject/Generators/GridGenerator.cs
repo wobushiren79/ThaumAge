@@ -1,13 +1,22 @@
 using System.Collections.Generic;
 using Math = System.Math;
 using UnityEngine;
+using System.Linq;
 #if UNITY_5_5_OR_NEWER
 using UnityEngine.Profiling;
 #endif
 
+
 namespace Pathfinding {
 	using Pathfinding.Serialization;
 	using Pathfinding.Util;
+	using Unity.Collections;
+	using Unity.Jobs;
+	using Unity.Mathematics;
+	using Pathfinding.Jobs;
+	using Pathfinding.Jobs.Grid;
+	using Unity.Burst;
+	using Pathfinding.Drawing;
 
 	/// <summary>
 	/// Generates a grid of nodes.
@@ -85,12 +94,16 @@ namespace Pathfinding {
 	[Pathfinding.Util.Preserve]
 	public class GridGraph : NavGraph, IUpdatableGraph, ITransformedGraph
 		, IRaycastableGraph {
-		/// <summary>This function will be called when this graph is destroyed</summary>
-		protected override void OnDestroy () {
-			base.OnDestroy();
+		protected override void DisposeUnmanagedData () {
+			// Destroy all nodes to make the graph go into an unscanned state
+			DestroyAllNodes();
 
 			// Clean up a reference in a static variable which otherwise should point to this graph forever and stop the GC from collecting it
 			RemoveGridGraphFromStatic();
+
+			// Dispose of native arrays. This is very important to avoid memory leaks!
+			rules.DisposeUnmanagedData();
+			if (nodeSurfaceNormals.IsCreated) nodeSurfaceNormals.Dispose();
 		}
 
 		protected override void DestroyAllNodes () {
@@ -103,6 +116,8 @@ namespace Pathfinding {
 				node.ClearConnections(false);
 				node.Destroy();
 			});
+			// Important: so that multiple calls to DestroyAllNodes still works
+			nodes = null;
 		}
 
 		void RemoveGridGraphFromStatic () {
@@ -131,6 +146,12 @@ namespace Pathfinding {
 			}
 		}
 
+		public virtual int MaxLayers {
+			get {
+				return 1;
+			}
+		}
+
 		public override int CountNodes () {
 			return nodes != null ? nodes.Length : 0;
 		}
@@ -148,6 +169,8 @@ namespace Pathfinding {
 		/// <summary>
 		/// Determines the layout of the grid graph inspector in the Unity Editor.
 		/// This field is only used in the editor, it has no effect on the rest of the game whatsoever.
+		///
+		/// If you want to change the grid shape like in the inspector you can use the <see cref="SetGridShape"/> method.
 		/// </summary>
 		[JsonMember]
 		public InspectorGridMode inspectorGridMode = InspectorGridMode.Grid;
@@ -193,6 +216,8 @@ namespace Pathfinding {
 		/// A top down view of an isometric graph. Note that the graph is entirely 2D, there is no perspective in this image.
 		/// [Open online documentation to see images]
 		///
+		/// For commonly used values see <see cref="StandardIsometricAngle"/> and <see cref="StandardDimetricAngle"/>.
+		///
 		/// Usually the angle that you want to use is either 30 degrees (alternatively 90-30 = 60 degrees) or atan(1/sqrt(2)) which is approximately 35.264 degrees (alternatively 90 - 35.264 = 54.736 degrees).
 		/// You might also want to rotate the graph plus or minus 45 degrees around the Y axis to get the oritientation required for your game.
 		///
@@ -204,6 +229,12 @@ namespace Pathfinding {
 		/// </summary>
 		[JsonMember]
 		public float isometricAngle;
+
+		/// <summary>Commonly used value for <see cref="isometricAngle"/></summary>
+		public static readonly float StandardIsometricAngle = 90-Mathf.Atan(1/Mathf.Sqrt(2))*Mathf.Rad2Deg;
+
+		/// <summary>Commonly used value for <see cref="isometricAngle"/></summary>
+		public static readonly float StandardDimetricAngle = Mathf.Acos(1/2f)*Mathf.Rad2Deg;
 
 		/// <summary>
 		/// If true, all edge costs will be set to the same value.
@@ -240,11 +271,52 @@ namespace Pathfinding {
 		public GraphCollision collision;
 
 		/// <summary>
-		/// The max position difference between two nodes to enable a connection.
+		/// The max y coordinate difference between two nodes to enable a connection.
 		/// Set to 0 to ignore the value.
+		///
+		/// This affects for example how the graph is generated around ledges and stairs.
+		///
+		/// See: <see cref="maxStepUsesSlope"/>
+		/// Version: Was previously called maxClimb
 		/// </summary>
 		[JsonMember]
-		public float maxClimb = 0.4F;
+		public float maxStepHeight = 0.4F;
+
+		/// <summary>
+		/// The max y coordinate difference between two nodes to enable a connection.
+		/// Deprecated: This field has been renamed to <see cref="maxStepHeight"/>
+		/// </summary>
+		[System.Obsolete("This field has been renamed to maxStepHeight")]
+		public float maxClimb {
+			get {
+				return maxStepHeight;
+			}
+			set {
+				maxStepHeight = value;
+			}
+		}
+
+		/// <summary>
+		/// Take the slope into account for <see cref="maxClimb"/>.
+		///
+		/// When this is enabled the normals of the terrain will be used to make more accurate estimates of how large the steps are between adjacent nodes.
+		///
+		/// When this is disabled then calculated step between two nodes is their y coordinate difference. This may be inaccurate, especially at the start of steep slopes.
+		///
+		/// [Open online documentation to see images]
+		///
+		/// In the image below you can see an example of what happens near a ramp.
+		/// In the topmost image the ramp is not connected with the rest of the graph which is obviously not what we want.
+		/// In the middle image an attempt has been made to raise the max step height while keeping <see cref="maxStepUsesSlope"/> disabled. However this causes too many connections to be added.
+		/// The agent should not be able to go up the ramp from the side.
+		/// Finally in the bottommost image the <see cref="maxStepHeight"/> has been restored to the original value but <see cref="maxStepUsesSlope"/> has been enabled. This configuration handles the ramp in a much smarter way.
+		/// Note that all the values in the image are just example values, they may be different for your scene.
+		/// [Open online documentation to see images]
+		///
+		/// See: <see cref="maxStepHeight"/>
+		/// </summary>
+		[JsonMember]
+		public bool maxStepUsesSlope = true;
 
 		/// <summary>The max slope in degrees for a node to be walkable.</summary>
 		[JsonMember]
@@ -311,23 +383,33 @@ namespace Pathfinding {
 
 		/// <summary>
 		/// Offset for the position when calculating penalty.
+		/// Deprecated: Use the RuleElevationPenalty class instead
 		/// See: penaltyPosition
 		/// </summary>
 		[JsonMember]
+		[System.Obsolete("Use the RuleElevationPenalty class instead")]
 		public float penaltyPositionOffset;
 
-		/// <summary>Use position (y-coordinate) to calculate penalty</summary>
+		/// <summary>
+		/// Use position (y-coordinate) to calculate penalty.
+		/// Deprecated: Use the RuleElevationPenalty class instead
+		/// </summary>
 		[JsonMember]
+		[System.Obsolete("Use the RuleElevationPenalty class instead")]
 		public bool penaltyPosition;
 
 		/// <summary>
 		/// Scale factor for penalty when calculating from position.
+		/// Deprecated: Use the RuleElevationPenalty class instead
 		/// See: penaltyPosition
 		/// </summary>
 		[JsonMember]
+		[System.Obsolete("Use the RuleElevationPenalty class instead")]
 		public float penaltyPositionFactor = 1F;
 
+		/// <summary>Deprecated: Use the RuleAnglePenalty class instead</summary>
 		[JsonMember]
+		[System.Obsolete("Use the RuleAnglePenalty class instead")]
 		public bool penaltyAngle;
 
 		/// <summary>
@@ -335,13 +417,40 @@ namespace Pathfinding {
 		/// At a 90 degree slope (not that exactly 90 degree slopes can occur, but almost 90 degree), this penalty is applied.
 		/// At a 45 degree slope, half of this is applied and so on.
 		/// Note that you may require very large values, a value of 1000 is equivalent to the cost of moving 1 world unit.
+		///
+		/// Deprecated: Use the RuleAnglePenalty class instead
 		/// </summary>
 		[JsonMember]
+		[System.Obsolete("Use the RuleAnglePenalty class instead")]
 		public float penaltyAngleFactor = 100F;
 
-		/// <summary>How much extra to penalize very steep angles</summary>
+		/// <summary>
+		/// How much extra to penalize very steep angles.
+		///
+		/// Deprecated: Use the RuleAnglePenalty class instead
+		/// </summary>
 		[JsonMember]
+		[System.Obsolete("Use the RuleAnglePenalty class instead")]
 		public float penaltyAnglePower = 1;
+
+		/// <summary>
+		/// Additional rules to use when scanning the grid graph.
+		///
+		/// <code>
+		/// // Get the first grid graph in the scene
+		/// var gridGraph = AstarPath.active.data.gridGraph;
+		///
+		/// gridGraph.rules.AddRule(new RuleAnglePenalty {
+		///     penaltyScale = 10000,
+		///     curve = AnimationCurve.Linear(0, 0, 90, 1),
+		/// });
+		/// </code>
+		///
+		/// See: <see cref="GridGraphRules"/>
+		/// See: <see cref="GridGraphRule"/>
+		/// </summary>
+		[JsonMember]
+		public GridGraphRules rules = new GridGraphRules();
 
 		/// <summary>
 		/// Use jump point search to speed up pathfinding.
@@ -375,8 +484,11 @@ namespace Pathfinding {
 		/// Color data is got as 0...255 values.
 		///
 		/// Warning: Can only be used with Unity 3.4 and up
+		///
+		/// Deprecated: Use the RuleTexture class instead
 		/// </summary>
 		[JsonMember]
+		[System.Obsolete("Use the RuleTexture class instead")]
 		public TextureData textureData = new TextureData();
 
 		/// <summary>\}</summary>
@@ -415,12 +527,10 @@ namespace Pathfinding {
 		public readonly uint[] neighbourCosts = new uint[8];
 
 		/// <summary>Offsets in the X direction for neighbour nodes. Only 1, 0 or -1</summary>
-		[System.NonSerialized]
-		public readonly int[] neighbourXOffsets = new int[8];
+		public static readonly int[] neighbourXOffsets = { 0, 1, 0, -1, 1, 1, -1, -1 };
 
 		/// <summary>Offsets in the Z direction for neighbour nodes. Only 1, 0 or -1</summary>
-		[System.NonSerialized]
-		public readonly int[] neighbourZOffsets = new int[8];
+		public static readonly int[] neighbourZOffsets = { -1, 0, 1, 0, -1, 1, 1, -1 };
 
 		/// <summary>Which neighbours are going to be used when <see cref="neighbours"/>=6</summary>
 		internal static readonly int[] hexagonNeighbourIndices = { 0, 1, 5, 2, 3, 7 };
@@ -439,19 +549,38 @@ namespace Pathfinding {
 		/// var gg = AstarPath.active.data.gridGraph;
 		/// int x = 5;
 		/// int z = 8;
-		/// GridNode node = gg.nodes[z*gg.width + x];
+		/// GridNodeBase node = gg.nodes[z*gg.width + x];
 		/// </code>
 		///
 		/// See: <see cref="GetNode"/>
 		/// See: <see cref="GetNodes"/>
 		/// </summary>
-		public GridNode[] nodes;
+		public GridNodeBase[] nodes;
+
+		/// <summary>
+		/// Surface normal for each node.
+		/// This needs to be saved when the <see cref="maxStepUsesSlope"/> option is enabled for graph updates to work.
+		/// </summary>
+		NativeArray<float4> nodeSurfaceNormals;
 
 		/// <summary>
 		/// Determines how the graph transforms graph space to world space.
 		/// See: <see cref="UpdateTransform"/>
 		/// </summary>
 		public GraphTransform transform { get; private set; }
+
+		/// <summary>
+		/// Delegate which creates and returns a single instance of the node type for this graph.
+		/// This may be set in the constructor for graphs inheriting from the GridGraph to change the node type of the graph.
+		/// </summary>
+		protected System.Func<GridNodeBase> newGridNodeDelegate = () => new GridNode();
+
+		protected virtual GridNodeBase[] AllocateNodesJob (int size, out JobHandle dependency) {
+			var newNodes = new GridNodeBase[size];
+
+			dependency = active.AllocateNodes(newNodes, size, newGridNodeDelegate);
+			return newNodes;
+		}
 
 		/// <summary>Used for using a texture as a source for a grid graph.</summary>
 		public class TextureData {
@@ -602,10 +731,12 @@ namespace Pathfinding {
 			return neighbourCosts[dir];
 		}
 
+		/// <summary>Deprecated:</summary>
+		[System.Obsolete("Use GridNode.HasConnectionInDirection instead")]
 		public GridNode GetNodeConnection (GridNode node, int dir) {
 			if (!node.HasConnectionInDirection(dir)) return null;
 			if (!node.EdgeNode) {
-				return nodes[node.NodeInGridIndex + neighbourOffsets[dir]];
+				return nodes[node.NodeInGridIndex + neighbourOffsets[dir]] as GridNode;
 			} else {
 				int index = node.NodeInGridIndex;
 				//int z = Math.DivRem (index,Width, out x);
@@ -616,6 +747,8 @@ namespace Pathfinding {
 			}
 		}
 
+		/// <summary>Deprecated:</summary>
+		[System.Obsolete("Use GridNode.HasConnectionInDirection instead")]
 		public bool HasNodeConnection (GridNode node, int dir) {
 			if (!node.HasConnectionInDirection(dir)) return false;
 			if (!node.EdgeNode) {
@@ -629,6 +762,8 @@ namespace Pathfinding {
 			}
 		}
 
+		/// <summary>Deprecated:</summary>
+		[System.Obsolete("Use GridNode.SetConnectionInternal instead")]
 		public void SetNodeConnection (GridNode node, int dir, bool value) {
 			int index = node.NodeInGridIndex;
 			int z = index/Width;
@@ -642,7 +777,10 @@ namespace Pathfinding {
 		/// Returns: A GridNode if the node has a connection to that node. Null if no connection in that direction exists
 		///
 		/// See: GridNode
+		///
+		/// Deprecated:
 		/// </summary>
+		[System.Obsolete("Use GridNode.HasConnectionInDirection instead")]
 		private GridNode GetNodeConnection (int index, int x, int z, int dir) {
 			if (!nodes[index].HasConnectionInDirection(dir)) return null;
 
@@ -653,7 +791,7 @@ namespace Pathfinding {
 			if (nz < 0 || nz >= Depth) return null;
 			int nindex = index + neighbourOffsets[dir];
 
-			return nodes[nindex];
+			return nodes[nindex] as GridNode;
 		}
 
 		/// <summary>
@@ -671,10 +809,13 @@ namespace Pathfinding {
 		/// <param name="z">Z coordinate of the node</param>
 		/// <param name="dir">Direction from 0 up to but excluding 8.</param>
 		/// <param name="value">Enable or disable the connection</param>
+		[System.Obsolete("Use GridNode.SetConnectionInternal instead")]
 		public void SetNodeConnection (int index, int x, int z, int dir, bool value) {
-			nodes[index].SetConnectionInternal(dir, value);
+			(nodes[index] as GridNode).SetConnectionInternal(dir, value);
 		}
 
+		/// <summary>Deprecated:</summary>
+		[System.Obsolete("Use GridNode.HasConnectionInDirection instead")]
 		public bool HasNodeConnection (int index, int x, int z, int dir) {
 			if (!nodes[index].HasConnectionInDirection(dir)) return false;
 
@@ -685,6 +826,43 @@ namespace Pathfinding {
 			if (nz < 0 || nz >= Depth) return false;
 
 			return true;
+		}
+
+		/// <summary>
+		/// Changes the grid shape.
+		/// This is equivalent to changing the 'shape' dropdown in the grid graph inspector.
+		///
+		/// Calling this method will set <see cref="isometricAngle"/>, <see cref="aspectRatio"/>, <see cref="uniformEdgeCosts"/> and <see cref="neighbours"/>
+		/// to appropriate values for that shape.
+		///
+		/// Note: Setting the shape to <see cref="InspectorGridMode.Advanced"/> does not do anything except set the <see cref="inspectorGridMode"/> field.
+		///
+		/// See: <see cref="inspectorHexagonSizeMode"/>
+		/// </summary>
+		public void SetGridShape (InspectorGridMode shape) {
+			switch (shape) {
+			case InspectorGridMode.Grid:
+				isometricAngle = 0;
+				aspectRatio = 1;
+				uniformEdgeCosts = false;
+				if (neighbours == NumNeighbours.Six) neighbours = NumNeighbours.Eight;
+				break;
+			case InspectorGridMode.Hexagonal:
+				isometricAngle = StandardIsometricAngle;
+				aspectRatio = 1;
+				uniformEdgeCosts = true;
+				neighbours = NumNeighbours.Six;
+				break;
+			case InspectorGridMode.IsometricGrid:
+				uniformEdgeCosts = false;
+				if (neighbours == NumNeighbours.Six) neighbours = NumNeighbours.Eight;
+				isometricAngle = StandardIsometricAngle;
+				break;
+			case InspectorGridMode.Advanced:
+			default:
+				break;
+			}
+			inspectorGridMode = shape;
 		}
 
 		/// <summary>
@@ -852,9 +1030,9 @@ namespace Pathfinding {
 			int z = Mathf.Clamp((int)zf, 0, depth-1);
 
 			// Closest node
-			GridNode node = nodes[x+z*width];
+			var node = nodes[x+z*width];
 
-			GridNode minNode = null;
+			GraphNode minNode = null;
 			float minDist = float.PositiveInfinity;
 			int overlap = getNearestForceOverlap;
 
@@ -991,7 +1169,7 @@ namespace Pathfinding {
 		/// The cost for a diagonal movement between two adjacent nodes is RoundToInt (<see cref="nodeSize"/> * Sqrt (2) * Int3.Precision)
 		/// </summary>
 		public virtual void SetUpOffsetsAndCosts () {
-			//First 4 are for the four directly adjacent nodes the last 4 are for the diagonals
+			// First 4 are for the four directly adjacent nodes the last 4 are for the diagonals
 			neighbourOffsets[0] = -width;
 			neighbourOffsets[1] = 1;
 			neighbourOffsets[2] = width;
@@ -1001,10 +1179,14 @@ namespace Pathfinding {
 			neighbourOffsets[6] = width-1;
 			neighbourOffsets[7] = -width-1;
 
-			uint straightCost = (uint)Mathf.RoundToInt(nodeSize*Int3.Precision);
+			// The width of a single node, and thus also the distance between two adjacent nodes (axis aligned).
+			// For hexagonal graphs the node size is different from the width of a hexaon.
+			float nodeWidth = neighbours == NumNeighbours.Six ? ConvertNodeSizeToHexagonSize(InspectorGridHexagonNodeSize.Width, nodeSize) : nodeSize;
+
+			uint straightCost = (uint)Mathf.RoundToInt(nodeWidth*Int3.Precision);
 
 			// Diagonals normally cost sqrt(2) (approx 1.41) times more
-			uint diagonalCost = uniformEdgeCosts ? straightCost : (uint)Mathf.RoundToInt(nodeSize*Mathf.Sqrt(2F)*Int3.Precision);
+			uint diagonalCost = uniformEdgeCosts ? straightCost : (uint)Mathf.RoundToInt(nodeWidth*Mathf.Sqrt(2F)*Int3.Precision);
 
 			neighbourCosts[0] = straightCost;
 			neighbourCosts[1] = straightCost;
@@ -1028,27 +1210,780 @@ namespace Pathfinding {
 			 *         |
 			 *         |
 			 */
-
-			neighbourXOffsets[0] = 0;
-			neighbourXOffsets[1] = 1;
-			neighbourXOffsets[2] = 0;
-			neighbourXOffsets[3] = -1;
-			neighbourXOffsets[4] = 1;
-			neighbourXOffsets[5] = 1;
-			neighbourXOffsets[6] = -1;
-			neighbourXOffsets[7] = -1;
-
-			neighbourZOffsets[0] = -1;
-			neighbourZOffsets[1] =  0;
-			neighbourZOffsets[2] =  1;
-			neighbourZOffsets[3] =  0;
-			neighbourZOffsets[4] = -1;
-			neighbourZOffsets[5] =  1;
-			neighbourZOffsets[6] =  1;
-			neighbourZOffsets[7] = -1;
 		}
 
-		protected override IEnumerable<Progress> ScanInternal () {
+		IEnumerable<Progress> ScanInternalBurst (bool async) {
+			if (nodeSize <= 0) {
+				yield break;
+			}
+
+			// Make sure the matrix is up to date
+			UpdateTransform();
+
+			if (width > 1024 || depth > 1024) {
+				Debug.LogError("One of the grid's sides is longer than 1024 nodes");
+				yield break;
+			}
+
+#if !ASTAR_JPS
+			if (this.useJumpPointSearch) {
+				Debug.LogError("Trying to use Jump Point Search, but support for it is not enabled. Please enable it in the inspector (Grid Graph settings).");
+			}
+#endif
+
+			SetUpOffsetsAndCosts();
+
+			// Set a global reference to this graph so that nodes can find it
+			GridNode.SetGridGraph((int)graphIndex, this);
+
+			// Create and initialize the collision class
+			if (collision == null) {
+				collision = new GraphCollision();
+			}
+			collision.Initialize(transform, nodeSize);
+
+			// Allocate buffers for jobs
+			var dependencyTracker = ObjectPool<JobDependencyTracker>.Claim();
+
+			// Create all nodes
+			JobHandle allocateNodesJob;
+			var newNodes = AllocateNodesJob(width * depth, out allocateNodesJob);
+			var allocationMethod = async ? Allocator.Persistent : Allocator.TempJob;
+
+			var bounds = new IntRect(0, 0, width - 1, depth - 1);
+
+			var updateNodesJob = UpdateAreaBurst(newNodes, new int3(width, 1, depth), bounds, dependencyTracker, allocateNodesJob, allocationMethod, RecalculationMode.RecalculateFromScratch);
+
+			if (async) {
+				foreach (var _ in updateNodesJob.CompleteTimeSliced(8.0f)) {
+					System.Threading.Thread.Yield();
+					yield return new Progress(0.5f, "Scanning grid graph");
+				}
+			} else {
+				updateNodesJob.Complete();
+			}
+
+			ObjectPool<JobDependencyTracker>.Release(ref dependencyTracker);
+		}
+
+		public struct GridGraphScanData {
+			public JobDependencyTracker dependencyTracker;
+			public Allocator allocationMethod;
+			public int numNodes;
+			public IntBounds bounds;
+			public int layers;
+			public Vector3 up;
+
+			/// <summary>Transforms graph-space to world space</summary>
+			public GraphTransform transform;
+
+			/// <summary>
+			/// Positions of all nodes.
+			///
+			/// Data is valid in these passes:
+			/// - BeforeCollision: Valid
+			/// - BeforeConnections: Valid
+			/// - AfterConnections: Valid
+			/// - PostProcess: Valid
+			/// </summary>
+			public NativeArray<Vector3> nodePositions;
+
+			/// <summary>
+			/// Bitpacked connections of all nodes.
+			///
+			/// Data is valid in these passes:
+			/// - BeforeCollision: Invalid
+			/// - BeforeConnections: Invalid
+			/// - AfterConnections: Valid
+			/// - PostProcess: Valid
+			/// </summary>
+			public NativeArray<int> nodeConnections;
+
+			/// <summary>
+			/// Bitpacked connections of all nodes.
+			///
+			/// Data is valid in these passes:
+			/// - BeforeCollision: Valid
+			/// - BeforeConnections: Valid
+			/// - AfterConnections: Valid
+			/// - PostProcess: Valid
+			/// </summary>
+			public NativeArray<uint> nodePenalties;
+
+			/// <summary>
+			/// Tags of all nodes
+			///
+			/// Data is valid in these passes:
+			/// - BeforeCollision: Valid (but if erosion uses tags then it will be overwritten later)
+			/// - BeforeConnections: Valid (but if erosion uses tags then it will be overwritten later)
+			/// - AfterConnections: Valid (but if erosion uses tags then it will be overwritten later)
+			/// - PostProcess: Valid
+			/// </summary>
+			public NativeArray<int> nodeTags;
+
+			/// <summary>
+			/// Normals of all nodes.
+			/// If height testing is disabled the normal will be (0,1,0) for all nodes.
+			/// If a node doesn't exist (only happens in layered grid graphs) or if the height raycast didn't hit anything then the normal will be (0,0,0).
+			///
+			/// Data is valid in these passes:
+			/// - BeforeCollision: Valid
+			/// - BeforeConnections: Valid
+			/// - AfterConnections: Valid
+			/// - PostProcess: Valid
+			/// </summary>
+			public NativeArray<float4> nodeNormals;
+
+			/// <summary>
+			/// Walkability of all nodes before erosion happens.
+			///
+			/// Data is valid in these passes:
+			/// - BeforeCollision: Valid (it will be combined with collision testing later)
+			/// - BeforeConnections: Valid
+			/// - AfterConnections: Valid
+			/// - PostProcess: Valid
+			/// </summary>
+			public NativeArray<bool> nodeWalkable;
+
+			/// <summary>
+			/// Walkability of all nodes after erosion happens. This is the final walkability of the nodes.
+			///
+			/// Data is valid in these passes:
+			/// - BeforeCollision: Invalid
+			/// - BeforeConnections: Invalid
+			/// - AfterConnections: Invalid
+			/// - PostProcess: Valid
+			/// </summary>
+			public NativeArray<bool> nodeWalkableWithErosion;
+
+			/// <summary>
+			/// Raycasts hits used for height testing.
+			/// This data is only valid if height testing is enabled, otherwise the array is uninitialized.
+			///
+			/// Data is valid in these passes:
+			/// - BeforeCollision: Valid (if height testing is enabled)
+			/// - BeforeConnections: Valid (if height testing is enabled)
+			/// - AfterConnections: Valid (if height testing is enabled)
+			/// - PostProcess: Valid (if height testing is enabled)
+			/// </summary>
+			public NativeArray<RaycastHit> heightHits;
+
+			/// <summary>
+			/// True if the data may have multiple layers.
+			/// For layered data the nodes are laid out as `data[y*width*depth + z*width + x]`.
+			/// For non-layered data the nodes are laid out as `data[z*width + x]` (which is equivalent to the above layout assuming y=0).
+			///
+			/// This also affects how node connections are stored. You can use \reflink{LayeredGridAdjacencyMapper} and \reflink{FlatGridAdjacencyMapper} to access
+			/// connections for the different data layouts.
+			/// </summary>
+			public bool layeredDataLayout;
+
+			public void AllocateBuffers () {
+				Profiler.BeginSample("Allocating buffers");
+				// Allocate buffers for jobs
+				// Allocating buffers with uninitialized memory is much faster if no jobs assume anything about their contents
+				nodePositions = dependencyTracker.NewNativeArray<Vector3>(numNodes, allocationMethod, NativeArrayOptions.UninitializedMemory);
+				nodeNormals = dependencyTracker.NewNativeArray<float4>(numNodes, allocationMethod, NativeArrayOptions.UninitializedMemory);
+				nodeConnections = dependencyTracker.NewNativeArray<int>(numNodes, allocationMethod, NativeArrayOptions.UninitializedMemory);
+				nodePenalties = dependencyTracker.NewNativeArray<uint>(numNodes, allocationMethod, NativeArrayOptions.UninitializedMemory);
+				nodeWalkable = dependencyTracker.NewNativeArray<bool>(numNodes, allocationMethod, NativeArrayOptions.UninitializedMemory);
+				nodeWalkableWithErosion = dependencyTracker.NewNativeArray<bool>(numNodes, allocationMethod, NativeArrayOptions.UninitializedMemory);
+				nodeTags = dependencyTracker.NewNativeArray<int>(numNodes, allocationMethod, NativeArrayOptions.ClearMemory);
+				Profiler.EndSample();
+			}
+
+			public void SetDefaultPenalties (uint initialPenalty) {
+				nodePenalties.MemSet(initialPenalty).Schedule(dependencyTracker);
+			}
+
+			public void SetDefaultNodePositions (GraphTransform transform) {
+				new JobNodePositions {
+					graphToWorld = transform.matrix,
+					bounds = bounds,
+					nodePositions = nodePositions,
+				}.Schedule(dependencyTracker);
+			}
+
+			public JobHandle HeightCheck (GraphCollision collision, int maxHits, NativeArray<int> outLayerCount, float characterHeight) {
+				// For some reason the physics code crashes when allocating raycastCommands with UninitializedMemory, even though I have verified that every
+				// element in the array is set to a well defined value before the physics code gets to it... Mysterious.
+				var cellCount = bounds.size.x * bounds.size.z;
+				var raycastCommands = dependencyTracker.NewNativeArray<RaycastCommand>(cellCount, allocationMethod, NativeArrayOptions.ClearMemory);
+
+				heightHits = dependencyTracker.NewNativeArray<RaycastHit>(cellCount * maxHits, allocationMethod, NativeArrayOptions.ClearMemory);
+
+				// Due to floating point inaccuracies we don't want the rays to end *exactly* at the base of the graph
+				// The rays may or may not hit colliders with the exact same y coordinate.
+				// We extend the rays a bit to ensure they always hit
+				const float RayLengthMargin = 0.01f;
+				var prepareJob = new JobPrepareGridRaycast {
+					graphToWorld = transform.matrix,
+					bounds = bounds,
+					raycastOffset = up * collision.fromHeight,
+					raycastDirection = -up * (collision.fromHeight + RayLengthMargin),
+					raycastMask = collision.heightMask,
+					raycastCommands = raycastCommands,
+				}.Schedule(dependencyTracker);
+
+				if (maxHits > 1) {
+					// Skip this distance between each hit.
+					// It is pretty arbitrarily chosen, but it must be lower than characterHeight.
+					// If it would be set too low then many thin colliders stacked on top of each other could lead to a very large number of hits
+					// that will not lead to any walkable nodes anyway.
+					float minStep = characterHeight * 0.5f;
+					var dependency = new RaycastAllCommand(raycastCommands, heightHits, maxHits, dependencyTracker, minStep).Schedule(prepareJob);
+
+					dependency = new JobMaxHitCount {
+						hits = heightHits,
+						maxHits = maxHits,
+						layerStride = bounds.size.x*bounds.size.z,
+						maxHitCount = outLayerCount,
+					}.Schedule(dependency);
+
+					return dependency;
+				} else {
+					dependencyTracker.ScheduleBatch(raycastCommands, heightHits, 2048);
+					outLayerCount[0] = 1;
+					return default;
+				}
+			}
+
+			public void CopyHits () {
+				// Copy the hit points and normals to separate arrays
+				new JobCopyHits {
+					hits = heightHits,
+					points = nodePositions,
+					normals = nodeNormals,
+				}.Schedule(dependencyTracker);
+			}
+
+			public void CalculateWalkabilityFromHeightData (bool useRaycastNormal, bool unwalkableWhenNoGround, float maxSlope, float characterHeight) {
+				new JobNodeWalkable {
+					useRaycastNormal = useRaycastNormal,
+					unwalkableWhenNoGround = unwalkableWhenNoGround,
+					maxSlope = maxSlope,
+					up = up,
+					nodeNormals = nodeNormals,
+					nodeWalkable = nodeWalkable,
+					nodePositions = nodePositions.Reinterpret<float3>(),
+					characterHeight = characterHeight,
+					layerStride = bounds.size.x*bounds.size.z,
+				}.Schedule(dependencyTracker);
+			}
+
+			public IEnumerator<JobHandle> CollisionCheck (GraphCollision collision) {
+				if (collision.type == ColliderType.Ray && !collision.use2D) {
+					var collisionCheckResult = dependencyTracker.NewNativeArray<bool>(numNodes, allocationMethod, NativeArrayOptions.UninitializedMemory);
+					collision.JobCollisionRay(nodePositions, collisionCheckResult, up, allocationMethod, dependencyTracker);
+					nodeWalkable.BitwiseAndWith(collisionCheckResult).Schedule(dependencyTracker);
+					return null;
+				} else {
+					// This part can unfortunately not be jobified yet
+					return new JobCheckCollisions {
+							   nodePositions = nodePositions,
+							   collisionResult = nodeWalkable,
+							   collision = collision,
+					}.ExecuteMainThreadJob(dependencyTracker);
+				}
+			}
+
+			public void Connections (float maxStepHeight, bool maxStepUsesSlope, NumNeighbours neighbours, bool cutCorners, bool use2D, bool useErodedWalkability, float characterHeight) {
+				new JobCalculateConnections {
+					maxStepHeight = maxStepHeight,
+					maxStepUsesSlope = maxStepUsesSlope,
+					up = up,
+					bounds = bounds,
+					neighbours = neighbours,
+					use2D = use2D,
+					cutCorners = cutCorners,
+					nodeWalkable = useErodedWalkability ? nodeWalkableWithErosion : nodeWalkable,
+					nodePositions = nodePositions,
+					nodeNormals = nodeNormals,
+					nodeConnections = nodeConnections,
+					characterHeight = characterHeight,
+					layeredDataLayout = layeredDataLayout,
+				}.ScheduleBatch(bounds.size.z, 20, dependencyTracker);
+
+				new JobFilterDiagonalConnections {
+					bounds = bounds,
+					neighbours = neighbours,
+					cutCorners = cutCorners,
+					nodeConnections = nodeConnections,
+				}.ScheduleBatch(bounds.size.z, 20, dependencyTracker);
+			}
+
+			public void Erosion (NumNeighbours neighbours, int erodeIterations, IntBounds erosionWriteMask, bool erosionUsesTags, int erosionStartTag) {
+				if (!layeredDataLayout) {
+					new JobErosion<FlatGridAdjacencyMapper> {
+						bounds = bounds,
+						writeMask = erosionWriteMask,
+						neighbours = neighbours,
+						nodeConnections = nodeConnections,
+						erosion = erodeIterations,
+						nodeWalkable = nodeWalkable,
+						outNodeWalkable = nodeWalkableWithErosion,
+						outNodeTags = nodeTags,
+						erosionUsesTags = erosionUsesTags,
+						erosionStartTag = erosionStartTag,
+					}.Schedule(dependencyTracker);
+				} else {
+					new JobErosion<LayeredGridAdjacencyMapper> {
+						bounds = bounds,
+						writeMask = erosionWriteMask,
+						neighbours = neighbours,
+						nodeConnections = nodeConnections,
+						erosion = erodeIterations,
+						// TOOD: Tags
+						nodeWalkable = nodeWalkable,
+						outNodeWalkable = nodeWalkableWithErosion,
+						outNodeTags = nodeTags,
+						erosionUsesTags = erosionUsesTags,
+						erosionStartTag = erosionStartTag,
+					}.Schedule(dependencyTracker);
+				}
+			}
+
+			[BurstCompile]
+			struct CopyBuffersJob : IJob {
+				public struct Buffers {
+					public NativeArray<Vector3> nodePositions;
+					public NativeArray<int> nodeConnections;
+					public NativeArray<uint> nodePenalties;
+					public NativeArray<int> nodeTags;
+					public NativeArray<float4> nodeNormals;
+					public NativeArray<bool> nodeWalkable;
+					public NativeArray<bool> nodeWalkableWithErosion;
+
+					public Buffers(ref GridGraphScanData data) {
+						nodePositions = data.nodePositions;
+						nodeConnections = data.nodeConnections;
+						nodePenalties = data.nodePenalties;
+						nodeTags = data.nodeTags;
+						nodeNormals = data.nodeNormals;
+						nodeWalkable = data.nodeWalkable;
+						nodeWalkableWithErosion = data.nodeWalkableWithErosion;
+					}
+				}
+
+				[ReadOnly]
+				[DisableUninitializedReadCheck]
+				public Buffers input;
+
+				[WriteOnly]
+				public Buffers output;
+
+				public int3 outputSize;
+				public IntBounds outputBounds;
+
+				public void Execute () {
+					var inputSize = outputBounds.size;
+					var inputBounds = new IntBounds(new int3(), outputBounds.size);
+
+					// Note: Having a single job that copies all of the buffers avoids a lot of scheduling overhead.
+					// We do miss out on parallelization, however for this job it is not that significant.
+					JobCopyRectangle<Vector3>.Copy(input.nodePositions, output.nodePositions, inputSize, outputSize, inputBounds, outputBounds);
+					JobCopyRectangle<float4>.Copy(input.nodeNormals, output.nodeNormals, inputSize, outputSize, inputBounds, outputBounds);
+					JobCopyRectangle<int>.Copy(input.nodeConnections, output.nodeConnections, inputSize, outputSize, inputBounds, outputBounds);
+					JobCopyRectangle<uint>.Copy(input.nodePenalties, output.nodePenalties, inputSize, outputSize, inputBounds, outputBounds);
+					JobCopyRectangle<int>.Copy(input.nodeTags, output.nodeTags, inputSize, outputSize, inputBounds, outputBounds);
+					JobCopyRectangle<bool>.Copy(input.nodeWalkable, output.nodeWalkable, inputSize, outputSize, inputBounds, outputBounds);
+					JobCopyRectangle<bool>.Copy(input.nodeWalkableWithErosion, output.nodeWalkableWithErosion, inputSize, outputSize, inputBounds, outputBounds);
+				}
+			}
+
+			public void ReadFromNodes (GridNodeBase[] nodes, int3 nodeArrayBounds, IntBounds readBounds, JobHandle nodesDependsOn, NativeArray<float4> graphNodeNormals) {
+				bounds = readBounds;
+				numNodes = readBounds.volume;
+				AllocateBuffers();
+
+				// This is a managed type, we need to trick Unity to allow this inside of a job
+				var nodesHandle = System.Runtime.InteropServices.GCHandle.Alloc(nodes);
+
+				var job = new JobReadNodeData {
+					nodesHandle = nodesHandle,
+					nodePositions = nodePositions,
+					nodePenalties = nodePenalties,
+					nodeTags = nodeTags,
+					nodeConnections = nodeConnections,
+					nodeWalkableWithErosion = nodeWalkableWithErosion,
+					nodeWalkable = nodeWalkable,
+					nodeArrayBounds = nodeArrayBounds,
+					dataBounds = readBounds,
+				}.ScheduleBatch(numNodes, math.max(2000, numNodes/16), dependencyTracker, nodesDependsOn);
+
+				dependencyTracker.DeferFree(nodesHandle, job);
+
+				UnityEngine.Assertions.Assert.IsTrue(graphNodeNormals.IsCreated);
+
+				// Read the normal data from the graphNodeNormals array and copy it to the nodeNormals array.
+				// The nodeArrayBounds may have fewer layers than the readBounds if layers are being added.
+				// This means we can copy only a subset of the normals.
+				// We MemSet the array to zero first to avoid any uninitialized data remaining.
+				nodeNormals.MemSet(float4.zero).Schedule(dependencyTracker);
+				var clampedReadBounds = new IntBounds(readBounds.min, new int3(readBounds.max.x, math.min(nodeArrayBounds.y, readBounds.max.y), readBounds.max.z));
+				new JobCopyRectangle<float4> {
+					input = graphNodeNormals,
+					output = nodeNormals,
+					inputSize = nodeArrayBounds,
+					outputSize = bounds.size,
+					inputBounds = clampedReadBounds,
+					outputBounds = new IntBounds(new int3(), clampedReadBounds.size),
+				}.Schedule(dependencyTracker);
+			}
+
+			public GridGraphScanData ReadFromNodesAndCopy (GridNodeBase[] nodes, int3 nodeArrayBounds, IntBounds readBounds, JobHandle nodesDependsOn, NativeArray<float4> graphNodeNormals) {
+				GridGraphScanData newData = this;
+
+				newData.ReadFromNodes(nodes, nodeArrayBounds, readBounds, nodesDependsOn, graphNodeNormals);
+
+				// Overwrite a rectangle in the center with the data from this object.
+				// In the end we will have newly calculated data in the middle and data read from nodes along the borders
+				var relativeCopyBounds = this.bounds.Offset(-readBounds.min);
+
+				new CopyBuffersJob {
+					input = new CopyBuffersJob.Buffers(ref this),
+					output = new CopyBuffersJob.Buffers(ref newData),
+					outputSize = readBounds.size,
+					outputBounds = relativeCopyBounds,
+				}.Schedule(dependencyTracker);
+
+				return newData;
+			}
+
+			public JobHandle AssignToNodes (GridNodeBase[] nodes, int3 nodeArrayBounds, IntBounds writeMask, uint graphIndex, JobHandle nodesDependsOn, NativeArray<float4> nodeSurfaceNormals) {
+				// This is a managed type, we need to trick Unity to allow this inside of a job
+				var nodesHandle = System.Runtime.InteropServices.GCHandle.Alloc(nodes);
+
+				// Dirty all the nodes. This cannot be done in parallel.
+				var job1 = new JobDirtyNodes {
+					nodesHandle = nodesHandle,
+					nodeArrayBounds = nodeArrayBounds,
+					dataBounds = bounds,
+				}.ScheduleManaged(nodesDependsOn);
+
+				// Assign the data to the nodes (in parallel for performance)
+				// Note that it is essential that the nodes have earlier been dirtied, otherwise they might be dirtied in parallel which
+				// will cause all kinds of thread safety issues.
+				var job2 = new JobAssignNodeData {
+					nodesHandle = nodesHandle,
+					graphIndex = graphIndex,
+					nodePositions = nodePositions,
+					nodePenalties = nodePenalties,
+					nodeTags = nodeTags,
+					nodeConnections = nodeConnections,
+					nodeWalkableWithErosion = nodeWalkableWithErosion,
+					nodeWalkable = nodeWalkable,
+					nodeArrayBounds = nodeArrayBounds,
+					dataBounds = bounds,
+					writeMask = writeMask,
+				}.ScheduleBatch(numNodes, math.max(1000, numNodes/16), dependencyTracker, job1);
+
+				dependencyTracker.DeferFree(nodesHandle, job2);
+
+				var job3 = new JobCopyRectangle<float4> {
+					input = nodeNormals,
+					output = nodeSurfaceNormals,
+					inputSize = bounds.size,
+					outputSize = nodeArrayBounds,
+					inputBounds = new IntBounds(new int3(), bounds.size),
+					outputBounds = bounds,
+				}.Schedule(dependencyTracker);
+
+				return JobHandle.CombineDependencies(job2, job3);
+			}
+		}
+
+		struct GridIndexMapper : GraphUpdateObject.INodeIndexMapper {
+			public int3 dataSize;
+			public IntBounds iterationBounds;
+			public int Count => iterationBounds.size.x*iterationBounds.size.y*iterationBounds.size.z;
+
+			public GridIndexMapper(IntBounds dataBounds, IntBounds iterationBounds) {
+				UnityEngine.Assertions.Assert.IsTrue(dataBounds.Contains(iterationBounds));
+				this.dataSize = dataBounds.size;
+				this.iterationBounds = iterationBounds.Offset(-dataBounds.min);
+			}
+
+			public int this[int index] {
+				get {
+					int y = index/(iterationBounds.size.x*iterationBounds.size.z);
+					index -= y*(iterationBounds.size.x*iterationBounds.size.z);
+					int x = index % iterationBounds.size.x;
+					var z = index/iterationBounds.size.x;
+					return (y + iterationBounds.min.y)*(dataSize.x*dataSize.z) + (z + iterationBounds.min.z)*dataSize.x + iterationBounds.min.x + x;
+				}
+			}
+		}
+
+		public enum RecalculationMode {
+			/// <summary>Recalculates the nodes from scratch. Used when the graph is first scanned. You should have destroyed all existing nodes before updating the graph with this mode.</summary>
+			RecalculateFromScratch,
+			/// <summary>Recalculate the minimal number of nodes necessary to guarantee changes inside the graph update's bounding box are taken into account. Some data may be read from the existing nodes</summary>
+			RecalculateMinimal,
+			/// <summary>Nodes are not recalculated. Used for graph updates which only set node properties</summary>
+			NoRecalculation,
+		}
+
+		JobHandleWithMainThreadWork UpdateAreaBurst (GridNodeBase[] newNodes, int3 nodeArrayBounds, IntRect bounds, JobDependencyTracker dependencyTracker, JobHandle nodesDependsOn, Allocator allocationMethod, RecalculationMode recalculationMode, GraphUpdateObject graphUpdateObject = null) {
+			return new JobHandleWithMainThreadWork(UpdateAreaBurstCoroutine(newNodes, nodeArrayBounds, bounds, dependencyTracker, nodesDependsOn, allocationMethod, recalculationMode, graphUpdateObject), dependencyTracker);
+		}
+
+		IEnumerator<JobHandle> UpdateAreaBurstCoroutine (GridNodeBase[] newNodes, int3 nodeArrayBounds, IntRect rect, JobDependencyTracker dependencyTracker, JobHandle nodesDependsOn, Allocator allocationMethod, RecalculationMode recalculationMode, GraphUpdateObject graphUpdateObject) {
+			var originalRect = rect;
+
+			var fullRecalculationRect = rect;
+
+			if (collision.collisionCheck && collision.type != ColliderType.Ray) fullRecalculationRect = fullRecalculationRect.Expand(Mathf.CeilToInt(collision.diameter * 0.5f));
+
+			// Due to erosion a bit more of the graph may be affected by the updates in the fullRecalculationBounds
+			var writeMaskRect = fullRecalculationRect.Expand(erodeIterations + 1);
+
+			// Due to how erosion works we need to recalculate erosion in an even larger region to make sure we
+			// get the correct result inside the writeMask
+			var readRect = writeMaskRect.Expand(erodeIterations + 1);
+
+			if (recalculationMode == RecalculationMode.RecalculateFromScratch) {
+				// If we are not allowed to read from the graph we need to recalculate everything that we would otherwise just have read from the graph
+				fullRecalculationRect = readRect;
+			}
+
+			// Clamp to the grid dimensions
+			var gridRect = new IntRect(0, 0, width - 1, depth - 1);
+			readRect = IntRect.Intersection(readRect, gridRect);
+			fullRecalculationRect = IntRect.Intersection(fullRecalculationRect, gridRect);
+			writeMaskRect = IntRect.Intersection(writeMaskRect, gridRect);
+
+			// Check if there is anything to do. The bounds may not even overlap the graph.
+			// Note that writeMaskRect may overlap the graph even though fullRecalculationRect is invalid.
+			// We ignore that case however since any changes we might write can only be caused by a node that is actually recalculated.
+			if (!fullRecalculationRect.IsValid()) yield break;
+
+			if (recalculationMode == RecalculationMode.RecalculateMinimal && readRect == fullRecalculationRect) {
+				// There is no point reading from the graph since we are recalculating all those nodes anyway.
+				// This happens if an update is done to the whole graph.
+				// Skipping the read can improve performance quite a lot for that kind of updates.
+				// This is purely an optimization and should not change the result.
+				recalculationMode = RecalculationMode.RecalculateFromScratch;
+			}
+
+#if ASTAR_DEBUG
+			var debugMatrix = transform * Matrix4x4.TRS(new Vector3(0.5f, 0, 0.5f), Quaternion.identity, Vector3.one);
+			using (Draw.WithDuration(1)) {
+				fullRecalculationRect.DebugDraw(debugMatrix, Color.yellow);
+				writeMaskRect.DebugDraw(debugMatrix * Matrix4x4.Translate(Vector3.up*0.1f), Color.magenta);
+			}
+#endif
+
+			var layers = nodeArrayBounds.y;
+
+			// If recalculating a very small number of nodes then disable dependency tracking and just run jobs one after the other.
+			// This is faster since dependency tracking has some overhead
+			dependencyTracker.SetLinearDependencies(writeMaskRect.Width*writeMaskRect.Height*layers < 500);
+
+			// Note that IntRects are defined with inclusive (min,max) coordinates while IntBounds use an exclusive upper bounds.
+			var readBounds = new IntBounds(readRect.xmin, 0, readRect.ymin, readRect.xmax + 1, layers, readRect.ymax + 1);
+			var fullRecalculationBounds = new IntBounds(fullRecalculationRect.xmin, 0, fullRecalculationRect.ymin, fullRecalculationRect.xmax + 1, layers, fullRecalculationRect.ymax + 1);
+
+			var context = new GridGraphRules.Context {
+				graph = this,
+				data = new GridGraphScanData {
+					dependencyTracker = dependencyTracker,
+					allocationMethod = allocationMethod,
+					bounds = fullRecalculationBounds,
+					layers = layers,
+					numNodes = fullRecalculationBounds.volume,
+					transform = transform,
+					up = (transform.Transform(Vector3.up) - transform.Transform(Vector3.zero)).normalized,
+					layeredDataLayout = (this is LayerGridGraph),
+				},
+				tracker = dependencyTracker,
+			};
+
+			float characterHeight = (this is LayerGridGraph lg ? lg.characterHeight : float.PositiveInfinity);
+
+			if (recalculationMode == RecalculationMode.RecalculateFromScratch || recalculationMode == RecalculationMode.RecalculateMinimal) {
+				var heightCheck = collision.heightCheck && !collision.use2D;
+				if (heightCheck) {
+					var layerCount = dependencyTracker.NewNativeArray<int>(1, allocationMethod, NativeArrayOptions.UninitializedMemory);
+					yield return context.data.HeightCheck(collision, MaxLayers, layerCount, characterHeight);
+					// Never reduce the layer count of the graph.
+					// For (not layered) grid graphs this is always 1.
+					// Unless we are recalculating the whole graph: in that case we don't care about the existing layers.
+					context.data.layers = recalculationMode == RecalculationMode.RecalculateFromScratch ? layerCount[0] : Mathf.Max(LayerCount, layerCount[0]);
+					context.data.bounds.max.y = context.data.layers;
+					readBounds.max.y = context.data.layers;
+					context.data.numNodes = context.data.bounds.volume;
+
+					// The size of the buffers depend on the height check for layered grid graphs since the number of layers might change
+					context.data.AllocateBuffers();
+					// Set the positions to be used if the height check ray didn't hit anything
+					context.data.SetDefaultNodePositions(transform);
+					context.data.CopyHits();
+					context.data.CalculateWalkabilityFromHeightData(useRaycastNormal, collision.unwalkableWhenNoGround, maxSlope, characterHeight);
+				} else {
+					context.data.AllocateBuffers();
+					context.data.SetDefaultNodePositions(transform);
+					// Mark all nodes as walkable to begin with
+					context.data.nodeWalkable.MemSet(true).Schedule(dependencyTracker);
+					// Set the normals to point straight up
+					context.data.nodeNormals.MemSet(new float4(context.data.up.x, context.data.up.y, context.data.up.z, 0)).Schedule(dependencyTracker);
+				}
+
+				context.data.SetDefaultPenalties(initialPenalty);
+
+				// Kick off jobs early while we prepare the rest of them
+				JobHandle.ScheduleBatchedJobs();
+
+				rules.RebuildIfNecessary();
+
+
+				{
+					// Here we execute some rules and possibly wait for some dependencies to complete.
+					// If main thread rules are used then we need to wait for all previous jobs to complete before the rule is actually executed.
+					var wait = rules.ExecuteRule(GridGraphRule.Pass.BeforeCollision, context);
+					while (wait.MoveNext()) yield return wait.Current;
+				}
+
+				if (collision.collisionCheck) {
+					var wait = context.data.CollisionCheck(collision);
+					while (wait != null && wait.MoveNext()) {
+						yield return wait.Current;
+					}
+				}
+
+				{
+					var wait = rules.ExecuteRule(GridGraphRule.Pass.BeforeConnections, context);
+					while (wait.MoveNext()) yield return wait.Current;
+				}
+
+				if (recalculationMode == RecalculationMode.RecalculateMinimal) {
+					context.data = context.data.ReadFromNodesAndCopy(newNodes, nodeArrayBounds, readBounds, nodesDependsOn, nodeSurfaceNormals);
+				}
+			} else {
+				// If we are not allowed to recalculate the graph then we read all the necessary info from the existing nodes
+				context.data.ReadFromNodes(newNodes, nodeArrayBounds, readBounds, nodesDependsOn, nodeSurfaceNormals);
+			}
+
+			if (graphUpdateObject != null) {
+				// Mark nodes that might be changed
+				for (int y = 0; y < nodeArrayBounds.y; y++) {
+					for (int z = writeMaskRect.ymin; z <= writeMaskRect.ymax; z++) {
+						var rowOffset = y*nodeArrayBounds.x*nodeArrayBounds.z + z*nodeArrayBounds.x;
+						for (int x = writeMaskRect.xmin; x <= writeMaskRect.xmax; x++) {
+							graphUpdateObject.WillUpdateNode(nodes[rowOffset + x]);
+						}
+					}
+				}
+
+				var updateRect = IntRect.Intersection(originalRect, gridRect);
+				// Note that IntRects are defined with inclusive (min,max) coordinates while IntBounds use an exclusive upper bounds.
+				var updateBounds = new IntBounds(updateRect.xmin, 0, updateRect.ymin, updateRect.xmax + 1, context.data.layers, updateRect.ymax + 1);
+				graphUpdateObject.ApplyJob(new GridIndexMapper(context.data.bounds, updateBounds), new GraphUpdateObject.GraphUpdateData {
+					nodePositions = context.data.nodePositions,
+					nodePenalties = context.data.nodePenalties,
+					nodeWalkable = context.data.nodeWalkable,
+					nodeTags = context.data.nodeTags,
+				}, dependencyTracker);
+			}
+
+			// Calculate the connections between nodes and also erode the graph
+			context.data.Connections(maxStepHeight, maxStepUsesSlope, neighbours, cutCorners, collision.use2D, false, characterHeight);
+			{
+				var wait = rules.ExecuteRule(GridGraphRule.Pass.AfterConnections, context);
+				while (wait.MoveNext()) yield return wait.Current;
+			}
+
+			var writeMaskBounds = new IntBounds(writeMaskRect.xmin, 0, writeMaskRect.ymin, writeMaskRect.xmax + 1, context.data.layers, writeMaskRect.ymax + 1);
+
+			if (erodeIterations > 0) {
+				context.data.Erosion(neighbours, erodeIterations, writeMaskBounds, erosionUseTags, erosionFirstTag);
+
+				// After erosion is done we need to recalculate the node connections
+				context.data.Connections(maxStepHeight, maxStepUsesSlope, neighbours, cutCorners, collision.use2D, true, characterHeight);
+				{
+					var wait = rules.ExecuteRule(GridGraphRule.Pass.AfterConnections, context);
+					while (wait.MoveNext()) yield return wait.Current;
+				}
+			} else {
+				// If erosion is disabled we can just copy nodeWalkable to nodeWalkableWithErosion
+				// TODO: Can we just do an assignment of the whole array?
+				context.data.nodeWalkable.CopyToJob(context.data.nodeWalkableWithErosion).Schedule(dependencyTracker);
+			}
+
+			{
+				var wait = rules.ExecuteRule(GridGraphRule.Pass.PostProcess, context);
+				while (wait.MoveNext()) yield return wait.Current;
+			}
+
+			var newNodeArrayBounds = nodeArrayBounds;
+			newNodeArrayBounds.y = context.data.layers;
+			var newNodeCount = newNodeArrayBounds.x*newNodeArrayBounds.y*newNodeArrayBounds.z;
+
+			bool reallocatedNodeNormals = false;
+			var newNodeSurfaceNormals = nodeSurfaceNormals;
+
+			// Resize the normals array if necessary
+			if (!newNodeSurfaceNormals.IsCreated || newNodeSurfaceNormals.Length != newNodeCount) {
+				reallocatedNodeNormals = true;
+				newNodeSurfaceNormals = new NativeArray<float4>(newNodeCount, Allocator.Persistent, NativeArrayOptions.ClearMemory);
+
+				if (nodeSurfaceNormals.IsCreated && recalculationMode != RecalculationMode.RecalculateFromScratch && width == newNodeArrayBounds.x && depth == newNodeArrayBounds.z) {
+					// Copy the old normals to the new array
+					new JobCopyRectangle<float4> {
+						input = nodeSurfaceNormals,
+						output = newNodeSurfaceNormals,
+						inputSize = nodeArrayBounds,
+						outputSize = newNodeArrayBounds,
+						inputBounds = new IntBounds(0, nodeArrayBounds),
+						outputBounds = new IntBounds(0, nodeArrayBounds)
+					}.Schedule(dependencyTracker);
+				}
+			}
+
+			// We need to wait for the nodes array to be fully initialized before trying to resize it or reading from it
+			yield return nodesDependsOn;
+
+			Memory.Realloc(ref newNodes, newNodeCount);
+			var allocJob = new JobAllocateNodes {
+				active = active,
+				nodeNormals = context.data.nodeNormals,
+				dataBounds = context.data.bounds,
+				nodeArrayBounds = newNodeArrayBounds,
+				nodes = newNodes,
+				newGridNodeDelegate = newGridNodeDelegate,
+			};
+
+			// This job needs to be executed on the main thread
+			yield return allocJob.GetDependencies(dependencyTracker);
+			allocJob.Execute();
+
+			yield return context.data.AssignToNodes(newNodes, newNodeArrayBounds, writeMaskBounds, graphIndex, new JobHandle(), newNodeSurfaceNormals);
+
+			// Dispose the old normals array and replace it with the new one.
+			// The disposal must happen after the above yield to make sure no jobs are using it at the moment.
+			if (reallocatedNodeNormals) {
+				if (nodeSurfaceNormals.IsCreated) nodeSurfaceNormals.Dispose();
+				nodeSurfaceNormals = newNodeSurfaceNormals;
+			}
+
+			// Assign the new nodes as an atomic operation
+			nodes = newNodes;
+			// TODO: Remove casting
+			if (this is LayerGridGraph layeredGridGraph) layeredGridGraph.layerCount = context.data.layers;
+		}
+
+		public static bool USE_BURST = true;
+		public static int BATCH_SIZE = 512;
+
+		protected override IEnumerable<Progress> ScanInternal (bool async) {
+			if (USE_BURST) {
+				foreach (var p in ScanInternalBurst(async)) {
+					yield return p;
+				}
+				yield break;
+			}
+
+
 			if (nodeSize <= 0) {
 				yield break;
 			}
@@ -1091,8 +2026,6 @@ namespace Pathfinding {
 			}
 			collision.Initialize(transform, nodeSize);
 
-			textureData.Initialize();
-
 			int progressCounter = 0;
 
 			const int YieldEveryNNodes = 1000;
@@ -1110,9 +2043,6 @@ namespace Pathfinding {
 					// Updates the position of the node
 					// and a bunch of other things
 					RecalculateCell(x, z);
-
-					// Apply texture data if necessary
-					textureData.Apply(nodes[z*width + x], x, z);
 				}
 			}
 
@@ -1186,11 +2116,6 @@ namespace Pathfinding {
 
 			if (resetPenalties) {
 				node.Penalty = initialPenalty;
-
-				// Calculate a penalty based on the y coordinate of the node
-				if (penaltyPosition) {
-					node.Penalty += (uint)Mathf.RoundToInt((node.position.y-penaltyPositionOffset)*penaltyPositionFactor);
-				}
 			}
 
 			if (resetTags) {
@@ -1202,11 +2127,6 @@ namespace Pathfinding {
 				if (hit.normal != Vector3.zero) {
 					// Take the dot product to find out the cosinus of the angle it has (faster than Vector3.Angle)
 					float angle = Vector3.Dot(hit.normal.normalized, collision.up);
-
-					// Add penalty based on normal
-					if (penaltyAngle && resetPenalties) {
-						node.Penalty += (uint)Mathf.RoundToInt((1F-Mathf.Pow(angle, penaltyAnglePower))*penaltyAngleFactor);
-					}
 
 					// Cosinus of the max slope
 					float cosAngle = Mathf.Cos(maxSlope*Mathf.Deg2Rad);
@@ -1239,14 +2159,14 @@ namespace Pathfinding {
 			if (neighbours == NumNeighbours.Six) {
 				// Check the 6 hexagonal connections
 				for (int i = 0; i < 6; i++) {
-					if (!HasNodeConnection(node, hexagonNeighbourIndices[i])) {
+					if (!node.HasConnectionInDirection(hexagonNeighbourIndices[i])) {
 						return true;
 					}
 				}
 			} else {
 				// Check the four axis aligned connections
 				for (int i = 0; i < 4; i++) {
-					if (!HasNodeConnection(node, i)) {
+					if (!node.HasConnectionInDirection(i)) {
 						return true;
 					}
 				}
@@ -1361,7 +2281,7 @@ namespace Pathfinding {
 			}
 
 			// Return the list to the pool
-			Pathfinding.Util.ListPool<GraphNode>.Release (ref nodesInRect);
+			Pathfinding.Util.ListPool<GraphNode>.Release(ref nodesInRect);
 		}
 
 		/// <summary>
@@ -1380,19 +2300,19 @@ namespace Pathfinding {
 				return false;
 			}
 
-			if (maxClimb <= 0 || collision.use2D) return true;
+			if (maxStepHeight <= 0 || collision.use2D) return true;
 
 			if (transform.onlyTranslational) {
 				// Common case optimization.
 				// If the transformation is only translational, that is if the graph is not rotated or transformed
 				// in any other way than changing its center. Then we can use this simplified code.
 				// This code is hot when scanning so it does have an impact.
-				return System.Math.Abs(node1.position.y - node2.position.y) <= maxClimb*Int3.Precision;
+				return System.Math.Abs(node1.position.y - node2.position.y) <= maxStepHeight*Int3.Precision;
 			} else {
 				var p1 = (Vector3)node1.position;
 				var p2 = (Vector3)node2.position;
 				var up = transform.WorldUpAtGraphPosition(p1);
-				return System.Math.Abs(Vector3.Dot(up, p1) - Vector3.Dot(up, p2)) <= maxClimb;
+				return System.Math.Abs(Vector3.Dot(up, p1) - Vector3.Dot(up, p2)) <= maxStepHeight;
 			}
 		}
 
@@ -1472,7 +2392,7 @@ namespace Pathfinding {
 		/// See: CalculateConnections(GridNodeBase)
 		/// </summary>
 		public virtual void CalculateConnections (int x, int z) {
-			var node = nodes[z*width + x];
+			var node = nodes[z*width + x] as GridNode;
 
 			// All connections are disabled if the node is not walkable
 			if (!node.Walkable) {
@@ -1531,7 +2451,7 @@ namespace Pathfinding {
 								int nz = z + neighbourZOffsets[directionIndex];
 
 								if (nx >= 0 & nz >= 0 & nx < width & nz < depth) {
-									GridNode other = nodes[index+neighbourOffsets[directionIndex]];
+									var other = nodes[index+neighbourOffsets[directionIndex]];
 
 									if (IsValidConnection(node, other)) {
 										diagConns |= 1 << directionIndex;
@@ -1546,7 +2466,7 @@ namespace Pathfinding {
 							// We don't need to check if it is out of bounds because if both of
 							// the other neighbours are inside the bounds this one must be too
 							if ((conns >> i & 1) != 0 && ((conns >> (i+1) | conns >> (i+1-4)) & 1) != 0) {
-								GridNode other = nodes[index+neighbourOffsets[i+4]];
+								var other = nodes[index+neighbourOffsets[i+4]];
 
 								if (IsValidConnection(node, other)) {
 									diagConns |= 1 << (i+4);
@@ -1581,8 +2501,8 @@ namespace Pathfinding {
 		}
 
 
-		public override void OnDrawGizmos (RetainedGizmos gizmos, bool drawNodes) {
-			using (var helper = gizmos.GetSingleFrameGizmoHelper(active)) {
+		public override void OnDrawGizmos (DrawingData gizmos, bool drawNodes, RedrawScope redrawScope) {
+			using (var helper = GraphGizmoHelper.GetSingleFrameGizmoHelper(gizmos, active, redrawScope)) {
 				// The width and depth fields might not be up to date, so recalculate
 				// them from the #unclampedSize field
 				int w, d;
@@ -1590,20 +2510,14 @@ namespace Pathfinding {
 				CalculateDimensions(out w, out d, out s);
 				var bounds = new Bounds();
 				bounds.SetMinMax(Vector3.zero, new Vector3(w, 0, d));
-				var trans = CalculateTransform();
-				helper.builder.DrawWireCube(trans, bounds, Color.white);
+				using (helper.builder.WithMatrix(CalculateTransform().matrix)) {
+					helper.builder.WireBox(bounds, Color.white);
 
-				int nodeCount = nodes != null ? nodes.Length : -1;
-				if (this is LayerGridGraph) nodeCount = (this as LayerGridGraph).nodes != null ? (this as LayerGridGraph).nodes.Length : -1;
+					int nodeCount = nodes != null ? nodes.Length : -1;
 
-				if (drawNodes && width*depth*LayerCount != nodeCount) {
-					var color = new Color(1, 1, 1, 0.2f);
-					for (int z = 0; z < d; z++) {
-						helper.builder.DrawLine(trans.Transform(new Vector3(0, 0, z)), trans.Transform(new Vector3(w, 0, z)), color);
-					}
-
-					for (int x = 0; x < w; x++) {
-						helper.builder.DrawLine(trans.Transform(new Vector3(x, 0, 0)), trans.Transform(new Vector3(x, 0, d)), color);
+					if (drawNodes && width*depth*LayerCount != nodeCount) {
+						var color = new Color(1, 1, 1, 0.2f);
+						helper.builder.WireGrid(new float3(w*0.5f, 0, d*0.5f), Quaternion.identity, new int2(w, d), new float2(w, d), color);
 					}
 				}
 			}
@@ -1617,23 +2531,23 @@ namespace Pathfinding {
 			// for large graphs. However just checking if any mesh needs to be updated is relatively fast. So we just store
 			// a hash together with the mesh and rebuild the mesh when necessary.
 			const int chunkWidth = 32;
-			GridNodeBase[] allNodes = ArrayPool<GridNodeBase>.Claim (chunkWidth*chunkWidth*LayerCount);
+			GridNodeBase[] allNodes = ArrayPool<GridNodeBase>.Claim(chunkWidth*chunkWidth*LayerCount);
 			for (int cx = width/chunkWidth; cx >= 0; cx--) {
 				for (int cz = depth/chunkWidth; cz >= 0; cz--) {
 					Profiler.BeginSample("Hash");
 					var allNodesCount = GetNodesInRegion(new IntRect(cx*chunkWidth, cz*chunkWidth, (cx+1)*chunkWidth - 1, (cz+1)*chunkWidth - 1), allNodes);
-					var hasher = new RetainedGizmos.Hasher(active);
-					hasher.AddHash(showMeshOutline ? 1 : 0);
-					hasher.AddHash(showMeshSurface ? 1 : 0);
-					hasher.AddHash(showNodeConnections ? 1 : 0);
+					var hasher = new NodeHasher(active);
+					hasher.Add(showMeshOutline);
+					hasher.Add(showMeshSurface);
+					hasher.Add(showNodeConnections);
 					for (int i = 0; i < allNodesCount; i++) {
 						hasher.HashNode(allNodes[i]);
 					}
 					Profiler.EndSample();
 
-					if (!gizmos.Draw(hasher)) {
+					if (!gizmos.Draw(hasher, redrawScope)) {
 						Profiler.BeginSample("Rebuild Retained Gizmo Chunk");
-						using (var helper = gizmos.GetGizmoHelper(active, hasher)) {
+						using (var helper = GraphGizmoHelper.GetGizmoHelper(gizmos, active, hasher, redrawScope)) {
 							if (showNodeConnections) {
 								for (int i = 0; i < allNodesCount; i++) {
 									// Don't bother drawing unwalkable nodes
@@ -1648,9 +2562,9 @@ namespace Pathfinding {
 					}
 				}
 			}
-			ArrayPool<GridNodeBase>.Release (ref allNodes);
+			ArrayPool<GridNodeBase>.Release(ref allNodes);
 
-			if (active.showUnwalkableNodes) DrawUnwalkableNodes(nodeSize * 0.3f);
+			if (active.showUnwalkableNodes) DrawUnwalkableNodes(gizmos, nodeSize * 0.3f, redrawScope);
 		}
 
 		/// <summary>
@@ -1673,8 +2587,8 @@ namespace Pathfinding {
 			var verticesPerNode = 3*trianglesPerNode;
 
 			// Get arrays that have room for all vertices/colors (the array might be larger)
-			var vertices = ArrayPool<Vector3>.Claim (walkable*verticesPerNode);
-			var colors = ArrayPool<Color>.Claim (walkable*verticesPerNode);
+			var vertices = ArrayPool<Vector3>.Claim(walkable*verticesPerNode);
+			var colors = ArrayPool<Color>.Claim(walkable*verticesPerNode);
 			int baseIndex = 0;
 
 			for (int i = 0; i < nodeCount; i++) {
@@ -1753,7 +2667,7 @@ namespace Pathfinding {
 					// then most chunks would be cached by the gizmo system, but the node indices may have changed and
 					// if NodeIndex was used then we might get incorrect gizmos at the borders between chunks.
 					if (other == null || (showMeshOutline && node.NodeInGridIndex < other.NodeInGridIndex)) {
-						helper.builder.DrawLine(vertices[baseIndex + j], vertices[baseIndex + (j+1) % neighbourIndices.Length], other == null ? Color.black : nodeColor);
+						helper.builder.Line(vertices[baseIndex + j], vertices[baseIndex + (j+1) % neighbourIndices.Length], other == null ? Color.black : nodeColor);
 					}
 				}
 
@@ -1762,16 +2676,18 @@ namespace Pathfinding {
 
 			if (showMeshSurface) helper.DrawTriangles(vertices, colors, baseIndex*trianglesPerNode/verticesPerNode);
 
-			ArrayPool<Vector3>.Release (ref vertices);
-			ArrayPool<Color>.Release (ref colors);
+			ArrayPool<Vector3>.Release(ref vertices);
+			ArrayPool<Color>.Release(ref colors);
 		}
 
 		/// <summary>
-		/// A rect with all nodes that the bounds could touch.
+		/// A rect that contains all nodes that the bounds could touch.
 		/// This correctly handles rotated graphs and other transformations.
 		/// The returned rect is guaranteed to not extend outside the graph bounds.
+		///
+		/// Note: The rect may contain nodes that are not contained in the bounding box.
 		/// </summary>
-		protected IntRect GetRectFromBounds (Bounds bounds) {
+		public IntRect GetRectFromBounds (Bounds bounds) {
 			// Take the bounds and transform it using the matrix
 			// Then convert that to a rectangle which contains
 			// all nodes that might be inside the bounds
@@ -1844,11 +2760,11 @@ namespace Pathfinding {
 			var rect = GetRectFromBounds(bounds);
 
 			if (nodes == null || !rect.IsValid() || nodes.Length != width*depth) {
-				return ListPool<GraphNode>.Claim ();
+				return ListPool<GraphNode>.Claim();
 			}
 
 			// Get a buffer we can use
-			var inArea = ListPool<GraphNode>.Claim (rect.Width*rect.Height);
+			var inArea = ListPool<GraphNode>.Claim(rect.Width*rect.Height);
 
 			// Loop through all nodes in the rectangle
 			for (int x = rect.xmin; x <= rect.xmax; x++) {
@@ -1868,7 +2784,11 @@ namespace Pathfinding {
 			return inArea;
 		}
 
-		/// <summary>Get all nodes in a rectangle.</summary>
+		/// <summary>
+		/// Get all nodes in a rectangle.
+		///
+		/// See: <see cref="GetRectFromBounds"/>
+		/// </summary>
 		/// <param name="rect">Region in which to return nodes. It will be clamped to the grid.</param>
 		public virtual List<GraphNode> GetNodesInRegion (IntRect rect) {
 			// Clamp the rect to the grid
@@ -1877,10 +2797,10 @@ namespace Pathfinding {
 
 			rect = IntRect.Intersection(rect, gridRect);
 
-			if (nodes == null || !rect.IsValid() || nodes.Length != width*depth) return ListPool<GraphNode>.Claim (0);
+			if (nodes == null || !rect.IsValid() || nodes.Length != width*depth) return ListPool<GraphNode>.Claim(0);
 
 			// Get a buffer we can use
-			var inArea = ListPool<GraphNode>.Claim (rect.Width*rect.Height);
+			var inArea = ListPool<GraphNode>.Claim(rect.Width*rect.Height);
 
 
 			for (int z = rect.ymin; z <= rect.ymax; z++) {
@@ -1899,6 +2819,8 @@ namespace Pathfinding {
 		///
 		/// Note: This method is much faster than GetNodesInRegion(IntRect) which returns a list because this method can make use of the highly optimized
 		///  System.Array.Copy method.
+		///
+		/// See: <see cref="GetRectFromBounds"/>
 		/// </summary>
 		/// <param name="rect">Region in which to return nodes. It will be clamped to the grid.</param>
 		/// <param name="buffer">Buffer in which the nodes will be stored. Should be at least as large as the number of nodes that can exist in that region.</param>
@@ -1999,9 +2921,18 @@ namespace Pathfinding {
 			}
 		}
 
+		public static bool USE_BURST_UPDATE = true;
+
+		internal JobHandleWithMainThreadWork UpdateRegion (IntRect bounds, JobDependencyTracker dependencyTracker, Allocator allocator, JobHandle dependsOn = default) {
+			if (nodes == null || nodes.Length != width*depth) throw new System.Exception("The Grid Graph is not scanned, cannot update");
+
+			// Allocate buffers for jobs
+			return UpdateAreaBurst(nodes, new int3(width, LayerCount, depth), bounds, dependencyTracker, dependsOn, allocator, RecalculationMode.RecalculateMinimal, null);
+		}
+
 		/// <summary>Internal function to update an area of the graph</summary>
 		void IUpdatableGraph.UpdateArea (GraphUpdateObject o) {
-			if (nodes == null || nodes.Length != width*depth) {
+			if (nodes == null || nodes.Length != width*depth*LayerCount) {
 				Debug.LogWarning("The Grid Graph is not scanned, cannot update area");
 				//Not scanned
 				return;
@@ -2012,10 +2943,23 @@ namespace Pathfinding {
 			int erosion;
 			CalculateAffectedRegions(o, out originalRect, out affectRect, out physicsRect, out willChangeWalkability, out erosion);
 
-#if ASTARDEBUG
+			if (USE_BURST_UPDATE) {
+				collision.Initialize(transform, nodeSize);
+
+				// Allocate buffers for jobs
+				var dependencyTracker = ObjectPool<JobDependencyTracker>.Claim();
+
+				var updateNodesJob = UpdateAreaBurst(nodes, new int3(width, LayerCount, depth), originalRect, dependencyTracker, new JobHandle(), Allocator.TempJob, o.updatePhysics ? RecalculationMode.RecalculateMinimal : RecalculationMode.NoRecalculation, o);
+				updateNodesJob.Complete();
+
+				ObjectPool<JobDependencyTracker>.Release(ref dependencyTracker);
+				return;
+			}
+#if ASTARDEBUG || true
 			var debugMatrix = transform * Matrix4x4.TRS(new Vector3(0.5f, 0, 0.5f), Quaternion.identity, Vector3.one);
 
 			originalRect.DebugDraw(debugMatrix, Color.red);
+			physicsRect.DebugDraw(debugMatrix, Color.yellow);
 #endif
 
 			// Rect which covers the whole grid
@@ -2051,7 +2995,7 @@ namespace Pathfinding {
 				for (int x = clampedRect.xmin; x <= clampedRect.xmax; x++) {
 					int index = z*width+x;
 
-					GridNode node = nodes[index];
+					var node = nodes[index];
 
 					if (o.bounds.Contains((Vector3)node.position)) {
 						if (willChangeWalkability) {
@@ -2087,7 +3031,7 @@ namespace Pathfinding {
 				erosionRect1 = IntRect.Intersection(erosionRect1, gridRect);
 				erosionRect2 = IntRect.Intersection(erosionRect2, gridRect);
 
-#if ASTARDEBUG
+#if ASTARDEBUG || true
 				erosionRect1.DebugDraw(debugMatrix, Color.magenta);
 				erosionRect2.DebugDraw(debugMatrix, Color.cyan);
 #endif
@@ -2102,7 +3046,7 @@ namespace Pathfinding {
 					for (int z = erosionRect2.ymin; z <= erosionRect2.ymax; z++) {
 						int index = z*width+x;
 
-						GridNode node = nodes[index];
+						var node = nodes[index];
 
 						bool tmp = node.Walkable;
 						node.Walkable = node.WalkableErosion;
@@ -2129,7 +3073,7 @@ namespace Pathfinding {
 
 						int index = z*width+x;
 
-						GridNode node = nodes[index];
+						var node = nodes[index];
 
 						//Restore temporarily stored data
 						node.Walkable = node.TmpWalkable;
@@ -2300,10 +3244,6 @@ namespace Pathfinding {
 		/// bool anyObstaclesInTheWay = gg.Linecast(transform.position, enemy.position);
 		/// </code>
 		///
-		/// Version: In 3.6.8 this method was rewritten to improve accuracy and performance.
-		/// Previously it used a sampling approach which could cut corners of obstacles slightly
-		/// and was pretty inefficient.
-		///
 		/// [Open online documentation to see images]
 		/// </summary>
 		/// <param name="from">Point to linecast from</param>
@@ -2312,6 +3252,29 @@ namespace Pathfinding {
 		/// <param name="hint">This parameter is deprecated. It will be ignored.</param>
 		/// <param name="trace">If a list is passed, then it will be filled with all nodes the linecast traverses</param>
 		public bool Linecast (Vector3 from, Vector3 to, GraphNode hint, out GraphHitInfo hit, List<GraphNode> trace) {
+			return Linecast(from, to, out hit, trace, null);
+		}
+
+		/// <summary>
+		/// Returns if there is an obstacle between from and to on the graph.
+		///
+		/// This is not the same as Physics.Linecast, this function traverses the graph and looks for collisions.
+		///
+		/// <code>
+		/// var gg = AstarPath.active.data.gridGraph;
+		/// bool anyObstaclesInTheWay = gg.Linecast(transform.position, enemy.position);
+		/// </code>
+		///
+		/// [Open online documentation to see images]
+		/// </summary>
+		/// <param name="from">Point to linecast from</param>
+		/// <param name="to">Point to linecast to</param>
+		/// <param name="hit">Contains info on what was hit, see GraphHitInfo</param>
+		/// <param name="hint">This parameter is deprecated. It will be ignored.</param>
+		/// <param name="trace">If a list is passed, then it will be filled with all nodes the linecast traverses</param>
+		/// <param name="filter">If not null then the delegate will be called for each node and if it returns false the node will be treated as unwalkable and a hit will be returned.
+		///               Note that unwalkable nodes are always treated as unwalkable regardless of what this filter returns.</param>
+		public bool Linecast (Vector3 from, Vector3 to, out GraphHitInfo hit, List<GraphNode> trace, System.Func<GraphNode, bool> filter) {
 			hit = new GraphHitInfo();
 
 			hit.origin = from;
@@ -2331,7 +3294,7 @@ namespace Pathfinding {
 			var startNode = GetNearest(transform.Transform(fromInGraphSpace), NNConstraint.None).node as GridNodeBase;
 			var endNode = GetNearest(transform.Transform(toInGraphSpace), NNConstraint.None).node as GridNodeBase;
 
-			if (!startNode.Walkable) {
+			if (startNode != null && (!startNode.Walkable || (filter != null && !filter(startNode)))) {
 				hit.node = startNode;
 				// Hit point is the point where the segment intersects with the graph boundary
 				// or just #from if it starts inside the graph
@@ -2414,9 +3377,9 @@ namespace Pathfinding {
 				// and pick the appropriate direction to move in
 				int ndir = nerror < 0 ? directionToIncreaseError : directionToReduceError;
 
-				// Check we can move in that direction
+				// Check if we can move in that direction
 				var other = current.GetNeighbourAlongDirection(ndir);
-				if (other != null) {
+				if (other != null && (filter == null || filter(other))) {
 					current = other;
 				} else {
 					// Hit obstacle
@@ -2492,6 +3455,7 @@ namespace Pathfinding {
 
 		/// <summary>
 		/// Returns if there is an obstacle between the two nodes on the graph.
+		///
 		/// This method is very similar to the other Linecast methods however it is much faster
 		/// due to being able to use only integer math and not having to look up which node is closest to a particular input point.
 		///
@@ -2502,7 +3466,11 @@ namespace Pathfinding {
 		/// bool anyObstaclesInTheWay = gg.Linecast(node1, node2);
 		/// </code>
 		/// </summary>
-		public bool Linecast (GridNodeBase fromNode, GridNodeBase toNode) {
+		/// <param name="fromNode">Node to start from.</param>
+		/// <param name="toNode">Node to try to reach using a straight line.</param>
+		/// <param name="filter">If not null then the delegate will be called for each node and if it returns false the node will be treated as unwalkable and a hit will be returned.
+		///               Note that unwalkable nodes are always treated as unwalkable regardless of what this filter returns.</param>
+		public bool Linecast (GridNodeBase fromNode, GridNodeBase toNode, System.Func<GraphNode, bool> filter = null) {
 			var dir = new Int2(toNode.XCoordinateInGrid - fromNode.XCoordinateInGrid, toNode.ZCoordinateInGrid - fromNode.ZCoordinateInGrid);
 
 			// How much further we move away from (or towards) the line when walking along the primary direction (e.g up and right or down and left).
@@ -2540,6 +3508,10 @@ namespace Pathfinding {
 			int directionToIncreaseError = (quadrant + 2) & 0x3;
 			int directionDiagonal = (dir.x != 0 && dir.y != 0) ? 4 + ((quadrant + 1) & 0x3) : -1;
 			Int2 offset = new Int2(0, 0);
+
+			// Use the filter
+			if (filter != null && fromNode != null && !filter(fromNode)) fromNode = null;
+
 			while (fromNode != null && fromNode.NodeInGridIndex != toNode.NodeInGridIndex) {
 				// This is proportional to the distance between the line and the node
 				var error = CrossMagnitude(dir, offset) * 2;
@@ -2553,6 +3525,10 @@ namespace Pathfinding {
 				if (nerror == 0 && directionDiagonal != -1) ndir = directionDiagonal;
 
 				fromNode = fromNode.GetNeighbourAlongDirection(ndir);
+
+				// Use the filter
+				if (filter != null && fromNode != null && !filter(fromNode)) fromNode = null;
+
 				offset += new Int2(neighbourXOffsets[ndir], neighbourZOffsets[ndir]);
 			}
 			return fromNode != toNode;
@@ -2565,6 +3541,7 @@ namespace Pathfinding {
 		///
 		/// See: neighbourOffsets
 		/// </summary>
+		[System.Obsolete("Use GridNode.HasConnectionInDirection instead")]
 		public bool CheckConnection (GridNode node, int dir) {
 			if (neighbours == NumNeighbours.Eight || neighbours == NumNeighbours.Six || dir < 4) {
 				return HasNodeConnection(node, dir);
@@ -2575,14 +3552,14 @@ namespace Pathfinding {
 				if (!HasNodeConnection(node, dir1) || !HasNodeConnection(node, dir2)) {
 					return false;
 				} else {
-					GridNode n1 = nodes[node.NodeInGridIndex+neighbourOffsets[dir1]];
-					GridNode n2 = nodes[node.NodeInGridIndex+neighbourOffsets[dir2]];
+					var n1 = nodes[node.NodeInGridIndex+neighbourOffsets[dir1]];
+					var n2 = nodes[node.NodeInGridIndex+neighbourOffsets[dir2]];
 
 					if (!n1.Walkable || !n2.Walkable) {
 						return false;
 					}
 
-					if (!HasNodeConnection(n2, dir1) || !HasNodeConnection(n1, dir2)) {
+					if (!HasNodeConnection(n2 as GridNode, dir1) || !HasNodeConnection(n1 as GridNode, dir2)) {
 						return false;
 					}
 				}
@@ -2601,6 +3578,8 @@ namespace Pathfinding {
 			for (int i = 0; i < nodes.Length; i++) {
 				nodes[i].SerializeNode(ctx);
 			}
+
+			SerializeNodeSurfaceNormals(ctx);
 		}
 
 		protected override void DeserializeExtraInfo (GraphSerializationContext ctx) {
@@ -2617,6 +3596,33 @@ namespace Pathfinding {
 				nodes[i] = new GridNode(active);
 				nodes[i].DeserializeNode(ctx);
 			}
+
+			DeserializeNodeSurfaceNormals(ctx, nodes, ctx.meta.version < AstarSerializer.V4_3_6);
+		}
+
+		protected void SerializeNodeSurfaceNormals (GraphSerializationContext ctx) {
+			for (int i = 0; i < nodes.Length; i++) {
+				ctx.SerializeVector3(new Vector3(nodeSurfaceNormals[i].x, nodeSurfaceNormals[i].y, nodeSurfaceNormals[i].z));
+			}
+		}
+
+		protected void DeserializeNodeSurfaceNormals (GraphSerializationContext ctx, GridNodeBase[] nodes, bool ignoreForCompatibility) {
+			if (nodeSurfaceNormals.IsCreated) nodeSurfaceNormals.Dispose();
+			nodeSurfaceNormals = new NativeArray<float4>(nodes.Length, Allocator.Persistent, NativeArrayOptions.UninitializedMemory);
+			if (ignoreForCompatibility) {
+				// For backwards compatibility with older versions that do not have the information stored.
+				// For most of these versions the #maxStepUsesSlope field will be deserialized to false anyway, so this array will not have any effect.
+				for (int i = 0; i < nodes.Length; i++) {
+					// If a node is null (can only happen for layered grid graphs) then the normal must be set to zero.
+					// Otherwise we set it to a "reasonable" up direction.
+					nodeSurfaceNormals[i] = nodes[i] != null ? new float4(0, 1, 0, 0) : float4.zero;
+				}
+			} else {
+				for (int i = 0; i < nodes.Length; i++) {
+					var v = ctx.DeserializeVector3();
+					nodeSurfaceNormals[i] = new float4(v.x, v.y, v.z, 0);
+				}
+			}
 		}
 
 		protected override void DeserializeSettingsCompatibility (GraphSerializationContext ctx) {
@@ -2628,7 +3634,7 @@ namespace Pathfinding {
 			unclampedSize = (Vector2)ctx.DeserializeVector3();
 			nodeSize = ctx.reader.ReadSingle();
 			collision.DeserializeSettingsCompatibility(ctx);
-			maxClimb = ctx.reader.ReadSingle();
+			maxStepHeight = ctx.reader.ReadSingle();
 			ctx.reader.ReadInt32();
 			maxSlope = ctx.reader.ReadSingle();
 			erodeIterations = ctx.reader.ReadInt32();
@@ -2637,26 +3643,89 @@ namespace Pathfinding {
 			ctx.reader.ReadBoolean(); // Old field
 			neighbours = (NumNeighbours)ctx.reader.ReadInt32();
 			cutCorners = ctx.reader.ReadBoolean();
+#pragma warning disable CS0618 // Type or member is obsolete
 			penaltyPosition = ctx.reader.ReadBoolean();
 			penaltyPositionFactor = ctx.reader.ReadSingle();
 			penaltyAngle = ctx.reader.ReadBoolean();
 			penaltyAngleFactor = ctx.reader.ReadSingle();
 			penaltyAnglePower = ctx.reader.ReadSingle();
+#pragma warning restore CS0618 // Type or member is obsolete
 			isometricAngle = ctx.reader.ReadSingle();
 			uniformEdgeCosts = ctx.reader.ReadBoolean();
 			useJumpPointSearch = ctx.reader.ReadBoolean();
 		}
 
+		void HandleBackwardsCompatibility (GraphSerializationContext ctx) {
+			// For compatibility
+			if (ctx.meta.version <= AstarSerializer.V4_3_2) maxStepUsesSlope = false;
+
+#pragma warning disable CS0618 // Type or member is obsolete
+			if (penaltyPosition) {
+				penaltyPosition = false;
+				// Can't convert it exactly. So assume there are no nodes with an elevation greater than 1000
+				rules.AddRule(new RuleElevationPenalty {
+					penaltyScale = Int3.Precision * penaltyPositionFactor * 1000.0f,
+					elevationRange = new Vector2(-penaltyPositionOffset/Int3.Precision, -penaltyPositionOffset/Int3.Precision + 1000),
+					curve = AnimationCurve.Linear(0, 0, 1, 1),
+				});
+			}
+
+			if (penaltyAngle) {
+				penaltyAngle = false;
+
+				// Approximate the legacy behavior with an animation curve
+				var curve = AnimationCurve.Linear(0, 0, 1, 1);
+				var keys = new Keyframe[7];
+				for (int i = 0; i < keys.Length; i++) {
+					var angle = Mathf.PI*0.5f*i/(keys.Length-1);
+					var penalty = (1F-Mathf.Pow(Mathf.Cos(angle), penaltyAnglePower))*penaltyAngleFactor;
+					var key = new Keyframe(Mathf.Rad2Deg * angle, penalty);
+					keys[i] = key;
+				}
+				var maxPenalty = keys.Max(k => k.value);
+				if (maxPenalty > 0) for (int i = 0; i < keys.Length; i++) keys[i].value /= maxPenalty;
+				curve.keys = keys;
+				for (int i = 0; i < keys.Length; i++) {
+					curve.SmoothTangents(i, 0.5f);
+				}
+
+				rules.AddRule(new RuleAnglePenalty {
+					penaltyScale = maxPenalty,
+					curve = curve,
+				});
+			}
+
+			if (textureData.enabled) {
+				textureData.enabled = false;
+				var channelScales = textureData.factors.Select(x => x/255.0f).ToList();
+				while (channelScales.Count < 4) channelScales.Add(1000);
+				var channels = textureData.channels.Cast<RuleTexture.ChannelUse>().ToList();
+				while (channels.Count < 4) channels.Add(RuleTexture.ChannelUse.None);
+
+				rules.AddRule(new RuleTexture {
+					texture = textureData.source,
+					channels = channels.ToArray(),
+					channelScales = channelScales.ToArray(),
+					scalingMode = RuleTexture.ScalingMode.FixedScale,
+					nodesPerPixel = 1.0f,
+				});
+			}
+#pragma warning restore CS0618 // Type or member is obsolete
+		}
+
 		protected override void PostDeserialization (GraphSerializationContext ctx) {
+			HandleBackwardsCompatibility(ctx);
+
 			UpdateTransform();
 			SetUpOffsetsAndCosts();
 			GridNode.SetGridGraph((int)graphIndex, this);
 
+			// Deserialize all nodes
 			if (nodes == null || nodes.Length == 0) return;
 
 			if (width*depth != nodes.Length) {
 				Debug.LogError("Node data did not match with bounds data. Probably a change to the bounds/width/depth data was made after scanning the graph just prior to saving it. Nodes will be discarded");
-				nodes = new GridNode[0];
+				nodes = new GridNodeBase[0];
 				return;
 			}
 

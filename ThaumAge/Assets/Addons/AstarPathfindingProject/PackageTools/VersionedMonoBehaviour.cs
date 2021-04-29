@@ -3,15 +3,31 @@ using UnityEngine;
 namespace Pathfinding {
 	/// <summary>Exposes internal methods from <see cref="Pathfinding.VersionedMonoBehaviour"/></summary>
 	public interface IVersionedMonoBehaviourInternal {
-		void UpgradeFromUnityThread ();
+		void UpgradeFromUnityThread();
+	}
+
+	namespace Util {
+		/// <summary>Used by Pathfinding.Util.BatchedEvents</summary>
+		public interface IEntityIndex {
+			int EntityIndex { get; set; }
+		}
 	}
 
 	/// <summary>Base class for all components in the package</summary>
-	public abstract class VersionedMonoBehaviour : MonoBehaviour, ISerializationCallbackReceiver, IVersionedMonoBehaviourInternal {
+	public abstract class VersionedMonoBehaviour :
+#if MODULE_BURST && MODULE_MATHEMATICS && MODULE_COLLECTIONS
+	Drawing.MonoBehaviourGizmos
+#else
+		MonoBehaviour
+#endif
+		, ISerializationCallbackReceiver, IVersionedMonoBehaviourInternal, Util.IEntityIndex {
 		/// <summary>Version of the serialized data. Used for script upgrades.</summary>
 		[SerializeField]
 		[HideInInspector]
 		int version = 0;
+
+		/// <summary>Internal entity index used by <see cref="BurstBatchHelper"/>. Should never be modified by other scripts.</summary>
+		int Util.IEntityIndex.EntityIndex { get; set; }
 
 		protected virtual void Awake () {
 			// Make sure the version field is up to date for components created during runtime.

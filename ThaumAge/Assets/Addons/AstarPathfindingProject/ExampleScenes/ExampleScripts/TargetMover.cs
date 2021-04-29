@@ -16,7 +16,6 @@ namespace Pathfinding {
 		public LayerMask mask;
 
 		public Transform target;
-		IAstarAI[] ais;
 
 		/// <summary>Determines if the target position should be updated every frame or only on double-click</summary>
 		public bool onlyOnDoubleClick;
@@ -27,9 +26,6 @@ namespace Pathfinding {
 		public void Start () {
 			//Cache the Main Camera
 			cam = Camera.main;
-			// Slightly inefficient way of finding all AIs, but this is just an example script, so it doesn't matter much.
-			// FindObjectsOfType does not support interfaces unfortunately.
-			ais = FindObjectsOfType<MonoBehaviour>().OfType<IAstarAI>().ToArray();
 			useGUILayout = false;
 		}
 
@@ -67,6 +63,9 @@ namespace Pathfinding {
 				target.position = newPosition;
 
 				if (onlyOnDoubleClick) {
+					// Slightly inefficient way of finding all AIs, but this is just an example script, so it doesn't matter much.
+					// FindObjectsOfType does not support interfaces unfortunately.
+					IAstarAI[] ais = FindObjectsOfType<MonoBehaviour>().OfType<IAstarAI>().ToArray();
 					for (int i = 0; i < ais.Length; i++) {
 						if (ais[i] != null) ais[i].SearchPath();
 					}

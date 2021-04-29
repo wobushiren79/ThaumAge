@@ -43,7 +43,7 @@ namespace Pathfinding {
 		/// </summary>
 		public PathEndingCondition endingCondition;
 
-		internal override bool FloodingPath {
+		public override bool FloodingPath {
 			get {
 				return true;
 			}
@@ -76,7 +76,7 @@ namespace Pathfinding {
 
 		protected override void OnEnterPool () {
 			base.OnEnterPool();
-			if (allNodes != null) Util.ListPool<GraphNode>.Release (ref allNodes);
+			if (allNodes != null) Util.ListPool<GraphNode>.Release(ref allNodes);
 		}
 
 		/// <summary>
@@ -88,7 +88,7 @@ namespace Pathfinding {
 		/// </summary>
 		protected override void Reset () {
 			base.Reset();
-			allNodes = Util.ListPool<GraphNode>.Claim ();
+			allNodes = Util.ListPool<GraphNode>.Claim();
 			endingCondition = null;
 			originalStartPoint = Vector3.zero;
 			startPoint = Vector3.zero;
