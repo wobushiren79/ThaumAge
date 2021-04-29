@@ -9711,7 +9711,7 @@ MonoBehaviour:
   showSearchTree: 0
   unwalkableNodeDebugSize: 0.3
   logPathResults: 0
-  maxNearestNodeDistance: 50
+  maxNearestNodeDistance: 100
   scanOnStartup: 1
   fullGetNearestSearch: 1
   prioritizeGraphs: 0
