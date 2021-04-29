@@ -20,7 +20,8 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
     /// </summary>
     public void HandleForWorldUpdate()
     {
-        CreateChunkForRangeForWorldPostion(transform.position, manager.worldRefreshRange, () =>
+        Vector3 playPosition = GameHandler.Instance.manager.player.transform.position;
+        CreateChunkForRangeForWorldPostion(playPosition, manager.worldRefreshRange, () =>
         {
 
         });
@@ -40,6 +41,7 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
         Chunk chunk = manager.GetChunk(position);
         if (chunk != null)
         {
+            callback?.Invoke();
             return;
         }
         //生成区块
@@ -52,8 +54,6 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
         chunk.SetData(position, manager.widthChunk, manager.heightChunk);
         //添加区块
         manager.AddChunk(position, chunk);
-        //添加寻路
-        //AstarPathHandler.Instance.manager.CreateGridGraph(position, manager.widthChunk, manager.heightChunk + 1);
 
         //回调
         Action callBack = () =>

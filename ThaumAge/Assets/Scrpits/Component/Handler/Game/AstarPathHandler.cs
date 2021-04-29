@@ -5,7 +5,7 @@ public class AstarPathHandler : BaseHandler<AstarPathHandler, AstarPathManager>
 {
     public void RefreshPath()
     {
-        //manager.proceduralGridMover.UpdateGraph();
+        manager.proceduralGridMover.UpdateGraph();
         //AstarPath.active.Scan();
     }
     //public void RefreshPath(Vector3 center,Vector3 size)

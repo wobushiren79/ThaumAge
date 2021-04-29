@@ -69,10 +69,8 @@ namespace Pathfinding {
 		/// <summary>Update is called once per frame</summary>
 		void Update () {
 			if (graph == null) return;
-
 			// Calculate where the graph center and the target position is in graph space
 			var graphCenterInGraphSpace = PointToGraphSpace(graph.center);
-			//var targetPositionInGraphSpace = PointToGraphSpace(new Vector3(target.position.x, 0 , target.position.z) );
 			var targetPositionInGraphSpace = PointToGraphSpace(target.position);
 			// Check the distance in graph space
 			// We only care about the X and Z axes since the Y axis is the "height" coordinate of the nodes (in graph space)
