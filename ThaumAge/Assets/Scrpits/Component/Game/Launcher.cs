@@ -5,7 +5,7 @@ public class Launcher : BaseMonoBehaviour
     void Start()
     {
 
-        AstarPathHandler.Instance.RefreshAllGraph();
+
         UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();
         userData.userId = "Test";
         //…Ë÷√÷÷◊”
@@ -18,6 +18,8 @@ public class Launcher : BaseMonoBehaviour
         WeatherHandler.Instance.ChangeWeather(WeatherTypeEnum.Cloudy, 2000);
         //UIHandler.Instance.manager.OpenUIAndCloseOther<UIGameMain>(UIEnum.GameMain);
         FPSHandler.Instance.SetData(true, 120);
+
+        AstarPathHandler.Instance.RefreshAllGraph();
     }
 
 }

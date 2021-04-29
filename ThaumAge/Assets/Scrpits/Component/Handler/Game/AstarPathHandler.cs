@@ -1,9 +1,8 @@
 ﻿using UnityEditor;
 using UnityEngine;
-
+using System.Collections;
 public class AstarPathHandler : BaseHandler<AstarPathHandler, AstarPathManager>
 {
-
 
     public void RefreshAllGraph()
     {
