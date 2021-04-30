@@ -5,47 +5,73 @@ using System.Diagnostics;
 using System.Linq.Expressions;
 using System.Runtime.Serialization;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class Test : BaseMonoBehaviour
 {
+    public GameObject objTest;
+    public GameObject objData;
+    public NavMeshBuildSource source;
+    public NavMeshBuildSettings navMeshBuildSettings;
+    public NavMeshData navMeshData;
+    public NavMeshDataInstance navMeshInstance;
+    public AsyncOperation navMeshUpdateOperation;
+    List<NavMeshBuildSource> navMeshSources=new List<NavMeshBuildSource>();
+    bool navMeshIsUpdating, navMeshHasNewData;
+
+    Bounds worldBounds;
     private void Start()
     {
-        int seed = int.MaxValue/4;
+        navMeshData = new NavMeshData();
 
-        WorldRandTools.Randomize(seed);
-        Stopwatch stopwatch = TimeUtil.GetMethodTimeStart();
-        for (int x = -100; x <= 100; x++)
+        MeshFilter meshFilter = objData.GetComponent<MeshFilter>();
+        NavMeshBuildSource source = new NavMeshBuildSource();
+        source.shape = NavMeshBuildSourceShape.Mesh;
+        source.size = new Vector3(100, 100, 100);
+        source.sourceObject = meshFilter.mesh;
+        source.transform = objData.transform.localToWorldMatrix;
+        navMeshSources.Add(source);
+
+        worldBounds = new Bounds(Vector3.zero, Vector3.one * 100);
+
+        navMeshBuildSettings = NavMesh.GetSettingsByIndex(0);
+        navMeshBuildSettings.agentClimb = 1.5f;
+        navMeshBuildSettings.agentSlope = 60;
+        navMeshBuildSettings.agentHeight = 1.8f;
+        navMeshInstance = NavMesh.AddNavMeshData(navMeshData);
+        NavMeshBuilder.UpdateNavMeshData(navMeshData, navMeshBuildSettings, navMeshSources, worldBounds);
+        if (navMeshInstance.valid)
         {
-            for (int z = -100; z <= 100; z++)
-            {
-                RandomTools randomTools = RandomUtil.GetRandom(seed, x, 1, z);
-                for (int i = 0; i < 100; i++)
-                {
-                    int data = randomTools.NextInt(2);
-                }
-
-                //if (data == 0)
-                //{
-                //    GameObject obj = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-                //    obj.transform.position = new Vector3(x, 0, z);
-                //}
-
-            }
+            NavMesh.RemoveNavMeshData(navMeshInstance);
         }
-        TimeUtil.GetMethodTimeEnd("1", stopwatch);
-        stopwatch = TimeUtil.GetMethodTimeStart();
-        for (int x = -100; x <= 100; x++)
-        {
-            for (int z = -100; z <= 100; z++)
-            {
-                for (int i=0;i<100;i++)
-                {
-                    float data = WorldRandTools.GetValue(new Vector3(x, 0, z));
-                }
-            }
-        }
-        TimeUtil.GetMethodTimeEnd("2", stopwatch);
+        navMeshInstance = NavMesh.AddNavMeshData(navMeshData);
     }
 
-
+void UpdateNavMesh()
+    {
+        if (navMeshIsUpdating)
+        {
+            if (navMeshUpdateOperation.isDone)
+            {
+                if (navMeshInstance.valid)
+                {
+                    NavMesh.RemoveNavMeshData(navMeshInstance);
+                }
+                navMeshInstance = NavMesh.AddNavMeshData(navMeshData);
+                navMeshIsUpdating = false;
+            }
+        }
+        else if (navMeshHasNewData)
+        {
+            //try
+            //{
+            //    navMeshUpdateOperation = NavMeshBuilder.UpdateNavMeshDataAsync(navMeshData, navMeshBuildSettings, navMeshSources, worldBounds);
+            //    navMeshIsUpdating = true;
+            //}
+            //catch (Exception ex)
+            //{
+            //}
+            //navMeshHasNewData = false;
+        }
+    }
 }
