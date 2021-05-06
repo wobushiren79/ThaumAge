@@ -19,7 +19,6 @@ public class Launcher : BaseMonoBehaviour
         //UIHandler.Instance.manager.OpenUIAndCloseOther<UIGameMain>(UIEnum.GameMain);
         FPSHandler.Instance.SetData(true, 120);
 
-        AstarPathHandler.Instance.RefreshAllGraph();
     }
 
 }

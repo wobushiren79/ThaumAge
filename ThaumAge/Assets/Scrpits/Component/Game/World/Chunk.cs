@@ -30,8 +30,8 @@ public class Chunk : BaseMonoBehaviour
     public MeshCollider meshCollider;
     public MeshCollider meshTrigger;
 
-    protected MeshRenderer meshRenderer;
-    protected MeshFilter meshFilter;
+    public MeshRenderer meshRenderer;
+    public MeshFilter meshFilter;
 
     //存储着此Chunk内的所有Block信息
     public Dictionary<Vector3Int, Block> mapForBlock = new Dictionary<Vector3Int, Block>();
@@ -45,20 +45,23 @@ public class Chunk : BaseMonoBehaviour
     public bool isBake = false;
     //世界坐标
     public Vector3Int worldPosition;
+
+    //渲染数据
+    protected ChunkRenderData chunkRenderData;
     //存储数据
     protected WorldDataBean worldData;
-    protected ChunkRenderData chunkRenderData;
 
-    protected Mesh chunkMesh;
-    protected Mesh chunkMeshCollider;
-    protected Mesh chunkMeshTrigger;
+
+    public Mesh chunkMesh;
+    public Mesh chunkMeshCollider;
+    public Mesh chunkMeshTrigger;
 
     public void Awake()
     {
         //获取自身相关组件引用
         meshRenderer = GetComponent<MeshRenderer>();
         meshFilter = GetComponent<MeshFilter>();
-
+        chunkRenderData = new ChunkRenderData();
         meshRenderer.materials = WorldCreateHandler.Instance.manager.GetAllMaterial();
 
         chunkMesh = new Mesh();

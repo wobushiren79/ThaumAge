@@ -16,7 +16,7 @@ public class Test : BaseMonoBehaviour
     public NavMeshData navMeshData;
     public NavMeshDataInstance navMeshInstance;
     public AsyncOperation navMeshUpdateOperation;
-    List<NavMeshBuildSource> navMeshSources=new List<NavMeshBuildSource>();
+    List<NavMeshBuildSource> navMeshSources = new List<NavMeshBuildSource>();
     bool navMeshIsUpdating, navMeshHasNewData;
 
     Bounds worldBounds;
@@ -45,9 +45,23 @@ public class Test : BaseMonoBehaviour
             NavMesh.RemoveNavMeshData(navMeshInstance);
         }
         navMeshInstance = NavMesh.AddNavMeshData(navMeshData);
+
+
+        LogUtil.Log(LogHandle("abczms!#$231590!=*:"));  
+    }
+    public string LogHandle(string data)
+    {
+        if (data.Length >= 63)
+        {
+            data = data.Substring(0, 63);
+        }
+        string strmatch = @"(?is)[^a-z0-9]";
+        System.Text.RegularExpressions.Regex reg = new System.Text.RegularExpressions.Regex(strmatch);
+        data = reg.Replace(data, "");
+        return data;
     }
 
-void UpdateNavMesh()
+    void UpdateNavMesh()
     {
         if (navMeshIsUpdating)
         {

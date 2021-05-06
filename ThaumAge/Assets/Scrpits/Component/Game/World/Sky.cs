@@ -49,16 +49,19 @@ public class Sky : BaseMonoBehaviour
         Vector3 mainLightPosition;
         Vector3 mainLightAnagles;
 
+        bool isShowLensFlare;
         //光照
         if (gameTime.hour >= 6 && gameTime.hour <= 18)
         {
             mainLightPosition = objSun.transform.position;
             mainLightAnagles = objSun.transform.eulerAngles;
+            isShowLensFlare = true;
         }
         else
         {
             mainLightPosition = objMoon.transform.position;
             mainLightAnagles = objMoon.transform.eulerAngles;
+            isShowLensFlare = false;
         }
 
         mainLight.transform.position = Vector3.Lerp(mainLight.transform.position, mainLightPosition, Time.deltaTime);
@@ -82,5 +85,7 @@ public class Sky : BaseMonoBehaviour
         LightHandler.Instance.manager.SetMainLightColor(lightColor);
         //设置环境光颜色
         LightHandler.Instance.manager.SetAmbientLight(lightColor * 0.7f);
+        //设置光晕
+        LightHandler.Instance.manager.SetMainLensFlare(isShowLensFlare);
     }
 }

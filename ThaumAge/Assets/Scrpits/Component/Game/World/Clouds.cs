@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using DG.Tweening;
+using System;
 
 public class Clouds : BaseMonoBehaviour
 {
@@ -16,8 +18,6 @@ public class Clouds : BaseMonoBehaviour
 
     //范围
     protected float rangeForHide = 500;
-    //材质
-    protected Material materialForCloud;
 
     //列表
     public List<GameObject> listShowCloudObj = new List<GameObject>();
@@ -26,8 +26,6 @@ public class Clouds : BaseMonoBehaviour
     protected void Awake()
     {
         objCloudModel.gameObject.SetActive(false);
-        materialForCloud = objCloudModel.GetComponent<MeshRenderer>().sharedMaterial;
-        materialForCloud.color = colorForCloud;
     }
 
     protected void Update()
@@ -44,23 +42,25 @@ public class Clouds : BaseMonoBehaviour
             GameObject objItemCloud = listShowCloudObj[i];
             objItemCloud.transform.Translate(Vector3.left * speedForCloud * Time.deltaTime);
             //超出范围则移除
-            if (objItemCloud.transform.position.x < playerPosition.x - rangeForHide
-                || objItemCloud.transform.position.x > playerPosition.x + rangeForHide
-                || objItemCloud.transform.position.z < playerPosition.z - rangeForHide
-                || objItemCloud.transform.position.z > playerPosition.z + rangeForHide)
+            if (objItemCloud.transform.position.x < playerPosition.x - rangeForHide)
             {
-                objItemCloud.gameObject.SetActive(false);
+                ChangeCloudsColorAlpha(objItemCloud, 0, 1,()=> 
+                {
+                    objItemCloud.gameObject.SetActive(false);
+                    listHideCloudObj.Enqueue(objItemCloud);
+                });
                 listShowCloudObj.RemoveAt(i);
-                listHideCloudObj.Enqueue(objItemCloud);
                 i--;
             }
         }
-        //颜色处理
-        Color lerpColorCloud = Color.Lerp(materialForCloud.color, colorForCloud,Time.deltaTime);
-        materialForCloud.color = lerpColorCloud;
     }
 
-    public void CreateCloud(Vector3 size,Color colorClouds)
+    /// <summary>
+    /// 创建云
+    /// </summary>
+    /// <param name="size"></param>
+    /// <param name="colorClouds"></param>
+    public void CreateCloud(Vector3 size, Color colorClouds)
     {
         GameObject objCloud;
         if (listHideCloudObj.Count > 0)
@@ -73,16 +73,48 @@ public class Clouds : BaseMonoBehaviour
             objCloud = Instantiate(gameObject, objCloudModel);
         }
         listShowCloudObj.Add(objCloud);
-        
-        Vector3 startPosition = GameHandler.Instance.manager.player.transform.position + new Vector3(rangeForHide, 0, Random.Range(-rangeForHide, rangeForHide));
+
+        Vector3 startPosition = GameHandler.Instance.manager.player.transform.position + new Vector3(rangeForHide, 0, UnityEngine.Random.Range(-rangeForHide, rangeForHide));
         objCloud.transform.position = new Vector3(startPosition.x, heightForCloud, startPosition.z);
         objCloud.transform.localScale = size;
 
-        ChangeCloudsColor(colorClouds);
+        ChangeCloudsColor(objCloud, colorClouds, 0.1f, null);
     }
 
-    public void ChangeCloudsColor(Color color)
+    /// <summary>
+    /// 改变云的颜色
+    /// </summary>
+    /// <param name="objCloud"></param>
+    /// <param name="color"></param>
+    /// <param name="changeTime"></param>
+    /// <param name="callBack"></param>
+    public void ChangeCloudsColor(GameObject objCloud, Color color, float changeTime, Action callBack)
     {
-        this.colorForCloud = color;
+        MeshRenderer meshRenderer = objCloud.GetComponent<MeshRenderer>();
+        meshRenderer.material
+            .DOColor(color, changeTime)
+            .OnComplete(() =>
+            {
+                callBack?.Invoke();
+            });
+    }
+
+    /// <summary>
+    /// 改变云的透明度
+    /// </summary>
+    /// <param name="objCloud"></param>
+    /// <param name="alpha"></param>
+    /// <param name="changeTime"></param>
+    /// <param name="callBack"></param>
+    public void ChangeCloudsColorAlpha(GameObject objCloud, float alpha, float changeTime, Action callBack)
+    {
+        MeshRenderer meshRenderer = objCloud.GetComponent<MeshRenderer>();
+        Color currentColor = meshRenderer.material.color;
+        meshRenderer.material
+            .DOColor(new Color(currentColor.r, currentColor.g, currentColor.b, alpha), changeTime)
+            .OnComplete(() =>
+            {
+                callBack?.Invoke();
+            });
     }
 }

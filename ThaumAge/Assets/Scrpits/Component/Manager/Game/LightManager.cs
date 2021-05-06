@@ -4,6 +4,8 @@ using UnityEngine;
 public class LightManager : BaseManager
 {
     protected Light _mainLight;
+    protected LensFlare _mainLensFlare;
+
     protected Material matSkybox;
 
     public Light mainLight
@@ -16,6 +18,19 @@ public class LightManager : BaseManager
 
             }
             return _mainLight;
+        }
+    }
+
+    public LensFlare mainLensFlare
+    {
+        get
+        {
+            if (_mainLensFlare == null)
+            {
+                _mainLensFlare = FindWithTag<LensFlare>(TagInfo.Tag_MainLight);
+
+            }
+            return _mainLensFlare;
         }
     }
 
@@ -69,6 +84,22 @@ public class LightManager : BaseManager
     public void SetAmbientLight(Color color)
     {
         RenderSettings.ambientLight = color;
+    }
+
+    /// <summary>
+    /// 设置主光照光晕
+    /// </summary>
+    /// <param name="isShow"></param>
+    public void SetMainLensFlare(bool isShow)
+    {
+        if (isShow)
+        {
+            mainLensFlare.enabled = true;
+        }
+        else
+        {
+            mainLensFlare.enabled = false;
+        }
     }
 
 }

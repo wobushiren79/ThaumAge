@@ -290,6 +290,8 @@ public class WorldCreateManager : BaseManager
                         //构建修改过的区块
                         updateDrawChunk.RefreshMesh();
                         listUpdateDrawChunk.RemoveAt(0);
+                        //刷新寻路
+                        PathFindingHandler.Instance.manager.RefreshPathFinding(updateDrawChunk);
                     }
                 }
                 else

@@ -19,6 +19,11 @@ public class ProjectConfigInfo
     public readonly static ProjectBuildTypeEnum BUILD_TYPE = ProjectBuildTypeEnum.Debug;
 
     /// <summary>
+    /// 寻路方式
+    /// </summary>
+    public readonly static PathFindingEnum AI_PATHFINDING = PathFindingEnum.Navigation;
+
+    /// <summary>
     /// steamAppId
     /// </summary>
     public readonly static string STEAM_APP_ID = "983170";
