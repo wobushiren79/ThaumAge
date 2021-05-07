@@ -34,21 +34,9 @@ public class LightManager : BaseManager
         }
     }
 
-    /// <summary>
-    /// 天空盒颜色ID
-    /// </summary>
-    protected int namdIdSkyBoxExposure;
-    protected int namdIdSkyBoxColor;
-
     private void Awake()
     {
         matSkybox = RenderSettings.skybox;
-
-        int propertyIndexSkyBoxExposure = matSkybox.shader.FindPropertyIndex("_Exposure");
-        namdIdSkyBoxExposure = matSkybox.shader.GetPropertyNameId(propertyIndexSkyBoxExposure);
-
-        int propertyIndexSkyBoxColor  = matSkybox.shader.FindPropertyIndex("_Tint");
-        namdIdSkyBoxColor = matSkybox.shader.GetPropertyNameId(propertyIndexSkyBoxColor);
     }
 
     /// <summary>
@@ -57,7 +45,7 @@ public class LightManager : BaseManager
     /// <param name="data"></param>
     public void SetSkyBoxExposure(float data)
     {
-        matSkybox.SetFloat(namdIdSkyBoxExposure, data);
+       // matSkybox.SetFloat(namdIdSkyBoxExposure, data);
     }
 
     /// <summary>
@@ -66,7 +54,7 @@ public class LightManager : BaseManager
     /// <param name="color"></param>
     public void SetSkyBoxColor(Color color)
     {
-        matSkybox.SetColor(namdIdSkyBoxColor, color);
+        //matSkybox.SetColor(namdIdSkyBoxColor, color);
     }
 
     /// <summary>
