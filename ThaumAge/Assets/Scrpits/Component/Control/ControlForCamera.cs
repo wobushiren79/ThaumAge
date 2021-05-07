@@ -82,7 +82,7 @@ public class ControlForCamera : ControlForBase
         Vector3 characterPosition = GameControlHandler.Instance.manager.controlForPlayer.transform.position;
         Vector3 cameraPosition = CameraHandler.Instance.manager.mainCamera.transform.position;
         Vector3 dir = -(cameraPosition - characterPosition).normalized;
-        float disTemp = Vector3.Distance(characterPosition, cameraPosition);
+        float disTemp = Vector3.Distance(characterPosition, cameraPosition) + 0.1f;
         bool isHit = RayUtil.RayToCast(characterPosition, -dir, disTemp, 1 << LayerInfo.Chunk, out RaycastHit hit);
 
         //有碰到且物体没有移走，就拉近
@@ -91,7 +91,7 @@ public class ControlForCamera : ControlForBase
             float disHitTemp = Vector3.Distance(characterPosition, hit.point);
             if (disTemp > disHitTemp)
             {
-                CameraHandler.Instance.SetCameraDistance(characterPosition, 1, 0.1f);
+                CameraHandler.Instance.SetCameraDistance(characterPosition, 1, 0.5f);
             }
         }
         else
@@ -100,7 +100,7 @@ public class ControlForCamera : ControlForBase
             bool isNormalHit = RayUtil.RayToCast(characterPosition, -dir, disTemp + 0.5f, 1 << LayerInfo.Chunk);
             if (!isNormalHit && disTemp < offsetDistance)
             {
-                CameraHandler.Instance.SetCameraDistance(characterPosition, -1, 0.1f);
+                CameraHandler.Instance.SetCameraDistance(characterPosition, -1, 0.5f);
             }
         }
     }
