@@ -8,4 +8,5 @@ public class BaseUIView : BaseMonoBehaviour
         AutoLinkUI();
     }
 
+
 }

@@ -42,7 +42,7 @@ public class WorldCreateManager : BaseManager
 
     protected void Awake()
     {
-        List<Material> listData = GetAllModel<Material>("block/mats");
+        List<Material> listData = GetAllModel<Material>("block/mats","Assets/Prefabs/Mats");
         for (int i = 0; i < listData.Count; i++)
         {
             //按照名字中的下标 确认每个材质球的顺序

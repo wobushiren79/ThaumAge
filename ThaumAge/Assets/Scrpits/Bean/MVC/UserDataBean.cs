@@ -12,6 +12,7 @@ using System;
 public class UserDataBean : BaseBean
 {
     public string userId;
+
     //游戏时间
     public TimeBean timeForGame = new TimeBean();
     //游玩时间

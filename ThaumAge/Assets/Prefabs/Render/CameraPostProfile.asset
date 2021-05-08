@@ -85,6 +85,25 @@ MonoBehaviour:
   components:
   - {fileID: 4391046719863861139}
   - {fileID: -6186456596015831572}
+  - {fileID: 2321842667345105656}
+--- !u!114 &2321842667345105656
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a7ff42a8c5be6646ad3975f3a54c1eb, type: 3}
+  m_Name: DiffusionProfileOverride
+  m_EditorClassIdentifier: 
+  active: 1
+  m_AdvancedMode: 0
+  diffusionProfiles:
+    m_OverrideState: 1
+    m_Value:
+    - {fileID: 11400000, guid: ad519751d9b770e459a0bd40fe639d34, type: 2}
 --- !u!114 &4391046719863861139
 MonoBehaviour:
   m_ObjectHideFlags: 3
