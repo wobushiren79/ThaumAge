@@ -134,8 +134,10 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Floats:
     - Vector1_436c287f9ccc4592ace2dc4816f8c589: 1.5
+    - Vector1_844ba7f04d914170bf72482d7ad8b143: 3
     - Vector1_9941dae1e9d142608dcfe382b8261dc4: 2
     - Vector1_bbf16480e82b4cf6ab55ea608aa9c3ab: 0.5
+    - Vector1_f68fb8214ef449feb79c374e7c01319b: 0.1
     - _AddPrecomputedVelocity: 0
     - _AlphaClip: 0
     - _AlphaCutoffEnable: 1
@@ -207,6 +209,7 @@ Material:
     - _ZTestTransparent: 4
     - _ZWrite: 1
     m_Colors:
+    - Vector2_305fe4b1430c43e68d5ce05ab423bd6a: {r: 10, g: 0, b: 0, a: 0}
     - Vector2_7531ee6fece44cfd80399c51ff7d5d56: {r: 0.5, g: 0, b: 0, a: 0}
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}

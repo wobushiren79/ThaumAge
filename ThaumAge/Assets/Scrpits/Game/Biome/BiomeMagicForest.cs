@@ -16,11 +16,10 @@ public class BiomeMagicForest : Biome
         if (wPos.y == genHeight)
         {
             AddWeed(wPos);
-            AddTree(wPos);
             AddBigTree(wPos);
             AddWorldTree(wPos);
             // 地表，使用草
-            return BlockTypeEnum.Grass;
+            return BlockTypeEnum.Grass_Magic;
         }
         if (wPos.y < genHeight && wPos.y > genHeight - 10)
         {

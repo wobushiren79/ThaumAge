@@ -413,18 +413,6 @@ public class Chunk : BaseMonoBehaviour
         {
             mapForBlock[localPosition] = newBlock;
         }
-
-
-        //保存数据
-        if (worldData != null && worldData.chunkData != null)
-        {
-            ChunkBean chunkData = worldData.chunkData;
-            if (chunkData.dicBlockData.ContainsKey(localPosition))
-            {
-                chunkData.dicBlockData[localPosition]= newBlock.blockData;
-            }
-        }
-
         //刷新六个方向的方块
         if (isRefreshBlockRange)
         {
@@ -439,7 +427,20 @@ public class Chunk : BaseMonoBehaviour
         }
 
         if (isSaveData)
-        {
+        {        
+            //保存数据
+            if (worldData != null && worldData.chunkData != null)
+            {
+                ChunkBean chunkData = worldData.chunkData;
+                if (chunkData.dicBlockData.ContainsKey(localPosition))
+                {
+                    chunkData.dicBlockData[localPosition] = newBlock.blockData;
+                }
+                else
+                {
+                    chunkData.dicBlockData.Add(localPosition, newBlock.blockData);
+                }
+            }
             //异步保存数据
             GameDataHandler.Instance.manager.SaveGameDataAsync(worldData);
         }

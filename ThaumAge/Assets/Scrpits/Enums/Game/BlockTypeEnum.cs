@@ -2,10 +2,14 @@ public enum BlockTypeEnum
 {
     None = -1,    //空
     Foundation = 1,    //地基
-    Grass = 2,    //草地
+
     Sand = 3,    //沙子
     Dirt = 4,    //泥土
     Stone = 5,    //石头
+
+    Grass = 101,    //草地
+    Grass_Magic = 102,    //蕴魔草地
+    Grass_Wild = 103,    //荒草地
 
     TreeOak = 1001,//橡木
     TreeSilver = 1002,//银树

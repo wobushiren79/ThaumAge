@@ -1,13 +1,13 @@
 ManifestFileVersion: 0
-CRC: 1181298841
+CRC: 1309364945
 AssetBundleManifest:
   AssetBundleInfos:
     Info_0:
-      Name: ui/ui
+      Name: block/base
       Dependencies: {}
     Info_1:
-      Name: block/mats
+      Name: ui/ui
       Dependencies: {}
     Info_2:
-      Name: block/base
+      Name: block/mats
       Dependencies: {}

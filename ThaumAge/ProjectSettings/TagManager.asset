@@ -8,6 +8,7 @@ TagManager:
   - MainLight
   - Clouds
   - AstarPath
+  - Volume
   layers:
   - Default
   - TransparentFX

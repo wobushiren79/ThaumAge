@@ -74,20 +74,5 @@ public class LightManager : BaseManager
         RenderSettings.ambientLight = color;
     }
 
-    /// <summary>
-    /// 设置主光照光晕
-    /// </summary>
-    /// <param name="isShow"></param>
-    public void SetMainLensFlare(bool isShow)
-    {
-        if (isShow)
-        {
-            mainLensFlare.enabled = true;
-        }
-        else
-        {
-            mainLensFlare.enabled = false;
-        }
-    }
 
 }

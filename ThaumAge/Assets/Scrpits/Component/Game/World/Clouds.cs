@@ -10,7 +10,7 @@ public class Clouds : BaseMonoBehaviour
     public int heightForCloud = 200;
 
     //速度
-    public float speedForCloud = 1;
+    public float speedForCloud = 10;
     //颜色
     public Color colorForCloud = Color.white;
     //模型
@@ -77,7 +77,7 @@ public class Clouds : BaseMonoBehaviour
         Vector3 startPosition = GameHandler.Instance.manager.player.transform.position + new Vector3(rangeForHide, 0, UnityEngine.Random.Range(-rangeForHide, rangeForHide));
         objCloud.transform.position = new Vector3(startPosition.x, heightForCloud, startPosition.z);
         objCloud.transform.localScale = size;
-
+        objCloud.transform.DOScale(Vector3.zero,0.5f).From().SetEase(Ease.OutBack);
         ChangeCloudsColor(objCloud, colorClouds, 0.1f, null);
     }
 

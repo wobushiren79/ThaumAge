@@ -9,7 +9,7 @@ public class Launcher : BaseMonoBehaviour
         //ÉèÖÃÖÖ×Ó
         WorldCreateHandler.Instance.manager.SetWorldSeed(132349);
         GameHandler.Instance.manager.ChangeGameState(GameStateEnum.Init);
-        WorldCreateHandler.Instance.CreateChunkForRangeForCenterPosition(Vector3Int.zero, 1, () =>
+        WorldCreateHandler.Instance.CreateChunkForRangeForCenterPosition(Vector3Int.zero,2, () =>
         {
             GameHandler.Instance.manager.ChangeGameState(GameStateEnum.Gaming);
         });
