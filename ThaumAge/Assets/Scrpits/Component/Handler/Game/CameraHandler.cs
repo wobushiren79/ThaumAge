@@ -21,7 +21,7 @@ public class CameraHandler : BaseHandler<CameraHandler, CameraManager>
     /// <param name="speedForMove"></param>
     public void RotateCameraAroundXZ(Vector3 aroundPosition, float rotateOffset, float speedForMove)
     {
-        manager.mainCamera.transform.RotateAround(aroundPosition, Vector3.up, rotateOffset * Time.deltaTime * speedForMove);
+        manager.mainCamera.transform.RotateAround(aroundPosition, Vector3.up, rotateOffset * Time.unscaledDeltaTime * speedForMove);
     }
 
     /// <summary>
@@ -33,7 +33,7 @@ public class CameraHandler : BaseHandler<CameraHandler, CameraManager>
     public void RotateCameraAroundY(Vector3 aroundPosition, float rotateOffset, float speedForMove)
     {
         Vector3 eulerAngles = manager.mainCamera.transform.rotation.eulerAngles;
-        float tempAngles = rotateOffset * Time.deltaTime * speedForMove;
+        float tempAngles = rotateOffset * Time.unscaledDeltaTime * speedForMove;
         float afterAngles = eulerAngles.x + tempAngles;
         if (afterAngles > 180)
         {
@@ -58,7 +58,7 @@ public class CameraHandler : BaseHandler<CameraHandler, CameraManager>
     /// <param name="size"></param>
     public void ZoomCamera(float zoomOffset, float speedForZoom)
     {
-        SetCameraFieldOfView(zoomOffset * Time.deltaTime * speedForZoom + manager.mainCamera.fieldOfView);
+        SetCameraFieldOfView(zoomOffset * Time.unscaledDeltaTime * speedForZoom + manager.mainCamera.fieldOfView);
     }
 
 

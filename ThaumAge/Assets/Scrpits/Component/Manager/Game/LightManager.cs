@@ -19,9 +19,9 @@ public class LightManager : BaseManager
         mainLightMiddleStart = new Color(0.3f, 0.7f, 1f, 1f);
         mainLightBottomStart = new Color(1f, 1f, 1f, 1f);
 
-        mainLightTopEnd = new Color(0f, 0f, 0.047f, 1f);
-        mainLightMiddleEnd = new Color(0.02f, 0.07f, 0.093f, 1f);
-        mainLightBottomEnd = new Color(0.1f, 0.1f, 0.1f, 1f);
+        mainLightTopEnd = new Color(0f, 0f, 0.01f, 1f);
+        mainLightMiddleEnd = new Color(0f, 0.005f, 0.02f, 1f);
+        mainLightBottomEnd = new Color(0.03f, 0.03f, 0.03f, 1f);
     }
 
     public Light mainLight
