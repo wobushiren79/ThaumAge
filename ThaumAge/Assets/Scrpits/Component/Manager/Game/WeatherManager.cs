@@ -4,19 +4,6 @@ using UnityEngine;
 
 public class WeatherManager : BaseManager
 {
-    protected Clouds _clouds;
-
-    public Clouds clouds
-    {
-        get
-        {
-            if (_clouds == null)
-            {
-                _clouds = FindWithTag<Clouds>(TagInfo.Tag_Clouds);
-            }
-            return _clouds;
-        }
-    }
 
     //当前天气
     public WeatherBase currentWeather;

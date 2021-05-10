@@ -21,7 +21,7 @@ public class WeatherBase
     public virtual void CreateClouds(Color colorCloud, int minSize, int maxSize)
     {
         Vector3 size = new Vector3(Random.Range(minSize, maxSize), Random.Range(5, 10), Random.Range(minSize, maxSize));
-        WeatherHandler.Instance.manager.clouds.CreateCloud(size, colorCloud);
+        SceneElementHandler.Instance.manager.clouds.CreateCloud(size, colorCloud);
         timeForCloud = timeMaxForCloud;
     }
 }

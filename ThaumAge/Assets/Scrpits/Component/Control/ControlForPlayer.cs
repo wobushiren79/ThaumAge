@@ -48,12 +48,12 @@ public class ControlForPlayer : ControlForBase
         {
             if (timeJumpTemp <= timeJump)
             {
-                playerVelocity.y = speedJump * Time.deltaTime;
-                timeJumpTemp += Time.deltaTime;
+                playerVelocity.y = speedJump * Time.unscaledDeltaTime;
+                timeJumpTemp += Time.unscaledDeltaTime;
             }
             else
             {
-                playerVelocity.y -= gravityValue * Time.deltaTime;
+                playerVelocity.y -= gravityValue * Time.unscaledDeltaTime;
                 if (characterController.isGrounded)
                 {
                     timeJumpTemp = 0;
@@ -63,7 +63,7 @@ public class ControlForPlayer : ControlForBase
         }
         else
         {
-            playerVelocity.y -= gravityValue * Time.deltaTime;
+            playerVelocity.y -= gravityValue * Time.unscaledDeltaTime;
         }
         characterController.Move(playerVelocity);
     }
@@ -200,7 +200,7 @@ public class ControlForPlayer : ControlForBase
         forward.y = 0;
         right.y = 0;
         //朝摄像头方向移动
-        playerVelocity = (Vector3.Normalize(forward) * moveOffset.y + Vector3.Normalize(right) * moveOffset.x) * Time.deltaTime * moveSpeed * 5;
+        playerVelocity = (Vector3.Normalize(forward) * moveOffset.y + Vector3.Normalize(right) * moveOffset.x) * Time.unscaledDeltaTime * moveSpeed * 5;
     }
 
 
@@ -234,7 +234,7 @@ public class ControlForPlayer : ControlForBase
 
         Quaternion rotate = Quaternion.Euler(rotateAngles);
         //朝摄像头方向移动
-        characterController.transform.rotation = Quaternion.Slerp(transform.rotation, rotate, rotateSpeed * Time.deltaTime);
+        characterController.transform.rotation = Quaternion.Slerp(transform.rotation, rotate, rotateSpeed * Time.unscaledDeltaTime);
     }
 
 }

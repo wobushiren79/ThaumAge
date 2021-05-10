@@ -4,11 +4,10 @@ using UnityEngine;
 using DG.Tweening;
 using System;
 
-public class Clouds : BaseMonoBehaviour
+public class SceneElementClouds : SceneElementBase
 {
     //高度
     public int heightForCloud = 200;
-
     //速度
     public float speedForCloud = 10;
     //颜色

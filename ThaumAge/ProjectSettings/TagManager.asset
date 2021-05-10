@@ -6,9 +6,11 @@ TagManager:
   tags:
   - GameControl
   - MainLight
-  - Clouds
   - AstarPath
   - Volume
+  - SceneElementSky
+  - SceneElementStar
+  - SceneElementClouds
   layers:
   - Default
   - TransparentFX

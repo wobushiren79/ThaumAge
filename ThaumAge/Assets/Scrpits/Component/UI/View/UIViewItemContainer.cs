@@ -2,13 +2,7 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class UIViewItemContainer : BaseUIView, IDropHandler
+public class UIViewItemContainer : BaseUIView
 {
-    public void OnDrop(PointerEventData eventData)
-    {
-        if (eventData.pointerDrag != null)
-        {
-           
-        }
-    }
+
 }

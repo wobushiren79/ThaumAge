@@ -43,7 +43,7 @@ GameObject:
   - component: {fileID: 6229578418763899044}
   - component: {fileID: 4367198098640585094}
   m_Layer: 0
-  m_Name: MainLight
+  m_Name: SunLight
   m_TagString: MainLight
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -75,7 +75,7 @@ Light:
   m_Type: 1
   m_Shape: 0
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 1
+  m_Intensity: 5
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208

@@ -15,6 +15,8 @@ public class Launcher : BaseMonoBehaviour
         });
         WeatherHandler.Instance.ChangeWeather(WeatherTypeEnum.Cloudy, 2000);
 
+        LightHandler.Instance.manager.InitData();
+
         UIHandler.Instance.manager.OpenUIAndCloseOther<UIGameMain>(UIEnum.GameMain);
         FPSHandler.Instance.SetData(true, 120);
     }

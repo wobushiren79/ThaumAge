@@ -176,7 +176,7 @@ GameObject:
   - component: {fileID: 7927601476835618168}
   m_Layer: 0
   m_Name: Sky
-  m_TagString: Untagged
+  m_TagString: SceneElementSky
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -211,6 +211,3 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   objSun: {fileID: 7927601475628692815}
   objMoon: {fileID: 7927601476382213094}
-  mainLightStart: {r: 1, g: 1, b: 1, a: 1}
-  mainLightEnd: {r: 0, g: 0.024712365, b: 0.0754717, a: 1}
-  timeForAngle: 0

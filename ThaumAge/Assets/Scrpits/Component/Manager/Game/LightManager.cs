@@ -4,9 +4,25 @@ using UnityEngine;
 public class LightManager : BaseManager
 {
     protected Light _mainLight;
-    protected LensFlare _mainLensFlare;
 
-    protected Material matSkybox;
+    public Color mainLightTopStart;
+    public Color mainLightMiddleStart;
+    public Color mainLightBottomStart;
+
+    public Color mainLightTopEnd;
+    public Color mainLightMiddleEnd;
+    public Color mainLightBottomEnd;
+
+    public void InitData()
+    {
+        mainLightTopStart = new Color(0f, 0f, 1f, 1f);
+        mainLightMiddleStart = new Color(0.3f, 0.7f, 1f, 1f);
+        mainLightBottomStart = new Color(1f, 1f, 1f, 1f);
+
+        mainLightTopEnd = new Color(0f, 0f, 0.047f, 1f);
+        mainLightMiddleEnd = new Color(0.02f, 0.07f, 0.093f, 1f);
+        mainLightBottomEnd = new Color(0.1f, 0.1f, 0.1f, 1f);
+    }
 
     public Light mainLight
     {
@@ -21,40 +37,13 @@ public class LightManager : BaseManager
         }
     }
 
-    public LensFlare mainLensFlare
-    {
-        get
-        {
-            if (_mainLensFlare == null)
-            {
-                _mainLensFlare = FindWithTag<LensFlare>(TagInfo.Tag_MainLight);
-
-            }
-            return _mainLensFlare;
-        }
-    }
-
-    private void Awake()
-    {
-        matSkybox = RenderSettings.skybox;
-    }
-
-    /// <summary>
-    /// 设置天空和曝光
-    /// </summary>
-    /// <param name="data"></param>
-    public void SetSkyBoxExposure(float data)
-    {
-       // matSkybox.SetFloat(namdIdSkyBoxExposure, data);
-    }
-
     /// <summary>
     /// 设置天空盒颜色
     /// </summary>
     /// <param name="color"></param>
-    public void SetSkyBoxColor(Color color)
+    public void SetSkyBoxColor(Color colorTop, Color colorMiddle, Color colorBottom)
     {
-        //matSkybox.SetColor(namdIdSkyBoxColor, color);
+        VolumeHandler.Instance.manager.SetGradientSkyColor(colorTop, colorMiddle, colorBottom);
     }
 
     /// <summary>

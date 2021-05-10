@@ -93,7 +93,7 @@ GameObject:
   - component: {fileID: 3567137269471571425}
   m_Layer: 0
   m_Name: Clouds
-  m_TagString: Clouds
+  m_TagString: SceneElementClouds
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -126,7 +126,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   heightForCloud: 200
-  rangeForHide: 100
   speedForCloud: 1
   colorForCloud: {r: 1, g: 1, b: 1, a: 1}
   objCloudModel: {fileID: 2292879426569510336}
