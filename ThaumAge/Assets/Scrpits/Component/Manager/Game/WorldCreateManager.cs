@@ -57,7 +57,7 @@ public class WorldCreateManager : BaseManager
     {
         if (GameHandler.Instance.manager.GetGameState() == GameStateEnum.Gaming)
         {
-            HandleForUpdateChunk();
+            HandleForUpdateChunk(null);
         }
     }
 
@@ -261,10 +261,12 @@ public class WorldCreateManager : BaseManager
     }
 
 
+
     /// <summary>
     /// 处理 待更新区块
     /// </summary>
-    public void HandleForUpdateChunk()
+    /// <param name="callBack"></param>
+    public void HandleForUpdateChunk(Action callBack)
     {
         if (listUpdateChunk.Count > 0)
         {
@@ -298,6 +300,10 @@ public class WorldCreateManager : BaseManager
                 {
                     listUpdateDrawChunk.RemoveAt(0);
                 }
+            }
+            else
+            {
+                callBack?.Invoke();
             }
         }
     }
@@ -341,10 +347,13 @@ public class WorldCreateManager : BaseManager
     /// <summary>
     /// 处理 更新方块
     /// </summary>
-    public async void HandleForUpdateBlock()
+    public async void HandleForUpdateBlock(Action callBack)
     {
         if (listUpdateBlock.Count <= 0)
+        {
+            callBack?.Invoke();
             return;
+        }
         await Task.Run(() =>
         {
             lock (this)
@@ -386,6 +395,7 @@ public class WorldCreateManager : BaseManager
                 }
             }
         });
+        callBack?.Invoke();
     }
 
     /// <summary>

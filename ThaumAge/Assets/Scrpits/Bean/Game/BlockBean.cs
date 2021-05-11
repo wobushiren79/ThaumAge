@@ -39,6 +39,7 @@ public class BlockBean
     {
         SetData(blockType, localposition, worldPosition, direction);
     }
+
     /// <summary>
     /// 设置数据
     /// </summary>

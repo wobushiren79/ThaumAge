@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class WeatherManager : BaseManager
 {
-
     //当前天气
     public WeatherBase currentWeather;
     //主世界天气
@@ -18,6 +17,9 @@ public class WeatherManager : BaseManager
     public void SetWeatherData(WeatherBean weatherData)
     {
         WeatherTypeEnum weatherType = weatherData.GetWeatherType();
+
+        SceneElementHandler.Instance.manager.SetRainActive(false);
+
         switch (weatherType)
         {
             case WeatherTypeEnum.Sunny:
@@ -27,7 +29,10 @@ public class WeatherManager : BaseManager
                 currentWeather = new WeatherCloudy(weatherData);
                 break;
             case WeatherTypeEnum.Rain:
-                currentWeather = new WeatherSunny(weatherData);
+                currentWeather = new WeatherRain(weatherData);
+                break;
+            case WeatherTypeEnum.Snow:
+                currentWeather = new WeatherSnow(weatherData);
                 break;
         }
     }

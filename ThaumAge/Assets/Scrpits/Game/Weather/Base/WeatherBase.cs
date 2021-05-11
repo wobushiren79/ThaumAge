@@ -24,4 +24,9 @@ public class WeatherBase
         SceneElementHandler.Instance.manager.clouds.CreateCloud(size, colorCloud);
         timeForCloud = timeMaxForCloud;
     }
+
+    public virtual void ChangeAllCloudsColor(Color colorCloud,float changeTime)
+    {
+        SceneElementHandler.Instance.manager.clouds.ChangeAllCloudsColor(colorCloud, changeTime);
+    }
 }

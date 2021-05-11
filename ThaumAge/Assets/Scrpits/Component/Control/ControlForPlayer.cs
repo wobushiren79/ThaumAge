@@ -16,6 +16,7 @@ public class ControlForPlayer : ControlForBase
     private float timeJumpTemp = 0;
 
     private float speedJump = 5;
+
     private void Awake()
     {
         InputAction jumpAction = InputHandler.Instance.manager.GetJumpData();
@@ -29,7 +30,20 @@ public class ControlForPlayer : ControlForBase
 
     private void Update()
     {
-        HandlerForMoveAndJump();
+        if (GameHandler.Instance.manager.GetGameState()== GameStateEnum.Gaming)
+        {
+            HandlerForMoveAndJump();
+        }
+    }
+
+    /// <summary>
+    /// 开关控制
+    /// </summary>
+    /// <param name="enabled"></param>
+    public override void EnabledControl(bool enabled)
+    {
+        base.EnabledControl(enabled);
+        characterController.enabled = enabled;
     }
 
     /// <summary>

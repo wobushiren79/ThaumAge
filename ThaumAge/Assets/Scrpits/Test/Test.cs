@@ -9,7 +9,7 @@ using UnityEngine.AI;
 
 public class Test : BaseMonoBehaviour
 {
-
+ 
     private void Start()
     {
         UIHandler.Instance.manager.OpenUIAndCloseOther<UIGameMain>(UIEnum.GameMain);

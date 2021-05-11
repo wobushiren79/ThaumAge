@@ -16,8 +16,4 @@ public class TagInfo
     public readonly static string Tag_AstarPath = "AstarPath";
     public readonly static string Tag_Volume = "Volume";
 
-    public readonly static string Tag_SceneElementSky = "SceneElementSky";
-    public readonly static string Tag_SceneElementStar = "SceneElementStar";
-    public readonly static string Tag_SceneElementClouds = "SceneElementClouds";
-
 }

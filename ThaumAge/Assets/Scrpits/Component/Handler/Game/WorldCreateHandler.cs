@@ -92,8 +92,7 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
                     totalNumber++;
                     if (totalNumber >= (range * 2 + 1) * (range * 2 + 1))
                     {
-                        manager.HandleForUpdateBlock();
-                        callback?.Invoke();
+                        manager.HandleForUpdateBlock(callback);
                     }
                 });
                 currentPosition += new Vector3Int(0, 0, manager.widthChunk);

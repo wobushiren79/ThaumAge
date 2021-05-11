@@ -99,6 +99,20 @@ public class SceneElementClouds : SceneElementBase
     }
 
     /// <summary>
+    /// 改变所有显示的云的颜色
+    /// </summary>
+    /// <param name="color"></param>
+    /// <param name="changeTime"></param>
+    public void ChangeAllCloudsColor(Color color, float changeTime)
+    {
+        for (int i=0;i< listShowCloudObj.Count;i++)
+        {
+            GameObject objCloud = listShowCloudObj[i];
+            ChangeCloudsColor(objCloud, color, changeTime, null);
+        }
+    }
+
+    /// <summary>
     /// 改变云的透明度
     /// </summary>
     /// <param name="objCloud"></param>

@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class Player : BaseMonoBehaviour
 {
+    protected CharacterController characterController;
     protected float timeForWorldUpdate = 0;
 
     private void LateUpdate()
@@ -14,13 +15,17 @@ public class Player : BaseMonoBehaviour
             HandleForBeyondBorder();
             HandleForColliderTrigger();
         }
+
     }
 
-    private void Update()
+    /// <summary>
+    /// 初始化位置
+    /// </summary>
+    public void InitPosition()
     {
-
+        int maxHeight = WorldCreateHandler.Instance.manager.GetMaxHeightForWorldPosition(Mathf.RoundToInt(transform.position.x), Mathf.RoundToInt(transform.position.z));
+        transform.position = new Vector3(transform.position.x, maxHeight + 5, transform.position.z);
     }
-
 
     /// <summary>
     /// 处理超出边界
@@ -29,8 +34,7 @@ public class Player : BaseMonoBehaviour
     {
         if (transform.position.y <= -10)
         {
-            int maxHeight = WorldCreateHandler.Instance.manager.GetMaxHeightForWorldPosition(Mathf.RoundToInt(transform.position.x), Mathf.RoundToInt(transform.position.z));
-            transform.position = new Vector3(transform.position.x, maxHeight + 5, transform.position.z);
+            InitPosition();
         }
     }
 
@@ -45,5 +49,7 @@ public class Player : BaseMonoBehaviour
 
         }
     }
+
+
 
 }

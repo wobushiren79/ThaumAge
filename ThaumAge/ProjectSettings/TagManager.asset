@@ -8,9 +8,6 @@ TagManager:
   - MainLight
   - AstarPath
   - Volume
-  - SceneElementSky
-  - SceneElementStar
-  - SceneElementClouds
   layers:
   - Default
   - TransparentFX

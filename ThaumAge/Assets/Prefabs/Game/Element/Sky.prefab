@@ -176,7 +176,7 @@ GameObject:
   - component: {fileID: 7927601476835618168}
   m_Layer: 0
   m_Name: Sky
-  m_TagString: SceneElementSky
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

@@ -1,7 +1,8 @@
 fileFormatVersion: 2
-guid: e41cd24662e06b646885a552b74f7343
+guid: f5462e074485f9c44a702bac39e1e5d7
+folderAsset: yes
 DefaultImporter:
   externalObjects: {}
   userData: 
-  assetBundleName: 
+  assetBundleName: game/element
   assetBundleVariant: 
