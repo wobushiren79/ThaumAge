@@ -24,13 +24,14 @@ public class LightHandler : BaseHandler<LightHandler, LightManager>
         Color lightTopColor;
         Color lightMiddleColor;
         Color lightBottomColor;
-
-        if (gameTime.hour >= 0 && gameTime.hour < 12)
+        //float lightIntensity;
+        if (gameTime.hour >= 0 && gameTime.hour <= 12)
         {
             lerpColor = (gameTime.hour * 60 + gameTime.minute) / (float)(12 * 60);
             lightTopColor = Color.Lerp(manager.mainLightTopEnd, manager.mainLightTopStart, lerpColor);
             lightMiddleColor = Color.Lerp(manager.mainLightMiddleEnd, manager.mainLightMiddleStart, lerpColor);
             lightBottomColor = Color.Lerp(manager.mainLightBottomEnd, manager.mainLightBottomStart, lerpColor);
+            //lightIntensity = (manager.mainLightMaxIntensity - manager.mainLightMinIntensity) * lerpColor + manager.mainLightMinIntensity;
         }
         else
         {
@@ -38,13 +39,17 @@ public class LightHandler : BaseHandler<LightHandler, LightManager>
             lightTopColor = Color.Lerp(manager.mainLightTopStart, manager.mainLightTopEnd, lerpColor);
             lightMiddleColor = Color.Lerp(manager.mainLightMiddleStart, manager.mainLightMiddleEnd, lerpColor);
             lightBottomColor = Color.Lerp(manager.mainLightBottomStart, manager.mainLightBottomEnd, lerpColor);
+            //lightIntensity = manager.mainLightMaxIntensity - (manager.mainLightMaxIntensity - manager.mainLightMinIntensity) * lerpColor;
         }
         //天空盒颜色
         manager.SetSkyBoxColor(lightTopColor, lightMiddleColor, lightBottomColor);
         //设置主光照颜色
         manager.SetMainLightColor(lightBottomColor);
         //设置环境光颜色
-        manager.SetAmbientLight(lightTopColor * 0.7f);
+        //manager.SetAmbientLight(lightTopColor * 0.7f);
+        //设置光照强度
+        //manager.SetMainLightIntensity(lightIntensity);
+
     }
 
     /// <summary>

@@ -13,6 +13,9 @@ public class LightManager : BaseManager
     public Color mainLightMiddleEnd;
     public Color mainLightBottomEnd;
 
+    public float mainLightMaxIntensity;
+    public float mainLightMinIntensity;
+
     public void InitData()
     {
         mainLightTopStart = new Color(0f, 0f, 1f, 1f);
@@ -22,6 +25,9 @@ public class LightManager : BaseManager
         mainLightTopEnd = new Color(0f, 0f, 0.01f, 1f);
         mainLightMiddleEnd = new Color(0f, 0.005f, 0.02f, 1f);
         mainLightBottomEnd = new Color(0.03f, 0.03f, 0.03f, 1f);
+
+        mainLightMaxIntensity = 4f;
+        mainLightMinIntensity = 0.1f;
     }
 
     public Light mainLight
@@ -43,7 +49,7 @@ public class LightManager : BaseManager
     /// <param name="color"></param>
     public void SetSkyBoxColor(Color colorTop, Color colorMiddle, Color colorBottom)
     {
-        //VolumeHandler.Instance.manager.SetGradientSkyColor(colorTop, colorMiddle, colorBottom);
+        VolumeHandler.Instance.manager.SetGradientSkyColor(colorTop, colorMiddle, colorBottom);
         //VolumeHandler.Instance.manager.SetPhysicallyBasedSkyColor(colorTop, colorMiddle, colorBottom);
     }
 
@@ -52,7 +58,16 @@ public class LightManager : BaseManager
     /// </summary>
     public void SetMainLightColor(Color color)
     {
-        //mainLight.color = color;
+        mainLight.color = color;
+    }
+
+    /// <summary>
+    /// 设置光照强度
+    /// </summary>
+    /// <param name="intensity"></param>
+    public void SetMainLightIntensity(float intensity)
+    {
+        mainLight.intensity = intensity;
     }
 
     /// <summary>
