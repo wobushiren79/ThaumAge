@@ -43,7 +43,8 @@ public class LightManager : BaseManager
     /// <param name="color"></param>
     public void SetSkyBoxColor(Color colorTop, Color colorMiddle, Color colorBottom)
     {
-        VolumeHandler.Instance.manager.SetGradientSkyColor(colorTop, colorMiddle, colorBottom);
+        //VolumeHandler.Instance.manager.SetGradientSkyColor(colorTop, colorMiddle, colorBottom);
+        //VolumeHandler.Instance.manager.SetPhysicallyBasedSkyColor(colorTop, colorMiddle, colorBottom);
     }
 
     /// <summary>
@@ -51,7 +52,7 @@ public class LightManager : BaseManager
     /// </summary>
     public void SetMainLightColor(Color color)
     {
-        mainLight.color = color;
+        //mainLight.color = color;
     }
 
     /// <summary>

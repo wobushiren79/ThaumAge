@@ -21,7 +21,8 @@ public class ScrollGridVertical : MonoBehaviour
     protected List<GameObject> cellList = new List<GameObject>();
     private bool inited;
 
-
+    protected GameObject viewport;
+    protected GameObject content;
 
     public void AddCellListener(System.Action<ScrollGridCell> call)
     {
@@ -52,6 +53,8 @@ public class ScrollGridVertical : MonoBehaviour
         newMinY = Mathf.Min(maxY, newMinY);//保证不小于viewport的高度。
         this.scrollRect.content.offsetMin = new Vector2(0, newMinY);
         this.CreateCells();
+
+        viewport.transform.rotation = new Quaternion();
     }
 
     private void Init()
@@ -70,10 +73,10 @@ public class ScrollGridVertical : MonoBehaviour
         this.scrollRect.horizontal = false;
         this.scrollRect.verticalScrollbar = verticalScrollbar;
         this.scrollRect.scrollSensitivity = 30;
-        GameObject viewport = new GameObject("viewport", typeof(RectTransform));
+        viewport = new GameObject("viewport", typeof(RectTransform));
         viewport.transform.SetParent(transform);
         this.scrollRect.viewport = viewport.GetComponent<RectTransform>();
-        GameObject content = new GameObject("content", typeof(RectTransform));
+        content = new GameObject("content", typeof(RectTransform));
         content.transform.SetParent(viewport.transform);
         this.scrollRect.content = content.GetComponent<RectTransform>();
 
@@ -86,6 +89,7 @@ public class ScrollGridVertical : MonoBehaviour
         this.scrollRect.viewport.anchorMin = Vector2.zero;
         this.scrollRect.viewport.anchorMax = Vector2.one;
         this.scrollRect.viewport.anchoredPosition3D = Vector3.zero;
+        this.scrollRect.viewport.eulerAngles = Vector3.zero;
         //设置viewpoint的mask。
         this.scrollRect.viewport.gameObject.AddComponent<Mask>().showMaskGraphic = false;
         Image image = this.scrollRect.viewport.gameObject.AddComponent<Image>();
@@ -110,6 +114,7 @@ public class ScrollGridVertical : MonoBehaviour
         this.scrollRect.content.anchorMax = Vector2.one;
         this.scrollRect.onValueChanged.AddListener(this.OnValueChange);
         this.CreateCells();
+
 
     }
     /// <summary>

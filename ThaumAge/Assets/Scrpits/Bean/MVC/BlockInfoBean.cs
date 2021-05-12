@@ -14,6 +14,8 @@ public class BlockInfoBean : BaseBean
 {
     public long link_id;
 
+    public string icon_key;
+
     public string name;
 
     public int shape;

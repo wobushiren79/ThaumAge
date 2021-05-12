@@ -19,6 +19,9 @@ public class ScrollGridHorizontal : MonoBehaviour
     private bool inited;
     protected List<GameObject> cellList = new List<GameObject>();
 
+    protected GameObject viewport;
+    protected GameObject content;
+
     public void AddCellListener(System.Action<ScrollGridCell> call)
     {
         this.onCellUpdateList.Add(call);
@@ -44,6 +47,8 @@ public class ScrollGridHorizontal : MonoBehaviour
 
         this.scrollRect.content.offsetMax = new Vector2(newMaxX, 0);
         this.CreateCells();
+
+        viewport.transform.rotation = new Quaternion();
     }
     public void Init()
     {
@@ -61,10 +66,10 @@ public class ScrollGridHorizontal : MonoBehaviour
         this.scrollRect.verticalScrollbar = horizontalScrollbar;
 
         this.scrollRect.scrollSensitivity = 30;
-        GameObject viewport = new GameObject("viewport", typeof(RectTransform));
+        viewport = new GameObject("viewport", typeof(RectTransform));
         viewport.transform.SetParent(transform);
         this.scrollRect.viewport = viewport.GetComponent<RectTransform>();
-        GameObject content = new GameObject("content", typeof(RectTransform));
+        content = new GameObject("content", typeof(RectTransform));
         content.transform.SetParent(viewport.transform);
         this.scrollRect.content = content.GetComponent<RectTransform>();
 
@@ -76,7 +81,7 @@ public class ScrollGridHorizontal : MonoBehaviour
         this.scrollRect.viewport.anchorMin = Vector2.zero;
         this.scrollRect.viewport.anchorMax = Vector2.one;
         this.scrollRect.viewport.anchoredPosition3D = Vector3.zero;
-
+        this.scrollRect.viewport.eulerAngles = Vector3.zero;
         this.scrollRect.viewport.gameObject.AddComponent<Mask>().showMaskGraphic = false;
         Image image = this.scrollRect.viewport.gameObject.AddComponent<Image>();
         Rect viewRect = this.scrollRect.viewport.rect;

@@ -1,0 +1,45 @@
+ManifestFileVersion: 0
+CRC: 596374502
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 2b38919f5050510bd17941808079372e
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: a4b4364a902bf1729385b9b848f48378
+HashAppended: 0
+ClassTypes:
+- Class: 1
+  Script: {instanceID: 0}
+- Class: 4
+  Script: {instanceID: 0}
+- Class: 21
+  Script: {instanceID: 0}
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 48
+  Script: {instanceID: 0}
+- Class: 108
+  Script: {instanceID: 0}
+- Class: 114
+  Script: {fileID: 11500000, guid: 7f32ae47904596c40baff66bcc088874, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 7a68c43fe1f2a47cfa234b5eeaa98012, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 08f0f08c22a8bf14d8fb8e39e39c06bf, type: 3}
+- Class: 115
+  Script: {instanceID: 0}
+- Class: 198
+  Script: {instanceID: 0}
+- Class: 199
+  Script: {instanceID: 0}
+- Class: 212
+  Script: {instanceID: 0}
+- Class: 213
+  Script: {instanceID: 0}
+SerializeReferenceClassIdentifiers: []
+Assets:
+- Assets/Prefabs/Game/Element/Star.prefab
+- Assets/Prefabs/Game/Light.prefab
+- Assets/Prefabs/Game/Element/Sky.prefab
+Dependencies: []

@@ -12,7 +12,7 @@ public class Test : BaseMonoBehaviour
  
     private void Start()
     {
-        UIHandler.Instance.manager.OpenUIAndCloseOther<UIGameMain>(UIEnum.GameMain);
+        UIHandler.Instance.manager.OpenUIAndCloseOther<UIGodItems>(UIEnum.GodItems);
     }
 
 }

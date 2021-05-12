@@ -1,0 +1,42 @@
+ManifestFileVersion: 0
+CRC: 543261583
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 9b61c24bbf944b4e3f49aac2e8e65a88
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 225da02fb9db2209710226f996ee12bd
+HashAppended: 0
+ClassTypes:
+- Class: 1
+  Script: {instanceID: 0}
+- Class: 4
+  Script: {instanceID: 0}
+- Class: 21
+  Script: {instanceID: 0}
+- Class: 23
+  Script: {instanceID: 0}
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 33
+  Script: {instanceID: 0}
+- Class: 43
+  Script: {instanceID: 0}
+- Class: 48
+  Script: {instanceID: 0}
+- Class: 114
+  Script: {fileID: 11500000, guid: 2927c7d17b136c0468fea45f4c512b35, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 403d116c9ca0d9d4ca61f0fa9eec3348, type: 3}
+- Class: 115
+  Script: {instanceID: 0}
+- Class: 198
+  Script: {instanceID: 0}
+- Class: 199
+  Script: {instanceID: 0}
+SerializeReferenceClassIdentifiers: []
+Assets:
+- Assets/Prefabs/Game/Weather/Rain.prefab
+- Assets/Prefabs/Game/Weather/Clouds.prefab
+Dependencies: []

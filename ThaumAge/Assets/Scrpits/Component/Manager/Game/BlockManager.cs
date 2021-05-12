@@ -99,7 +99,21 @@ public class BlockManager : BaseManager, IBlockInfoView
         return null;
     }
 
+    /// <summary>
+    /// 获取所有方块信息
+    /// </summary>
+    /// <returns></returns>
+    public List<BlockInfoBean> GetAllBackInfo()
+    {
+        List<BlockInfoBean> listData = new List<BlockInfoBean>();
+        foreach (var itemData in dicBlockInfo.Values)
+        {
+            listData.Add(itemData);
+        }
+        return listData;
+    }
 
+         
     public BlockInfoBean GetBlockInfo(long blockId)
     {
         return GetBlockInfo((BlockTypeEnum)blockId);

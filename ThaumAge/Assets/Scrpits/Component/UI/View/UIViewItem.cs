@@ -1,22 +1,33 @@
 ﻿using UnityEditor;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.UIElements;
+using UnityEngine.UI;
 
 public class UIViewItem : BaseUIView, IBeginDragHandler, IDragHandler, IEndDragHandler, ICanvasRaycastFilter
 {
-    protected Transform originalParent;
+    public Image ui_IVIcon;
+    public Text ui_TVNumber;
+
+    protected UIViewItemContainer originalParent;
     protected Vector3 originalPosition;
 
     protected bool isRaycastLocationValid = true;
 
+    /// <summary>
+    /// 开始拖拽
+    /// </summary>
+    /// <param name="eventData"></param>
     public void OnBeginDrag(PointerEventData eventData)
     {
-        originalParent = transform.parent;
-        originalPosition = ((RectTransform)transform).anchoredPosition;
+        originalParent = transform.parent.GetComponent<UIViewItemContainer>();
+        originalPosition = rectTransform.anchoredPosition;
         isRaycastLocationValid = false;//设置射线忽略自身
     }
 
+    /// <summary>
+    /// 拖拽中
+    /// </summary>
+    /// <param name="eventData"></param>
     public void OnDrag(PointerEventData eventData)
     {
         RectTransform rtfContainer = UIHandler.Instance.manager.GetContainer();
@@ -25,9 +36,13 @@ public class UIViewItem : BaseUIView, IBeginDragHandler, IDragHandler, IEndDragH
         transform.SetAsLastSibling();
         //需要将鼠标的坐标转换成UGUI坐标
         RectTransformUtility.ScreenPointToLocalPointInRectangle(rtfContainer, eventData.position, Camera.main, out Vector2 vecMouse);
-        ((RectTransform)transform).anchoredPosition = vecMouse;
+        rectTransform.anchoredPosition = vecMouse;
     }
 
+    /// <summary>
+    /// 结束拖拽
+    /// </summary>
+    /// <param name="eventData"></param>
     public void OnEndDrag(PointerEventData eventData)
     {
         GameObject objDrop = eventData.pointerCurrentRaycast.gameObject;
@@ -38,7 +53,7 @@ public class UIViewItem : BaseUIView, IBeginDragHandler, IDragHandler, IEndDragH
             if (viewShortcuts != null)
             {
                 transform.SetParent(viewShortcuts.transform);
-                ((RectTransform)transform).anchoredPosition = viewShortcuts.transform.position;
+                rectTransform.anchoredPosition = viewShortcuts.transform.position;
                 isRaycastLocationValid = true;//设置为不能穿透
                 return;
             }
@@ -48,12 +63,12 @@ public class UIViewItem : BaseUIView, IBeginDragHandler, IDragHandler, IEndDragH
             {
                 //交换位置
                 transform.SetParent(viewItem.transform.parent);
-                ((RectTransform)transform).anchoredPosition = Vector2.zero;
+                rectTransform.anchoredPosition = Vector2.zero;
                 transform.localScale = Vector3.one;
                 transform.eulerAngles = Vector3.one;
 
-                viewItem.transform.SetParent(originalParent);
-                ((RectTransform)viewItem.transform).anchoredPosition = Vector2.zero;
+                viewItem.transform.SetParent(originalParent.transform);
+                rectTransform.anchoredPosition = Vector2.zero;
                 viewItem.transform.localScale = Vector3.one;
                 viewItem.transform.eulerAngles = Vector3.one;
 
@@ -61,11 +76,17 @@ public class UIViewItem : BaseUIView, IBeginDragHandler, IDragHandler, IEndDragH
                 return;
             }
         }
-        transform.SetParent(originalParent);
-        ((RectTransform)transform).anchoredPosition = originalPosition;
+        transform.SetParent(originalParent.transform);
+        rectTransform.anchoredPosition = originalPosition;
         isRaycastLocationValid = true;//设置为不能穿透
     }
 
+    /// <summary>
+    /// 是否忽略本身的射线检测
+    /// </summary>
+    /// <param name="sp"></param>
+    /// <param name="eventCamera"></param>
+    /// <returns></returns>
     public bool IsRaycastLocationValid(Vector2 sp, Camera eventCamera)
     {
         return isRaycastLocationValid;
