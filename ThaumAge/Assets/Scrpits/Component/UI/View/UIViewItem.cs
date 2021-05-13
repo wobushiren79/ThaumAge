@@ -13,6 +13,36 @@ public class UIViewItem : BaseUIView, IBeginDragHandler, IDragHandler, IEndDragH
 
     protected bool isRaycastLocationValid = true;
 
+    public BlockInfoBean blockInfo;
+    
+
+    /// <summary>
+    /// 设置数据
+    /// </summary>
+    /// <param name="blockInfo"></param>
+    public void SetData(BlockInfoBean blockInfo)
+    {
+        this.blockInfo = blockInfo;
+        SetIcon(blockInfo.icon_key);
+    }
+
+    /// <summary>
+    /// 设置图标
+    /// </summary>
+    /// <param name="iconKey"></param>
+    public void SetIcon(string iconKey)
+    {
+        Sprite spIcon= IconHandler.Instance.manager.GetItemsSpriteByName(iconKey);
+        if (spIcon == null)
+        {
+            spIcon = IconHandler.Instance.manager.GetItemsSpriteByName("item_test");
+        }
+        if (ui_IVIcon != null)
+        {
+            ui_IVIcon.sprite = spIcon;
+        }
+    }
+
     /// <summary>
     /// 开始拖拽
     /// </summary>

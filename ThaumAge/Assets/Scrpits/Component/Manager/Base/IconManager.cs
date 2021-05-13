@@ -32,7 +32,7 @@ public class IconManager : BaseManager
     /// <returns></returns>
     public Sprite GetItemsSpriteByName(string name)
     {
-        return GetSpriteByName(dicItems, ref AtlasForItems, "SpriteAtlasForItem", "sprite/atlas", name);
+        return GetSpriteByName(dicItems, ref AtlasForItems, "SpriteAtlasForItems", "sprite/atlas", name);
     }
 
     public Texture2D GetTextureUIByName(string name)

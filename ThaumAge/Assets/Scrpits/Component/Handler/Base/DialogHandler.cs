@@ -17,7 +17,7 @@ public class DialogHandler : BaseUIHandler<DialogHandler, DialogManager>
     {
         return CreateDialog<T>(dialogType, null, null, callBack, dialogBean, 0);
     }
-    public T CreateDialog<T>(DialogEnum dialogType, DialogBean dialogBean, Action<DialogView, DialogBean> actionSubmit, Action<DialogView, DialogBean> actionCancel) where T : DialogView
+    public T CreateDialog<T>(DialogEnum dialogType, DialogBean dialogBean, Action<DialogView, DialogBean> actionSubmit = null, Action<DialogView, DialogBean> actionCancel = null) where T : DialogView
     {
         return CreateDialog<T>(dialogType, actionSubmit, actionCancel, null, dialogBean, 0);
     }

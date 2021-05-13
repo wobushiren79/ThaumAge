@@ -267,16 +267,13 @@ public class WorldCreateManager : BaseManager
     /// <param name="callBack"></param>
     public void HandleForUpdateChunk(Action callBack)
     {
-        if (listUpdateChunk.Count > 0)
+        if (listUpdateChunk.TryDequeue(out Chunk updateChunk))
         {
-            if (listUpdateChunk.TryDequeue(out Chunk updateChunk))
+            if (updateChunk != null)
             {
-                if (updateChunk != null)
-                {
-                    WorldCreateHandler.Instance.manager.AddUpdateDrawChunk(updateChunk);
-                    //构建修改过的区块
-                    updateChunk.BuildChunkForAsync(null);
-                }
+                WorldCreateHandler.Instance.manager.AddUpdateDrawChunk(updateChunk);
+                //构建修改过的区块
+                updateChunk.BuildChunkForAsync(null);
             }
         }
         else

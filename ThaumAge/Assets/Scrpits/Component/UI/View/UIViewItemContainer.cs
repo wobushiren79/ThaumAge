@@ -15,10 +15,10 @@ public class UIViewItemContainer : BaseUIView
 
     public void SetData(BlockInfoBean blockInfo)
     {
-
+        SetViewItem(blockInfo);
     }
 
-    public void SetViewItem()
+    public void SetViewItem(BlockInfoBean blockInfo)
     {
         if (currentViewItem == null)
         {
@@ -28,6 +28,6 @@ public class UIViewItemContainer : BaseUIView
             currentViewItem.transform.localScale = ui_ViewItem.transform.localScale;
             currentViewItem.transform.rotation = ui_ViewItem.transform.rotation;
         }
-
+        currentViewItem.SetData(blockInfo);
     }
 }
