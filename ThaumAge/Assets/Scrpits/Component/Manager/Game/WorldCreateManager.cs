@@ -22,12 +22,12 @@ public class WorldCreateManager : BaseManager
     public Material[] arrayBlockMat = new Material[16];
 
     //所有待修改的方块
-    protected Queue<BlockBean> listUpdateBlock = new Queue<BlockBean>();
+    protected ConcurrentQueue<BlockBean> listUpdateBlock = new ConcurrentQueue<BlockBean>();
     //所有待修改的区块
     protected ConcurrentQueue<Chunk> listUpdateChunk = new ConcurrentQueue<Chunk>();
     //待绘制的区块
     protected List<Chunk> listUpdateDrawChunk = new List<Chunk>();
-    
+
     //世界种子
     protected int worldSeed;
 
@@ -40,9 +40,11 @@ public class WorldCreateManager : BaseManager
 
     public float time;
 
+    protected static object lockForUpdateBlock = new object();
+
     protected void Awake()
     {
-        List<Material> listData = GetAllModel<Material>("block/mats","Assets/Prefabs/Mats");
+        List<Material> listData = GetAllModel<Material>("block/mats", "Assets/Prefabs/Mats");
         for (int i = 0; i < listData.Count; i++)
         {
             //按照名字中的下标 确认每个材质球的顺序
@@ -100,10 +102,7 @@ public class WorldCreateManager : BaseManager
     /// <param name="blockData"></param>
     public void AddUpdateBlock(BlockBean blockData)
     {
-        lock (this)
-        {
-            listUpdateBlock.Enqueue(blockData);
-        }
+        listUpdateBlock.Enqueue(blockData);
     }
 
     /// <summary>
@@ -356,44 +355,42 @@ public class WorldCreateManager : BaseManager
         }
         await Task.Run(() =>
         {
-            lock (this)
+
+            List<BlockBean> listNoChunkBlock = new List<BlockBean>();
+            //添加修改的方块信息，用于树木或建筑群等用于多个区块的数据     
+            while (listUpdateBlock.TryDequeue(out BlockBean itemBlock))
             {
-                List<BlockBean> listNoChunkBlock = new List<BlockBean>();
-                //添加修改的方块信息，用于树木或建筑群等用于多个区块的数据     
-                while (listUpdateBlock.Count > 0)
+                if (itemBlock == null || itemBlock.worldPosition == null)
                 {
-                    BlockBean itemBlock = listUpdateBlock.Dequeue();
-                    if (itemBlock == null || itemBlock.worldPosition == null)
+                    continue;
+                }
+                Vector3Int positionBlockWorld = itemBlock.worldPosition.GetVector3Int();
+                Chunk chunk = GetChunkForWorldPosition(positionBlockWorld);
+                if (chunk != null && chunk.isInit)
+                {
+                    Vector3Int positionBlockLocal = itemBlock.worldPosition.GetVector3Int() - chunk.worldPosition;
+                    //需要重新设置一下本地坐标 之前没有记录本地坐标
+                    itemBlock.localPosition = new Vector3IntBean(positionBlockLocal);
+                    //获取保存的数据
+                    WorldDataBean worldData = chunk.GetWorldData();
+                    if (worldData == null || worldData.chunkData == null || worldData.chunkData.GetBlockData(positionBlockLocal) == null)
                     {
-                        continue;
-                    }
-                    Vector3Int positionBlockWorld = itemBlock.worldPosition.GetVector3Int();
-                    Chunk chunk = GetChunkForWorldPosition(positionBlockWorld);
-                    if (chunk != null)
-                    {
-                        Vector3Int positionBlockLocal = itemBlock.worldPosition.GetVector3Int() - chunk.worldPosition;
-                        //需要重新设置一下本地坐标 之前没有记录本地坐标
-                        itemBlock.localPosition = new Vector3IntBean(positionBlockLocal);
-                        //获取保存的数据
-                        WorldDataBean worldData = chunk.GetWorldData();
-                        if (worldData == null || worldData.chunkData == null || worldData.chunkData.GetBlockData(positionBlockLocal) == null)
-                        {
-                            //设置方块
-                            chunk.SetBlock(itemBlock, false, false, false);
-                            //添加需要更新的chunk
-                            AddUpdateChunk(chunk);
-                        }
-                    }
-                    else
-                    {
-                        listNoChunkBlock.Add(itemBlock);
+                        //设置方块
+                        chunk.SetBlock(itemBlock, false, false, false);
+                        //添加需要更新的chunk
+                        AddUpdateChunk(chunk);
                     }
                 }
-                for (int i = 0; i < listNoChunkBlock.Count; i++)
+                else
                 {
-                    AddUpdateBlock(listNoChunkBlock[i]);
+                    listNoChunkBlock.Add(itemBlock);
                 }
             }
+            for (int i = 0; i < listNoChunkBlock.Count; i++)
+            {
+                AddUpdateBlock(listNoChunkBlock[i]);
+            }
+
         });
         callBack?.Invoke();
     }

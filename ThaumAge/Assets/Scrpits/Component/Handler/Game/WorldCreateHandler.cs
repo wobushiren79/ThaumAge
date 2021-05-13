@@ -67,8 +67,8 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
         };
         //生成方块数据
         manager.CreateChunkBlockDataForAsync(chunk, callBack);
-
     }
+
 
     /// <summary>
     /// 根据中心位置创建区域chunk
