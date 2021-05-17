@@ -14,6 +14,8 @@ public class GameDataManager : BaseManager,
     public WorldDataController controllerForWorldData;
     public UserDataController controllerForUserData;
 
+    protected static object lockForSaveData = new object();
+
     protected void Awake()
     {
         controllerForGameConfig = new GameConfigController(this, this);
@@ -68,7 +70,7 @@ public class GameDataManager : BaseManager,
     {
         await Task.Run(() =>
         {
-            lock (this)
+            lock (lockForSaveData)
             {
                 worldData.chunkData.SaveData();
                 controllerForUserData.SetUserData(userData);

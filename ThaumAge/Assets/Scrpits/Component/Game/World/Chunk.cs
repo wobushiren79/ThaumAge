@@ -56,6 +56,8 @@ public class Chunk : BaseMonoBehaviour
     public Mesh chunkMeshCollider;
     public Mesh chunkMeshTrigger;
 
+    protected static object lockForUpdateBlcok = new object();
+
     public void Awake()
     {
         //获取自身相关组件引用
@@ -218,12 +220,12 @@ public class Chunk : BaseMonoBehaviour
         isBake = true;
         await Task.Run(() =>
         {
-            lock (this)
+            lock (lockForUpdateBlcok)
             {
                 //遍历chunk, 生成其中的每一个Block
                 try
                 {
-                   Stopwatch stopwatch= TimeUtil.GetMethodTimeStart();
+                    Stopwatch stopwatch = TimeUtil.GetMethodTimeStart();
                     chunkRenderData = new ChunkRenderData
                     {
                         //普通使用的三角形合集
@@ -277,56 +279,53 @@ public class Chunk : BaseMonoBehaviour
     /// </summary>
     public void RefreshMesh()
     {
-        lock (this)
+        chunkMesh.Clear();
+        chunkMeshCollider.Clear();
+        chunkMeshTrigger.Clear();
+
+        chunkMesh.subMeshCount = meshRenderer.materials.Length;
+        //定点数判断
+        if (chunkRenderData == null || chunkRenderData.verts.Count <= 3)
         {
-            chunkMesh.Clear();
-            chunkMeshCollider.Clear();
-            chunkMeshTrigger.Clear();
-
-            chunkMesh.subMeshCount = meshRenderer.materials.Length;
-            //定点数判断
-            if (chunkRenderData==null || chunkRenderData.verts.Count <= 3)
-            {
-                return;
-            }
-
-            //设置顶点
-            chunkMesh.SetVertices(chunkRenderData.verts);
-            //设置UV
-            chunkMesh.SetUVs(0, chunkRenderData.uvs);
-            //设置三角（单面渲染，双面渲染,液体）
-            foreach (var itemTris in chunkRenderData.dicTris)
-            {
-                chunkMesh.SetTriangles(itemTris.Value.ToArray(), (int)itemTris.Key);
-            }
-
-            //碰撞数据设置
-            chunkMeshCollider.SetVertices(chunkRenderData.vertsCollider);
-            chunkMeshCollider.SetTriangles(chunkRenderData.trisCollider, 0);
-
-            //出发数据设置
-            chunkMeshTrigger.SetVertices(chunkRenderData.vertsTrigger);
-            chunkMeshTrigger.SetTriangles(chunkRenderData.trisTrigger, 0);
-
-            Physics.BakeMesh(chunkMeshCollider.GetInstanceID(), false);
-            Physics.BakeMesh(chunkMeshTrigger.GetInstanceID(), false);
-
-            //刷新
-            chunkMesh.RecalculateBounds();
-            chunkMesh.RecalculateNormals();
-            //刷新
-            chunkMeshCollider.RecalculateBounds();
-            chunkMeshCollider.RecalculateNormals();
-            //刷新
-            chunkMeshTrigger.RecalculateBounds();
-            chunkMeshTrigger.RecalculateNormals();
-
-            meshFilter.mesh.Optimize();
-
-            meshFilter.mesh = chunkMesh;
-            meshCollider.sharedMesh = chunkMeshCollider;
-            meshTrigger.sharedMesh = chunkMeshTrigger;
+            return;
         }
+
+        //设置顶点
+        chunkMesh.SetVertices(chunkRenderData.verts);
+        //设置UV
+        chunkMesh.SetUVs(0, chunkRenderData.uvs);
+        //设置三角（单面渲染，双面渲染,液体）
+        foreach (var itemTris in chunkRenderData.dicTris)
+        {
+            chunkMesh.SetTriangles(itemTris.Value.ToArray(), (int)itemTris.Key);
+        }
+
+        //碰撞数据设置
+        chunkMeshCollider.SetVertices(chunkRenderData.vertsCollider);
+        chunkMeshCollider.SetTriangles(chunkRenderData.trisCollider, 0);
+
+        //出发数据设置
+        chunkMeshTrigger.SetVertices(chunkRenderData.vertsTrigger);
+        chunkMeshTrigger.SetTriangles(chunkRenderData.trisTrigger, 0);
+
+        Physics.BakeMesh(chunkMeshCollider.GetInstanceID(), false);
+        Physics.BakeMesh(chunkMeshTrigger.GetInstanceID(), false);
+
+        //刷新
+        chunkMesh.RecalculateBounds();
+        chunkMesh.RecalculateNormals();
+        //刷新
+        chunkMeshCollider.RecalculateBounds();
+        chunkMeshCollider.RecalculateNormals();
+        //刷新
+        chunkMeshTrigger.RecalculateBounds();
+        chunkMeshTrigger.RecalculateNormals();
+
+        meshFilter.mesh.Optimize();
+
+        meshFilter.mesh = chunkMesh;
+        meshCollider.sharedMesh = chunkMeshCollider;
+        meshTrigger.sharedMesh = chunkMeshTrigger;
     }
 
     public Block GetBlockForWorld(Vector3Int blockWorldPosition)

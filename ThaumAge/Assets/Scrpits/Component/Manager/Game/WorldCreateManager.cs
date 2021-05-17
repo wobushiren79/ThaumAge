@@ -246,10 +246,13 @@ public class WorldCreateManager : BaseManager
         {
             try
             {
-                //生成基础地形数据
-                HandleForBaseBlock(chunk);
-                //处理存档方块 优先使用存档方块
-                HandleForLoadBlock(chunk);
+                lock(lockForUpdateBlock)
+                {
+                    //生成基础地形数据
+                    HandleForBaseBlock(chunk);
+                    //处理存档方块 优先使用存档方块
+                    HandleForLoadBlock(chunk);
+                }
             }
             catch (Exception e)
             {
@@ -352,7 +355,6 @@ public class WorldCreateManager : BaseManager
         }
         await Task.Run(() =>
         {
-
             List<BlockBean> listNoChunkBlock = new List<BlockBean>();
             //添加修改的方块信息，用于树木或建筑群等用于多个区块的数据     
             while (listUpdateBlock.TryDequeue(out BlockBean itemBlock))

@@ -18,15 +18,8 @@ public class WeatherBase
 
     }
 
-    public virtual void CreateClouds(Color colorCloud, int minSize, int maxSize)
-    {
-        Vector3 size = new Vector3(Random.Range(minSize, maxSize), Random.Range(5, 10), Random.Range(minSize, maxSize));
-        SceneElementHandler.Instance.manager.clouds.CreateCloud(size, colorCloud);
-        timeForCloud = timeMaxForCloud;
-    }
-
     public virtual void ChangeAllCloudsColor(Color colorCloud,float changeTime)
     {
-        SceneElementHandler.Instance.manager.clouds.ChangeAllCloudsColor(colorCloud, changeTime);
+        SceneElementHandler.Instance.manager.clouds.ChangeCloudsColor(colorCloud, changeTime);
     }
 }

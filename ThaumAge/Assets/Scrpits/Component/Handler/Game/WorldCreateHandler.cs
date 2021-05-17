@@ -20,11 +20,14 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
     /// </summary>
     public void HandleForWorldUpdate()
     {
-        Vector3 playPosition = GameHandler.Instance.manager.player.transform.position;
-        CreateChunkForRangeForWorldPostion(playPosition, manager.worldRefreshRange, () =>
+        if (GameHandler.Instance.manager.GetGameState() == GameStateEnum.Gaming)
         {
+            Vector3 playPosition = GameHandler.Instance.manager.player.transform.position;
+            CreateChunkForRangeForWorldPostion(playPosition, manager.worldRefreshRange, () =>
+            {
 
-        });
+            });
+        }
     }
 
     /// <summary>

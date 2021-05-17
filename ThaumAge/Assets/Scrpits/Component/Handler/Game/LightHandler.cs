@@ -25,13 +25,20 @@ public class LightHandler : BaseHandler<LightHandler, LightManager>
         Color lightMiddleColor;
         Color lightBottomColor;
         //float lightIntensity;
-        if (gameTime.hour >= 0 && gameTime.hour <= 12)
+        if (gameTime.hour > 3 && gameTime.hour <= 12)
         {
             lerpColor = (gameTime.hour * 60 + gameTime.minute) / (float)(12 * 60);
             lightTopColor = Color.Lerp(manager.mainLightTopEnd, manager.mainLightTopStart, lerpColor);
             lightMiddleColor = Color.Lerp(manager.mainLightMiddleEnd, manager.mainLightMiddleStart, lerpColor);
             lightBottomColor = Color.Lerp(manager.mainLightBottomEnd, manager.mainLightBottomStart, lerpColor);
             //lightIntensity = (manager.mainLightMaxIntensity - manager.mainLightMinIntensity) * lerpColor + manager.mainLightMinIntensity;
+        }
+        else if (gameTime.hour >= 0 && gameTime.hour <= 3)
+        {
+
+            lightTopColor = manager.mainLightTopEnd;
+            lightMiddleColor = manager.mainLightMiddleEnd;
+            lightBottomColor = manager.mainLightBottomEnd;
         }
         else
         {

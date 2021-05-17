@@ -14,7 +14,6 @@ public class WeatherRain : WeatherBase
     public override void Update()
     {
         base.Update();
-        HandleForClouds();
     }
 
     /// <summary>
@@ -34,19 +33,5 @@ public class WeatherRain : WeatherBase
         colorClouds = new Color(0, 0, 0, 0.5f);
         ChangeAllCloudsColor(colorClouds, 0.5f);
     }
-
-    /// <summary>
-    /// 处理-云的生成
-    /// </summary>
-    public void HandleForClouds()
-    {
-        timeForCloud -= Time.deltaTime;
-        if (timeForCloud <= 0)
-        {
-            CreateClouds(colorClouds, 50, 100);
-            timeForCloud = timeMaxForCloud;
-        }
-    }
-
 
 }
