@@ -221,10 +221,11 @@ public class Chunk : BaseMonoBehaviour
         isBake = true;
         await Task.Run(() =>
         {
-            lock (lockForUpdateBlcok)
+
+            //遍历chunk, 生成其中的每一个Block
+            try
             {
-                //遍历chunk, 生成其中的每一个Block
-                try
+                lock (lockForUpdateBlcok)
                 {
                     chunkRenderData = new ChunkRenderData
                     {
@@ -265,11 +266,12 @@ public class Chunk : BaseMonoBehaviour
                         }
                     }
                 }
-                catch (Exception e)
-                {
-                    LogUtil.Log("BuildChunkForAsync:" + e.ToString());
-                }
             }
+            catch (Exception e)
+            {
+                LogUtil.Log("BuildChunkForAsync:" + e.ToString());
+            }
+
         });
         isBake = false;
         callBack?.Invoke(this);

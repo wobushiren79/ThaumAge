@@ -27,7 +27,6 @@ public class Launcher : BaseMonoBehaviour
         };
 
         WorldCreateHandler.Instance.CreateChunkForRangeForCenterPosition(Vector3Int.zero, refreshRange, callBackForLoadData);
-
     }
 
     /// <summary>

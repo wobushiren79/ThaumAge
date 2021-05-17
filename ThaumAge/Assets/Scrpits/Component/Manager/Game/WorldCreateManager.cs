@@ -26,7 +26,7 @@ public class WorldCreateManager : BaseManager
     //所有待修改的区块
     protected ConcurrentQueue<Chunk> listUpdateChunk = new ConcurrentQueue<Chunk>();
     //待绘制的区块
-    protected List<Chunk> listUpdateDrawChunk = new List<Chunk>();
+    protected Queue<Chunk> listUpdateDrawChunk = new Queue<Chunk>();
 
     //世界种子
     protected int worldSeed;
@@ -92,7 +92,7 @@ public class WorldCreateManager : BaseManager
     {
         if (!listUpdateDrawChunk.Contains(chunk))
         {
-            listUpdateDrawChunk.Add(chunk);
+            listUpdateDrawChunk.Enqueue(chunk);
         }
     }
 
@@ -231,7 +231,7 @@ public class WorldCreateManager : BaseManager
         {
             try
             {
-                lock(lockForUpdateBlock)
+                lock (lockForUpdateBlock)
                 {
                     //生成基础地形数据
                     HandleForBaseBlock(chunk);
@@ -241,7 +241,7 @@ public class WorldCreateManager : BaseManager
             }
             catch (Exception e)
             {
-                LogUtil.Log("CreateChunkBlockDataForAsync:"+e.ToString());
+                LogUtil.Log("CreateChunkBlockDataForAsync:" + e.ToString());
             }
         });
         callBack?.Invoke();
@@ -268,21 +268,21 @@ public class WorldCreateManager : BaseManager
         {
             if (listUpdateDrawChunk.Count > 0)
             {
-                Chunk updateDrawChunk = listUpdateDrawChunk[0];
+                Chunk updateDrawChunk = listUpdateDrawChunk.Peek();
                 if (updateDrawChunk != null)
                 {
                     if (!updateDrawChunk.isBake)
                     {
                         //构建修改过的区块
                         updateDrawChunk.RefreshMesh();
-                        listUpdateDrawChunk.RemoveAt(0);
+                        listUpdateDrawChunk.Dequeue();
                         //刷新寻路
                         PathFindingHandler.Instance.manager.RefreshPathFinding(updateDrawChunk);
                     }
                 }
                 else
                 {
-                    listUpdateDrawChunk.RemoveAt(0);
+                    listUpdateDrawChunk.Dequeue();
                 }
             }
             else
