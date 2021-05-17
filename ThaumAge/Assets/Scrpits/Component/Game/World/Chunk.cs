@@ -34,7 +34,7 @@ public class Chunk : BaseMonoBehaviour
     public MeshFilter meshFilter;
 
     //存储着此Chunk内的所有Block信息
-    public Dictionary<Vector3Int, Block> mapForBlock = new Dictionary<Vector3Int, Block>();
+    public Block[,,] mapForBlock;
     //待更新方块
     public List<BlockBean> listUpdateBlock = new List<BlockBean>();
     //大小
@@ -152,6 +152,7 @@ public class Chunk : BaseMonoBehaviour
         this.worldPosition = worldPosition;
         this.width = width;
         this.height = height;
+        mapForBlock = new Block[width, height, width];
     }
 
     /// <summary>
@@ -210,7 +211,7 @@ public class Chunk : BaseMonoBehaviour
     public async void BuildChunkForAsync(Action<Chunk> callBack)
     {
         //只有初始化之后的chunk才能刷新
-        if (!isInit || mapForBlock.Count <= 0)
+        if (!isInit || mapForBlock.Length <= 0)
         {
             callBack?.Invoke(this);
             return;
@@ -223,7 +224,6 @@ public class Chunk : BaseMonoBehaviour
                 //遍历chunk, 生成其中的每一个Block
                 try
                 {
-                   Stopwatch stopwatch= TimeUtil.GetMethodTimeStart();
                     chunkRenderData = new ChunkRenderData
                     {
                         //普通使用的三角形合集
@@ -251,20 +251,22 @@ public class Chunk : BaseMonoBehaviour
                         chunkRenderData.dicTris.Add(blockMaterial, new List<int>());
                     }
 
-                    List<Vector3Int> listKey = new List<Vector3Int>(mapForBlock.Keys);
-                    for (int i = 0; i < listKey.Count; i++)
+                    for (int x = 0; x < width; x++)
                     {
-                        Vector3Int itemKey = listKey[i];
-                        if (mapForBlock.TryGetValue(itemKey, out Block value))
+                        for (int y = 0; y < height; y++)
                         {
-                            if (value != null)
-                                value.BuildBlock(chunkRenderData);
+                            for (int z = 0; z < width; z++)
+                            {
+                                Block block = mapForBlock[x, y, z];
+                                block.BuildBlock(chunkRenderData);
+                            }
+
                         }
                     }
                 }
                 catch (Exception e)
                 {
-                    LogUtil.Log(e.ToString());
+                    LogUtil.Log("BuildChunkForAsync:" + e.ToString());
                 }
             }
         });
@@ -285,7 +287,7 @@ public class Chunk : BaseMonoBehaviour
 
             chunkMesh.subMeshCount = meshRenderer.materials.Length;
             //定点数判断
-            if (chunkRenderData==null || chunkRenderData.verts.Count <= 3)
+            if (chunkRenderData == null || chunkRenderData.verts.Count <= 3)
             {
                 return;
             }
@@ -340,22 +342,14 @@ public class Chunk : BaseMonoBehaviour
         {
             return null;
         }
-        int halfWidth = width / 2;
         //当前位置是否在Chunk内
-        if ((localPosition.x < -halfWidth) || (localPosition.z < -halfWidth) || (localPosition.x >= halfWidth) || (localPosition.z >= halfWidth))
+        if ((localPosition.x < 0) || (localPosition.z < 0) || (localPosition.x >= width) || (localPosition.z >= width))
         {
             Vector3Int blockWorldPosition = localPosition + worldPosition;
             Block tempBlock = WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(blockWorldPosition);
             return tempBlock;
         }
-        if (mapForBlock.TryGetValue(localPosition, out Block value))
-        {
-            return value;
-        }
-        else
-        {
-            return null;
-        }
+        return mapForBlock[localPosition.x, localPosition.y, localPosition.z];
     }
 
 
@@ -409,10 +403,14 @@ public class Chunk : BaseMonoBehaviour
 
         //添加数据
         Block newBlock = BlockHandler.Instance.CreateBlock(this, blockData);
-        if (mapForBlock.ContainsKey(localPosition))
+        if (localPosition.x >= width || localPosition.x < 0
+            || localPosition.y >= height || localPosition.y < 0
+            || localPosition.z >= width || localPosition.z < 0)
         {
-            mapForBlock[localPosition] = newBlock;
+            return null;
         }
+        mapForBlock[localPosition.x, localPosition.y, localPosition.z] = newBlock;
+
         //刷新六个方向的方块
         if (isRefreshBlockRange)
         {
@@ -427,7 +425,7 @@ public class Chunk : BaseMonoBehaviour
         }
 
         if (isSaveData)
-        {        
+        {
             //保存数据
             if (worldData != null && worldData.chunkData != null)
             {

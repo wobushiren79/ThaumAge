@@ -1,4 +1,8 @@
 ﻿using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq.Expressions;
 using System.Runtime.Serialization;
 using UnityEngine;
 using UnityEngine.Scripting;
@@ -32,9 +36,13 @@ public class BlockHandler : BaseHandler<BlockHandler, BlockManager>
     {
         BlockTypeEnum blockType = blockData.GetBlockType();
         Type type = manager.GetRegisterBlock(blockType).GetType();
-        //Block block = CreateInstance<Block>(type);
-        //Block block = Activator.CreateInstance(type) as Block;
+
         Block block = FormatterServices.GetUninitializedObject(type) as Block;
+
+        //Block block = CreateInstance<Block>(type);
+
+        //Block block = Activator.CreateInstance(type) as Block;
+
         block.SetData(chunk, blockData.localPosition.GetVector3Int(), blockData);
         return block;
     }
@@ -45,20 +53,20 @@ public class BlockHandler : BaseHandler<BlockHandler, BlockManager>
     /// <typeparam name="T"></typeparam>
     /// <param name="objType"></param>
     /// <returns></returns>
-    //public static T CreateInstance<T>(Type objType) where T : class
-    //{
-    //    Func<T> returnFunc;
-    //    if (!DelegateStore<T>.Store.TryGetValue(objType.FullName, out returnFunc))
-    //    {
-    //        Func<T> a0l = Expression.Lambda<Func<T>>(Expression.New(objType)).Compile();
-    //        DelegateStore<T>.Store[objType.FullName] = a0l;
-    //        returnFunc = a0l;
-    //    }
-    //    return returnFunc();
-    //}
-    //internal static class DelegateStore<T>
-    //{
-    //    internal static IDictionary<string, Func<T>> Store = new ConcurrentDictionary<string, Func<T>>();
-    //}
+    public static T CreateInstance<T>(Type objType) where T : class
+    {
+        Func<T> returnFunc;
+        if (!DelegateStore<T>.Store.TryGetValue(objType.FullName, out returnFunc))
+        {
+            Func<T> a0l = Expression.Lambda<Func<T>>(Expression.New(objType)).Compile();
+            DelegateStore<T>.Store[objType.FullName] = a0l;
+            returnFunc = a0l;
+        }
+        return returnFunc();
+    }
+    internal static class DelegateStore<T>
+    {
+        internal static IDictionary<string, Func<T>> Store = new ConcurrentDictionary<string, Func<T>>();
+    }
 
 }

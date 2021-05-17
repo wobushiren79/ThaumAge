@@ -146,25 +146,10 @@ public class WorldCreateManager : BaseManager
 
     public Vector3Int GetChunkPositionForWorldPosition(Vector3Int pos)
     {
-        int halfWidth = widthChunk / 2;
         int posX;
         int posZ;
-        if (pos.x < 0)
-        {
-            posX = Mathf.FloorToInt((pos.x - halfWidth + 1) / widthChunk) * widthChunk;
-        }
-        else
-        {
-            posX = Mathf.FloorToInt((pos.x + halfWidth) / widthChunk) * widthChunk;
-        }
-        if (pos.z < 0)
-        {
-            posZ = Mathf.FloorToInt((pos.z - halfWidth + 1) / widthChunk) * widthChunk;
-        }
-        else
-        {
-            posZ = Mathf.FloorToInt((pos.z + halfWidth) / widthChunk) * widthChunk;
-        }
+        posX = Mathf.FloorToInt((float)pos.x / widthChunk) * widthChunk;
+        posZ = Mathf.FloorToInt((float)pos.z / widthChunk) * widthChunk;
         return new Vector3Int(posX, 0, posZ);
     }
 
@@ -253,7 +238,7 @@ public class WorldCreateManager : BaseManager
             }
             catch (Exception e)
             {
-                LogUtil.Log(e.ToString());
+                LogUtil.Log("CreateChunkBlockDataForAsync:"+e.ToString());
             }
         });
         callBack?.Invoke();
@@ -310,7 +295,6 @@ public class WorldCreateManager : BaseManager
     /// <param name="chunk"></param>
     public void HandleForBaseBlock(Chunk chunk)
     {
-        int halfWidth = widthChunk / 2;
         //获取该世界的所有生态
         List<Biome> listBiome = BiomeHandler.Instance.manager.GetBiomeListByWorldType(worldType);
         //获取一定范围内的生态点
@@ -324,20 +308,18 @@ public class WorldCreateManager : BaseManager
             {
                 for (int z = 0; z < widthChunk; z++)
                 {
-                    Vector3Int position = new Vector3Int(x - halfWidth, y, z - halfWidth);
+                    Vector3Int position = new Vector3Int(x, y, z);
                     //获取方块类型
                     BlockTypeEnum blockType = BiomeHandler.Instance.CreateBiomeBlockType(chunk, listBiomeCenter, listBiome, position);
                     //生成方块
                     Block block = BlockHandler.Instance.CreateBlock(chunk, position, blockType);
-                    //TODO 还可以检测方块的优先级
-                    if (!chunk.mapForBlock.ContainsKey(position))
-                    {
-                        //添加方块
-                        chunk.mapForBlock.Add(position, block);
-                    }
+                    //添加方块
+                    chunk.mapForBlock[x, y, z] = block;
+
                 }
             }
         }
+
     }
 
     /// <summary>
@@ -352,7 +334,6 @@ public class WorldCreateManager : BaseManager
         }
         await Task.Run(() =>
         {
-
             List<BlockBean> listNoChunkBlock = new List<BlockBean>();
             //添加修改的方块信息，用于树木或建筑群等用于多个区块的数据     
             while (listUpdateBlock.TryDequeue(out BlockBean itemBlock))
@@ -429,11 +410,7 @@ public class WorldCreateManager : BaseManager
             Block block = BlockHandler.Instance.CreateBlock(chunk, blockData);
             Vector3Int positionBlock = blockData.localPosition.GetVector3Int();
             //添加方块 如果已经有该方块 则先删除，优先使用存档的方块
-            if (chunk.mapForBlock.ContainsKey(positionBlock))
-            {
-                chunk.mapForBlock.Remove(positionBlock);
-            }
-            chunk.mapForBlock.Add(positionBlock, block);
+            chunk.mapForBlock[positionBlock.x, positionBlock.y, positionBlock.z] = block;
         }
         chunk.SetWorldData(worldData);
     }

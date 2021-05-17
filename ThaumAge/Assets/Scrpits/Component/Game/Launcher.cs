@@ -20,9 +20,7 @@ public class Launcher : BaseMonoBehaviour
         {
             StartCoroutine(CoroutineForUpdateChunk());
         };
-
-        WorldCreateHandler.Instance.CreateChunkForRangeForCenterPosition(Vector3Int.zero, 2, callBackForLoadData);
-
+        WorldCreateHandler.Instance.CreateChunkForRangeForCenterPosition(Vector3Int.zero, 5, callBackForLoadData);
     }
 
     /// <summary>
