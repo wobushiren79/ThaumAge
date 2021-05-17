@@ -10,7 +10,7 @@ public class BlockManager : BaseManager, IBlockInfoView
     //方块信息列表
     protected Dictionary<BlockTypeEnum, BlockInfoBean> dicBlockInfo = new Dictionary<BlockTypeEnum, BlockInfoBean>();
     //注册方块列表
-    protected Dictionary<int, Block> dicBlockRegister = new Dictionary<int, Block>();
+    protected Dictionary<BlockTypeEnum, Block> dicBlockRegister = new Dictionary<BlockTypeEnum, Block>();
 
     public virtual void Awake()
     {
@@ -26,15 +26,15 @@ public class BlockManager : BaseManager, IBlockInfoView
     /// <returns></returns>
     public Block GetRegisterBlock(int blockId)
     {
-        if (dicBlockRegister.TryGetValue(blockId, out Block value))
+        return GetRegisterBlock((BlockTypeEnum)blockId);
+    }
+    public Block GetRegisterBlock(BlockTypeEnum blockType)
+    {
+        if (dicBlockRegister.TryGetValue(blockType, out Block value))
         {
             return value;
         }
         return null;
-    }
-    public Block GetRegisterBlock(BlockTypeEnum blockType)
-    {
-        return GetRegisterBlock((int)blockType);
     }
 
     /// <summary>
@@ -58,15 +58,15 @@ public class BlockManager : BaseManager, IBlockInfoView
                 string blockShapeName = EnumUtil.GetEnumName(blockShape);
                 block = ReflexUtil.CreateInstance<Block>("Block" + blockShapeName);
             }
-            RegisterBlock((int)blockType, block);
+            RegisterBlock(blockType, block);
         }
     }
 
-    public void RegisterBlock(int blockId, Block block)
+    public void RegisterBlock(BlockTypeEnum blockType, Block block)
     {
-        if (!dicBlockRegister.ContainsKey(blockId))
+        if (!dicBlockRegister.ContainsKey(blockType))
         {
-            dicBlockRegister.Add(blockId, block);
+            dicBlockRegister.Add(blockType, block);
         }
     }
 

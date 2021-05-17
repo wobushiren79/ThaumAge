@@ -32,6 +32,7 @@ public class GameDataManager : BaseManager,
     {
         if (userData == null)
             userData = new UserDataBean();
+        userData.timeForGame.hour = 6;
         return userData;
     }
 
