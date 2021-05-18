@@ -20,13 +20,12 @@ public class Launcher : BaseMonoBehaviour
 
         //开关角色控制
         GameControlHandler.Instance.manager.controlForPlayer.EnabledControl(false);
-        //加载玩数据后
-        Action callBackForLoadData = () =>
-        {
-            StartCoroutine(CoroutineForUpdateChunk());
-        };
 
-        WorldCreateHandler.Instance.CreateChunkForRangeForCenterPosition(Vector3Int.zero, refreshRange, callBackForLoadData);
+
+        WorldCreateHandler.Instance.CreateChunkForRangeForCenterPosition(Vector3Int.zero, refreshRange);
+
+        //加载玩数据后
+        StartCoroutine(CoroutineForUpdateChunk());
     }
 
     /// <summary>
@@ -51,7 +50,7 @@ public class Launcher : BaseMonoBehaviour
         while (GameHandler.Instance.manager.GetGameState() == GameStateEnum.Init)
         {
             yield return new WaitForFixedUpdate();
-            WorldCreateHandler.Instance.manager.HandleForUpdateChunk(CompleteForUpdateChunk);
+            WorldCreateHandler.Instance.HandleForUpdateChunk(CompleteForUpdateChunk);
         }
     }
 

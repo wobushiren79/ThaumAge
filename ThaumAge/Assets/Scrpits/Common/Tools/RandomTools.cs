@@ -20,7 +20,10 @@ public class RandomTools
 
     public int NextInt(int n)
     {
-        if (n <= 0) throw new ArgumentException("n must be positive");
+        if (n <= 0) {
+            LogUtil.Log("n must be positive");
+            return 0;
+        } 
 
         if ((n & -n) == n)  // i.e., n is a power of 2
             return (int)((n * (long)Next(31)) >> 31);

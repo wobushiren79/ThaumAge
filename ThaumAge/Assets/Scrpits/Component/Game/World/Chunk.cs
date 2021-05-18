@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Threading;
 using System.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
@@ -10,19 +12,19 @@ public class Chunk : BaseMonoBehaviour
     public class ChunkRenderData
     {
         //普通使用的三角形合集
-        public List<Vector3> verts;
-        public List<Vector2> uvs;
+        public List<Vector3> verts = new List<Vector3>();
+        public List<Vector2> uvs = new List<Vector2>();
 
         //碰撞使用的三角形合集
-        public List<Vector3> vertsCollider;
-        public List<int> trisCollider;
+        public List<Vector3> vertsCollider = new List<Vector3>();
+        public List<int> trisCollider = new List<int>();
 
         //出发使用的三角形合集
-        public List<Vector3> vertsTrigger;
-        public List<int> trisTrigger;
+        public List<Vector3> vertsTrigger = new List<Vector3>();
+        public List<int> trisTrigger = new List<int>();
 
         //所有三角形合集，根据材质球区分
-        public Dictionary<BlockMaterialEnum, List<int>> dicTris;
+        public Dictionary<BlockMaterialEnum, List<int>> dicTris = new Dictionary<BlockMaterialEnum, List<int>>();
     }
 
     public Action eventUpdate;
@@ -42,7 +44,8 @@ public class Chunk : BaseMonoBehaviour
     public int height = 0;
     //是否初始化
     public bool isInit = false;
-    public bool isBake = false;
+    public bool isBuildChunk = false;
+    public bool isDrawMesh = false;
     //世界坐标
     public Vector3Int worldPosition;
 
@@ -50,7 +53,6 @@ public class Chunk : BaseMonoBehaviour
     protected ChunkRenderData chunkRenderData;
     //存储数据
     protected WorldDataBean worldData;
-
 
     public Mesh chunkMesh;
     public Mesh chunkMeshCollider;
@@ -166,13 +168,6 @@ public class Chunk : BaseMonoBehaviour
         this.worldData = worldData;
     }
 
-    /// <summary>
-    /// 设置初始化状态
-    /// </summary>
-    public void SetInitState(bool isInit)
-    {
-        this.isInit = isInit;
-    }
 
     /// <summary>
     /// 异步构建范围内的chunk
@@ -208,6 +203,42 @@ public class Chunk : BaseMonoBehaviour
     }
 
     /// <summary>
+    /// 异步创建区块方块数据
+    /// </summary>
+    /// <param name="chunk"></param>
+    /// <param name="callBack"></param>
+    public void BuildChunkBlockDataForAsync()
+    {
+        //初始化Map
+        BiomeManager biomeManager = BiomeHandler.Instance.manager;
+        BlockManager blockManager = BlockHandler.Instance.manager;
+        GameDataManager gameDataManager = GameDataHandler.Instance.manager;
+
+        Thread threadForBuildBlockData = new Thread(() =>
+        {
+            try
+            {
+                //生成基础地形数据
+                HandleForBaseBlock();
+                //处理存档方块 优先使用存档方块
+                HandleForLoadBlock();
+                //设置数据
+                BuildChunkRangeForAsync();
+                //初始化完成
+                isInit = true;
+                //更新待更新方块
+                WorldCreateHandler.Instance.HandleForUpdateBlock();
+            }
+            catch (Exception e)
+            {
+                LogUtil.Log("CreateChunkBlockDataForAsync:" + e.ToString());
+            }
+        });
+        threadForBuildBlockData.Start();
+    }
+
+
+    /// <summary>
     /// 异步构建chunk
     /// </summary>
     public async void BuildChunkForAsync(Action<Chunk> callBack)
@@ -218,7 +249,7 @@ public class Chunk : BaseMonoBehaviour
             callBack?.Invoke(this);
             return;
         }
-        isBake = true;
+        isBuildChunk = true;
         await Task.Run(() =>
         {
 
@@ -227,23 +258,7 @@ public class Chunk : BaseMonoBehaviour
             {
                 lock (lockForUpdateBlcok)
                 {
-                    chunkRenderData = new ChunkRenderData
-                    {
-                        //普通使用的三角形合集
-                        verts = new List<Vector3>(),
-                        uvs = new List<Vector2>(),
-
-                        //碰撞使用的三角形合集
-                        vertsCollider = new List<Vector3>(),
-                        trisCollider = new List<int>(),
-
-                        //碰撞使用的三角形合集
-                        vertsTrigger = new List<Vector3>(),
-                        trisTrigger = new List<int>(),
-
-                        //三角型合集
-                        dicTris = new Dictionary<BlockMaterialEnum, List<int>>()
-                    };
+                    chunkRenderData = new ChunkRenderData();
 
                     //初始化数据
                     List<BlockMaterialEnum> blockMaterialsEnum = EnumUtil.GetEnumValue<BlockMaterialEnum>();
@@ -273,62 +288,79 @@ public class Chunk : BaseMonoBehaviour
             }
 
         });
-        isBake = false;
+        isBuildChunk = false;
         callBack?.Invoke(this);
     }
 
     /// <summary>
     /// 刷新网格
     /// </summary>
-    public void RefreshMesh()
+    public void DrawMesh()
     {
-        chunkMesh.Clear();
-        chunkMeshCollider.Clear();
-        chunkMeshTrigger.Clear();
-
-        chunkMesh.subMeshCount = meshRenderer.materials.Length;
-        //定点数判断
-        if (chunkRenderData == null || chunkRenderData.verts.Count <= 3)
-        {
+        if (isBuildChunk)
             return;
-        }
-
-        //设置顶点
-        chunkMesh.SetVertices(chunkRenderData.verts);
-        //设置UV
-        chunkMesh.SetUVs(0, chunkRenderData.uvs);
-        //设置三角（单面渲染，双面渲染,液体）
-        foreach (var itemTris in chunkRenderData.dicTris)
+        try
         {
-            chunkMesh.SetTriangles(itemTris.Value.ToArray(), (int)itemTris.Key);
+            isDrawMesh = true;
+
+            chunkMesh.Clear();
+            chunkMeshCollider.Clear();
+            chunkMeshTrigger.Clear();
+
+            chunkMesh.subMeshCount = meshRenderer.materials.Length;
+            //定点数判断
+            if (chunkRenderData == null || chunkRenderData.verts.Count <= 3)
+            {
+                isDrawMesh = false;
+                return;
+            }
+
+            //设置顶点
+            chunkMesh.SetVertices(chunkRenderData.verts);
+            //设置UV
+            chunkMesh.SetUVs(0, chunkRenderData.uvs);
+            //设置三角（单面渲染，双面渲染,液体）
+            foreach (var itemTris in chunkRenderData.dicTris)
+            {
+                chunkMesh.SetTriangles(itemTris.Value.ToArray(), (int)itemTris.Key);
+            }
+
+            //碰撞数据设置
+            chunkMeshCollider.SetVertices(chunkRenderData.vertsCollider);
+            chunkMeshCollider.SetTriangles(chunkRenderData.trisCollider, 0);
+
+            //出发数据设置
+            chunkMeshTrigger.SetVertices(chunkRenderData.vertsTrigger);
+            chunkMeshTrigger.SetTriangles(chunkRenderData.trisTrigger, 0);
+
+            Physics.BakeMesh(chunkMeshCollider.GetInstanceID(), false);
+            Physics.BakeMesh(chunkMeshTrigger.GetInstanceID(), false);
+
+            //刷新
+            chunkMesh.RecalculateBounds();
+            chunkMesh.RecalculateNormals();
+            //刷新
+            chunkMeshCollider.RecalculateBounds();
+            chunkMeshCollider.RecalculateNormals();
+            //刷新
+            chunkMeshTrigger.RecalculateBounds();
+            chunkMeshTrigger.RecalculateNormals();
+
+            meshFilter.mesh.Optimize();
+
+            meshFilter.mesh = chunkMesh;
+            meshCollider.sharedMesh = chunkMeshCollider;
+            meshTrigger.sharedMesh = chunkMeshTrigger;
         }
-
-        //碰撞数据设置
-        chunkMeshCollider.SetVertices(chunkRenderData.vertsCollider);
-        chunkMeshCollider.SetTriangles(chunkRenderData.trisCollider, 0);
-
-        //出发数据设置
-        chunkMeshTrigger.SetVertices(chunkRenderData.vertsTrigger);
-        chunkMeshTrigger.SetTriangles(chunkRenderData.trisTrigger, 0);
-
-        Physics.BakeMesh(chunkMeshCollider.GetInstanceID(), false);
-        Physics.BakeMesh(chunkMeshTrigger.GetInstanceID(), false);
-
-        //刷新
-        chunkMesh.RecalculateBounds();
-        chunkMesh.RecalculateNormals();
-        //刷新
-        chunkMeshCollider.RecalculateBounds();
-        chunkMeshCollider.RecalculateNormals();
-        //刷新
-        chunkMeshTrigger.RecalculateBounds();
-        chunkMeshTrigger.RecalculateNormals();
-
-        meshFilter.mesh.Optimize();
-
-        meshFilter.mesh = chunkMesh;
-        meshCollider.sharedMesh = chunkMeshCollider;
-        meshTrigger.sharedMesh = chunkMeshTrigger;
+        catch
+        {
+            isDrawMesh = false;
+        }
+        finally
+        {
+            isDrawMesh = false;
+        }
+      
     }
 
     public Block GetBlockForWorld(Vector3Int blockWorldPosition)
@@ -446,6 +478,79 @@ public class Chunk : BaseMonoBehaviour
         return newBlock;
     }
 
+    /// <summary>
+    /// 处理 读取的方块
+    /// </summary>
+    public void HandleForLoadBlock()
+    {
+        GameDataManager gameDataManager = GameDataHandler.Instance.manager;
+        //获取数据中的chunk
+        UserDataBean userData = gameDataManager.GetUserData();
+
+        WorldDataBean worldData = gameDataManager.GetWorldData(userData.userId, WorldTypeEnum.Main, worldPosition);
+
+        //如果没有世界数据 则创建一个
+        if (worldData == null)
+        {
+            worldData = new WorldDataBean();
+            worldData.workdType = (int)WorldTypeEnum.Main;
+            worldData.userId = userData.userId;
+        }
+        Dictionary<Vector3Int, BlockBean> dicBlockData = new Dictionary<Vector3Int, BlockBean>();
+        //如果有数据 则读取数据
+        if (worldData.chunkData != null)
+        {
+            worldData.chunkData.InitData();
+            dicBlockData = worldData.chunkData.dicBlockData;
+        }
+        else
+        {
+            worldData.chunkData = new ChunkBean();
+            worldData.chunkData.position = new Vector3IntBean(worldPosition);
+        }
+        foreach (var itemData in dicBlockData)
+        {
+            BlockBean blockData = itemData.Value;
+            //生成方块
+            Block block = BlockHandler.Instance.CreateBlock(this, blockData);
+            Vector3Int positionBlock = blockData.localPosition.GetVector3Int();
+            //添加方块 如果已经有该方块 则先删除，优先使用存档的方块
+            mapForBlock[positionBlock.x, positionBlock.y, positionBlock.z] = block;
+        }
+        SetWorldData(worldData);
+    }
+
+    /// <summary>
+    /// 处理-基础地形方块
+    /// </summary>
+    /// <param name="chunk"></param>
+    public void HandleForBaseBlock()
+    {
+        WorldTypeEnum worldType = WorldCreateHandler.Instance.manager.worldType;
+        //获取该世界的所有生态
+        List<Biome> listBiome = BiomeHandler.Instance.manager.GetBiomeListByWorldType(worldType);
+        //获取一定范围内的生态点
+        List<Vector3Int> listBiomeCenter = BiomeHandler.Instance.GetBiomeCenterPosition(this, 5, 10);
+
+        //遍历map，生成其中每个Block的信息 
+        //生成基础地形数据
+        for (int x = 0; x < width; x++)
+        {
+            for (int y = 0; y < height; y++)
+            {
+                for (int z = 0; z < width; z++)
+                {
+                    Vector3Int position = new Vector3Int(x, y, z);
+                    //获取方块类型
+                    BlockTypeEnum blockType = BiomeHandler.Instance.CreateBiomeBlockType(this, listBiomeCenter, listBiome, position);
+                    //生成方块
+                    Block block = BlockHandler.Instance.CreateBlock(this, position, blockType);
+                    //添加方块
+                    mapForBlock[x, y, z] = block;
+                }
+            }
+        }
+    }
 
     #region 事件注册
     public void RegisterEventUpdate(Action action)
