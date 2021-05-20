@@ -41,7 +41,7 @@ public class BiomeDesert : Biome
         cactusData.addRateMin = 1;
         cactusData.addRateMax = 100;
         cactusData.minHeight = 1;
-        cactusData.minHeight = 5;
+        cactusData.maxHeight = 5;
         cactusData.cactusType = BlockTypeEnum.Cactus;
         BiomeCreateTool.AddCactus(startPosition, cactusData);
     }

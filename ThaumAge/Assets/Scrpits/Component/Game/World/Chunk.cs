@@ -36,7 +36,7 @@ public class Chunk : BaseMonoBehaviour
     public MeshFilter meshFilter;
 
     //存储着此Chunk内的所有Block信息
-    public Block[,,] mapForBlock;
+    public Block[] mapForBlock;
     //待更新方块
     public List<BlockBean> listUpdateBlock = new List<BlockBean>();
     //大小
@@ -156,7 +156,7 @@ public class Chunk : BaseMonoBehaviour
         this.worldPosition = worldPosition;
         this.width = width;
         this.height = height;
-        mapForBlock = new Block[width, height, width];
+        mapForBlock = new Block[width * height * width];
     }
 
     /// <summary>
@@ -207,77 +207,77 @@ public class Chunk : BaseMonoBehaviour
     /// </summary>
     /// <param name="chunk"></param>
     /// <param name="callBack"></param>
-    public void BuildChunkBlockDataForAsync()
+    public async void BuildChunkBlockDataForAsync(Action callBackForComplete)
     {
         //初始化Map
         BiomeManager biomeManager = BiomeHandler.Instance.manager;
         BlockManager blockManager = BlockHandler.Instance.manager;
         GameDataManager gameDataManager = GameDataHandler.Instance.manager;
 
-        Thread threadForBuildBlockData = new Thread(() =>
+        await Task.Run(() =>
         {
             try
             {
-                //生成基础地形数据
-                HandleForBaseBlock();
-                //处理存档方块 优先使用存档方块
-                HandleForLoadBlock();
-                //设置数据
-                BuildChunkRangeForAsync();
-                //初始化完成
-                isInit = true;
-                //更新待更新方块
-                WorldCreateHandler.Instance.HandleForUpdateBlock();
+                lock (lockForUpdateBlcok)
+                {
+                    //生成基础地形数据      
+                    HandleForBaseBlock();
+                    //处理存档方块 优先使用存档方块
+                    HandleForLoadBlock();
+                    //设置数据
+                    BuildChunkRangeForAsync();
+                    //初始化完成
+                    isInit = true;
+                }
             }
             catch (Exception e)
             {
                 LogUtil.Log("CreateChunkBlockDataForAsync:" + e.ToString());
             }
         });
-        threadForBuildBlockData.Start();
+        callBackForComplete?.Invoke();
     }
 
 
     /// <summary>
     /// 异步构建chunk
     /// </summary>
-    public async void BuildChunkForAsync(Action<Chunk> callBack)
+    public async void BuildChunkForAsync(Action callBackForComplete)
     {
         //只有初始化之后的chunk才能刷新
         if (!isInit || mapForBlock.Length <= 0)
         {
-            callBack?.Invoke(this);
+            isBuildChunk = false;
+            callBackForComplete?.Invoke();
             return;
         }
+        if (isBuildChunk)
+            return;
         isBuildChunk = true;
         await Task.Run(() =>
         {
-
             //遍历chunk, 生成其中的每一个Block
             try
             {
-                lock (lockForUpdateBlcok)
+                chunkRenderData = new ChunkRenderData();
+
+                //初始化数据
+                List<BlockMaterialEnum> blockMaterialsEnum = EnumUtil.GetEnumValue<BlockMaterialEnum>();
+
+                for (int i = 0; i < blockMaterialsEnum.Count; i++)
                 {
-                    chunkRenderData = new ChunkRenderData();
+                    BlockMaterialEnum blockMaterial = blockMaterialsEnum[i];
+                    chunkRenderData.dicTris.Add(blockMaterial, new List<int>());
+                }
 
-                    //初始化数据
-                    List<BlockMaterialEnum> blockMaterialsEnum = EnumUtil.GetEnumValue<BlockMaterialEnum>();
-
-                    for (int i = 0; i < blockMaterialsEnum.Count; i++)
+                for (int x = 0; x < width; x++)
+                {
+                    for (int y = 0; y < height; y++)
                     {
-                        BlockMaterialEnum blockMaterial = blockMaterialsEnum[i];
-                        chunkRenderData.dicTris.Add(blockMaterial, new List<int>());
-                    }
-
-                    for (int x = 0; x < width; x++)
-                    {
-                        for (int y = 0; y < height; y++)
+                        for (int z = 0; z < width; z++)
                         {
-                            for (int z = 0; z < width; z++)
-                            {
-                                Block block = mapForBlock[x, y, z];
-                                block.BuildBlock(chunkRenderData);
-                            }
+                            Block block = mapForBlock[GetIndexByPosition(x, y, z)];
+                            block.BuildBlock(chunkRenderData);
                         }
                     }
                 }
@@ -286,10 +286,13 @@ public class Chunk : BaseMonoBehaviour
             {
                 LogUtil.Log("BuildChunkForAsync:" + e.ToString());
             }
+            finally
+            {
 
+            }
         });
         isBuildChunk = false;
-        callBack?.Invoke(this);
+        callBackForComplete?.Invoke();
     }
 
     /// <summary>
@@ -360,7 +363,7 @@ public class Chunk : BaseMonoBehaviour
         {
             isDrawMesh = false;
         }
-      
+
     }
 
     public Block GetBlockForWorld(Vector3Int blockWorldPosition)
@@ -381,7 +384,7 @@ public class Chunk : BaseMonoBehaviour
             Block tempBlock = WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(blockWorldPosition);
             return tempBlock;
         }
-        return mapForBlock[localPosition.x, localPosition.y, localPosition.z];
+        return mapForBlock[GetIndexByPosition(localPosition)];
     }
 
 
@@ -441,7 +444,7 @@ public class Chunk : BaseMonoBehaviour
         {
             return null;
         }
-        mapForBlock[localPosition.x, localPosition.y, localPosition.z] = newBlock;
+        mapForBlock[GetIndexByPosition(localPosition)] = newBlock;
 
         //刷新六个方向的方块
         if (isRefreshBlockRange)
@@ -515,7 +518,7 @@ public class Chunk : BaseMonoBehaviour
             Block block = BlockHandler.Instance.CreateBlock(this, blockData);
             Vector3Int positionBlock = blockData.localPosition.GetVector3Int();
             //添加方块 如果已经有该方块 则先删除，优先使用存档的方块
-            mapForBlock[positionBlock.x, positionBlock.y, positionBlock.z] = block;
+            mapForBlock[GetIndexByPosition(positionBlock)] = block;
         }
         SetWorldData(worldData);
     }
@@ -531,9 +534,10 @@ public class Chunk : BaseMonoBehaviour
         List<Biome> listBiome = BiomeHandler.Instance.manager.GetBiomeListByWorldType(worldType);
         //获取一定范围内的生态点
         List<Vector3Int> listBiomeCenter = BiomeHandler.Instance.GetBiomeCenterPosition(this, 5, 10);
-
         //遍历map，生成其中每个Block的信息 
         //生成基础地形数据
+
+        Stopwatch stopwatch = TimeUtil.GetMethodTimeStart();
         for (int x = 0; x < width; x++)
         {
             for (int y = 0; y < height; y++)
@@ -546,11 +550,23 @@ public class Chunk : BaseMonoBehaviour
                     //生成方块
                     Block block = BlockHandler.Instance.CreateBlock(this, position, blockType);
                     //添加方块
-                    mapForBlock[x, y, z] = block;
+                    mapForBlock[GetIndexByPosition(x, y, z)] = block;
                 }
             }
         }
+        TimeUtil.GetMethodTimeEnd("1", stopwatch);
     }
+
+    public int GetIndexByPosition(Vector3Int position)
+    {
+        return GetIndexByPosition(position.x, position.y, position.z);
+    }
+    public int GetIndexByPosition(int x, int y, int z)
+    {
+        LogUtil.Log("index:"+ (x * width * height + y * height + z));
+        return x * width * height + y * height + z;
+    }
+
 
     #region 事件注册
     public void RegisterEventUpdate(Action action)

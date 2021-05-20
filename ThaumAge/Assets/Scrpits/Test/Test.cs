@@ -9,26 +9,74 @@ using UnityEngine.AI;
 
 public class Test : BaseMonoBehaviour
 {
-    public int widthChunk = 16;
-    public Vector3Int vector3;
+
     private void Start()
     {
+        int count1 = 64;
+        int count2 = 256;
 
-    }
 
-    private void OnGUI()
-    {
-        if (GUILayout.Button("test"))
-        {
-          LogUtil.Log(GetChunkPositionForWorldPosition(vector3)+"");
-        }
+        //string[] arrayData1 = new string[count1 * count2 * count1];
+        //string[,,] arrayData2 = new string[count1, count2, count1];
+
+        //Stopwatch stopwatch = TimeUtil.GetMethodTimeStart();
+        //for (int x = 0; x < count1; x++)
+        //{
+        //    for (int y = 0; y < count2; y++)
+        //    {
+        //        for (int z = 0; z < count1; z++)
+        //        {
+        //            arrayData1[x + y + z] = (x + y + z) + "";
+        //        }
+        //    }
+        //}
+        //TimeUtil.GetMethodTimeEnd("1", stopwatch);
+
+        //stopwatch = TimeUtil.GetMethodTimeStart();
+        //for (int x = 0; x < count1; x++)
+        //{
+        //    for (int y = 0; y < count2; y++)
+        //    {
+        //        for (int z = 0; z < count1; z++)
+        //        {
+        //            arrayData2[x, y, z] = (x + y + z) + "";
+        //        }
+        //    }
+        //}
+        //TimeUtil.GetMethodTimeEnd("2", stopwatch);
+
+        //stopwatch = TimeUtil.GetMethodTimeStart();
+        //for (int x = 0; x < count1; x++)
+        //{
+        //    for (int y = 0; y < count2; y++)
+        //    {
+        //        for (int z = 0; z < count1; z++)
+        //        {
+        //            string data = arrayData1[x + y + z];
+        //        }
+        //    }
+        //}
+        //TimeUtil.GetMethodTimeEnd("3", stopwatch);
+
+        //stopwatch = TimeUtil.GetMethodTimeStart();
+        //for (int x = 0; x < count1; x++)
+        //{
+        //    for (int y = 0; y < count2; y++)
+        //    {
+        //        for (int z = 0; z < count1; z++)
+        //        {
+        //            string data = arrayData2[x, y, z];
+        //        }
+        //    }
+        //}
+        //TimeUtil.GetMethodTimeEnd("4", stopwatch);
     }
-    public Vector3Int GetChunkPositionForWorldPosition(Vector3Int pos)
+    public struct TestData1
     {
-        int posX;
-        int posZ;
-        posX = Mathf.FloorToInt((float)pos.x / widthChunk) * widthChunk;
-        posZ = Mathf.FloorToInt((float)pos.z / widthChunk) * widthChunk;
-        return new Vector3Int(posX, 0, posZ);
+        public string data;
+    }
+    public class TestData2
+    {
+        public string data;
     }
 }

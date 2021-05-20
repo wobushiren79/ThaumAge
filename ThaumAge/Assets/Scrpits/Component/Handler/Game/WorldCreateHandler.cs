@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
@@ -7,6 +8,8 @@ using UnityEngine;
 public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateManager>
 {
     protected float timeForWorldUpdate = 0;
+
+    protected static object lockForUpdateBlock = new object();
 
     protected void Update()
     {
@@ -17,10 +20,9 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
             {
                 timeForWorldUpdate = 0.2f;
                 HandleForWorldUpdate();
+                HandleForDrawChunk();
             }
-            HandleForUpdateChunk(null);
         }
-
     }
 
     /// <summary>
@@ -31,7 +33,7 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
     /// <param name="width"></param>
     /// <param name="height"></param>
     /// <param name="minHeight"></param>
-    public void CreateChunk(Vector3Int position)
+    public void CreateChunk(Vector3Int position, Action callBackForCreate)
     {
         //检测当前位置是否有区块
         Chunk chunk = manager.GetChunk(position);
@@ -49,8 +51,21 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
         chunk.SetData(position, manager.widthChunk, manager.heightChunk);
         //添加区块
         manager.AddChunk(position, chunk);
+
+        //成功更新方块后得回调
+        Action callBackForUpdateChunk = () =>
+        {
+            HandleForUpdateChunk(callBackForCreate);
+        };
+
+        //成功初始化回调
+        Action callBackForComplete = () =>
+        {
+            //更新待更新方块
+            HandleForUpdateBlock(callBackForUpdateChunk);
+        };
         //生成方块数据
-        chunk.BuildChunkBlockDataForAsync();
+        chunk.BuildChunkBlockDataForAsync(callBackForComplete);
     }
 
 
@@ -60,17 +75,24 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
     /// <param name="centerPosition"></param>
     /// <param name="range"></param>
     /// <param name="callback"></param>
-    public void CreateChunkForRangeForCenterPosition(Vector3Int centerPosition, int range)
+    public void CreateChunkForRangeForCenterPosition(Vector3Int centerPosition, int range,Action callBackForComplete)
     {
         manager.worldRefreshRange = range;
 
         Vector3Int startPosition = -manager.widthChunk * range * new Vector3Int(1, 0, 1) + centerPosition;
         Vector3Int currentPosition = startPosition;
+        int totalNumber = 0;
         for (int i = 0; i <= range * 2; i++)
         {
             for (int f = 0; f <= range * 2; f++)
             {
-                CreateChunk(currentPosition);
+                CreateChunk(currentPosition, ()=> {
+                    totalNumber++;
+                    if (totalNumber >= (range * 2 + 1) * (range * 2 + 1))
+                    {
+                        callBackForComplete?.Invoke();
+                    }
+                });
                 currentPosition += new Vector3Int(0, 0, manager.widthChunk);
             }
             currentPosition.z = startPosition.z;
@@ -78,21 +100,49 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
         }
     }
 
-    public void CreateChunkForRangeForWorldPostion(Vector3 position, int range)
+    public void CreateChunkForRangeForWorldPostion(Vector3 position, int range, Action callBackForComplete)
     {
         int positionX = (int)(position.x / manager.widthChunk) * manager.widthChunk;
         int positionZ = (int)(position.z / manager.widthChunk) * manager.widthChunk;
         Vector3Int centerPosition = new Vector3Int(positionX, 0, positionZ);
-        CreateChunkForRangeForCenterPosition(centerPosition, range);
+        CreateChunkForRangeForCenterPosition(centerPosition, range, callBackForComplete);
+    }
+
+    /// <summary>
+    /// 处理待绘制的区块
+    /// </summary>
+    public void HandleForDrawChunk()
+    {
+        if (manager.listUpdateDrawChunk.Count > 0)
+        {
+            Chunk updateDrawChunk = manager.listUpdateDrawChunk.Peek();
+            if (updateDrawChunk != null)
+            {
+                if (!updateDrawChunk.isBuildChunk)
+                {
+                    updateDrawChunk = manager.listUpdateDrawChunk.Dequeue();
+                    //构建修改过的区块
+                    updateDrawChunk.DrawMesh();
+                    //刷新寻路
+                    PathFindingHandler.Instance.manager.RefreshPathFinding(updateDrawChunk);
+                    //继续下一个
+                    HandleForDrawChunk();
+                }
+            }
+            else
+            {
+                manager.listUpdateDrawChunk.Dequeue();
+            }
+        }
     }
 
     /// <summary>
     /// 处理 待更新区块
     /// </summary>
     /// <param name="callBack"></param>
-    public void HandleForUpdateChunk(Action callBack)
+    public void HandleForUpdateChunk(Action callBackForUpdateChunk)
     {
-        if (manager.listUpdateChunk.Count > 0)
+        while (manager.listUpdateChunk.Count > 0)
         {
             manager.listUpdateChunk.TryDequeue(out Chunk updateChunk);
             if (updateChunk == null)
@@ -106,32 +156,10 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
             //构建修改过的区块
             updateChunk.BuildChunkForAsync(null);
         }
-
-
-        if (manager.listUpdateDrawChunk.Count > 0)
-        {
-            Chunk updateDrawChunk = manager.listUpdateDrawChunk.Peek();
-            if (updateDrawChunk != null)
-            {
-                if (!updateDrawChunk.isBuildChunk)
-                {
-                    //构建修改过的区块
-                    updateDrawChunk.DrawMesh();
-                    manager.listUpdateDrawChunk.Dequeue();
-                    //刷新寻路
-                    PathFindingHandler.Instance.manager.RefreshPathFinding(updateDrawChunk);
-                }
-            }
-            else
-            {
-                manager.listUpdateDrawChunk.Dequeue();
-            }
-        }
-        else
-        {
-            callBack?.Invoke();
-        }
+        callBackForUpdateChunk?.Invoke();
     }
+
+
     /// <summary>
     /// 处理-世界刷新
     /// </summary>
@@ -140,19 +168,20 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
         if (GameHandler.Instance.manager.GetGameState() == GameStateEnum.Gaming)
         {
             Vector3 playPosition = GameHandler.Instance.manager.player.transform.position;
-            CreateChunkForRangeForWorldPostion(playPosition, manager.worldRefreshRange);
+            CreateChunkForRangeForWorldPostion(playPosition, manager.worldRefreshRange,null);
         }
     }
     /// <summary>
     /// 处理 更新方块
     /// </summary>
-    public void HandleForUpdateBlock()
+    public async void HandleForUpdateBlock(Action callBackForComplete)
     {
         if (manager.listUpdateBlock.Count <= 0)
         {
+            callBackForComplete?.Invoke();
             return;
         }
-        Thread threadForUpdateBlock = new Thread(() =>
+        await Task.Run(() =>
         {
             List<BlockBean> listNoChunkBlock = new List<BlockBean>();
             //添加修改的方块信息，用于树木或建筑群等用于多个区块的数据     
@@ -189,6 +218,6 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
                 manager.AddUpdateBlock(listNoChunkBlock[i]);
             }
         });
-        threadForUpdateBlock.Start();
+        callBackForComplete?.Invoke();
     }
 }
