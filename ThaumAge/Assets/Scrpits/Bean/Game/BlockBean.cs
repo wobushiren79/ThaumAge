@@ -14,7 +14,6 @@ public class BlockBean
     public int contactLevel;
     //方向
     public int direction;
-
     //方块数据
     public string meta;
 

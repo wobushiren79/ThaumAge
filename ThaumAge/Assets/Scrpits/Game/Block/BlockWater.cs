@@ -5,9 +5,9 @@ using System.Security.Cryptography;
 
 public class BlockWater : BlockLiquid
 {
-    public override void SetData(Chunk chunk, Vector3Int position, BlockBean blockData)
+    public void SetData(Chunk chunk, Vector3Int position)
     {
-        base.SetData(chunk, position, blockData);
+        base.SetData(chunk, BlockTypeEnum.Water, position, DirectionEnum.UP);
         chunk.RegisterEventUpdate(WaterUpdate);
     }
 
@@ -18,7 +18,7 @@ public class BlockWater : BlockLiquid
     {
         //取消注册回调
         chunk.UnRegisterEventUpdate(WaterUpdate);
-        if (blockData.contactLevel != 0)
+        if (contactLevel != 0)
         {
             if (!CheckHasHeightContactLevel())
             {
@@ -33,12 +33,12 @@ public class BlockWater : BlockLiquid
         bool isSuccess = SetCloseWaterBlock(downBlockWorldPosition, 0);
         if (isSuccess)
             return;
-        if (blockData.contactLevel > 3)
+        if (contactLevel > 3)
             return;
-        SetCloseWaterBlock(worldPosition + Vector3Int.left, blockData.contactLevel + 1);
-        SetCloseWaterBlock(worldPosition + Vector3Int.right, blockData.contactLevel + 1);
-        SetCloseWaterBlock(worldPosition + Vector3Int.back, blockData.contactLevel + 1);
-        SetCloseWaterBlock(worldPosition + Vector3Int.forward, blockData.contactLevel + 1);
+        SetCloseWaterBlock(worldPosition + Vector3Int.left, contactLevel + 1);
+        SetCloseWaterBlock(worldPosition + Vector3Int.right, contactLevel + 1);
+        SetCloseWaterBlock(worldPosition + Vector3Int.back, contactLevel + 1);
+        SetCloseWaterBlock(worldPosition + Vector3Int.forward, contactLevel + 1);
     }
 
     /// <summary>
@@ -52,10 +52,10 @@ public class BlockWater : BlockLiquid
         Block closeBlock = WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(worldPosition);
         if (closeBlock == null)
             return false;
-        BlockTypeEnum closeBlockType = closeBlock.blockData.GetBlockType();
+        BlockTypeEnum closeBlockType = closeBlock.blockType;
         BlockInfoBean closeBlockInfo = BlockHandler.Instance.manager.GetBlockInfo(closeBlockType);
         //如果是空方块或者重量等于1
-        if (closeBlockType == BlockTypeEnum.None 
+        if (closeBlockType == BlockTypeEnum.None
             //|| closeBlockType == BlockTypeEnum.Water
             || closeBlockInfo.weight == 1)
         {
@@ -64,8 +64,8 @@ public class BlockWater : BlockLiquid
             //    //如果相邻都是水 需要根据关联等级设置
             //    return false;
             //}
-            BlockBean newBlockData = new BlockBean(blockData.GetBlockType(), worldPosition - closeBlock.chunk.worldPosition, worldPosition);
-           
+            BlockBean newBlockData = new BlockBean(blockType, worldPosition - closeBlock.chunk.worldPosition, worldPosition);
+
             newBlockData.contactLevel = contactLevel;
             closeBlock.chunk.listUpdateBlock.Add(newBlockData);
             return true;
@@ -102,7 +102,7 @@ public class BlockWater : BlockLiquid
         Block closeBlock = WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(wPos);
         if (closeBlock == null)
             return false;
-        if (blockData.contactLevel > closeBlock.blockData.contactLevel)
+        if (contactLevel > closeBlock.contactLevel)
         {
             return true;
         }

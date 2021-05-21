@@ -1,18 +1,42 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[Serializable]
 public abstract class Block
 {
     public Chunk chunk;    //所属Chunk
-    public Vector3Int localPosition; //Chunk内的坐标
-    public Vector3Int worldPosition; //世界坐标
-    public BlockBean blockData; //方框数据
 
+    public BlockTypeEnum blockType;    //方块类型
+
+    public Vector3Int localPosition; //Chunk内的坐标
+    public Vector3Int worldPosition; //世界坐标                             
     public Vector3 centerPosition;
 
+    public int contactLevel;    //方块联系等级
+    public DirectionEnum direction;    //方向
+    public string meta;    //方块数据
+
+    protected BlockBean _blockData; //方框数据
     protected BlockInfoBean _blockInfo;//方块信息
     protected float uvWidth;
+
+    public BlockBean blockData
+    {
+        set
+        {
+            _blockData = value;
+        }
+        get
+        {
+            if (_blockData == null)
+            {
+                _blockData = new BlockBean(blockType, localPosition, worldPosition, direction);
+            }
+            return _blockData;
+        }
+    }
 
     public BlockInfoBean blockInfo
     {
@@ -20,7 +44,7 @@ public abstract class Block
         {
             if (_blockInfo == null)
             {
-                _blockInfo = BlockHandler.Instance.manager.GetBlockInfo(blockData.blockId);
+                _blockInfo = BlockHandler.Instance.manager.GetBlockInfo(blockType);
             }
             return _blockInfo;
         }
@@ -28,14 +52,12 @@ public abstract class Block
 
     public Block()
     {
-        if (blockData == null)
-            blockData = new BlockBean();
+
     }
 
     public Block(BlockTypeEnum blockType)
     {
-        if (blockData == null)
-            blockData = new BlockBean(blockType, Vector3Int.zero, Vector3Int.zero);
+        this.blockType = blockType;
     }
 
     public virtual void RefreshBlock()
@@ -65,14 +87,19 @@ public abstract class Block
     /// <param name="chunk"></param>
     /// <param name="position"></param>
     /// <param name="blockData"></param>
-    public virtual void SetData(Chunk chunk, Vector3Int localPosition, BlockBean blockData)
+    public virtual void SetData(Chunk chunk, BlockTypeEnum blockType, Vector3Int localPosition, DirectionEnum direction)
     {
         this.chunk = chunk;
+        this.blockType = blockType;
         this.localPosition = localPosition;
-        this.worldPosition = localPosition + chunk.worldPosition;
-        this.blockData = blockData;
+        if (chunk != null)
+            this.worldPosition = localPosition + chunk.worldPosition;
         this.centerPosition = localPosition + new Vector3(0.5f, 0.5f, 0.5f);
         uvWidth = 1 / 128f;
+    }
+    public virtual void SetData(Chunk chunk, BlockTypeEnum blockType, Vector3Int localPosition)
+    {
+        SetData(chunk, blockType, localPosition, DirectionEnum.UP);
     }
 
     /// <summary>
@@ -104,7 +131,7 @@ public abstract class Block
 
     public virtual bool CheckNeedBuildFace(Vector3Int position)
     {
-        return CheckNeedBuildFace(position,out Block value);
+        return CheckNeedBuildFace(position, out Block value);
     }
 
     /// <summary>
@@ -189,7 +216,6 @@ public abstract class Block
         else if (blockInfo.rotate_state == 1)
         {
             //已中心点旋转
-            DirectionEnum direction = blockData.GetDirection();
             Vector3 angles;
             switch (direction)
             {

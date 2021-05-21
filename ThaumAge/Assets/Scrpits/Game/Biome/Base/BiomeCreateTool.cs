@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using UnityEditor;
 using UnityEngine;
 
@@ -128,7 +129,6 @@ public class BiomeCreateTool
 
         if (addRate < treeData.addRateMin)
         {
-
             for (int i = 5; i < treeHeight + 3; i++)
             {
                 //生成树叶
@@ -240,7 +240,6 @@ public class BiomeCreateTool
                 BlockBean backData = new BlockBean(treeData.treeTrunk, treeTrunkPosition + Vector3Int.back);
                 WorldCreateHandler.Instance.manager.AddUpdateBlock(backData);
             }
-
         }
     }
 

@@ -26,7 +26,7 @@ public class BlockLiquid : Block
             case BlockShapeEnum.Cube:
                 return false;
             case BlockShapeEnum.Liquid:
-                if (closeBlock.blockData.GetBlockType() == blockData.GetBlockType())
+                if (closeBlock.blockType == blockType)
                 {
                     return false;
                 }
@@ -52,7 +52,6 @@ public class BlockLiquid : Block
     {
         base.BuildBlock(chunkData);
 
-        BlockTypeEnum blockType = blockData.GetBlockType();
         if (blockType != BlockTypeEnum.None)
         {
             float itemContactHeight = 1f / 4f;
@@ -147,29 +146,28 @@ public class BlockLiquid : Block
     /// <returns></returns>
     private float GetAverageHeightForRange(float itemContactHeight, Block one, Block two, Block three)
     {
-        BlockTypeEnum blockType = blockData.GetBlockType();
         int number = 1;
         float subHeightThis = 0;
         float subHeightOne = 0;
         float subHeightTwo = 0;
         float subHeightThree = 0;
-        if (blockData.contactLevel != 0)
+        if (contactLevel != 0)
         {
-            subHeightThis = (this.blockData.contactLevel * itemContactHeight);
+            subHeightThis = (this.contactLevel * itemContactHeight);
         }
-        if (one.blockData.GetBlockType() == blockType)
+        if (one.blockType == blockType)
         {
-            subHeightOne = (one.blockData.contactLevel * itemContactHeight);
+            subHeightOne = (one.contactLevel * itemContactHeight);
             number++;
         }
-        if (two.blockData.GetBlockType() == blockType)
+        if (two.blockType == blockType)
         {
-            subHeightTwo = (two.blockData.contactLevel * itemContactHeight);
+            subHeightTwo = (two.contactLevel * itemContactHeight);
             number++;
         }
-        if (three.blockData.GetBlockType() == blockType)
+        if (three.blockType== blockType)
         {
-            subHeightThree = (three.blockData.contactLevel * itemContactHeight);
+            subHeightThree = (three.contactLevel * itemContactHeight);
             number++;
         }
         float subHeight = (subHeightOne + subHeightTwo + subHeightThree + subHeightThis) / number;

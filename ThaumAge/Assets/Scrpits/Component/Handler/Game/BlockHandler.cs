@@ -12,18 +12,11 @@ using UnityEngine.Scripting;
 public class BlockHandler : BaseHandler<BlockHandler, BlockManager>
 {
 
-    /// <summary>
-    /// 创建方块
-    /// </summary>
-    /// <param name="chunk"></param>
-    /// <param name="position"></param>
-    /// <param name="blockType"></param>
-    /// <returns></returns>
-    public Block CreateBlock(Chunk chunk, Vector3Int position, BlockTypeEnum blockType)
+    public Block CreateBlock(Chunk chunk, BlockBean blockData)
     {
-        //设置数据
-        BlockBean blockData = new BlockBean(blockType, position, position + chunk.worldPosition);
-        return CreateBlock(chunk, blockData);
+        Block block = CreateBlock(chunk, blockData.GetBlockType(), blockData.localPosition.GetVector3Int());
+        block.blockData = blockData;
+        return block;
     }
 
     /// <summary>
@@ -32,18 +25,15 @@ public class BlockHandler : BaseHandler<BlockHandler, BlockManager>
     /// <param name="chunk"></param>
     /// <param name="blockData"></param>
     /// <returns></returns>
-    public Block CreateBlock(Chunk chunk, BlockBean blockData)
+    public Block CreateBlock(Chunk chunk, BlockTypeEnum blockType, Vector3Int localPosition)
     {
-        BlockTypeEnum blockType = blockData.GetBlockType();
         Type type = manager.GetRegisterBlock(blockType).GetType();
 
         Block block = FormatterServices.GetUninitializedObject(type) as Block;
-
         //Block block = CreateInstance<Block>(type);
 
         //Block block = Activator.CreateInstance(type) as Block;
-
-        block.SetData(chunk, blockData.localPosition.GetVector3Int(), blockData);
+        block.SetData(chunk, blockType, localPosition);
         return block;
     }
 

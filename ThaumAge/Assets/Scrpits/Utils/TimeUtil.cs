@@ -101,9 +101,11 @@ public class TimeUtil
         return sw;
     }
    
-    public static void GetMethodTimeEnd(string mark, Stopwatch stopwatch)
+    public static long GetMethodTimeEnd(string mark, Stopwatch stopwatch)
     {
         stopwatch.Stop();
-        LogUtil.Log("方法耗时"+mark+"："+ stopwatch.Elapsed.Ticks.ToString());
+        long time = stopwatch.Elapsed.Ticks;
+        LogUtil.Log("方法耗时"+mark+"："+ time.ToString());
+        return time;
     }
 }

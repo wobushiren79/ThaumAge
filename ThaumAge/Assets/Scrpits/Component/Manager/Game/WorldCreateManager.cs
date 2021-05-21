@@ -183,7 +183,7 @@ public class WorldCreateManager : BaseManager
             Block itemBlock = chunk.GetBlockForWorld(new Vector3Int(x, y, z));
             if (itemBlock == null)
                 continue;
-            if (itemBlock.blockData.GetBlockType() != BlockTypeEnum.None && y > maxHeight)
+            if (itemBlock.blockType != BlockTypeEnum.None && y > maxHeight)
             {
                 maxHeight = y;
             }

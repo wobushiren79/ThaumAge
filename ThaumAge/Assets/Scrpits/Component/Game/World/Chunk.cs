@@ -536,8 +536,6 @@ public class Chunk : BaseMonoBehaviour
         List<Vector3Int> listBiomeCenter = BiomeHandler.Instance.GetBiomeCenterPosition(this, 5, 10);
         //遍历map，生成其中每个Block的信息 
         //生成基础地形数据
-
-        Stopwatch stopwatch = TimeUtil.GetMethodTimeStart();
         for (int x = 0; x < width; x++)
         {
             for (int y = 0; y < height; y++)
@@ -545,16 +543,18 @@ public class Chunk : BaseMonoBehaviour
                 for (int z = 0; z < width; z++)
                 {
                     Vector3Int position = new Vector3Int(x, y, z);
+
                     //获取方块类型
                     BlockTypeEnum blockType = BiomeHandler.Instance.CreateBiomeBlockType(this, listBiomeCenter, listBiome, position);
+
                     //生成方块
-                    Block block = BlockHandler.Instance.CreateBlock(this, position, blockType);
+                    Block block = BlockHandler.Instance.CreateBlock(this, blockType, position);
+
                     //添加方块
                     mapForBlock[GetIndexByPosition(x, y, z)] = block;
                 }
             }
         }
-        TimeUtil.GetMethodTimeEnd("1", stopwatch);
     }
 
     public int GetIndexByPosition(Vector3Int position)
@@ -563,8 +563,7 @@ public class Chunk : BaseMonoBehaviour
     }
     public int GetIndexByPosition(int x, int y, int z)
     {
-        LogUtil.Log("index:"+ (x * width * height + y * height + z));
-        return x * width * height + y * height + z;
+        return x * width * height + y * width + z;
     }
 
 

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using UnityEditor;
 using UnityEngine;
 
@@ -71,6 +72,13 @@ public class BiomeHandler : BaseHandler<BiomeHandler, BiomeManager>
 
         //获取当前位置方块随机生成的高度值
         int genHeight = GetHeightData(wPos, biomeInfo);
+
+        //当前方块位置高于随机生成的高度值时，当前方块类型为空
+        if (wPos.y > genHeight)
+        {
+            return BlockTypeEnum.None;
+        }
+
         //边缘处理 逐渐减缓到最低高度
         float offsetDis = secondDis - minDis;
         if (genHeight - biomeInfo.minHeight > 2//高度大于3格
@@ -83,13 +91,11 @@ public class BiomeHandler : BaseHandler<BiomeHandler, BiomeManager>
                 genHeight = edgeHeight;
             }
         }
-        //当前方块位置高于随机生成的高度值时，当前方块类型为空
-        if (wPos.y > genHeight)
-        {
-            return BlockTypeEnum.None;
-        }
+ 
+        BlockTypeEnum blockType= biome.GetBlockType(genHeight, blockLocPosition, wPos);
+
         //获取方块
-        return biome.GetBlockType(genHeight, blockLocPosition, wPos);
+        return blockType;
     }
 
     /// <summary>

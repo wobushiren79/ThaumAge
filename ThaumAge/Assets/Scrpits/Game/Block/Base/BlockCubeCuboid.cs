@@ -17,7 +17,6 @@ public class BlockCubeCuboid : BlockCube
     {
         base.BuildBlock(chunkData);
 
-        BlockTypeEnum blockType = blockData.GetBlockType();
         if (blockType != BlockTypeEnum.None)
         {
             //Left
