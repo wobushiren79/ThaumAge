@@ -82,7 +82,7 @@ public class Chunk : BaseMonoBehaviour
         chunkMeshCollider.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
         chunkMeshTrigger.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
 
-        meshFilter.mesh = chunkMesh;
+        meshFilter.sharedMesh = chunkMesh;
         meshCollider.sharedMesh = chunkMeshCollider;
         meshTrigger.sharedMesh = chunkMeshTrigger;
 
@@ -90,6 +90,9 @@ public class Chunk : BaseMonoBehaviour
         meshFilter.mesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
         meshCollider.sharedMesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
         meshTrigger.sharedMesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
+
+        Physics.BakeMesh(chunkMeshCollider.GetInstanceID(), false);
+        Physics.BakeMesh(chunkMeshTrigger.GetInstanceID(), false);
     }
 
     protected float eventUpdateTime = 0;
@@ -259,28 +262,32 @@ public class Chunk : BaseMonoBehaviour
             //遍历chunk, 生成其中的每一个Block
             try
             {
-                chunkRenderData = new ChunkRenderData();
-
-                //初始化数据
-                List<BlockMaterialEnum> blockMaterialsEnum = EnumUtil.GetEnumValue<BlockMaterialEnum>();
-
-                for (int i = 0; i < blockMaterialsEnum.Count; i++)
+                lock(lockForUpdateBlcok)
                 {
-                    BlockMaterialEnum blockMaterial = blockMaterialsEnum[i];
-                    chunkRenderData.dicTris.Add(blockMaterial, new List<int>());
-                }
+                    chunkRenderData = new ChunkRenderData();
 
-                for (int x = 0; x < width; x++)
-                {
-                    for (int y = 0; y < height; y++)
+                    //初始化数据
+                    List<BlockMaterialEnum> blockMaterialsEnum = EnumUtil.GetEnumValue<BlockMaterialEnum>();
+
+                    for (int i = 0; i < blockMaterialsEnum.Count; i++)
                     {
-                        for (int z = 0; z < width; z++)
+                        BlockMaterialEnum blockMaterial = blockMaterialsEnum[i];
+                        chunkRenderData.dicTris.Add(blockMaterial, new List<int>());
+                    }
+
+                    for (int x = 0; x < width; x++)
+                    {
+                        for (int y = 0; y < height; y++)
                         {
-                            Block block = mapForBlock[GetIndexByPosition(x, y, z)];
-                            block.BuildBlock(chunkRenderData);
+                            for (int z = 0; z < width; z++)
+                            {
+                                Block block = mapForBlock[GetIndexByPosition(x, y, z)];
+                                block.BuildBlock(chunkRenderData);
+                            }
                         }
                     }
                 }
+           
             }
             catch (Exception e)
             {
@@ -336,27 +343,27 @@ public class Chunk : BaseMonoBehaviour
             chunkMeshTrigger.SetVertices(chunkRenderData.vertsTrigger);
             chunkMeshTrigger.SetTriangles(chunkRenderData.trisTrigger, 0);
 
-            Physics.BakeMesh(chunkMeshCollider.GetInstanceID(), false);
-            Physics.BakeMesh(chunkMeshTrigger.GetInstanceID(), false);
-
             //刷新
             chunkMesh.RecalculateBounds();
             chunkMesh.RecalculateNormals();
             //刷新
-            chunkMeshCollider.RecalculateBounds();
-            chunkMeshCollider.RecalculateNormals();
+            //chunkMeshCollider.RecalculateBounds();
+            //chunkMeshCollider.RecalculateNormals();
             //刷新
-            chunkMeshTrigger.RecalculateBounds();
-            chunkMeshTrigger.RecalculateNormals();
+            //chunkMeshTrigger.RecalculateBounds();
+            //chunkMeshTrigger.RecalculateNormals();
 
-            meshFilter.mesh.Optimize();
-
-            meshFilter.mesh = chunkMesh;
+            //meshFilter.mesh.Optimize();
+            meshFilter.sharedMesh = chunkMesh;
             meshCollider.sharedMesh = chunkMeshCollider;
             meshTrigger.sharedMesh = chunkMeshTrigger;
+
+            Physics.BakeMesh(chunkMeshCollider.GetInstanceID(), false);
+            Physics.BakeMesh(chunkMeshTrigger.GetInstanceID(), false);
         }
-        catch
+        catch(Exception e)
         {
+            LogUtil.Log("绘制出错_"+ e.ToString());
             isDrawMesh = false;
         }
         finally
@@ -465,13 +472,14 @@ public class Chunk : BaseMonoBehaviour
             if (worldData != null && worldData.chunkData != null)
             {
                 ChunkBean chunkData = worldData.chunkData;
-                if (chunkData.dicBlockData.ContainsKey(localPosition))
+                int index = GetIndexByPosition(localPosition);
+                if (chunkData.dicBlockData.ContainsKey(index))
                 {
-                    chunkData.dicBlockData[localPosition] = newBlock.blockData;
+                    chunkData.dicBlockData[index] = newBlock.blockData;
                 }
                 else
                 {
-                    chunkData.dicBlockData.Add(localPosition, newBlock.blockData);
+                    chunkData.dicBlockData.Add(index, newBlock.blockData);
                 }
             }
             //异步保存数据
@@ -499,7 +507,7 @@ public class Chunk : BaseMonoBehaviour
             worldData.workdType = (int)WorldTypeEnum.Main;
             worldData.userId = userData.userId;
         }
-        Dictionary<Vector3Int, BlockBean> dicBlockData = new Dictionary<Vector3Int, BlockBean>();
+        Dictionary<int, BlockBean> dicBlockData = new Dictionary<int, BlockBean>();
         //如果有数据 则读取数据
         if (worldData.chunkData != null)
         {

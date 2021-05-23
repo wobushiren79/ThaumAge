@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
@@ -20,9 +21,9 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
             {
                 timeForWorldUpdate = 0.2f;
                 HandleForWorldUpdate();
-                HandleForDrawChunk();
             }
         }
+        HandleForDrawChunk();
     }
 
     /// <summary>
@@ -60,13 +61,13 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
 
         //成功初始化回调
         Action callBackForComplete = () =>
-        {
+        {         
             //更新待更新方块
-            HandleForUpdateBlock(callBackForUpdateChunk);
-        };
-        //生成方块数据
-        chunk.BuildChunkBlockDataForAsync(callBackForComplete);
+            StartCoroutine(CoroutineForDelayUpdateBlock(callBackForUpdateChunk));
+        };  
+        StartCoroutine(CoroutineForDelayBuildChunkBlockData( chunk,  callBackForComplete));
     }
+
 
 
     /// <summary>
@@ -82,13 +83,14 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
         Vector3Int startPosition = -manager.widthChunk * range * new Vector3Int(1, 0, 1) + centerPosition;
         Vector3Int currentPosition = startPosition;
         int totalNumber = 0;
+        int rangeNumber = (range * 2 + 1) * (range * 2 + 1);
         for (int i = 0; i <= range * 2; i++)
         {
             for (int f = 0; f <= range * 2; f++)
             {
                 CreateChunk(currentPosition, ()=> {
                     totalNumber++;
-                    if (totalNumber >= (range * 2 + 1) * (range * 2 + 1))
+                    if (totalNumber >= rangeNumber)
                     {
                         callBackForComplete?.Invoke();
                     }
@@ -126,7 +128,7 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
                     //刷新寻路
                     PathFindingHandler.Instance.manager.RefreshPathFinding(updateDrawChunk);
                     //继续下一个
-                    HandleForDrawChunk();
+                    //HandleForDrawChunk();
                 }
             }
             else
@@ -146,15 +148,15 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
         {
             manager.listUpdateChunk.TryDequeue(out Chunk updateChunk);
             if (updateChunk == null)
-                return;
+                break;
             if (!updateChunk.isInit || updateChunk.isDrawMesh)
             {
                 manager.listUpdateChunk.Enqueue(updateChunk);
-                return;
+                break;
             }
             manager.AddUpdateDrawChunk(updateChunk);
             //构建修改过的区块
-            updateChunk.BuildChunkForAsync(null);
+            StartCoroutine(CoroutineForDelayUpdateBlock(updateChunk, null));
         }
         callBackForUpdateChunk?.Invoke();
     }
@@ -219,5 +221,43 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
             }
         });
         callBackForComplete?.Invoke();
+    }
+
+
+    /// <summary>
+    /// 携程延迟生成数据
+    /// </summary>
+    /// <param name="chunk"></param>
+    /// <param name="callBackForComplete"></param>
+    /// <returns></returns>
+    public IEnumerator CoroutineForDelayBuildChunkBlockData(Chunk chunk, Action callBackForComplete)
+    {
+        yield return new WaitForEndOfFrame();
+        //生成方块数据
+        chunk.BuildChunkBlockDataForAsync(callBackForComplete);
+    }
+
+    /// <summary>
+    /// 延迟刷新数据
+    /// </summary>
+    /// <param name="chunk"></param>
+    /// <param name="callBackForComplete"></param>
+    /// <returns></returns>
+    public IEnumerator CoroutineForDelayUpdateBlock(Action callBackForComplete)
+    {
+        yield return new WaitForEndOfFrame();
+        HandleForUpdateBlock(callBackForComplete);
+    }
+
+    /// <summary>
+    /// 携程处理区块更新
+    /// </summary>
+    /// <param name="updateChunk"></param>
+    /// <param name="callBackForComplete"></param>
+    /// <returns></returns>
+    public IEnumerator CoroutineForDelayUpdateBlock(Chunk updateChunk, Action callBackForComplete)
+    {
+        yield return new WaitForEndOfFrame();
+        updateChunk.BuildChunkForAsync(callBackForComplete);
     }
 }

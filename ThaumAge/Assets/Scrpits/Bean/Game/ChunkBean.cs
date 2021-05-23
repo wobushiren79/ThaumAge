@@ -8,17 +8,20 @@ public class ChunkBean
     public Vector3IntBean position;
     public List<BlockBean> listBlockData = new List<BlockBean>();
 
-    public Dictionary<Vector3Int, BlockBean> dicBlockData = new Dictionary<Vector3Int, BlockBean>();
+    public Dictionary<int, BlockBean> dicBlockData = new Dictionary<int, BlockBean>();
 
     public void InitData()
     {
         dicBlockData.Clear();
+        int widthChunk = WorldCreateHandler.Instance.manager.widthChunk;
+        int heightChunk = WorldCreateHandler.Instance.manager.heightChunk;
         for (int i = 0; i < listBlockData.Count; i++)
         {
             BlockBean blockData = listBlockData[i];
             Vector3Int localPosition = blockData.localPosition.GetVector3Int();
-            if (!dicBlockData.ContainsKey(localPosition))
-                dicBlockData.Add(localPosition, blockData);
+            int index = MathUtil.GetSingleIndexForThree(localPosition, widthChunk, heightChunk);
+            if (!dicBlockData.ContainsKey(index))
+                dicBlockData.Add(index, blockData);
         }
     }
 
@@ -40,7 +43,10 @@ public class ChunkBean
 
     public BlockBean GetBlockData(Vector3Int localPosition)
     {
-        if(dicBlockData.TryGetValue(localPosition,out BlockBean blockData))
+        int widthChunk = WorldCreateHandler.Instance.manager.widthChunk;
+        int heightChunk = WorldCreateHandler.Instance.manager.heightChunk;
+        int index = MathUtil.GetSingleIndexForThree(localPosition, widthChunk, heightChunk);
+        if (dicBlockData.TryGetValue(index, out BlockBean blockData))
         {
             return blockData;     
         }

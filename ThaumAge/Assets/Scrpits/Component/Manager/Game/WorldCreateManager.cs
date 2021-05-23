@@ -16,7 +16,7 @@ public class WorldCreateManager : BaseManager
     public Dictionary<string, GameObject> dicModel = new Dictionary<string, GameObject>();
 
     //存储着世界中所有的Chunk
-    public Dictionary<Vector3Int, Chunk> dicChunk = new Dictionary<Vector3Int, Chunk>();
+    public Dictionary<int, Chunk> dicChunk = new Dictionary<int, Chunk>();
 
     //存储着所有的材质
     public Material[] arrayBlockMat = new Material[16];
@@ -33,6 +33,8 @@ public class WorldCreateManager : BaseManager
 
     public int widthChunk = 16;
     public int heightChunk = 256;
+    //世界大小
+    public int worldSize = 10000;
     //世界范围
     public int worldRefreshRange = 1;
 
@@ -61,7 +63,8 @@ public class WorldCreateManager : BaseManager
     /// <param name="chunk"></param>
     public void AddChunk(Vector3Int position, Chunk chunk)
     {
-        dicChunk.Add(position, chunk);
+        int index = MathUtil.GetSingleIndexForTwo(position.x/ widthChunk, position.z/ widthChunk, worldSize);
+        dicChunk.Add(index, chunk);
     }
 
     /// <summary>
@@ -119,11 +122,12 @@ public class WorldCreateManager : BaseManager
     /// <summary>
     /// 获取区块
     /// </summary>
-    /// <param name="pos"></param>
+    /// <param name="position"></param>
     /// <returns></returns>
-    public Chunk GetChunk(Vector3Int pos)
+    public Chunk GetChunk(Vector3Int position)
     {
-        if (dicChunk.TryGetValue(pos, out Chunk value))
+        int index = MathUtil.GetSingleIndexForTwo(position.x / widthChunk, position.z / widthChunk, worldSize);
+        if (dicChunk.TryGetValue(index, out Chunk value))
         {
             return value;
         }
