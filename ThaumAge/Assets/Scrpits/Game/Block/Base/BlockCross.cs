@@ -16,9 +16,11 @@ public class BlockCross : Block
     public override void RefreshBlock()
     {
         base.RefreshBlock();
-        Block blockDown = chunk.GetBlockForLocal(localPosition + Vector3Int.down);
+        chunk.GetBlockForLocal(localPosition + Vector3Int.down, out Block blockDown, out bool isInside);
+
         //如果下方方块为NONE或者为液体
-        if (blockDown.blockType == BlockTypeEnum.None || blockDown.blockInfo.GetBlockShape() == BlockShapeEnum.Liquid)
+
+        if (isInside && (blockDown == null || blockDown.blockType == BlockTypeEnum.None || blockDown.blockInfo.GetBlockShape() == BlockShapeEnum.Liquid))
         {
             BlockBean newBlockData = new BlockBean(BlockTypeEnum.None, localPosition, worldPosition);
             chunk.listUpdateBlock.Add(newBlockData);

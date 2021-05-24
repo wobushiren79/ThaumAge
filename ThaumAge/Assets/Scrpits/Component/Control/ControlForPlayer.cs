@@ -147,10 +147,10 @@ public class ControlForPlayer : ControlForBase
                     addPosition = position + Vector3Int.back;
                     direction = DirectionEnum.Back;
                 }
-                Block block = WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(addPosition);
+                WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(addPosition,out Block block, out bool hasChunk);
                 if(block != null)
                 {
-                    block.chunk.SetBlockForWorld(addPosition, BlockTypeEnum.Water);
+                    block.chunk.SetBlockForWorld(addPosition, BlockTypeEnum.Dirt);
                 }    
             }
         }

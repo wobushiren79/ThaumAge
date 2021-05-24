@@ -17,9 +17,18 @@ public class BlockLiquid : Block
         //检测旋转
         Vector3Int checkPosition = Vector3Int.RoundToInt(RotatePosition(position, localPosition));
         //获取方块
-        closeBlock = WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(checkPosition + chunk.worldPosition);
+        WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(checkPosition + chunk.worldPosition,out closeBlock,out bool hasChunk);
         if (closeBlock == null)
-            return false;
+        {
+            if (hasChunk)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
         BlockShapeEnum blockShape = closeBlock.blockInfo.GetBlockShape();
         switch (blockShape)
         {

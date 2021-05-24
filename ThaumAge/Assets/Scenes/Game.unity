@@ -191,6 +191,62 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6f4571f17635af04fb22f21dd03a54f4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &161798560
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 161798563}
+  - component: {fileID: 161798562}
+  - component: {fileID: 161798561}
+  m_Layer: 0
+  m_Name: PathFindingHandler
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &161798561
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 161798560}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a0edd4d380063354aa9f5d1a7f0b5647, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &161798562
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 161798560}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 102a22168c792cb43b03f4b2b28316a7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &161798563
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 161798560}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 7
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &198485901
 GameObject:
   m_ObjectHideFlags: 0
@@ -504,7 +560,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e5f99864ca1f069419542d0c013a44bc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  refreshRange: 5
+  refreshRange: 2
 --- !u!1001 &1239447546
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -608,7 +664,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 441482e8936e35048a1dffac814e3ef8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Profile: {fileID: 0}
+  m_Profile: {fileID: 11400000, guid: 6b19b24c4e59a04448e6b882411a84a7, type: 2}
   m_StaticLightingSkyUniqueID: 0
 --- !u!4 &1254574179
 Transform:

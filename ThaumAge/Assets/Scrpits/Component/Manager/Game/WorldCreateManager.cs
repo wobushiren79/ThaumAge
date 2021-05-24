@@ -73,6 +73,8 @@ public class WorldCreateManager : BaseManager
     /// <param name="chunk"></param>
     public void AddUpdateChunk(Chunk chunk)
     {
+        if (chunk == null)
+            return;
         if (!listUpdateChunk.Contains(chunk))
         {
             listUpdateChunk.Enqueue(chunk);
@@ -154,12 +156,17 @@ public class WorldCreateManager : BaseManager
     /// </summary>
     /// <param name="pos">世界坐标</param>
     /// <returns></returns>
-    public Block GetBlockForWorldPosition(Vector3Int pos)
+    public void GetBlockForWorldPosition(Vector3Int pos,out Block block ,out bool hasChunk)
     {
         Chunk chunk = GetChunkForWorldPosition(pos);
         if (chunk == null)
-            return null;
-        return chunk.GetBlockForWorld(pos);
+        {
+            block = null;
+            hasChunk = false;
+            return;
+        }
+        chunk.GetBlockForWorld(pos, out  block,out bool isInside);
+        hasChunk = true;
     }
 
     /// <summary>
@@ -184,7 +191,7 @@ public class WorldCreateManager : BaseManager
         maxHeight = int.MinValue;
         for (int y = 0; y < heightChunk; y++)
         {
-            Block itemBlock = chunk.GetBlockForWorld(new Vector3Int(x, y, z));
+            chunk.GetBlockForWorld(new Vector3Int(x, y, z),out Block itemBlock,out bool isInside);
             if (itemBlock == null)
                 continue;
             if (itemBlock.blockType != BlockTypeEnum.None && y > maxHeight)

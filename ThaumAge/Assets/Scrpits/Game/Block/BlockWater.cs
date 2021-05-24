@@ -49,9 +49,16 @@ public class BlockWater : BlockLiquid
     /// <returns></returns>
     public bool SetCloseWaterBlock(Vector3Int worldPosition, int contactLevel)
     {
-        Block closeBlock = WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(worldPosition);
-        if (closeBlock == null)
+        WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(worldPosition, out Block closeBlock, out bool hasChunk);
+        if (!hasChunk)
             return false;
+        if (closeBlock == null)
+        {
+            BlockBean newBlockData = new BlockBean(blockType, worldPosition - closeBlock.chunk.worldPosition, worldPosition);
+            newBlockData.contactLevel = contactLevel;
+            closeBlock.chunk.listUpdateBlock.Add(newBlockData);
+            return true;
+        }
         BlockTypeEnum closeBlockType = closeBlock.blockType;
         BlockInfoBean closeBlockInfo = BlockHandler.Instance.manager.GetBlockInfo(closeBlockType);
         //如果是空方块或者重量等于1
@@ -99,7 +106,7 @@ public class BlockWater : BlockLiquid
     /// <returns></returns>
     public bool CheckHasHeightContactLevel(Vector3Int wPos)
     {
-        Block closeBlock = WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(wPos);
+        WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(wPos, out Block closeBlock,out bool hasChunk);
         if (closeBlock == null)
             return false;
         if (contactLevel > closeBlock.contactLevel)

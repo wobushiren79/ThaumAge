@@ -67,17 +67,18 @@ public abstract class Block
 
     public virtual void RefreshBlockRange()
     {
-        Block upBlock = WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(worldPosition + Vector3Int.up);
+        bool hasChunk;
+        WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(worldPosition + Vector3Int.up,out Block upBlock ,out hasChunk);
         upBlock?.RefreshBlock();
-        Block downBlock = WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(worldPosition + Vector3Int.down);
+        WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(worldPosition + Vector3Int.down, out Block downBlock, out hasChunk);
         downBlock?.RefreshBlock();
-        Block leftBlock = WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(worldPosition + Vector3Int.left);
+        WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(worldPosition + Vector3Int.left, out Block leftBlock, out hasChunk);
         leftBlock?.RefreshBlock();
-        Block rightBlock = WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(worldPosition + Vector3Int.right);
+        WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(worldPosition + Vector3Int.right, out Block rightBlock, out hasChunk);
         rightBlock?.RefreshBlock();
-        Block forwardBlock = WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(worldPosition + Vector3Int.forward);
+        WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(worldPosition + Vector3Int.forward, out Block forwardBlock, out hasChunk);
         forwardBlock?.RefreshBlock();
-        Block backBlock = WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(worldPosition + Vector3Int.back);
+         WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(worldPosition + Vector3Int.back, out Block backBlock, out hasChunk);
         backBlock?.RefreshBlock();
     }
 
@@ -114,11 +115,20 @@ public abstract class Block
         //检测旋转
         Vector3Int checkPosition = Vector3Int.RoundToInt(RotatePosition(position, localPosition));
         //获取方块
-        closeBlock = WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(checkPosition + chunk.worldPosition);
-        //if (closeBlock.chunk != chunk)
-        //    return true;
+        WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(checkPosition + chunk.worldPosition,out closeBlock,out bool hasChunk);
         if (closeBlock == null)
-            return false;
+        {
+            if (hasChunk)
+            {       
+                //只是空气方块
+                return true;
+            }
+            else
+            {
+                //还没有生成chunk
+                return false;
+            }
+        }
         BlockShapeEnum blockShape = closeBlock.blockInfo.GetBlockShape();
         switch (blockShape)
         {

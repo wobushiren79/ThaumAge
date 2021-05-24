@@ -261,20 +261,17 @@ public class Chunk : BaseMonoBehaviour
         {
             //遍历chunk, 生成其中的每一个Block
             try
-            {
-                lock(lockForUpdateBlcok)
+            { 
+                lock (lockForUpdateBlcok)
                 {
                     chunkRenderData = new ChunkRenderData();
-
                     //初始化数据
                     List<BlockMaterialEnum> blockMaterialsEnum = EnumUtil.GetEnumValue<BlockMaterialEnum>();
-
                     for (int i = 0; i < blockMaterialsEnum.Count; i++)
                     {
                         BlockMaterialEnum blockMaterial = blockMaterialsEnum[i];
                         chunkRenderData.dicTris.Add(blockMaterial, new List<int>());
                     }
-
                     for (int x = 0; x < width; x++)
                     {
                         for (int y = 0; y < height; y++)
@@ -282,12 +279,14 @@ public class Chunk : BaseMonoBehaviour
                             for (int z = 0; z < width; z++)
                             {
                                 Block block = mapForBlock[GetIndexByPosition(x, y, z)];
+                                if (block == null)
+                                    continue;
                                 block.BuildBlock(chunkRenderData);
                             }
                         }
                     }
                 }
-           
+
             }
             catch (Exception e)
             {
@@ -373,25 +372,32 @@ public class Chunk : BaseMonoBehaviour
 
     }
 
-    public Block GetBlockForWorld(Vector3Int blockWorldPosition)
+    public void GetBlockForWorld(Vector3Int blockWorldPosition, out Block block, out bool isInside)
     {
-        return GetBlockForLocal(blockWorldPosition - worldPosition);
+         GetBlockForLocal(blockWorldPosition - worldPosition,out block,out isInside);
     }
 
-    public Block GetBlockForLocal(Vector3Int localPosition)
+    public void GetBlockForLocal(Vector3Int localPosition,out Block block,out bool isInside)
     {
         if (localPosition.y < 0 || localPosition.y > height - 1)
         {
-            return null;
+            block = null;
+            isInside = false;
+            return;
         }
         //当前位置是否在Chunk内
         if ((localPosition.x < 0) || (localPosition.z < 0) || (localPosition.x >= width) || (localPosition.z >= width))
         {
             Vector3Int blockWorldPosition = localPosition + worldPosition;
-            Block tempBlock = WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(blockWorldPosition);
-            return tempBlock;
+            WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(blockWorldPosition,out block,out bool hasChunk);
+            isInside = false;
+            return;
         }
-        return mapForBlock[GetIndexByPosition(localPosition)];
+        else
+        {
+            isInside = true;
+            block = mapForBlock[GetIndexByPosition(localPosition)];
+        }
     }
 
 
@@ -554,6 +560,10 @@ public class Chunk : BaseMonoBehaviour
 
                     //获取方块类型
                     BlockTypeEnum blockType = BiomeHandler.Instance.CreateBiomeBlockType(this, listBiomeCenter, listBiome, position);
+
+                    //如果是空 则跳过
+                    if (blockType == BlockTypeEnum.None)
+                        continue;
 
                     //生成方块
                     Block block = BlockHandler.Instance.CreateBlock(this, blockType, position);
