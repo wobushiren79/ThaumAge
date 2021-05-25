@@ -30,25 +30,24 @@ public class BlockCube : Block
         if (blockType != BlockTypeEnum.None)
         {
             //Left
-            if (CheckNeedBuildFace(localPosition + new Vector3Int(-1, 0, 0)))
+            if (CheckNeedBuildFace(DirectionEnum.Left))
                 BuildFace(DirectionEnum.Left, localPosition, Vector3.up, Vector3.forward, false, chunkData);
-       
             //Right
-            if (CheckNeedBuildFace(localPosition + new Vector3Int(1, 0, 0)))
+            if (CheckNeedBuildFace(DirectionEnum.Right))
                 BuildFace(DirectionEnum.Right, localPosition + new Vector3Int(1, 0, 0), Vector3.up, Vector3.forward, true, chunkData);
 
             //Bottom
-            if (CheckNeedBuildFace(localPosition + new Vector3Int(0, -1, 0)))
+            if (CheckNeedBuildFace(DirectionEnum.Down))
                 BuildFace(DirectionEnum.Down, localPosition, Vector3.forward, Vector3.right, false, chunkData);
             //Top
-            if (CheckNeedBuildFace(localPosition + new Vector3Int(0, 1, 0)))
+            if (CheckNeedBuildFace(DirectionEnum.UP))
                 BuildFace(DirectionEnum.UP, localPosition + new Vector3Int(0, 1, 0), Vector3.forward, Vector3.right, true, chunkData);
 
             //Front
-            if (CheckNeedBuildFace(localPosition + new Vector3Int(0, 0, -1)))
+            if (CheckNeedBuildFace(DirectionEnum.Forward))
                 BuildFace(DirectionEnum.Forward, localPosition, Vector3.up, Vector3.right, true, chunkData);
             //Back
-            if (CheckNeedBuildFace(localPosition + new Vector3Int(0, 0, 1)))
+            if (CheckNeedBuildFace(DirectionEnum.Back))
                 BuildFace(DirectionEnum.Back, localPosition + new Vector3Int(0, 0, 1), Vector3.up, Vector3.right, false, chunkData);
         }
     }

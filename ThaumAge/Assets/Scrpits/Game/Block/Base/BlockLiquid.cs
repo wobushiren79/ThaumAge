@@ -10,14 +10,37 @@ public class BlockLiquid : Block
     /// </summary>
     /// <param name="position"></param>
     /// <returns></returns>
-    public override bool CheckNeedBuildFace(Vector3Int position, out Block closeBlock)
+    public override bool CheckNeedBuildFace(DirectionEnum direction, out Block closeBlock)
     {
         closeBlock = null;
-        if (position.y < 0) return false;
-        //检测旋转
-        Vector3Int checkPosition = Vector3Int.RoundToInt(RotatePosition(position, localPosition));
-        //获取方块
-        WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(checkPosition + chunk.worldPosition,out closeBlock,out bool hasChunk);
+        bool hasChunk = false;
+        switch (direction)
+        {
+            case DirectionEnum.Left:
+                closeBlock = leftBlock;
+                hasChunk = leftBlockHasChunk;
+                break;
+            case DirectionEnum.Right:
+                closeBlock = rightBlock;
+                hasChunk = rightBlockHasChunk;
+                break;
+            case DirectionEnum.UP:
+                closeBlock = upBlock;
+                hasChunk = upBlockHasChunk;
+                break;
+            case DirectionEnum.Down:
+                closeBlock = downBlock;
+                hasChunk = downBlockHasChunk;
+                break;
+            case DirectionEnum.Forward:
+                closeBlock = forwardBlock;
+                hasChunk = forwardBlockHasChunk;
+                break;
+            case DirectionEnum.Back:
+                closeBlock = backBlock;
+                hasChunk = backBlockHasChunk;
+                break;
+        }
         if (closeBlock == null)
         {
             if (hasChunk)
@@ -65,10 +88,10 @@ public class BlockLiquid : Block
         {
             float itemContactHeight = 1f / 4f;
 
-            bool isBuildLeftFace = CheckNeedBuildFace(localPosition + new Vector3Int(-1, 0, 0), out Block leftCloseBlock);
-            bool isBuildRightFace = CheckNeedBuildFace(localPosition + new Vector3Int(1, 0, 0), out Block rightCloseBlock);
-            bool isBuildFrontFace = CheckNeedBuildFace(localPosition + new Vector3Int(0, 0, -1), out Block frontCloseBlock);
-            bool isBuildBackFace = CheckNeedBuildFace(localPosition + new Vector3Int(0, 0, 1), out Block backCloseBlock);
+            bool isBuildLeftFace = CheckNeedBuildFace(DirectionEnum.Left, out Block leftCloseBlock);
+            bool isBuildRightFace = CheckNeedBuildFace(DirectionEnum.Right, out Block rightCloseBlock);
+            bool isBuildForwardFace = CheckNeedBuildFace(DirectionEnum.Forward, out Block frontCloseBlock);
+            bool isBuildBackFace = CheckNeedBuildFace(DirectionEnum.Back, out Block backCloseBlock);
 
             bool isBuildlfFace = CheckNeedBuildFace(localPosition + new Vector3Int(-1, 0, -1), out Block lfCloseBlock);
             bool isBuildlbFace = CheckNeedBuildFace(localPosition + new Vector3Int(-1, 0, 1), out Block lbCloseBlock);
@@ -93,7 +116,6 @@ public class BlockLiquid : Block
             //Right
             if (isBuildRightFace)
             {
-
                 BuildFace(
                     localPosition + Vector3Int.right,
                     localPosition + Vector3Int.right + Vector3.up - new Vector3(0, rfSubHeight, 0),
@@ -102,9 +124,8 @@ public class BlockLiquid : Block
                     chunkData);
             }
             //Front
-            if (isBuildFrontFace)
+            if (isBuildForwardFace)
             {
-
                 BuildFace(
                     localPosition,
                     localPosition + Vector3.up - new Vector3(0, lfSubHeight, 0),
@@ -123,7 +144,7 @@ public class BlockLiquid : Block
                     chunkData);
             }
             //Bottom
-            if (CheckNeedBuildFace(localPosition + new Vector3Int(0, -1, 0)))
+            if (CheckNeedBuildFace(DirectionEnum.Down))
             {
                 BuildFace(
                    localPosition,
@@ -133,7 +154,7 @@ public class BlockLiquid : Block
                    chunkData);
             }
             //Top
-            if (CheckNeedBuildFace(localPosition + new Vector3Int(0, 1, 0)))
+            if (CheckNeedBuildFace(DirectionEnum.UP))
             {
                 BuildFace(
                     localPosition + new Vector3Int(0, 1, 0) - new Vector3(0, lfSubHeight, 0),

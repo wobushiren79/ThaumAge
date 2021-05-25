@@ -25,10 +25,10 @@ public class BlockCubeCuboid : BlockCube
                 BuildFace(DirectionEnum.Right, localPosition + new Vector3(15f / 16f, 0, 0), Vector3.up, Vector3.forward, true, chunkData);
 
             //Bottom
-            if (CheckNeedBuildFace(localPosition + new Vector3Int(0, -1, 0)))
+            if (CheckNeedBuildFace(DirectionEnum.Down))
                 BuildFace(DirectionEnum.Down, localPosition, Vector3.forward, Vector3.right, false, chunkData);
             //Top
-            if (CheckNeedBuildFace(localPosition + new Vector3Int(0, 1, 0)))
+            if (CheckNeedBuildFace(DirectionEnum.UP))
                 BuildFace(DirectionEnum.UP, localPosition + new Vector3Int(0, 1, 0), Vector3.forward, Vector3.right, true, chunkData);
 
             //Front

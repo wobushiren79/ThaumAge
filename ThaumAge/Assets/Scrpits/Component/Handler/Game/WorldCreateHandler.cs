@@ -203,6 +203,9 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
         {
             lock(lockForUpdateBlock)
             {
+#if UNITY_EDITOR
+                Stopwatch stopwatch = TimeUtil.GetMethodTimeStart();
+#endif
                 List<BlockBean> listNoChunkBlock = new List<BlockBean>();
                 //添加修改的方块信息，用于树木或建筑群等用于多个区块的数据     
                 while (manager.listUpdateBlock.TryDequeue(out BlockBean itemBlock))
@@ -238,6 +241,9 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
                 {
                     manager.AddUpdateBlock(listNoChunkBlock[i]);
                 }
+#if UNITY_EDITOR
+                TimeUtil.GetMethodTimeEnd("Time_HandleForUpdateBlock:", stopwatch);
+#endif
             }
 
         });

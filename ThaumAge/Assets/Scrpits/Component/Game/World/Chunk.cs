@@ -223,6 +223,9 @@ public class Chunk : BaseMonoBehaviour
             {
                 lock (lockForUpdateBlcok)
                 {
+#if UNITY_EDITOR
+                    Stopwatch stopwatch = TimeUtil.GetMethodTimeStart();
+#endif
                     //生成基础地形数据      
                     HandleForBaseBlock();
                     //处理存档方块 优先使用存档方块
@@ -231,6 +234,9 @@ public class Chunk : BaseMonoBehaviour
                     BuildChunkRangeForAsync();
                     //初始化完成
                     isInit = true;
+#if UNITY_EDITOR
+                    TimeUtil.GetMethodTimeEnd("Time_BuildChunkBlockDataForAsync:", stopwatch);
+#endif
                 }
             }
             catch (Exception e)
@@ -261,9 +267,12 @@ public class Chunk : BaseMonoBehaviour
         {
             //遍历chunk, 生成其中的每一个Block
             try
-            { 
+            {
                 lock (lockForUpdateBlcok)
                 {
+#if UNITY_EDITOR
+                    Stopwatch stopwatch = TimeUtil.GetMethodTimeStart();
+#endif
                     chunkRenderData = new ChunkRenderData();
                     //初始化数据
                     List<BlockMaterialEnum> blockMaterialsEnum = EnumUtil.GetEnumValue<BlockMaterialEnum>();
@@ -279,12 +288,15 @@ public class Chunk : BaseMonoBehaviour
                             for (int z = 0; z < width; z++)
                             {
                                 Block block = mapForBlock[GetIndexByPosition(x, y, z)];
-                                if (block == null)
+                                if (block == null || block.blockType == BlockTypeEnum.None)
                                     continue;
                                 block.BuildBlock(chunkRenderData);
                             }
                         }
                     }
+#if UNITY_EDITOR
+                    TimeUtil.GetMethodTimeEnd("Time_BuildChunkForAsync:", stopwatch);
+#endif
                 }
 
             }
@@ -360,9 +372,9 @@ public class Chunk : BaseMonoBehaviour
             Physics.BakeMesh(chunkMeshCollider.GetInstanceID(), false);
             Physics.BakeMesh(chunkMeshTrigger.GetInstanceID(), false);
         }
-        catch(Exception e)
+        catch (Exception e)
         {
-            LogUtil.Log("绘制出错_"+ e.ToString());
+            LogUtil.Log("绘制出错_" + e.ToString());
             isDrawMesh = false;
         }
         finally
@@ -374,10 +386,10 @@ public class Chunk : BaseMonoBehaviour
 
     public void GetBlockForWorld(Vector3Int blockWorldPosition, out Block block, out bool isInside)
     {
-         GetBlockForLocal(blockWorldPosition - worldPosition,out block,out isInside);
+        GetBlockForLocal(blockWorldPosition - worldPosition, out block, out isInside);
     }
 
-    public void GetBlockForLocal(Vector3Int localPosition,out Block block,out bool isInside)
+    public void GetBlockForLocal(Vector3Int localPosition, out Block block, out bool isInside)
     {
         if (localPosition.y < 0 || localPosition.y > height - 1)
         {
@@ -389,14 +401,15 @@ public class Chunk : BaseMonoBehaviour
         if ((localPosition.x < 0) || (localPosition.z < 0) || (localPosition.x >= width) || (localPosition.z >= width))
         {
             Vector3Int blockWorldPosition = localPosition + worldPosition;
-            WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(blockWorldPosition,out block,out bool hasChunk);
+            WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(blockWorldPosition, out block, out bool hasChunk);
             isInside = false;
             return;
         }
         else
         {
             isInside = true;
-            block = mapForBlock[GetIndexByPosition(localPosition)];
+            int index = GetIndexByPosition(localPosition);
+            block = mapForBlock[index];
         }
     }
 
