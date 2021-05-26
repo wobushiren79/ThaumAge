@@ -93,7 +93,7 @@ public abstract class Block
         {
             if (_forwardBlock == null)
             {
-                Vector3Int checkPosition = Vector3Int.RoundToInt(RotatePosition((localPosition + Vector3Int.forward), localPosition));
+                Vector3Int checkPosition = Vector3Int.RoundToInt(RotatePosition((localPosition + Vector3Int.back), localPosition));
                 WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(checkPosition + chunk.worldPosition, out _forwardBlock, out forwardBlockHasChunk);
             }
             return _forwardBlock;
@@ -106,7 +106,7 @@ public abstract class Block
         {
             if (_backBlock == null)
             {
-                Vector3Int checkPosition = Vector3Int.RoundToInt(RotatePosition((localPosition + Vector3Int.back), localPosition));
+                Vector3Int checkPosition = Vector3Int.RoundToInt(RotatePosition((localPosition + Vector3Int.forward), localPosition));
                 WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(checkPosition + chunk.worldPosition, out _backBlock, out  backBlockHasChunk);
             }
             return _backBlock;

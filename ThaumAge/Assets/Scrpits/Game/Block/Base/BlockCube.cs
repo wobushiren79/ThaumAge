@@ -43,7 +43,7 @@ public class BlockCube : Block
             if (CheckNeedBuildFace(DirectionEnum.UP))
                 BuildFace(DirectionEnum.UP, localPosition + new Vector3Int(0, 1, 0), Vector3.forward, Vector3.right, true, chunkData);
 
-            //Front
+            //Forward
             if (CheckNeedBuildFace(DirectionEnum.Forward))
                 BuildFace(DirectionEnum.Forward, localPosition, Vector3.up, Vector3.right, true, chunkData);
             //Back
