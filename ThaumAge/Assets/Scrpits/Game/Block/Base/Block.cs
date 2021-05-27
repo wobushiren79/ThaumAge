@@ -36,14 +36,16 @@ public abstract class Block
     protected Block _backBlock;
     protected bool backBlockHasChunk;
 
+
     public Block leftBlock
     {
         get
         {
             if (_leftBlock == null)
             {
-                Vector3Int checkPosition = Vector3Int.RoundToInt(RotatePosition((localPosition + Vector3Int.left), localPosition));
-                WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(checkPosition + chunk.worldPosition, out _leftBlock, out leftBlockHasChunk);
+                WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(localPosition + Vector3Int.left + chunk.worldPosition, out _leftBlock, out leftBlockHasChunk);
+                if (_leftBlock != null)
+                    _leftBlock._rightBlock = this;
             }
             return _leftBlock;
         }
@@ -54,8 +56,9 @@ public abstract class Block
         {
             if (_rightBlock == null)
             {
-                Vector3Int checkPosition = Vector3Int.RoundToInt(RotatePosition((localPosition + Vector3Int.right), localPosition));
-                WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(checkPosition + chunk.worldPosition, out _rightBlock, out rightBlockHasChunk);
+                WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(localPosition + Vector3Int.right + chunk.worldPosition, out _rightBlock, out rightBlockHasChunk);
+                if (_rightBlock != null)
+                    _rightBlock._leftBlock = this;
             }
             return _rightBlock;
         }
@@ -67,8 +70,9 @@ public abstract class Block
         {
             if (_upBlock == null)
             {
-                Vector3Int checkPosition = Vector3Int.RoundToInt(RotatePosition((localPosition + Vector3Int.up), localPosition));
-                WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(checkPosition + chunk.worldPosition, out _upBlock, out upBlockHasChunk);
+                WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(localPosition + Vector3Int.up + chunk.worldPosition, out _upBlock, out upBlockHasChunk);
+                if (_upBlock != null)
+                    _upBlock._downBlock = this;
             }
             return _upBlock;
         }
@@ -80,8 +84,9 @@ public abstract class Block
         {
             if (_downBlock == null)
             {
-                Vector3Int checkPosition = Vector3Int.RoundToInt(RotatePosition((localPosition + Vector3Int.down), localPosition));
-                WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(checkPosition + chunk.worldPosition, out _downBlock, out downBlockHasChunk);
+                WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(localPosition + Vector3Int.down + chunk.worldPosition, out _downBlock, out downBlockHasChunk);
+                if (_downBlock != null)
+                    _downBlock._upBlock = this;
             }
             return _downBlock;
         }
@@ -93,8 +98,9 @@ public abstract class Block
         {
             if (_forwardBlock == null)
             {
-                Vector3Int checkPosition = Vector3Int.RoundToInt(RotatePosition((localPosition + Vector3Int.back), localPosition));
-                WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(checkPosition + chunk.worldPosition, out _forwardBlock, out forwardBlockHasChunk);
+                WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(localPosition + Vector3Int.back + chunk.worldPosition, out _forwardBlock, out forwardBlockHasChunk);
+                if (_forwardBlock != null)
+                    _forwardBlock._backBlock = this;
             }
             return _forwardBlock;
         }
@@ -106,8 +112,9 @@ public abstract class Block
         {
             if (_backBlock == null)
             {
-                Vector3Int checkPosition = Vector3Int.RoundToInt(RotatePosition((localPosition + Vector3Int.forward), localPosition));
-                WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(checkPosition + chunk.worldPosition, out _backBlock, out  backBlockHasChunk);
+                WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(localPosition + Vector3Int.forward + chunk.worldPosition, out _backBlock, out backBlockHasChunk);
+                if (_backBlock != null)
+                    _backBlock._forwardBlock = this;
             }
             return _backBlock;
         }
@@ -233,35 +240,7 @@ public abstract class Block
     /// <returns></returns>
     public virtual bool CheckNeedBuildFace(DirectionEnum direction, out Block closeBlock)
     {
-        closeBlock = null;
-        bool hasChunk = false;
-        switch (direction)
-        {
-            case DirectionEnum.Left:
-                closeBlock = leftBlock;
-                hasChunk = leftBlockHasChunk;
-                break;
-            case DirectionEnum.Right:
-                closeBlock = rightBlock;
-                hasChunk = rightBlockHasChunk;
-                break;
-            case DirectionEnum.UP:
-                closeBlock = upBlock;
-                hasChunk = upBlockHasChunk;
-                break;
-            case DirectionEnum.Down:
-                closeBlock = downBlock;
-                hasChunk = downBlockHasChunk;
-                break;
-            case DirectionEnum.Forward:
-                closeBlock = forwardBlock;
-                hasChunk = forwardBlockHasChunk;
-                break;
-            case DirectionEnum.Back:
-                closeBlock = backBlock;
-                hasChunk = backBlockHasChunk;
-                break;
-        }
+        GetCloseRotateBlockByDirection(direction, out closeBlock, out bool hasChunk);
         if (closeBlock == null)
         {
             if (hasChunk)
@@ -359,6 +338,188 @@ public abstract class Block
     public virtual void AddTris(Chunk.ChunkRenderData chunkData)
     {
 
+    }
+
+    public virtual void GetCloseRotateBlockByDirection(DirectionEnum getDirection, out Block closeBlock, out bool hasChunk)
+    {
+        if (blockInfo.rotate_state == 0)
+        {
+            //²»Ðý×ª
+            GetCloseBlockByDirection(getDirection, out closeBlock, out hasChunk);
+        }
+        else if (blockInfo.rotate_state == 1)
+        {
+            //Ðý×ª
+            DirectionEnum rotateDirection = GetRotateDirection(direction);
+            GetCloseBlockByDirection(rotateDirection, out closeBlock, out hasChunk);
+        }
+        else
+        {
+            closeBlock = null;
+            hasChunk = false;
+        }
+    }
+
+    public virtual void GetCloseBlockByDirection(DirectionEnum getDirection, out Block closeBlock, out bool hasChunk)
+    {
+        switch (direction)
+        {
+            case DirectionEnum.UP:
+                closeBlock = upBlock;
+                hasChunk = upBlockHasChunk;
+                break;
+            case DirectionEnum.Down:
+                closeBlock = downBlock;
+                hasChunk = downBlockHasChunk;
+                break;
+            case DirectionEnum.Left:
+                closeBlock = leftBlock;
+                hasChunk = leftBlockHasChunk;
+                break;
+            case DirectionEnum.Right:
+                closeBlock = rightBlock;
+                hasChunk = rightBlockHasChunk;
+                break;
+            case DirectionEnum.Forward:
+                closeBlock = forwardBlock;
+                hasChunk = forwardBlockHasChunk;
+                break;
+            case DirectionEnum.Back:
+                closeBlock = backBlock;
+                hasChunk = backBlockHasChunk;
+                break;
+            default:
+                closeBlock = upBlock;
+                hasChunk = upBlockHasChunk;
+                break;
+        }
+    }
+
+    public DirectionEnum GetRotateDirection(DirectionEnum getDirection)
+    {
+        DirectionEnum targetDirection = DirectionEnum.UP;
+        switch (direction)
+        {
+            case DirectionEnum.UP:
+                targetDirection = getDirection;
+                break;
+            case DirectionEnum.Down:
+                switch (getDirection)
+                {
+                    case DirectionEnum.UP:
+                        targetDirection = DirectionEnum.Down;
+                        break;
+                    case DirectionEnum.Down:
+                        targetDirection = DirectionEnum.UP;
+                        break;
+                    case DirectionEnum.Left:
+                        targetDirection = getDirection;
+                        break;
+                    case DirectionEnum.Right:
+                        targetDirection = getDirection;
+                        break;
+                    case DirectionEnum.Forward:
+                        targetDirection = DirectionEnum.Back;
+                        break;
+                    case DirectionEnum.Back:
+                        targetDirection = DirectionEnum.Forward;
+                        break;
+                }
+                break;
+            case DirectionEnum.Left:
+                switch (getDirection)
+                {
+                    case DirectionEnum.UP:
+                        targetDirection = DirectionEnum.Left;
+                        break;
+                    case DirectionEnum.Down:
+                        targetDirection = DirectionEnum.Right;
+                        break;
+                    case DirectionEnum.Left:
+                        targetDirection = DirectionEnum.Down;
+                        break;
+                    case DirectionEnum.Right:
+                        targetDirection = DirectionEnum.UP;
+                        break;
+                    case DirectionEnum.Forward:
+                        targetDirection = getDirection;
+                        break;
+                    case DirectionEnum.Back:
+                        targetDirection = getDirection;
+                        break;
+                }
+                break;
+            case DirectionEnum.Right:
+                switch (getDirection)
+                {
+                    case DirectionEnum.UP:
+                        targetDirection = DirectionEnum.Right;
+                        break;
+                    case DirectionEnum.Down:
+                        targetDirection = DirectionEnum.Left;
+                        break;
+                    case DirectionEnum.Left:
+                        targetDirection = DirectionEnum.UP;
+                        break;
+                    case DirectionEnum.Right:
+                        targetDirection = DirectionEnum.Down;
+                        break;
+                    case DirectionEnum.Forward:
+                        targetDirection = getDirection;
+                        break;
+                    case DirectionEnum.Back:
+                        targetDirection = getDirection;
+                        break;
+                }
+                break;
+            case DirectionEnum.Forward:
+                switch (getDirection)
+                {
+                    case DirectionEnum.UP:
+                        targetDirection = DirectionEnum.Forward;
+                        break;
+                    case DirectionEnum.Down:
+                        targetDirection = DirectionEnum.Back;
+                        break;
+                    case DirectionEnum.Left:
+                        targetDirection = getDirection;
+                        break;
+                    case DirectionEnum.Right:
+                        targetDirection = getDirection;
+                        break;
+                    case DirectionEnum.Forward:
+                        targetDirection = DirectionEnum.Down;
+                        break;
+                    case DirectionEnum.Back:
+                        targetDirection = DirectionEnum.UP;
+                        break;
+                }
+                break;
+            case DirectionEnum.Back:
+                switch (getDirection)
+                {
+                    case DirectionEnum.UP:
+                        targetDirection = DirectionEnum.Back;
+                        break;
+                    case DirectionEnum.Down:
+                        targetDirection = DirectionEnum.Forward;
+                        break;
+                    case DirectionEnum.Left:
+                        targetDirection = getDirection;
+                        break;
+                    case DirectionEnum.Right:
+                        targetDirection = getDirection;
+                        break;
+                    case DirectionEnum.Forward:
+                        targetDirection = DirectionEnum.UP;
+                        break;
+                    case DirectionEnum.Back:
+                        targetDirection = DirectionEnum.Down;
+                        break;
+                }
+                break;
+        }
+        return targetDirection;
     }
 
     /// <summary>
