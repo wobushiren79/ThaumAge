@@ -17,6 +17,8 @@ public class GameConfigBean
     public float environmentVolume = 0.5f;
     //自动保存时间
     public float autoSaveTime = 30;
+    //UI大小
+    public float uiSize = 1f;
 
     //帧数限制开启 1开启 0关闭
     public int stateForFrames = 1;

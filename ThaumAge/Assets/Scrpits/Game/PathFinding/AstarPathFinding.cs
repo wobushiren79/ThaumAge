@@ -43,7 +43,7 @@ public class AstarPathFinding : BaseMonoBehaviour
             gridGraph.center = center;
             gridGraph.SetDimensions(width, width, 0.5f);
             gridGraph.name = center + "";
-            gridGraph.maxClimb = 1.5f;
+            gridGraph.maxStepHeight = 1.5f;
             gridGraph.maxSlope = 90;
             GraphCollision graphCollision = gridGraph.collision;
             graphCollision.collisionCheck = false;

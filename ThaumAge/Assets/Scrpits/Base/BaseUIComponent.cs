@@ -8,8 +8,6 @@ public class BaseUIComponent : BaseMonoBehaviour
 { 
     //UI管理
     public BaseUIManager uiManager;
-    //UI动画
-    public Animator uiAnimator;
     //备注数据
     public string remarkData;
 
@@ -17,8 +15,6 @@ public class BaseUIComponent : BaseMonoBehaviour
     {
         if (uiManager == null)
             uiManager = GetComponentInParent<BaseUIManager>();
-        if (uiAnimator == null)
-            uiAnimator = GetComponent<Animator>();
         AutoLinkUI();
     }
     
@@ -30,8 +26,7 @@ public class BaseUIComponent : BaseMonoBehaviour
         if (this.gameObject.activeSelf)
             return;
         this.gameObject.SetActive(true);
-        if (uiAnimator != null)
-            uiAnimator.SetInteger("UIStates", 1);
+        RefreshUI();
     }
 
     /// <summary>
@@ -43,8 +38,6 @@ public class BaseUIComponent : BaseMonoBehaviour
         if (!this.gameObject.activeSelf)
             return;
         this.gameObject.SetActive(false);
-        if (uiAnimator != null)
-            uiAnimator.SetInteger("UIStates", 0);
     }
 
     /// <summary>

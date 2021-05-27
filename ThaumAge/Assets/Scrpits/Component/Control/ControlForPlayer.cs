@@ -110,42 +110,42 @@ public class ControlForPlayer : ControlForBase
             {
                 Vector3Int position = Vector3Int.zero;
                 Vector3Int addPosition = Vector3Int.zero;
-                DirectionEnum direction = DirectionEnum.UP;
+                //DirectionEnum direction = DirectionEnum.UP;
                 if (hit.normal.y > 0)
                 {
                     position = new Vector3Int((int)Mathf.Floor(hit.point.x), (int)Mathf.Floor(hit.point.y) - 1, (int)Mathf.Floor(hit.point.z));
                     addPosition = position + Vector3Int.up;
-                    direction = DirectionEnum.UP;
+                    //direction = DirectionEnum.UP;
                 }
                 else if (hit.normal.y < 0)
                 {
                     position = new Vector3Int((int)Mathf.Floor(hit.point.x), (int)Mathf.Floor(hit.point.y), (int)Mathf.Floor(hit.point.z));
                     addPosition = position + Vector3Int.down;
-                    direction = DirectionEnum.Down;
+                    //direction = DirectionEnum.Down;
                 }
                 else if (hit.normal.x > 0)
                 {
                     position = new Vector3Int((int)Mathf.Floor(hit.point.x) - 1, (int)Mathf.Floor(hit.point.y), (int)Mathf.Floor(hit.point.z));
                     addPosition = position + Vector3Int.right;
-                    direction = DirectionEnum.Right;
+                    //direction = DirectionEnum.Right;
                 }
                 else if (hit.normal.x < 0)
                 {
                     position = new Vector3Int((int)Mathf.Floor(hit.point.x), (int)Mathf.Floor(hit.point.y), (int)Mathf.Floor(hit.point.z));
                     addPosition = position + Vector3Int.left;
-                    direction = DirectionEnum.Left;
+                    //direction = DirectionEnum.Left;
                 }
                 else if (hit.normal.z > 0)
                 {
                     position = new Vector3Int((int)Mathf.Floor(hit.point.x), (int)Mathf.Floor(hit.point.y), (int)Mathf.Floor(hit.point.z) - 1);
                     addPosition = position + Vector3Int.forward;
-                    direction = DirectionEnum.Forward;
+                    //direction = DirectionEnum.Forward;
                 }
                 else if (hit.normal.z < 0)
                 {
                     position = new Vector3Int((int)Mathf.Floor(hit.point.x), (int)Mathf.Floor(hit.point.y), (int)Mathf.Floor(hit.point.z));
                     addPosition = position + Vector3Int.back;
-                    direction = DirectionEnum.Back;
+                    //direction = DirectionEnum.Back;
                 }
                 WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(addPosition,out Block block, out bool hasChunk);
                 if(block != null)

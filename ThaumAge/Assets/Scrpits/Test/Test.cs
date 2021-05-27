@@ -8,5 +8,8 @@ using UnityEngine.Rendering;
 
 public class Test : BaseMonoBehaviour
 {
-    
+    private void Start()
+    {
+        UIHandler.Instance.manager.OpenUI<UIGameMain>(UIEnum.GameMain);
+    }
 }

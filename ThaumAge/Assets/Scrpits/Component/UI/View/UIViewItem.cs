@@ -2,20 +2,23 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using DG.Tweening;
 
 public class UIViewItem : BaseUIView, IBeginDragHandler, IDragHandler, IEndDragHandler, ICanvasRaycastFilter
 {
     public Image ui_IVIcon;
     public Text ui_TVNumber;
 
-    protected UIViewItemContainer originalParent;
-    protected Vector3 originalPosition;
-
-    protected bool isRaycastLocationValid = true;
+    public float timeForBackOriginal = 0.2f;//返回原始位置的时间
+    public float timeForMove = 0.1f;//移动到指定位置的时间
 
     public BlockInfoBean blockInfo;
-    
 
+    protected UIViewItemContainer originalParent;//原始父级
+    protected Vector3 originalPosition;//原始位置
+
+    protected bool isRaycastLocationValid = true;
+    
     /// <summary>
     /// 设置数据
     /// </summary>
@@ -75,40 +78,55 @@ public class UIViewItem : BaseUIView, IBeginDragHandler, IDragHandler, IEndDragH
     /// <param name="eventData"></param>
     public void OnEndDrag(PointerEventData eventData)
     {
-        GameObject objDrop = eventData.pointerCurrentRaycast.gameObject;
-        if (objDrop != null)
+        GameObject objTarget = eventData.pointerCurrentRaycast.gameObject;
+        if (objTarget != null)
         {
-            UIViewShortcuts viewShortcuts = objDrop.GetComponent<UIViewShortcuts>();
+            UIViewItemContainer viewItemContainer = objTarget.GetComponent<UIViewItemContainer>();
             //如果是空的格子
-            if (viewShortcuts != null)
-            {
-                transform.SetParent(viewShortcuts.transform);
-                rectTransform.anchoredPosition = viewShortcuts.transform.position;
-                isRaycastLocationValid = true;//设置为不能穿透
+            if (viewItemContainer != null)
+            {    
+                transform.SetParent(viewItemContainer.transform);
+                rectTransform
+                    .DOAnchorPos(viewItemContainer.transform.position, timeForMove)
+                    .SetEase(Ease.OutBack)
+                    .OnComplete(()=> 
+                    {
+                        isRaycastLocationValid = true;//设置为不能穿透
+                     });
+  
                 return;
             }
-            UIViewItem viewItem = objDrop.GetComponent<UIViewItem>();
+            UIViewItem viewItem = objTarget.GetComponent<UIViewItem>();
             //如果不是空的格子
             if (viewItem != null)
             {
                 //交换位置
                 transform.SetParent(viewItem.transform.parent);
-                rectTransform.anchoredPosition = Vector2.zero;
+                rectTransform
+                    .DOAnchorPos(Vector2.zero, timeForMove)
+                    .SetEase(Ease.OutBack)
+                    .OnComplete(()=> 
+                    {
+                        isRaycastLocationValid = true;//设置为不能穿透
+                    });
                 transform.localScale = Vector3.one;
-                transform.eulerAngles = Vector3.one;
 
                 viewItem.transform.SetParent(originalParent.transform);
-                rectTransform.anchoredPosition = Vector2.zero;
+                viewItem.rectTransform.anchoredPosition = Vector2.zero;
                 viewItem.transform.localScale = Vector3.one;
-                viewItem.transform.eulerAngles = Vector3.one;
 
-                isRaycastLocationValid = true;//设置为不能穿透
                 return;
             }
         }
+        //返回原来的位置
         transform.SetParent(originalParent.transform);
-        rectTransform.anchoredPosition = originalPosition;
-        isRaycastLocationValid = true;//设置为不能穿透
+        rectTransform
+            .DOAnchorPos(originalPosition, timeForBackOriginal)
+            .SetEase(Ease.OutBack)
+            .OnComplete(()=> 
+            {
+                isRaycastLocationValid = true;//设置为不能穿透
+            });
     }
 
     /// <summary>
