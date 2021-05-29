@@ -16,6 +16,7 @@ public class ControlForPlayer : ControlForBase
     private float timeJumpTemp = 0;
 
     private float speedJump = 5;
+    private float moveSpeed = 5;
 
     private void Awake()
     {
@@ -56,7 +57,7 @@ public class ControlForPlayer : ControlForBase
         //旋转角色
         RotateCharacter(moveData, 5);
         //移动角色
-        MoveCharacter(moveData, 1);
+        MoveCharacter(moveData, moveSpeed);
         //跳跃处理
         if (isJump)
         {

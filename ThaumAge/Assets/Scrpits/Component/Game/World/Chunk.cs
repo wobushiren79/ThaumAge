@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
+using DG.Tweening;
 
 public class Chunk : BaseMonoBehaviour
 {
@@ -46,6 +47,8 @@ public class Chunk : BaseMonoBehaviour
     public bool isInit = false;
     public bool isBuildChunk = false;
     public bool isDrawMesh = false;
+    protected bool isFirstDraw = true;
+    protected bool isAnimForInit = false;
     //世界坐标
     public Vector3Int worldPosition;
 
@@ -369,8 +372,14 @@ public class Chunk : BaseMonoBehaviour
             meshCollider.sharedMesh = chunkMeshCollider;
             meshTrigger.sharedMesh = chunkMeshTrigger;
 
-            Physics.BakeMesh(chunkMeshCollider.GetInstanceID(), false);
-            Physics.BakeMesh(chunkMeshTrigger.GetInstanceID(), false);
+            //Physics.BakeMesh(chunkMeshCollider.GetInstanceID(), false);
+            //Physics.BakeMesh(chunkMeshTrigger.GetInstanceID(), false);
+
+            //初始化动画
+            AnimForInit(() => {
+                //刷新寻路
+                PathFindingHandler.Instance.manager.RefreshPathFinding(this);
+            });
         }
         catch (Exception e)
         {
@@ -382,6 +391,28 @@ public class Chunk : BaseMonoBehaviour
             isDrawMesh = false;
         }
 
+    }
+
+    /// <summary>
+    /// 初始化动画
+    /// </summary>
+    public void AnimForInit(Action callBack)
+    {
+        if (isFirstDraw)
+        {
+            isFirstDraw = false;
+            //动画
+            transform.DOLocalMoveY(-50, 1).From().OnComplete(() =>
+            {
+                callBack?.Invoke();
+                isAnimForInit = true;
+            });
+        }
+        else
+        {
+            if (isAnimForInit)
+                callBack?.Invoke();
+        }
     }
 
     public void GetBlockForWorld(Vector3Int blockWorldPosition, out Block block, out bool isInside)

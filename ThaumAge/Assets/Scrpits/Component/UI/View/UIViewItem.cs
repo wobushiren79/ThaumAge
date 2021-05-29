@@ -15,7 +15,6 @@ public class UIViewItem : BaseUIView, IBeginDragHandler, IDragHandler, IEndDragH
     public BlockInfoBean blockInfo;
 
     protected UIViewItemContainer originalParent;//原始父级
-    protected Vector3 originalPosition;//原始位置
 
     protected bool isRaycastLocationValid = true;
     
@@ -38,7 +37,7 @@ public class UIViewItem : BaseUIView, IBeginDragHandler, IDragHandler, IEndDragH
         Sprite spIcon= IconHandler.Instance.manager.GetItemsSpriteByName(iconKey);
         if (spIcon == null)
         {
-            spIcon = IconHandler.Instance.manager.GetItemsSpriteByName("item_test");
+            spIcon = IconHandler.Instance.manager.GetItemsSpriteByName("icon_unknow");
         }
         if (ui_IVIcon != null)
         {
@@ -53,7 +52,6 @@ public class UIViewItem : BaseUIView, IBeginDragHandler, IDragHandler, IEndDragH
     public void OnBeginDrag(PointerEventData eventData)
     {
         originalParent = transform.parent.GetComponent<UIViewItemContainer>();
-        originalPosition = rectTransform.anchoredPosition;
         isRaycastLocationValid = false;//设置射线忽略自身
     }
 
@@ -87,7 +85,7 @@ public class UIViewItem : BaseUIView, IBeginDragHandler, IDragHandler, IEndDragH
             {    
                 transform.SetParent(viewItemContainer.transform);
                 rectTransform
-                    .DOAnchorPos(viewItemContainer.transform.position, timeForMove)
+                    .DOAnchorPos(Vector2.zero, timeForMove)
                     .SetEase(Ease.OutBack)
                     .OnComplete(()=> 
                     {
@@ -121,7 +119,7 @@ public class UIViewItem : BaseUIView, IBeginDragHandler, IDragHandler, IEndDragH
         //返回原来的位置
         transform.SetParent(originalParent.transform);
         rectTransform
-            .DOAnchorPos(originalPosition, timeForBackOriginal)
+            .DOAnchorPos(Vector2.zero, timeForBackOriginal)
             .SetEase(Ease.OutBack)
             .OnComplete(()=> 
             {

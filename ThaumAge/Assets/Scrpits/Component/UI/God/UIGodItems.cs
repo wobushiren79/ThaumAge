@@ -17,7 +17,17 @@ public class UIGodItems : BaseUIComponent
     public override void OpenUI()
     {
         base.OpenUI();
+        GameControlHandler.Instance.manager.controlForPlayer.EnabledControl(false);
+        GameControlHandler.Instance.manager.controlForCamera.EnabledControl(false);
         InitData();
+        
+    }
+
+    public override void CloseUI()
+    {
+        base.CloseUI();
+        GameControlHandler.Instance.manager.controlForPlayer.EnabledControl(true);
+        GameControlHandler.Instance.manager.controlForCamera.EnabledControl(true);
     }
 
     /// <summary>
