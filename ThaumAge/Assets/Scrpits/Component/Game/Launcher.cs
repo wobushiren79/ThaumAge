@@ -17,7 +17,6 @@ public class Launcher : BaseMonoBehaviour
         //设置种子
         WorldCreateHandler.Instance.manager.SetWorldSeed(132349);
         GameHandler.Instance.manager.ChangeGameState(GameStateEnum.Init);
-        LightHandler.Instance.manager.InitData();
 
         //开关角色控制
         GameControlHandler.Instance.manager.controlForPlayer.EnabledControl(false);
@@ -40,7 +39,8 @@ public class Launcher : BaseMonoBehaviour
         GameHandler.Instance.manager.player.InitPosition();
         //开关角色控制
         GameControlHandler.Instance.manager.controlForPlayer.EnabledControl(true);
-
+        //修改灯光
+        LightHandler.Instance.InitData();
     }
 
 }

@@ -45,6 +45,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 08f0f08c22a8bf14d8fb8e39e39c06bf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  starEffect: {fileID: 7435040573844545991}
 --- !u!1 &5190609951105343806
 GameObject:
   m_ObjectHideFlags: 0
@@ -4908,13 +4909,22 @@ VisualEffect:
   m_ResourceVersion: 1
   m_PropertySheet:
     m_Float:
-      m_Array: []
+      m_Array:
+      - m_Value: 0.005
+        m_Name: RoationRate
+        m_Overridden: 1
+      - m_Value: 1
+        m_Name: ShowLerp
+        m_Overridden: 1
     m_Vector2f:
       m_Array: []
     m_Vector3f:
       m_Array: []
     m_Vector4f:
-      m_Array: []
+      m_Array:
+      - m_Value: {x: 2, y: 2, z: 2, w: 1}
+        m_Name: Color
+        m_Overridden: 1
     m_Uint:
       m_Array: []
     m_Int:
@@ -4926,7 +4936,10 @@ VisualEffect:
     m_Gradient:
       m_Array: []
     m_NamedObject:
-      m_Array: []
+      m_Array:
+      - m_Value: {fileID: 2800000, guid: f8578fd4cdc56cf48b78b851fc394452, type: 3}
+        m_Name: StarTex
+        m_Overridden: 1
     m_Bool:
       m_Array: []
 --- !u!73398921 &7160414938608559577

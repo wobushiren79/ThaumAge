@@ -38,11 +38,11 @@ public class SceneElementHandler : BaseHandler<SceneElementHandler, SceneElement
     {
         if (gameTime.hour >= 6 && gameTime.hour <= 18)
         {
-            manager.star.gameObject.SetActive(false);
+            manager.star.ShowStar(false);
         }
         else
         {
-            manager.star.gameObject.SetActive(true);
+            manager.star.ShowStar(true);
         }
     }
 }
