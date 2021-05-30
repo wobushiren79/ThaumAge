@@ -156,17 +156,27 @@ public class WorldCreateManager : BaseManager
     /// </summary>
     /// <param name="pos">世界坐标</param>
     /// <returns></returns>
-    public void GetBlockForWorldPosition(Vector3Int pos,out Block block ,out bool hasChunk)
+    public void GetBlockForWorldPosition(Vector3Int pos,out Block block ,out Chunk chunk)
     {
-        Chunk chunk = GetChunkForWorldPosition(pos);
+        chunk = GetChunkForWorldPosition(pos);
         if (chunk == null)
         {
             block = null;
-            hasChunk = false;
             return;
         }
         chunk.GetBlockForWorld(pos, out  block,out bool isInside);
-        hasChunk = true;
+    }
+    public void GetBlockForWorldPosition(Vector3Int pos, out Block block, out bool hasChunk)
+    {
+        GetBlockForWorldPosition(pos, out block, out Chunk chunk);
+        if (chunk == null)
+        {
+            hasChunk = false;
+        }
+        else
+        {
+            hasChunk = true;
+        }
     }
 
     /// <summary>

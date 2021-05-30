@@ -1069,6 +1069,8 @@
         "m_GuidSerialized": "66eb9cc0-a424-4302-95f8-20a9f8441891"
     },
     "m_Name": "Speed",
+    "m_DefaultRefNameVersion": 0,
+    "m_RefNameGeneratedByDisplayName": "",
     "m_DefaultReferenceName": "Vector2_305fe4b1430c43e68d5ce05ab423bd6a",
     "m_OverrideReferenceName": "",
     "m_GeneratePropertyBlock": true,
@@ -1894,6 +1896,8 @@
         "m_GuidSerialized": "1a1bc4a2-9da2-46d4-b7a2-686442f06536"
     },
     "m_Name": "Amplitude",
+    "m_DefaultRefNameVersion": 0,
+    "m_RefNameGeneratedByDisplayName": "",
     "m_DefaultReferenceName": "Vector1_844ba7f04d914170bf72482d7ad8b143",
     "m_OverrideReferenceName": "",
     "m_GeneratePropertyBlock": true,
@@ -3372,6 +3376,8 @@
         "m_GuidSerialized": "e59bcea2-90a0-451a-a9ee-064d873e6f72"
     },
     "m_Name": "Tex",
+    "m_DefaultRefNameVersion": 0,
+    "m_RefNameGeneratedByDisplayName": "",
     "m_DefaultReferenceName": "Texture2D_e6ca5795d4204cb6ad9ca7fce18bc9b7",
     "m_OverrideReferenceName": "",
     "m_GeneratePropertyBlock": true,
@@ -3481,6 +3487,8 @@
         "m_GuidSerialized": "77a4d15c-e036-4a14-80f6-c51c4d40572e"
     },
     "m_Name": "Frequency",
+    "m_DefaultRefNameVersion": 0,
+    "m_RefNameGeneratedByDisplayName": "",
     "m_DefaultReferenceName": "Vector1_f68fb8214ef449feb79c374e7c01319b",
     "m_OverrideReferenceName": "",
     "m_GeneratePropertyBlock": true,

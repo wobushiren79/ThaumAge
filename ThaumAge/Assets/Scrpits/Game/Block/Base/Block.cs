@@ -15,7 +15,6 @@ public abstract class Block
     public Vector3Int worldPosition; //世界坐标                             
     public Vector3 centerPosition;
 
-    public int contactLevel;    //方块联系等级
     public DirectionEnum direction;    //方向
     public string meta;    //方块数据
 
@@ -243,8 +242,7 @@ public abstract class Block
     public virtual bool CheckNeedBuildFace(DirectionEnum direction, out Block closeBlock)
     {
         closeBlock = null;
-        if (localPosition.y == 0)
-            return false;
+        if (localPosition.y == 0) return false;
         GetCloseRotateBlockByDirection(direction, out closeBlock, out bool hasChunk);
         if (closeBlock == null)
         {
@@ -269,10 +267,6 @@ public abstract class Block
         }
     }
 
-    public virtual bool CheckNeedBuildFace(Vector3Int position)
-    {
-        return CheckNeedBuildFace(position, out Block value);
-    }
     public virtual bool CheckNeedBuildFace(DirectionEnum direction)
     {
         return CheckNeedBuildFace(direction, out Block value);

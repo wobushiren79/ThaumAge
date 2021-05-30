@@ -39,7 +39,7 @@ public class Chunk : BaseMonoBehaviour
     //存储着此Chunk内的所有Block信息
     public Block[] mapForBlock;
     //待更新方块
-    public List<BlockBean> listUpdateBlock = new List<BlockBean>();
+    public Queue<BlockBean> listUpdateBlock = new Queue<BlockBean>();
     //大小
     public int width = 0;
     public int height = 0;
@@ -114,30 +114,36 @@ public class Chunk : BaseMonoBehaviour
     }
 
     /// <summary>
+    /// 增加待更新方块
+    /// </summary>
+    /// <param name="blockData"></param>
+    public void AddUpdateBlock(BlockBean blockData)
+    {
+        listUpdateBlock.Enqueue(blockData);
+    }
+
+    /// <summary>
     /// 处理-更新的方块
     /// </summary>
     public void HandleForUpdateBlock()
     {
         if (listUpdateBlock.Count > 0)
         {
-            for (int i = 0; i < listUpdateBlock.Count; i++)
+            while (listUpdateBlock.Count > 0)
             {
-                BlockBean itemBlock = listUpdateBlock[i];
+                BlockBean itemBlock = listUpdateBlock.Dequeue();
                 Vector3Int positionBlockWorld = itemBlock.worldPosition.GetVector3Int();
                 Vector3Int positionBlockLocal = positionBlockWorld - worldPosition;
                 //需要重新设置一下本地坐标 之前没有记录本地坐标
                 itemBlock.localPosition = new Vector3IntBean(positionBlockLocal);
-
                 //设置方块
                 SetBlock(itemBlock, false, false, false);
-                //从更新列表中移除
-                listUpdateBlock.Remove(itemBlock);
-                i--;
             }
             //异步保存数据
             GameDataHandler.Instance.manager.SaveGameDataAsync(worldData);
             //异步刷新
-            BuildChunkRangeForAsync();
+            AddUpdateChunkForRange();
+            WorldCreateHandler.Instance.HandleForUpdateChunk(false,null);
         }
     }
 
@@ -176,9 +182,9 @@ public class Chunk : BaseMonoBehaviour
 
 
     /// <summary>
-    /// 异步构建范围内的chunk
+    /// 增加四周待更新的区块
     /// </summary>
-    public void BuildChunkRangeForAsync()
+    public void AddUpdateChunkForRange()
     {
         Chunk leftChunk = WorldCreateHandler.Instance.manager.GetChunk(worldPosition - new Vector3Int(-width, 0, 0));
         Chunk rightChunk = WorldCreateHandler.Instance.manager.GetChunk(worldPosition - new Vector3Int(width, 0, 0));
@@ -191,7 +197,7 @@ public class Chunk : BaseMonoBehaviour
         WorldCreateHandler.Instance.manager.AddUpdateChunk(this);
     }
 
-    public void BuildChunkRangeForAsync(Block changeBlock)
+    public void AddUpdateChunkForRange(Block changeBlock)
     {
         Chunk leftChunk = WorldCreateHandler.Instance.manager.GetChunkForWorldPosition(changeBlock.worldPosition - new Vector3Int(-1, 0, 0));
         Chunk rightChunk = WorldCreateHandler.Instance.manager.GetChunkForWorldPosition(changeBlock.worldPosition - new Vector3Int(1, 0, 0));
@@ -234,7 +240,7 @@ public class Chunk : BaseMonoBehaviour
                     //处理存档方块 优先使用存档方块
                     HandleForLoadBlock();
                     //设置数据
-                    BuildChunkRangeForAsync();
+                    AddUpdateChunkForRange();
                     //初始化完成
                     isInit = true;
 #if UNITY_EDITOR
@@ -376,7 +382,8 @@ public class Chunk : BaseMonoBehaviour
             //Physics.BakeMesh(chunkMeshTrigger.GetInstanceID(), false);
 
             //初始化动画
-            AnimForInit(() => {
+            AnimForInit(() =>
+            {
                 //刷新寻路
                 PathFindingHandler.Instance.manager.RefreshPathFinding(this);
             });
@@ -482,6 +489,7 @@ public class Chunk : BaseMonoBehaviour
         BlockBean blockData = new BlockBean(blockType, localPosition, localPosition + worldPosition);
         return SetBlock(blockData, true, true, true);
     }
+
     public Block SetBlockForLocal(Vector3Int localPosition, BlockTypeEnum blockType, DirectionEnum direction)
     {
         BlockBean blockData = new BlockBean(blockType, localPosition, localPosition + worldPosition, direction);
@@ -513,7 +521,7 @@ public class Chunk : BaseMonoBehaviour
         if (isRefreshChunkRange)
         {
             //异步构建chunk
-            BuildChunkRangeForAsync(newBlock);
+            AddUpdateChunkForRange(newBlock);
         }
 
         if (isSaveData)

@@ -31,7 +31,7 @@ public class ControlForPlayer : ControlForBase
 
     private void Update()
     {
-        if (GameHandler.Instance.manager.GetGameState()== GameStateEnum.Gaming)
+        if (GameHandler.Instance.manager.GetGameState() == GameStateEnum.Gaming)
         {
             HandlerForMoveAndJump();
         }
@@ -148,11 +148,12 @@ public class ControlForPlayer : ControlForBase
                     addPosition = position + Vector3Int.back;
                     //direction = DirectionEnum.Back;
                 }
-                WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(addPosition,out Block block, out bool hasChunk);
-                if(block != null)
+                WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(addPosition, out Block block, out Chunk addChunk);
+                if (addChunk)
                 {
-                    block.chunk.SetBlockForWorld(addPosition, BlockTypeEnum.Dirt);
-                }    
+                    addChunk.SetBlockForWorld(addPosition, BlockTypeEnum.Water);
+                    WorldCreateHandler.Instance.HandleForUpdateChunk(true, null);
+                }
             }
         }
     }
@@ -163,7 +164,7 @@ public class ControlForPlayer : ControlForBase
         Vector3 cameraPosition = CameraHandler.Instance.manager.mainCamera.transform.position;
         float disMax = Vector3.Distance(cameraPosition, transform.position);
         //发射射线检测
-        RayUtil.RayToScreenPointForScreenCenter(disMax+ 2, 1 << LayerInfo.Chunk, out bool isCollider, out RaycastHit hit);
+        RayUtil.RayToScreenPointForScreenCenter(disMax + 2, 1 << LayerInfo.Chunk, out bool isCollider, out RaycastHit hit);
         if (isCollider)
         {
             float disHit = Vector3.Distance(cameraPosition, hit.point);
@@ -175,29 +176,30 @@ public class ControlForPlayer : ControlForBase
                 Vector3Int position = Vector3Int.zero; ;
                 if (hit.normal.y > 0)
                 {
-                     position = new Vector3Int((int)Mathf.Floor(hit.point.x), (int)Mathf.Floor(hit.point.y) - 1, (int)Mathf.Floor(hit.point.z));
+                    position = new Vector3Int((int)Mathf.Floor(hit.point.x), (int)Mathf.Floor(hit.point.y) - 1, (int)Mathf.Floor(hit.point.z));
                 }
                 else if (hit.normal.y < 0)
                 {
-                     position = new Vector3Int((int)Mathf.Floor(hit.point.x), (int)Mathf.Floor(hit.point.y), (int)Mathf.Floor(hit.point.z));
+                    position = new Vector3Int((int)Mathf.Floor(hit.point.x), (int)Mathf.Floor(hit.point.y), (int)Mathf.Floor(hit.point.z));
                 }
                 else if (hit.normal.x > 0)
                 {
-                     position = new Vector3Int((int)Mathf.Floor(hit.point.x) - 1, (int)Mathf.Floor(hit.point.y), (int)Mathf.Floor(hit.point.z));
+                    position = new Vector3Int((int)Mathf.Floor(hit.point.x) - 1, (int)Mathf.Floor(hit.point.y), (int)Mathf.Floor(hit.point.z));
                 }
                 else if (hit.normal.x < 0)
                 {
-                     position = new Vector3Int((int)Mathf.Floor(hit.point.x), (int)Mathf.Floor(hit.point.y), (int)Mathf.Floor(hit.point.z));
+                    position = new Vector3Int((int)Mathf.Floor(hit.point.x), (int)Mathf.Floor(hit.point.y), (int)Mathf.Floor(hit.point.z));
                 }
                 else if (hit.normal.z > 0)
                 {
-                     position = new Vector3Int((int)Mathf.Floor(hit.point.x), (int)Mathf.Floor(hit.point.y), (int)Mathf.Floor(hit.point.z) - 1);
+                    position = new Vector3Int((int)Mathf.Floor(hit.point.x), (int)Mathf.Floor(hit.point.y), (int)Mathf.Floor(hit.point.z) - 1);
                 }
                 else if (hit.normal.z < 0)
                 {
-                     position = new Vector3Int((int)Mathf.Floor(hit.point.x), (int)Mathf.Floor(hit.point.y), (int)Mathf.Floor(hit.point.z)); 
+                    position = new Vector3Int((int)Mathf.Floor(hit.point.x), (int)Mathf.Floor(hit.point.y), (int)Mathf.Floor(hit.point.z));
                 }
                 chunk.RemoveBlockForWorld(position);
+                WorldCreateHandler.Instance.HandleForUpdateChunk(true, null);
             }
         }
     }
