@@ -6,7 +6,7 @@ public class UIGodItems : BaseUIComponent
 {
     public ScrollGridVertical ui_ItemList;
 
-    protected List<BlockInfoBean> listBlockInfoData = new List<BlockInfoBean>();
+    protected List<ItemsInfoBean> listItemsInfo = new List<ItemsInfoBean>();
 
     public override void Awake()
     {
@@ -17,8 +17,8 @@ public class UIGodItems : BaseUIComponent
     public override void OpenUI()
     {
         base.OpenUI();
-        GameControlHandler.Instance.manager.controlForPlayer.EnabledControl(false);
-        GameControlHandler.Instance.manager.controlForCamera.EnabledControl(false);
+        GameControlHandler.Instance.manager.controlForPlayer?.EnabledControl(false);
+        GameControlHandler.Instance.manager.controlForCamera?.EnabledControl(false);
         InitData();
         
     }
@@ -26,8 +26,8 @@ public class UIGodItems : BaseUIComponent
     public override void CloseUI()
     {
         base.CloseUI();
-        GameControlHandler.Instance.manager.controlForPlayer.EnabledControl(true);
-        GameControlHandler.Instance.manager.controlForCamera.EnabledControl(true);
+        GameControlHandler.Instance.manager.controlForPlayer?.EnabledControl(true);
+        GameControlHandler.Instance.manager.controlForCamera?.EnabledControl(true);
     }
 
     /// <summary>
@@ -35,8 +35,8 @@ public class UIGodItems : BaseUIComponent
     /// </summary>
     public void InitData()
     {
-        listBlockInfoData = BlockHandler.Instance.manager.GetAllBackInfo();
-        ui_ItemList.SetCellCount(listBlockInfoData.Count);
+        listItemsInfo = ItemsHandler.Instance.manager.GetAllItemsInfo();
+        ui_ItemList.SetCellCount(listItemsInfo.Count);
     }
  
     /// <summary>
@@ -46,7 +46,7 @@ public class UIGodItems : BaseUIComponent
     public void OnCellForItem(ScrollGridCell itemCell)
     {
         UIViewItemContainer viewItemContainer = itemCell.GetComponent<UIViewItemContainer>();
-        BlockInfoBean blockInfo = listBlockInfoData[itemCell.index];
-        viewItemContainer.SetData(blockInfo);
+        ItemsInfoBean itemsInfo = listItemsInfo[itemCell.index];
+        viewItemContainer.SetData(itemsInfo);
     }
 }

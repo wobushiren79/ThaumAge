@@ -12,20 +12,20 @@ public class UIViewItem : BaseUIView, IBeginDragHandler, IDragHandler, IEndDragH
     public float timeForBackOriginal = 0.2f;//返回原始位置的时间
     public float timeForMove = 0.1f;//移动到指定位置的时间
 
-    public BlockInfoBean blockInfo;
+    public ItemsInfoBean itemsInfo;
 
     protected UIViewItemContainer originalParent;//原始父级
 
     protected bool isRaycastLocationValid = true;
-    
+
     /// <summary>
     /// 设置数据
     /// </summary>
-    /// <param name="blockInfo"></param>
-    public void SetData(BlockInfoBean blockInfo)
+    /// <param name="itemsInfo"></param>
+    public void SetData(ItemsInfoBean itemsInfo)
     {
-        this.blockInfo = blockInfo;
-        SetIcon(blockInfo.icon_key);
+        this.itemsInfo = itemsInfo;
+        SetIcon(itemsInfo.icon_key);
     }
 
     /// <summary>

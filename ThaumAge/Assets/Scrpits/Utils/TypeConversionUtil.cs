@@ -357,4 +357,39 @@ public class TypeConversionUtil
     {
         return Sprite.Create(t2d, new Rect(0, 0, t2d.width, t2d.height), Vector2.zero);
     }
+
+    /// <summary>
+    /// list转map 需集成baseBean
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="listData"></param>
+    /// <returns></returns>
+    public static Dictionary<long, T> ListToMap<T>(List<T> listData) where T : BaseBean
+    {
+        Dictionary<long, T> map = new Dictionary<long, T>();
+        if (listData == null)
+            return map;
+        for (int i = 0; i < listData.Count; i++)
+        {
+            T itemData = listData[i];
+            map.Add(itemData.id, itemData);
+        }
+        return map;
+    }
+
+    /// <summary>
+    /// map转list
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="mapData"></param>
+    /// <returns></returns>
+    public static List<T> MapToList<T>(Dictionary<long, T> mapData)
+    {
+        List<T> listData = new List<T>();
+        foreach (var value in mapData.Values)
+        {
+            listData.Add(value);
+        }
+        return listData;
+    }
 }

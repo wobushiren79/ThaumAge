@@ -100,7 +100,7 @@ public class BlockManager : BaseManager, IBlockInfoView
     }
 
     /// <summary>
-    /// 获取所有方块信息
+    /// 获取除空气外的所有方块信息
     /// </summary>
     /// <returns></returns>
     public List<BlockInfoBean> GetAllBackInfo()
@@ -113,7 +113,7 @@ public class BlockManager : BaseManager, IBlockInfoView
         return listData;
     }
 
-         
+
     public BlockInfoBean GetBlockInfo(long blockId)
     {
         return GetBlockInfo((BlockTypeEnum)blockId);
