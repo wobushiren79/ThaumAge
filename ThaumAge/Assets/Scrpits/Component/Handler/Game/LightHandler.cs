@@ -4,60 +4,21 @@ using UnityEngine;
 public class LightHandler : BaseHandler<LightHandler, LightManager>
 {
 
+    public void InitData()
+    {
+
+    }
+
     private void Update()
     {
         if (GameHandler.Instance.manager.GetGameState() == GameStateEnum.Gaming)
         {
             TimeBean gameTime = GameTimeHandler.Instance.manager.GetGameTime();
-            HandleForLightColor(gameTime);
             HandleForLightTransform(gameTime);
+            HnaldeForDayNightTransition(gameTime);
         }
     }
 
-    /// <summary>
-    /// 处理-光照颜色
-    /// </summary>
-    /// <param name="gameTime"></param>
-    public void HandleForLightColor(TimeBean gameTime)
-    {
-        float lerpColor;
-        Color lightTopColor;
-        Color lightMiddleColor;
-        Color lightBottomColor;
-        //float lightIntensity;
-        if (gameTime.hour > 3 && gameTime.hour <= 12)
-        {
-            lerpColor = (gameTime.hour * 60 + gameTime.minute) / (float)(12 * 60);
-            lightTopColor = Color.Lerp(manager.mainLightTopEnd, manager.mainLightTopStart, lerpColor);
-            lightMiddleColor = Color.Lerp(manager.mainLightMiddleEnd, manager.mainLightMiddleStart, lerpColor);
-            lightBottomColor = Color.Lerp(manager.mainLightBottomEnd, manager.mainLightBottomStart, lerpColor);
-            //lightIntensity = (manager.mainLightMaxIntensity - manager.mainLightMinIntensity) * lerpColor + manager.mainLightMinIntensity;
-        }
-        else if (gameTime.hour >= 0 && gameTime.hour <= 3)
-        {
-
-            lightTopColor = manager.mainLightTopEnd;
-            lightMiddleColor = manager.mainLightMiddleEnd;
-            lightBottomColor = manager.mainLightBottomEnd;
-        }
-        else
-        {
-            lerpColor = ((gameTime.hour - 12) * 60 + gameTime.minute) / (float)(12 * 60);
-            lightTopColor = Color.Lerp(manager.mainLightTopStart, manager.mainLightTopEnd, lerpColor);
-            lightMiddleColor = Color.Lerp(manager.mainLightMiddleStart, manager.mainLightMiddleEnd, lerpColor);
-            lightBottomColor = Color.Lerp(manager.mainLightBottomStart, manager.mainLightBottomEnd, lerpColor);
-            //lightIntensity = manager.mainLightMaxIntensity - (manager.mainLightMaxIntensity - manager.mainLightMinIntensity) * lerpColor;
-        }
-        //天空盒颜色
-        manager.SetSkyBoxColor(lightTopColor, lightMiddleColor, lightBottomColor);
-        //设置主光照颜色
-        manager.SetMainLightColor(lightBottomColor);
-        //设置环境光颜色
-        //manager.SetAmbientLight(lightTopColor * 0.7f);
-        //设置光照强度
-        //manager.SetMainLightIntensity(lightIntensity);
-
-    }
 
     /// <summary>
     /// 处理-光照位置旋转
@@ -65,20 +26,31 @@ public class LightHandler : BaseHandler<LightHandler, LightManager>
     /// <param name="gameTime"></param>
     public void HandleForLightTransform(TimeBean gameTime)
     {
-        SceneElementSky sky = SceneElementHandler.Instance.manager.sky;
-        Vector3 position;
-        Vector3 angle;
+        float lightAlpha = (float)(gameTime.hour * 60f + gameTime.minute) / (24f * 60f);
+
+        float sunRotation = Mathf.Lerp(-90, 270, lightAlpha);
+        float moonRotation = sunRotation - 180;
+        Quaternion sunQuaternion = Quaternion.Euler(sunRotation, -45, 0);
+        Quaternion moonQuaternion = Quaternion.Euler(moonRotation, -45, 0);
+        manager.sunLight.transform.rotation = Quaternion.Lerp(manager.sunLight.transform.rotation,sunQuaternion,Time.deltaTime);
+        manager.moonLight.transform.rotation = Quaternion.Lerp(manager.moonLight.transform.rotation, moonQuaternion, Time.deltaTime);
+    }
+
+    /// <summary>
+    /// 处理-白天黑夜转换
+    /// </summary>
+    /// <param name="gameTime"></param>
+    public void HnaldeForDayNightTransition(TimeBean gameTime)
+    {
         if (gameTime.hour >= 6 && gameTime.hour <= 18)
         {
-            position = sky.objSun.transform.position;
-            angle = sky.objSun.transform.eulerAngles;
+            manager.sunLight.shadows = LightShadows.Soft;
+            manager.moonLight.shadows = LightShadows.None;
         }
         else
         {
-            position = sky.objMoon.transform.position;
-            angle = sky.objMoon.transform.eulerAngles;
+            manager.sunLight.shadows = LightShadows.None;
+            manager.moonLight.shadows = LightShadows.Soft;
         }
-        manager.mainLight.transform.position = position;
-        manager.mainLight.transform.eulerAngles = angle;
     }
 }

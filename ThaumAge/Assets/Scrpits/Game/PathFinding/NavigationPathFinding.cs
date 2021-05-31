@@ -23,7 +23,7 @@ public class NavigationPathFinding : BaseMonoBehaviour
 
     private void Update()
     {
-        //HandleForUpdateNavMesh();
+        HandleForUpdateNavMesh();
     }
 
     public void InitNavMesh()

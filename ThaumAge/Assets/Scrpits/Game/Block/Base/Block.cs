@@ -15,7 +15,6 @@ public abstract class Block
     public Vector3Int worldPosition; //世界坐标                             
     public Vector3 centerPosition;
 
-    public int contactLevel;    //方块联系等级
     public DirectionEnum direction;    //方向
     public string meta;    //方块数据
 
@@ -184,6 +183,8 @@ public abstract class Block
         this.chunk = chunk;
         this.blockType = blockType;
         this.localPosition = localPosition;
+        this.direction = direction;
+
         if (chunk != null)
             this.worldPosition = localPosition + chunk.worldPosition;
         this.centerPosition = localPosition + new Vector3(0.5f, 0.5f, 0.5f);
@@ -240,6 +241,8 @@ public abstract class Block
     /// <returns></returns>
     public virtual bool CheckNeedBuildFace(DirectionEnum direction, out Block closeBlock)
     {
+        closeBlock = null;
+        if (localPosition.y == 0) return false;
         GetCloseRotateBlockByDirection(direction, out closeBlock, out bool hasChunk);
         if (closeBlock == null)
         {
@@ -264,10 +267,6 @@ public abstract class Block
         }
     }
 
-    public virtual bool CheckNeedBuildFace(Vector3Int position)
-    {
-        return CheckNeedBuildFace(position, out Block value);
-    }
     public virtual bool CheckNeedBuildFace(DirectionEnum direction)
     {
         return CheckNeedBuildFace(direction, out Block value);
@@ -350,7 +349,7 @@ public abstract class Block
         else if (blockInfo.rotate_state == 1)
         {
             //旋转
-            DirectionEnum rotateDirection = GetRotateDirection(direction);
+            DirectionEnum rotateDirection = GetRotateDirection(getDirection);
             GetCloseBlockByDirection(rotateDirection, out closeBlock, out hasChunk);
         }
         else
@@ -360,9 +359,15 @@ public abstract class Block
         }
     }
 
+    /// <summary>
+    /// 获取不同方向的方块
+    /// </summary>
+    /// <param name="getDirection"></param>
+    /// <param name="closeBlock"></param>
+    /// <param name="hasChunk"></param>
     public virtual void GetCloseBlockByDirection(DirectionEnum getDirection, out Block closeBlock, out bool hasChunk)
     {
-        switch (direction)
+        switch (getDirection)
         {
             case DirectionEnum.UP:
                 closeBlock = upBlock;
@@ -395,6 +400,11 @@ public abstract class Block
         }
     }
 
+    /// <summary>
+    /// 根据本身坐标选择方向
+    /// </summary>
+    /// <param name="getDirection"></param>
+    /// <returns></returns>
     public DirectionEnum GetRotateDirection(DirectionEnum getDirection)
     {
         DirectionEnum targetDirection = DirectionEnum.UP;
@@ -553,10 +563,10 @@ public abstract class Block
                     angles = new Vector3(0, 0, -90);
                     break;
                 case DirectionEnum.Forward:
-                    angles = new Vector3(90, 0, 0);
+                    angles = new Vector3(-90, 0, 0);
                     break;
                 case DirectionEnum.Back:
-                    angles = new Vector3(-90, 0, 0);
+                    angles = new Vector3(90, 0, 0);
                     break;
                 default:
                     angles = new Vector3(0, 0, 0);

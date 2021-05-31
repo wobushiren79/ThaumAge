@@ -23,7 +23,7 @@ public class BlockCross : Block
         if (isInside && (blockDown == null || blockDown.blockType == BlockTypeEnum.None || blockDown.blockInfo.GetBlockShape() == BlockShapeEnum.Liquid))
         {
             BlockBean newBlockData = new BlockBean(BlockTypeEnum.None, localPosition, worldPosition);
-            chunk.listUpdateBlock.Add(newBlockData);
+            chunk.AddUpdateBlock(newBlockData);
         }
     }
 

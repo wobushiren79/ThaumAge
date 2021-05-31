@@ -196,6 +196,9 @@ public class BlockEditorWindow : EditorWindow
                 }
             }
         }
+        EditorUI.GUIText("图标", 50);
+        blockInfo.icon_key = EditorUI.GUIEditorText(blockInfo.icon_key, 100);
+        EditorUI.GUIPic("Assets/Texture/Items/"+blockInfo.icon_key+".png");
         GUILayout.EndHorizontal();
     }
 

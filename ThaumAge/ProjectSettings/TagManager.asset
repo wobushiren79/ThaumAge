@@ -8,6 +8,8 @@ TagManager:
   - MainLight
   - AstarPath
   - Volume
+  - Sun
+  - Moon
   layers:
   - Default
   - TransparentFX

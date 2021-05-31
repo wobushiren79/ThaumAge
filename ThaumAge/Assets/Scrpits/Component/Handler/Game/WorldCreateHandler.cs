@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DG.Tweening;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -83,10 +84,10 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
         Vector3Int startPosition = -manager.widthChunk * range * new Vector3Int(1, 0, 1) + centerPosition;
         Vector3Int currentPosition = startPosition;
         int totalNumber = 0;
-        int rangeNumber = (range * 2 + 1) * (range * 2 + 1);
-        for (int i = 0; i <= range * 2; i++)
+        int rangeNumber = (range * 2) * (range * 2);
+        for (int i = 0; i < range * 2; i++)
         {
-            for (int f = 0; f <= range * 2; f++)
+            for (int f = 0; f < range * 2; f++)
             {
                 CreateChunk(currentPosition, () =>
                 {
@@ -127,8 +128,6 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
                     updateDrawChunk = manager.listUpdateDrawChunk.Dequeue();
                     //构建修改过的区块
                     updateDrawChunk.DrawMesh();
-                    //刷新寻路
-                    PathFindingHandler.Instance.manager.RefreshPathFinding(updateDrawChunk);
                     //继续下一个
                     //HandleForDrawChunk();
                 }
@@ -168,9 +167,7 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
                 if (!isOrderDraw)
                 {
                     //构建修改过的区块
-                    updateChunk.DrawMesh();
-                    //刷新寻路
-                    PathFindingHandler.Instance.manager.RefreshPathFinding(updateChunk);
+                    updateChunk.DrawMesh();    
                 }
             }));
         }

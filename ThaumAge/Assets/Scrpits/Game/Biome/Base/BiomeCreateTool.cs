@@ -583,58 +583,57 @@ public class BiomeCreateTool
     /// <param name="caveData"></param>
     public static void AddCave(Vector3Int startPosition, BiomeForCaveData caveData)
     {
-        int worldSeed = WorldCreateHandler.Instance.manager.GetWorldSeed();
-        RandomTools random = RandomUtil.GetRandom(worldSeed + 901, startPosition.x, startPosition.y, startPosition.z);
-        int addRate = random.NextInt(caveData.addRateMax);
-        if (addRate < caveData.addRateMin)
-        {
-            int caveSize = caveData.size;
-            int offset = caveData.offset;
-            int depth = random.NextInt(caveData.minDepth, caveData.maxDepth);
-            Queue<Vector3Int> path = new Queue<Vector3Int>();
-            Vector3Int pathPosition = startPosition;
+        //int worldSeed = WorldCreateHandler.Instance.manager.GetWorldSeed();
+        //RandomTools random = RandomUtil.GetRandom(worldSeed + 901, startPosition.x, startPosition.y, startPosition.z);
+        //int addRate = random.NextInt(caveData.addRateMax);
+        //if (addRate < caveData.addRateMin)
+        //{
+        //    int caveSize = caveData.size;
+        //    int offset = caveData.offset;
+        //    int depth = random.NextInt(caveData.minDepth, caveData.maxDepth);
+        //    Queue<Vector3Int> path = new Queue<Vector3Int>();
+        //    Vector3Int pathPosition = startPosition;
 
-            int directionX = (random.NextInt(2) == 0 ? 1 : -1);
-            int directionZ = (random.NextInt(2) == 0 ? 1 : -1);
+        //    int directionX = (random.NextInt(2) == 0 ? 1 : -1);
+        //    int directionZ = (random.NextInt(2) == 0 ? 1 : -1);
 
-            for (int d = 0; d < depth; d++)
-            {
-                int randomY = random.NextInt(2);
-                int addPositionX = directionX * offset;
-                int addPositionZ = directionZ * offset;
-                int addPositionY = (randomY == 0 ? -offset : 0);
+        //    for (int d = 0; d < depth; d++)
+        //    {
+        //        int randomY = random.NextInt(2);
+        //        int addPositionX = directionX * offset;
+        //        int addPositionZ = directionZ * offset;
+        //        int addPositionY = (randomY == 0 ? -offset : 0);
 
-                pathPosition += new Vector3Int(addPositionX, -addPositionY, addPositionZ);
+        //        pathPosition += new Vector3Int(addPositionX, -addPositionY, addPositionZ);
 
-                path.Enqueue(pathPosition);
-            }
+        //        path.Enqueue(pathPosition);
+        //    }
 
-            //遍历每个路径点
-            while (path.Count > 0)
-            {
-                pathPosition = path.Dequeue();
-                for (int z = -caveSize; z <= caveSize; z++)
-                {
-                    for (int y = -caveSize; y <= caveSize; y++)
-                    {
-                        for (int x = -caveSize; x <= caveSize; x++)
-                        {
+        //    //遍历每个路径点
+        //    while (path.Count > 0)
+        //    {
+        //        pathPosition = path.Dequeue();
+        //        for (int z = -caveSize; z <= caveSize; z++)
+        //        {
+        //            for (int y = -caveSize; y <= caveSize; y++)
+        //            {
+        //                for (int x = -caveSize; x <= caveSize; x++)
+        //                {
 
-                            Vector3Int tempPosition = pathPosition + new Vector3Int(x, y, z);
-                            float dis = Vector3.Distance(tempPosition, pathPosition);
-                            if (tempPosition.y <= 0 || dis >= caveSize)
-                            {
-                                continue;
-                            }
-                            BlockBean blockData = new BlockBean(BlockTypeEnum.None, tempPosition);
-                            WorldCreateHandler.Instance.manager.AddUpdateBlock(blockData);
-                        }
-                    }
-                }
-            }
-
-        }
-
+        //                    Vector3Int tempPosition = pathPosition + new Vector3Int(x, y, z);
+        //                    float dis = Vector3.Distance(tempPosition, pathPosition);
+        //                    if (tempPosition.y <= 0 || dis >= caveSize)
+        //                    {
+        //                        continue;
+        //                    }
+        //                    BlockBean blockData = new BlockBean(BlockTypeEnum.None, tempPosition);
+        //                    WorldCreateHandler.Instance.manager.AddUpdateBlock(blockData);
+        //                }
+        //            }
+        //        }
+        //    }
+        //}
+        //---------------------------------------------------------------------------------------------------
         //if (addRate < caveData.addRateMin)
         //{
         //    int caveSize = caveData.size;

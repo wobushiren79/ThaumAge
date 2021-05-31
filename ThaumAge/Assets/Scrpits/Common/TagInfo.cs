@@ -12,6 +12,8 @@ public class TagInfo
     public readonly static string Tag_GameControl = "GameControl";
 
     public readonly static string Tag_MainLight = "MainLight";
+    public readonly static string Tag_Sun = "Sun";
+    public readonly static string Tag_Moon = "Moon";
 
     public readonly static string Tag_AstarPath = "AstarPath";
     public readonly static string Tag_Volume = "Volume";

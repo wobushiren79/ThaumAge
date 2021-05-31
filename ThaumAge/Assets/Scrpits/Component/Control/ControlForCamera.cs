@@ -7,6 +7,8 @@ public class ControlForCamera : ControlForBase
 {
     protected Vector2 lookData = Vector2.zero;
     protected float offsetDistance;//摄像机对于角色的差量
+
+    protected float speedForLookAround = 15;
     private void Awake()
     {
         InputAction disAction = InputHandler.Instance.manager.GetCameraDistanceData();
@@ -51,8 +53,8 @@ public class ControlForCamera : ControlForBase
         }
         Vector3 characterPosition = GameControlHandler.Instance.manager.controlForPlayer.transform.position;
         lookData = Vector2.Lerp(lookData, Vector2.zero, 0.06f);
-        CameraHandler.Instance.RotateCameraAroundXZ(characterPosition, lookData.x, 20);
-        CameraHandler.Instance.RotateCameraAroundY(characterPosition, -lookData.y, 20);
+        CameraHandler.Instance.RotateCameraAroundXZ(characterPosition, lookData.x, speedForLookAround);
+        CameraHandler.Instance.RotateCameraAroundY(characterPosition, -lookData.y, speedForLookAround);
     }
 
     /// <summary>
