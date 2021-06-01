@@ -21,9 +21,27 @@ public class ItemsManager : BaseManager, IItemsInfoView
         dicItemsInfo = TypeConversionUtil.ListToMap(listItemsInfo);
     }
 
+    /// <summary>
+    /// 获取所有物体信息
+    /// </summary>
+    /// <returns></returns>
     public List<ItemsInfoBean> GetAllItemsInfo()
     {
         return listItemsInfo;
+    }
+
+    /// <summary>
+    /// 根据ID获取物品数据
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
+    public ItemsInfoBean GetItemsInfoById(long id)
+    {
+        if (dicItemsInfo.TryGetValue(id,out ItemsInfoBean itemsInfo))
+        {
+            return itemsInfo;
+        }
+        return null;
     }
 
     #region 数据回调

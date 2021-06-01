@@ -13,12 +13,18 @@ public class UIViewItemContainer : BaseUIView
         ui_ViewItem.gameObject.SetActive(false);
     }
 
-    public void SetData(ItemsInfoBean itemsInfo)
+    public void SetData(ItemsBean itemsData)
     {
-        SetViewItem(itemsInfo);
+        SetViewItem(itemsData);
     }
 
-    public void SetViewItem(ItemsInfoBean itemsInfo)
+    public void SetViewItem(UIViewItem uiView)
+    {
+        this.currentViewItem = uiView;
+        this.currentViewItem.transform.SetParent(rectTransform);
+    }
+
+    public void SetViewItem(ItemsBean itemsData)
     {
         if (currentViewItem == null)
         {
@@ -28,6 +34,6 @@ public class UIViewItemContainer : BaseUIView
             currentViewItem.transform.localScale = ui_ViewItem.transform.localScale;
             currentViewItem.transform.rotation = ui_ViewItem.transform.rotation;
         }
-        currentViewItem.SetData(itemsInfo);
+        currentViewItem.SetData(itemsData);
     }
 }

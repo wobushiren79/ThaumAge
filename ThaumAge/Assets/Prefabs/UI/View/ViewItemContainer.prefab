@@ -189,6 +189,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: ViewItem
       objectReference: {fileID: 0}
+    - target: {fileID: 7451433743779716937, guid: 3741f9e2d3d72704b934aa94845584ce, type: 3}
+      propertyPath: m_Name
+      value: TVNumber
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3741f9e2d3d72704b934aa94845584ce, type: 3}
 --- !u!224 &3494181000994542895 stripped

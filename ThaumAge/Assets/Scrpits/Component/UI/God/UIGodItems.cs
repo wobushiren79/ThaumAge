@@ -47,6 +47,9 @@ public class UIGodItems : BaseUIComponent
     {
         UIViewItemContainer viewItemContainer = itemCell.GetComponent<UIViewItemContainer>();
         ItemsInfoBean itemsInfo = listItemsInfo[itemCell.index];
-        viewItemContainer.SetData(itemsInfo);
+        ItemsBean itemsData = new ItemsBean();
+        itemsData.itemsId = itemsInfo.id;
+        itemsData.number = -1;
+        viewItemContainer.SetData(itemsData);
     }
 }

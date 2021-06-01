@@ -16,6 +16,8 @@ public class ItemsInfoBean : BaseBean
     public string name;
     public int items_type;
 
+    public int max_number;    //最大格子数量
+
     public ItemsTypeEnum GetItemsType()
     {
         return (ItemsTypeEnum)items_type;

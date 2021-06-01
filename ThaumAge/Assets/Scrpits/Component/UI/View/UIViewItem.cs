@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using DG.Tweening;
+using System;
 
 public class UIViewItem : BaseUIView, IBeginDragHandler, IDragHandler, IEndDragHandler, ICanvasRaycastFilter
 {
@@ -12,6 +13,7 @@ public class UIViewItem : BaseUIView, IBeginDragHandler, IDragHandler, IEndDragH
     public float timeForBackOriginal = 0.2f;//返回原始位置的时间
     public float timeForMove = 0.1f;//移动到指定位置的时间
 
+    public ItemsBean itemsData;
     public ItemsInfoBean itemsInfo;
 
     protected UIViewItemContainer originalParent;//原始父级
@@ -22,10 +24,51 @@ public class UIViewItem : BaseUIView, IBeginDragHandler, IDragHandler, IEndDragH
     /// 设置数据
     /// </summary>
     /// <param name="itemsInfo"></param>
-    public void SetData(ItemsInfoBean itemsInfo)
+    public void SetData(ItemsBean itemsData)
     {
-        this.itemsInfo = itemsInfo;
-        SetIcon(itemsInfo.icon_key);
+        this.itemsData = itemsData;
+        this.itemsInfo = ItemsHandler.Instance.manager.GetItemsInfoById(itemsData.itemsId);
+        RefreshUI();
+    }
+
+    public override void RefreshUI()
+    {
+        base.RefreshUI();
+        if (itemsInfo != null)
+        {
+            SetIcon(itemsInfo.icon_key);
+        }
+        if (itemsData != null)
+        {
+            SetNumber(itemsData.number);
+        }
+    }
+
+    /// <summary>
+    /// 设置数量
+    /// </summary>
+    /// <param name="number"></param>
+    public void SetNumber(int number)
+    {
+        if (ui_TVNumber == null)
+            return;
+        if (number <= 0)
+        {
+            ui_TVNumber.gameObject.SetActive(false);
+        }
+        else
+        {
+            ui_TVNumber.gameObject.SetActive(true);
+        }
+        ui_TVNumber.text = number + "";
+        if (number == itemsInfo.max_number)
+        {
+            ui_TVNumber.color = Color.red;
+        }
+        else
+        {
+            ui_TVNumber.color = Color.white;
+        }
     }
 
     /// <summary>
@@ -52,6 +95,17 @@ public class UIViewItem : BaseUIView, IBeginDragHandler, IDragHandler, IEndDragH
     public void OnBeginDrag(PointerEventData eventData)
     {
         originalParent = transform.parent.GetComponent<UIViewItemContainer>();
+
+        //如果是无限物品格 则在原位置实例化一个新的
+        if (itemsData.number < 0)
+        {
+            GameObject objOriginal = Instantiate(originalParent.gameObject, gameObject);
+            objOriginal.transform.position = gameObject.transform.position;
+            UIViewItem viewItem = objOriginal.GetComponent<UIViewItem>();
+            originalParent.SetViewItem(viewItem);
+        }
+        itemsData.number = itemsInfo.max_number;
+        RefreshUI();
         isRaycastLocationValid = false;//设置射线忽略自身
     }
 
@@ -83,48 +137,75 @@ public class UIViewItem : BaseUIView, IBeginDragHandler, IDragHandler, IEndDragH
             //如果是空的格子
             if (viewItemContainer != null)
             {    
-                transform.SetParent(viewItemContainer.transform);
-                rectTransform
-                    .DOAnchorPos(Vector2.zero, timeForMove)
-                    .SetEase(Ease.OutBack)
-                    .OnComplete(()=> 
-                    {
-                        isRaycastLocationValid = true;//设置为不能穿透
-                     });
-  
+                viewItemContainer.SetViewItem(this);
+                AnimForPositionChange(rectTransform, timeForMove, () => { });
                 return;
             }
             UIViewItem viewItem = objTarget.GetComponent<UIViewItem>();
-            //如果不是空的格子
+            //如果目标不是空的格子
             if (viewItem != null)
             {
-                //交换位置
-                transform.SetParent(viewItem.transform.parent);
-                rectTransform
-                    .DOAnchorPos(Vector2.zero, timeForMove)
-                    .SetEase(Ease.OutBack)
-                    .OnComplete(()=> 
+                //如果目标是同一类物品
+                if (viewItem.itemsInfo.GetItemsType() == itemsInfo.GetItemsType())
+                {
+                    //如果目标是无限物品 则删除现有物品
+                    if (viewItem.itemsData.number < 0)
                     {
-                        isRaycastLocationValid = true;//设置为不能穿透
-                    });
-                transform.localScale = Vector3.one;
+                        //--------------------------------
+                        transform.SetParent(viewItem.transform.parent);
+                        transform.localScale = Vector3.one;
+                        AnimForPositionChange(rectTransform, timeForMove, () => { Destroy(gameObject); });
+                        return;
+                    }
+                    //如果目标不是无限物品，则先将目标叠加到最大，自己再返回原位置
+                    else
+                    {
+                        //目标数量叠加到最大   //自己的数量减小
+                        viewItem.itemsData.number += itemsData.number;
+                        if (viewItem.itemsData.number > viewItem.itemsInfo.max_number)
+                        {
+                            viewItem.itemsData.number = viewItem.itemsInfo.max_number;
+                            itemsData.number = viewItem.itemsData.number - viewItem.itemsInfo.max_number;
+                        }
+                        //刷新一下UI
+                        viewItem.RefreshUI();
+                        RefreshUI();
+                        //如果自己没有数量了，则删除
+                        if (itemsData.number <= 0)
+                        {
+                            AnimForPositionChange(rectTransform, timeForMove, () => { Destroy(gameObject); });
+                            return;
+                        }
+                    }
+                }
+                //如果目标不是同一类物品
+                else
+                {
+                    //如果目标是无限物品 则回到原来位置
+                    if (viewItem.itemsData.number < 0)
+                    {
 
-                viewItem.transform.SetParent(originalParent.transform);
-                viewItem.rectTransform.anchoredPosition = Vector2.zero;
-                viewItem.transform.localScale = Vector3.one;
+                    }
+                    //如果是目标不是无限物品，则交换物品位置
+                    else
+                    {
+                        //交换位置
+                        transform.SetParent(viewItem.transform.parent);
+                        transform.localScale = Vector3.one;
+                        AnimForPositionChange(rectTransform, timeForMove, () => { });
 
-                return;
+                        viewItem.transform.SetParent(originalParent.transform);
+                        viewItem.rectTransform.anchoredPosition = Vector2.zero;
+                        viewItem.transform.localScale = Vector3.one;
+                        return;
+                    }
+                }
+
             }
         }
         //返回原来的位置
         transform.SetParent(originalParent.transform);
-        rectTransform
-            .DOAnchorPos(Vector2.zero, timeForBackOriginal)
-            .SetEase(Ease.OutBack)
-            .OnComplete(()=> 
-            {
-                isRaycastLocationValid = true;//设置为不能穿透
-            });
+        AnimForPositionChange(rectTransform, timeForBackOriginal,() => { });
     }
 
     /// <summary>
@@ -136,5 +217,23 @@ public class UIViewItem : BaseUIView, IBeginDragHandler, IDragHandler, IEndDragH
     public bool IsRaycastLocationValid(Vector2 sp, Camera eventCamera)
     {
         return isRaycastLocationValid;
+    }
+
+    /// <summary>
+    /// 位置变换动画
+    /// </summary>
+    /// <param name="target"></param>
+    /// <param name="changeTime"></param>
+    /// <param name="callBack"></param>
+    protected void AnimForPositionChange(RectTransform target,float changeTime, Action callBack)
+    {
+        target
+            .DOAnchorPos(Vector2.zero, changeTime)
+            .SetEase(Ease.OutBack)
+            .OnComplete(() =>
+            {
+                isRaycastLocationValid = true;//设置为不能穿透
+                callBack?.Invoke();
+            });
     }
 }
