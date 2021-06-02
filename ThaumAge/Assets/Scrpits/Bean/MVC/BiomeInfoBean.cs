@@ -11,7 +11,7 @@ using System;
 [Serializable]
 public class BiomeInfoBean : BaseBean
 {
-    public long link_id;
+    public int link_id;
     //ÆµÂÊ
     public float frequency;
     //Õñ·ù

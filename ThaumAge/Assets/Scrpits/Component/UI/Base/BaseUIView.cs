@@ -5,13 +5,13 @@ public class BaseUIView : BaseMonoBehaviour
 {
     protected RectTransform rectTransform;
     //原始UI大小
-    protected Vector2 uiSizeoOriginal;
+    protected Vector2 uiSizeOriginal;
 
     public virtual void Awake()
     {
         AutoLinkUI();
         rectTransform = ((RectTransform)transform);
-        uiSizeoOriginal = rectTransform.sizeDelta;
+        uiSizeOriginal = rectTransform.sizeDelta;
     }
 
     protected virtual void OnEnable()
@@ -35,7 +35,7 @@ public class BaseUIView : BaseMonoBehaviour
     public virtual void ChangeUISize(float size)
     {
         if (rectTransform != null)
-            rectTransform.sizeDelta = new Vector2(uiSizeoOriginal.x * size, uiSizeoOriginal.y * size);
+            rectTransform.sizeDelta = new Vector2(uiSizeOriginal.x * size, uiSizeOriginal.y * size);
     }
 
 }

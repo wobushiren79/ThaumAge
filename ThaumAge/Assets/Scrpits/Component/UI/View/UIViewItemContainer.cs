@@ -10,6 +10,7 @@ public class UIViewItemContainer : BaseUIView
 
     public override void Awake()
     {
+        base.Awake();
         ui_ViewItem.gameObject.SetActive(false);
     }
 
@@ -26,6 +27,17 @@ public class UIViewItemContainer : BaseUIView
 
     public void SetViewItem(ItemsBean itemsData)
     {
+        //如果没有东西，则删除原来存在的
+        if (itemsData == null)
+        {
+            if (currentViewItem != null)
+            {
+                Destroy(currentViewItem.gameObject);
+            }
+            currentViewItem = null;
+            return;
+        }
+        //如果有东西，则先实例化再设置数据
         if (currentViewItem == null)
         {
             GameObject obj = Instantiate(gameObject, ui_ViewItem.gameObject);
@@ -35,5 +47,10 @@ public class UIViewItemContainer : BaseUIView
             currentViewItem.transform.rotation = ui_ViewItem.transform.rotation;
         }
         currentViewItem.SetData(itemsData);
+    }
+
+    public UIViewItem GetViewItem()
+    {
+        return currentViewItem;
     }
 }

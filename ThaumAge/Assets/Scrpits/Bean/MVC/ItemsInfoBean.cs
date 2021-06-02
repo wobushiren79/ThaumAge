@@ -11,12 +11,12 @@ using System;
 [Serializable]
 public class ItemsInfoBean : BaseBean
 {
-    public long link_id;
+    public int link_id;
     public string icon_key;
     public string name;
-    public int items_type;
+    public byte items_type;
 
-    public int max_number;    //最大格子数量
+    public byte max_number;    //最大格子数量
 
     public ItemsTypeEnum GetItemsType()
     {

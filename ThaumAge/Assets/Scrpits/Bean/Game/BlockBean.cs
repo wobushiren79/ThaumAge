@@ -5,13 +5,13 @@ using UnityEngine;
 public class BlockBean 
 {
     //方块类型
-    public long blockId;
+    public int blockId;
     //方块位置
     public Vector3IntBean localPosition;
     //方块的世界坐标
     public Vector3IntBean worldPosition;
     //方向
-    public int direction;
+    public byte direction;
     //方块数据
     public string meta;
 
@@ -45,10 +45,10 @@ public class BlockBean
     /// <param name="worldPosition"></param>
     public void SetData(BlockTypeEnum blockType, Vector3Int localposition, Vector3Int worldPosition, DirectionEnum direction)
     {
-        this.blockId = (long)blockType;
+        this.blockId = (int)blockType;
         this.localPosition = new Vector3IntBean(localposition);
         this.worldPosition = new Vector3IntBean(worldPosition);
-        this.direction = (int)direction;
+        this.direction = (byte)direction;
     }
 
     /// <summary>
@@ -62,10 +62,10 @@ public class BlockBean
 
     public void SetBlockType(BlockTypeEnum blockType)
     {
-        this.blockId = (long)blockType;
+        this.blockId = (int)blockType;
     }
 
-    public void SetBlockType(long blockType)
+    public void SetBlockType(int blockType)
     {
         this.blockId = blockType;
     }

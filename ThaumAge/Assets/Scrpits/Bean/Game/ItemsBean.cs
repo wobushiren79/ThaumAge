@@ -5,8 +5,8 @@ using System;
 [Serializable]
 public class ItemsBean 
 {
-    public long itemsId;
-    public int number;
+    public int itemsId;
+    public byte number;
     public string meta;
 
     public T GetMetaData<T>()

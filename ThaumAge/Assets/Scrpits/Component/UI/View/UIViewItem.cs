@@ -100,8 +100,8 @@ public class UIViewItem : BaseUIView, IBeginDragHandler, IDragHandler, IEndDragH
         if (itemsData.number < 0)
         {
             GameObject objOriginal = Instantiate(originalParent.gameObject, gameObject);
-            objOriginal.transform.position = gameObject.transform.position;
             UIViewItem viewItem = objOriginal.GetComponent<UIViewItem>();
+            objOriginal.transform.position = gameObject.transform.position;
             originalParent.SetViewItem(viewItem);
         }
         itemsData.number = itemsInfo.max_number;
@@ -151,7 +151,6 @@ public class UIViewItem : BaseUIView, IBeginDragHandler, IDragHandler, IEndDragH
                     //如果目标是无限物品 则删除现有物品
                     if (viewItem.itemsData.number < 0)
                     {
-                        //--------------------------------
                         transform.SetParent(viewItem.transform.parent);
                         transform.localScale = Vector3.one;
                         AnimForPositionChange(rectTransform, timeForMove, () => { Destroy(gameObject); });
@@ -190,11 +189,11 @@ public class UIViewItem : BaseUIView, IBeginDragHandler, IDragHandler, IEndDragH
                     else
                     {
                         //交换位置
-                        transform.SetParent(viewItem.transform.parent);
+                        viewItem.originalParent.SetViewItem(this);
                         transform.localScale = Vector3.one;
                         AnimForPositionChange(rectTransform, timeForMove, () => { });
 
-                        viewItem.transform.SetParent(originalParent.transform);
+                        originalParent.SetViewItem(viewItem);
                         viewItem.rectTransform.anchoredPosition = Vector2.zero;
                         viewItem.transform.localScale = Vector3.one;
                         return;
@@ -205,7 +204,15 @@ public class UIViewItem : BaseUIView, IBeginDragHandler, IDragHandler, IEndDragH
         }
         //返回原来的位置
         transform.SetParent(originalParent.transform);
-        AnimForPositionChange(rectTransform, timeForBackOriginal,() => { });
+        if (originalParent.GetViewItem()!=this)
+        {          
+            //如果原来的位置已经被占据 则删除
+            AnimForPositionChange(rectTransform, timeForBackOriginal, () => { Destroy(gameObject); });
+        }
+        else
+        {
+            AnimForPositionChange(rectTransform, timeForBackOriginal, () => { });
+        }
     }
 
     /// <summary>
