@@ -19,6 +19,8 @@ public class UserDataBean : BaseBean
     //游玩时间
     public TimeBean timeForPlay = new TimeBean();
 
+    //快捷栏位置
+    public byte indexForShortcuts = 0;
     //快捷栏道具
     public ItemsBean[] listShortcutsItems = new ItemsBean[10];
     //背包道具
@@ -29,7 +31,7 @@ public class UserDataBean : BaseBean
     /// </summary>
     /// <param name="index"></param>
     /// <returns></returns>
-    public ItemsBean GetItemsFromShortcuts(int index)
+    public ItemsBean GetItemsFromShortcut(int index)
     {
         return listShortcutsItems[index];
     }

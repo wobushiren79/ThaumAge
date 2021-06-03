@@ -135,7 +135,7 @@ public class ItemsEditorWindow : EditorWindow
         EditorUI.GUIText("图标", 50);
         itemsInfo.icon_key = EditorUI.GUIEditorText(itemsInfo.icon_key, 100);
         EditorUI.GUIPic("Assets/Texture/Items/" + itemsInfo.icon_key + ".png");
-        itemsInfo.items_type = (int)EditorUI.GUIEnum<ItemsTypeEnum>("物品类型",itemsInfo.items_type,250);
+        itemsInfo.items_type = (byte)EditorUI.GUIEnum<ItemsTypeEnum>("物品类型",itemsInfo.items_type,250);
 
         GUILayout.EndHorizontal();
     }

@@ -1,11 +1,14 @@
 ﻿using UnityEditor;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class UIViewItemContainer : BaseUIView
 {
+    public Image ui_Background;
     public UIViewItem ui_ViewItem;
 
+    public Vector2Int viewIndex;
     protected UIViewItem currentViewItem;
 
     public override void Awake()
@@ -14,8 +17,9 @@ public class UIViewItemContainer : BaseUIView
         ui_ViewItem.gameObject.SetActive(false);
     }
 
-    public void SetData(ItemsBean itemsData)
+    public void SetData(ItemsBean itemsData,Vector2Int viewIndex)
     {
+        this.viewIndex = viewIndex;
         SetViewItem(itemsData);
     }
 
@@ -52,5 +56,21 @@ public class UIViewItemContainer : BaseUIView
     public UIViewItem GetViewItem()
     {
         return currentViewItem;
+    }
+
+    /// <summary>
+    /// 设置选择状态
+    /// </summary>
+    /// <param name="isSelect"></param>
+    public void SetSelectState(bool isSelect)
+    {
+        if (isSelect)
+        {
+            ui_Background.color = Color.red;
+        }
+        else
+        {
+            ui_Background.color = Color.white;
+        }
     }
 }

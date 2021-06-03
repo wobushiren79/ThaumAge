@@ -14,6 +14,8 @@ public class InputManager : BaseManager
         inputActions.Player.Use.Enable();
         inputActions.Player.Cancel.Enable();
         inputActions.Player.CameraDistance.Enable();
+        inputActions.Player.Shortcuts.Enable();
+        inputActions.Player.UserDetails.Enable();
     }
 
     /// <summary>
@@ -69,5 +71,23 @@ public class InputManager : BaseManager
     public InputAction GetCameraDistanceData()
     {
         return inputActions.Player.CameraDistance;
+    }
+
+    /// <summary>
+    /// 获取快捷栏数据
+    /// </summary>
+    /// <returns></returns>
+    public InputAction GetShortcutsData()
+    {
+        return inputActions.Player.Shortcuts;
+    }
+
+    /// <summary>
+    /// 获取用户详情按钮数据
+    /// </summary>
+    /// <returns></returns>
+    public InputAction GetUserDetails()
+    {
+        return inputActions.Player.UserDetails;
     }
 }

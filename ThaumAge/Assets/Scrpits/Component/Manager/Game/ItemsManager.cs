@@ -35,7 +35,7 @@ public class ItemsManager : BaseManager, IItemsInfoView
     /// </summary>
     /// <param name="id"></param>
     /// <returns></returns>
-    public ItemsInfoBean GetItemsInfoById(long id)
+    public ItemsInfoBean GetItemsInfoById(int id)
     {
         if (dicItemsInfo.TryGetValue(id,out ItemsInfoBean itemsInfo))
         {

@@ -2,9 +2,10 @@
 using UnityEditor;
 using UnityEngine;
 
-public class UIGodItems : BaseUIComponent
+public class UIGodItems : UICommonNormal
 {
     public ScrollGridVertical ui_ItemList;
+    public UIViewShortcuts ui_Shortcuts;
 
     protected List<ItemsInfoBean> listItemsInfo = new List<ItemsInfoBean>();
 
@@ -14,20 +15,16 @@ public class UIGodItems : BaseUIComponent
         ui_ItemList.AddCellListener(OnCellForItem);
     }
 
+    public override void RefreshUI()
+    {
+        base.RefreshUI();
+        ui_Shortcuts.RefreshUI();
+    }
+
     public override void OpenUI()
     {
         base.OpenUI();
-        GameControlHandler.Instance.manager.controlForPlayer?.EnabledControl(false);
-        GameControlHandler.Instance.manager.controlForCamera?.EnabledControl(false);
         InitData();
-        
-    }
-
-    public override void CloseUI()
-    {
-        base.CloseUI();
-        GameControlHandler.Instance.manager.controlForPlayer?.EnabledControl(true);
-        GameControlHandler.Instance.manager.controlForCamera?.EnabledControl(true);
     }
 
     /// <summary>
@@ -38,7 +35,7 @@ public class UIGodItems : BaseUIComponent
         listItemsInfo = ItemsHandler.Instance.manager.GetAllItemsInfo();
         ui_ItemList.SetCellCount(listItemsInfo.Count);
     }
- 
+
     /// <summary>
     /// 单个数据回调
     /// </summary>
@@ -49,7 +46,7 @@ public class UIGodItems : BaseUIComponent
         ItemsInfoBean itemsInfo = listItemsInfo[itemCell.index];
         ItemsBean itemsData = new ItemsBean();
         itemsData.itemsId = itemsInfo.id;
-        itemsData.number = -1;
-        viewItemContainer.SetData(itemsData);
+        itemsData.number = byte.MaxValue;
+        viewItemContainer.SetData(itemsData, new Vector2Int(itemCell.index, 0));
     }
 }

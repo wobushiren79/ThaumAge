@@ -52,7 +52,7 @@ public class UIViewItem : BaseUIView, IBeginDragHandler, IDragHandler, IEndDragH
     {
         if (ui_TVNumber == null)
             return;
-        if (number <= 0)
+        if (number == byte.MaxValue)
         {
             ui_TVNumber.gameObject.SetActive(false);
         }
@@ -97,14 +97,14 @@ public class UIViewItem : BaseUIView, IBeginDragHandler, IDragHandler, IEndDragH
         originalParent = transform.parent.GetComponent<UIViewItemContainer>();
 
         //如果是无限物品格 则在原位置实例化一个新的
-        if (itemsData.number < 0)
+        if (itemsData.number == byte.MaxValue)
         {
             GameObject objOriginal = Instantiate(originalParent.gameObject, gameObject);
             UIViewItem viewItem = objOriginal.GetComponent<UIViewItem>();
             objOriginal.transform.position = gameObject.transform.position;
             originalParent.SetViewItem(viewItem);
         }
-        itemsData.number = itemsInfo.max_number;
+        itemsData.number = (byte)itemsInfo.max_number;
         RefreshUI();
         isRaycastLocationValid = false;//设置射线忽略自身
     }
@@ -149,7 +149,7 @@ public class UIViewItem : BaseUIView, IBeginDragHandler, IDragHandler, IEndDragH
                 if (viewItem.itemsInfo.GetItemsType() == itemsInfo.GetItemsType())
                 {
                     //如果目标是无限物品 则删除现有物品
-                    if (viewItem.itemsData.number < 0)
+                    if (viewItem.itemsData.number == byte.MaxValue)
                     {
                         transform.SetParent(viewItem.transform.parent);
                         transform.localScale = Vector3.one;
@@ -163,14 +163,14 @@ public class UIViewItem : BaseUIView, IBeginDragHandler, IDragHandler, IEndDragH
                         viewItem.itemsData.number += itemsData.number;
                         if (viewItem.itemsData.number > viewItem.itemsInfo.max_number)
                         {
-                            viewItem.itemsData.number = viewItem.itemsInfo.max_number;
-                            itemsData.number = viewItem.itemsData.number - viewItem.itemsInfo.max_number;
+                            viewItem.itemsData.number = (byte)viewItem.itemsInfo.max_number;
+                            itemsData.number = (byte)(viewItem.itemsData.number - viewItem.itemsInfo.max_number);
                         }
                         //刷新一下UI
                         viewItem.RefreshUI();
                         RefreshUI();
                         //如果自己没有数量了，则删除
-                        if (itemsData.number <= 0)
+                        if (itemsData.number == byte.MaxValue)
                         {
                             AnimForPositionChange(rectTransform, timeForMove, () => { Destroy(gameObject); });
                             return;
@@ -181,7 +181,7 @@ public class UIViewItem : BaseUIView, IBeginDragHandler, IDragHandler, IEndDragH
                 else
                 {
                     //如果目标是无限物品 则回到原来位置
-                    if (viewItem.itemsData.number < 0)
+                    if (viewItem.itemsData.number == byte.MaxValue)
                     {
 
                     }

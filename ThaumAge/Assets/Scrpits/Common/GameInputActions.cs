@@ -65,6 +65,22 @@ public class @GameInputActions : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""Shortcuts"",
+                    ""type"": ""Button"",
+                    ""id"": ""9c8f386d-2df2-4a51-9c35-41d1b12281e5"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""UserDetails"",
+                    ""type"": ""Button"",
+                    ""id"": ""b3e0f2ef-4b70-463b-95e8-a6f00c39d08e"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -329,6 +345,160 @@ public class @GameInputActions : IInputActionCollection, IDisposable
                     ""processors"": """",
                     ""groups"": ""Keyboard&Mouse"",
                     ""action"": ""Cancel"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""8aca6e07-e098-496c-bd83-73bf7eccc99d"",
+                    ""path"": ""<Keyboard>/1"",
+                    ""interactions"": """",
+                    ""processors"": ""Clamp(min=1,max=1)"",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Shortcuts"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""0109d2b6-ffc0-4090-bd0c-3ccc27bbafee"",
+                    ""path"": ""<Keyboard>/2"",
+                    ""interactions"": """",
+                    ""processors"": ""Clamp(min=2,max=2)"",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Shortcuts"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""6554e7b8-1f85-4ff2-8dea-30451e23f3fe"",
+                    ""path"": ""<Keyboard>/3"",
+                    ""interactions"": """",
+                    ""processors"": ""Clamp(min=3,max=3)"",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Shortcuts"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""baac1f71-b8c0-4aeb-ae3a-d3973aaa15cf"",
+                    ""path"": ""<Keyboard>/4"",
+                    ""interactions"": """",
+                    ""processors"": ""Clamp(min=4,max=4)"",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Shortcuts"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""fe68a9ea-62d9-4be3-8883-0ec12b2d1b31"",
+                    ""path"": ""<Keyboard>/5"",
+                    ""interactions"": """",
+                    ""processors"": ""Clamp(min=5,max=5)"",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Shortcuts"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""29a6be5e-d8ba-410a-b5bc-c8076f619d8b"",
+                    ""path"": ""<Keyboard>/6"",
+                    ""interactions"": """",
+                    ""processors"": ""Clamp(min=6,max=6)"",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Shortcuts"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""fe9f4164-98aa-4454-bd6a-4b81e26d4cb9"",
+                    ""path"": ""<Keyboard>/7"",
+                    ""interactions"": """",
+                    ""processors"": ""Clamp(min=7,max=7)"",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Shortcuts"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c7c2f7cf-7836-4f7f-a70d-5d0fc9b446fa"",
+                    ""path"": ""<Keyboard>/8"",
+                    ""interactions"": """",
+                    ""processors"": ""Clamp(min=8,max=8)"",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Shortcuts"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""932ea63b-2023-46c6-a502-c163827efe59"",
+                    ""path"": ""<Keyboard>/9"",
+                    ""interactions"": """",
+                    ""processors"": ""Clamp(min=9,max=9)"",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Shortcuts"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""71ff012e-d16c-4fc4-ba5d-aa10728b5c3c"",
+                    ""path"": ""<Keyboard>/0"",
+                    ""interactions"": """",
+                    ""processors"": ""Clamp(min=10,max=10)"",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Shortcuts"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""090d6c72-a3e8-44a0-a60c-7b0e27acad3f"",
+                    ""path"": ""<Gamepad>/rightShoulder"",
+                    ""interactions"": """",
+                    ""processors"": ""Clamp(min=-1,max=-1)"",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Shortcuts"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b74dde96-2dac-4235-9567-cc689c6e10d7"",
+                    ""path"": ""<Gamepad>/leftShoulder"",
+                    ""interactions"": """",
+                    ""processors"": ""Clamp(min=-2,max=-2)"",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Shortcuts"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""6b1d9c76-abdc-4832-a90f-99cd8d5f16db"",
+                    ""path"": ""<Gamepad>/start"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""UserDetails"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""0646b11e-723d-4784-a379-766eba616f68"",
+                    ""path"": ""<Keyboard>/b"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""UserDetails"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -912,6 +1082,8 @@ public class @GameInputActions : IInputActionCollection, IDisposable
         m_Player_Jump = m_Player.FindAction("Jump", throwIfNotFound: true);
         m_Player_CameraDistance = m_Player.FindAction("CameraDistance", throwIfNotFound: true);
         m_Player_Cancel = m_Player.FindAction("Cancel", throwIfNotFound: true);
+        m_Player_Shortcuts = m_Player.FindAction("Shortcuts", throwIfNotFound: true);
+        m_Player_UserDetails = m_Player.FindAction("UserDetails", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -979,6 +1151,8 @@ public class @GameInputActions : IInputActionCollection, IDisposable
     private readonly InputAction m_Player_Jump;
     private readonly InputAction m_Player_CameraDistance;
     private readonly InputAction m_Player_Cancel;
+    private readonly InputAction m_Player_Shortcuts;
+    private readonly InputAction m_Player_UserDetails;
     public struct PlayerActions
     {
         private @GameInputActions m_Wrapper;
@@ -989,6 +1163,8 @@ public class @GameInputActions : IInputActionCollection, IDisposable
         public InputAction @Jump => m_Wrapper.m_Player_Jump;
         public InputAction @CameraDistance => m_Wrapper.m_Player_CameraDistance;
         public InputAction @Cancel => m_Wrapper.m_Player_Cancel;
+        public InputAction @Shortcuts => m_Wrapper.m_Player_Shortcuts;
+        public InputAction @UserDetails => m_Wrapper.m_Player_UserDetails;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1016,6 +1192,12 @@ public class @GameInputActions : IInputActionCollection, IDisposable
                 @Cancel.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnCancel;
                 @Cancel.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnCancel;
                 @Cancel.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnCancel;
+                @Shortcuts.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnShortcuts;
+                @Shortcuts.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnShortcuts;
+                @Shortcuts.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnShortcuts;
+                @UserDetails.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnUserDetails;
+                @UserDetails.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnUserDetails;
+                @UserDetails.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnUserDetails;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -1038,6 +1220,12 @@ public class @GameInputActions : IInputActionCollection, IDisposable
                 @Cancel.started += instance.OnCancel;
                 @Cancel.performed += instance.OnCancel;
                 @Cancel.canceled += instance.OnCancel;
+                @Shortcuts.started += instance.OnShortcuts;
+                @Shortcuts.performed += instance.OnShortcuts;
+                @Shortcuts.canceled += instance.OnShortcuts;
+                @UserDetails.started += instance.OnUserDetails;
+                @UserDetails.performed += instance.OnUserDetails;
+                @UserDetails.canceled += instance.OnUserDetails;
             }
         }
     }
@@ -1200,6 +1388,8 @@ public class @GameInputActions : IInputActionCollection, IDisposable
         void OnJump(InputAction.CallbackContext context);
         void OnCameraDistance(InputAction.CallbackContext context);
         void OnCancel(InputAction.CallbackContext context);
+        void OnShortcuts(InputAction.CallbackContext context);
+        void OnUserDetails(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {
