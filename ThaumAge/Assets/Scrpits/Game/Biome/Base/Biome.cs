@@ -37,8 +37,8 @@ public class Biome
         {
             addRateMin = 100,
             addRateMax = 1000000,
-            minDepth = 5,
-            maxDepth = 30,
+            minDepth = 1,
+            maxDepth = 5,
             offset = 3,
             size = 3,
         };

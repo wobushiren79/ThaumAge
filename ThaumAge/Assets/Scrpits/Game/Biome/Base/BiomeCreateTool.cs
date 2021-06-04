@@ -17,7 +17,6 @@ public class BiomeCreateTool
         public int trunkRange;//躯干范围
         public int leavesRange;//树叶范围
     }
-
     public struct BiomeForPlantData
     {
         public int addRateMin;
@@ -50,7 +49,6 @@ public class BiomeCreateTool
         public int maxDepth;
         public int offset;
         public int size;
-
     }
 
     /// <summary>
@@ -242,7 +240,6 @@ public class BiomeCreateTool
             }
         }
     }
-
 
     /// <summary>
     /// 增加世界之树
@@ -527,7 +524,6 @@ public class BiomeCreateTool
         }
     }
 
-
     /// <summary>
     /// 增加仙人掌
     /// </summary>
@@ -583,8 +579,16 @@ public class BiomeCreateTool
     /// <param name="caveData"></param>
     public static void AddCave(Vector3Int startPosition, BiomeForCaveData caveData)
     {
-        //int worldSeed = WorldCreateHandler.Instance.manager.GetWorldSeed();
-        //RandomTools random = RandomUtil.GetRandom(worldSeed + 901, startPosition.x, startPosition.y, startPosition.z);
+        int worldSeed = WorldCreateHandler.Instance.manager.GetWorldSeed();
+        RandomTools random = RandomUtil.GetRandom(worldSeed + 901, startPosition.x, startPosition.y, startPosition.z);
+        int addRate = random.NextInt(caveData.addRateMax);
+        if (addRate < caveData.addRateMin)
+        {
+            int depth = random.NextInt(caveData.minDepth, caveData.maxDepth);
+
+            BlockBean blockData = new BlockBean(BlockTypeEnum.None, startPosition);
+            WorldCreateHandler.Instance.manager.AddUpdateBlock(blockData);
+        }
         //int addRate = random.NextInt(caveData.addRateMax);
         //if (addRate < caveData.addRateMin)
         //{
