@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using Cinemachine;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -12,6 +13,56 @@ public class CameraHandler : BaseHandler<CameraHandler, CameraManager>
 
     protected float maxCameraDis = 10;
     protected float minCameraDis = 0;
+
+    /// <summary>
+    /// 初始化数据
+    /// </summary>
+    public void InitData()
+    {
+        CinemachineVirtualCameraBase[] listCinemachineFreeLook = manager.listCameraFreeLook;
+        if (CheckUtil.ArrayIsNull(listCinemachineFreeLook))
+            return;
+        Player player = GameHandler.Instance.manager.player;
+        for (int i = 0; i < listCinemachineFreeLook.Length; i++)
+        {
+            CinemachineVirtualCameraBase cinemachineFreeLook = listCinemachineFreeLook[i];
+            if(cinemachineFreeLook is CinemachineFreeLook)
+            {
+                //第三人称
+                cinemachineFreeLook.Follow = player.LookForThird;
+                cinemachineFreeLook.LookAt = player.LookForThird;
+            }
+            else
+            {
+                //第一人称
+                cinemachineFreeLook.Follow = player.LookForFirst;
+            }
+        }
+    }
+
+
+    /// <summary>
+    ///  修改摄像头距离
+    /// </summary>
+    /// <param name="distance">距离：0为第一人称，123依次递增</param>
+    public void ChangeCameraDistance(int distance)
+    {
+        CinemachineVirtualCameraBase[] listCinemachineFreeLook = manager.listCameraFreeLook;
+        if (CheckUtil.ArrayIsNull(listCinemachineFreeLook))
+            return;
+        for (int i = 0; i < listCinemachineFreeLook.Length; i++)
+        {
+            CinemachineVirtualCameraBase cinemachineFreeLook = listCinemachineFreeLook[i];
+            if (cinemachineFreeLook.name.Contains(distance + ""))
+            {
+                cinemachineFreeLook.Priority = 1;
+            }
+            else
+            {
+                cinemachineFreeLook.Priority = 0;
+            }
+        }
+    }
 
     /// <summary>
     /// 旋转镜头

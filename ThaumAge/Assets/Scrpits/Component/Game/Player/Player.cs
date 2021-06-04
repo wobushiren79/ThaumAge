@@ -3,6 +3,11 @@ using UnityEngine;
 
 public class Player : BaseMonoBehaviour
 {
+    //第一人称点位
+    public Transform LookForFirst;
+    //第三人称点位
+    public Transform LookForThird;
+
     protected CharacterController characterController;
     protected float timeForWorldUpdate = 0;
 

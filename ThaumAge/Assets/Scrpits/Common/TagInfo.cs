@@ -18,4 +18,6 @@ public class TagInfo
     public readonly static string Tag_AstarPath = "AstarPath";
     public readonly static string Tag_Volume = "Volume";
 
+
+    public readonly static string Tag_CameraFreeLook= "CameraFreeLook";
 }

@@ -17,6 +17,8 @@ public class Test : BaseMonoBehaviour
         //UIHandler.Instance.manager.OpenUI<UIGameMain>(UIEnum.GameMain);
         InputAction shortcutsData = InputHandler.Instance.manager.GetShortcutsData();
         shortcutsData.started += HandleForShortcuts;
+
+        CameraHandler.Instance.InitData();
     }
 
     public void HandleForShortcuts(InputAction.CallbackContext callback)

@@ -10,6 +10,7 @@ TagManager:
   - Volume
   - Sun
   - Moon
+  - CameraFreeLook
   layers:
   - Default
   - TransparentFX
