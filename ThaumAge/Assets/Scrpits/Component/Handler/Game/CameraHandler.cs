@@ -25,17 +25,17 @@ public class CameraHandler : BaseHandler<CameraHandler, CameraManager>
         Player player = GameHandler.Instance.manager.player;
         for (int i = 0; i < listCinemachineFreeLook.Length; i++)
         {
-            CinemachineVirtualCameraBase cinemachineFreeLook = listCinemachineFreeLook[i];
-            if(cinemachineFreeLook is CinemachineFreeLook)
+            CinemachineVirtualCameraBase cinemachine = listCinemachineFreeLook[i];
+            if(cinemachine is CinemachineFreeLook)
             {
                 //第三人称
-                cinemachineFreeLook.Follow = player.LookForThird;
-                cinemachineFreeLook.LookAt = player.LookForThird;
+                cinemachine.Follow = player.LookForThird;
+                cinemachine.LookAt = player.LookForThird;
             }
             else
             {
                 //第一人称
-                cinemachineFreeLook.Follow = player.LookForFirst;
+                cinemachine.Follow = player.LookForFirst;
             }
         }
     }
@@ -60,6 +60,50 @@ public class CameraHandler : BaseHandler<CameraHandler, CameraManager>
             else
             {
                 cinemachineFreeLook.Priority = 0;
+            }
+        }
+    }
+
+    public void EnabledCameraMove(bool enabled)
+    {
+        CinemachineVirtualCameraBase[] listCinemachineFreeLook = manager.listCameraFreeLook;
+        if (CheckUtil.ArrayIsNull(listCinemachineFreeLook))
+            return;
+        for (int i = 0; i < listCinemachineFreeLook.Length; i++)
+        {
+            CinemachineVirtualCameraBase cinemachine= listCinemachineFreeLook[i];
+            if (cinemachine is CinemachineFreeLook)
+            {
+                //第三人称
+                CinemachineFreeLook cinemachineFreeLook = cinemachine as CinemachineFreeLook;
+                if (enabled)
+                {
+                    cinemachineFreeLook.m_XAxis.m_MaxSpeed = manager.speedForCameraMove;
+                    cinemachineFreeLook.m_YAxis.m_MaxSpeed = manager.speedForCameraMove / 30;
+                }
+                else
+                {
+                    cinemachineFreeLook.m_XAxis.m_MaxSpeed = 0;
+                    cinemachineFreeLook.m_YAxis.m_MaxSpeed = 0;
+                }
+            }
+            else
+            {
+                //第一人称
+                CinemachineVirtualCamera cinemachineVirtualCamera = cinemachine as CinemachineVirtualCamera;
+                CinemachinePOV cinemachinePOV = cinemachineVirtualCamera.GetCinemachineComponent<CinemachinePOV>();
+                if (cinemachinePOV == null)
+                    return;
+                if (enabled)
+                {
+                    cinemachinePOV.m_VerticalAxis.m_MaxSpeed = manager.speedForCameraMove;
+                    cinemachinePOV.m_HorizontalAxis.m_MaxSpeed = manager.speedForCameraMove;
+                }
+                else
+                {
+                    cinemachinePOV.m_VerticalAxis.m_MaxSpeed = 0;
+                    cinemachinePOV.m_HorizontalAxis.m_MaxSpeed = 0;
+                }
             }
         }
     }

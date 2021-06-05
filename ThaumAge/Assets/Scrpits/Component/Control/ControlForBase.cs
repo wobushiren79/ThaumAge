@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class ControlForBase : BaseMonoBehaviour
-{
+{    
+
     /// <summary>
     /// ¿ª¹Ø¿ØÖÆ
     /// </summary>

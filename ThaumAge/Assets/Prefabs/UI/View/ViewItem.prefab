@@ -164,6 +164,8 @@ MonoBehaviour:
     icon_key: 
     name: 
     items_type: 0
+    type_id: 0
+    max_number: 0
 --- !u!114 &7208818934016802075
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -223,7 +225,7 @@ GameObject:
   - component: {fileID: 7782124943341884685}
   - component: {fileID: 6907875097117628219}
   m_Layer: 5
-  m_Name: Text
+  m_Name: TVNumber
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

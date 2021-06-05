@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class UIViewItemContainer : BaseUIView
 {
-    public Image ui_Background;
+    public Image ui_IVBackground;
     public UIViewItem ui_ViewItem;
 
     public Vector2Int viewIndex;
@@ -17,7 +17,7 @@ public class UIViewItemContainer : BaseUIView
         ui_ViewItem.gameObject.SetActive(false);
     }
 
-    public void SetData(ItemsBean itemsData,Vector2Int viewIndex)
+    public void SetData(ItemsBean itemsData, Vector2Int viewIndex)
     {
         this.viewIndex = viewIndex;
         SetViewItem(itemsData);
@@ -64,13 +64,15 @@ public class UIViewItemContainer : BaseUIView
     /// <param name="isSelect"></param>
     public void SetSelectState(bool isSelect)
     {
+        if (ui_IVBackground == null)
+            return;
         if (isSelect)
         {
-            ui_Background.color = Color.red;
+            ui_IVBackground.color = new Color(0.5f, 0.5f, 0.5f, 1f);
         }
         else
         {
-            ui_Background.color = Color.white;
+            ui_IVBackground.color = Color.white;
         }
     }
 }

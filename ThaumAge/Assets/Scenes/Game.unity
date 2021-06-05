@@ -736,7 +736,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 776616026688040896, guid: e48ab55db35bda74596243c14d61528a, type: 3}
       propertyPath: field of view
-      value: 40
+      value: 60
       objectReference: {fileID: 0}
     - target: {fileID: 776616026688040896, guid: e48ab55db35bda74596243c14d61528a, type: 3}
       propertyPath: far clip plane
@@ -774,6 +774,22 @@ PrefabInstance:
       propertyPath: m_Lens.m_SensorSize.x
       value: 1.8395604
       objectReference: {fileID: 0}
+    - target: {fileID: 3287581641859170236, guid: e48ab55db35bda74596243c14d61528a, type: 3}
+      propertyPath: m_FollowOffset.z
+      value: -4.3092318
+      objectReference: {fileID: 0}
+    - target: {fileID: 4645485890047231068, guid: e48ab55db35bda74596243c14d61528a, type: 3}
+      propertyPath: m_FollowOffset.z
+      value: -4.3092318
+      objectReference: {fileID: 0}
+    - target: {fileID: 6779441266917252449, guid: e48ab55db35bda74596243c14d61528a, type: 3}
+      propertyPath: m_FollowOffset.z
+      value: -4.3092318
+      objectReference: {fileID: 0}
+    - target: {fileID: 7319987004489445258, guid: e48ab55db35bda74596243c14d61528a, type: 3}
+      propertyPath: m_Lens.m_SensorSize.x
+      value: 2.2005532
+      objectReference: {fileID: 0}
     - target: {fileID: 7547917985195101338, guid: e48ab55db35bda74596243c14d61528a, type: 3}
       propertyPath: m_Lens.m_SensorSize.x
       value: 1.8395604
@@ -784,45 +800,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e48ab55db35bda74596243c14d61528a, type: 3}
---- !u!1 &776616026706179349 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 776616026688040902, guid: e48ab55db35bda74596243c14d61528a, type: 3}
-  m_PrefabInstance: {fileID: 776616026706179348}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &776616026706179350
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 776616026706179349}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 72ece51f2901e7445ab60da3685d6b5f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_ShowDebugText: 0
-  m_ShowCameraFrustum: 1
-  m_IgnoreTimeScale: 0
-  m_WorldUpOverride: {fileID: 0}
-  m_UpdateMethod: 2
-  m_BlendUpdateMethod: 1
-  m_DefaultBlend:
-    m_Style: 1
-    m_Time: 2
-    m_CustomCurve:
-      serializedVersion: 2
-      m_Curve: []
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-  m_CustomBlends: {fileID: 0}
-  m_CameraCutEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_CameraActivatedEvent:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!1001 &8533266650952524531
 PrefabInstance:
   m_ObjectHideFlags: 0

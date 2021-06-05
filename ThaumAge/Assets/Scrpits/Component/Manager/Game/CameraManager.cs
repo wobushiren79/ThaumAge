@@ -11,6 +11,8 @@ public class CameraManager : BaseManager
     protected Transform _cameraFreeLookContainer;
     protected CinemachineVirtualCameraBase[] _listCameraFreeLook;
 
+    public float speedForCameraMove = 300;
+
     public CinemachineVirtualCameraBase[] listCameraFreeLook
     {
         get

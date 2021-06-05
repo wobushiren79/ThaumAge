@@ -20,6 +20,7 @@ public class UIViewShortcuts : BaseUIView
     public override void Awake()
     {
         base.Awake();
+        listShortcut = new List<UIViewItemContainer>();
         listShortcut.Add(ui_ShortcutItem_1);
         listShortcut.Add(ui_ShortcutItem_2);
         listShortcut.Add(ui_ShortcutItem_3);

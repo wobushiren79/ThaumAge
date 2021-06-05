@@ -10,6 +10,7 @@ public class ControlForCamera : ControlForBase
     //摄像头最大距离
     public int maxCameraDistance = 1;
 
+
     private void Awake()
     {
         InputAction disAction = InputHandler.Instance.manager.GetCameraDistanceData();
@@ -17,10 +18,22 @@ public class ControlForCamera : ControlForBase
     }
 
     /// <summary>
+    /// 开关控制
+    /// </summary>
+    /// <param name="enabled"></param>
+    public override void EnabledControl(bool enabled)
+    {
+        base.EnabledControl(enabled);
+        CameraHandler.Instance.EnabledCameraMove(enabled);
+    }
+
+    /// <summary>
     /// 镜头远景处理
     /// </summary>
     public void HandleForDistance(InputAction.CallbackContext callBack)
     {
+        if (!isActiveAndEnabled)
+            return;
         float data = callBack.ReadValue<float>();
         if (data > 0)
         {
