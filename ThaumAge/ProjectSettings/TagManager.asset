@@ -11,6 +11,7 @@ TagManager:
   - Sun
   - Moon
   - CameraFreeLook
+  - UICamera
   layers:
   - Default
   - TransparentFX

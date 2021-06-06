@@ -26,13 +26,14 @@ public class UIViewItemContainer : BaseUIView
     public void SetViewItem(UIViewItem uiView)
     {
         this.currentViewItem = uiView;
+        this.currentViewItem.originalParent = this;
         this.currentViewItem.transform.SetParent(rectTransform);
     }
 
     public void SetViewItem(ItemsBean itemsData)
     {
         //如果没有东西，则删除原来存在的
-        if (itemsData == null)
+        if (itemsData == null||itemsData.itemsId == 0)
         {
             if (currentViewItem != null)
             {

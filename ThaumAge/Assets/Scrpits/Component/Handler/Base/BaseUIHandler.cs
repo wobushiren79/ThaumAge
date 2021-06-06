@@ -11,6 +11,7 @@ public class BaseUIHandler<T, M> : BaseHandler<T,M>
     public GraphicRaycaster graphicRaycaster;
 
     public int sortingOrder = 0;
+
     protected override void Awake()
     {
         canvas = CptUtil.AddCpt<Canvas>(gameObject);
@@ -22,6 +23,8 @@ public class BaseUIHandler<T, M> : BaseHandler<T,M>
 
     public void ChangeUIRenderMode(RenderMode renderMode)
     {
+        canvas.pixelPerfect = true;
+        canvas.gameObject.layer = LayerInfo.UI;
         canvas.renderMode = renderMode;
         switch (renderMode)
         {
@@ -29,7 +32,7 @@ public class BaseUIHandler<T, M> : BaseHandler<T,M>
                 break;
             case RenderMode.ScreenSpaceCamera:
                 canvas.planeDistance = 1;
-                canvas.worldCamera = Camera.main;
+                canvas.worldCamera = CameraHandler.Instance.manager.uiCamera;
                 break;
             case RenderMode.WorldSpace:
                 break;

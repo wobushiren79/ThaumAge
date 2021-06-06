@@ -7,11 +7,12 @@ using UnityEngine;
 public class CameraManager : BaseManager
 {
     protected Camera _mainCamera;
+    protected Camera _uiCamera;
 
     protected Transform _cameraFreeLookContainer;
     protected CinemachineVirtualCameraBase[] _listCameraFreeLook;
 
-    public float speedForCameraMove = 300;
+    public float speedForCameraMove = 200;
 
     public CinemachineVirtualCameraBase[] listCameraFreeLook
     {
@@ -41,4 +42,15 @@ public class CameraManager : BaseManager
         }
     }
 
+    public Camera uiCamera
+    {
+        get
+        {
+            if (_uiCamera == null)
+            {
+                _uiCamera = FindWithTag<Camera>(TagInfo.Tag_UICamera);
+            }
+            return _uiCamera;
+        }
+    }
 }

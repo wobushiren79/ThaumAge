@@ -22,4 +22,5 @@ public class ItemsInfoBean : BaseBean
     {
         return (ItemsTypeEnum)items_type;
     }
+
 }

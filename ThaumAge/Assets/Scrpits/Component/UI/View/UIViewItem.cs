@@ -16,7 +16,7 @@ public class UIViewItem : BaseUIView, IBeginDragHandler, IDragHandler, IEndDragH
     public ItemsBean itemsData;
     public ItemsInfoBean itemsInfo;
 
-    protected UIViewItemContainer originalParent;//原始父级
+    public UIViewItemContainer originalParent;//原始父级
 
     protected bool isRaycastLocationValid = true;
 
@@ -34,13 +34,10 @@ public class UIViewItem : BaseUIView, IBeginDragHandler, IDragHandler, IEndDragH
     public override void RefreshUI()
     {
         base.RefreshUI();
-        if (itemsInfo != null)
+        if (itemsInfo != null&& itemsData!=null)
         {
             SetIcon(itemsInfo.icon_key);
-        }
-        if (itemsData != null)
-        {
-            SetNumber(itemsData.number);
+            SetNumber(itemsData.number, itemsInfo.max_number); 
         }
     }
 
@@ -48,11 +45,11 @@ public class UIViewItem : BaseUIView, IBeginDragHandler, IDragHandler, IEndDragH
     /// 设置数量
     /// </summary>
     /// <param name="number"></param>
-    public void SetNumber(int number)
+    public void SetNumber(int number,int maxNumber)
     {
         if (ui_TVNumber == null)
             return;
-        if (number == byte.MaxValue)
+        if (number == int.MaxValue)
         {
             ui_TVNumber.gameObject.SetActive(false);
         }
@@ -61,7 +58,7 @@ public class UIViewItem : BaseUIView, IBeginDragHandler, IDragHandler, IEndDragH
             ui_TVNumber.gameObject.SetActive(true);
         }
         ui_TVNumber.text = number + "";
-        if (number == itemsInfo.max_number)
+        if (number == maxNumber)
         {
             ui_TVNumber.color = Color.red;
         }
@@ -97,14 +94,14 @@ public class UIViewItem : BaseUIView, IBeginDragHandler, IDragHandler, IEndDragH
         originalParent = transform.parent.GetComponent<UIViewItemContainer>();
 
         //如果是无限物品格 则在原位置实例化一个新的
-        if (itemsData.number == byte.MaxValue)
+        if (itemsData.number == int.MaxValue)
         {
             GameObject objOriginal = Instantiate(originalParent.gameObject, gameObject);
             UIViewItem viewItem = objOriginal.GetComponent<UIViewItem>();
             objOriginal.transform.position = gameObject.transform.position;
             originalParent.SetViewItem(viewItem);
         }
-        itemsData.number = (byte)itemsInfo.max_number;
+        itemsData.number = itemsInfo.max_number;
         RefreshUI();
         isRaycastLocationValid = false;//设置射线忽略自身
     }
@@ -120,7 +117,7 @@ public class UIViewItem : BaseUIView, IBeginDragHandler, IDragHandler, IEndDragH
         //将生成的物体设为canvas的最后一个子物体，一般来说最后一个子物体是可操作的
         transform.SetAsLastSibling();
         //需要将鼠标的坐标转换成UGUI坐标
-        RectTransformUtility.ScreenPointToLocalPointInRectangle(rtfContainer, eventData.position, Camera.main, out Vector2 vecMouse);
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(rtfContainer, eventData.position, CameraHandler.Instance.manager.uiCamera, out Vector2 vecMouse);
         rectTransform.anchoredPosition = vecMouse;
     }
 
@@ -146,10 +143,10 @@ public class UIViewItem : BaseUIView, IBeginDragHandler, IDragHandler, IEndDragH
             if (viewItem != null)
             {
                 //如果目标是同一类物品
-                if (viewItem.itemsInfo.GetItemsType() == itemsInfo.GetItemsType())
+                if (viewItem.itemsInfo.type_id == itemsInfo.type_id)
                 {
                     //如果目标是无限物品 则删除现有物品
-                    if (viewItem.itemsData.number == byte.MaxValue)
+                    if (viewItem.itemsData.number == int.MaxValue)
                     {
                         transform.SetParent(viewItem.transform.parent);
                         transform.localScale = Vector3.one;
@@ -163,14 +160,14 @@ public class UIViewItem : BaseUIView, IBeginDragHandler, IDragHandler, IEndDragH
                         viewItem.itemsData.number += itemsData.number;
                         if (viewItem.itemsData.number > viewItem.itemsInfo.max_number)
                         {
-                            viewItem.itemsData.number = (byte)viewItem.itemsInfo.max_number;
-                            itemsData.number = (byte)(viewItem.itemsData.number - viewItem.itemsInfo.max_number);
+                            itemsData.number = viewItem.itemsData.number - viewItem.itemsInfo.max_number;
+                            viewItem.itemsData.number = viewItem.itemsInfo.max_number;   
                         }
                         //刷新一下UI
                         viewItem.RefreshUI();
                         RefreshUI();
                         //如果自己没有数量了，则删除
-                        if (itemsData.number == byte.MaxValue)
+                        if (itemsData.number == int.MaxValue)
                         {
                             AnimForPositionChange(rectTransform, timeForMove, () => { Destroy(gameObject); });
                             return;
@@ -181,7 +178,7 @@ public class UIViewItem : BaseUIView, IBeginDragHandler, IDragHandler, IEndDragH
                 else
                 {
                     //如果目标是无限物品 则回到原来位置
-                    if (viewItem.itemsData.number == byte.MaxValue)
+                    if (viewItem.itemsData.number == int.MaxValue)
                     {
 
                     }
@@ -189,11 +186,15 @@ public class UIViewItem : BaseUIView, IBeginDragHandler, IDragHandler, IEndDragH
                     else
                     {
                         //交换位置
-                        viewItem.originalParent.SetViewItem(this);
+                        UIViewItemContainer dargContainer = this.originalParent;
+                        UIViewItemContainer targetContainer = viewItem.originalParent;
+                        //交换父级
+                        dargContainer.SetViewItem(viewItem);
+                        targetContainer.SetViewItem(this);
+                        //设置位置
                         transform.localScale = Vector3.one;
                         AnimForPositionChange(rectTransform, timeForMove, () => { });
 
-                        originalParent.SetViewItem(viewItem);
                         viewItem.rectTransform.anchoredPosition = Vector2.zero;
                         viewItem.transform.localScale = Vector3.one;
                         return;

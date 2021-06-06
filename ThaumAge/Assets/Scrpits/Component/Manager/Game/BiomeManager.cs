@@ -7,7 +7,7 @@ public class BiomeManager : BaseManager,IBiomeInfoView
 {
     protected BiomeInfoController controllerForBiome;
 
-    protected Dictionary<BiomeTypeEnum, BiomeInfoBean> dicBiomeInfo = new Dictionary<BiomeTypeEnum, BiomeInfoBean>();
+    protected BiomeInfoBean[] arrayBiomeInfo = new BiomeInfoBean[EnumUtil.GetEnumMaxIndex<BiomeTypeEnum>()+1];
 
     public List<Biome> listBiomeForMain = new List<Biome>();
 
@@ -23,11 +23,10 @@ public class BiomeManager : BaseManager,IBiomeInfoView
     /// <param name="listData"></param>
     public void InitBiomeInfo(List<BiomeInfoBean> listData)
     {
-        dicBiomeInfo.Clear();
         for (int i = 0; i < listData.Count; i++)
         {
             BiomeInfoBean itemInfo = listData[i];
-            dicBiomeInfo.Add(itemInfo.GetBiomeType(), itemInfo);
+            arrayBiomeInfo[itemInfo.id] = itemInfo;
         }
     }
 
@@ -38,17 +37,13 @@ public class BiomeManager : BaseManager,IBiomeInfoView
     /// <returns></returns>
     public BiomeInfoBean GetBiomeInfo(BiomeTypeEnum biomeType)
     {
-        if (dicBiomeInfo.TryGetValue(biomeType, out BiomeInfoBean blockInfo))
-        {
-            return blockInfo;
-        }
-        return null;
+        return GetBiomeInfo((int)biomeType);
     }
 
 
-    public BiomeInfoBean GetBiomeInfo(long biomeId)
+    public BiomeInfoBean GetBiomeInfo(int biomeId)
     {
-        return GetBiomeInfo((BiomeTypeEnum)biomeId);
+        return arrayBiomeInfo[biomeId];
     }
 
     /// <summary>

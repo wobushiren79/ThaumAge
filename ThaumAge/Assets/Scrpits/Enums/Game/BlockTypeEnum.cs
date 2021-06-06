@@ -1,6 +1,6 @@
 public enum BlockTypeEnum
 {
-    None = -1,    //¿Õ
+    None = 0,    //¿Õ
     Foundation = 1,    //µØ»ù
 
     Sand = 3,    //É³×Ó

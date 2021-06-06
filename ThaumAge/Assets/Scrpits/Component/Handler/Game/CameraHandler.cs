@@ -93,7 +93,7 @@ public class CameraHandler : BaseHandler<CameraHandler, CameraManager>
                 CinemachineVirtualCamera cinemachineVirtualCamera = cinemachine as CinemachineVirtualCamera;
                 CinemachinePOV cinemachinePOV = cinemachineVirtualCamera.GetCinemachineComponent<CinemachinePOV>();
                 if (cinemachinePOV == null)
-                    return;
+                    continue;
                 if (enabled)
                 {
                     cinemachinePOV.m_VerticalAxis.m_MaxSpeed = manager.speedForCameraMove;

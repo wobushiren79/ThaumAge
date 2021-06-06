@@ -8,7 +8,7 @@ public class ControlForCamera : ControlForBase
 
     public int cameraDistance = 0;
     //摄像头最大距离
-    public int maxCameraDistance = 1;
+    public int maxCameraDistance = 2;
 
 
     private void Awake()

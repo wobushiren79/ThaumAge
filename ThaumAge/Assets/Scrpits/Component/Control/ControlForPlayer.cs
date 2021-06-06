@@ -56,6 +56,8 @@ public class ControlForPlayer : ControlForBase
     /// <param name="callback"></param>
     public void HandleForUserDetails(CallbackContext callback)
     {
+        if (!isActiveAndEnabled)
+            return;
         UIHandler.Instance.manager.OpenUIAndCloseOther<UIGameUserDetails>(UIEnum.GameUserDetails);
     }
 
@@ -65,6 +67,8 @@ public class ControlForPlayer : ControlForBase
     /// <param name="callback"></param>
     public void HandleForShortcuts(CallbackContext callback)
     {
+        if (!isActiveAndEnabled)
+            return;
         float data = callback.ReadValue<float>();
         UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();
         bool isRefreshUI = true;
@@ -142,6 +146,8 @@ public class ControlForPlayer : ControlForBase
     /// </summary>
     public void HandleForJumpStart(CallbackContext callback)
     {
+        if (!isActiveAndEnabled)
+            return;
         isJump = true;
     }
 
@@ -150,6 +156,8 @@ public class ControlForPlayer : ControlForBase
     /// </summary>
     public void HandleForUse(CallbackContext callback)
     {
+        if (!isActiveAndEnabled)
+            return;
         //获取道具栏上的物品
         UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();
         ItemsBean itemsData = userData.GetItemsFromShortcut(userData.indexForShortcuts);
@@ -248,7 +256,8 @@ public class ControlForPlayer : ControlForBase
     /// <param name="callback"></param>
     public void HandleForCancel(CallbackContext callback)
     {
-
+        if (!isActiveAndEnabled)
+            return;
     }
 
     /// <summary>

@@ -46,7 +46,7 @@ public class UIGodItems : UICommonNormal
         ItemsInfoBean itemsInfo = listItemsInfo[itemCell.index];
         ItemsBean itemsData = new ItemsBean();
         itemsData.itemsId = itemsInfo.id;
-        itemsData.number = byte.MaxValue;
+        itemsData.number = int.MaxValue;
         viewItemContainer.SetData(itemsData, new Vector2Int(itemCell.index, 0));
     }
 }

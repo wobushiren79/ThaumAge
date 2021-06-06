@@ -8,9 +8,9 @@ public class BlockManager : BaseManager, IBlockInfoView
     protected BlockInfoController controllerForBlock;
 
     //方块信息列表
-    protected Dictionary<BlockTypeEnum, BlockInfoBean> dicBlockInfo = new Dictionary<BlockTypeEnum, BlockInfoBean>();
+    protected BlockInfoBean[] arrayBlockInfo = new BlockInfoBean[EnumUtil.GetEnumMaxIndex<BlockTypeEnum>() + 1];
     //注册方块列表
-    protected Dictionary<BlockTypeEnum, Block> dicBlockRegister = new Dictionary<BlockTypeEnum, Block>();
+    protected Block[] arrayBlockRegister = new Block[EnumUtil.GetEnumMaxIndex<BlockTypeEnum>() + 1];
 
     public virtual void Awake()
     {
@@ -26,15 +26,11 @@ public class BlockManager : BaseManager, IBlockInfoView
     /// <returns></returns>
     public Block GetRegisterBlock(int blockId)
     {
-        return GetRegisterBlock((BlockTypeEnum)blockId);
+        return arrayBlockRegister[blockId];
     }
     public Block GetRegisterBlock(BlockTypeEnum blockType)
     {
-        if (dicBlockRegister.TryGetValue(blockType, out Block value))
-        {
-            return value;
-        }
-        return null;
+        return GetRegisterBlock((int)blockType);
     }
 
     /// <summary>
@@ -64,10 +60,7 @@ public class BlockManager : BaseManager, IBlockInfoView
 
     public void RegisterBlock(BlockTypeEnum blockType, Block block)
     {
-        if (!dicBlockRegister.ContainsKey(blockType))
-        {
-            dicBlockRegister.Add(blockType, block);
-        }
+        arrayBlockRegister[(int)blockType] = block;
     }
 
 
@@ -77,11 +70,10 @@ public class BlockManager : BaseManager, IBlockInfoView
     /// <param name="listData"></param>
     public void InitBlockInfo(List<BlockInfoBean> listData)
     {
-        dicBlockInfo.Clear();
         for (int i = 0; i < listData.Count; i++)
         {
             BlockInfoBean itemInfo = listData[i];
-            dicBlockInfo.Add(itemInfo.GetBlockType(), itemInfo);
+            arrayBlockInfo[itemInfo.id] = itemInfo;
         }
     }
 
@@ -92,32 +84,23 @@ public class BlockManager : BaseManager, IBlockInfoView
     /// <returns></returns>
     public BlockInfoBean GetBlockInfo(BlockTypeEnum blockType)
     {
-        if (dicBlockInfo.TryGetValue(blockType, out BlockInfoBean blockInfo))
-        {
-            return blockInfo;
-        }
-        return null;
+        return GetBlockInfo((int)blockType);
+    }
+    public BlockInfoBean GetBlockInfo(long blockId)
+    {
+        return arrayBlockInfo[blockId];
     }
 
     /// <summary>
     /// 获取除空气外的所有方块信息
     /// </summary>
     /// <returns></returns>
-    public List<BlockInfoBean> GetAllBackInfo()
+    public BlockInfoBean[] GetAllBackInfo()
     {
-        List<BlockInfoBean> listData = new List<BlockInfoBean>();
-        foreach (var itemData in dicBlockInfo.Values)
-        {
-            listData.Add(itemData);
-        }
-        return listData;
+        return arrayBlockInfo;
     }
 
 
-    public BlockInfoBean GetBlockInfo(long blockId)
-    {
-        return GetBlockInfo((BlockTypeEnum)blockId);
-    }
 
     #region 方块数据回调
     public void GetBlockInfoSuccess<T>(T data, Action<T> action)

@@ -123,11 +123,6 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!20 &53467861 stripped
-Camera:
-  m_CorrespondingSourceObject: {fileID: 776616026688040896, guid: e48ab55db35bda74596243c14d61528a, type: 3}
-  m_PrefabInstance: {fileID: 776616026706179348}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &198485901
 GameObject:
   m_ObjectHideFlags: 0
@@ -197,9 +192,9 @@ Canvas:
   m_Enabled: 1
   serializedVersion: 3
   m_RenderMode: 1
-  m_Camera: {fileID: 53467861}
+  m_Camera: {fileID: 1206028686}
   m_PlaneDistance: 1
-  m_PixelPerfect: 0
+  m_PixelPerfect: 1
   m_ReceivesEvents: 1
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
@@ -346,6 +341,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   refreshRange: 2
+--- !u!20 &1206028686 stripped
+Camera:
+  m_CorrespondingSourceObject: {fileID: 3993300171924132472, guid: e48ab55db35bda74596243c14d61528a, type: 3}
+  m_PrefabInstance: {fileID: 776616026706179348}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1239447546
 PrefabInstance:
   m_ObjectHideFlags: 0

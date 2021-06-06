@@ -3,7 +3,7 @@ using UnityEditor;
 using System;
 using System.Collections.Generic;
 
-public class EnumUtil
+public  class EnumUtil
 {
     public static string GetEnumName<T>(T data)
     {
@@ -18,6 +18,23 @@ public class EnumUtil
     public static E GetEnum<E>(int type)
     {
         return (E)Enum.ToObject(typeof(E), type);
+    }
+
+    /// <summary>
+    /// 获取枚举最大值
+    /// </summary>
+    /// <param name="enumType"></param>
+    /// <returns></returns>
+    public static int GetEnumMaxIndex<E>()
+    {  
+        int maxIndex = int.MinValue;
+        Array EnumArray = Enum.GetValues(typeof(E));
+        foreach (int item in EnumArray)
+        {
+            if (item > maxIndex)
+                maxIndex = item;
+        }
+        return maxIndex;
     }
 
     /// <summary>

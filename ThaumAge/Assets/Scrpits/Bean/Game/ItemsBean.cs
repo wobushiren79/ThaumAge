@@ -6,7 +6,7 @@ using System;
 public class ItemsBean 
 {
     public int itemsId;
-    public byte number;
+    public int number;
     public string meta;
 
     public T GetMetaData<T>()

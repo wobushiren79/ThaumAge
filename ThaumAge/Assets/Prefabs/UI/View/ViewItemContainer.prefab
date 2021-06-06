@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 6504799005663754621}
   - component: {fileID: 4325592810017204959}
   - component: {fileID: 5997811799174784006}
+  - component: {fileID: 433894734758163089}
   m_Layer: 5
   m_Name: IVBackground
   m_TagString: Untagged
@@ -75,6 +76,18 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!225 &433894734758163089
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 980731751959818827}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 0
+  m_IgnoreParentGroups: 0
 --- !u!1 &2677102780424032982
 GameObject:
   m_ObjectHideFlags: 0
@@ -130,7 +143,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2677102780424032982}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
@@ -165,7 +178,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1921fcc4cb70a7e498b3423861f7cba2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ui_Background: {fileID: 0}
+  ui_IVBackground: {fileID: 0}
   ui_ViewItem: {fileID: 853812645625611826}
   viewIndex: {x: 0, y: 0}
 --- !u!1001 &3887314891564592412
