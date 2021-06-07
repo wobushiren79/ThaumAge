@@ -20,7 +20,6 @@ public class BiomeForest : Biome
             AddFlower(wPos);
             AddTree(wPos);
             AddBigTree(wPos);
-            //AddWorldTree(wPos);
             // 地表，使用草
             return BlockTypeEnum.Grass;
         }
@@ -52,23 +51,7 @@ public class BiomeForest : Biome
             treeLeaves = BlockTypeEnum.LeavesOak,
             leavesRange = 4,
         };
-        BiomeCreateTool.AddBigTree(wPos, treeData);
-    }
-
-    protected void AddWorldTree(Vector3Int wPos)
-    {
-        BiomeForTreeData treeData = new BiomeForTreeData
-        {
-            addRateMin = 100,
-            addRateMax = 200000,
-            minHeight = 30,
-            maxHeight = 50,
-            treeTrunk = BlockTypeEnum.TreeOak,
-            treeLeaves = BlockTypeEnum.LeavesOak,
-            leavesRange = 4,
-            trunkRange = 3,
-        };
-        BiomeCreateTool.AddWorldTree(wPos, treeData);
+        BiomeCreateTool.AddTreeForBig(wPos, treeData);
     }
 
     protected void AddTree(Vector3Int wPos)

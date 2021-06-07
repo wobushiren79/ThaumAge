@@ -116,7 +116,7 @@ public class BiomeCreateTool
     /// </summary>
     /// <param name="startPosition"></param>
     /// <param name="treeData"></param>
-    public static void AddBigTree(Vector3Int startPosition, BiomeForTreeData treeData)
+    public static void AddTreeForBig(Vector3Int startPosition, BiomeForTreeData treeData)
     {
         int worldSeed = WorldCreateHandler.Instance.manager.GetWorldSeed();
         RandomTools random = RandomUtil.GetRandom(worldSeed + 2, startPosition.x, startPosition.y, startPosition.z);
@@ -246,7 +246,7 @@ public class BiomeCreateTool
     /// </summary>
     /// <param name="startPosition"></param>
     /// <param name="treeData"></param>
-    public static void AddWorldTree(Vector3Int startPosition, BiomeForTreeData treeData)
+    public static void AddTreeForWorld(Vector3Int startPosition, BiomeForTreeData treeData)
     {
         Dictionary<Vector3Int, BlockBean> dicData = new Dictionary<Vector3Int, BlockBean>();
         int worldSeed = WorldCreateHandler.Instance.manager.GetWorldSeed();
@@ -505,6 +505,32 @@ public class BiomeCreateTool
 
     }
 
+
+    /// <summary>
+    /// 生成蘑菇树
+    /// </summary>
+    /// <param name="startPosition"></param>
+    /// <param name="treeData"></param>
+    public static void AddTreeForMushroom(Vector3Int startPosition, BiomeForTreeData treeData)
+    {
+        int worldSeed = WorldCreateHandler.Instance.manager.GetWorldSeed();
+        RandomTools random = RandomUtil.GetRandom(worldSeed + 4, startPosition.x, startPosition.y, startPosition.z);
+        //生成概率
+        int addRate = random.NextInt(treeData.addRateMax);
+        //高度
+        int treeHeight = random.NextInt(treeData.maxHeight - treeData.minHeight) + treeData.minHeight;
+
+        if (addRate < treeData.addRateMin)
+        {
+            for (int i = 0; i < treeHeight; i++)
+            {
+                Vector3Int treeTrunkPosition = startPosition + Vector3Int.up * (i + 1);
+                BlockBean blockData = new BlockBean(treeData.treeTrunk, treeTrunkPosition);
+                WorldCreateHandler.Instance.manager.AddUpdateBlock(blockData);
+            }
+        }
+    }
+
     /// <summary>
     /// 增加植物
     /// </summary>
@@ -709,4 +735,6 @@ public class BiomeCreateTool
         //}
 
     }
+
+
 }

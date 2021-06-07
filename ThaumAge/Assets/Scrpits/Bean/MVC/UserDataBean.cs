@@ -33,7 +33,13 @@ public class UserDataBean : BaseBean
     /// <returns></returns>
     public ItemsBean GetItemsFromShortcut(int index)
     {
-        return listShortcutsItems[index];
+        ItemsBean itemsData = listShortcutsItems[index];
+        if (itemsData == null)
+        {
+            itemsData = new ItemsBean();
+            listShortcutsItems[index] = itemsData;
+        }
+        return itemsData;
     }
 
     /// <summary>
@@ -43,7 +49,13 @@ public class UserDataBean : BaseBean
     /// <returns></returns>
     public ItemsBean GetItemsFromBackpack(int index)
     {
-        return listBackpack[index];
+        ItemsBean itemsData = listBackpack[index];
+        if (itemsData == null)
+        {
+            itemsData = new ItemsBean();
+            listBackpack[index] = itemsData;
+        }
+        return itemsData;
     }
 
     /// <summary>

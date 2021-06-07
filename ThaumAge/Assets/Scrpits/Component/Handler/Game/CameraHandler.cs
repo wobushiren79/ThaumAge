@@ -14,6 +14,17 @@ public class CameraHandler : BaseHandler<CameraHandler, CameraManager>
     protected float maxCameraDis = 10;
     protected float minCameraDis = 0;
 
+    public float timeScale = 0;
+
+    private void Update()
+    {
+        if (timeScale != Time.timeScale)
+        {
+            timeScale = Time.timeScale;
+            ChangeCameraSpeed(manager.speedForCameraMove); 
+        }
+    }
+
     /// <summary>
     /// 初始化数据
     /// </summary>
@@ -66,26 +77,30 @@ public class CameraHandler : BaseHandler<CameraHandler, CameraManager>
 
     public void EnabledCameraMove(bool enabled)
     {
+        if (enabled)
+        {
+            ChangeCameraSpeed(manager.speedForCameraMove);
+        }
+        else
+        {
+            ChangeCameraSpeed(0);
+        }
+    }
+
+    public void ChangeCameraSpeed(float speed)
+    {
         CinemachineVirtualCameraBase[] listCinemachineFreeLook = manager.listCameraFreeLook;
         if (CheckUtil.ArrayIsNull(listCinemachineFreeLook))
             return;
         for (int i = 0; i < listCinemachineFreeLook.Length; i++)
         {
-            CinemachineVirtualCameraBase cinemachine= listCinemachineFreeLook[i];
+            CinemachineVirtualCameraBase cinemachine = listCinemachineFreeLook[i];
             if (cinemachine is CinemachineFreeLook)
             {
                 //第三人称
                 CinemachineFreeLook cinemachineFreeLook = cinemachine as CinemachineFreeLook;
-                if (enabled)
-                {
-                    cinemachineFreeLook.m_XAxis.m_MaxSpeed = manager.speedForCameraMove;
-                    cinemachineFreeLook.m_YAxis.m_MaxSpeed = manager.speedForCameraMove / 30;
-                }
-                else
-                {
-                    cinemachineFreeLook.m_XAxis.m_MaxSpeed = 0;
-                    cinemachineFreeLook.m_YAxis.m_MaxSpeed = 0;
-                }
+                cinemachineFreeLook.m_XAxis.m_MaxSpeed = speed / timeScale;
+                cinemachineFreeLook.m_YAxis.m_MaxSpeed = (speed / 30) / timeScale;
             }
             else
             {
@@ -94,16 +109,8 @@ public class CameraHandler : BaseHandler<CameraHandler, CameraManager>
                 CinemachinePOV cinemachinePOV = cinemachineVirtualCamera.GetCinemachineComponent<CinemachinePOV>();
                 if (cinemachinePOV == null)
                     continue;
-                if (enabled)
-                {
-                    cinemachinePOV.m_VerticalAxis.m_MaxSpeed = manager.speedForCameraMove;
-                    cinemachinePOV.m_HorizontalAxis.m_MaxSpeed = manager.speedForCameraMove;
-                }
-                else
-                {
-                    cinemachinePOV.m_VerticalAxis.m_MaxSpeed = 0;
-                    cinemachinePOV.m_HorizontalAxis.m_MaxSpeed = 0;
-                }
+                cinemachinePOV.m_VerticalAxis.m_MaxSpeed = speed / timeScale;
+                cinemachinePOV.m_HorizontalAxis.m_MaxSpeed = speed / timeScale;
             }
         }
     }

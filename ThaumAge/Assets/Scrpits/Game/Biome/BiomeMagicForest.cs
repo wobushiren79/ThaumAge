@@ -50,7 +50,7 @@ public class BiomeMagicForest : Biome
             treeLeaves = BlockTypeEnum.LeavesSilver,
             leavesRange = 4,
         };
-        BiomeCreateTool.AddBigTree(wPos, treeData);
+        BiomeCreateTool.AddTreeForBig(wPos, treeData);
     }
 
     protected void AddWorldTree(Vector3Int wPos)
@@ -66,7 +66,7 @@ public class BiomeMagicForest : Biome
             leavesRange = 4,
             trunkRange = 3,
         };
-        BiomeCreateTool.AddWorldTree(wPos, treeData);
+        BiomeCreateTool.AddTreeForWorld(wPos, treeData);
     }
 
     protected void AddTree(Vector3Int wPos)

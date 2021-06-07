@@ -50,6 +50,7 @@ SpriteAtlas:
     cachedData: {fileID: 0}
   m_MasterAtlas: {fileID: 0}
   m_PackedSprites:
+  - {fileID: 21300000, guid: b31d648132a133c43850570ce05c59e6, type: 3}
   - {fileID: 21300000, guid: c84110b19e6b18b4a9404d8c68d49363, type: 3}
   - {fileID: 21300000, guid: dd882182ed9807849a0f9361dd7e32fd, type: 3}
   - {fileID: 21300000, guid: 68b4dfa3189dae74298a1ab031e6cee0, type: 3}
@@ -57,15 +58,19 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 5b7e9e350d06bfc47ad64ed7e6850833, type: 3}
   - {fileID: 21300000, guid: 46958cc5b78164741ba8f3e7f296cecf, type: 3}
   - {fileID: 21300000, guid: b795e116c08e5754fb3171968d67f102, type: 3}
+  - {fileID: 21300000, guid: 95671d16330067f40bc51b73ddc9460a, type: 3}
   - {fileID: 21300000, guid: 47e6d72671f820e40b746e841ba9e447, type: 3}
   - {fileID: 21300000, guid: 9c744638940d4924d8c473bc32a2706b, type: 3}
   - {fileID: 21300000, guid: 4298ef0924cd8ab49bd4590cfcb024e0, type: 3}
   - {fileID: 21300000, guid: 95a421c96fe23364c8604afcbb035098, type: 3}
+  - {fileID: 21300000, guid: 281ff16adcdeb6a428980acbed103408, type: 3}
   - {fileID: 21300000, guid: d38e1b7a109ecc241bcd14df5744474d, type: 3}
   - {fileID: 21300000, guid: 092e4d9a501d75a4baf81cfea5cbff6a, type: 3}
   - {fileID: 21300000, guid: 10688c5b4fb22b544a317018086c5791, type: 3}
   - {fileID: 21300000, guid: f55b38cba06c0ea4b9c5f1a3dfe464d1, type: 3}
+  - {fileID: 21300000, guid: 91deda1c0db202f46af9477a1166fefc, type: 3}
   - {fileID: 21300000, guid: eae48e3cf338f41408444294e890f651, type: 3}
+  - {fileID: 21300000, guid: 0a78d65c50add214089c05e46d4a0fbc, type: 3}
   - {fileID: 21300000, guid: 3f18219ca88c6454fba5a49d5ca324d4, type: 3}
   - {fileID: 21300000, guid: b0d748acc4b51684ca302bc03196f25a, type: 3}
   - {fileID: 21300000, guid: 0761178d69f59134b969d8c55ec45be7, type: 3}
@@ -74,6 +79,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 9fb7765f63c19f043a167bf941dcd02a, type: 3}
   - {fileID: 21300000, guid: 31eccf8fe76d0f742b3ae195aa302fc4, type: 3}
   m_PackedSpriteNamesToIndex:
+  - icon_flower_fireflower
   - icon_cactus
   - icon_tree_world
   - icon_flower_sunflower
@@ -81,15 +87,19 @@ SpriteAtlas:
   - icon_flower_rose
   - icon_dirt
   - icon_tree_oak
+  - icon_flower_waterflower
   - icon_leaves_oak
   - icon_magma
   - icon_weed_1
   - icon_sand
+  - icon_flower_goldflower
   - icon_stone
   - icon_water
   - icon_weed_3
   - icon_leaves_silver
+  - icon_flower_earthflower
   - icon_flower_chrysanthemum
+  - icon_flower_woodflower
   - icon_base
   - icon_grass_wild
   - icon_leaves_world
