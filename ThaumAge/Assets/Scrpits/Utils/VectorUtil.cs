@@ -37,6 +37,26 @@ public class VectorUtil
     }
 
     /// <summary>
+    /// 获取圆上几点
+    /// </summary>
+    /// <param name="number"></param>
+    /// <param name="startAngle"></param>
+    /// <param name="centerPosition"></param>
+    /// <param name="r"></param>
+    /// <returns></returns>
+    public static Vector2[] GetListCirclePosition(int number, float startAngle, Vector2 centerPosition, float r)
+    {
+        Vector2[] listData = new Vector2[number];
+        float itemAngle = 360f / number;
+        for (int i = 0; i < number; i++)
+        {
+            startAngle += itemAngle;
+            listData[i] = GetCirclePosition(startAngle, centerPosition, r);
+        }
+        return listData;
+    }
+
+    /// <summary>
     /// 获取绕某点旋转之后的点
     /// </summary>
     /// <param name="centerPosition">中心点</param>
