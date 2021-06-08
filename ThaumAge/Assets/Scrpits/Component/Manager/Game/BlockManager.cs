@@ -14,6 +14,11 @@ public class BlockManager : BaseManager, IBlockInfoView
 
     public virtual void Awake()
     {
+        InitData();
+    }
+
+    public void InitData()
+    {
         controllerForBlock = new BlockInfoController(this, this);
         controllerForBlock.GetAllBlockInfoData(InitBlockInfo);
         RegisterBlock();

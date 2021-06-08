@@ -3,11 +3,15 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-public class BiomeManager : BaseManager,IBiomeInfoView
+public class BiomeManager : BaseManager
+    , IBiomeInfoView
+    , IBuildingInfoView
 {
     protected BiomeInfoController controllerForBiome;
+    protected BuildingInfoController controllerForBuilding;
 
-    protected BiomeInfoBean[] arrayBiomeInfo = new BiomeInfoBean[EnumUtil.GetEnumMaxIndex<BiomeTypeEnum>()+1];
+    protected BiomeInfoBean[] arrayBiomeInfo = new BiomeInfoBean[EnumUtil.GetEnumMaxIndex<BiomeTypeEnum>() + 1];
+    protected BuildingInfoBean[] arrayBuildingInfo = new BuildingInfoBean[EnumUtil.GetEnumMaxIndex<BuildingTypeEnum>() + 1];
 
     public List<Biome> listBiomeForMain = new List<Biome>();
 
@@ -15,10 +19,12 @@ public class BiomeManager : BaseManager,IBiomeInfoView
     {
         controllerForBiome = new BiomeInfoController(this, this);
         controllerForBiome.GetAllBiomeInfoData(InitBiomeInfo);
+        controllerForBuilding = new BuildingInfoController(this, this);
+        controllerForBuilding.GetAllBuildingInfoData(InitBuildingInfo);
     }
 
     /// <summary>
-    /// 初始化方块信息
+    /// 初始化生态信息
     /// </summary>
     /// <param name="listData"></param>
     public void InitBiomeInfo(List<BiomeInfoBean> listData)
@@ -27,6 +33,19 @@ public class BiomeManager : BaseManager,IBiomeInfoView
         {
             BiomeInfoBean itemInfo = listData[i];
             arrayBiomeInfo[itemInfo.id] = itemInfo;
+        }
+    }
+
+    /// <summary>
+    /// 初始化建筑信息
+    /// </summary>
+    /// <param name="listData"></param>
+    public void InitBuildingInfo(List<BuildingInfoBean> listData)
+    {
+        for (int i = 0; i < listData.Count; i++)
+        {
+            BuildingInfoBean itemInfo = listData[i];
+            arrayBuildingInfo[itemInfo.id] = itemInfo;
         }
     }
 
@@ -40,10 +59,24 @@ public class BiomeManager : BaseManager,IBiomeInfoView
         return GetBiomeInfo((int)biomeType);
     }
 
-
     public BiomeInfoBean GetBiomeInfo(int biomeId)
     {
         return arrayBiomeInfo[biomeId];
+    }
+
+    /// <summary>
+    /// 获取建筑信息
+    /// </summary>
+    /// <param name="biomeType"></param>
+    /// <returns></returns>
+    public BuildingInfoBean GetBuildingInfo(BuildingTypeEnum buildingType)
+    {
+        return GetBuildingInfo((int)buildingType);
+    }
+
+    public BuildingInfoBean GetBuildingInfo(int buildingId)
+    {
+        return arrayBuildingInfo[buildingId];
     }
 
     /// <summary>
@@ -73,7 +106,7 @@ public class BiomeManager : BaseManager,IBiomeInfoView
         return listBiome;
     }
 
-    #region 方块数据回调
+    #region 数据回调
     public void GetBiomeInfoSuccess<T>(T data, Action<T> action)
     {
         action?.Invoke(data);
@@ -82,6 +115,16 @@ public class BiomeManager : BaseManager,IBiomeInfoView
     public void GetBiomeInfoFail(string failMsg, Action action)
     {
         LogUtil.Log("获取生态数据失败");
+    }
+
+    public void GetBuildingInfoSuccess<T>(T data, Action<T> action)
+    {
+        action?.Invoke(data);
+    }
+
+    public void GetBuildingInfoFail(string failMsg, Action action)
+    {
+        LogUtil.Log("获取建筑数据失败");
     }
     #endregion
 }

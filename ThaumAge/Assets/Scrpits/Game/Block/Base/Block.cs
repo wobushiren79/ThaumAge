@@ -282,7 +282,10 @@ public abstract class Block
     {
 
     }
+    public virtual void BuildBlockNoCheck(Chunk.ChunkRenderData chunkData)
+    {
 
+    }
     /// <summary>
     /// ¹¹½¨Ãæ
     /// </summary>
