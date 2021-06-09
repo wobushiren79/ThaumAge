@@ -583,6 +583,14 @@ public abstract class Block
     }
 
     /// <summary>
+    /// 初始化方块
+    /// </summary>
+    public virtual void InitBlock()
+    {
+
+    }
+
+    /// <summary>
     /// 摧毁方块
     /// </summary>
     public virtual void DestoryBlock()

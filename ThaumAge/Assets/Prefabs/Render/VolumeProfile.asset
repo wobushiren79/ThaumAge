@@ -266,7 +266,6 @@ MonoBehaviour:
   - {fileID: 4897695127272970279}
   - {fileID: -8925082790883325855}
   - {fileID: 2565017048552465745}
-  - {fileID: 3803787142752095297}
   - {fileID: -5646821606905725613}
 --- !u!114 &2321842667345105656
 MonoBehaviour:
@@ -406,7 +405,7 @@ MonoBehaviour:
     m_Value: 0
   type:
     m_OverrideState: 1
-    m_Value: 1
+    m_Value: 2
   sphericalMode:
     m_OverrideState: 0
     m_Value: 1
@@ -422,7 +421,7 @@ MonoBehaviour:
     m_Value: {x: 0, y: -6381174, z: 0}
   airDensityR:
     m_OverrideState: 0
-    m_Value: 0.04534
+    m_Value: 0.059
     min: 0
     max: 1
   airDensityG:
@@ -436,33 +435,33 @@ MonoBehaviour:
     min: 0
     max: 1
   airTint:
-    m_OverrideState: 0
-    m_Value: {r: 0.9, g: 0.9, b: 1, a: 1}
+    m_OverrideState: 1
+    m_Value: {r: 0.6839622, g: 0.8457433, b: 1, a: 1}
     hdr: 0
     showAlpha: 0
     showEyeDropper: 1
   airMaximumAltitude:
     m_OverrideState: 0
-    m_Value: 55261.973
+    m_Value: 55376.58
     min: 0
   aerosolDensity:
     m_OverrideState: 0
-    m_Value: 0.01192826
+    m_Value: 0.05
     min: 0
     max: 1
   aerosolTint:
-    m_OverrideState: 0
+    m_OverrideState: 1
     m_Value: {r: 0.9, g: 0.9, b: 0.9, a: 1}
     hdr: 0
     showAlpha: 0
     showEyeDropper: 1
   aerosolMaximumAltitude:
     m_OverrideState: 0
-    m_Value: 8289.296
+    m_Value: 2
     min: 0
   aerosolAnisotropy:
     m_OverrideState: 0
-    m_Value: 0
+    m_Value: 0.5
     min: -1
     max: 1
   numberOfBounces:
@@ -535,30 +534,6 @@ MonoBehaviour:
   m_ObsoleteEarthPreset:
     m_OverrideState: 0
     m_Value: 1
---- !u!114 &3803787142752095297
-MonoBehaviour:
-  m_ObjectHideFlags: 3
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b51a78e223a2e504bb88a059b55229ea, type: 3}
-  m_Name: WhiteBalance
-  m_EditorClassIdentifier: 
-  active: 0
-  m_AdvancedMode: 0
-  temperature:
-    m_OverrideState: 1
-    m_Value: -60
-    min: -100
-    max: 100
-  tint:
-    m_OverrideState: 1
-    m_Value: -15
-    min: -100
-    max: 100
 --- !u!114 &4391046719863861139
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -594,7 +569,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24f077503be6ae942a1e1245dbd53ea9, type: 3}
   m_Name: Bloom
   m_EditorClassIdentifier: 
-  active: 0
+  active: 1
   m_AdvancedMode: 0
   quality:
     m_OverrideState: 1

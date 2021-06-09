@@ -42,6 +42,7 @@ public class BuildingEditor : BaseMonoBehaviour
         for (int i = 0; i < listData.Count; i++)
         {
             Vector3 itemPosition = listData[i];
+            //向下移动0.5个单位
             itemPosition -= new Vector3(0.5f, 0.5f, 0.5f);
             listData[i] = itemPosition;
         }

@@ -143,7 +143,7 @@ public class Chunk : BaseMonoBehaviour
             GameDataHandler.Instance.manager.SaveGameDataAsync(worldData);
             //异步刷新
             AddUpdateChunkForRange();
-            WorldCreateHandler.Instance.HandleForUpdateChunk(false,null);
+            WorldCreateHandler.Instance.HandleForUpdateChunk(false, null);
         }
     }
 
@@ -499,8 +499,6 @@ public class Chunk : BaseMonoBehaviour
     public Block SetBlock(BlockBean blockData, bool isSaveData, bool isRefreshChunkRange, bool isRefreshBlockRange)
     {
         Vector3Int localPosition = blockData.localPosition.GetVector3Int();
-        //首先移除方块
-
         //添加数据
         Block newBlock = BlockHandler.Instance.CreateBlock(this, blockData);
         if (localPosition.x >= width || localPosition.x < 0
@@ -509,7 +507,16 @@ public class Chunk : BaseMonoBehaviour
         {
             return null;
         }
-        mapForBlock[GetIndexByPosition(localPosition)] = newBlock;
+
+        int index = GetIndexByPosition(localPosition);
+        //首先移除方块
+        Block oldBlock = mapForBlock[index];
+        if (oldBlock != null)
+            oldBlock.DestoryBlock();
+
+        //设置新方块
+        mapForBlock[index] = newBlock;
+        newBlock.InitBlock();
 
         //刷新六个方向的方块
         if (isRefreshBlockRange)
@@ -530,7 +537,6 @@ public class Chunk : BaseMonoBehaviour
             if (worldData != null && worldData.chunkData != null)
             {
                 ChunkBean chunkData = worldData.chunkData;
-                int index = GetIndexByPosition(localPosition);
                 if (chunkData.dicBlockData.ContainsKey(index))
                 {
                     chunkData.dicBlockData[index] = newBlock.blockData;
@@ -581,10 +587,17 @@ public class Chunk : BaseMonoBehaviour
         {
             BlockBean blockData = itemData.Value;
             //生成方块
-            Block block = BlockHandler.Instance.CreateBlock(this, blockData);
+            Block newBlock = BlockHandler.Instance.CreateBlock(this, blockData);
             Vector3Int positionBlock = blockData.localPosition.GetVector3Int();
             //添加方块 如果已经有该方块 则先删除，优先使用存档的方块
-            mapForBlock[GetIndexByPosition(positionBlock)] = block;
+            int index = GetIndexByPosition(positionBlock);
+            Block oldBlock = mapForBlock[index];
+            if (oldBlock != null)
+                oldBlock.DestoryBlock();
+
+            mapForBlock[index] = newBlock;
+            //初始化方块
+            newBlock.InitBlock();
         }
         SetWorldData(worldData);
     }
@@ -619,9 +632,10 @@ public class Chunk : BaseMonoBehaviour
 
                     //生成方块
                     Block block = BlockHandler.Instance.CreateBlock(this, blockType, position);
-
                     //添加方块
                     mapForBlock[GetIndexByPosition(x, y, z)] = block;
+                    //初始化方块
+                    block.InitBlock();
                 }
             }
         }
