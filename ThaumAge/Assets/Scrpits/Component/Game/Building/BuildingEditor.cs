@@ -23,7 +23,7 @@ public class BuildingEditor : BaseMonoBehaviour
         BlockHandler.Instance.manager.InitData();
 
         BlockCube blockCube = new BlockCube();
-        blockCube.SetData(null, blockType, Vector3Int.zero, direction);
+        blockCube.SetData(blockType, direction, Vector3Int.zero, Vector3Int.zero);
 
         Chunk.ChunkRenderData chunkRender = new Chunk.ChunkRenderData();
         //初始化数据

@@ -27,9 +27,9 @@ public class BiomeHandler : BaseHandler<BiomeHandler, BiomeManager>
     /// <returns></returns>
     public BlockTypeEnum CreateBiomeBlockType(Chunk chunk, List<Vector3Int> listBiomeCenterPosition, List<Biome> listBiome, Vector3Int blockLocPosition)
     {
-        Vector3Int wPos = blockLocPosition + chunk.worldPosition;
+        Vector3Int wPos = blockLocPosition + chunk.chunkData.positionForWorld;
         //y坐标是否在Chunk内
-        if (wPos.y >= chunk.height)
+        if (wPos.y >= chunk.chunkData.chunkHeight)
         {
             return BlockTypeEnum.None;
         }
@@ -142,9 +142,9 @@ public class BiomeHandler : BaseHandler<BiomeHandler, BiomeManager>
     {
         List<Vector3Int> listData = new List<Vector3Int>();
         int worldSeed = WorldCreateHandler.Instance.manager.GetWorldSeed();
-        int unitSize = currentChunk.width * rate;
-        int startX = Mathf.FloorToInt(currentChunk.worldPosition.x / (float)unitSize) * unitSize;
-        int startZ = Mathf.FloorToInt(currentChunk.worldPosition.z / (float)unitSize) * unitSize;
+        int unitSize = currentChunk.chunkData.chunkWidth * rate;
+        int startX = Mathf.FloorToInt(currentChunk.chunkData.positionForWorld.x / (float)unitSize) * unitSize;
+        int startZ = Mathf.FloorToInt(currentChunk.chunkData.positionForWorld.z / (float)unitSize) * unitSize;
         for (int x = -range; x < range; x++)
         {
             for (int z = -range; z < range; z++)

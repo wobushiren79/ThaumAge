@@ -7,133 +7,22 @@ using UnityEngine;
 [Serializable]
 public abstract class Block
 {
-    public Chunk chunk;    //所属Chunk
-
     public BlockTypeEnum blockType;    //方块类型
-
-    public Vector3Int localPosition; //Chunk内的坐标
-    public Vector3Int worldPosition; //世界坐标                             
-    public Vector3 centerPosition;
-
     public DirectionEnum direction;    //方向
-    public string meta;    //方块数据
 
-    protected BlockBean _blockData; //方框数据
+    public Vector3Int localPosition;
+    public Vector3Int worldPosition;
+
+    public Vector3 centerPosition
+    {
+        get
+        {
+            return localPosition + new Vector3(0.5f, 0.5f, 0.5f);
+        }
+    }
+
     protected BlockInfoBean _blockInfo;//方块信息
-    protected float uvWidth;
-
-    protected Block _leftBlock;
-    protected bool leftBlockHasChunk;
-    protected Block _rightBlock;
-    protected bool rightBlockHasChunk;
-    protected Block _upBlock;
-    protected bool upBlockHasChunk;
-    protected Block _downBlock;
-    protected bool downBlockHasChunk;
-    protected Block _forwardBlock;
-    protected bool forwardBlockHasChunk;
-    protected Block _backBlock;
-    protected bool backBlockHasChunk;
-
-
-    public Block leftBlock
-    {
-        get
-        {
-            if (_leftBlock == null)
-            {
-                WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(localPosition + Vector3Int.left + chunk.worldPosition, out _leftBlock, out leftBlockHasChunk);
-                if (_leftBlock != null)
-                    _leftBlock._rightBlock = this;
-            }
-            return _leftBlock;
-        }
-    }
-    public Block rightBlock
-    {
-        get
-        {
-            if (_rightBlock == null)
-            {
-                WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(localPosition + Vector3Int.right + chunk.worldPosition, out _rightBlock, out rightBlockHasChunk);
-                if (_rightBlock != null)
-                    _rightBlock._leftBlock = this;
-            }
-            return _rightBlock;
-        }
-    }
-
-    public Block upBlock
-    {
-        get
-        {
-            if (_upBlock == null)
-            {
-                WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(localPosition + Vector3Int.up + chunk.worldPosition, out _upBlock, out upBlockHasChunk);
-                if (_upBlock != null)
-                    _upBlock._downBlock = this;
-            }
-            return _upBlock;
-        }
-    }
-
-    public Block downBlock
-    {
-        get
-        {
-            if (_downBlock == null)
-            {
-                WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(localPosition + Vector3Int.down + chunk.worldPosition, out _downBlock, out downBlockHasChunk);
-                if (_downBlock != null)
-                    _downBlock._upBlock = this;
-            }
-            return _downBlock;
-        }
-    }
-
-    public Block forwardBlock
-    {
-        get
-        {
-            if (_forwardBlock == null)
-            {
-                WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(localPosition + Vector3Int.back + chunk.worldPosition, out _forwardBlock, out forwardBlockHasChunk);
-                if (_forwardBlock != null)
-                    _forwardBlock._backBlock = this;
-            }
-            return _forwardBlock;
-        }
-    }
-
-    public Block backBlock
-    {
-        get
-        {
-            if (_backBlock == null)
-            {
-                WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(localPosition + Vector3Int.forward + chunk.worldPosition, out _backBlock, out backBlockHasChunk);
-                if (_backBlock != null)
-                    _backBlock._forwardBlock = this;
-            }
-            return _backBlock;
-        }
-    }
-
-    public BlockBean blockData
-    {
-        set
-        {
-            _blockData = value;
-        }
-        get
-        {
-            if (_blockData == null)
-            {
-                _blockData = new BlockBean(blockType, localPosition, worldPosition, direction);
-            }
-            return _blockData;
-        }
-    }
+    protected float uvWidth = 1 / 128f;
 
     public BlockInfoBean blockInfo
     {
@@ -145,6 +34,10 @@ public abstract class Block
             }
             return _blockInfo;
         }
+        set
+        {
+            _blockInfo = value;
+        }
     }
 
     public Block()
@@ -155,6 +48,7 @@ public abstract class Block
     public Block(BlockTypeEnum blockType)
     {
         this.blockType = blockType;
+
     }
 
     public virtual void RefreshBlock()
@@ -164,12 +58,7 @@ public abstract class Block
 
     public virtual void RefreshBlockRange()
     {
-        upBlock?.RefreshBlock();
-        downBlock?.RefreshBlock();
-        leftBlock?.RefreshBlock();
-        rightBlock?.RefreshBlock();
-        forwardBlock?.RefreshBlock();
-        backBlock?.RefreshBlock();
+
     }
 
     /// <summary>
@@ -178,59 +67,12 @@ public abstract class Block
     /// <param name="chunk"></param>
     /// <param name="position"></param>
     /// <param name="blockData"></param>
-    public virtual void SetData(Chunk chunk, BlockTypeEnum blockType, Vector3Int localPosition, DirectionEnum direction)
+    public virtual void SetData(BlockTypeEnum blockType,  DirectionEnum direction, Vector3Int localPosition,Vector3Int worldPosition)
     {
-        this.chunk = chunk;
         this.blockType = blockType;
-        this.localPosition = localPosition;
         this.direction = direction;
-
-        if (chunk != null)
-            this.worldPosition = localPosition + chunk.worldPosition;
-        this.centerPosition = localPosition + new Vector3(0.5f, 0.5f, 0.5f);
-        uvWidth = 1 / 128f;
-    }
-    public virtual void SetData(Chunk chunk, BlockTypeEnum blockType, Vector3Int localPosition)
-    {
-        SetData(chunk, blockType, localPosition, DirectionEnum.UP);
-    }
-
-
-    /// <summary>
-    /// 检测是否需要构建面
-    /// </summary>
-    /// <param name="position"></param>
-    /// <param name="closeBlock"></param>
-    /// <returns></returns>
-    public virtual bool CheckNeedBuildFace(Vector3Int position, out Block closeBlock)
-    {
-        closeBlock = null;
-        if (position.y < 0) return false;
-        //检测旋转
-        Vector3Int checkPosition = Vector3Int.RoundToInt(RotatePosition(position, localPosition));
-        //获取方块
-        WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(checkPosition + chunk.worldPosition, out closeBlock, out bool hasChunk);
-        if (closeBlock == null)
-        {
-            if (hasChunk)
-            {
-                //只是空气方块
-                return true;
-            }
-            else
-            {
-                //还没有生成chunk
-                return false;
-            }
-        }
-        BlockShapeEnum blockShape = closeBlock.blockInfo.GetBlockShape();
-        switch (blockShape)
-        {
-            case BlockShapeEnum.Cube:
-                return false;
-            default:
-                return true;
-        }
+        this.localPosition = localPosition;
+        this.worldPosition = worldPosition;
     }
 
     /// <summary>
@@ -239,12 +81,12 @@ public abstract class Block
     /// <param name="direction"></param>
     /// <param name="closeBlock"></param>
     /// <returns></returns>
-    public virtual bool CheckNeedBuildFace(DirectionEnum direction, out Block closeBlock)
+    public virtual bool CheckNeedBuildFace(DirectionEnum direction, out BlockTypeEnum closeBlock)
     {
-        closeBlock = null;
+        closeBlock = BlockTypeEnum.None;
         if (localPosition.y == 0) return false;
-        GetCloseRotateBlockByDirection(direction, out closeBlock, out bool hasChunk);
-        if (closeBlock == null)
+        GetCloseRotateBlockByDirection(direction, out closeBlock,out DirectionEnum closeBlockDirection, out bool hasChunk);
+        if (closeBlock == BlockTypeEnum.None)
         {
             if (hasChunk)
             {
@@ -257,7 +99,8 @@ public abstract class Block
                 return false;
             }
         }
-        BlockShapeEnum blockShape = closeBlock.blockInfo.GetBlockShape();
+        Block closeRegisterBlock = BlockHandler.Instance.manager.GetRegisterBlock(closeBlock);
+        BlockShapeEnum blockShape = closeRegisterBlock.blockInfo.GetBlockShape();
         switch (blockShape)
         {
             case BlockShapeEnum.Cube:
@@ -269,7 +112,7 @@ public abstract class Block
 
     public virtual bool CheckNeedBuildFace(DirectionEnum direction)
     {
-        return CheckNeedBuildFace(direction, out Block value);
+        return CheckNeedBuildFace(direction, out BlockTypeEnum closeBlock);
     }
 
     /// <summary>
@@ -342,22 +185,23 @@ public abstract class Block
 
     }
 
-    public virtual void GetCloseRotateBlockByDirection(DirectionEnum getDirection, out Block closeBlock, out bool hasChunk)
+    public virtual void GetCloseRotateBlockByDirection(DirectionEnum getDirection, out BlockTypeEnum closeBlock, out DirectionEnum direction, out bool hasChunk)
     {
         if (blockInfo.rotate_state == 0)
         {
             //不旋转
-            GetCloseBlockByDirection(getDirection, out closeBlock, out hasChunk);
+            GetCloseBlockByDirection(getDirection, out closeBlock,out direction, out hasChunk);
         }
         else if (blockInfo.rotate_state == 1)
         {
             //旋转
             DirectionEnum rotateDirection = GetRotateDirection(getDirection);
-            GetCloseBlockByDirection(rotateDirection, out closeBlock, out hasChunk);
+            GetCloseBlockByDirection(rotateDirection, out closeBlock, out direction, out hasChunk);
         }
         else
         {
-            closeBlock = null;
+            closeBlock = BlockTypeEnum.None;
+            direction = DirectionEnum.UP;
             hasChunk = false;
         }
     }
@@ -368,38 +212,41 @@ public abstract class Block
     /// <param name="getDirection"></param>
     /// <param name="closeBlock"></param>
     /// <param name="hasChunk"></param>
-    public virtual void GetCloseBlockByDirection(DirectionEnum getDirection, out Block closeBlock, out bool hasChunk)
+    public virtual void GetCloseBlockByDirection(DirectionEnum getDirection, out BlockTypeEnum blockType, out DirectionEnum direction, out bool hasChunk)
     {
+        Vector3Int targetBlockWorldPosition;
         switch (getDirection)
         {
             case DirectionEnum.UP:
-                closeBlock = upBlock;
-                hasChunk = upBlockHasChunk;
+                targetBlockWorldPosition = worldPosition + Vector3Int.up;
                 break;
             case DirectionEnum.Down:
-                closeBlock = downBlock;
-                hasChunk = downBlockHasChunk;
+                targetBlockWorldPosition = worldPosition + Vector3Int.down;
                 break;
             case DirectionEnum.Left:
-                closeBlock = leftBlock;
-                hasChunk = leftBlockHasChunk;
+                targetBlockWorldPosition = worldPosition + Vector3Int.left;
                 break;
             case DirectionEnum.Right:
-                closeBlock = rightBlock;
-                hasChunk = rightBlockHasChunk;
+                targetBlockWorldPosition = worldPosition + Vector3Int.right;
                 break;
             case DirectionEnum.Forward:
-                closeBlock = forwardBlock;
-                hasChunk = forwardBlockHasChunk;
+                targetBlockWorldPosition = worldPosition + Vector3Int.back;
                 break;
             case DirectionEnum.Back:
-                closeBlock = backBlock;
-                hasChunk = backBlockHasChunk;
+                targetBlockWorldPosition = worldPosition + Vector3Int.forward;
                 break;
             default:
-                closeBlock = upBlock;
-                hasChunk = upBlockHasChunk;
+                targetBlockWorldPosition = worldPosition + Vector3Int.up;
                 break;
+        }
+        WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(targetBlockWorldPosition, out  blockType, out  direction,out Chunk chunk);
+        if (chunk == null)
+        {
+            hasChunk = false;
+        }
+        else
+        {
+            hasChunk = true;
         }
     }
 

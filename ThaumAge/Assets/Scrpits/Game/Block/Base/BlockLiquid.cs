@@ -10,13 +10,13 @@ public class BlockLiquid : Block
     /// </summary>
     /// <param name="position"></param>
     /// <returns></returns>
-    public override bool CheckNeedBuildFace(DirectionEnum direction, out Block closeBlock)
+    public override bool CheckNeedBuildFace(DirectionEnum direction, out BlockTypeEnum closeBlock)
     {
-        closeBlock = null;
+        closeBlock = BlockTypeEnum.None;
         if (localPosition.y == 0)
             return false;
-        GetCloseRotateBlockByDirection(direction, out closeBlock, out bool hasChunk);
-        if (closeBlock == null)
+        GetCloseRotateBlockByDirection(direction, out  closeBlock, out DirectionEnum closeBlockDirection, out bool hasChunk);
+        if (closeBlock == BlockTypeEnum.None)
         {
             if (hasChunk)
             {
@@ -27,13 +27,14 @@ public class BlockLiquid : Block
                 return false;
             }
         }
-        BlockShapeEnum blockShape = closeBlock.blockInfo.GetBlockShape();
+        Block closeRegisterBlock = BlockHandler.Instance.manager.GetRegisterBlock(closeBlock);
+        BlockShapeEnum blockShape = closeRegisterBlock.blockInfo.GetBlockShape();
         switch (blockShape)
         {
             case BlockShapeEnum.Cube:
                 return false;
             case BlockShapeEnum.Liquid:
-                if (closeBlock.blockType == blockType)
+                if (closeBlock == blockType)
                 {
                     return false;
                 }

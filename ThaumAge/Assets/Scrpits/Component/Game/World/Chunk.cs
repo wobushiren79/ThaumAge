@@ -36,21 +36,18 @@ public class Chunk : BaseMonoBehaviour
     public MeshRenderer meshRenderer;
     public MeshFilter meshFilter;
 
-    //存储着此Chunk内的所有Block信息
-    public Block[] mapForBlock;
+    //存储着此Chunk内的所有信息
+    public ChunkDataBean chunkData;
+
     //待更新方块
     public Queue<BlockBean> listUpdateBlock = new Queue<BlockBean>();
-    //大小
-    public int width = 0;
-    public int height = 0;
+
     //是否初始化
     public bool isInit = false;
     public bool isBuildChunk = false;
     public bool isDrawMesh = false;
     protected bool isFirstDraw = true;
     protected bool isAnimForInit = false;
-    //世界坐标
-    public Vector3Int worldPosition;
 
     //渲染数据
     protected ChunkRenderData chunkRenderData;
@@ -133,11 +130,11 @@ public class Chunk : BaseMonoBehaviour
             {
                 BlockBean itemBlock = listUpdateBlock.Dequeue();
                 Vector3Int positionBlockWorld = itemBlock.worldPosition.GetVector3Int();
-                Vector3Int positionBlockLocal = positionBlockWorld - worldPosition;
+                Vector3Int positionBlockLocal = positionBlockWorld - chunkData.positionForWorld;
                 //需要重新设置一下本地坐标 之前没有记录本地坐标
                 itemBlock.localPosition = new Vector3IntBean(positionBlockLocal);
                 //设置方块
-                SetBlock(itemBlock, false, false, false);
+                SetBlockForLocal(positionBlockLocal, itemBlock.GetBlockType(), itemBlock.GetDirection(), false, false, false);
             }
             //异步保存数据
             GameDataHandler.Instance.manager.SaveGameDataAsync(worldData);
@@ -165,10 +162,7 @@ public class Chunk : BaseMonoBehaviour
     /// <param name="minHeight"></param>
     public void SetData(Vector3Int worldPosition, int width, int height)
     {
-        this.worldPosition = worldPosition;
-        this.width = width;
-        this.height = height;
-        mapForBlock = new Block[width * height * width];
+        chunkData = new ChunkDataBean(worldPosition, width, height);
     }
 
     /// <summary>
@@ -186,10 +180,12 @@ public class Chunk : BaseMonoBehaviour
     /// </summary>
     public void AddUpdateChunkForRange()
     {
-        Chunk leftChunk = WorldCreateHandler.Instance.manager.GetChunk(worldPosition - new Vector3Int(-width, 0, 0));
-        Chunk rightChunk = WorldCreateHandler.Instance.manager.GetChunk(worldPosition - new Vector3Int(width, 0, 0));
-        Chunk upChunk = WorldCreateHandler.Instance.manager.GetChunk(worldPosition - new Vector3Int(0, 0, width));
-        Chunk downChunk = WorldCreateHandler.Instance.manager.GetChunk(worldPosition - new Vector3Int(0, 0, -width));
+        Vector3Int worldPosition = chunkData.positionForWorld;
+        int chunkWidth = chunkData.chunkWidth;
+        Chunk leftChunk = WorldCreateHandler.Instance.manager.GetChunk(worldPosition - new Vector3Int(-chunkWidth, 0, 0));
+        Chunk rightChunk = WorldCreateHandler.Instance.manager.GetChunk(worldPosition - new Vector3Int(chunkWidth, 0, 0));
+        Chunk upChunk = WorldCreateHandler.Instance.manager.GetChunk(worldPosition - new Vector3Int(0, 0, chunkWidth));
+        Chunk downChunk = WorldCreateHandler.Instance.manager.GetChunk(worldPosition - new Vector3Int(0, 0, -chunkWidth));
         WorldCreateHandler.Instance.manager.AddUpdateChunk(leftChunk);
         WorldCreateHandler.Instance.manager.AddUpdateChunk(rightChunk);
         WorldCreateHandler.Instance.manager.AddUpdateChunk(upChunk);
@@ -197,12 +193,12 @@ public class Chunk : BaseMonoBehaviour
         WorldCreateHandler.Instance.manager.AddUpdateChunk(this);
     }
 
-    public void AddUpdateChunkForRange(Block changeBlock)
+    public void AddUpdateChunkForRange(Vector3Int worldPosition)
     {
-        Chunk leftChunk = WorldCreateHandler.Instance.manager.GetChunkForWorldPosition(changeBlock.worldPosition - new Vector3Int(-1, 0, 0));
-        Chunk rightChunk = WorldCreateHandler.Instance.manager.GetChunkForWorldPosition(changeBlock.worldPosition - new Vector3Int(1, 0, 0));
-        Chunk upChunk = WorldCreateHandler.Instance.manager.GetChunkForWorldPosition(changeBlock.worldPosition - new Vector3Int(0, 0, 1));
-        Chunk downChunk = WorldCreateHandler.Instance.manager.GetChunkForWorldPosition(changeBlock.worldPosition - new Vector3Int(0, 0, -1));
+        Chunk leftChunk = WorldCreateHandler.Instance.manager.GetChunkForWorldPosition(worldPosition - new Vector3Int(-1, 0, 0));
+        Chunk rightChunk = WorldCreateHandler.Instance.manager.GetChunkForWorldPosition(worldPosition - new Vector3Int(1, 0, 0));
+        Chunk upChunk = WorldCreateHandler.Instance.manager.GetChunkForWorldPosition(worldPosition - new Vector3Int(0, 0, 1));
+        Chunk downChunk = WorldCreateHandler.Instance.manager.GetChunkForWorldPosition(worldPosition - new Vector3Int(0, 0, -1));
         if (leftChunk != this)
             WorldCreateHandler.Instance.manager.AddUpdateChunk(leftChunk);
         if (rightChunk != this)
@@ -263,7 +259,7 @@ public class Chunk : BaseMonoBehaviour
     public async void BuildChunkForAsync(Action callBackForComplete)
     {
         //只有初始化之后的chunk才能刷新
-        if (!isInit || mapForBlock.Length <= 0)
+        if (!isInit || chunkData.arrayBlockIds.Length <= 0)
         {
             isBuildChunk = false;
             callBackForComplete?.Invoke();
@@ -290,15 +286,18 @@ public class Chunk : BaseMonoBehaviour
                         BlockMaterialEnum blockMaterial = blockMaterialsEnum[i];
                         chunkRenderData.dicTris.Add(blockMaterial, new List<int>());
                     }
-                    for (int x = 0; x < width; x++)
+                    for (int x = 0; x < chunkData.chunkWidth; x++)
                     {
-                        for (int y = 0; y < height; y++)
+                        for (int y = 0; y < chunkData.chunkHeight; y++)
                         {
-                            for (int z = 0; z < width; z++)
+                            for (int z = 0; z < chunkData.chunkWidth; z++)
                             {
-                                Block block = mapForBlock[GetIndexByPosition(x, y, z)];
-                                if (block == null || block.blockType == BlockTypeEnum.None)
+                                chunkData.GetBlockForLocal(x, y, z, out BlockTypeEnum blockType, out DirectionEnum direction);
+                                if (blockType == BlockTypeEnum.None)
                                     continue;
+                                Vector3Int localPosition = new Vector3Int(x, y, z);
+                                Block block = BlockHandler.Instance.manager.GetRegisterBlock(blockType);
+                                block.SetData(blockType, direction, localPosition, localPosition + chunkData.positionForWorld);
                                 block.BuildBlock(chunkRenderData);
                             }
                         }
@@ -422,32 +421,32 @@ public class Chunk : BaseMonoBehaviour
         }
     }
 
-    public void GetBlockForWorld(Vector3Int blockWorldPosition, out Block block, out bool isInside)
+    public void GetBlockForWorld(Vector3Int blockWorldPosition, out BlockTypeEnum block, out DirectionEnum direction, out bool isInside)
     {
-        GetBlockForLocal(blockWorldPosition - worldPosition, out block, out isInside);
+        GetBlockForLocal(blockWorldPosition - chunkData.positionForWorld, out block, out direction, out isInside);
     }
 
-    public void GetBlockForLocal(Vector3Int localPosition, out Block block, out bool isInside)
+    public void GetBlockForLocal(Vector3Int localPosition, out BlockTypeEnum block, out DirectionEnum direction, out bool isInside)
     {
-        if (localPosition.y < 0 || localPosition.y > height - 1)
+        if (localPosition.y < 0 || localPosition.y > chunkData.chunkHeight - 1)
         {
-            block = null;
+            block = BlockTypeEnum.None;
+            direction = DirectionEnum.UP;
             isInside = false;
             return;
         }
         //当前位置是否在Chunk内
-        if ((localPosition.x < 0) || (localPosition.z < 0) || (localPosition.x >= width) || (localPosition.z >= width))
+        if ((localPosition.x < 0) || (localPosition.z < 0) || (localPosition.x >= chunkData.chunkWidth) || (localPosition.z >= chunkData.chunkWidth))
         {
-            Vector3Int blockWorldPosition = localPosition + worldPosition;
-            WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(blockWorldPosition, out block, out bool hasChunk);
+            Vector3Int blockWorldPosition = localPosition + chunkData.positionForWorld;
+            WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(blockWorldPosition, out block, out direction, out bool hasChunk);
             isInside = false;
             return;
         }
         else
         {
             isInside = true;
-            int index = GetIndexByPosition(localPosition);
-            block = mapForBlock[index];
+            chunkData.GetBlockForLocal(localPosition,out block,out direction);
         }
     }
 
@@ -465,92 +464,109 @@ public class Chunk : BaseMonoBehaviour
         SetBlockForLocal(localPosition, BlockTypeEnum.None);
     }
 
-
     /// <summary>
     /// 设置方块
     /// </summary>
     /// <param name="worldPosition"></param>
     /// <param name="blockType"></param>
     /// <returns></returns>
-    public Block SetBlockForWorld(Vector3Int worldPosition, BlockTypeEnum blockType)
+    public void SetBlockForWorld(Vector3Int worldPosition, BlockTypeEnum blockType)
     {
-        Vector3Int blockLocalPosition = worldPosition - this.worldPosition;
-        return SetBlockForLocal(blockLocalPosition, blockType);
+        SetBlockForWorld(worldPosition, blockType, DirectionEnum.UP);
     }
 
-    public Block SetBlockForWorld(Vector3Int worldPosition, BlockTypeEnum blockType, DirectionEnum direction)
+    public void SetBlockForWorld(Vector3Int worldPosition, BlockTypeEnum blockType, DirectionEnum direction)
     {
-        Vector3Int blockLocalPosition = worldPosition - this.worldPosition;
-        return SetBlockForLocal(blockLocalPosition, blockType, direction);
+        Vector3Int blockLocalPosition = worldPosition - chunkData.positionForWorld;
+        SetBlockForLocal(blockLocalPosition, blockType, direction);
     }
 
-    public Block SetBlockForLocal(Vector3Int localPosition, BlockTypeEnum blockType)
+    public void SetBlockForLocal(Vector3Int localPosition, BlockTypeEnum blockType)
     {
-        BlockBean blockData = new BlockBean(blockType, localPosition, localPosition + worldPosition);
-        return SetBlock(blockData, true, true, true);
+        SetBlockForLocal(localPosition, blockType, DirectionEnum.UP);
     }
 
-    public Block SetBlockForLocal(Vector3Int localPosition, BlockTypeEnum blockType, DirectionEnum direction)
+    public void SetBlockForLocal(Vector3Int localPosition, BlockTypeEnum blockType, DirectionEnum direction)
     {
-        BlockBean blockData = new BlockBean(blockType, localPosition, localPosition + worldPosition, direction);
-        return SetBlock(blockData, true, true, true);
+        SetBlockForLocal(localPosition, blockType, direction, true, true, true);
     }
 
-    public Block SetBlock(BlockBean blockData, bool isSaveData, bool isRefreshChunkRange, bool isRefreshBlockRange)
+    public void SetBlockForLocal(Vector3Int localPosition, BlockTypeEnum blockType, DirectionEnum direction, bool isSaveData, bool isRefreshChunkRange, bool isRefreshBlockRange)
     {
-        Vector3Int localPosition = blockData.localPosition.GetVector3Int();
-        //添加数据
-        Block newBlock = BlockHandler.Instance.CreateBlock(this, blockData);
-        if (localPosition.x >= width || localPosition.x < 0
-            || localPosition.y >= height || localPosition.y < 0
-            || localPosition.z >= width || localPosition.z < 0)
-        {
-            return null;
-        }
-
-        int index = GetIndexByPosition(localPosition);
         //首先移除方块
-        Block oldBlock = mapForBlock[index];
-        if (oldBlock != null)
-            oldBlock.DestoryBlock();
+        chunkData.GetBlockForLocal(localPosition, out BlockTypeEnum oldBlockType, out DirectionEnum oldDirection);
 
         //设置新方块
-        mapForBlock[index] = newBlock;
-        newBlock.InitBlock();
+        chunkData.SetBlockForLocal(localPosition, blockType, direction);
 
         //刷新六个方向的方块
         if (isRefreshBlockRange)
         {
-            newBlock.RefreshBlockRange();
+            //待更新
+            //newBlock.RefreshBlockRange();
         }
 
         //是否实时刷新
         if (isRefreshChunkRange)
         {
             //异步构建chunk
-            AddUpdateChunkForRange(newBlock);
+            AddUpdateChunkForRange(localPosition + chunkData.positionForWorld);
         }
 
         if (isSaveData)
         {
+            int index = chunkData.GetIndexByPosition(localPosition);
             //保存数据
             if (worldData != null && worldData.chunkData != null)
             {
-                ChunkBean chunkData = worldData.chunkData;
-                if (chunkData.dicBlockData.ContainsKey(index))
+                BlockBean blockData = new BlockBean(blockType, localPosition, localPosition + chunkData.positionForWorld, direction);
+                if (worldData.chunkData.dicBlockData.ContainsKey(index))
                 {
-                    chunkData.dicBlockData[index] = newBlock.blockData;
+                    worldData.chunkData.dicBlockData[index] = blockData;
                 }
                 else
                 {
-                    chunkData.dicBlockData.Add(index, newBlock.blockData);
+                    worldData.chunkData.dicBlockData.Add(index, blockData);
                 }
             }
             //异步保存数据
             GameDataHandler.Instance.manager.SaveGameDataAsync(worldData);
         }
+    }
 
-        return newBlock;
+    /// <summary>
+    /// 处理-基础地形方块
+    /// </summary>
+    /// <param name="chunk"></param>
+    public void HandleForBaseBlock()
+    {
+        WorldTypeEnum worldType = WorldCreateHandler.Instance.manager.worldType;
+        //获取该世界的所有生态
+        List<Biome> listBiome = BiomeHandler.Instance.manager.GetBiomeListByWorldType(worldType);
+        //获取一定范围内的生态点
+        List<Vector3Int> listBiomeCenter = BiomeHandler.Instance.GetBiomeCenterPosition(this, 5, 10);
+        //遍历map，生成其中每个Block的信息 
+        //生成基础地形数据
+        for (int x = 0; x < chunkData.chunkWidth; x++)
+        {
+            for (int y = 0; y < chunkData.chunkHeight; y++)
+            {
+                for (int z = 0; z < chunkData.chunkWidth; z++)
+                {
+                    Vector3Int position = new Vector3Int(x, y, z);
+
+                    //获取方块类型
+                    BlockTypeEnum blockType = BiomeHandler.Instance.CreateBiomeBlockType(this, listBiomeCenter, listBiome, position);
+
+                    //如果是空 则跳过
+                    if (blockType == BlockTypeEnum.None)
+                        continue;
+
+                    //添加方块
+                    chunkData.SetBlockForLocal(x, y, z, blockType, DirectionEnum.UP);
+                }
+            }
+        }
     }
 
     /// <summary>
@@ -562,7 +578,7 @@ public class Chunk : BaseMonoBehaviour
         //获取数据中的chunk
         UserDataBean userData = gameDataManager.GetUserData();
 
-        WorldDataBean worldData = gameDataManager.GetWorldData(userData.userId, WorldTypeEnum.Main, worldPosition);
+        WorldDataBean worldData = gameDataManager.GetWorldData(userData.userId, WorldTypeEnum.Main, chunkData.positionForWorld);
 
         //如果没有世界数据 则创建一个
         if (worldData == null)
@@ -581,73 +597,19 @@ public class Chunk : BaseMonoBehaviour
         else
         {
             worldData.chunkData = new ChunkBean();
-            worldData.chunkData.position = new Vector3IntBean(worldPosition);
+            worldData.chunkData.position = new Vector3IntBean(chunkData.positionForWorld);
         }
         foreach (var itemData in dicBlockData)
         {
             BlockBean blockData = itemData.Value;
-            //生成方块
-            Block newBlock = BlockHandler.Instance.CreateBlock(this, blockData);
             Vector3Int positionBlock = blockData.localPosition.GetVector3Int();
-            //添加方块 如果已经有该方块 则先删除，优先使用存档的方块
-            int index = GetIndexByPosition(positionBlock);
-            Block oldBlock = mapForBlock[index];
-            if (oldBlock != null)
-                oldBlock.DestoryBlock();
 
-            mapForBlock[index] = newBlock;
-            //初始化方块
-            newBlock.InitBlock();
+            //添加方块 如果已经有该方块 则先删除，优先使用存档的方块
+            chunkData.GetBlockForLocal(positionBlock, out BlockTypeEnum blockType, out DirectionEnum direction);
+
+            chunkData.SetBlockForLocal(positionBlock, blockData.blockId, blockData.direction);
         }
         SetWorldData(worldData);
-    }
-
-    /// <summary>
-    /// 处理-基础地形方块
-    /// </summary>
-    /// <param name="chunk"></param>
-    public void HandleForBaseBlock()
-    {
-        WorldTypeEnum worldType = WorldCreateHandler.Instance.manager.worldType;
-        //获取该世界的所有生态
-        List<Biome> listBiome = BiomeHandler.Instance.manager.GetBiomeListByWorldType(worldType);
-        //获取一定范围内的生态点
-        List<Vector3Int> listBiomeCenter = BiomeHandler.Instance.GetBiomeCenterPosition(this, 5, 10);
-        //遍历map，生成其中每个Block的信息 
-        //生成基础地形数据
-        for (int x = 0; x < width; x++)
-        {
-            for (int y = 0; y < height; y++)
-            {
-                for (int z = 0; z < width; z++)
-                {
-                    Vector3Int position = new Vector3Int(x, y, z);
-
-                    //获取方块类型
-                    BlockTypeEnum blockType = BiomeHandler.Instance.CreateBiomeBlockType(this, listBiomeCenter, listBiome, position);
-
-                    //如果是空 则跳过
-                    if (blockType == BlockTypeEnum.None)
-                        continue;
-
-                    //生成方块
-                    Block block = BlockHandler.Instance.CreateBlock(this, blockType, position);
-                    //添加方块
-                    mapForBlock[GetIndexByPosition(x, y, z)] = block;
-                    //初始化方块
-                    block.InitBlock();
-                }
-            }
-        }
-    }
-
-    public int GetIndexByPosition(Vector3Int position)
-    {
-        return GetIndexByPosition(position.x, position.y, position.z);
-    }
-    public int GetIndexByPosition(int x, int y, int z)
-    {
-        return x * width * height + y * width + z;
     }
 
 

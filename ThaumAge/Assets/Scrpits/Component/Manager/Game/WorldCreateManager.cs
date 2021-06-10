@@ -156,19 +156,20 @@ public class WorldCreateManager : BaseManager
     /// </summary>
     /// <param name="pos">世界坐标</param>
     /// <returns></returns>
-    public void GetBlockForWorldPosition(Vector3Int pos,out Block block ,out Chunk chunk)
+    public void GetBlockForWorldPosition(Vector3Int pos, out BlockTypeEnum block, out DirectionEnum direction, out Chunk chunk)
     {
         chunk = GetChunkForWorldPosition(pos);
         if (chunk == null)
         {
-            block = null;
+            block =  BlockTypeEnum.None;
+            direction = DirectionEnum.UP;
             return;
         }
-        chunk.GetBlockForWorld(pos, out  block,out bool isInside);
+        chunk.GetBlockForWorld(pos, out  block,out direction, out bool isInside);
     }
-    public void GetBlockForWorldPosition(Vector3Int pos, out Block block, out bool hasChunk)
+    public void GetBlockForWorldPosition(Vector3Int pos, out BlockTypeEnum block, out DirectionEnum direction, out bool hasChunk)
     {
-        GetBlockForWorldPosition(pos, out block, out Chunk chunk);
+        GetBlockForWorldPosition(pos, out block,out direction, out Chunk chunk);
         if (chunk == null)
         {
             hasChunk = false;
@@ -194,17 +195,16 @@ public class WorldCreateManager : BaseManager
     /// <param name="pos"></param>
     public int GetMaxHeightForWorldPosition(int x, int z)
     {
-        int maxHeight = 100;
         Chunk chunk = GetChunkForWorldPosition(new Vector3Int(x, 0, z));
         if (chunk == null)
-            return maxHeight;
-        maxHeight = int.MinValue;
+            return 0;
+        int maxHeight = int.MinValue;
         for (int y = 0; y < heightChunk; y++)
         {
-            chunk.GetBlockForWorld(new Vector3Int(x, y, z),out Block itemBlock,out bool isInside);
-            if (itemBlock == null)
+            chunk.GetBlockForWorld(new Vector3Int(x, y, z), out BlockTypeEnum blockType, out DirectionEnum direction, out bool isInside);
+            if (blockType ==  BlockTypeEnum.None|| !isInside)
                 continue;
-            if (itemBlock.blockType != BlockTypeEnum.None && y > maxHeight)
+            if (blockType != BlockTypeEnum.None && isInside && y > maxHeight)
             {
                 maxHeight = y;
             }
