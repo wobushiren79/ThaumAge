@@ -736,7 +736,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 776616026688040896, guid: e48ab55db35bda74596243c14d61528a, type: 3}
       propertyPath: far clip plane
-      value: 5000
+      value: 200
       objectReference: {fileID: 0}
     - target: {fileID: 776616026688040896, guid: e48ab55db35bda74596243c14d61528a, type: 3}
       propertyPath: near clip plane
@@ -770,6 +770,10 @@ PrefabInstance:
       propertyPath: m_Lens.m_SensorSize.x
       value: 1.8395604
       objectReference: {fileID: 0}
+    - target: {fileID: 3086789914522227274, guid: e48ab55db35bda74596243c14d61528a, type: 3}
+      propertyPath: m_Lens.m_SensorSize.x
+      value: 1.8923476
+      objectReference: {fileID: 0}
     - target: {fileID: 3287581641859170236, guid: e48ab55db35bda74596243c14d61528a, type: 3}
       propertyPath: m_FollowOffset.z
       value: -4.3092318
@@ -784,7 +788,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7319987004489445258, guid: e48ab55db35bda74596243c14d61528a, type: 3}
       propertyPath: m_Lens.m_SensorSize.x
-      value: 2.2005532
+      value: 1.8923476
+      objectReference: {fileID: 0}
+    - target: {fileID: 7374345364582230763, guid: e48ab55db35bda74596243c14d61528a, type: 3}
+      propertyPath: m_Lens.m_SensorSize.x
+      value: 1.8923476
       objectReference: {fileID: 0}
     - target: {fileID: 7547917985195101338, guid: e48ab55db35bda74596243c14d61528a, type: 3}
       propertyPath: m_Lens.m_SensorSize.x
