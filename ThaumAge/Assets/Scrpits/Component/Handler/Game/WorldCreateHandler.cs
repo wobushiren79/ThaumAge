@@ -167,7 +167,7 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
                 if (!isOrderDraw)
                 {
                     //构建修改过的区块
-                    updateChunk.DrawMesh();    
+                    updateChunk.DrawMesh();
                 }
             }));
         }
@@ -198,7 +198,7 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
         }
         await Task.Run(() =>
         {
-            lock(lockForUpdateBlock)
+            lock (lockForUpdateBlock)
             {
 #if UNITY_EDITOR
                 Stopwatch stopwatch = TimeUtil.GetMethodTimeStart();
@@ -215,7 +215,7 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
                     Chunk chunk = manager.GetChunkForWorldPosition(positionBlockWorld);
                     if (chunk != null && chunk.isInit)
                     {
-                        Vector3Int positionBlockLocal = itemBlock.worldPosition.GetVector3Int() - chunk.worldPosition;
+                        Vector3Int positionBlockLocal = itemBlock.worldPosition.GetVector3Int() - chunk.chunkData.positionForWorld;
                         //需要重新设置一下本地坐标 之前没有记录本地坐标
                         itemBlock.localPosition = new Vector3IntBean(positionBlockLocal);
                         //获取保存的数据
@@ -224,7 +224,7 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
                         if (worldData == null || worldData.chunkData == null || worldData.chunkData.GetBlockData(positionBlockLocal) == null)
                         {
                             //设置方块
-                            chunk.SetBlock(itemBlock, false, false, false);
+                            chunk.SetBlockForLocal(positionBlockLocal, itemBlock.GetBlockType(), itemBlock.GetDirection(), false, false, false);
                             //添加需要更新的chunk
                             manager.AddUpdateChunk(chunk);
                         }

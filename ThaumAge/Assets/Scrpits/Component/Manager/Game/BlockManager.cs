@@ -14,6 +14,11 @@ public class BlockManager : BaseManager, IBlockInfoView
 
     public virtual void Awake()
     {
+        InitData();
+    }
+
+    public void InitData()
+    {
         controllerForBlock = new BlockInfoController(this, this);
         controllerForBlock.GetAllBlockInfoData(InitBlockInfo);
         RegisterBlock();
@@ -54,6 +59,7 @@ public class BlockManager : BaseManager, IBlockInfoView
                 string blockShapeName = EnumUtil.GetEnumName(blockShape);
                 block = ReflexUtil.CreateInstance<Block>("Block" + blockShapeName);
             }
+            block.blockInfo = blockInfo;
             RegisterBlock(blockType, block);
         }
     }

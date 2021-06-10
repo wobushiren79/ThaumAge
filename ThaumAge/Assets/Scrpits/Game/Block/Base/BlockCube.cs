@@ -33,14 +33,14 @@ public class BlockCube : Block
             if (CheckNeedBuildFace(DirectionEnum.Left))
                 BuildFace(DirectionEnum.Left, localPosition, Vector3.up, Vector3.forward, false, chunkData);
             //Right
-           if (CheckNeedBuildFace(DirectionEnum.Right))
+            if (CheckNeedBuildFace(DirectionEnum.Right))
                 BuildFace(DirectionEnum.Right, localPosition + new Vector3Int(1, 0, 0), Vector3.up, Vector3.forward, true, chunkData);
 
             //Bottom
-           if (CheckNeedBuildFace(DirectionEnum.Down))
+            if (CheckNeedBuildFace(DirectionEnum.Down))
                 BuildFace(DirectionEnum.Down, localPosition, Vector3.forward, Vector3.right, false, chunkData);
             //Top
-           if (CheckNeedBuildFace(DirectionEnum.UP))
+            if (CheckNeedBuildFace(DirectionEnum.UP))
                 BuildFace(DirectionEnum.UP, localPosition + new Vector3Int(0, 1, 0), Vector3.forward, Vector3.right, true, chunkData);
 
             //Forward
@@ -49,6 +49,20 @@ public class BlockCube : Block
             //Back
             if (CheckNeedBuildFace(DirectionEnum.Back))
                 BuildFace(DirectionEnum.Back, localPosition + new Vector3Int(0, 0, 1), Vector3.up, Vector3.right, false, chunkData);
+        }
+    }
+
+    public override void BuildBlockNoCheck(Chunk.ChunkRenderData chunkData)
+    {
+        base.BuildBlock(chunkData);
+        if (blockType != BlockTypeEnum.None)
+        {
+            BuildFace(DirectionEnum.Left, localPosition, Vector3.up, Vector3.forward, false, chunkData);
+            BuildFace(DirectionEnum.Right, localPosition + new Vector3Int(1, 0, 0), Vector3.up, Vector3.forward, true, chunkData);
+            BuildFace(DirectionEnum.Down, localPosition, Vector3.forward, Vector3.right, false, chunkData);
+            BuildFace(DirectionEnum.UP, localPosition + new Vector3Int(0, 1, 0), Vector3.forward, Vector3.right, true, chunkData);
+            BuildFace(DirectionEnum.Forward, localPosition, Vector3.up, Vector3.right, true, chunkData);
+            BuildFace(DirectionEnum.Back, localPosition + new Vector3Int(0, 0, 1), Vector3.up, Vector3.right, false, chunkData);
         }
     }
 

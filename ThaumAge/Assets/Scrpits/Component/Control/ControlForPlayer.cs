@@ -223,7 +223,7 @@ public class ControlForPlayer : ControlForBase
                 else
                 {
                     //如果手上有物品
-                    WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(closePosition, out Block block, out Chunk addChunk);
+                    WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(closePosition, out BlockTypeEnum block,out DirectionEnum blockDirection, out Chunk addChunk);
                     if (addChunk)
                     {
                         ItemsInfoBean itemsInfo = ItemsHandler.Instance.manager.GetItemsInfoById(itemsData.itemsId);

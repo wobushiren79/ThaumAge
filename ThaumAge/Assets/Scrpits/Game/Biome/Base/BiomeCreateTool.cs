@@ -736,5 +736,24 @@ public class BiomeCreateTool
 
     }
 
+    /// <summary>
+    /// 增加建筑
+    /// </summary>
+    /// <param name="startPosition"></param>
+    /// <param name="buildingType"></param>
+    public static void AddBuilding(Vector3Int startPosition, BuildingTypeEnum buildingType)
+    {
+        BuildingInfoBean buildingInfo = BiomeHandler.Instance.manager.GetBuildingInfo(buildingType);
+
+        List<BuildingBean> listBuildingData = buildingInfo.listBuildingData;
+
+        for (int i = 0; i < listBuildingData.Count; i++)
+        {
+            BuildingBean buildingData = listBuildingData[i];
+
+            BlockBean blockData = new BlockBean((BlockTypeEnum)buildingData.blockId, startPosition + buildingData.GetPosition(), (DirectionEnum)buildingData.direction);
+            WorldCreateHandler.Instance.manager.AddUpdateBlock(blockData);
+        }
+    }
 
 }

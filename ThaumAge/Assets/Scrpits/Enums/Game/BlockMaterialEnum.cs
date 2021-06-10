@@ -8,5 +8,4 @@ public enum BlockMaterialEnum
     BothFaceSwing = 3,
     Water = 4,
     Magma = 5,
-
 }

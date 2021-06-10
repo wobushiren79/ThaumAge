@@ -18,28 +18,16 @@ public class BlockHandler : BaseHandler<BlockHandler, BlockManager>
     /// <param name="chunk"></param>
     /// <param name="blockData"></param>
     /// <returns></returns>
-    public Block CreateBlock(Chunk chunk, BlockTypeEnum blockType, Vector3Int localPosition, DirectionEnum direction)
-    {
-        Type type = manager.GetRegisterBlock(blockType).GetType();
+    //public Block CreateBlock(Chunk chunk, BlockTypeEnum blockType, Vector3Int localPosition, DirectionEnum direction)
+    //{
+    //    Type type = manager.GetRegisterBlock(blockType).GetType();
 
-        Block block = FormatterServices.GetUninitializedObject(type) as Block;
-        //Block block = CreateInstance<Block>(type);
-        //Block block = Activator.CreateInstance(type) as Block;
-        block.SetData(chunk, blockType, localPosition, direction);
-        return block;
-    }
-
-    public Block CreateBlock(Chunk chunk, BlockTypeEnum blockType, Vector3Int localPosition)
-    {
-        return CreateBlock(chunk, blockType, localPosition, DirectionEnum.UP);
-    }
-
-    public Block CreateBlock(Chunk chunk, BlockBean blockData)
-    {
-        Block block = CreateBlock(chunk, blockData.GetBlockType(), blockData.localPosition.GetVector3Int(), blockData.GetDirection());
-        block.blockData = blockData;
-        return block;
-    }
+    //    Block block = FormatterServices.GetUninitializedObject(type) as Block;
+    //    //Block block = CreateInstance<Block>(type);
+    //    //Block block = Activator.CreateInstance(type) as Block;
+    //    block.SetData(chunk, blockType, localPosition, direction);
+    //    return block;
+    //}
 
 
     /// <summary>

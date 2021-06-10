@@ -56,9 +56,9 @@ public class NavigationPathFinding : BaseMonoBehaviour
     /// <param name="chunk"></param>
     public void RefreshNavMeshSource(Chunk chunk)
     {
-        if (navMeshSources.TryGetValue(chunk.worldPosition,out NavMeshBuildSource source))
+        if (navMeshSources.TryGetValue(chunk.chunkData.positionForWorld,out NavMeshBuildSource source))
         {
-            source.size = new Vector3(chunk.width, chunk.height + 1, chunk.width);
+            source.size = new Vector3(chunk.chunkData.chunkWidth, chunk.chunkData.chunkHeight + 1, chunk.chunkData.chunkWidth);
             source.sourceObject = chunk.chunkMeshCollider;
             source.transform = chunk.transform.localToWorldMatrix;
         }
@@ -66,10 +66,10 @@ public class NavigationPathFinding : BaseMonoBehaviour
         {
             NavMeshBuildSource sourceNew = new NavMeshBuildSource();
             sourceNew.shape = NavMeshBuildSourceShape.Mesh;
-            sourceNew.size = new Vector3(chunk.width, chunk.height + 1, chunk.width);
+            sourceNew.size = new Vector3(chunk.chunkData.chunkWidth, chunk.chunkData.chunkHeight + 1, chunk.chunkData.chunkWidth);
             sourceNew.sourceObject = chunk.chunkMeshCollider;
             sourceNew.transform = chunk.transform.localToWorldMatrix;
-            navMeshSources.Add(chunk.worldPosition, sourceNew);
+            navMeshSources.Add(chunk.chunkData.positionForWorld, sourceNew);
         }
         worldBounds.Encapsulate(chunk.meshRenderer.bounds);
         worldBounds.Expand(0.1f);
