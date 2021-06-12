@@ -2,39 +2,32 @@
 using UnityEngine;
 
 [Serializable]
-public class BlockBean 
+public class BlockBean
 {
+    //方块的本地坐标
+    public Vector3Int localPosition;
+    //方块的世界坐标
+    public Vector3Int worldPosition;
+
     //方块类型
     public ushort blockId;
     //方向
     public byte direction;
     //方块数据
     public string meta;
-    //方块位置
-    public Vector3IntBean localPosition;
-    //方块的世界坐标
-    public Vector3IntBean worldPosition;
 
     public BlockBean()
     {
 
     }
+    public BlockBean(Vector3Int worldPosition, BlockTypeEnum blockType = BlockTypeEnum.None, DirectionEnum direction = DirectionEnum.UP)
+    {
+        SetData(Vector3Int.zero, worldPosition, blockType, direction);
+    }
 
-    public BlockBean(BlockTypeEnum blockType, Vector3Int worldPosition)
+    public BlockBean(Vector3Int localposition, Vector3Int worldPosition, BlockTypeEnum blockType = BlockTypeEnum.None, DirectionEnum direction = DirectionEnum.UP)
     {
-        SetData(blockType, Vector3Int.zero, worldPosition, DirectionEnum.UP);
-    }
-    public BlockBean(BlockTypeEnum blockType, Vector3Int worldPosition, DirectionEnum direction)
-    {
-        SetData(blockType, Vector3Int.zero, worldPosition, direction);
-    }
-    public BlockBean(BlockTypeEnum blockType, Vector3Int localposition,Vector3Int worldPosition)
-    {
-        SetData(blockType, localposition, worldPosition,DirectionEnum.UP);
-    }
-    public BlockBean(BlockTypeEnum blockType, Vector3Int localposition, Vector3Int worldPosition, DirectionEnum direction)
-    {
-        SetData(blockType, localposition, worldPosition, direction);
+        SetData(localposition, worldPosition, blockType, direction);
     }
 
     /// <summary>
@@ -43,21 +36,14 @@ public class BlockBean
     /// <param name="blockType"></param>
     /// <param name="localposition"></param>
     /// <param name="worldPosition"></param>
-    public void SetData(BlockTypeEnum blockType, Vector3Int localposition, Vector3Int worldPosition, DirectionEnum direction)
+    public void SetData(Vector3Int localPosition, Vector3Int worldPosition, BlockTypeEnum blockType = BlockTypeEnum.None, DirectionEnum direction = DirectionEnum.UP)
     {
-        this.blockId = (ushort)blockType;
-        this.localPosition = new Vector3IntBean(localposition);
-        this.worldPosition = new Vector3IntBean(worldPosition);
-        this.direction = (byte)direction;
-    }
+        this.localPosition = localPosition;
+        this.worldPosition = worldPosition;
 
-    /// <summary>
-    /// 获取方块类型
-    /// </summary>
-    /// <returns></returns>
-    public BlockTypeEnum GetBlockType()
-    {
-        return (BlockTypeEnum)blockId;
+        this.blockId = (ushort)blockType;
+        this.direction = (byte)direction;
+        this.meta = null;
     }
 
     public void SetBlockType(BlockTypeEnum blockType)
@@ -83,14 +69,63 @@ public class BlockBean
         return data;
     }
 
-    /// <summary>
-    /// 获取方向
-    /// </summary>
-    /// <returns></returns>
+    public BlockTypeEnum GetBlockType()
+    {
+        return (BlockTypeEnum)blockId;
+    }
+
     public DirectionEnum GetDirection()
     {
         if (direction == 0)
             return DirectionEnum.UP;
-       return (DirectionEnum)direction;
+        return (DirectionEnum)direction;
     }
 }
+
+//public struct BlockBean
+//{
+//    //方块的本地坐标
+//    public Vector3Int localPosition;
+//    //方块的世界坐标
+//    public Vector3Int worldPosition;
+
+//    //方块类型
+//    public ushort blockId;
+//    //方向
+//    public byte direction;
+//    //方块数据
+//    public string meta;
+
+//    public BlockBean(Vector3Int worldPosition, BlockTypeEnum blockType = BlockTypeEnum.None, DirectionEnum direction = DirectionEnum.UP)
+//    {
+//        this.localPosition = Vector3Int.zero;
+//        this.worldPosition = worldPosition;
+
+//        this.blockId = (ushort)blockType;
+//        this.direction = (byte)direction;
+//        this.meta = null;
+//    }
+
+//    public BlockBean(Vector3Int localPosition, Vector3Int worldPosition, BlockTypeEnum blockType = BlockTypeEnum.None, DirectionEnum direction = DirectionEnum.UP)
+//    {
+//        this.localPosition = localPosition;
+//        this.worldPosition = worldPosition;
+
+//        this.blockId = (ushort)blockType;
+//        this.direction = (byte)direction;
+//        this.meta = null;
+//    }
+
+//    public BlockTypeEnum GetBlockType()
+//    {
+//        return (BlockTypeEnum)blockId;
+//    }
+
+//    public DirectionEnum GetDirection()
+//    {
+//        if (direction == 0)
+//            return DirectionEnum.UP;
+//        return (DirectionEnum)direction;
+//    }
+
+//}

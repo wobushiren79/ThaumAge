@@ -16,7 +16,7 @@ public class WorldCreateManager : BaseManager
     public Dictionary<string, GameObject> dicModel = new Dictionary<string, GameObject>();
 
     //存储着世界中所有的Chunk
-    public Dictionary<int, Chunk> dicChunk = new Dictionary<int, Chunk>();
+    public Dictionary<long, Chunk> dicChunk = new Dictionary<long, Chunk>();
 
     //存储着所有的材质
     public Material[] arrayBlockMat = new Material[16];
@@ -63,7 +63,7 @@ public class WorldCreateManager : BaseManager
     /// <param name="chunk"></param>
     public void AddChunk(Vector3Int position, Chunk chunk)
     {
-        int index = MathUtil.GetSingleIndexForTwo(position.x/ widthChunk, position.z/ widthChunk, worldSize);
+        int index = MathUtil.GetSingleIndexForTwo(position.x / widthChunk, position.z / widthChunk, worldSize);
         dicChunk.Add(index, chunk);
     }
 
@@ -161,23 +161,11 @@ public class WorldCreateManager : BaseManager
         chunk = GetChunkForWorldPosition(pos);
         if (chunk == null)
         {
-            block =  BlockTypeEnum.None;
+            block = BlockTypeEnum.None;
             direction = DirectionEnum.UP;
             return;
         }
-        chunk.GetBlockForWorld(pos, out  block,out direction, out bool isInside);
-    }
-    public void GetBlockForWorldPosition(Vector3Int pos, out BlockTypeEnum block, out DirectionEnum direction, out bool hasChunk)
-    {
-        GetBlockForWorldPosition(pos, out block,out direction, out Chunk chunk);
-        if (chunk == null)
-        {
-            hasChunk = false;
-        }
-        else
-        {
-            hasChunk = true;
-        }
+        chunk.GetBlockForWorld(pos, out block, out direction, out bool isInside);
     }
 
     /// <summary>
@@ -201,8 +189,8 @@ public class WorldCreateManager : BaseManager
         int maxHeight = int.MinValue;
         for (int y = 0; y < heightChunk; y++)
         {
-            chunk.GetBlockForWorld(new Vector3Int(x, y, z), out BlockTypeEnum blockType, out DirectionEnum direction, out bool isInside);
-            if (blockType ==  BlockTypeEnum.None|| !isInside)
+            chunk.GetBlockForWorld(new Vector3Int(x, y, z), out BlockTypeEnum blockType,out DirectionEnum direction, out bool isInside);
+            if (blockType == BlockTypeEnum.None || !isInside)
                 continue;
             if (blockType != BlockTypeEnum.None && isInside && y > maxHeight)
             {

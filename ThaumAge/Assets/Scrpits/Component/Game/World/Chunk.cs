@@ -39,9 +39,6 @@ public class Chunk : BaseMonoBehaviour
     //存储着此Chunk内的所有信息
     public ChunkDataBean chunkData;
 
-    //待更新方块
-    public Queue<BlockBean> listUpdateBlock = new Queue<BlockBean>();
-
     //是否初始化
     public bool isInit = false;
     public bool isBuildChunk = false;
@@ -106,43 +103,9 @@ public class Chunk : BaseMonoBehaviour
         {
             eventUpdateTime = 1;
             eventUpdate?.Invoke();
-            HandleForUpdateBlock();
         }
     }
 
-    /// <summary>
-    /// 增加待更新方块
-    /// </summary>
-    /// <param name="blockData"></param>
-    public void AddUpdateBlock(BlockBean blockData)
-    {
-        listUpdateBlock.Enqueue(blockData);
-    }
-
-    /// <summary>
-    /// 处理-更新的方块
-    /// </summary>
-    public void HandleForUpdateBlock()
-    {
-        if (listUpdateBlock.Count > 0)
-        {
-            while (listUpdateBlock.Count > 0)
-            {
-                BlockBean itemBlock = listUpdateBlock.Dequeue();
-                Vector3Int positionBlockWorld = itemBlock.worldPosition.GetVector3Int();
-                Vector3Int positionBlockLocal = positionBlockWorld - chunkData.positionForWorld;
-                //需要重新设置一下本地坐标 之前没有记录本地坐标
-                itemBlock.localPosition = new Vector3IntBean(positionBlockLocal);
-                //设置方块
-                SetBlockForLocal(positionBlockLocal, itemBlock.GetBlockType(), itemBlock.GetDirection(), false, false, false);
-            }
-            //异步保存数据
-            GameDataHandler.Instance.manager.SaveGameDataAsync(worldData);
-            //异步刷新
-            AddUpdateChunkForRange();
-            WorldCreateHandler.Instance.HandleForUpdateChunk(false, null);
-        }
-    }
 
     /// <summary>
     /// 获取存储数据
@@ -426,6 +389,7 @@ public class Chunk : BaseMonoBehaviour
         GetBlockForLocal(blockWorldPosition - chunkData.positionForWorld, out block, out direction, out isInside);
     }
 
+
     public void GetBlockForLocal(Vector3Int localPosition, out BlockTypeEnum block, out DirectionEnum direction, out bool isInside)
     {
         if (localPosition.y < 0 || localPosition.y > chunkData.chunkHeight - 1)
@@ -439,17 +403,16 @@ public class Chunk : BaseMonoBehaviour
         if ((localPosition.x < 0) || (localPosition.z < 0) || (localPosition.x >= chunkData.chunkWidth) || (localPosition.z >= chunkData.chunkWidth))
         {
             Vector3Int blockWorldPosition = localPosition + chunkData.positionForWorld;
-            WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(blockWorldPosition, out block, out direction, out bool hasChunk);
+            WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(blockWorldPosition, out block, out direction, out Chunk chunk);
             isInside = false;
             return;
         }
         else
         {
             isInside = true;
-            chunkData.GetBlockForLocal(localPosition,out block,out direction);
+            chunkData.GetBlockForLocal(localPosition, out block, out direction);
         }
     }
-
 
     /// <summary>
     /// 移除方块
@@ -519,7 +482,7 @@ public class Chunk : BaseMonoBehaviour
             //保存数据
             if (worldData != null && worldData.chunkData != null)
             {
-                BlockBean blockData = new BlockBean(blockType, localPosition, localPosition + chunkData.positionForWorld, direction);
+                BlockBean blockData = new BlockBean(localPosition, localPosition + chunkData.positionForWorld, blockType, direction);
                 if (worldData.chunkData.dicBlockData.ContainsKey(index))
                 {
                     worldData.chunkData.dicBlockData[index] = blockData;
@@ -602,7 +565,7 @@ public class Chunk : BaseMonoBehaviour
         foreach (var itemData in dicBlockData)
         {
             BlockBean blockData = itemData.Value;
-            Vector3Int positionBlock = blockData.localPosition.GetVector3Int();
+            Vector3Int positionBlock = blockData.localPosition;
 
             //添加方块 如果已经有该方块 则先删除，优先使用存档的方块
             chunkData.GetBlockForLocal(positionBlock, out BlockTypeEnum blockType, out DirectionEnum direction);

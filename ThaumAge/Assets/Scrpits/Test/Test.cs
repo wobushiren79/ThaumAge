@@ -30,7 +30,7 @@ public class Test : BaseMonoBehaviour
         byte[] dataList3 = new byte[count];
         string[] dataList5 = new string[count];
         string[] dataList6 = new string[count];
-        BlockCube[] dataList4 = new BlockCube[count];
+        BlockBean[] dataList4 = new BlockBean[count];
 
         Stopwatch stopwatch = TimeUtil.GetMethodTimeStart();
         for (int i = 0; i < count; i++)
@@ -57,7 +57,7 @@ public class Test : BaseMonoBehaviour
         stopwatch = TimeUtil.GetMethodTimeStart();
         for (int i = 0; i < count; i++)
         {
-            BlockCube dataTest = new BlockCube();
+            BlockBean dataTest = new BlockBean();
             dataList4[i] = dataTest;
         }
         TimeUtil.GetMethodTimeEnd("3", stopwatch);
@@ -85,7 +85,7 @@ public class Test : BaseMonoBehaviour
         stopwatch = TimeUtil.GetMethodTimeStart();
         for (int i = 0; i < count; i++)
         {
-            BlockCube dataTes = dataList4[i];
+            BlockBean dataTes = dataList4[i];
         }
         TimeUtil.GetMethodTimeEnd("33", stopwatch);
     }

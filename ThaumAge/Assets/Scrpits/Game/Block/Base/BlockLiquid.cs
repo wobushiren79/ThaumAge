@@ -15,7 +15,7 @@ public class BlockLiquid : Block
         closeBlock = BlockTypeEnum.None;
         if (localPosition.y == 0)
             return false;
-        GetCloseRotateBlockByDirection(direction, out  closeBlock, out DirectionEnum closeBlockDirection, out bool hasChunk);
+        GetCloseRotateBlockByDirection(direction, out closeBlock, out bool hasChunk);
         if (closeBlock == BlockTypeEnum.None)
         {
             if (hasChunk)

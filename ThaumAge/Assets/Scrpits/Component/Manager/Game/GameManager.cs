@@ -19,6 +19,20 @@ public class GameManager : BaseManager
         }
     }
 
+    public PlayerTargetBlock _playerTargetBlock;
+
+    public PlayerTargetBlock playerTargetBlock
+    {
+        get
+        {
+            if (_playerTargetBlock == null)
+            {
+                _playerTargetBlock = FindWithTag<PlayerTargetBlock>(TagInfo.Tag_Player);
+            }
+            return _playerTargetBlock;
+        }
+    }
+
     /// <summary>
     /// 改变游戏状态
     /// </summary>

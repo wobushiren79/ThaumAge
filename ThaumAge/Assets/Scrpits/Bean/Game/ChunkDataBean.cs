@@ -23,7 +23,6 @@ public class ChunkDataBean
         arrayBlockDirection = new byte[chunkWidth * chunkHeight * chunkWidth];
     }
 
-
     /// <summary>
     /// 设置方块
     /// </summary>
@@ -33,14 +32,17 @@ public class ChunkDataBean
         arrayBlockIds[index] = blockId;
         arrayBlockDirection[index] = direction;
     }
+
     public void SetBlockForLocal(int x, int y, int z, BlockTypeEnum blockType, DirectionEnum direction)
     {
         SetBlockForLocal(x, y, z, (ushort)blockType, (byte)direction);
     }
+
     public void SetBlockForLocal(Vector3Int blockPosition, ushort blockId, byte direction)
     {
         SetBlockForLocal(blockPosition.x, blockPosition.y, blockPosition.z, blockId, direction);
     }
+
     public void SetBlockForLocal(Vector3Int blockPosition, BlockTypeEnum blockType, DirectionEnum direction)
     {
         SetBlockForLocal(blockPosition.x, blockPosition.y, blockPosition.z, (ushort)blockType, (byte)direction);
@@ -72,6 +74,15 @@ public class ChunkDataBean
         GetBlockForLocal(blockPosition.x, blockPosition.y, blockPosition.z, out blockType, out direction);
     }
 
+    public void GetBlockForLocal(int x, int y, int z, out BlockTypeEnum blockType)
+    {
+        int index = GetIndexByPosition(x, y, z);
+        blockType = (BlockTypeEnum)arrayBlockIds[index];
+    }
+    public void GetBlockForLocal(Vector3Int blockPosition, out BlockTypeEnum blockType)
+    {
+        GetBlockForLocal(blockPosition.x, blockPosition.y, blockPosition.z, out blockType);
+    }
 
     /// <summary>
     /// 获取下标
