@@ -11,9 +11,9 @@ public class BiomePrairie : Biome
 
     }
 
-    public override BlockTypeEnum GetBlockType(int genHeight, Vector3Int localPos, Vector3Int wPos)
+    public override BlockTypeEnum GetBlockType(BiomeInfoBean biomeInfo, int genHeight, Vector3Int localPos, Vector3Int wPos)
     {
-        base.GetBlockType(genHeight, localPos, wPos);
+        base.GetBlockType(biomeInfo, genHeight, localPos, wPos);
         if (wPos.y == genHeight)
         {
             AddWeed(wPos);
@@ -43,8 +43,7 @@ public class BiomePrairie : Biome
     {
         BiomeForTreeData treeData = new BiomeForTreeData
         {
-            addRateMin = 1,
-            addRateMax = 500,
+            addRate = 0.01f,
             minHeight = 4,
             maxHeight = 7,
             treeTrunk = BlockTypeEnum.TreeOak,
@@ -58,8 +57,7 @@ public class BiomePrairie : Biome
     {
         BiomeForPlantData weedData = new BiomeForPlantData
         {
-            addRateMin = 3,
-            addRateMax = 10,
+            addRate = 0.3f,
             listPlantType = new List<BlockTypeEnum>{ BlockTypeEnum.Weed_Long, BlockTypeEnum.Weed_Normal, BlockTypeEnum.Weed_Short }
         };
         BiomeCreateTool.AddPlant(wPos, weedData);
@@ -69,8 +67,7 @@ public class BiomePrairie : Biome
     {
         BiomeForFlowerData flowersData = new BiomeForFlowerData
         {
-            addRateMin = 1,
-            addRateMax = 50,
+            addRate = 0.02f,
             listFlowerType = new List<BlockTypeEnum> { BlockTypeEnum.Sunflower, BlockTypeEnum.Rose, BlockTypeEnum.Chrysanthemum }
         };
         BiomeCreateTool.AddFlower(wPos, flowersData);

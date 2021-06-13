@@ -16,15 +16,18 @@ public class BlockCross : Block
     public override void RefreshBlock()
     {
         base.RefreshBlock();
-        //chunk.GetBlockForLocal(localPosition + Vector3Int.down, out Block blockDown, out bool isInside);
-
-        ////如果下方方块为NONE或者为液体
-
-        //if (isInside && (blockDown == null || blockDown.blockType == BlockTypeEnum.None || blockDown.blockInfo.GetBlockShape() == BlockShapeEnum.Liquid))
-        //{
-        //    BlockBean newBlockData = new BlockBean(BlockTypeEnum.None, localPosition, worldPosition);
-        //    chunk.AddUpdateBlock(newBlockData);
-        //}
+        //获取当前区块
+        Chunk chunk = WorldCreateHandler.Instance.manager.GetChunkForWorldPosition(worldPosition);
+        //获取下方方块
+        chunk.GetBlockForLocal(localPosition + Vector3Int.down, out BlockTypeEnum downBlockType, out DirectionEnum downBlockdirection, out bool isInside);
+        //获取下方方块数据
+        BlockInfoBean downBlockInfo = BlockHandler.Instance.manager.GetBlockInfo(downBlockType);
+        //如果下方方块为NONE或者为液体
+        if (isInside && (downBlockType == BlockTypeEnum.None || downBlockInfo.GetBlockShape() == BlockShapeEnum.Liquid))
+        {
+            chunk.SetBlockForLocal(localPosition, BlockTypeEnum.None);
+            WorldCreateHandler.Instance.manager.AddUpdateChunk(chunk);
+        }
     }
 
     public override void AddTris(Chunk.ChunkRenderData chunkData)

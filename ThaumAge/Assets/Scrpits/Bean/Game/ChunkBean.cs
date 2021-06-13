@@ -5,7 +5,8 @@ using UnityEngine;
 [Serializable]
 public class ChunkBean
 {
-    public Vector3IntBean position;
+    public Vector3Int position;
+
     public List<BlockBean> listBlockData = new List<BlockBean>();
 
     public Dictionary<int, BlockBean> dicBlockData = new Dictionary<int, BlockBean>();

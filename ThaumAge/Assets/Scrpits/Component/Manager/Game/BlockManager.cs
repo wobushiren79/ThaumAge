@@ -60,6 +60,7 @@ public class BlockManager : BaseManager, IBlockInfoView
                 block = ReflexUtil.CreateInstance<Block>("Block" + blockShapeName);
             }
             block.blockInfo = blockInfo;
+            block.SetData(Vector3Int.zero, Vector3Int.zero, blockType, DirectionEnum.UP);
             RegisterBlock(blockType, block);
         }
     }

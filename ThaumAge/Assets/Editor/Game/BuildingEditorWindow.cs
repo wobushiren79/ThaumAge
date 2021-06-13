@@ -149,7 +149,7 @@ public class BuildingEditorWindow : EditorWindow
             if (buildingEditor == null)
                 continue;
             BuildingBean buildingData = new BuildingBean();
-            buildingData.position = new Vector3IntBean((int)tfChild.position.x, (int)tfChild.position.y, (int)tfChild.position.z);
+            buildingData.position = Vector3Int.CeilToInt(tfChild.position);
             buildingData.direction = (int)buildingEditor.direction;
             buildingData.blockId = (int)buildingEditor.blockType;
 

@@ -16,6 +16,7 @@ public class BuildingEditor : BaseMonoBehaviour
     {
         meshFilter = GetComponent<MeshFilter>();
         meshRenderer = GetComponent<MeshRenderer>();
+        OnValidate();
     }
 
     private void OnValidate()
@@ -23,7 +24,7 @@ public class BuildingEditor : BaseMonoBehaviour
         BlockHandler.Instance.manager.InitData();
 
         BlockCube blockCube = new BlockCube();
-        blockCube.SetData(blockType, direction, Vector3Int.zero, Vector3Int.zero);
+        blockCube.SetData(Vector3Int.zero, Vector3Int.zero,blockType, direction);
 
         Chunk.ChunkRenderData chunkRender = new Chunk.ChunkRenderData();
         //初始化数据

@@ -28,7 +28,7 @@ public class Chunk : BaseMonoBehaviour
         public Dictionary<BlockMaterialEnum, List<int>> dicTris = new Dictionary<BlockMaterialEnum, List<int>>();
     }
 
-    public Action eventUpdate;
+    public List<Action> listEventUpdate;
 
     public MeshCollider meshCollider;
     public MeshCollider meshTrigger;
@@ -102,7 +102,7 @@ public class Chunk : BaseMonoBehaviour
         if (eventUpdateTime < 0)
         {
             eventUpdateTime = 1;
-            eventUpdate?.Invoke();
+            HandleForEventUpdate();
         }
     }
 
@@ -260,7 +260,7 @@ public class Chunk : BaseMonoBehaviour
                                     continue;
                                 Vector3Int localPosition = new Vector3Int(x, y, z);
                                 Block block = BlockHandler.Instance.manager.GetRegisterBlock(blockType);
-                                block.SetData(blockType, direction, localPosition, localPosition + chunkData.positionForWorld);
+                                block.SetData(localPosition, localPosition + chunkData.positionForWorld, direction);
                                 block.BuildBlock(chunkRenderData);
                             }
                         }
@@ -465,8 +465,9 @@ public class Chunk : BaseMonoBehaviour
         //刷新六个方向的方块
         if (isRefreshBlockRange)
         {
-            //待更新
-            //newBlock.RefreshBlockRange();
+            Block newBlock = BlockHandler.Instance.manager.GetRegisterBlock(blockType);
+            newBlock.SetData(localPosition, chunkData.positionForWorld + localPosition, direction);
+            newBlock.RefreshBlockRange();
         }
 
         //是否实时刷新
@@ -560,7 +561,7 @@ public class Chunk : BaseMonoBehaviour
         else
         {
             worldData.chunkData = new ChunkBean();
-            worldData.chunkData.position = new Vector3IntBean(chunkData.positionForWorld);
+            worldData.chunkData.position = chunkData.positionForWorld;
         }
         foreach (var itemData in dicBlockData)
         {
@@ -575,16 +576,27 @@ public class Chunk : BaseMonoBehaviour
         SetWorldData(worldData);
     }
 
+    /// <summary>
+    /// 事件处理
+    /// </summary>
+    public void HandleForEventUpdate()
+    {
+        for (int i = 0; i < listEventUpdate.Count; i++)
+        {
+            Action actionItem = listEventUpdate[i];
+            actionItem?.Invoke();
+        }
+    }
 
     #region 事件注册
     public void RegisterEventUpdate(Action action)
     {
-        eventUpdate += action;
+        listEventUpdate.Add(action);
     }
 
     public void UnRegisterEventUpdate(Action action)
     {
-        eventUpdate -= action;
+        listEventUpdate.Remove(action);
     }
     #endregion
 }

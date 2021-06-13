@@ -15,8 +15,8 @@ public class ControlForPlayer : ControlForBase
     private float timeJump = 0.2f;
     private float timeJumpTemp = 0;
 
-    private float speedJump = 5;
-    private float moveSpeed = 5;
+    private float speedJump = 2;
+    private float moveSpeed = 2;
 
     private void Awake()
     {
@@ -262,16 +262,18 @@ public class ControlForPlayer : ControlForBase
                 //如果上手没有物品 则挖掘
                 if (itemsData == null || itemsData.itemsId == 0)
                 {
-
                     if (isUse)
                     {
                         //获取原位置方块
                         WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(targetPosition, out BlockTypeEnum oldBlockType, out DirectionEnum oldBlockDirection, out Chunk targetChunk);
-                        //如果原位置是空则不做处理
-                        if (oldBlockType != BlockTypeEnum.None)
+                        if (targetChunk)
                         {
-                            targetChunk.RemoveBlockForWorld(targetPosition);
-                            WorldCreateHandler.Instance.HandleForUpdateChunk(true, null);
+                            //如果原位置是空则不做处理
+                            if (oldBlockType != BlockTypeEnum.None)
+                            {
+                                targetChunk.RemoveBlockForWorld(targetPosition);
+                                WorldCreateHandler.Instance.HandleForUpdateChunk(true, null);
+                            }
                         }
                     }
                     else

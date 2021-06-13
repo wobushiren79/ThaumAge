@@ -18,7 +18,7 @@ public class Biome
     /// </summary>
     /// <param name="genHeight"></param>
     /// <returns></returns>
-    public virtual BlockTypeEnum GetBlockType(int genHeight, Vector3Int localPos, Vector3Int wPos)
+    public virtual BlockTypeEnum GetBlockType(BiomeInfoBean biomeInfo,int genHeight, Vector3Int localPos, Vector3Int wPos)
     {
         if (wPos.y < genHeight - 1)
         {
@@ -35,12 +35,9 @@ public class Biome
     {
         BiomeForCaveData caveData = new BiomeForCaveData
         {
-            addRateMin = 100,
-            addRateMax = 1000000,
+            addRate = 0.00001f,
             minDepth = 1,
-            maxDepth = 5,
-            offset = 3,
-            size = 3,
+            maxDepth = 4,
         };
         BiomeCreateTool.AddCave(startPosition, caveData);
     }

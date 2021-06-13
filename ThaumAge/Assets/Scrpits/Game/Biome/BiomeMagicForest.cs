@@ -10,9 +10,9 @@ public class BiomeMagicForest : Biome
     {
     }
 
-    public override BlockTypeEnum GetBlockType(int genHeight, Vector3Int localPos, Vector3Int wPos)
+    public override BlockTypeEnum GetBlockType(BiomeInfoBean biomeInfo, int genHeight, Vector3Int localPos, Vector3Int wPos)
     {
-        base.GetBlockType(genHeight, localPos, wPos);
+        base.GetBlockType(biomeInfo, genHeight, localPos, wPos);
         if (wPos.y == genHeight)
         {
             AddWeed(wPos);
@@ -42,8 +42,7 @@ public class BiomeMagicForest : Biome
     {
         BiomeForTreeData treeData = new BiomeForTreeData
         {
-            addRateMin = 100,
-            addRateMax = 20000,
+            addRate = 0.005f,
             minHeight = 6,
             maxHeight = 10,
             treeTrunk = BlockTypeEnum.TreeSilver,
@@ -57,8 +56,7 @@ public class BiomeMagicForest : Biome
     {
         BiomeForTreeData treeData = new BiomeForTreeData
         {
-            addRateMin = 100,
-            addRateMax = 2000000,
+            addRate = 0.00005f,
             minHeight = 30,
             maxHeight = 50,
             treeTrunk = BlockTypeEnum.TreeWorld,
@@ -73,8 +71,7 @@ public class BiomeMagicForest : Biome
     {
         BiomeForTreeData treeData = new BiomeForTreeData
         {
-            addRateMin = 100,
-            addRateMax = 5000,
+            addRate= 0.01f,
             minHeight = 3,
             maxHeight = 6,
             treeTrunk = BlockTypeEnum.TreeOak,
@@ -88,8 +85,7 @@ public class BiomeMagicForest : Biome
     {
         BiomeForPlantData weedData = new BiomeForPlantData
         {
-            addRateMin = 1,
-            addRateMax = 3,
+            addRate = 0.3f,
             listPlantType = new List<BlockTypeEnum> { BlockTypeEnum.Weed_Long, BlockTypeEnum.Weed_Normal, BlockTypeEnum.Weed_Short }
         };
         BiomeCreateTool.AddPlant(wPos, weedData);

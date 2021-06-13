@@ -58,7 +58,30 @@ public abstract class Block
 
     public virtual void RefreshBlockRange()
     {
+        GetCloseBlock(Vector3Int.up)?.RefreshBlock();
+        GetCloseBlock(Vector3Int.down)?.RefreshBlock();
+        GetCloseBlock(Vector3Int.left)?.RefreshBlock();
+        GetCloseBlock(Vector3Int.right)?.RefreshBlock();
+        GetCloseBlock(Vector3Int.forward)?.RefreshBlock();
+        GetCloseBlock(Vector3Int.back)?.RefreshBlock();
+    }
 
+    /// <summary>
+    /// 获取靠近的方块
+    /// </summary>
+    /// <param name="closeDirection"></param>
+    /// <returns></returns>
+    protected Block GetCloseBlock(Vector3Int closeDirection)
+    {
+        Vector3Int closeWorldPosition = worldPosition + closeDirection;
+        WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(closeWorldPosition, out BlockTypeEnum closeBlockType, out DirectionEnum closeBlockDirection, out Chunk chunk);
+        if (chunk != null)
+        {
+            Block closeBlock = BlockHandler.Instance.manager.GetRegisterBlock(closeBlockType);
+            closeBlock.SetData(closeWorldPosition - chunk.chunkData.positionForWorld, closeWorldPosition, closeBlockDirection);
+            return closeBlock;
+        }
+        return null;
     }
 
     /// <summary>
@@ -67,13 +90,18 @@ public abstract class Block
     /// <param name="chunk"></param>
     /// <param name="position"></param>
     /// <param name="blockData"></param>
-    public virtual void SetData(BlockTypeEnum blockType, DirectionEnum direction, Vector3Int localPosition, Vector3Int worldPosition)
+    public virtual void SetData(Vector3Int localPosition, Vector3Int worldPosition, DirectionEnum direction)
     {
         this.localPosition = localPosition;
         this.worldPosition = worldPosition;
 
-        this.blockType = blockType;
         this.direction = direction;
+    }
+
+    public virtual void SetData(Vector3Int localPosition, Vector3Int worldPosition,BlockTypeEnum blockType, DirectionEnum direction)
+    {
+        SetData(localPosition, worldPosition, direction);
+        this.blockType = blockType;
     }
 
     /// <summary>

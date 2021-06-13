@@ -23,71 +23,39 @@ public class Test : BaseMonoBehaviour
     private void Start()
     {
         //UIHandler.Instance.manager.OpenUI<UIGameMain>(UIEnum.GameMain);
-        int count = 999999;
+        int count = 8124*16;
+        int seed = 131;
 
-        DataTest[] dataList1 = new DataTest[count];
-        int[] dataList2 = new int[count];
-        byte[] dataList3 = new byte[count];
-        string[] dataList5 = new string[count];
-        string[] dataList6 = new string[count];
-        BlockBean[] dataList4 = new BlockBean[count];
+        List<string> listData = new List<string>();
+        Dictionary<int, string> dicData = new Dictionary<int, string>();
+        string[] arrayData = new string[count];
+
+        for (int i = 0; i < count; i++)
+        {
+            dicData.Add(i, "test" + i);
+            arrayData[i] = ("test" + i);
+        }
+
+        for (int i = 0; i < 1; i++)
+        {
+            listData.Add("test" + i);
+        }
+
+
 
         Stopwatch stopwatch = TimeUtil.GetMethodTimeStart();
-        for (int i = 0; i < count; i++)
+        for (int x = 0; x < count; x++)
         {
-            DataTest dataTest = new DataTest();
-            dataTest.id = i;
-            dataTest.dr = 1;
-            dataTest.remark = "test";
-            dataTest.remark2 = "test";
-            dataList1[i] = dataTest;
-        }
-        TimeUtil.GetMethodTimeEnd("1", stopwatch);
-
-        stopwatch = TimeUtil.GetMethodTimeStart();
-        for (int i = 0; i < count; i++)
-        {
-            dataList2[i] = i;
-            dataList3[i] = 1;
-            dataList5[i] = "test";
-            dataList6[i] = "test";
+            string data = arrayData[x];
         }
         TimeUtil.GetMethodTimeEnd("2", stopwatch);
 
         stopwatch = TimeUtil.GetMethodTimeStart();
-        for (int i = 0; i < count; i++)
+        for (int x = 0; x < 1; x++)
         {
-            BlockBean dataTest = new BlockBean();
-            dataList4[i] = dataTest;
+            string data = listData[x];
         }
-        TimeUtil.GetMethodTimeEnd("3", stopwatch);
-
-        stopwatch = TimeUtil.GetMethodTimeStart();
-        for (int i = 0; i < count; i++)
-        {
-            DataTest dataTes = dataList1[i];
-            int id = dataTes.id;
-            int dr = dataTes.dr;
-            string remark = dataTes.remark;
-        }
-        TimeUtil.GetMethodTimeEnd("11", stopwatch);
-
-        stopwatch = TimeUtil.GetMethodTimeStart();
-        for (int i = 0; i < count; i++)
-        {
-            int id = dataList2[i];
-            byte dr = dataList3[i];
-            string remark = dataList5[i];
-            string remark2 = dataList6[i];
-        }
-        TimeUtil.GetMethodTimeEnd("22", stopwatch);
-
-        stopwatch = TimeUtil.GetMethodTimeStart();
-        for (int i = 0; i < count; i++)
-        {
-            BlockBean dataTes = dataList4[i];
-        }
-        TimeUtil.GetMethodTimeEnd("33", stopwatch);
+        TimeUtil.GetMethodTimeEnd("1", stopwatch);
     }
 
 
