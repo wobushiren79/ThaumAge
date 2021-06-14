@@ -18,6 +18,7 @@ public class BiomeMagicForest : Biome
             AddWeed(wPos);
             AddBigTree(wPos);
             AddWorldTree(wPos);
+            AddMushroomTree(wPos);
             // 地表，使用草
             return BlockTypeEnum.Grass_Magic;
         }
@@ -36,6 +37,14 @@ public class BiomeMagicForest : Biome
             //其他石头
             return BlockTypeEnum.Stone;
         }
+    }
+
+    protected void AddMushroomTree(Vector3Int wPos)
+    {
+        Vector3Int startPosition = wPos + Vector3Int.up;
+        BiomeCreateTool.AddBuilding(0.0001f, 101, startPosition, BuildingTypeEnum.MushrooBig);
+        BiomeCreateTool.AddBuilding(0.0001f, 201, startPosition, BuildingTypeEnum.Mushroom);
+        BiomeCreateTool.AddBuilding(0.0001f, 301, startPosition, BuildingTypeEnum.MushrooSmall);
     }
 
     protected void AddBigTree(Vector3Int wPos)
@@ -71,7 +80,7 @@ public class BiomeMagicForest : Biome
     {
         BiomeForTreeData treeData = new BiomeForTreeData
         {
-            addRate= 0.01f,
+            addRate = 0.01f,
             minHeight = 3,
             maxHeight = 6,
             treeTrunk = BlockTypeEnum.TreeOak,

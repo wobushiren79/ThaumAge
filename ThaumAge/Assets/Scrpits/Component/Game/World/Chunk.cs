@@ -28,7 +28,7 @@ public class Chunk : BaseMonoBehaviour
         public Dictionary<BlockMaterialEnum, List<int>> dicTris = new Dictionary<BlockMaterialEnum, List<int>>();
     }
 
-    public List<Action> listEventUpdate;
+    public List<Action> listEventUpdate = new List<Action>();
 
     public MeshCollider meshCollider;
     public MeshCollider meshTrigger;

@@ -677,23 +677,30 @@ public class BiomeCreateTool
 
     }
 
+
     /// <summary>
     /// 增加建筑
     /// </summary>
+    /// <param name="addRate"></param>
+    /// <param name="randomData"></param>
     /// <param name="startPosition"></param>
     /// <param name="buildingType"></param>
-    public static void AddBuilding(Vector3Int startPosition, BuildingTypeEnum buildingType)
+    public static void AddBuilding(float addRate, uint randomData, Vector3Int startPosition, BuildingTypeEnum buildingType)
     {
-        BuildingInfoBean buildingInfo = BiomeHandler.Instance.manager.GetBuildingInfo(buildingType);
-
-        List<BuildingBean> listBuildingData = buildingInfo.listBuildingData;
-
-        for (int i = 0; i < listBuildingData.Count; i++)
+        float randomRate = WorldRandTools.GetValue(startPosition, randomData);
+        if (randomRate < addRate)
         {
-            BuildingBean buildingData = listBuildingData[i];
+            BuildingInfoBean buildingInfo = BiomeHandler.Instance.manager.GetBuildingInfo(buildingType);
 
-            BlockBean blockData = new BlockBean(startPosition + buildingData.GetPosition(), (BlockTypeEnum)buildingData.blockId, (DirectionEnum)buildingData.direction);
-            WorldCreateHandler.Instance.manager.AddUpdateBlock(blockData);
+            List<BuildingBean> listBuildingData = buildingInfo.listBuildingData;
+
+            for (int i = 0; i < listBuildingData.Count; i++)
+            {
+                BuildingBean buildingData = listBuildingData[i];
+
+                BlockBean blockData = new BlockBean(startPosition + buildingData.GetPosition(), (BlockTypeEnum)buildingData.blockId, (DirectionEnum)buildingData.direction);
+                WorldCreateHandler.Instance.manager.AddUpdateBlock(blockData);
+            }
         }
     }
 

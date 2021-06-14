@@ -177,6 +177,7 @@ public class BuildingEditorWindow : EditorWindow
             buildingEditor.direction = (DirectionEnum)buildingData.direction;
             buildingEditor.blockType = (BlockTypeEnum)buildingData.blockId;
             buildingEditor.transform.position = buildingData.GetPosition();
+            buildingEditor.OnValidate();
         }
     }
 }

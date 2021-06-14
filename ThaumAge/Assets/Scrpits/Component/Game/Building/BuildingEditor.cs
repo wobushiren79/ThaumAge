@@ -12,14 +12,14 @@ public class BuildingEditor : BaseMonoBehaviour
     public BlockTypeEnum blockType;
     public DirectionEnum direction;
 
-    private void Awake()
+    public void Awake()
     {
         meshFilter = GetComponent<MeshFilter>();
         meshRenderer = GetComponent<MeshRenderer>();
         OnValidate();
     }
 
-    private void OnValidate()
+    public void OnValidate()
     {
         BlockHandler.Instance.manager.InitData();
 

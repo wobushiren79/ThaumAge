@@ -60,6 +60,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: b795e116c08e5754fb3171968d67f102, type: 3}
   - {fileID: 21300000, guid: 95671d16330067f40bc51b73ddc9460a, type: 3}
   - {fileID: 21300000, guid: 47e6d72671f820e40b746e841ba9e447, type: 3}
+  - {fileID: 21300000, guid: 5ed231c66e4f52944a9b169c98416ab9, type: 3}
   - {fileID: 21300000, guid: 9c744638940d4924d8c473bc32a2706b, type: 3}
   - {fileID: 21300000, guid: 4298ef0924cd8ab49bd4590cfcb024e0, type: 3}
   - {fileID: 21300000, guid: 95a421c96fe23364c8604afcbb035098, type: 3}
@@ -74,6 +75,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 3f18219ca88c6454fba5a49d5ca324d4, type: 3}
   - {fileID: 21300000, guid: b0d748acc4b51684ca302bc03196f25a, type: 3}
   - {fileID: 21300000, guid: 0761178d69f59134b969d8c55ec45be7, type: 3}
+  - {fileID: 21300000, guid: 5466a31ec854ee3429fe6949bc4c4737, type: 3}
   - {fileID: 21300000, guid: d0c1a91ed33b55a4292833e482611494, type: 3}
   - {fileID: 21300000, guid: 6c85ccde3337d784b88d46781c858b7b, type: 3}
   - {fileID: 21300000, guid: 9fb7765f63c19f043a167bf941dcd02a, type: 3}
@@ -89,6 +91,7 @@ SpriteAtlas:
   - icon_tree_oak
   - icon_flower_waterflower
   - icon_leaves_oak
+  - icon_leaves_mushroom
   - icon_magma
   - icon_weed_1
   - icon_sand
@@ -103,6 +106,7 @@ SpriteAtlas:
   - icon_base
   - icon_grass_wild
   - icon_leaves_world
+  - icon_tree_mushroom
   - icon_weed_2
   - icon_unknow
   - icon_grass_magic
