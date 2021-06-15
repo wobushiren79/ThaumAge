@@ -45,6 +45,14 @@ public class BiomeCreateTool
         public int maxDepth;
     }
 
+    public struct BiomeForRiverData
+    {
+        public float addRate;
+        public int minDepth;
+        public int maxDepth;
+    }
+
+
     /// <summary>
     /// 增加普通的树
     /// </summary>
@@ -679,6 +687,17 @@ public class BiomeCreateTool
 
     }
 
+
+    /// <summary>
+    /// 增加河流
+    /// </summary>
+    /// <param name="randomData"></param>
+    /// <param name="startPosition"></param>
+    /// <param name="riverData"></param>
+    public static void AddRiver(uint randomData, Vector3Int startPosition, BiomeForRiverData riverData)
+    {
+
+    }
 
     /// <summary>
     /// 增加建筑
