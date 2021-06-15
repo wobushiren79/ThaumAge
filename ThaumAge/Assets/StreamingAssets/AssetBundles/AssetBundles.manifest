@@ -1,22 +1,25 @@
 ManifestFileVersion: 0
-CRC: 59629792
+CRC: 4198754513
 AssetBundleManifest:
   AssetBundleInfos:
     Info_0:
-      Name: game/element
+      Name: block/base
       Dependencies: {}
     Info_1:
-      Name: block/mats
-      Dependencies: {}
-    Info_2:
       Name: ui/ui
       Dependencies: {}
+    Info_2:
+      Name: block/mats
+      Dependencies: {}
     Info_3:
-      Name: game/weather
+      Name: game/element
       Dependencies: {}
     Info_4:
-      Name: block/base
+      Name: game/weather
       Dependencies: {}
     Info_5:
       Name: sprite/atlas
+      Dependencies: {}
+    Info_6:
+      Name: block/block
       Dependencies: {}

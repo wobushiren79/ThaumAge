@@ -6,6 +6,7 @@ public enum BlockTypeEnum
     Sand = 3,    //沙子
     Dirt = 4,    //泥土
     Stone = 5,    //石头
+    StoneMoss = 6, //苔藓石
 
     Grass = 101,    //草地
     Grass_Magic = 102,    //蕴魔草地
@@ -25,9 +26,17 @@ public enum BlockTypeEnum
     Weed_Normal = 3002,    //杂草中等
     Weed_Short = 3003,    //杂草短
 
-    Sunflower = 3011,    //太阳花
-    Rose = 3012,    //玫瑰
-    Chrysanthemum = 3013,    //菊花
+    FlowerSun = 3011,    //向日葵
+    FlowerRose = 3012,    //玫瑰花
+    FlowerChrysanthemum = 3013,    //菊花
+
+    FlowerGold = 3021,//金耀花
+    FlowerWood = 3022,//木植花
+    FlowerWater = 3023,//水悦花
+    FlowerFire = 3024,//火焰花
+    FlowerEarth = 3025,//土岩花
+
+    MushroomLuminous = 3031,//夜光蘑菇
 
     Cactus = 4001,    //仙人掌
 

@@ -462,17 +462,25 @@ public abstract class Block
     /// <summary>
     /// 初始化方块
     /// </summary>
-    public virtual void InitBlock()
+    public virtual void InitBlock(Chunk chunk)
     {
-
+        //如果有模型。则创建模型
+        if (!CheckUtil.StringIsNull(blockInfo.model_name))
+        {
+            chunk.listBlockModelUpdate.Enqueue(localPosition);
+        }
     }
 
     /// <summary>
     /// 摧毁方块
     /// </summary>
-    public virtual void DestoryBlock()
+    public virtual void DestoryBlock(Chunk chunk)
     {
-
+        //如果有模型，则摧毁模型
+        if (chunk.dicBlockModel.ContainsKey(localPosition))
+        {
+            chunk.listBlockModelUpdate.Enqueue(localPosition);
+        }
     }
 
 }

@@ -52,6 +52,7 @@ SpriteAtlas:
   m_PackedSprites:
   - {fileID: 21300000, guid: b31d648132a133c43850570ce05c59e6, type: 3}
   - {fileID: 21300000, guid: c84110b19e6b18b4a9404d8c68d49363, type: 3}
+  - {fileID: 21300000, guid: 34daaf0223462eb499ca801194f1c1cf, type: 3}
   - {fileID: 21300000, guid: dd882182ed9807849a0f9361dd7e32fd, type: 3}
   - {fileID: 21300000, guid: 68b4dfa3189dae74298a1ab031e6cee0, type: 3}
   - {fileID: 21300000, guid: 9d676a642bcdee848a0a0e1898f2a852, type: 3}
@@ -63,6 +64,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 5ed231c66e4f52944a9b169c98416ab9, type: 3}
   - {fileID: 21300000, guid: 9c744638940d4924d8c473bc32a2706b, type: 3}
   - {fileID: 21300000, guid: 4298ef0924cd8ab49bd4590cfcb024e0, type: 3}
+  - {fileID: 21300000, guid: 40ad9c494f89aaa4aac3e9c8d7d6e598, type: 3}
   - {fileID: 21300000, guid: 95a421c96fe23364c8604afcbb035098, type: 3}
   - {fileID: 21300000, guid: 281ff16adcdeb6a428980acbed103408, type: 3}
   - {fileID: 21300000, guid: d38e1b7a109ecc241bcd14df5744474d, type: 3}
@@ -83,6 +85,7 @@ SpriteAtlas:
   m_PackedSpriteNamesToIndex:
   - icon_flower_fireflower
   - icon_cactus
+  - icon_stone_moss
   - icon_tree_world
   - icon_flower_sunflower
   - icon_tree_silver
@@ -94,6 +97,7 @@ SpriteAtlas:
   - icon_leaves_mushroom
   - icon_magma
   - icon_weed_1
+  - icon_mushroom_luminous
   - icon_sand
   - icon_flower_goldflower
   - icon_stone

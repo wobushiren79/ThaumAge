@@ -39,6 +39,18 @@ public class BiomeForest : Biome
             return BlockTypeEnum.Stone;
         }
     }
+
+
+    protected void AddFlower(Vector3Int wPos)
+    {
+        BiomeForFlowerData flowersData = new BiomeForFlowerData
+        {
+            addRate = 0.01f,
+            listFlowerType = new List<BlockTypeEnum> { BlockTypeEnum.FlowerSun, BlockTypeEnum.FlowerRose, BlockTypeEnum.FlowerChrysanthemum }
+        };
+        BiomeCreateTool.AddFlower(101,wPos, flowersData);
+    }
+
     protected void AddBigTree(Vector3Int wPos)
     {
         BiomeForTreeData treeData = new BiomeForTreeData
@@ -77,14 +89,5 @@ public class BiomeForest : Biome
         BiomeCreateTool.AddPlant(wPos, weedData);
     }
 
-    protected void AddFlower(Vector3Int wPos)
-    {
-        BiomeForFlowerData flowersData = new BiomeForFlowerData
-        {
-            addRate = 0.01f,
-            listFlowerType = new List<BlockTypeEnum> { BlockTypeEnum.Sunflower, BlockTypeEnum.Rose, BlockTypeEnum.Chrysanthemum }
-        };
-        BiomeCreateTool.AddFlower(wPos, flowersData);
-    }
 
 }

@@ -12,6 +12,16 @@ using UnityEngine.Scripting;
 public class BlockHandler : BaseHandler<BlockHandler, BlockManager>
 {
 
+    public GameObject CreateBlockModel(Chunk chunk, ushort blockId, string modelName)
+    {
+        GameObject objModel = manager.GetBlockModel(blockId, modelName);
+        if (objModel == null)
+            return null;
+        GameObject objBlock = Instantiate(chunk.objBlockContainer, objModel);
+        return objBlock;
+    }
+
+
     /// <summary>
     /// 创建方块
     /// </summary>

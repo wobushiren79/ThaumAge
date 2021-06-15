@@ -19,6 +19,9 @@ public class BiomeMagicForest : Biome
             AddBigTree(wPos);
             AddWorldTree(wPos);
             AddMushroomTree(wPos);
+            AddStoneMoss(wPos);
+            AddFlower(wPos);
+            AddFlower(wPos);
             // 地表，使用草
             return BlockTypeEnum.Grass_Magic;
         }
@@ -45,6 +48,22 @@ public class BiomeMagicForest : Biome
         BiomeCreateTool.AddBuilding(0.0001f, 101, startPosition, BuildingTypeEnum.MushrooBig);
         BiomeCreateTool.AddBuilding(0.0001f, 201, startPosition, BuildingTypeEnum.Mushroom);
         BiomeCreateTool.AddBuilding(0.0001f, 301, startPosition, BuildingTypeEnum.MushrooSmall);
+    }
+
+    protected void AddStoneMoss(Vector3Int wPos)
+    {
+        Vector3Int startPosition = wPos + Vector3Int.up;
+        BiomeCreateTool.AddBuilding(0.005f, 401, startPosition, BuildingTypeEnum.StoneMoss);
+    }
+
+    public void AddFlower(Vector3Int wPos)
+    {
+        BiomeForFlowerData flowersData = new BiomeForFlowerData
+        {
+            addRate = 0.005f,
+            listFlowerType = new List<BlockTypeEnum> { BlockTypeEnum.MushroomLuminous }
+        };
+        BiomeCreateTool.AddFlower(501, wPos, flowersData);
     }
 
     protected void AddBigTree(Vector3Int wPos)
@@ -99,5 +118,8 @@ public class BiomeMagicForest : Biome
         };
         BiomeCreateTool.AddPlant(wPos, weedData);
     }
+
+
+
 
 }

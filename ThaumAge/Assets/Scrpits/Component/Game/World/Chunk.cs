@@ -30,6 +30,10 @@ public class Chunk : BaseMonoBehaviour
 
     public List<Action> listEventUpdate = new List<Action>();
 
+    //需要创建方块实力的列表
+    public Queue<Vector3Int> listBlockModelUpdate = new Queue<Vector3Int>();
+    public Dictionary<Vector3Int, GameObject> dicBlockModel = new Dictionary<Vector3Int, GameObject>();
+
     public MeshCollider meshCollider;
     public MeshCollider meshTrigger;
 
@@ -54,6 +58,8 @@ public class Chunk : BaseMonoBehaviour
     public Mesh chunkMesh;
     public Mesh chunkMeshCollider;
     public Mesh chunkMeshTrigger;
+
+    public GameObject objBlockContainer;
 
     protected static object lockForUpdateBlcok = new object();
 
@@ -104,6 +110,7 @@ public class Chunk : BaseMonoBehaviour
             eventUpdateTime = 1;
             HandleForEventUpdate();
         }
+        HandleForBlockModelUpdate();
     }
 
 
@@ -458,14 +465,23 @@ public class Chunk : BaseMonoBehaviour
     {
         //首先移除方块
         chunkData.GetBlockForLocal(localPosition, out BlockTypeEnum oldBlockType, out DirectionEnum oldDirection);
-
+        if (oldBlockType != BlockTypeEnum.None)
+        {
+            Block oldBlock = BlockHandler.Instance.manager.GetRegisterBlock(oldBlockType);
+            oldBlock.SetData(localPosition, localPosition + this.chunkData.positionForWorld, oldDirection);
+            oldBlock.DestoryBlock(this);
+        }
         //设置新方块
         chunkData.SetBlockForLocal(localPosition, blockType, direction);
+
+        Block newBlock = BlockHandler.Instance.manager.GetRegisterBlock(blockType);
+        newBlock.SetData(localPosition, localPosition + this.chunkData.positionForWorld, direction);
+        newBlock.InitBlock(this);
+
 
         //刷新六个方向的方块
         if (isRefreshBlockRange)
         {
-            Block newBlock = BlockHandler.Instance.manager.GetRegisterBlock(blockType);
             newBlock.SetData(localPosition, chunkData.positionForWorld + localPosition, direction);
             newBlock.RefreshBlockRange();
         }
@@ -586,6 +602,36 @@ public class Chunk : BaseMonoBehaviour
             Action actionItem = listEventUpdate[i];
             actionItem?.Invoke();
         }
+    }
+
+    /// <summary>
+    /// 处理实例化模型的方块
+    /// </summary>
+    public void HandleForBlockModelUpdate()
+    {
+        if (listBlockModelUpdate.Count <= 0)
+            return;
+        Vector3Int localPosition = listBlockModelUpdate.Dequeue();
+        //首先删除原有的模型
+        if (dicBlockModel.TryGetValue(localPosition, out GameObject dataObj))
+        {
+            dicBlockModel.Remove(localPosition);
+            Destroy(dataObj);
+        }
+        GetBlockForLocal(localPosition, out BlockTypeEnum block, out DirectionEnum direction, out bool isInside);
+        if (!isInside || block == BlockTypeEnum.None)
+            return;
+        //获取数据
+        BlockInfoBean blockInfo = BlockHandler.Instance.manager.GetBlockInfo(block);
+        if (blockInfo == null || CheckUtil.StringIsNull(blockInfo.model_name))
+            return;
+        //获取模型
+        GameObject objBlockModel = BlockHandler.Instance.CreateBlockModel(this, (ushort)block, blockInfo.model_name);
+        if (objBlockModel == null)
+            return;
+        dicBlockModel.Add(localPosition, objBlockModel);
+        //设置位置
+        objBlockModel.transform.position = localPosition + chunkData.positionForWorld + new Vector3(0.5f, 0, 0.5f);
     }
 
     #region 事件注册

@@ -11,6 +11,9 @@ public class BlockManager : BaseManager, IBlockInfoView
     protected BlockInfoBean[] arrayBlockInfo = new BlockInfoBean[EnumUtil.GetEnumMaxIndex<BlockTypeEnum>() + 1];
     //注册方块列表
     protected Block[] arrayBlockRegister = new Block[EnumUtil.GetEnumMaxIndex<BlockTypeEnum>() + 1];
+    //方块模型列表
+    protected GameObject[] arrayBlockModel = new GameObject[EnumUtil.GetEnumMaxIndex<BlockTypeEnum>() + 1];
+    
 
     public virtual void Awake()
     {
@@ -22,6 +25,22 @@ public class BlockManager : BaseManager, IBlockInfoView
         controllerForBlock = new BlockInfoController(this, this);
         controllerForBlock.GetAllBlockInfoData(InitBlockInfo);
         RegisterBlock();
+    }
+
+    /// <summary>
+    /// 获取方块的模型
+    /// </summary>
+    /// <param name="modelName"></param>
+    /// <returns></returns>
+    public GameObject GetBlockModel(ushort blockId, string modelName)
+    {
+        GameObject objModel = arrayBlockModel[blockId];
+        if (objModel == null)
+        {
+            objModel= GetModel<GameObject>("block/block", modelName);
+            arrayBlockModel[blockId] = objModel;
+        }
+        return objModel;
     }
 
     /// <summary>
@@ -93,7 +112,7 @@ public class BlockManager : BaseManager, IBlockInfoView
     {
         return GetBlockInfo((int)blockType);
     }
-    public BlockInfoBean GetBlockInfo(long blockId)
+    public BlockInfoBean GetBlockInfo(int blockId)
     {
         return arrayBlockInfo[blockId];
     }

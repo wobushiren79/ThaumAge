@@ -11,6 +11,7 @@ public class BuildingEditor : BaseMonoBehaviour
 
     public BlockTypeEnum blockType;
     public DirectionEnum direction;
+    public float randomRate = 1;
 
     public void Awake()
     {

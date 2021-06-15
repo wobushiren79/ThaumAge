@@ -537,14 +537,16 @@ public class BiomeCreateTool
         }
     }
 
+
     /// <summary>
     /// 增加鲜花
     /// </summary>
+    /// <param name="randomData"></param>
     /// <param name="startPosition"></param>
     /// <param name="flowerData"></param>
-    public static void AddFlower(Vector3Int startPosition, BiomeForFlowerData flowerData)
+    public static void AddFlower(uint randomData, Vector3Int startPosition, BiomeForFlowerData flowerData)
     {
-        float addRate = WorldRandTools.GetValue(startPosition);
+        float addRate = WorldRandTools.GetValue(startPosition, randomData);
         int flowerTypeNumber = WorldRandTools.Range(0, flowerData.listFlowerType.Count);
         if (addRate < flowerData.addRate)
         {
@@ -697,9 +699,13 @@ public class BiomeCreateTool
             for (int i = 0; i < listBuildingData.Count; i++)
             {
                 BuildingBean buildingData = listBuildingData[i];
-
-                BlockBean blockData = new BlockBean(startPosition + buildingData.GetPosition(), (BlockTypeEnum)buildingData.blockId, (DirectionEnum)buildingData.direction);
-                WorldCreateHandler.Instance.manager.AddUpdateBlock(blockData);
+                Vector3Int targetPosition = startPosition + buildingData.GetPosition();
+                float createRate = WorldRandTools.GetValue(targetPosition);           
+                if (buildingData.randomRate == 0 || createRate < buildingData.randomRate)
+                {
+                    BlockBean blockData = new BlockBean(targetPosition, (BlockTypeEnum)buildingData.blockId, (DirectionEnum)buildingData.direction);
+                    WorldCreateHandler.Instance.manager.AddUpdateBlock(blockData);
+                }
             }
         }
     }

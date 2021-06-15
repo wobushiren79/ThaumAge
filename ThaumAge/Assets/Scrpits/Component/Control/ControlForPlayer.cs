@@ -15,7 +15,7 @@ public class ControlForPlayer : ControlForBase
     private float timeJump = 0.2f;
     private float timeJumpTemp = 0;
 
-    private float speedJump = 2;
+    private float speedJump = 5;
     private float moveSpeed = 2;
 
     private void Awake()
