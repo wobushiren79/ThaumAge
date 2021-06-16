@@ -16,7 +16,7 @@ public class ControlForPlayer : ControlForBase
     private float timeJumpTemp = 0;
 
     private float speedJump = 5;
-    private float moveSpeed = 5;
+    private float moveSpeed = 2;
 
     private void Awake()
     {
@@ -37,6 +37,7 @@ public class ControlForPlayer : ControlForBase
         if (GameHandler.Instance.manager.GetGameState() == GameStateEnum.Gaming)
         {
             HandlerForMoveAndJump();
+            //HandleForUse(false);
         }
     }
 
@@ -151,10 +152,53 @@ public class ControlForPlayer : ControlForBase
         isJump = true;
     }
 
+    public void HandlerForPlayerTargetPosition()
+    {
+        if (!isActiveAndEnabled)
+            return;
+        //获取道具栏上的物品
+        UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();
+        ItemsBean itemsData = userData.GetItemsFromShortcut(userData.indexForShortcuts);
+
+        //获取摄像头到角色的距离
+        Vector3 cameraPosition = CameraHandler.Instance.manager.mainCamera.transform.position;
+        float disMax = Vector3.Distance(cameraPosition, transform.position);
+        //发射射线检测
+        RayUtil.RayToScreenPointForScreenCenter(disMax + 2, 1 << LayerInfo.Chunk, out bool isCollider, out RaycastHit hit);
+        if (isCollider)
+        {
+            Vector3 targetPosition = Vector3.zero;
+            //如果上手没有物品 则使用当前选中的方块
+            if (itemsData == null || itemsData.itemsId == 0)
+            {
+                if (hit.normal.y > 0)
+                {
+                    targetPosition = new Vector3Int((int)Mathf.Floor(hit.point.x), (int)Mathf.Floor(hit.point.y) - 1, (int)Mathf.Floor(hit.point.z));
+
+                }
+            }
+            //如果上手有物品 则使用当前选中的方块的靠近方块
+            else
+            {
+
+            }
+
+            //展示目标位置
+            GameHandler.Instance.manager.playerTargetBlock.Show(targetPosition);
+        }
+        else
+        {
+            //展示目标位置
+            GameHandler.Instance.manager.playerTargetBlock.Hide();
+        }
+    }
+
+
+
     /// <summary>
     /// 使用处理
     /// </summary>
-    public void HandleForUse(CallbackContext callback)
+    public void HandleForUse(bool isUse)
     {
         if (!isActiveAndEnabled)
             return;
@@ -172,8 +216,9 @@ public class ControlForPlayer : ControlForBase
             float disHit = Vector3.Distance(cameraPosition, hit.point);
             if (disHit < disMax)
                 return;
-            Chunk chunk = hit.collider.GetComponentInParent<Chunk>();
-            if (chunk)
+            Chunk chunkForHit = hit.collider.GetComponentInParent<Chunk>();
+
+            if (chunkForHit)
             {
                 Vector3Int targetPosition = Vector3Int.zero;
                 Vector3Int closePosition = Vector3Int.zero;
@@ -214,40 +259,73 @@ public class ControlForPlayer : ControlForBase
                     closePosition = targetPosition + Vector3Int.back;
                     direction = DirectionEnum.Back;
                 }
-                if (itemsData == null)
+                //如果上手没有物品 则挖掘
+                if (itemsData == null || itemsData.itemsId == 0)
                 {
-                    //如果手上没有物品
-                    chunk.RemoveBlockForWorld(targetPosition);
-                    WorldCreateHandler.Instance.HandleForUpdateChunk(true, null);
+                    if (isUse)
+                    {
+                        //获取原位置方块
+                        WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(targetPosition, out BlockTypeEnum oldBlockType, out DirectionEnum oldBlockDirection, out Chunk targetChunk);
+                        if (targetChunk)
+                        {
+                            //如果原位置是空则不做处理
+                            if (oldBlockType != BlockTypeEnum.None)
+                            {
+                                targetChunk.RemoveBlockForWorld(targetPosition);
+                                WorldCreateHandler.Instance.HandleForUpdateChunk(true, null);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        //显示位置
+                        GameHandler.Instance.manager.playerTargetBlock.Show(targetPosition);
+                    }
                 }
+                //如果手上有物品 则使用
                 else
                 {
-                    //如果手上有物品
-                    WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(closePosition, out BlockTypeEnum block,out DirectionEnum blockDirection, out Chunk addChunk);
-                    if (addChunk)
+                    if (isUse)
                     {
-                        ItemsInfoBean itemsInfo = ItemsHandler.Instance.manager.GetItemsInfoById(itemsData.itemsId);
-                        ItemsTypeEnum itemsType = itemsInfo.GetItemsType();
-                        switch (itemsType)
+                        WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(closePosition, out BlockTypeEnum block, out DirectionEnum blockDirection, out Chunk addChunk);
+                        if (addChunk)
                         {
-                            case ItemsTypeEnum.Block:
-                                //如果是可放置的方块
-                                BlockInfoBean blockInfo = BlockHandler.Instance.manager.GetBlockInfo(itemsInfo.type_id);
-                                if (blockInfo.rotate_state == 0)
-                                {
-                                    addChunk.SetBlockForWorld(closePosition, blockInfo.GetBlockType(), DirectionEnum.UP);
-                                }
-                                else
-                                {
-                                    addChunk.SetBlockForWorld(closePosition, blockInfo.GetBlockType(), direction);
-                                }
-                                WorldCreateHandler.Instance.HandleForUpdateChunk(true, null);
-                                break;
+                            ItemsInfoBean itemsInfo = ItemsHandler.Instance.manager.GetItemsInfoById(itemsData.itemsId);
+                            ItemsTypeEnum itemsType = itemsInfo.GetItemsType();
+                            switch (itemsType)
+                            {
+                                case ItemsTypeEnum.Block:
+                                    //如果是可放置的方块
+                                    BlockInfoBean blockInfo = BlockHandler.Instance.manager.GetBlockInfo(itemsInfo.type_id);
+                                    if (blockInfo.rotate_state == 0)
+                                    {
+                                        addChunk.SetBlockForWorld(closePosition, blockInfo.GetBlockType(), DirectionEnum.UP);
+                                    }
+                                    else
+                                    {
+                                        addChunk.SetBlockForWorld(closePosition, blockInfo.GetBlockType(), direction);
+                                    }
+                                    WorldCreateHandler.Instance.HandleForUpdateChunk(true, null);
+                                    break;
+                            }
                         }
+                    }
+                    else
+                    {
+                        //显示位置
+                        GameHandler.Instance.manager.playerTargetBlock.Show(closePosition);
                     }
                 }
             }
         }
+        else
+        {
+            GameHandler.Instance.manager.playerTargetBlock.Hide();
+        }
+    }
+    public void HandleForUse(CallbackContext callback)
+    {
+        HandleForUse(true);
     }
 
     /// <summary>

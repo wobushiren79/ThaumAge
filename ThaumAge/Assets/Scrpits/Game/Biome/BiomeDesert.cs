@@ -9,14 +9,14 @@ public class BiomeDesert : Biome
     {
     }
 
-    public override BlockTypeEnum GetBlockType(int genHeight, Vector3Int localPos, Vector3Int wPos)
+    public override BlockTypeEnum GetBlockType(BiomeInfoBean biomeInfo, int genHeight, Vector3Int localPos, Vector3Int wPos)
     {
-        base.GetBlockType(genHeight, localPos, wPos);
+        base.GetBlockType(biomeInfo, genHeight, localPos, wPos);
         if (wPos.y == genHeight)
         {
             AddCactus(wPos);
         }
-        if (wPos.y <= genHeight&& wPos.y > genHeight - 5)
+        if (wPos.y <= genHeight && wPos.y > genHeight - 5)
         {
             return BlockTypeEnum.Sand;
         }
@@ -37,9 +37,8 @@ public class BiomeDesert : Biome
 
     public void AddCactus(Vector3Int startPosition)
     {
-        BiomeForCactusData cactusData = new BiomeForCactusData(); 
-        cactusData.addRateMin = 1;
-        cactusData.addRateMax = 100;
+        BiomeForCactusData cactusData = new BiomeForCactusData();
+        cactusData.addRate = 0.1f;
         cactusData.minHeight = 1;
         cactusData.maxHeight = 5;
         cactusData.cactusType = BlockTypeEnum.Cactus;

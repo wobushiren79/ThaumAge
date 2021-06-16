@@ -8,9 +8,9 @@ public class BiomeOcean : Biome
 
     }
 
-    public override BlockTypeEnum GetBlockType(int genHeight, Vector3Int localPos, Vector3Int wPos)
+    public override BlockTypeEnum GetBlockType(BiomeInfoBean biomeInfo, int genHeight, Vector3Int localPos, Vector3Int wPos)
     {
-        base.GetBlockType(genHeight, localPos, wPos);
+        base.GetBlockType(biomeInfo, genHeight, localPos, wPos);
         return BlockTypeEnum.TreeOak;
     }
 }

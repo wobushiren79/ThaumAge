@@ -8,7 +8,9 @@ public class Launcher : BaseMonoBehaviour
     public int refreshRange = 5;
 
     void Start()
-    {        
+    {
+        //先清理一下内纯
+        SystemUtil.GCCollect();
         //设置FPS
         FPSHandler.Instance.SetData(true, 120);
 

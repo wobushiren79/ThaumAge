@@ -5,7 +5,8 @@ using UnityEngine;
 [Serializable]
 public class ChunkBean
 {
-    public Vector3IntBean position;
+    public Vector3Int position;
+
     public List<BlockBean> listBlockData = new List<BlockBean>();
 
     public Dictionary<int, BlockBean> dicBlockData = new Dictionary<int, BlockBean>();
@@ -18,7 +19,7 @@ public class ChunkBean
         for (int i = 0; i < listBlockData.Count; i++)
         {
             BlockBean blockData = listBlockData[i];
-            Vector3Int localPosition = blockData.localPosition.GetVector3Int();
+            Vector3Int localPosition = blockData.localPosition;
             int index = MathUtil.GetSingleIndexForThree(localPosition, widthChunk, heightChunk);
             if (!dicBlockData.ContainsKey(index))
                 dicBlockData.Add(index, blockData);
@@ -41,15 +42,15 @@ public class ChunkBean
         }
     }
 
-    public BlockBean GetBlockData(Vector3Int localPosition)
+    public bool GetBlockData(Vector3Int localPosition,out BlockBean blockData)
     {
         int widthChunk = WorldCreateHandler.Instance.manager.widthChunk;
         int heightChunk = WorldCreateHandler.Instance.manager.heightChunk;
         int index = MathUtil.GetSingleIndexForThree(localPosition, widthChunk, heightChunk);
-        if (dicBlockData.TryGetValue(index, out BlockBean blockData))
+        if (dicBlockData.TryGetValue(index, out  blockData))
         {
-            return blockData;     
+            return true;     
         }
-        return null;
+        return false;
     }
 }

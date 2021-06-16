@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
@@ -17,7 +18,14 @@ public class ItemsManager : BaseManager, IItemsInfoView
 
     public void InitItemsInfo(List<ItemsInfoBean> listItemsInfo)
     {
-        this.listItemsInfo = listItemsInfo;
+        if (listItemsInfo == null)
+            return;
+        this.listItemsInfo = listItemsInfo
+            .OrderBy(data =>
+            {
+                return data.id;
+            })
+            .ToList();
         dicItemsInfo = TypeConversionUtil.ListToMap(listItemsInfo);
     }
 

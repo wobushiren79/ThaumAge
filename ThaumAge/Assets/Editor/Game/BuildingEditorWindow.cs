@@ -149,10 +149,10 @@ public class BuildingEditorWindow : EditorWindow
             if (buildingEditor == null)
                 continue;
             BuildingBean buildingData = new BuildingBean();
-            buildingData.position = new Vector3IntBean((int)tfChild.position.x, (int)tfChild.position.y, (int)tfChild.position.z);
+            buildingData.position = Vector3Int.CeilToInt(tfChild.position);
             buildingData.direction = (int)buildingEditor.direction;
             buildingData.blockId = (int)buildingEditor.blockType;
-
+            buildingData.randomRate = buildingEditor.randomRate;
             listBuildingData.Add(buildingData);
         }
         itemData.SetListBuildingData(listBuildingData);
@@ -176,7 +176,9 @@ public class BuildingEditorWindow : EditorWindow
             BuildingEditor buildingEditor = objItem.GetComponent<BuildingEditor>();
             buildingEditor.direction = (DirectionEnum)buildingData.direction;
             buildingEditor.blockType = (BlockTypeEnum)buildingData.blockId;
+            buildingEditor.randomRate = buildingData.randomRate;
             buildingEditor.transform.position = buildingData.GetPosition();
+            buildingEditor.OnValidate();
         }
     }
 }

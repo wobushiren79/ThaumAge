@@ -11,19 +11,21 @@ public class BuildingEditor : BaseMonoBehaviour
 
     public BlockTypeEnum blockType;
     public DirectionEnum direction;
+    public float randomRate = 1;
 
-    private void Awake()
+    public void Awake()
     {
         meshFilter = GetComponent<MeshFilter>();
         meshRenderer = GetComponent<MeshRenderer>();
+        OnValidate();
     }
 
-    private void OnValidate()
+    public void OnValidate()
     {
         BlockHandler.Instance.manager.InitData();
 
         BlockCube blockCube = new BlockCube();
-        blockCube.SetData(blockType, direction, Vector3Int.zero, Vector3Int.zero);
+        blockCube.SetData(Vector3Int.zero, Vector3Int.zero,blockType, direction);
 
         Chunk.ChunkRenderData chunkRender = new Chunk.ChunkRenderData();
         //初始化数据

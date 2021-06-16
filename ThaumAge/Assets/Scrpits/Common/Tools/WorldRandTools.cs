@@ -37,7 +37,7 @@ public class WorldRandTools
     /// <summary>
     /// Get one of the random values "linked" to a given position
     /// </summary>
-    public static float GetValue(Vector3 position)
+    public static float GetValue(Vector3 position, uint randomData = 0)
     {
         if (position.x == 0)
         {
@@ -55,10 +55,9 @@ public class WorldRandTools
         hash = hash * MAGIC2 ^ (uint)position.x;
         hash = hash * MAGIC2 ^ (uint)position.y;
         hash = hash * MAGIC2 ^ (uint)position.z;
-        rndIndex = hash & RANDOM_TABLE_SIZE_MINUS_ONE;
+        rndIndex = (hash + randomData) & RANDOM_TABLE_SIZE_MINUS_ONE;
         return rnd[rndIndex];
     }
-
 
     /// <summary>
     /// Get one of the random values "linked" to a given position

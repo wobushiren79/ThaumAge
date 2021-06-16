@@ -92,7 +92,7 @@ public class BiomeHandler : BaseHandler<BiomeHandler, BiomeManager>
             }
         }
  
-        BlockTypeEnum blockType= biome.GetBlockType(genHeight, blockLocPosition, wPos);
+        BlockTypeEnum blockType= biome.GetBlockType(biomeInfo, genHeight, blockLocPosition, wPos);
 
         //获取方块
         return blockType;

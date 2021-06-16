@@ -1,0 +1,37 @@
+ManifestFileVersion: 0
+CRC: 4009204918
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 25dc689ea4ac683f9d471a1e9ab1839d
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: eec358e15b64ba850326b80c7970cecc
+HashAppended: 0
+ClassTypes:
+- Class: 1
+  Script: {instanceID: 0}
+- Class: 4
+  Script: {instanceID: 0}
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 48
+  Script: {instanceID: 0}
+- Class: 72
+  Script: {instanceID: 0}
+- Class: 108
+  Script: {instanceID: 0}
+- Class: 114
+  Script: {fileID: 11500000, guid: 7a68c43fe1f2a47cfa234b5eeaa98012, type: 3}
+- Class: 115
+  Script: {instanceID: 0}
+- Class: 73398921
+  Script: {instanceID: 0}
+- Class: 2058629509
+  Script: {instanceID: 0}
+- Class: 2083052967
+  Script: {instanceID: 0}
+SerializeReferenceClassIdentifiers: []
+Assets:
+- Assets/Prefabs/Block/BlockMushroomLuminous.prefab
+Dependencies: []

@@ -28,7 +28,11 @@ public class Chunk : BaseMonoBehaviour
         public Dictionary<BlockMaterialEnum, List<int>> dicTris = new Dictionary<BlockMaterialEnum, List<int>>();
     }
 
-    public Action eventUpdate;
+    public List<Action> listEventUpdate = new List<Action>();
+
+    //需要创建方块实力的列表
+    public Queue<Vector3Int> listBlockModelUpdate = new Queue<Vector3Int>();
+    public Dictionary<Vector3Int, GameObject> dicBlockModel = new Dictionary<Vector3Int, GameObject>();
 
     public MeshCollider meshCollider;
     public MeshCollider meshTrigger;
@@ -38,9 +42,6 @@ public class Chunk : BaseMonoBehaviour
 
     //存储着此Chunk内的所有信息
     public ChunkDataBean chunkData;
-
-    //待更新方块
-    public Queue<BlockBean> listUpdateBlock = new Queue<BlockBean>();
 
     //是否初始化
     public bool isInit = false;
@@ -57,6 +58,8 @@ public class Chunk : BaseMonoBehaviour
     public Mesh chunkMesh;
     public Mesh chunkMeshCollider;
     public Mesh chunkMeshTrigger;
+
+    public GameObject objBlockContainer;
 
     protected static object lockForUpdateBlcok = new object();
 
@@ -105,44 +108,11 @@ public class Chunk : BaseMonoBehaviour
         if (eventUpdateTime < 0)
         {
             eventUpdateTime = 1;
-            eventUpdate?.Invoke();
-            HandleForUpdateBlock();
+            HandleForEventUpdate();
         }
+        HandleForBlockModelUpdate();
     }
 
-    /// <summary>
-    /// 增加待更新方块
-    /// </summary>
-    /// <param name="blockData"></param>
-    public void AddUpdateBlock(BlockBean blockData)
-    {
-        listUpdateBlock.Enqueue(blockData);
-    }
-
-    /// <summary>
-    /// 处理-更新的方块
-    /// </summary>
-    public void HandleForUpdateBlock()
-    {
-        if (listUpdateBlock.Count > 0)
-        {
-            while (listUpdateBlock.Count > 0)
-            {
-                BlockBean itemBlock = listUpdateBlock.Dequeue();
-                Vector3Int positionBlockWorld = itemBlock.worldPosition.GetVector3Int();
-                Vector3Int positionBlockLocal = positionBlockWorld - chunkData.positionForWorld;
-                //需要重新设置一下本地坐标 之前没有记录本地坐标
-                itemBlock.localPosition = new Vector3IntBean(positionBlockLocal);
-                //设置方块
-                SetBlockForLocal(positionBlockLocal, itemBlock.GetBlockType(), itemBlock.GetDirection(), false, false, false);
-            }
-            //异步保存数据
-            GameDataHandler.Instance.manager.SaveGameDataAsync(worldData);
-            //异步刷新
-            AddUpdateChunkForRange();
-            WorldCreateHandler.Instance.HandleForUpdateChunk(false, null);
-        }
-    }
 
     /// <summary>
     /// 获取存储数据
@@ -297,7 +267,7 @@ public class Chunk : BaseMonoBehaviour
                                     continue;
                                 Vector3Int localPosition = new Vector3Int(x, y, z);
                                 Block block = BlockHandler.Instance.manager.GetRegisterBlock(blockType);
-                                block.SetData(blockType, direction, localPosition, localPosition + chunkData.positionForWorld);
+                                block.SetData(localPosition, localPosition + chunkData.positionForWorld, direction);
                                 block.BuildBlock(chunkRenderData);
                             }
                         }
@@ -426,6 +396,7 @@ public class Chunk : BaseMonoBehaviour
         GetBlockForLocal(blockWorldPosition - chunkData.positionForWorld, out block, out direction, out isInside);
     }
 
+
     public void GetBlockForLocal(Vector3Int localPosition, out BlockTypeEnum block, out DirectionEnum direction, out bool isInside)
     {
         if (localPosition.y < 0 || localPosition.y > chunkData.chunkHeight - 1)
@@ -439,17 +410,16 @@ public class Chunk : BaseMonoBehaviour
         if ((localPosition.x < 0) || (localPosition.z < 0) || (localPosition.x >= chunkData.chunkWidth) || (localPosition.z >= chunkData.chunkWidth))
         {
             Vector3Int blockWorldPosition = localPosition + chunkData.positionForWorld;
-            WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(blockWorldPosition, out block, out direction, out bool hasChunk);
+            WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(blockWorldPosition, out block, out direction, out Chunk chunk);
             isInside = false;
             return;
         }
         else
         {
             isInside = true;
-            chunkData.GetBlockForLocal(localPosition,out block,out direction);
+            chunkData.GetBlockForLocal(localPosition, out block, out direction);
         }
     }
-
 
     /// <summary>
     /// 移除方块
@@ -495,15 +465,25 @@ public class Chunk : BaseMonoBehaviour
     {
         //首先移除方块
         chunkData.GetBlockForLocal(localPosition, out BlockTypeEnum oldBlockType, out DirectionEnum oldDirection);
-
+        if (oldBlockType != BlockTypeEnum.None)
+        {
+            Block oldBlock = BlockHandler.Instance.manager.GetRegisterBlock(oldBlockType);
+            oldBlock.SetData(localPosition, localPosition + this.chunkData.positionForWorld, oldDirection);
+            oldBlock.DestoryBlock(this);
+        }
         //设置新方块
         chunkData.SetBlockForLocal(localPosition, blockType, direction);
+
+        Block newBlock = BlockHandler.Instance.manager.GetRegisterBlock(blockType);
+        newBlock.SetData(localPosition, localPosition + this.chunkData.positionForWorld, direction);
+        newBlock.InitBlock(this);
+
 
         //刷新六个方向的方块
         if (isRefreshBlockRange)
         {
-            //待更新
-            //newBlock.RefreshBlockRange();
+            newBlock.SetData(localPosition, chunkData.positionForWorld + localPosition, direction);
+            newBlock.RefreshBlockRange();
         }
 
         //是否实时刷新
@@ -519,7 +499,7 @@ public class Chunk : BaseMonoBehaviour
             //保存数据
             if (worldData != null && worldData.chunkData != null)
             {
-                BlockBean blockData = new BlockBean(blockType, localPosition, localPosition + chunkData.positionForWorld, direction);
+                BlockBean blockData = new BlockBean(localPosition, localPosition + chunkData.positionForWorld, blockType, direction);
                 if (worldData.chunkData.dicBlockData.ContainsKey(index))
                 {
                     worldData.chunkData.dicBlockData[index] = blockData;
@@ -597,12 +577,12 @@ public class Chunk : BaseMonoBehaviour
         else
         {
             worldData.chunkData = new ChunkBean();
-            worldData.chunkData.position = new Vector3IntBean(chunkData.positionForWorld);
+            worldData.chunkData.position = chunkData.positionForWorld;
         }
         foreach (var itemData in dicBlockData)
         {
             BlockBean blockData = itemData.Value;
-            Vector3Int positionBlock = blockData.localPosition.GetVector3Int();
+            Vector3Int positionBlock = blockData.localPosition;
 
             //添加方块 如果已经有该方块 则先删除，优先使用存档的方块
             chunkData.GetBlockForLocal(positionBlock, out BlockTypeEnum blockType, out DirectionEnum direction);
@@ -612,16 +592,57 @@ public class Chunk : BaseMonoBehaviour
         SetWorldData(worldData);
     }
 
+    /// <summary>
+    /// 事件处理
+    /// </summary>
+    public void HandleForEventUpdate()
+    {
+        for (int i = 0; i < listEventUpdate.Count; i++)
+        {
+            Action actionItem = listEventUpdate[i];
+            actionItem?.Invoke();
+        }
+    }
+
+    /// <summary>
+    /// 处理实例化模型的方块
+    /// </summary>
+    public void HandleForBlockModelUpdate()
+    {
+        if (listBlockModelUpdate.Count <= 0)
+            return;
+        Vector3Int localPosition = listBlockModelUpdate.Dequeue();
+        //首先删除原有的模型
+        if (dicBlockModel.TryGetValue(localPosition, out GameObject dataObj))
+        {
+            dicBlockModel.Remove(localPosition);
+            Destroy(dataObj);
+        }
+        GetBlockForLocal(localPosition, out BlockTypeEnum block, out DirectionEnum direction, out bool isInside);
+        if (!isInside || block == BlockTypeEnum.None)
+            return;
+        //获取数据
+        BlockInfoBean blockInfo = BlockHandler.Instance.manager.GetBlockInfo(block);
+        if (blockInfo == null || CheckUtil.StringIsNull(blockInfo.model_name))
+            return;
+        //获取模型
+        GameObject objBlockModel = BlockHandler.Instance.CreateBlockModel(this, (ushort)block, blockInfo.model_name);
+        if (objBlockModel == null)
+            return;
+        dicBlockModel.Add(localPosition, objBlockModel);
+        //设置位置
+        objBlockModel.transform.position = localPosition + chunkData.positionForWorld + new Vector3(0.5f, 0, 0.5f);
+    }
 
     #region 事件注册
     public void RegisterEventUpdate(Action action)
     {
-        eventUpdate += action;
+        listEventUpdate.Add(action);
     }
 
     public void UnRegisterEventUpdate(Action action)
     {
-        eventUpdate -= action;
+        listEventUpdate.Remove(action);
     }
     #endregion
 }
