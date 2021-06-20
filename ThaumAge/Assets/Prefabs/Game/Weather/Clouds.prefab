@@ -45,11 +45,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 403d116c9ca0d9d4ca61f0fa9eec3348, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  heightForCloud: 200
-  speedForCloud: 1
-  colorForCloud: {r: 1, g: 1, b: 1, a: 1}
-  objCloudModel: {fileID: 0}
-  listShowCloudObj: []
+  vfxPropertyBinder: {fileID: 0}
 --- !u!2083052967 &7743788524898655515
 VisualEffect:
   m_ObjectHideFlags: 0
@@ -70,9 +66,15 @@ VisualEffect:
     m_Vector2f:
       m_Array: []
     m_Vector3f:
-      m_Array: []
+      m_Array:
+      - m_Value: {x: 0, y: 0, z: 0}
+        m_Name: CreatePosition
+        m_Overridden: 1
     m_Vector4f:
-      m_Array: []
+      m_Array:
+      - m_Value: {x: 1, y: 1, z: 1, w: 1}
+        m_Name: CloudsColor
+        m_Overridden: 1
     m_Uint:
       m_Array: []
     m_Int:

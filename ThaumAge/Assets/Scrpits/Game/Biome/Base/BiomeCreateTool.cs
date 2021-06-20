@@ -50,6 +50,7 @@ public class BiomeCreateTool
         public float addRate;
         public int minDepth;
         public int maxDepth;
+        public int riverSize;
     }
 
 
@@ -700,6 +701,58 @@ public class BiomeCreateTool
     }
 
     /// <summary>
+    /// 增加枯木
+    /// </summary>
+    /// <param name="randomData"></param>
+    /// <param name="startPosition"></param>
+    /// <param name="treeData"></param>
+    public static void AddDeadwood(uint randomData, Vector3Int startPosition, BiomeForTreeData treeData)
+    {
+        //生成概率
+        float addRate = WorldRandTools.GetValue(startPosition, randomData);
+        //高度
+        int treeHeight = WorldRandTools.Range(treeData.minHeight, treeData.maxHeight);
+
+        if (addRate < treeData.addRate)
+        {
+            Vector3Int treeDataPosition = startPosition;
+            for (int i = 0; i < treeHeight; i++)
+            {
+                int x = 0;
+                int y = 0;
+                int z = 0;
+
+                if (i <= 1)
+                {
+                    x = 0;
+                    y = 1;
+                    z = 0;
+                }
+                else
+                {
+                    x = WorldRandTools.Range(-1, 2, treeDataPosition, 111);
+                    y = WorldRandTools.Range(-1, 2, treeDataPosition, 222);
+                    z = WorldRandTools.Range(-1, 2, treeDataPosition, 333);
+                }
+
+                treeDataPosition += new Vector3Int(x, y, z);
+
+                DirectionEnum direction = DirectionEnum.UP;
+                if (x != 0)
+                {
+                    direction = DirectionEnum.Left;
+                }
+                else if (z != 0)
+                {
+                    direction = DirectionEnum.Forward;
+                }
+                BlockBean blockData = new BlockBean(treeDataPosition, treeData.treeTrunk, direction);
+                WorldCreateHandler.Instance.manager.AddUpdateBlock(blockData);
+            }
+        }
+    }
+
+    /// <summary>
     /// 增加建筑
     /// </summary>
     /// <param name="addRate"></param>
@@ -719,7 +772,7 @@ public class BiomeCreateTool
             {
                 BuildingBean buildingData = listBuildingData[i];
                 Vector3Int targetPosition = startPosition + buildingData.GetPosition();
-                float createRate = WorldRandTools.GetValue(targetPosition);           
+                float createRate = WorldRandTools.GetValue(targetPosition);
                 if (buildingData.randomRate == 0 || createRate < buildingData.randomRate)
                 {
                     BlockBean blockData = new BlockBean(targetPosition, (BlockTypeEnum)buildingData.blockId, (DirectionEnum)buildingData.direction);

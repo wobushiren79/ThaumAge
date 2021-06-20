@@ -106,7 +106,6 @@ public class BiomeHandler : BaseHandler<BiomeHandler, BiomeManager>
     /// <returns></returns>
     public int GetHeightData(Vector3Int wPos, BiomeInfoBean biomeInfo)
     {
-
         ////让随机种子，振幅，频率，应用于我们的噪音采样结果
         float x0 = (wPos.x + offset0.x) * biomeInfo.frequency;
         float y0 = (wPos.y + offset0.y) * biomeInfo.frequency;

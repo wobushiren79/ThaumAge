@@ -64,6 +64,10 @@ public class SceneElementManager : BaseManager
     {
         rain.gameObject.SetActive(active);
     }
+    public void SetCloudAction(bool active)
+    {
+        clouds.gameObject.SetActive(active);
+    }
 
 
     private T CreateElement<T>(string assetBundlePath, string name, string remarkResourcesPath)

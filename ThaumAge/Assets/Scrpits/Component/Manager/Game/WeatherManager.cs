@@ -19,7 +19,7 @@ public class WeatherManager : BaseManager
         WeatherTypeEnum weatherType = weatherData.GetWeatherType();
 
         SceneElementHandler.Instance.manager.SetRainActive(false);
-
+        SceneElementHandler.Instance.manager.SetCloudAction(false);
         switch (weatherType)
         {
             case WeatherTypeEnum.Sunny:

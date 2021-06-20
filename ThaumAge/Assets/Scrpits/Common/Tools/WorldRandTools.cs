@@ -92,9 +92,9 @@ public class WorldRandTools
     /// <summary>
     /// Returns a random value between min (inclusive) and max (exclusive) "linked" to a given position
     /// </summary>
-    public static int Range(int min, int max, Vector3 position)
+    public static int Range(int min, int max, Vector3 position, uint randomData = 0)
     {
-        float v = GetValue(position);
+        float v = GetValue(position, randomData);
         return (int)(min + (max - min) * 0.99999f * v);
     }
     public static int Range(int max, Vector3 position)

@@ -63,12 +63,12 @@ MonoBehaviour:
     FieldOfView: 60
     OrthographicSize: 10
     NearClipPlane: 0.1
-    FarClipPlane: 5000
+    FarClipPlane: 2000
     Dutch: 0
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 0
-    m_SensorSize: {x: 2.2005532, y: 1}
+    m_SensorSize: {x: 1.7950237, y: 1}
     Iso: 200
     ShutterSpeed: 0.005
     Aperture: 16
@@ -317,7 +317,7 @@ Camera:
     width: 1
     height: 1
   near clip plane: 0.1
-  far clip plane: 5000
+  far clip plane: 2000
   field of view: 60
   orthographic: 0
   orthographic size: 10
@@ -557,7 +557,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 0
-    m_SensorSize: {x: 2.2005532, y: 1}
+    m_SensorSize: {x: 1.7950237, y: 1}
     Iso: 200
     ShutterSpeed: 0.005
     Aperture: 16
@@ -731,12 +731,12 @@ MonoBehaviour:
     FieldOfView: 60
     OrthographicSize: 10
     NearClipPlane: 0.1
-    FarClipPlane: 5000
+    FarClipPlane: 2000
     Dutch: 0
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 0
-    m_SensorSize: {x: 2.2005532, y: 1}
+    m_SensorSize: {x: 1.7950237, y: 1}
     Iso: 200
     ShutterSpeed: 0.005
     Aperture: 16
@@ -813,7 +813,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 2.2005532, y: 1}
+    m_SensorSize: {x: 1.7950237, y: 1}
     Iso: 200
     ShutterSpeed: 0.005
     Aperture: 16
@@ -1507,12 +1507,12 @@ MonoBehaviour:
     FieldOfView: 60
     OrthographicSize: 10
     NearClipPlane: 0.1
-    FarClipPlane: 5000
+    FarClipPlane: 2000
     Dutch: 0
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 0
-    m_SensorSize: {x: 2.2005532, y: 1}
+    m_SensorSize: {x: 1.7950237, y: 1}
     Iso: 200
     ShutterSpeed: 0.005
     Aperture: 16
@@ -1593,7 +1593,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 0
-    m_SensorSize: {x: 2.2005532, y: 1}
+    m_SensorSize: {x: 1.7950237, y: 1}
     Iso: 200
     ShutterSpeed: 0.005
     Aperture: 16
@@ -2019,12 +2019,12 @@ MonoBehaviour:
     FieldOfView: 60
     OrthographicSize: 10
     NearClipPlane: 0.1
-    FarClipPlane: 5000
+    FarClipPlane: 2000
     Dutch: 0
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 0
-    m_SensorSize: {x: 2.2005532, y: 1}
+    m_SensorSize: {x: 1.7950237, y: 1}
     Iso: 200
     ShutterSpeed: 0.005
     Aperture: 16
@@ -2265,12 +2265,12 @@ MonoBehaviour:
     FieldOfView: 60
     OrthographicSize: 10
     NearClipPlane: 0.1
-    FarClipPlane: 5000
+    FarClipPlane: 2000
     Dutch: 0
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 0
-    m_SensorSize: {x: 2.2005532, y: 1}
+    m_SensorSize: {x: 1.7950237, y: 1}
     Iso: 200
     ShutterSpeed: 0.005
     Aperture: 16
@@ -2349,12 +2349,12 @@ MonoBehaviour:
     FieldOfView: 60
     OrthographicSize: 10
     NearClipPlane: 0.1
-    FarClipPlane: 5000
+    FarClipPlane: 2000
     Dutch: 0
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 0
-    m_SensorSize: {x: 2.2005532, y: 1}
+    m_SensorSize: {x: 1.7950237, y: 1}
     Iso: 200
     ShutterSpeed: 0.005
     Aperture: 16

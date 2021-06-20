@@ -13,17 +13,18 @@ public class BlockLiquid : Block
     public override bool CheckNeedBuildFace(DirectionEnum direction, out BlockTypeEnum closeBlock)
     {
         closeBlock = BlockTypeEnum.None;
-        if (localPosition.y == 0)
-            return false;
+        if (localPosition.y == 0) return false;
         GetCloseRotateBlockByDirection(direction, out closeBlock, out bool hasChunk);
         if (closeBlock == BlockTypeEnum.None)
         {
             if (hasChunk)
             {
+                //只是空气方块
                 return true;
             }
             else
             {
+                //还没有生成chunk
                 return false;
             }
         }
