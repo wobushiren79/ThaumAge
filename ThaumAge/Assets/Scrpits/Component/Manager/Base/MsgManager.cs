@@ -4,18 +4,17 @@ using UnityEngine;
 
 public class MsgManager : BaseManager
 {
-    public GameObject objContainer;
     public Dictionary<string, GameObject> listObjModel = new Dictionary<string, GameObject>();
     protected string resUrl = "UI/Msg/";
 
     public void ShowMsg(Camera camera, string content)
     {
-        ShowMsg<MsgView>(MsgEnum.Normal, content, GameUtil.MousePointToUGUIPoint(camera, (RectTransform)objContainer.transform));
+        ShowMsg<MsgView>(MsgEnum.Normal, content, GameUtil.MousePointToUGUIPoint(camera, (RectTransform)gameObject.transform));
     }
 
     public void ShowMsg(string content)
     {
-        ShowMsg<MsgView>(MsgEnum.Normal, content, GameUtil.MousePointToUGUIPoint(null, (RectTransform)objContainer.transform));
+        ShowMsg<MsgView>(MsgEnum.Normal, content, GameUtil.MousePointToUGUIPoint(Camera.main, (RectTransform)gameObject.transform));
     }
 
     public void ShowMsg(string content, Vector3 msgPosition)
@@ -55,7 +54,7 @@ public class MsgManager : BaseManager
         }
         if (objModel == null)
             return null;
-        GameObject obj = Instantiate(objContainer, objModel);
+        GameObject obj = Instantiate(gameObject, objModel);
         return obj;
     }
 
@@ -69,6 +68,6 @@ public class MsgManager : BaseManager
 
     public RectTransform GetContainer()
     {
-        return (RectTransform)objContainer.transform;
+        return (RectTransform)gameObject.transform;
     }
 }
