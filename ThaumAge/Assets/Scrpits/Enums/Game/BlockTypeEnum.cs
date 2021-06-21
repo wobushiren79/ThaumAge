@@ -7,6 +7,7 @@ public enum BlockTypeEnum
     Dirt = 4,    //泥土
     Stone = 5,    //石头
     StoneMoss = 6, //苔藓石
+    StoneVolcanic = 7,//火山岩
 
     Grass = 101,    //草地
     Grass_Magic = 102,    //蕴魔草地

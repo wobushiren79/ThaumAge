@@ -3,7 +3,6 @@ using UnityEngine;
 
 public class WeatherRain : WeatherBase
 {
-    public Color colorClouds;
 
     public WeatherRain(WeatherBean weatherData) : base(weatherData)
     {
@@ -30,6 +29,7 @@ public class WeatherRain : WeatherBase
     /// </summary>
     public void InitClouds()
     {
+        SceneElementHandler.Instance.manager.SetCloudAction(true);
         colorClouds = new Color(0, 0, 0, 0.5f);
         ChangeAllCloudsColor(colorClouds, 0.5f);
     }
