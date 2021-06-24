@@ -27,6 +27,15 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
     }
 
     /// <summary>
+    /// 设置世界类型
+    /// </summary>
+    /// <param name="worldType"></param>
+    public void SetWorldType(WorldTypeEnum worldType)
+    {
+        manager.worldType = worldType;
+    }
+
+    /// <summary>
     /// 建造区块
     /// </summary>
     /// <param name="worldSeed"></param>

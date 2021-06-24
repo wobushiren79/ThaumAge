@@ -13,6 +13,7 @@ public class BiomeManager : BaseManager
     protected BiomeInfoBean[] arrayBiomeInfo = new BiomeInfoBean[EnumUtil.GetEnumMaxIndex<BiomeTypeEnum>() + 1];
     protected BuildingInfoBean[] arrayBuildingInfo = new BuildingInfoBean[EnumUtil.GetEnumMaxIndex<BuildingTypeEnum>() + 1];
 
+    public List<Biome> listBiomeForTest = new List<Biome>();
     public List<Biome> listBiomeForMain = new List<Biome>();
 
     public virtual void Awake()
@@ -84,11 +85,18 @@ public class BiomeManager : BaseManager
     /// </summary>
     /// <param name="worldType"></param>
     /// <returns></returns>
-    public List<Biome> GetBiomeListByWorldType(WorldTypeEnum worldType)
+    public virtual Biome[] GetBiomeListByWorldType(WorldTypeEnum worldType)
     {
         List<Biome> listBiome = new List<Biome>();
         switch (worldType)
         {
+            case WorldTypeEnum.Test:
+                if (CheckUtil.ListIsNull(listBiomeForTest))
+                {
+                    listBiomeForTest.Add(new BiomeTest());
+                }
+                listBiome = listBiomeForTest;
+                break;
             case WorldTypeEnum.Main:
                 if (CheckUtil.ListIsNull(listBiomeForMain))
                 {
@@ -103,7 +111,7 @@ public class BiomeManager : BaseManager
                 listBiome = listBiomeForMain;
                 break;
         }
-        return listBiome;
+        return listBiome.ToArray();
     }
 
     #region 数据回调

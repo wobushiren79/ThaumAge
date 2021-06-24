@@ -7,6 +7,8 @@ public class Launcher : BaseMonoBehaviour
 {
     public int refreshRange = 5;
 
+    public WorldTypeEnum worldType = WorldTypeEnum.Test;
+
     void Start()
     {
         //先清理一下内纯
@@ -23,6 +25,9 @@ public class Launcher : BaseMonoBehaviour
         //开关角色控制
         GameControlHandler.Instance.manager.controlForPlayer.EnabledControl(false);
 
+        //设置世界类型
+        WorldCreateHandler.Instance.SetWorldType(worldType);
+        //刷新周围区块
         WorldCreateHandler.Instance.CreateChunkForRangeForCenterPosition(Vector3Int.zero, refreshRange, CompleteForUpdateChunk);
         //修改游戏状态
         GameHandler.Instance.manager.ChangeGameState(GameStateEnum.Gaming);

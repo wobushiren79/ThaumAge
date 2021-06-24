@@ -1,5 +1,6 @@
 ﻿
 public enum WorldTypeEnum
 {
-    Main = 0,
+    Test = 0,
+    Main = 1,
 }

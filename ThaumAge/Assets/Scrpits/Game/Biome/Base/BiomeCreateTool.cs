@@ -45,12 +45,13 @@ public class BiomeCreateTool
         public int maxDepth;
     }
 
-    public struct BiomeForRiverData
+    public struct BiomeForWaterPoolData
     {
         public float addRate;
         public int minDepth;
         public int maxDepth;
-        public int riverSize;
+        public int minSize;
+        public int maxSize;
     }
 
 
@@ -685,19 +686,44 @@ public class BiomeCreateTool
         //        }
         //    }
         //}
-
     }
 
-
     /// <summary>
-    /// 增加河流
+    /// 增加水池
     /// </summary>
     /// <param name="randomData"></param>
     /// <param name="startPosition"></param>
     /// <param name="riverData"></param>
-    public static void AddRiver(uint randomData, Vector3Int startPosition, BiomeForRiverData riverData)
+    public static void AddWaterPool(uint randomData, Vector3Int startPosition, BiomeForWaterPoolData riverData)
     {
+        //生成概率
+        float addRate = WorldRandTools.GetValue(startPosition, randomData);
 
+        if (addRate < riverData.addRate)
+        {
+            //高度
+            int depth = WorldRandTools.Range(riverData.minDepth, riverData.maxDepth, startPosition, 1);
+            int size = WorldRandTools.Range(riverData.minSize, riverData.maxSize, startPosition, 101);
+
+            Vector3Int tempPosition = startPosition;
+            for (int z = -size; z <= size; z++)
+            {
+                for (int y = -depth; y <= 0; y++)
+                {
+                    for (int x = -size; x <= size; x++)
+                    {
+                        Vector3Int currentPosition = tempPosition + new Vector3Int(x, y, z);
+                        float dis = Vector3.Distance(currentPosition, startPosition);
+                        if (tempPosition.y <= 0 || dis >= size)
+                        {
+                            continue;
+                        }
+                        BlockBean blockData = new BlockBean(currentPosition, BlockTypeEnum.None);
+                        WorldCreateHandler.Instance.manager.AddUpdateBlock(blockData);
+                    }
+                }
+            }
+        }
     }
 
     /// <summary>
@@ -710,11 +736,12 @@ public class BiomeCreateTool
     {
         //生成概率
         float addRate = WorldRandTools.GetValue(startPosition, randomData);
-        //高度
-        int treeHeight = WorldRandTools.Range(treeData.minHeight, treeData.maxHeight);
 
         if (addRate < treeData.addRate)
         {
+            //高度
+            int treeHeight = WorldRandTools.Range(treeData.minHeight, treeData.maxHeight);
+
             Vector3Int treeDataPosition = startPosition;
             for (int i = 0; i < treeHeight; i++)
             {

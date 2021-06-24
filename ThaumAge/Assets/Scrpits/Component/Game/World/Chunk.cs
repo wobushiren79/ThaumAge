@@ -522,9 +522,9 @@ public class Chunk : BaseMonoBehaviour
     {
         WorldTypeEnum worldType = WorldCreateHandler.Instance.manager.worldType;
         //获取该世界的所有生态
-        List<Biome> listBiome = BiomeHandler.Instance.manager.GetBiomeListByWorldType(worldType);
+        Biome[] listBiome = BiomeHandler.Instance.manager.GetBiomeListByWorldType(worldType);
         //获取一定范围内的生态点
-        List<Vector3Int> listBiomeCenter = BiomeHandler.Instance.GetBiomeCenterPosition(this, 5, 10);
+        Vector3Int[] listBiomeCenter = BiomeHandler.Instance.GetBiomeCenterPosition(this, 5, 10);
         //遍历map，生成其中每个Block的信息 
         //生成基础地形数据
         for (int x = 0; x < chunkData.chunkWidth; x++)

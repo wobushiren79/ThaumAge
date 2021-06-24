@@ -25,7 +25,7 @@ public class BiomeHandler : BaseHandler<BiomeHandler, BiomeManager>
     /// <param name="width"></param>
     /// <param name="height"></param>
     /// <returns></returns>
-    public BlockTypeEnum CreateBiomeBlockType(Chunk chunk, List<Vector3Int> listBiomeCenterPosition, List<Biome> listBiome, Vector3Int blockLocPosition)
+    public BlockTypeEnum CreateBiomeBlockType(Chunk chunk, Vector3Int[] listBiomeCenterPosition, Biome[] listBiome, Vector3Int blockLocPosition)
     {
         Vector3Int wPos = blockLocPosition + chunk.chunkData.positionForWorld;
         //y坐标是否在Chunk内
@@ -33,31 +33,28 @@ public class BiomeHandler : BaseHandler<BiomeHandler, BiomeManager>
         {
             return BlockTypeEnum.None;
         }
-        //最近的距离
-        float minDis = float.MaxValue;
-        //第二靠近的生态点 用于生态边缘处理
-        float secondDis = float.MaxValue;
+        //距离该方块最近的生态点距离
+        float minBiomeDis = float.MaxValue;
+        //距离该方块第二近的生态点距离
+        float secondMinBiomeDis = float.MaxValue;
         //最靠近的生态点
-        Vector3Int biomeCenterPosition = Vector3Int.zero;
+        Vector3Int minBiomePosition = Vector3Int.zero;
         //便利中心点，寻找最靠近的生态点（维诺图）
-        for (int i = 0; i < listBiomeCenterPosition.Count; i++)
+        for (int i = 0; i < listBiomeCenterPosition.Length; i++)
         {
             Vector3Int itemCenterPosition = listBiomeCenterPosition[i];
             float tempDis = Vector3Int.Distance(itemCenterPosition, new Vector3Int(wPos.x, 0, wPos.z));
-            if (tempDis < minDis)
+
+            //如果小于最小距离
+            if (tempDis <= minBiomeDis)
             {
-                //如果小于最小距离
-                biomeCenterPosition = itemCenterPosition;
-                secondDis = minDis;
-                minDis = tempDis;
+                minBiomePosition = itemCenterPosition;
+                minBiomeDis = tempDis;
             }
-            else
+            //如果大于最小距离 并且小于第二小距离
+            else if (tempDis > minBiomeDis && tempDis <= secondMinBiomeDis)
             {
-                //如果大于最小距离 并且小于第二小距离
-                if (tempDis < secondDis)
-                {
-                    secondDis = tempDis;
-                }
+                secondMinBiomeDis = tempDis;
             }
         }
 
@@ -65,7 +62,7 @@ public class BiomeHandler : BaseHandler<BiomeHandler, BiomeManager>
         //int worldSeed = WorldCreateHandler.Instance.manager.GetWorldSeed();
         //RandomTools biomeRandom = RandomUtil.GetRandom(worldSeed, biomeCenterPosition.x, biomeCenterPosition.z);
         //int biomeIndex = biomeRandom.NextInt(listBiome.Count);
-        int biomeIndex = WorldRandTools.Range(listBiome.Count, biomeCenterPosition);
+        int biomeIndex = WorldRandTools.Range(listBiome.Length, minBiomePosition);
 
         Biome biome = listBiome[biomeIndex];
         BiomeInfoBean biomeInfo = manager.GetBiomeInfo(biome.biomeType);
@@ -80,7 +77,7 @@ public class BiomeHandler : BaseHandler<BiomeHandler, BiomeManager>
         }
 
         //边缘处理 逐渐减缓到最低高度
-        float offsetDis = secondDis - minDis;
+        float offsetDis = secondMinBiomeDis - minBiomeDis;
         if (genHeight - biomeInfo.minHeight > 2//高度大于3格
             && offsetDis <= 10) //在10范围以内
         {
@@ -89,10 +86,20 @@ public class BiomeHandler : BaseHandler<BiomeHandler, BiomeManager>
             if (edgeHeight < genHeight)
             {
                 genHeight = edgeHeight;
+                if (genHeight <= 64 && genHeight >= 60)
+                {
+                    //水平线
+                    return BlockTypeEnum.Water;
+                }
+            }
+            //其余情况则返回空方块
+            else
+            {
+                return BlockTypeEnum.None;
             }
         }
- 
-        BlockTypeEnum blockType= biome.GetBlockType(biomeInfo, genHeight, blockLocPosition, wPos);
+
+        BlockTypeEnum blockType = biome.GetBlockType(biomeInfo, genHeight, blockLocPosition, wPos);
 
         //获取方块
         return blockType;
@@ -137,7 +144,7 @@ public class BiomeHandler : BaseHandler<BiomeHandler, BiomeManager>
     /// <param name="range">范围</param>
     /// <param name="rate">倍数</param>
     /// <returns></returns>
-    public List<Vector3Int> GetBiomeCenterPosition(Chunk currentChunk, int range, int rate)
+    public Vector3Int[] GetBiomeCenterPosition(Chunk currentChunk, int range, int rate)
     {
         List<Vector3Int> listData = new List<Vector3Int>();
         int worldSeed = WorldCreateHandler.Instance.manager.GetWorldSeed();
@@ -158,7 +165,7 @@ public class BiomeHandler : BaseHandler<BiomeHandler, BiomeManager>
                 }
             }
         }
-        return listData;
+        return listData.ToArray();
     }
 
 
