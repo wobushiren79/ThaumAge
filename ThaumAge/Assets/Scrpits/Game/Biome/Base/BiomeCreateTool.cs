@@ -786,9 +786,21 @@ public class BiomeCreateTool
     /// <param name="randomData"></param>
     /// <param name="startPosition"></param>
     /// <param name="buildingType"></param>
-    public static void AddBuilding(float addRate, uint randomData, Vector3Int startPosition, BuildingTypeEnum buildingType)
+    public static bool AddBuilding(float addRate, uint randomData, Vector3Int startPosition, BuildingTypeEnum buildingType)
     {
-        float randomRate = WorldRandTools.GetValue(startPosition, randomData);
+        float randomRate;
+        if (addRate < 0.00001f)
+        {
+            //概率小于万分之一的用RandomTools
+            int seed = WorldCreateHandler.Instance.manager.GetWorldSeed();
+            RandomTools randomTools = RandomUtil.GetRandom(seed, startPosition.x, startPosition.y, startPosition.z);
+            //生成概率
+            randomRate = randomTools.NextFloat();
+        }
+        else
+        {
+            randomRate = WorldRandTools.GetValue(startPosition, randomData);
+        }
         if (randomRate < addRate)
         {
             BuildingInfoBean buildingInfo = BiomeHandler.Instance.manager.GetBuildingInfo(buildingType);
@@ -806,7 +818,9 @@ public class BiomeCreateTool
                     WorldCreateHandler.Instance.manager.AddUpdateBlock(blockData);
                 }
             }
+            return true;
         }
+        return false;
     }
 
 }

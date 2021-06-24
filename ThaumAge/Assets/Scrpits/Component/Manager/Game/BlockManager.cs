@@ -13,7 +13,6 @@ public class BlockManager : BaseManager, IBlockInfoView
     protected Block[] arrayBlockRegister = new Block[EnumUtil.GetEnumMaxIndex<BlockTypeEnum>() + 1];
     //方块模型列表
     protected GameObject[] arrayBlockModel = new GameObject[EnumUtil.GetEnumMaxIndex<BlockTypeEnum>() + 1];
-    
 
     public virtual void Awake()
     {
@@ -37,7 +36,7 @@ public class BlockManager : BaseManager, IBlockInfoView
         GameObject objModel = arrayBlockModel[blockId];
         if (objModel == null)
         {
-            objModel= GetModel<GameObject>("block/block", modelName);
+            objModel = GetModel<GameObject>("block/block", modelName);
             arrayBlockModel[blockId] = objModel;
         }
         return objModel;
@@ -52,6 +51,7 @@ public class BlockManager : BaseManager, IBlockInfoView
     {
         return arrayBlockRegister[blockId];
     }
+
     public Block GetRegisterBlock(BlockTypeEnum blockType)
     {
         return GetRegisterBlock((int)blockType);
@@ -89,7 +89,6 @@ public class BlockManager : BaseManager, IBlockInfoView
         arrayBlockRegister[(int)blockType] = block;
     }
 
-
     /// <summary>
     /// 初始化方块信息
     /// </summary>
@@ -125,8 +124,6 @@ public class BlockManager : BaseManager, IBlockInfoView
     {
         return arrayBlockInfo;
     }
-
-
 
     #region 方块数据回调
     public void GetBlockInfoSuccess<T>(T data, Action<T> action)

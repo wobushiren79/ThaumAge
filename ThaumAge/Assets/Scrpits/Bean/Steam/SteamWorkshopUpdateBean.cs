@@ -21,7 +21,7 @@ public class SteamWorkshopUpdateBean
     //原数据
     public string metadata = "";
     //公布状态  默认公开
-    public ERemoteStoragePublishedFileVisibility visibility= ERemoteStoragePublishedFileVisibility.k_ERemoteStoragePublishedFileVisibilityPublic;
+    public ERemoteStoragePublishedFileVisibility visibility = ERemoteStoragePublishedFileVisibility.k_ERemoteStoragePublishedFileVisibilityPublic;
     //语言 具体参数请参考steam文献  默认english
-    public string updateLanguage="english";
+    public string updateLanguage = "english";
 }

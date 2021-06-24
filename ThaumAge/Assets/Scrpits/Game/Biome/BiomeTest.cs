@@ -11,7 +11,6 @@ public class BiomeTest : Biome
 
     public override BlockTypeEnum GetBlockType(BiomeInfoBean biomeInfo, int genHeight, Vector3Int localPos, Vector3Int wPos)
     {
-        base.GetBlockType(biomeInfo, genHeight, localPos, wPos);
         if (wPos.y == genHeight)
         {
             //草

@@ -21,7 +21,6 @@ public class BiomeMagicForest : Biome
             AddMushroomTree(wPos);
             AddStoneMoss(wPos);
             AddFlower(wPos);
-            AddFlower(wPos);
             // 地表，使用草
             return BlockTypeEnum.Grass_Magic;
         }
