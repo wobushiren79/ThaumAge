@@ -1,10 +1,12 @@
 ﻿using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+
 using static BiomeCreateTool;
 
 public class BiomeMagicForest : Biome
 {
+
     //魔法深林
     public BiomeMagicForest() : base(BiomeTypeEnum.MagicForest)
     {
@@ -76,7 +78,7 @@ public class BiomeMagicForest : Biome
             treeLeaves = BlockTypeEnum.LeavesSilver,
             leavesRange = 4,
         };
-        BiomeCreateTool.AddTreeForBig(wPos, treeData);
+        BiomeCreateTool.AddTreeForBig(222, wPos, treeData);
     }
 
     protected void AddWorldTree(Vector3Int wPos)
@@ -105,7 +107,7 @@ public class BiomeMagicForest : Biome
             treeLeaves = BlockTypeEnum.LeavesOak,
             leavesRange = 2,
         };
-        BiomeCreateTool.AddTree(wPos, treeData);
+        BiomeCreateTool.AddTree(111, wPos, treeData);
     }
 
     protected void AddWeed(Vector3Int wPos)
@@ -117,8 +119,5 @@ public class BiomeMagicForest : Biome
         };
         BiomeCreateTool.AddPlant(wPos, weedData);
     }
-
-
-
 
 }

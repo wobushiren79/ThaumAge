@@ -45,7 +45,7 @@ public class BiomePrairie : Biome
             addRate = 0.02f,
             listFlowerType = new List<BlockTypeEnum> { BlockTypeEnum.FlowerSun, BlockTypeEnum.FlowerRose, BlockTypeEnum.FlowerChrysanthemum }
         };
-        BiomeCreateTool.AddFlower(101,wPos, flowersData);
+        BiomeCreateTool.AddFlower(101, wPos, flowersData);
     }
 
     protected void AddTree(Vector3Int wPos)
@@ -59,7 +59,7 @@ public class BiomePrairie : Biome
             treeLeaves = BlockTypeEnum.LeavesOak,
             leavesRange = 2,
         };
-        BiomeCreateTool.AddTree(wPos, treeData);
+        BiomeCreateTool.AddTree(111, wPos, treeData);
     }
 
     protected void AddWeed(Vector3Int wPos)
@@ -67,7 +67,7 @@ public class BiomePrairie : Biome
         BiomeForPlantData weedData = new BiomeForPlantData
         {
             addRate = 0.3f,
-            listPlantType = new List<BlockTypeEnum>{ BlockTypeEnum.Weed_Long, BlockTypeEnum.Weed_Normal, BlockTypeEnum.Weed_Short }
+            listPlantType = new List<BlockTypeEnum> { BlockTypeEnum.Weed_Long, BlockTypeEnum.Weed_Normal, BlockTypeEnum.Weed_Short }
         };
         BiomeCreateTool.AddPlant(wPos, weedData);
     }

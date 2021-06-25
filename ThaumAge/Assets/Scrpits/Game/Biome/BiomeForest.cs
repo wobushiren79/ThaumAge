@@ -62,7 +62,7 @@ public class BiomeForest : Biome
             treeLeaves = BlockTypeEnum.LeavesOak,
             leavesRange = 4,
         };
-        BiomeCreateTool.AddTreeForBig(wPos, treeData);
+        BiomeCreateTool.AddTreeForBig(222,wPos, treeData);
     }
 
     protected void AddTree(Vector3Int wPos)
@@ -76,7 +76,7 @@ public class BiomeForest : Biome
             treeLeaves = BlockTypeEnum.LeavesOak,
             leavesRange = 2,
         };
-        BiomeCreateTool.AddTree(wPos, treeData);
+        BiomeCreateTool.AddTree(111,wPos, treeData);
     }
 
     protected void AddWeed(Vector3Int wPos)

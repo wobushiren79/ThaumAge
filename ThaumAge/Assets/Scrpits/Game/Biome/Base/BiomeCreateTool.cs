@@ -60,15 +60,15 @@ public class BiomeCreateTool
     /// </summary>
     /// <param name="startPosition"></param>
     /// <param name="treeData"></param>
-    public static void AddTree(Vector3Int startPosition, BiomeForTreeData treeData)
+    public static void AddTree(uint randomData, Vector3Int startPosition, BiomeForTreeData treeData)
     {
         //生成概率
-        float addRate = WorldRandTools.GetValue(startPosition);
-        //高度
-        int treeHeight = WorldRandTools.Range(treeData.minHeight, treeData.maxHeight);
+        float addRate = WorldRandTools.GetValue(startPosition, randomData);
 
         if (addRate < treeData.addRate)
         {
+            //高度
+            int treeHeight = WorldRandTools.Range(treeData.minHeight, treeData.maxHeight);
             for (int i = 0; i < treeHeight + 2; i++)
             {
                 Vector3Int treeTrunkPosition = startPosition + Vector3Int.up * (i + 1);
@@ -118,15 +118,15 @@ public class BiomeCreateTool
     /// </summary>
     /// <param name="startPosition"></param>
     /// <param name="treeData"></param>
-    public static void AddTreeForBig(Vector3Int startPosition, BiomeForTreeData treeData)
+    public static void AddTreeForBig(uint randomData, Vector3Int startPosition, BiomeForTreeData treeData)
     {
         //生成概率
-        float addRate = WorldRandTools.GetValue(startPosition);
-        //高度
-        int treeHeight = WorldRandTools.Range(treeData.minHeight, treeData.maxHeight);
+        float addRate = WorldRandTools.GetValue(startPosition, randomData);
 
         if (addRate < treeData.addRate)
         {
+            //高度
+            int treeHeight = WorldRandTools.Range(treeData.minHeight, treeData.maxHeight);
             for (int i = 5; i < treeHeight + 3; i++)
             {
                 //生成树叶
@@ -502,6 +502,54 @@ public class BiomeCreateTool
 
     }
 
+    /// <summary>
+    /// 增加环形树
+    /// </summary>
+    public static void AddTreeForRing(uint randomData, Vector3Int startPosition, BiomeForTreeData treeData)
+    {
+        //生成概率
+        float addRate = WorldRandTools.GetValue(startPosition, randomData);
+
+        if (addRate < treeData.addRate)
+        {
+            //高度
+            int treeHeight = WorldRandTools.Range(treeData.minHeight, treeData.maxHeight);
+            for (int i = 0; i < treeHeight + 2; i++)
+            {
+                Vector3Int treeTrunkPosition = startPosition + Vector3Int.up * (i + 1);
+                //生成树干
+                if (i < treeHeight)
+                {
+                    BlockBean blockData = new BlockBean(treeTrunkPosition, treeData.treeTrunk);
+                    WorldCreateHandler.Instance.manager.AddUpdateBlock(blockData);
+                }
+                if (i > 4 && i % 2 == 0)
+                {
+                    //最大范围
+                    int range = treeData.leavesRange;
+
+                    //生成叶子
+                    for (int x = -range; x <= range; x++)
+                    {
+                        for (int z = -range; z <= range; z++)
+                        {
+                            if (x == startPosition.x && z == startPosition.z)
+                                continue;
+                            if (Math.Abs(x) == range || Math.Abs(z) == range)
+                            {
+                                //如果是边界 则有几率不生成
+                                int randomLeaves = WorldRandTools.Range(0, 3);
+                                if (randomLeaves == 0)
+                                    continue;
+                            }
+                            BlockBean blockData = new BlockBean(treeTrunkPosition + new Vector3Int(x, 0, z), treeData.treeLeaves);
+                            WorldCreateHandler.Instance.manager.AddUpdateBlock(blockData);
+                        }
+                    }
+                }
+            }
+        }
+    }
 
     /// <summary>
     /// 增加植物
@@ -807,13 +855,17 @@ public class BiomeCreateTool
 
             List<BuildingBean> listBuildingData = buildingInfo.listBuildingData;
 
+            int randomAngle = WorldRandTools.Range(0, 4, startPosition) * 90;
+
             for (int i = 0; i < listBuildingData.Count; i++)
             {
                 BuildingBean buildingData = listBuildingData[i];
                 Vector3Int targetPosition = startPosition + buildingData.GetPosition();
                 float createRate = WorldRandTools.GetValue(targetPosition);
+
                 if (buildingData.randomRate == 0 || createRate < buildingData.randomRate)
                 {
+                    VectorUtil.GetRotatedPosition(startPosition, targetPosition, new Vector3(0, randomAngle, 0));
                     BlockBean blockData = new BlockBean(targetPosition, (BlockTypeEnum)buildingData.blockId, (DirectionEnum)buildingData.direction);
                     WorldCreateHandler.Instance.manager.AddUpdateBlock(blockData);
                 }
