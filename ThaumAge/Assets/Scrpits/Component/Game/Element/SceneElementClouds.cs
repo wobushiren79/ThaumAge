@@ -25,6 +25,13 @@ public class SceneElementClouds : SceneElementBase
         HandleForPosition();
     }
 
+    public override Vector3 HandleForPosition()
+    {
+        Transform tfPlayer = GameHandler.Instance.manager.player.transform;
+        transform.position = new Vector3(tfPlayer.position.x, 200, tfPlayer.position.z);
+        return transform.position;
+    }
+
     public void ChangeCloudsColor(Color colorCloud, float changeTime)
     {
 

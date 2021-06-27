@@ -269,6 +269,7 @@ public class Chunk : BaseMonoBehaviour
                                 Block block = BlockHandler.Instance.manager.GetRegisterBlock(blockType);
                                 block.SetData(localPosition, localPosition + chunkData.positionForWorld, direction);
                                 block.BuildBlock(chunkRenderData);
+                                block.InitBlock(this);
                             }
                         }
                     }

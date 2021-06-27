@@ -15,4 +15,13 @@ public class BlockMagma : BlockWater
         chunkData.dicTris[BlockMaterialEnum.Magma].Add(index + 2);
         chunkData.dicTris[BlockMaterialEnum.Magma].Add(index + 3);
     }
+
+    public override void InitBlock(Chunk chunk)
+    {
+        GetCloseBlockByDirection(DirectionEnum.UP,out BlockTypeEnum blockType,out bool hasChunk);
+        if(blockType == BlockTypeEnum.None)
+        {
+            base.InitBlock(chunk);
+        }
+    }
 }
