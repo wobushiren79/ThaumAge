@@ -15,19 +15,11 @@ public class BiomeVolcano : Biome
         float noise = (genHeight - biomeInfo.minHeight) / biomeInfo.amplitude;
         if (noise >= 0.9f)
         {
-            //if (localPos.y <= genHeight)
-            //{
-            //    return BlockTypeEnum.Magma;
-            //}
-            //else
-            //{
-            //    return BlockTypeEnum.None;
-            //}
             if (localPos.y >= genHeight - 3)
             {
                 return BlockTypeEnum.None;
             }
-            else if (localPos.y > 20 && localPos.y < genHeight - 3)
+            else if (localPos.y > 20 && localPos.y < genHeight - 1)
             {
                 return BlockTypeEnum.Magma;
             }
@@ -35,11 +27,6 @@ public class BiomeVolcano : Biome
             {
                 return BlockTypeEnum.StoneVolcanic;
             }
-        }
-        if (localPos.y == biomeInfo.minHeight)
-        {
-            BlockBean blockData = new BlockBean(wPos+Vector3Int.up, BlockTypeEnum.Magma);
-            WorldCreateHandler.Instance.manager.AddUpdateBlock(blockData);
         }
         if (genHeight == localPos.y)
         {
