@@ -13,6 +13,8 @@ public abstract class Block
     public Vector3Int localPosition;
     public Vector3Int worldPosition;
 
+    protected float uvWidth = 1 / 128f;
+
     public Vector3 centerPosition
     {
         get
@@ -22,7 +24,14 @@ public abstract class Block
     }
 
     protected BlockInfoBean _blockInfo;//∑ΩøÈ–≈œ¢
-    protected float uvWidth = 1 / 128f;
+
+    public Chunk chunk
+    {
+        get
+        {
+           return WorldCreateHandler.Instance.manager.GetChunk(localPosition);
+        }
+    }
 
     public BlockInfoBean blockInfo
     {

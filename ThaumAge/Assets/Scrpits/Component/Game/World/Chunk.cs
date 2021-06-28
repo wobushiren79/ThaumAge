@@ -28,7 +28,7 @@ public class Chunk : BaseMonoBehaviour
         public Dictionary<BlockMaterialEnum, List<int>> dicTris = new Dictionary<BlockMaterialEnum, List<int>>();
     }
 
-    public List<Action> listEventUpdate = new List<Action>();
+    public List<Action<Chunk>> listEventUpdate = new List<Action<Chunk>>();
 
     //需要创建方块实力的列表
     public Queue<Vector3Int> listBlockModelUpdate = new Queue<Vector3Int>();
@@ -600,8 +600,8 @@ public class Chunk : BaseMonoBehaviour
     {
         for (int i = 0; i < listEventUpdate.Count; i++)
         {
-            Action actionItem = listEventUpdate[i];
-            actionItem?.Invoke();
+            Action<Chunk> actionItem = listEventUpdate[i];
+            actionItem?.Invoke(this);
         }
     }
 
@@ -636,12 +636,12 @@ public class Chunk : BaseMonoBehaviour
     }
 
     #region 事件注册
-    public void RegisterEventUpdate(Action action)
+    public void RegisterEventUpdate(Action<Chunk> action)
     {
         listEventUpdate.Add(action);
     }
 
-    public void UnRegisterEventUpdate(Action action)
+    public void UnRegisterEventUpdate(Action<Chunk> action)
     {
         listEventUpdate.Remove(action);
     }

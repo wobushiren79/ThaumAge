@@ -18,10 +18,25 @@ public class BlockMagma : BlockWater
 
     public override void InitBlock(Chunk chunk)
     {
-        GetCloseBlockByDirection(DirectionEnum.UP,out BlockTypeEnum blockType,out bool hasChunk);
-        if(blockType == BlockTypeEnum.None)
+        if (chunk == null)
+            return;
+        GetCloseBlockByDirection(DirectionEnum.UP, out BlockTypeEnum blockType, out bool hasChunk);
+        if (blockType == BlockTypeEnum.None)
         {
+            //如果上方是空得 则实例化冒烟特效
             base.InitBlock(chunk);
         }
+        else
+        {
+            DestoryBlock(chunk);
+            chunk.RegisterEventUpdate(FlowUpdate);
+        }
     }
+
+    public override void RefreshBlock()
+    {
+        base.RefreshBlock();
+        InitBlock(chunk);
+    }
+
 }
