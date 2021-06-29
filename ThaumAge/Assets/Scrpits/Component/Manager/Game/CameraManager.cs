@@ -11,6 +11,7 @@ public class CameraManager : BaseManager
 
     protected Transform _cameraFreeLookContainer;
     protected CinemachineVirtualCameraBase[] _listCameraFreeLook;
+    private CinemachineFreeLook.Orbit[] threeFreeLookOrbits;
 
     public float speedForCameraMove = 200;
 

@@ -6,7 +6,7 @@ using static UnityEngine.InputSystem.InputAction;
 
 public class ControlForPlayer : ControlForBase
 {
-    public CharacterController characterController;
+    private CharacterController characterController;
 
     private float gravityValue = 10f;
     private Vector3 playerVelocity;
@@ -20,6 +20,8 @@ public class ControlForPlayer : ControlForBase
 
     private void Awake()
     {
+        characterController = GetComponent<CharacterController>();
+
         InputAction jumpAction = InputHandler.Instance.manager.GetJumpData();
         jumpAction.started += HandleForJumpStart;
         InputAction useAction = InputHandler.Instance.manager.GetUseData();

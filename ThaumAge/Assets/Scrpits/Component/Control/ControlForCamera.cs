@@ -6,9 +6,7 @@ using UnityEngine.InputSystem;
 public class ControlForCamera : ControlForBase
 {
 
-    public int cameraDistance = 0;
-    //摄像头最大距离
-    public int maxCameraDistance = 2;
+    public float cameraDistance = 0;
 
 
     private void Awake()
@@ -37,21 +35,24 @@ public class ControlForCamera : ControlForBase
         float data = callBack.ReadValue<float>();
         if (data > 0)
         {
-            cameraDistance++;
+            cameraDistance += 0.1f;
         }
         else if (data < 0)
         {
-            cameraDistance--;
+            cameraDistance -= 0.1f;
         }
-        if (cameraDistance > maxCameraDistance)
+        if (cameraDistance > 1)
         {
             cameraDistance = 0;
         }
         else if (cameraDistance < 0)
         {
-            cameraDistance = maxCameraDistance;
+            cameraDistance = 1;
         }
         CameraHandler.Instance.ChangeCameraDistance(cameraDistance);
+
+
+
         //CameraHandler.Instance.manager.
         //Vector3 characterPosition = GameControlHandler.Instance.manager.controlForPlayer.transform.position;
         //float data = callBack.ReadValue<float>();

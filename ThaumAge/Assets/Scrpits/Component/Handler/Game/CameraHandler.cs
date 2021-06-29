@@ -56,7 +56,7 @@ public class CameraHandler : BaseHandler<CameraHandler, CameraManager>
     ///  修改摄像头距离
     /// </summary>
     /// <param name="distance">距离：0为第一人称，123依次递增</param>
-    public void ChangeCameraDistance(int distance)
+    public void ChangeCameraDistance(float distance)
     {
         CinemachineVirtualCameraBase[] listCinemachineFreeLook = manager.listCameraFreeLook;
         if (CheckUtil.ArrayIsNull(listCinemachineFreeLook))
