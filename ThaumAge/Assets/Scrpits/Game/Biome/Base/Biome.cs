@@ -18,7 +18,7 @@ public class Biome
     /// </summary>
     /// <param name="genHeight"></param>
     /// <returns></returns>
-    public virtual BlockTypeEnum GetBlockType(BiomeInfoBean biomeInfo,int genHeight, Vector3Int localPos, Vector3Int wPos)
+    public virtual BlockTypeEnum GetBlockType(Chunk chunk,BiomeInfoBean biomeInfo,int genHeight, Vector3Int localPos, Vector3Int wPos)
     {
         if (wPos.y < genHeight - 1)
         {

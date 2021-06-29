@@ -12,9 +12,9 @@ public class BiomeMagicForest : Biome
     {
     }
 
-    public override BlockTypeEnum GetBlockType(BiomeInfoBean biomeInfo, int genHeight, Vector3Int localPos, Vector3Int wPos)
+    public override BlockTypeEnum GetBlockType(Chunk chunk, BiomeInfoBean biomeInfo, int genHeight, Vector3Int localPos, Vector3Int wPos)
     {
-        base.GetBlockType(biomeInfo, genHeight, localPos, wPos);
+        base.GetBlockType(chunk, biomeInfo, genHeight, localPos, wPos);
         if (wPos.y == genHeight)
         {
             AddWeed(wPos);
@@ -51,20 +51,18 @@ public class BiomeMagicForest : Biome
         BiomeCreateTool.AddBuilding(0.0001f, 301, startPosition, BuildingTypeEnum.MushrooSmall);
     }
 
-    protected void AddStoneMoss(Vector3Int wPos)
+    protected void AddTree(Vector3Int wPos)
     {
-        Vector3Int startPosition = wPos + Vector3Int.up;
-        BiomeCreateTool.AddBuilding(0.005f, 401, startPosition, BuildingTypeEnum.StoneMoss);
-    }
-
-    public void AddFlower(Vector3Int wPos)
-    {
-        BiomeForFlowerData flowersData = new BiomeForFlowerData
+        BiomeForTreeData treeData = new BiomeForTreeData
         {
-            addRate = 0.005f,
-            listFlowerType = new List<BlockTypeEnum> { BlockTypeEnum.MushroomLuminous }
+            addRate = 0.01f,
+            minHeight = 3,
+            maxHeight = 6,
+            treeTrunk = BlockTypeEnum.TreeOak,
+            treeLeaves = BlockTypeEnum.LeavesOak,
+            leavesRange = 2,
         };
-        BiomeCreateTool.AddFlower(501, wPos, flowersData);
+        BiomeCreateTool.AddTree(401, wPos, treeData);
     }
 
     protected void AddBigTree(Vector3Int wPos)
@@ -78,7 +76,7 @@ public class BiomeMagicForest : Biome
             treeLeaves = BlockTypeEnum.LeavesSilver,
             leavesRange = 4,
         };
-        BiomeCreateTool.AddTreeForBig(222, wPos, treeData);
+        BiomeCreateTool.AddTreeForBig(501, wPos, treeData);
     }
 
     protected void AddWorldTree(Vector3Int wPos)
@@ -96,20 +94,6 @@ public class BiomeMagicForest : Biome
         BiomeCreateTool.AddTreeForWorld(wPos, treeData);
     }
 
-    protected void AddTree(Vector3Int wPos)
-    {
-        BiomeForTreeData treeData = new BiomeForTreeData
-        {
-            addRate = 0.01f,
-            minHeight = 3,
-            maxHeight = 6,
-            treeTrunk = BlockTypeEnum.TreeOak,
-            treeLeaves = BlockTypeEnum.LeavesOak,
-            leavesRange = 2,
-        };
-        BiomeCreateTool.AddTree(111, wPos, treeData);
-    }
-
     protected void AddWeed(Vector3Int wPos)
     {
         BiomeForPlantData weedData = new BiomeForPlantData
@@ -117,7 +101,22 @@ public class BiomeMagicForest : Biome
             addRate = 0.3f,
             listPlantType = new List<BlockTypeEnum> { BlockTypeEnum.Weed_Long, BlockTypeEnum.Weed_Normal, BlockTypeEnum.Weed_Short }
         };
-        BiomeCreateTool.AddPlant(wPos, weedData);
+        BiomeCreateTool.AddPlant(601,wPos, weedData);
     }
 
+    public void AddFlower(Vector3Int wPos)
+    {
+        BiomeForFlowerData flowersData = new BiomeForFlowerData
+        {
+            addRate = 0.005f,
+            listFlowerType = new List<BlockTypeEnum> { BlockTypeEnum.MushroomLuminous }
+        };
+        BiomeCreateTool.AddFlower(701, wPos, flowersData);
+    }
+
+    protected void AddStoneMoss(Vector3Int wPos)
+    {
+        Vector3Int startPosition = wPos + Vector3Int.up;
+        BiomeCreateTool.AddBuilding(0.005f, 801, startPosition, BuildingTypeEnum.StoneMoss);
+    }
 }
