@@ -35,11 +35,11 @@ public class ControlForCamera : ControlForBase
         float data = callBack.ReadValue<float>();
         if (data > 0)
         {
-            cameraDistance += 0.1f;
+            cameraDistance -= 0.1f;
         }
         else if (data < 0)
         {
-            cameraDistance -= 0.1f;
+            cameraDistance += 0.1f;
         }
         if (cameraDistance > 1)
         {

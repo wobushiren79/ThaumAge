@@ -10,8 +10,8 @@ TagManager:
   - Volume
   - Sun
   - Moon
-  - CameraFreeLook
   - UICamera
+  - CameraCinemachine
   layers:
   - Default
   - TransparentFX

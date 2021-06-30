@@ -30,51 +30,47 @@ public class CameraHandler : BaseHandler<CameraHandler, CameraManager>
     /// </summary>
     public void InitData()
     {
-        CinemachineVirtualCameraBase[] listCinemachineFreeLook = manager.listCameraFreeLook;
-        if (CheckUtil.ArrayIsNull(listCinemachineFreeLook))
-            return;
         Player player = GameHandler.Instance.manager.player;
-        for (int i = 0; i < listCinemachineFreeLook.Length; i++)
-        {
-            CinemachineVirtualCameraBase cinemachine = listCinemachineFreeLook[i];
-            if(cinemachine is CinemachineFreeLook)
-            {
-                //第三人称
-                cinemachine.Follow = player.LookForThird;
-                cinemachine.LookAt = player.LookForThird;
-            }
-            else
-            {
-                //第一人称
-                cinemachine.Follow = player.LookForFirst;
-            }
-        }
+
+        CinemachineVirtualCamera cameraForFirst = manager.cameraForFirst;
+        //第一人称
+        cameraForFirst.Follow = player.LookForFirst;
+        CinemachineFreeLook cameraForThree = manager.cameraForThree;
+        //第三人称
+        cameraForThree.Follow = player.LookForThird;
+        cameraForThree.LookAt = player.LookForThird;
     }
 
 
     /// <summary>
     ///  修改摄像头距离
     /// </summary>
-    /// <param name="distance">距离：0为第一人称，123依次递增</param>
+    /// <param name="distance">距离：0为第一人称，0-1距离依次增加</param>
     public void ChangeCameraDistance(float distance)
     {
-        CinemachineVirtualCameraBase[] listCinemachineFreeLook = manager.listCameraFreeLook;
-        if (CheckUtil.ArrayIsNull(listCinemachineFreeLook))
-            return;
-        for (int i = 0; i < listCinemachineFreeLook.Length; i++)
+        CinemachineVirtualCamera cameraForFirst = manager.cameraForFirst;
+        CinemachineFreeLook cameraForThree = manager.cameraForThree;
+        if (distance <= 0)
+        {      
+            cameraForFirst.Priority = 1;
+            cameraForThree.Priority = 0;
+        }
+        else
         {
-            CinemachineVirtualCameraBase cinemachineFreeLook = listCinemachineFreeLook[i];
-            if (cinemachineFreeLook.name.Contains(distance + ""))
+            cameraForFirst.Priority = 0;
+            cameraForThree.Priority = 1;
+            for (int i = 0; i < cameraForThree.m_Orbits.Length; i++)
             {
-                cinemachineFreeLook.Priority = 1;
-            }
-            else
-            {
-                cinemachineFreeLook.Priority = 0;
+                cameraForThree.m_Orbits[i].m_Height = manager.threeFreeLookOriginalOrbits[i].m_Height * distance;
+                cameraForThree.m_Orbits[i].m_Radius = manager.threeFreeLookOriginalOrbits[i].m_Radius * distance;
             }
         }
     }
 
+    /// <summary>
+    /// 是否开启摄像头移动
+    /// </summary>
+    /// <param name="enabled"></param>
     public void EnabledCameraMove(bool enabled)
     {
         if (enabled)
@@ -87,32 +83,25 @@ public class CameraHandler : BaseHandler<CameraHandler, CameraManager>
         }
     }
 
+    /// <summary>
+    /// 修改摄像头速度
+    /// </summary>
+    /// <param name="speed"></param>
     public void ChangeCameraSpeed(float speed)
     {
-        CinemachineVirtualCameraBase[] listCinemachineFreeLook = manager.listCameraFreeLook;
-        if (CheckUtil.ArrayIsNull(listCinemachineFreeLook))
-            return;
-        for (int i = 0; i < listCinemachineFreeLook.Length; i++)
+        CinemachineVirtualCamera cameraForFirst = manager.cameraForFirst;
+        //第一人称
+        CinemachinePOV cinemachinePOV = cameraForFirst.GetCinemachineComponent<CinemachinePOV>();
+        if (cinemachinePOV != null)
         {
-            CinemachineVirtualCameraBase cinemachine = listCinemachineFreeLook[i];
-            if (cinemachine is CinemachineFreeLook)
-            {
-                //第三人称
-                CinemachineFreeLook cinemachineFreeLook = cinemachine as CinemachineFreeLook;
-                cinemachineFreeLook.m_XAxis.m_MaxSpeed = speed / timeScale;
-                cinemachineFreeLook.m_YAxis.m_MaxSpeed = (speed / 30) / timeScale;
-            }
-            else
-            {
-                //第一人称
-                CinemachineVirtualCamera cinemachineVirtualCamera = cinemachine as CinemachineVirtualCamera;
-                CinemachinePOV cinemachinePOV = cinemachineVirtualCamera.GetCinemachineComponent<CinemachinePOV>();
-                if (cinemachinePOV == null)
-                    continue;
-                cinemachinePOV.m_VerticalAxis.m_MaxSpeed = speed / timeScale;
-                cinemachinePOV.m_HorizontalAxis.m_MaxSpeed = speed / timeScale;
-            }
+            cinemachinePOV.m_VerticalAxis.m_MaxSpeed = speed / timeScale;
+            cinemachinePOV.m_HorizontalAxis.m_MaxSpeed = speed / timeScale;
         }
+
+        CinemachineFreeLook cameraForThree = manager.cameraForThree;
+        //第三人称
+        cameraForThree.m_XAxis.m_MaxSpeed = speed / timeScale;
+        cameraForThree.m_YAxis.m_MaxSpeed = (speed / 30) / timeScale;
     }
 
     /// <summary>
