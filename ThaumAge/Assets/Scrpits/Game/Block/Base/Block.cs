@@ -29,7 +29,7 @@ public abstract class Block
     {
         get
         {
-           return WorldCreateHandler.Instance.manager.GetChunk(localPosition);
+            return WorldCreateHandler.Instance.manager.GetChunk(localPosition);
         }
     }
 
@@ -107,7 +107,7 @@ public abstract class Block
         this.direction = direction;
     }
 
-    public virtual void SetData(Vector3Int localPosition, Vector3Int worldPosition,BlockTypeEnum blockType, DirectionEnum direction)
+    public virtual void SetData(Vector3Int localPosition, Vector3Int worldPosition, BlockTypeEnum blockType, DirectionEnum direction)
     {
         SetData(localPosition, worldPosition, direction);
         this.blockType = blockType;
@@ -490,6 +490,14 @@ public abstract class Block
         {
             chunk.listBlockModelUpdate.Enqueue(localPosition);
         }
+    }
+
+    /// <summary>
+    /// 获取下标
+    /// </summary>
+    public int GetIndex(int chunkWidth, int chunkHeight)
+    {
+        return localPosition.x * chunkWidth * chunkHeight + localPosition.y * chunkWidth + localPosition.z;
     }
 
 }

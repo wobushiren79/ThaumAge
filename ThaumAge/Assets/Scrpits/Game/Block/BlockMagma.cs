@@ -29,7 +29,7 @@ public class BlockMagma : BlockWater
         else
         {
             DestoryBlock(chunk);
-            chunk.RegisterEventUpdate(FlowUpdate);
+            chunk.RegisterEventUpdate(localPosition, FlowUpdate);
         }
     }
 
