@@ -556,10 +556,10 @@ public class BiomeCreateTool
     /// </summary>
     /// <param name="startPosition"></param>
     /// <param name="weedData"></param>
-    public static void AddPlant(Vector3Int startPosition, BiomeForPlantData plantData)
+    public static void AddPlant(uint randomData, Vector3Int startPosition, BiomeForPlantData plantData)
     {
         //生成概率
-        float addRate = WorldRandTools.GetValue(startPosition);
+        float addRate = WorldRandTools.GetValue(startPosition, randomData);
         int weedTypeNumber = WorldRandTools.Range(0, plantData.listPlantType.Count);
         if (addRate < plantData.addRate)
         {
@@ -569,14 +569,15 @@ public class BiomeCreateTool
     }
 
     /// <summary>
-    /// 增加仙人掌
+    ///  增加仙人掌
     /// </summary>
+    /// <param name="randomData"></param>
     /// <param name="startPosition"></param>
     /// <param name="cactusData"></param>
-    public static void AddCactus(Vector3Int startPosition, BiomeForCactusData cactusData)
+    public static void AddCactus(uint randomData, Vector3Int startPosition, BiomeForCactusData cactusData)
     {
         //生成概率
-        float addRate = WorldRandTools.GetValue(startPosition);
+        float addRate = WorldRandTools.GetValue(startPosition, randomData);
         //高度
         int treeHeight = WorldRandTools.Range(cactusData.minHeight, cactusData.maxHeight);
 

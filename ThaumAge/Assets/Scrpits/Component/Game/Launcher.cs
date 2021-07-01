@@ -35,18 +35,18 @@ public class Launcher : BaseMonoBehaviour
     /// </summary>
     public void CompleteForUpdateChunk()
     {
-        //初始化摄像头数据
-        CameraHandler.Instance.InitData();
         //打开主UI
         UIHandler.Instance.manager.OpenUIAndCloseOther<UIGameMain>(UIEnum.GameMain);
         //修改天气
         WeatherHandler.Instance.ChangeWeather(WeatherTypeEnum.Cloudy, 2000);
-        //初始化位置
-        GameHandler.Instance.manager.player.InitPosition();
-        //开关角色控制
-        GameControlHandler.Instance.manager.controlForPlayer.EnabledControl(true);
         //修改灯光
         LightHandler.Instance.InitData();
+        //初始化摄像头数据
+        CameraHandler.Instance.InitData();
+        //开关角色控制
+        GameControlHandler.Instance.manager.controlForPlayer.EnabledControl(true);
+        //初始化位置
+        GameHandler.Instance.manager.player.InitPosition();
     }
 
 }

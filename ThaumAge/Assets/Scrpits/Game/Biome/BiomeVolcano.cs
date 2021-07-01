@@ -1,4 +1,5 @@
-﻿using UnityEditor;
+﻿using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 using static BiomeCreateTool;
 
@@ -9,9 +10,9 @@ public class BiomeVolcano : Biome
     {
     }
 
-    public override BlockTypeEnum GetBlockType(BiomeInfoBean biomeInfo, int genHeight, Vector3Int localPos, Vector3Int wPos)
+    public override BlockTypeEnum GetBlockType(Chunk chunk, BiomeInfoBean biomeInfo, int genHeight, Vector3Int localPos, Vector3Int wPos)
     {
-        base.GetBlockType(biomeInfo, genHeight, localPos, wPos);
+        base.GetBlockType(chunk,biomeInfo, genHeight, localPos, wPos);
         float noise = (genHeight - biomeInfo.minHeight) / biomeInfo.amplitude;
         if (noise >= 0.9f)
         {
@@ -31,6 +32,7 @@ public class BiomeVolcano : Biome
         if (genHeight == localPos.y)
         {
             AddDeadwood(wPos);
+            AddFireFlower(wPos);
         }
         return BlockTypeEnum.StoneVolcanic;
     }
@@ -47,5 +49,19 @@ public class BiomeVolcano : Biome
         treeData.maxHeight = 8;
         treeData.treeTrunk = BlockTypeEnum.TreeOak;
         BiomeCreateTool.AddDeadwood(101, startPosition, treeData);
+    }
+
+    /// <summary>
+    /// 增加火焰花
+    /// </summary>
+    /// <param name="wPos"></param>
+    public void AddFireFlower(Vector3Int wPos)
+    {
+        BiomeForFlowerData flowersData = new BiomeForFlowerData
+        {
+            addRate = 0.005f,
+            listFlowerType = new List<BlockTypeEnum> { BlockTypeEnum.FlowerFire }
+        };
+        BiomeCreateTool.AddFlower(201, wPos, flowersData);
     }
 }

@@ -19,6 +19,5 @@ public class TagInfo
     public readonly static string Tag_Volume = "Volume";
 
     public readonly static string Tag_UICamera = "UICamera";
-
-    public readonly static string Tag_CameraFreeLook= "CameraFreeLook";
+    public readonly static string Tag_CameraCinemachine = "CameraCinemachine";
 }

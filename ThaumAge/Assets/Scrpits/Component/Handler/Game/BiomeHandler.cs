@@ -99,7 +99,7 @@ public class BiomeHandler : BaseHandler<BiomeHandler, BiomeManager>
             }
         }
 
-        BlockTypeEnum blockType = biome.GetBlockType(biomeInfo, genHeight, blockLocPosition, wPos);
+        BlockTypeEnum blockType = biome.GetBlockType(chunk, biomeInfo, genHeight, blockLocPosition, wPos);
 
         //获取方块
         return blockType;
@@ -113,10 +113,15 @@ public class BiomeHandler : BaseHandler<BiomeHandler, BiomeManager>
     /// <returns></returns>
     public int GetHeightData(Vector3Int wPos, BiomeInfoBean biomeInfo)
     {
+        return GetHeightData( wPos, biomeInfo.frequency, biomeInfo.amplitude, biomeInfo.minHeight);
+    }
+
+    public int GetHeightData(Vector3Int wPos,float frequency,float amplitude,int minHeight)
+    {
         ////让随机种子，振幅，频率，应用于我们的噪音采样结果
-        float x0 = (wPos.x + offset0.x) * biomeInfo.frequency;
-        float y0 = (wPos.y + offset0.y) * biomeInfo.frequency;
-        float z0 = (wPos.z + offset0.z) * biomeInfo.frequency;
+        float x0 = (wPos.x + offset0.x) * frequency;
+        float y0 = (wPos.y + offset0.y) * frequency;
+        float z0 = (wPos.z + offset0.z) * frequency;
 
         //float x1 = (wPos.x + offset1.x) * biomeInfo.frequency * 2;
         //float y1 = (wPos.y + offset1.y) * biomeInfo.frequency * 2;
@@ -133,8 +138,8 @@ public class BiomeHandler : BaseHandler<BiomeHandler, BiomeManager>
         ////在采样结果上，叠加上baseHeight，限制随机生成的高度下限
         //return Mathf.FloorToInt(noise0 + noise1 + noise2 + biomeInfo.minHeight);
 
-        float noise0 = Mathf.PerlinNoise(x0, z0) * biomeInfo.amplitude;
-        return Mathf.FloorToInt(noise0 + biomeInfo.minHeight);
+        float noise0 = Mathf.PerlinNoise(x0, z0) * amplitude;
+        return Mathf.FloorToInt(noise0 + minHeight);
     }
 
     /// <summary>

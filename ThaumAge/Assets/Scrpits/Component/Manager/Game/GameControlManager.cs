@@ -13,7 +13,7 @@ public class GameControlManager : BaseManager
         {
             if (_controlForPlayer == null)
             {
-                _controlForPlayer = FindWithTag<ControlForPlayer>(TagInfo.Tag_GameControl);
+                _controlForPlayer = FindWithTag<ControlForPlayer>(TagInfo.Tag_Player);
             }
             return _controlForPlayer;
         }
