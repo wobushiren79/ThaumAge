@@ -18,7 +18,7 @@ public class BlockWater : BlockLiquid
         //设置下方方块
         bool isSuccess = SetCloseFlowBlock(downBlockWorldPosition);
         //取消注册
-        //chunk.UnRegisterEventUpdate(localPosition);
+        chunk.UnRegisterEventUpdate(localPosition);
     }
 
     /// <summary>
@@ -34,8 +34,8 @@ public class BlockWater : BlockLiquid
             return false;
         if (closeBlock == BlockTypeEnum.None)
         {
-            //如果是空方块 替换成岩浆
-            closeChunk.SetBlockForWorld(worldPosition, BlockTypeEnum.Magma);
+            //如果是空方块 替换成当前方块
+            closeChunk.SetBlockForWorld(worldPosition, blockType);
             //更新区块
             WorldCreateHandler.Instance.HandleForUpdateChunk(true, null);
             return true;
@@ -44,11 +44,11 @@ public class BlockWater : BlockLiquid
         {
             //获取靠近方块信息
             BlockInfoBean closeBlockInfo = BlockHandler.Instance.manager.GetBlockInfo(closeBlock);
-            //如果是空方块 或者总量为1 则替换为水方块
+            //如果是空方块 或者总量为1 则替换为当前方块
             if (blockInfo.weight == 1)
             {
                 //如果是空方块 替换成岩浆
-                closeChunk.SetBlockForWorld(worldPosition, BlockTypeEnum.Magma);
+                closeChunk.SetBlockForWorld(worldPosition, blockType);
                 //更新区块
                 WorldCreateHandler.Instance.HandleForUpdateChunk(true, null);
                 return true;

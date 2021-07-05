@@ -3,10 +3,33 @@ using UnityEngine;
 
 public class GameManager : BaseManager
 {
-    public GameStateEnum gameState = GameStateEnum.None;
+    protected GameStateEnum gameState = GameStateEnum.None;
+
+    protected SOGameInitBean _gameInitData;
 
     protected Player _player;
 
+    protected PlayerTargetBlock _playerTargetBlock;
+
+    /// <summary>
+    /// 游戏初始化数据
+    /// </summary>
+    public SOGameInitBean gameInitData
+    {
+        get
+        {
+            if (_gameInitData == null)
+            {
+                _gameInitData = LoadResourcesUtil.SyncLoadData<SOGameInitBean>("ScriptableObjects/GameInit");
+            }
+            return _gameInitData;
+        }
+    }
+
+
+    /// <summary>
+    /// 玩家
+    /// </summary>
     public Player player
     {
         get
@@ -19,8 +42,10 @@ public class GameManager : BaseManager
         }
     }
 
-    public PlayerTargetBlock _playerTargetBlock;
 
+    /// <summary>
+    /// 玩家目标方块
+    /// </summary>
     public PlayerTargetBlock playerTargetBlock
     {
         get
@@ -42,6 +67,11 @@ public class GameManager : BaseManager
         this.gameState = gameState;
     }
 
+
+    /// <summary>
+    /// 获取游戏状态
+    /// </summary>
+    /// <returns></returns>
     public GameStateEnum GetGameState()
     {
         return gameState;
