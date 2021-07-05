@@ -4,14 +4,15 @@ using System.Collections.Generic;
 using UnityEngine.Tilemaps;
 using UnityEngine.U2D;
 using RotaryHeart.Lib.SerializableDictionary;
+using System;
 
 public class BaseManager : BaseMonoBehaviour
 {
-    protected List<T> GetAllModel<T>(string assetBundlePath) where T : Object
+    protected List<T> GetAllModel<T>(string assetBundlePath) where T : UnityEngine.Object
     {
         return GetAllModel<T>(assetBundlePath, null);
     }
-    protected List<T> GetAllModel<T>(string assetBundlePath, string remarkResourcesPath) where T : Object
+    protected List<T> GetAllModel<T>(string assetBundlePath, string remarkResourcesPath) where T : UnityEngine.Object
     {
         List<T> models = null;
 #if UNITY_EDITOR
@@ -25,16 +26,15 @@ public class BaseManager : BaseMonoBehaviour
             models = LoadAssetUtil.SyncLoadAllAsset<T>(assetBundlePath);
         }
 #else
-        models = LoadAssetUtil.SyncLoadAllAsset<T>(assetBundlePath);
+            models = LoadAssetUtil.SyncLoadAllAsset<T>(assetBundlePath);
 #endif
         return models;
     }
-
-    protected T GetModel<T>(string assetBundlePath, string name) where T : Object
+    protected T GetModel<T>(string assetBundlePath, string name) where T : UnityEngine.Object
     {
         return GetModel<T>(assetBundlePath, name, null);
     }
-    protected T GetModel<T>(string assetBundlePath, string name, string remarkResourcesPath) where T : Object
+    protected T GetModel<T>(string assetBundlePath, string name, string remarkResourcesPath) where T : UnityEngine.Object
     {
         if (name == null)
             return null;
@@ -55,12 +55,12 @@ public class BaseManager : BaseMonoBehaviour
         return model;
     }
 
-    protected T GetModel<T>(Dictionary<string, T> listModel, string assetBundlePath, string name) where T : Object
+    protected T GetModel<T>(Dictionary<string, T> listModel, string assetBundlePath, string name) where T : UnityEngine.Object
     {
         return GetModel<T>(listModel, assetBundlePath, name, null);
     }
 
-    protected T GetModel<T>(Dictionary<string, T> listModel, string assetBundlePath, string name, string remarkResourcesPath) where T : Object
+    protected T GetModel<T>(Dictionary<string, T> listModel, string assetBundlePath, string name, string remarkResourcesPath) where T : UnityEngine.Object
     {
         if (name == null)
             return null;
@@ -90,12 +90,12 @@ public class BaseManager : BaseMonoBehaviour
         return model;
     }
 
-    protected T GetModel<T>(SerializableDictionaryBase<string, T> listModel, string assetBundlePath, string name) where T : Object
+    protected T GetModel<T>(SerializableDictionaryBase<string, T> listModel, string assetBundlePath, string name) where T : UnityEngine.Object
     {
         return GetModel<T>(listModel, assetBundlePath, name, null);
     }
 
-    protected T GetModel<T>(SerializableDictionaryBase<string, T> listModel, string assetBundlePath, string name, string remarkResourcesPath) where T : Object
+    protected T GetModel<T>(SerializableDictionaryBase<string, T> listModel, string assetBundlePath, string name, string remarkResourcesPath) where T : UnityEngine.Object
     {
         if (name == null)
             return null;
@@ -124,6 +124,58 @@ public class BaseManager : BaseMonoBehaviour
             listModel.Add(name, model);
         }
         return model;
+    }
+
+    protected T GetModelForResources<T>(Dictionary<string, T> listModel, string resPath) where T : UnityEngine.Object
+    {
+        if (name == null)
+            return null;
+        if (listModel.TryGetValue(name, out T value))
+        {
+            return value;
+        }
+
+        T model = LoadResourcesUtil.SyncLoadData<T>(resPath);
+
+        if (model != null)
+        {
+            listModel.Add(name, model);
+        }
+        return model;
+    }
+
+    protected void GetModelForAddressables<T>(Dictionary<string, T> listModel, string keyName, Action<T> callBack) where T : UnityEngine.Object
+    {
+        if (keyName == null)
+        {
+            callBack?.Invoke(null);
+            return;
+        }
+
+        if (listModel.TryGetValue(keyName, out T value))
+        {
+            callBack?.Invoke(value);
+            return;
+        }
+
+        LoadAddressablesUtil.LoadAssetAsync<T>(keyName, data =>
+        {
+            listModel.Add(keyName, data.Result);
+            callBack?.Invoke(data.Result);
+        });
+    }
+
+    protected void GetModelForAddressables<T>(List<string> listKeyName, Action<IList<T>> callBack) where T : UnityEngine.Object
+    {
+        if (listKeyName == null)
+        {
+            callBack?.Invoke(null);
+            return;
+        }
+        LoadAddressablesUtil.LoadAssetsAsync<T>(listKeyName, listData =>
+        {
+            callBack?.Invoke(listData.Result);
+        });
     }
 
     protected Sprite GetSpriteByName(IconBeanDictionary dicIcon, ref SpriteAtlas spriteAtlas, string atlasName, string assetBundlePath, string name)
@@ -158,6 +210,7 @@ public class BaseManager : BaseMonoBehaviour
         {
             //如果没有atlas 先加载atlas
             spriteAtlas = LoadAssetUtil.SyncLoadAsset<SpriteAtlas>(assetBundlePath, atlasName);
+            //spriteAtlas = LoadResourcesUtil.SyncLoadData<SpriteAtlas>(assetBundlePath+ atlasName);
         }
 #else
         //如果没有atlas 先加载atlas
@@ -202,6 +255,7 @@ public class BaseManager : BaseMonoBehaviour
         {
             //如果没有atlas 先加载atlas
             spriteAtlas = LoadAssetUtil.SyncLoadAsset<SpriteAtlas>(assetBundlePath, atlasName);
+            //spriteAtlas = LoadResourcesUtil.SyncLoadData<SpriteAtlas>(assetBundlePath+ atlasName);
         }
 #else
         //如果没有atlas 先加载atlas
@@ -344,5 +398,4 @@ public class BaseManager : BaseMonoBehaviour
         else
             return null;
     }
-
 }

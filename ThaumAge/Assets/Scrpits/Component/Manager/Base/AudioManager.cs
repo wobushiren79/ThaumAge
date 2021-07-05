@@ -12,34 +12,33 @@ public class AudioManager : BaseManager
     /// 根据名字获取音乐
     /// </summary>
     /// <param name="name"></param>
-    /// <returns></returns>
-    public AudioClip GetMusicClip(string name)
+    /// <param name="completeAction"></param>
+    public void GetMusicClip(string name, System.Action<AudioClip> completeAction)
     {
-        return LoadClipData(1, name);
+        LoadClipData(1, name, completeAction);
     }
 
     /// <summary>
     /// 根据名字获取音效
     /// </summary>
     /// <param name="name"></param>
-    /// <returns></returns>
-    public AudioClip GetSoundClip(string name)
+    /// <param name="completeAction"></param>
+    public void GetSoundClip(string name, System.Action<AudioClip> completeAction)
     {
-        return LoadClipData(2, name);
+        LoadClipData(2, name, completeAction);
     }
 
     /// <summary>
     /// 根据名字获取环境音乐
     /// </summary>
     /// <param name="name"></param>
-    /// <returns></returns>
-    public AudioClip GetEnvironmentClip(string name)
+    /// <param name="completeAction"></param>
+    public void GetEnvironmentClip(string name, System.Action<AudioClip> completeAction)
     {
-        return LoadClipData(3, name);
+        LoadClipData(3, name, completeAction);
     }
 
-
-    protected AudioClip LoadClipData(int type, string name)
+    protected void LoadClipData(int type, string name, System.Action<AudioClip> completeAction)
     {
         string dataPath = "audio/";
         AudioBeanDictionary dicData = new AudioBeanDictionary();
@@ -61,13 +60,45 @@ public class AudioManager : BaseManager
         }
         if (dicData.TryGetValue(name, out audioClip))
         {
-            return audioClip;
+            completeAction?.Invoke(audioClip);
+            return;
         }
         audioClip = LoadAssetUtil.SyncLoadAsset<AudioClip>(dataPath, name);
         if (audioClip != null)
         {
             dicData.Add(name, audioClip);
         }
-        return audioClip;
+        completeAction?.Invoke(audioClip);
+    }
+
+    public void LoadClipDataByAddressbles(int type, string name, System.Action<AudioClip> completeAction)
+    {
+        AudioBeanDictionary dicData = new AudioBeanDictionary();
+        switch (type)
+        {
+            case 1:
+                dicData = listMusicData;
+                break;
+            case 2:
+                dicData = listSoundData;
+                break;
+            case 3:
+                dicData = listEnvironmentData;
+                break;
+        }
+        if (dicData.TryGetValue(name, out AudioClip audioClip))
+        {
+            completeAction?.Invoke(audioClip);
+            return;
+        }
+        LoadAddressablesUtil.LoadAssetAsync<AudioClip>(name, (data) =>
+        {
+            if (data.Result != null)
+            {
+                dicData.Add(name, data.Result);
+            }
+            completeAction?.Invoke(data.Result);
+        });
+
     }
 }
