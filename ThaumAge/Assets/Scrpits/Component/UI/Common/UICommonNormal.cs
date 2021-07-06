@@ -7,17 +7,6 @@ public class UICommonNormal : BaseUIComponent
 {
     public Button ui_Exit;
 
-    public override void Awake()
-    {
-        base.Awake();
-        ui_Exit.onClick.AddListener(OnClickForExit);
-    }
-
-    public virtual void OnClickForExit()
-    {
-        UIHandler.Instance.manager.OpenUIAndCloseOther<UIGameMain>(UIEnum.GameMain);
-    }
-
     public override void OpenUI()
     {
         base.OpenUI();
@@ -28,5 +17,14 @@ public class UICommonNormal : BaseUIComponent
     {
         base.CloseUI();
         GameControlHandler.Instance.SetPlayerControlEnabled(true);
+    }
+
+    public override void OnClickForButton(Button viewButton)
+    {
+        base.OnClickForButton(viewButton);
+        if (viewButton == ui_Exit)
+        {
+            UIHandler.Instance.manager.OpenUIAndCloseOther<UIGameMain>(UIEnum.GameMain);
+        }
     }
 }
