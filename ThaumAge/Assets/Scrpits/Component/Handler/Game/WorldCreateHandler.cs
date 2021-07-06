@@ -9,7 +9,7 @@ using UnityEngine;
 
 public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateManager>
 {
-    protected float timeForWorldUpdate = 0;
+    protected Vector3 positionForWorldUpdate = Vector3.zero;
 
     protected static object lockForUpdateBlock = new object();
 
@@ -17,12 +17,7 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
     {
         if (GameHandler.Instance.manager.GetGameState() == GameStateEnum.Gaming)
         {
-            timeForWorldUpdate -= Time.deltaTime;
-            if (timeForWorldUpdate <= 0)
-            {
-                timeForWorldUpdate = GameHandler.Instance.manager.gameInitData.timeForWorldUpdate;
-                HandleForWorldUpdate();
-            }
+            HandleForWorldUpdate();
         }
     }
 
@@ -121,22 +116,18 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
     /// <param name="callBackForComplete"></param>
     public void DestroyChunkRangeForCenterPosition(Vector3Int centerPosition, int range, Action callBackForComplete)
     {
-        Vector3Int startPosition = -manager.widthChunk * range * new Vector3Int(1, 0, 1) + centerPosition;
-        Vector3Int currentPosition = startPosition;
-        int rangeNumber = (range * 2) * (range * 2);
-        for (int i = 0; i < range * 2; i++)
+        Vector3Int maxPosition = manager.widthChunk * range * new Vector3Int(1, 0, 1) + centerPosition;
+        Vector3Int minPosition = -manager.widthChunk * range * new Vector3Int(1, 0, 1) + centerPosition;
+        foreach (var chunk in  manager.dicChunk.Values)
         {
-            for (int f = 0; f < range * 2; f++)
+            if (chunk.chunkData.positionForWorld.x > maxPosition.x
+                || chunk.chunkData.positionForWorld.x < minPosition.x
+                || chunk.chunkData.positionForWorld.z > maxPosition.z
+                || chunk.chunkData.positionForWorld.z > maxPosition.z)
             {
-                Chunk chunk= manager.GetChunk(currentPosition);
-                if (chunk!=null)
-                {
-                    Destroy(chunk);
-                }
-                currentPosition += new Vector3Int(0, 0, manager.widthChunk);
-            }
-            currentPosition.z = startPosition.z;
-            currentPosition += new Vector3Int(manager.widthChunk, 0, 0);
+                manager.RemoveChunk(chunk.chunkData.positionForWorld, chunk);
+                callBackForComplete?.Invoke();
+            }       
         }
     }
 
@@ -251,9 +242,21 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
     {
         if (GameHandler.Instance.manager.GetGameState() == GameStateEnum.Gaming)
         {
+            //获取玩家位置
             Vector3 playPosition = GameHandler.Instance.manager.player.transform.position;
-            CreateChunkRangeForWorldPostion(playPosition, manager.worldRefreshRange, null);
-            DestroyChunkRangeForWorldPosition(playPosition, manager.worldRefreshRange * 5, null);
+            //不计算Y轴坐标
+            playPosition.y = 0;
+            //计算两点距离
+            float dis = Vector3.Distance(playPosition, positionForWorldUpdate);
+            //获取刷新距离
+            SOGameInitBean gameInitData = GameHandler.Instance.manager.gameInitData;
+            //对比距离 大于刷新距离则刷新
+            if (dis > gameInitData.disForWorldUpdate)
+            {
+                positionForWorldUpdate = playPosition;
+                CreateChunkRangeForWorldPostion(playPosition, manager.worldRefreshRange, null);
+                DestroyChunkRangeForWorldPosition(playPosition, manager.worldRefreshRange + gameInitData.rangeForWorldUpdateDestory, null);
+            }
         }
     }
     /// <summary>
