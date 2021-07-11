@@ -289,12 +289,6 @@ public class ControlForPlayer : ControlForBase
                 rotateAngles.y += -90;
             }
         }
-
-        
-
-
-
-        LogUtil.Log("moveOffset:"+ moveOffset);
         Quaternion rotate = Quaternion.Euler(rotateAngles);
         //朝摄像头方向移动
         characterController.transform.rotation = Quaternion.Slerp(transform.rotation, rotate, rotateSpeed * Time.unscaledDeltaTime);

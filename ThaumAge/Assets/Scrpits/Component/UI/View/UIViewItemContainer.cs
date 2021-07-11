@@ -77,7 +77,7 @@ public class UIViewItemContainer : BaseUIView
             return;
         if (isSelect)
         {
-            ui_IVBackground.color = new Color(0.5f, 0.5f, 0.5f, 1f);
+            ui_IVBackground.color = Color.green;
         }
         else
         {
