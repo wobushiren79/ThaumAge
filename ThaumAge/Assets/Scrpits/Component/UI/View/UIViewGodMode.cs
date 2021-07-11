@@ -6,13 +6,12 @@ public class UIViewGodMode : BaseUIView
 {
     public Button ui_BTGodItems;
 
-    public void Start()
+    public override void OnClickForButton(Button viewButton)
     {
-        ui_BTGodItems.onClick.AddListener(OnClickForGodItems);    
-    }
-
-    public void OnClickForGodItems()
-    {
-        UIHandler.Instance.manager.OpenUIAndCloseOther<UIGodItems>(UIEnum.GodItems);
+        base.OnClickForButton(viewButton);
+        if (viewButton == ui_BTGodItems)
+        {
+            UIHandler.Instance.manager.OpenUIAndCloseOther<UIGodItems>(UIEnum.GodItems);
+        }
     }
 }

@@ -2,6 +2,7 @@
 using UnityEditor;
 using System.Collections.Generic;
 using System.Collections;
+using System;
 
 public class AudioHandler : BaseHandler<AudioHandler, AudioManager>
 {
@@ -138,30 +139,32 @@ public class AudioHandler : BaseHandler<AudioHandler, AudioManager>
     {
         if (sourceNumber > sourceMaxNumber)
             return;
-        AudioClip audioClip = null;
         AudioSource audioSource = audioSourceForSound;
+        Action<AudioClip> completeAction = (audioClip) => 
+        {
+            if (audioClip != null)
+            {
+
+                StartCoroutine(CoroutineForPlayOneShot(audioSource, audioClip, volumeScale));
+                //audioSource.PlayOneShot(audioClip, volumeScale);
+            }
+            // AudioSource.PlayClipAtPoint(soundClip, soundPosition,volumeScale);
+        };
         switch (sound)
         {
             case AudioSoundEnum.ButtonForNormal:
-                audioClip = manager.GetSoundClip("sound_btn_3");
+                manager.GetSoundClip("sound_btn_3", completeAction);
                 break;
             case AudioSoundEnum.ButtonForBack:
-                audioClip = manager.GetSoundClip("sound_btn_2");
+                manager.GetSoundClip("sound_btn_2", completeAction);
                 break;
             case AudioSoundEnum.ButtonForHighLight:
-                audioClip = manager.GetSoundClip("sound_btn_1");
+                manager.GetSoundClip("sound_btn_1", completeAction);
                 break;
             case AudioSoundEnum.ButtonForShow:
-                audioClip = manager.GetSoundClip("sound_btn_6");
+                manager.GetSoundClip("sound_btn_6", completeAction);
                 break;
         }
-        if (audioClip != null)
-        {
-
-            StartCoroutine(CoroutineForPlayOneShot(audioSource, audioClip, volumeScale));
-            //audioSource.PlayOneShot(audioClip, volumeScale);
-        }
-        // AudioSource.PlayClipAtPoint(soundClip, soundPosition,volumeScale);
     }
 
     /// <summary>

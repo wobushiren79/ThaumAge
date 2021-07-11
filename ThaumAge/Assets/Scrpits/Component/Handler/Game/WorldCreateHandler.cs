@@ -9,7 +9,7 @@ using UnityEngine;
 
 public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateManager>
 {
-    protected float timeForWorldUpdate = 0;
+    protected Vector3 positionForWorldUpdate = Vector3.zero;
 
     protected static object lockForUpdateBlock = new object();
 
@@ -17,12 +17,7 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
     {
         if (GameHandler.Instance.manager.GetGameState() == GameStateEnum.Gaming)
         {
-            timeForWorldUpdate -= Time.deltaTime;
-            if (timeForWorldUpdate <= 0)
-            {
-                timeForWorldUpdate = 0.2f;
-                HandleForWorldUpdate();
-            }
+            HandleForWorldUpdate();
         }
     }
 
@@ -85,7 +80,7 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
     /// <param name="centerPosition"></param>
     /// <param name="range"></param>
     /// <param name="callback"></param>
-    public void CreateChunkForRangeForCenterPosition(Vector3Int centerPosition, int range, Action callBackForComplete)
+    public void CreateChunkRangeForCenterPosition(Vector3Int centerPosition, int range, Action callBackForComplete)
     {
         manager.worldRefreshRange = range;
 
@@ -113,12 +108,65 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
         }
     }
 
-    public void CreateChunkForRangeForWorldPostion(Vector3 position, int range, Action callBackForComplete)
+    /// <summary>
+    /// 删除范围外的所有区块
+    /// </summary>
+    /// <param name="centerPosition"></param>
+    /// <param name="range"></param>
+    /// <param name="callBackForComplete"></param>
+    public void DestroyChunkRangeForCenterPosition(Vector3Int centerPosition, int range, Action callBackForComplete)
+    {
+        Vector3Int maxPosition = manager.widthChunk * range * new Vector3Int(1, 0, 1) + centerPosition;
+        Vector3Int minPosition = -manager.widthChunk * range * new Vector3Int(1, 0, 1) + centerPosition;
+        foreach (var chunk in  manager.dicChunk.Values)
+        {
+            if (chunk.chunkData.positionForWorld.x > maxPosition.x
+                || chunk.chunkData.positionForWorld.x < minPosition.x
+                || chunk.chunkData.positionForWorld.z > maxPosition.z
+                || chunk.chunkData.positionForWorld.z > maxPosition.z)
+            {
+                manager.RemoveChunk(chunk.chunkData.positionForWorld, chunk);
+                callBackForComplete?.Invoke();
+            }       
+        }
+    }
+
+    /// <summary>
+    /// 通过角色的坐标 创建一定范围内的区块
+    /// </summary>
+    /// <param name="position"></param>
+    /// <param name="range"></param>
+    /// <param name="callBackForComplete"></param>
+
+    public void CreateChunkRangeForWorldPostion(Vector3 position, int range, Action callBackForComplete)
+    {
+        Vector3Int centerPosition = GetChunkPositionByWorldPosition(position);
+        CreateChunkRangeForCenterPosition(centerPosition, range, callBackForComplete);
+    }
+
+    /// <summary>
+    /// 通过角色的坐标 删除一定范围外的区块
+    /// </summary>
+    /// <param name="position"></param>
+    /// <param name="range"></param>
+    /// <param name="callBackForComplete"></param>
+    public void DestroyChunkRangeForWorldPosition(Vector3 position, int range, Action callBackForComplete)
+    {
+        Vector3Int centerPosition = GetChunkPositionByWorldPosition(position);
+        DestroyChunkRangeForCenterPosition(centerPosition, range, callBackForComplete);
+    }
+
+    /// <summary>
+    /// 通过角色的世界坐标 获取所在区块的中心坐标
+    /// </summary>
+    /// <param name="position"></param>
+    /// <returns></returns>
+    private Vector3Int GetChunkPositionByWorldPosition(Vector3 position)
     {
         int positionX = (int)(position.x / manager.widthChunk) * manager.widthChunk;
         int positionZ = (int)(position.z / manager.widthChunk) * manager.widthChunk;
         Vector3Int centerPosition = new Vector3Int(positionX, 0, positionZ);
-        CreateChunkForRangeForCenterPosition(centerPosition, range, callBackForComplete);
+        return centerPosition;
     }
 
     /// <summary>
@@ -194,8 +242,21 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
     {
         if (GameHandler.Instance.manager.GetGameState() == GameStateEnum.Gaming)
         {
+            //获取玩家位置
             Vector3 playPosition = GameHandler.Instance.manager.player.transform.position;
-            CreateChunkForRangeForWorldPostion(playPosition, manager.worldRefreshRange, null);
+            //不计算Y轴坐标
+            playPosition.y = 0;
+            //计算两点距离
+            float dis = Vector3.Distance(playPosition, positionForWorldUpdate);
+            //获取刷新距离
+            SOGameInitBean gameInitData = GameHandler.Instance.manager.gameInitData;
+            //对比距离 大于刷新距离则刷新
+            if (dis > gameInitData.disForWorldUpdate)
+            {
+                positionForWorldUpdate = playPosition;
+                CreateChunkRangeForWorldPostion(playPosition, manager.worldRefreshRange, null);
+                DestroyChunkRangeForWorldPosition(playPosition, manager.worldRefreshRange + gameInitData.rangeForWorldUpdateDestory, null);
+            }
         }
     }
     /// <summary>

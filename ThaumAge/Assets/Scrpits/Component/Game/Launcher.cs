@@ -25,7 +25,7 @@ public class Launcher : BaseMonoBehaviour
         //设置世界类型
         WorldCreateHandler.Instance.SetWorldType(worldType);
         //刷新周围区块
-        WorldCreateHandler.Instance.CreateChunkForRangeForCenterPosition(Vector3Int.zero, refreshRange, CompleteForUpdateChunk);
+        WorldCreateHandler.Instance.CreateChunkRangeForCenterPosition(Vector3Int.zero, refreshRange, CompleteForUpdateChunk);
         //修改游戏状态
         GameHandler.Instance.manager.ChangeGameState(GameStateEnum.Gaming);
     }

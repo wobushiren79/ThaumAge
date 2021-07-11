@@ -3,9 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
+using UnityEngine.UI;
 
-public class BaseUIComponent : BaseMonoBehaviour 
-{ 
+public class BaseUIComponent : BaseMonoBehaviour
+{
     //UI管理
     public BaseUIManager uiManager;
     //备注数据
@@ -16,8 +17,9 @@ public class BaseUIComponent : BaseMonoBehaviour
         if (uiManager == null)
             uiManager = GetComponentInParent<BaseUIManager>();
         AutoLinkUI();
+        InitButtons();
     }
-    
+
     /// <summary>
     /// 开启UI
     /// </summary>
@@ -62,4 +64,26 @@ public class BaseUIComponent : BaseMonoBehaviour
         return uiManager as T;
     }
 
+    /// <summary>
+    /// 初始化所有按钮点击事件
+    /// </summary>
+    public void InitButtons()
+    {
+        Button[] buttonArray = gameObject.GetComponentsInChildren<Button>();
+        if (CheckUtil.ArrayIsNull(buttonArray))
+            return;
+        for (int i = 0; i < buttonArray.Length; i++)
+        {
+            Button itemButton = buttonArray[i];
+            itemButton.onClick.AddListener(()=> { OnClickForButton(itemButton); });
+        }
+    }
+
+    /// <summary>
+    /// 按钮点击
+    /// </summary>
+    public virtual void OnClickForButton(Button viewButton)
+    {
+
+    }
 }

@@ -11,37 +11,43 @@ public class EffectHandler : BaseHandler<EffectHandler, EffectManager>
     /// </summary>
     /// <param name="name"></param>
     /// <param name="effectPosition"></param>
-    public GameObject PlayEffect(GameObject objContainer, string name, Vector3 effectPosition, float delayTime)
+    public void PlayEffect(GameObject objContainer, string name, Vector3 effectPosition, float delayTime, Action<GameObject> callBack = null)
     {
-        GameObject objEffect = manager.CreateEffect(objContainer,name);
-        if (objEffect == null)
-            return objEffect;
-        objEffect.transform.position = effectPosition;
-        ParticleSystem[] listParticleSystem = objEffect.GetComponentsInChildren<ParticleSystem>();
-        for (int i = 0; i < listParticleSystem.Length; i++)
+        manager.CreateEffect(objContainer, name, (objEffect) =>
         {
-            ParticleSystem particleSystem = listParticleSystem[i];
-            ParticleSystem.MainModule psMain = particleSystem.main;
-            psMain.loop = false;
-            //psMain.stopAction = ParticleSystemStopAction.Callback;
-            particleSystem.Play();
-        }
-        if (delayTime <= 0)
-        {
-            return objEffect;
-        }
-        StartCoroutine(CoroutineForDelayDestroy(objEffect, delayTime));
-        return objEffect;
+            if (objEffect == null)
+            {
+                callBack?.Invoke(null);
+                return;
+            }
+            objEffect.transform.position = effectPosition;
+            ParticleSystem[] listParticleSystem = objEffect.GetComponentsInChildren<ParticleSystem>();
+            for (int i = 0; i < listParticleSystem.Length; i++)
+            {
+                ParticleSystem particleSystem = listParticleSystem[i];
+                ParticleSystem.MainModule psMain = particleSystem.main;
+                psMain.loop = false;
+                //psMain.stopAction = ParticleSystemStopAction.Callback;
+                particleSystem.Play();
+            }
+            if (delayTime <= 0)
+            {
+                callBack?.Invoke(objEffect);
+                return;
+            }
+            StartCoroutine(CoroutineForDelayDestroy(objEffect, delayTime));
+            callBack?.Invoke(objEffect);
+        });
     }
 
-    public GameObject PlayEffect(string name, Vector3 effectPosition, float delayTime)
+    public void PlayEffect(string name, Vector3 effectPosition, float delayTime, Action<GameObject> callBack = null)
     {
-        return PlayEffect(null, name, effectPosition, delayTime);
+        PlayEffect(null, name, effectPosition, delayTime, callBack);
     }
 
-    public GameObject PlayEffect(string name, Vector3 effectPosition)
+    public void PlayEffect(string name, Vector3 effectPosition, Action<GameObject> callBack = null)
     {
-        return PlayEffect(name, effectPosition, 5);
+        PlayEffect(name, effectPosition, 5, callBack);
     }
 
     public IEnumerator CoroutineForDelayDestroy(GameObject objEffect, float delayTime)

@@ -58,7 +58,22 @@ public class WorldCreateManager : BaseManager
     }
 
     /// <summary>
-    /// 增加区域
+    /// 移除区块
+    /// </summary>
+    /// <param name="position"></param>
+    /// <param name="chunk"></param>
+    public void RemoveChunk(Vector3Int position, Chunk chunk)
+    {
+        if (chunk.isInit)
+        {
+            int index = MathUtil.GetSingleIndexForTwo(position.x / widthChunk, position.z / widthChunk, worldSize);
+            dicChunk.Remove(index);
+            Destroy(chunk);
+        }
+    }
+
+    /// <summary>
+    /// 增加区块
     /// </summary>
     /// <param name="chunk"></param>
     public void AddChunk(Vector3Int position, Chunk chunk)
