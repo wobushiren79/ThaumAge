@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.021619761, g: 0.033372648, b: 0.04402212, a: 1}
+  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -385,7 +385,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   refreshRange: 3
-  worldType: 1
+  worldType: 0
 --- !u!20 &1206028686 stripped
 Camera:
   m_CorrespondingSourceObject: {fileID: 3993300171924132472, guid: e48ab55db35bda74596243c14d61528a, type: 3}
@@ -882,6 +882,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 776616026688040897, guid: e48ab55db35bda74596243c14d61528a, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 776616026688040897, guid: e48ab55db35bda74596243c14d61528a, type: 3}
       propertyPath: m_LocalRotation.x
       value: -0
       objectReference: {fileID: 0}
@@ -919,7 +923,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7374345364582230763, guid: e48ab55db35bda74596243c14d61528a, type: 3}
       propertyPath: m_Lens.m_SensorSize.x
-      value: 1.7950237
+      value: 2.1611984
       objectReference: {fileID: 0}
     - target: {fileID: 7547917985195101338, guid: e48ab55db35bda74596243c14d61528a, type: 3}
       propertyPath: m_Lens.m_SensorSize.x
@@ -938,6 +942,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 4990177942635491225, guid: 5c61e63afb4d67740855fd8526300679, type: 3}
+      propertyPath: m_Name
+      value: EyeLook
+      objectReference: {fileID: 0}
+    - target: {fileID: 6676467097155781421, guid: 5c61e63afb4d67740855fd8526300679, type: 3}
+      propertyPath: m_Name
+      value: FollowLook
+      objectReference: {fileID: 0}
     - target: {fileID: 8533266650839486888, guid: 5c61e63afb4d67740855fd8526300679, type: 3}
       propertyPath: m_RootOrder
       value: 3

@@ -34,11 +34,11 @@ public class CameraHandler : BaseHandler<CameraHandler, CameraManager>
 
         CinemachineVirtualCamera cameraForFirst = manager.cameraForFirst;
         //第一人称
-        cameraForFirst.Follow = player.LookForFirst;
+        cameraForFirst.Follow = player.LookForEye;
         CinemachineFreeLook cameraForThree = manager.cameraForThree;
         //第三人称
-        cameraForThree.Follow = player.LookForThird;
-        cameraForThree.LookAt = player.LookForThird;
+        cameraForThree.Follow = player.LookForFollow;
+        cameraForThree.LookAt = player.LookForEye;
     }
 
 

@@ -12,4 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7854b9db1d949f540b90bebac3773343, type: 3}
   m_Name: GameInit
   m_EditorClassIdentifier: 
-  timeForWorldUpdate: 0.5
+  disForWorldUpdate: 16
+  rangeForWorldUpdateDestory: 5

@@ -8,11 +8,12 @@ public class BlockWater : BlockLiquid
     public override void InitBlock(Chunk chunk)
     {
         base.InitBlock(chunk);
-        chunk.RegisterEventUpdate(localPosition, FlowUpdate);
+        chunk.RegisterEventUpdate(localPosition);
     }
 
-    public void FlowUpdate(Vector3Int localPosition, Chunk chunk)
+    public override void EventBlockUpdate(Chunk chunk, Vector3Int localPosition, DirectionEnum direction)
     {
+        base.EventBlockUpdate(chunk, localPosition, direction);
         //添加下方水方块
         Vector3Int downBlockWorldPosition = localPosition + Vector3Int.down + chunk.chunkData.positionForWorld;
         //设置下方方块
@@ -69,6 +70,11 @@ public class BlockWater : BlockLiquid
         base.RefreshBlock();
     }
 
+
+    /// <summary>
+    /// 删除方块
+    /// </summary>
+    /// <param name="chunk"></param>
     public override void DestoryBlock(Chunk chunk)
     {
         base.DestoryBlock(chunk);

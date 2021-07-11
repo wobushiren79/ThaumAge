@@ -16,7 +16,7 @@ public class ControlForPlayer : ControlForBase
     private float timeJumpTemp = 0;
 
     private float speedJump = 5;
-    private float moveSpeed = 2;
+    public float moveSpeed = 2;
 
     private void Awake()
     {
@@ -39,7 +39,6 @@ public class ControlForPlayer : ControlForBase
         if (GameHandler.Instance.manager.GetGameState() == GameStateEnum.Gaming)
         {
             HandlerForMoveAndJump();
-            //HandleForUse(false);
         }
     }
 
@@ -241,28 +240,61 @@ public class ControlForPlayer : ControlForBase
     /// <param name="targetPosition"></param>
     public void RotateCharacter(Vector2 moveOffset, float rotateSpeed)
     {
+        if (moveOffset == Vector2.zero)
+            return;
         Camera mainCamera = CameraHandler.Instance.manager.mainCamera;
         Vector3 rotateAngles = new Vector3(0, mainCamera.transform.rotation.eulerAngles.y, 0);
         //前进后退的旋转
         if (moveOffset.y > 0)
-        {
-            rotateAngles.y += 0;
+        {       
+            //左右移动的旋转
+            if (moveOffset.x > 0)
+            {
+                rotateAngles.y += 45;
+            }
+            else if (moveOffset.x < 0)
+            {
+                rotateAngles.y += -45;
+            }
+            else
+            {
+                rotateAngles.y += 0;
+            }
         }
         else if (moveOffset.y < 0)
         {
-            rotateAngles.y += 180;
+            //左右移动的旋转
+            if (moveOffset.x > 0)
+            {
+                rotateAngles.y += 135;
+            }
+            else if (moveOffset.x < 0)
+            {
+                rotateAngles.y += -135;
+            }
+            else
+            {
+                rotateAngles.y += 180;
+            }
+        }
+        else 
+        {
+            //左右移动的旋转
+            if (moveOffset.x > 0)
+            {
+                rotateAngles.y += 90;
+            }
+            else if (moveOffset.x < 0)
+            {
+                rotateAngles.y += -90;
+            }
         }
 
-        //左右移动的旋转
-        if (moveOffset.x > 0)
-        {
-            rotateAngles.y += 90;
-        }
-        else if (moveOffset.x < 0)
-        {
-            rotateAngles.y += -90;
-        }
+        
 
+
+
+        LogUtil.Log("moveOffset:"+ moveOffset);
         Quaternion rotate = Quaternion.Euler(rotateAngles);
         //朝摄像头方向移动
         characterController.transform.rotation = Quaternion.Slerp(transform.rotation, rotate, rotateSpeed * Time.unscaledDeltaTime);

@@ -28,7 +28,8 @@ public class Chunk : BaseMonoBehaviour
         public Dictionary<BlockMaterialEnum, List<int>> dicTris = new Dictionary<BlockMaterialEnum, List<int>>();
     }
 
-    public Dictionary<Vector3Int, Action<Vector3Int, Chunk>> dicEventUpdate = new Dictionary<Vector3Int, Action<Vector3Int, Chunk>>();
+    //需要更新事件的方块（频率每秒一次）
+    public List<Vector3Int> listEventUpdate = new List<Vector3Int>();
 
     //需要创建方块实力的列表
     public Queue<Vector3Int> listBlockModelUpdate = new Queue<Vector3Int>();
@@ -598,10 +599,12 @@ public class Chunk : BaseMonoBehaviour
     /// </summary>
     public void HandleForEventUpdate()
     {
-        foreach (var itemEvent in dicEventUpdate)
+        for (int i = 0; i < listEventUpdate.Count; i++)
         {
-            Action<Vector3Int, Chunk> actionItem = itemEvent.Value;
-            actionItem?.Invoke(itemEvent.Key, this);
+            Vector3Int localPosition = listEventUpdate[i];
+            GetBlockForLocal(localPosition, out BlockTypeEnum blockType, out DirectionEnum direction, out bool isInside);
+            Block block = BlockHandler.Instance.manager.GetRegisterBlock(blockType);
+            block.EventBlockUpdate(this, localPosition, direction);
         }
     }
 
@@ -619,15 +622,17 @@ public class Chunk : BaseMonoBehaviour
             dicBlockModel.Remove(localPosition);
             Destroy(dataObj);
         }
-        GetBlockForLocal(localPosition, out BlockTypeEnum block, out DirectionEnum direction, out bool isInside);
-        if (!isInside || block == BlockTypeEnum.None)
+
+        GetBlockForLocal(localPosition, out BlockTypeEnum blockType, out DirectionEnum direction, out bool isInside);
+
+        if (!isInside || blockType == BlockTypeEnum.None)
             return;
         //获取数据
-        BlockInfoBean blockInfo = BlockHandler.Instance.manager.GetBlockInfo(block);
+        BlockInfoBean blockInfo = BlockHandler.Instance.manager.GetBlockInfo(blockType);
         if (blockInfo == null || CheckUtil.StringIsNull(blockInfo.model_name))
             return;
         //获取模型
-        GameObject objBlockModel = BlockHandler.Instance.CreateBlockModel(this, (ushort)block, blockInfo.model_name);
+        GameObject objBlockModel = BlockHandler.Instance.CreateBlockModel(this, (ushort)blockType, blockInfo.model_name);
         if (objBlockModel == null)
             return;
         dicBlockModel.Add(localPosition, objBlockModel);
@@ -636,16 +641,16 @@ public class Chunk : BaseMonoBehaviour
     }
 
     #region 事件注册
-    public void RegisterEventUpdate(Vector3Int position, Action<Vector3Int, Chunk> action)
+    public void RegisterEventUpdate(Vector3Int position)
     {
-        if(!dicEventUpdate.ContainsKey(position))
-            dicEventUpdate.Add(position, action);
+        if (!listEventUpdate.Contains(position))
+            listEventUpdate.Add(position);
     }
 
     public void UnRegisterEventUpdate(Vector3Int position)
     {
-        if (dicEventUpdate.ContainsKey(position))
-            dicEventUpdate.Remove(position);
+        if (listEventUpdate.Contains(position))
+            listEventUpdate.Remove(position);
     }
     #endregion
 }

@@ -1,4 +1,5 @@
-﻿using UnityEditor;
+﻿using System;
+using UnityEditor;
 using UnityEngine;
 
 public class BlockMagma : BlockWater
@@ -20,23 +21,33 @@ public class BlockMagma : BlockWater
     {
         if (chunk == null)
             return;
-        GetCloseBlockByDirection(DirectionEnum.UP, out BlockTypeEnum blockType, out bool hasChunk);
-        if (blockType == BlockTypeEnum.None)
-        {
-            //如果上方是空得 则实例化冒烟特效
-            base.InitBlock(chunk);
-        }
-        else
-        {
-            DestoryBlock(chunk);
-            chunk.RegisterEventUpdate(localPosition, FlowUpdate);
-        }
+        InitSmoke(chunk, localPosition);
+        chunk.RegisterEventUpdate(localPosition);
     }
+        
 
     public override void RefreshBlock()
     {
         base.RefreshBlock();
-        InitBlock(chunk);
+        InitSmoke(chunk, localPosition);
+    }
+    
+    /// <summary>
+    /// 初始化烟雾
+    /// </summary>
+    public void InitSmoke(Chunk chunk,Vector3Int localPosition)
+    {
+        GetCloseBlockByDirection(DirectionEnum.UP, out BlockTypeEnum blockType, out bool hasChunk);
+        if (blockType == BlockTypeEnum.None)
+        {
+            //如果上方是空得 则实例化冒烟特效
+            CreateBlockModel(chunk, localPosition);
+        }
+        else
+        {
+            //如果上方有物体，则不冒烟
+            DestoryBlockModel(chunk, localPosition);
+        }
     }
 
 }

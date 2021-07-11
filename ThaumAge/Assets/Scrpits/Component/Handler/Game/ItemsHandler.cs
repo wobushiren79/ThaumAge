@@ -10,7 +10,7 @@ public class ItemsHandler : BaseHandler<ItemsHandler, ItemsManager>
     public void UseItem(ItemsBean itemsData)
     {
         Item item;
-        if (itemsData == null)
+        if (itemsData == null|| itemsData.itemsId==0)
         {
             //如果手上没有东西
             item = manager.GetRegisterItem(ItemsTypeEnum.Block);

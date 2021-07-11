@@ -60,21 +60,6 @@ public abstract class Block
 
     }
 
-    public virtual void RefreshBlock()
-    {
-
-    }
-
-    public virtual void RefreshBlockRange()
-    {
-        GetCloseBlock(Vector3Int.up)?.RefreshBlock();
-        GetCloseBlock(Vector3Int.down)?.RefreshBlock();
-        GetCloseBlock(Vector3Int.left)?.RefreshBlock();
-        GetCloseBlock(Vector3Int.right)?.RefreshBlock();
-        GetCloseBlock(Vector3Int.forward)?.RefreshBlock();
-        GetCloseBlock(Vector3Int.back)?.RefreshBlock();
-    }
-
     /// <summary>
     /// 获取靠近的方块
     /// </summary>
@@ -473,6 +458,30 @@ public abstract class Block
     /// </summary>
     public virtual void InitBlock(Chunk chunk)
     {
+        CreateBlockModel(chunk,localPosition);
+    }
+
+    /// <summary>
+    /// 摧毁方块
+    /// </summary>
+    public virtual void DestoryBlock(Chunk chunk)
+    {
+        DestoryBlockModel(chunk,localPosition);
+    }
+
+    /// <summary>
+    /// 事件方块更新
+    /// </summary>
+    public virtual void EventBlockUpdate(Chunk chunk, Vector3Int localPosition,DirectionEnum direction)
+    {
+
+    }
+
+    /// <summary>
+    /// 创建方块的模型
+    /// </summary>
+    public virtual void CreateBlockModel(Chunk chunk, Vector3Int localPosition)
+    {
         //如果有模型。则创建模型
         if (!CheckUtil.StringIsNull(blockInfo.model_name))
         {
@@ -481,15 +490,36 @@ public abstract class Block
     }
 
     /// <summary>
-    /// 摧毁方块
+    /// 删除方块的模型
     /// </summary>
-    public virtual void DestoryBlock(Chunk chunk)
+    public virtual void DestoryBlockModel(Chunk chunk, Vector3Int localPosition)
     {
         //如果有模型，则摧毁模型
         if (chunk.dicBlockModel.ContainsKey(localPosition))
         {
             chunk.listBlockModelUpdate.Enqueue(localPosition);
         }
+    }
+
+    /// <summary>
+    /// 刷新方块
+    /// </summary>
+    public virtual void RefreshBlock()
+    {
+
+    }
+
+    /// <summary>
+    /// 刷新周围方块
+    /// </summary>
+    public virtual void RefreshBlockRange()
+    {
+        GetCloseBlock(Vector3Int.up)?.RefreshBlock();
+        GetCloseBlock(Vector3Int.down)?.RefreshBlock();
+        GetCloseBlock(Vector3Int.left)?.RefreshBlock();
+        GetCloseBlock(Vector3Int.right)?.RefreshBlock();
+        GetCloseBlock(Vector3Int.forward)?.RefreshBlock();
+        GetCloseBlock(Vector3Int.back)?.RefreshBlock();
     }
 
     /// <summary>

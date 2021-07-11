@@ -68,7 +68,7 @@ public class WorldCreateManager : BaseManager
         {
             int index = MathUtil.GetSingleIndexForTwo(position.x / widthChunk, position.z / widthChunk, worldSize);
             dicChunk.Remove(index);
-            Destroy(chunk);
+            Destroy(chunk.gameObject);
         }
     }
 

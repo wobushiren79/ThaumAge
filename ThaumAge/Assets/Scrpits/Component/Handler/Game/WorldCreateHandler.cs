@@ -118,17 +118,24 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
     {
         Vector3Int maxPosition = manager.widthChunk * range * new Vector3Int(1, 0, 1) + centerPosition;
         Vector3Int minPosition = -manager.widthChunk * range * new Vector3Int(1, 0, 1) + centerPosition;
-        foreach (var chunk in  manager.dicChunk.Values)
+        List<Chunk> listRemoveChunk = new List<Chunk>();
+        foreach (var chunk in manager.dicChunk.Values)
         {
             if (chunk.chunkData.positionForWorld.x > maxPosition.x
                 || chunk.chunkData.positionForWorld.x < minPosition.x
                 || chunk.chunkData.positionForWorld.z > maxPosition.z
-                || chunk.chunkData.positionForWorld.z > maxPosition.z)
+                || chunk.chunkData.positionForWorld.z < minPosition.z)
             {
-                manager.RemoveChunk(chunk.chunkData.positionForWorld, chunk);
-                callBackForComplete?.Invoke();
-            }       
+                listRemoveChunk.Add(chunk);
+            }
         }
+
+        for (int i = 0; i < listRemoveChunk.Count; i++)
+        {
+            Chunk chunk = listRemoveChunk[i];
+            manager.RemoveChunk(chunk.chunkData.positionForWorld, chunk);
+        }
+        callBackForComplete?.Invoke();
     }
 
     /// <summary>
@@ -290,9 +297,9 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
                         //获取保存的数据
                         WorldDataBean worldData = chunk.GetWorldData();
 
-                        if (worldData == null || worldData.chunkData == null|| worldData.chunkData.GetBlockData(positionBlockLocal, out BlockBean blockData))
+                        if (worldData == null || worldData.chunkData == null || worldData.chunkData.GetBlockData(positionBlockLocal, out BlockBean blockData))
                         {
-                             //如果有存档方块 则不替换
+                            //如果有存档方块 则不替换
                         }
                         else
                         {

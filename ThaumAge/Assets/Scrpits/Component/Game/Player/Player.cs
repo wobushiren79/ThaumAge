@@ -4,9 +4,9 @@ using UnityEngine;
 public class Player : BaseMonoBehaviour
 {
     //第一人称点位
-    public Transform LookForFirst;
+    public Transform LookForEye;
     //第三人称点位
-    public Transform LookForThird;
+    public Transform LookForFollow;
 
     protected CharacterController characterController;
     protected float timeForWorldUpdate = 0;
