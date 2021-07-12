@@ -12,7 +12,6 @@ using UnityEngine.Rendering;
 public class Test : BaseMonoBehaviour
 {
 
-
     private void Start()
     {
         GameHandler.Instance.manager.ChangeGameState(GameStateEnum.Gaming);

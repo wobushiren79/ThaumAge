@@ -34,7 +34,7 @@ public class BlockInfoController : BaseMVCController<BlockInfoModel, IBlockInfoV
             GetView().GetBlockInfoFail("没有数据",null);
             return null;
         }
-        GetView().GetBlockInfoSuccess<BlockInfoBean>(data,action);
+        GetView().GetBlockInfoSuccess(data,action);
         return data;
     }
 
@@ -51,7 +51,7 @@ public class BlockInfoController : BaseMVCController<BlockInfoModel, IBlockInfoV
         }
         else
         {
-            GetView().GetBlockInfoSuccess<List<BlockInfoBean>>(listData, action);
+            GetView().GetBlockInfoSuccess(listData, action);
         }
     }
 
