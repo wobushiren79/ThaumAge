@@ -385,7 +385,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   refreshRange: 3
-  worldType: 0
+  worldType: 1
 --- !u!20 &1206028686 stripped
 Camera:
   m_CorrespondingSourceObject: {fileID: 3993300171924132472, guid: e48ab55db35bda74596243c14d61528a, type: 3}

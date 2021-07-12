@@ -65,6 +65,8 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 5ed231c66e4f52944a9b169c98416ab9, type: 3}
   - {fileID: 21300000, guid: 9c744638940d4924d8c473bc32a2706b, type: 3}
   - {fileID: 21300000, guid: 4298ef0924cd8ab49bd4590cfcb024e0, type: 3}
+  - {fileID: 21300000, guid: db10d429b190c0746a9288b04bd3ecd7, type: 3}
+  - {fileID: 21300000, guid: 9a7b064922356dd44aa34cc2593a0449, type: 3}
   - {fileID: 21300000, guid: 40ad9c494f89aaa4aac3e9c8d7d6e598, type: 3}
   - {fileID: 21300000, guid: 95a421c96fe23364c8604afcbb035098, type: 3}
   - {fileID: 21300000, guid: 281ff16adcdeb6a428980acbed103408, type: 3}
@@ -75,8 +77,11 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 91deda1c0db202f46af9477a1166fefc, type: 3}
   - {fileID: 21300000, guid: eae48e3cf338f41408444294e890f651, type: 3}
   - {fileID: 21300000, guid: 0a78d65c50add214089c05e46d4a0fbc, type: 3}
+  - {fileID: 21300000, guid: afddf66c1247585499f66a8bf5056a7a, type: 3}
   - {fileID: 21300000, guid: 3f18219ca88c6454fba5a49d5ca324d4, type: 3}
   - {fileID: 21300000, guid: b0d748acc4b51684ca302bc03196f25a, type: 3}
+  - {fileID: 21300000, guid: 93b95ecc0335d3949b0ee0e01a7b7266, type: 3}
+  - {fileID: 21300000, guid: 5cfdb0fc27d2c424e96b92e974ca3b15, type: 3}
   - {fileID: 21300000, guid: 0761178d69f59134b969d8c55ec45be7, type: 3}
   - {fileID: 21300000, guid: 5466a31ec854ee3429fe6949bc4c4737, type: 3}
   - {fileID: 21300000, guid: d0c1a91ed33b55a4292833e482611494, type: 3}
@@ -99,6 +104,8 @@ SpriteAtlas:
   - icon_leaves_mushroom
   - icon_magma
   - icon_weed_1
+  - icon_ore_copper
+  - icon_ore_diamond
   - icon_mushroom_luminous
   - icon_sand
   - icon_flower_goldflower
@@ -109,8 +116,11 @@ SpriteAtlas:
   - icon_flower_earthflower
   - icon_flower_chrysanthemum
   - icon_flower_woodflower
+  - icon_ore_iron
   - icon_base
   - icon_grass_wild
+  - icon_ore_gold
+  - icon_ore_silver
   - icon_leaves_world
   - icon_tree_mushroom
   - icon_weed_2

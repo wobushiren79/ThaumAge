@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
 using DG.Tweening;
+using System.Collections.Concurrent;
 
 public class Chunk : BaseMonoBehaviour
 {
@@ -32,7 +33,10 @@ public class Chunk : BaseMonoBehaviour
     public List<Vector3Int> listEventUpdate = new List<Vector3Int>();
 
     //需要创建方块实力的列表
-    public Queue<Vector3Int> listBlockModelUpdate = new Queue<Vector3Int>();
+    public ConcurrentQueue<Vector3Int> listBlockModelUpdate = new ConcurrentQueue<Vector3Int>();
+    //需要删除方块实力的列表
+    public ConcurrentQueue<Vector3Int> listBlockModelDestroy = new ConcurrentQueue<Vector3Int>();
+
     public Dictionary<Vector3Int, GameObject> dicBlockModel = new Dictionary<Vector3Int, GameObject>();
 
     public MeshCollider meshCollider;
@@ -112,6 +116,7 @@ public class Chunk : BaseMonoBehaviour
             HandleForEventUpdate();
         }
         HandleForBlockModelUpdate();
+        HandleForBlockModelDestory();
     }
 
 
@@ -282,7 +287,7 @@ public class Chunk : BaseMonoBehaviour
             }
             catch (Exception e)
             {
-                LogUtil.Log("BuildChunkForAsync:" + e.ToString());
+                LogUtil.LogError("BuildChunkForAsync:" + e.ToString());
             }
             finally
             {
@@ -385,6 +390,7 @@ public class Chunk : BaseMonoBehaviour
                 callBack?.Invoke();
                 isAnimForInit = true;
             });
+            callBack?.Invoke();
         }
         else
         {
@@ -615,12 +621,14 @@ public class Chunk : BaseMonoBehaviour
     {
         if (listBlockModelUpdate.Count <= 0)
             return;
-        Vector3Int localPosition = listBlockModelUpdate.Dequeue();
+        if (!listBlockModelUpdate.TryDequeue(out Vector3Int localPosition))
+            return;
         //首先删除原有的模型
         if (dicBlockModel.TryGetValue(localPosition, out GameObject dataObj))
         {
-            dicBlockModel.Remove(localPosition);
-            Destroy(dataObj);
+            //dicBlockModel.Remove(localPosition);
+            //Destroy(dataObj);
+            return;
         }
 
         GetBlockForLocal(localPosition, out BlockTypeEnum blockType, out DirectionEnum direction, out bool isInside);
@@ -637,7 +645,24 @@ public class Chunk : BaseMonoBehaviour
             return;
         dicBlockModel.Add(localPosition, objBlockModel);
         //设置位置
-        objBlockModel.transform.position = localPosition + chunkData.positionForWorld + new Vector3(0.5f, 0, 0.5f);
+        objBlockModel.transform.localPosition = localPosition + new Vector3(0.5f, 0, 0.5f);
+    }
+
+    /// <summary>
+    /// 处理删除模型的方块
+    /// </summary>
+    public void HandleForBlockModelDestory()
+    {
+        if (listBlockModelDestroy.Count <= 0)
+            return;
+        if (!listBlockModelUpdate.TryDequeue(out Vector3Int localPosition))
+            return;
+        //如果有模型，则摧毁模型
+        if (dicBlockModel.TryGetValue(localPosition, out GameObject objBlockModel))
+        {
+            dicBlockModel.Remove(localPosition);
+            Destroy(objBlockModel);
+        }
     }
 
     #region 事件注册

@@ -29,7 +29,7 @@ public abstract class Block
     {
         get
         {
-            return WorldCreateHandler.Instance.manager.GetChunk(localPosition);
+            return WorldCreateHandler.Instance.manager.GetChunkForWorldPosition(worldPosition);
         }
     }
 
@@ -494,11 +494,8 @@ public abstract class Block
     /// </summary>
     public virtual void DestoryBlockModel(Chunk chunk, Vector3Int localPosition)
     {
-        //如果有模型，则摧毁模型
-        if (chunk.dicBlockModel.ContainsKey(localPosition))
-        {
-            chunk.listBlockModelUpdate.Enqueue(localPosition);
-        }
+        //摧毁模型
+        chunk.listBlockModelDestroy.Enqueue(localPosition);
     }
 
     /// <summary>

@@ -139,7 +139,7 @@ public class WorldCreateManager : BaseManager
     /// <summary>
     /// 获取区块
     /// </summary>
-    /// <param name="position"></param>
+    /// <param name="position">区块的坐标</param>
     /// <returns></returns>
     public Chunk GetChunk(Vector3Int position)
     {
@@ -151,12 +151,22 @@ public class WorldCreateManager : BaseManager
         return null;
     }
 
+    /// <summary>
+    /// 通过随意一个世界坐标 获取chunk
+    /// </summary>
+    /// <param name="pos"></param>
+    /// <returns></returns>
     public Chunk GetChunkForWorldPosition(Vector3Int pos)
     {
         Vector3Int chunkPosition = GetChunkPositionForWorldPosition(pos);
         return GetChunk(chunkPosition);
     }
 
+    /// <summary>
+    /// 通过随意一个世界坐标 获取chunk的世界坐标
+    /// </summary>
+    /// <param name="pos"></param>
+    /// <returns></returns>
     public Vector3Int GetChunkPositionForWorldPosition(Vector3Int pos)
     {
         int posX;
