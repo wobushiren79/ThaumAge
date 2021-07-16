@@ -41,6 +41,8 @@ public enum BlockTypeEnum
 
     Cactus = 4001,    //ÏÉÈËÕÆ
 
+
+
     Water = 9001,//Ë®
     Magma = 9002,//ÑÒ½¬
 }

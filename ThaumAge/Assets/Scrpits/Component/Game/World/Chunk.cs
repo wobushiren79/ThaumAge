@@ -52,8 +52,8 @@ public class Chunk : BaseMonoBehaviour
     public bool isInit = false;
     public bool isBuildChunk = false;
     public bool isDrawMesh = false;
-    protected bool isFirstDraw = true;
-    protected bool isAnimForInit = false;
+    public bool isFirstDraw = true;
+    public bool isAnimForInit = false;
 
     //渲染数据
     protected ChunkRenderData chunkRenderData;
@@ -115,8 +115,10 @@ public class Chunk : BaseMonoBehaviour
             eventUpdateTime = 1;
             HandleForEventUpdate();
         }
-        HandleForBlockModelUpdate();
-        HandleForBlockModelDestory();
+        HandleForBlockModelUpdate(out bool hasUpdate);
+        //先更新完全部需要更新的东西 在进行删除
+        if(!hasUpdate)
+            HandleForBlockModelDestory();
     }
 
 
@@ -617,10 +619,12 @@ public class Chunk : BaseMonoBehaviour
     /// <summary>
     /// 处理实例化模型的方块
     /// </summary>
-    public void HandleForBlockModelUpdate()
+    public void HandleForBlockModelUpdate(out bool hasUpdate)
     {
+        hasUpdate = false;
         if (listBlockModelUpdate.Count <= 0)
             return;
+        hasUpdate = true;
         if (!listBlockModelUpdate.TryDequeue(out Vector3Int localPosition))
             return;
         //首先删除原有的模型
@@ -630,6 +634,7 @@ public class Chunk : BaseMonoBehaviour
             //Destroy(dataObj);
             return;
         }
+
 
         GetBlockForLocal(localPosition, out BlockTypeEnum blockType, out DirectionEnum direction, out bool isInside);
 
