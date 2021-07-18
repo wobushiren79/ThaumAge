@@ -184,7 +184,7 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
         if (manager.listUpdateDrawChunk.Count > 0)
         {
             Chunk updateDrawChunk = manager.listUpdateDrawChunk.Peek();
-            if (updateDrawChunk != null)
+            if (updateDrawChunk != null && updateDrawChunk.isInit && updateDrawChunk.isAnimForInit)
             {
                 if (!updateDrawChunk.isBuildChunk)
                 {
