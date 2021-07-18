@@ -13,28 +13,28 @@ public class BlockCubeCuboid : BlockCube
     /// <param name="verts"></param>
     /// <param name="uvs"></param>
     /// <param name="tris"></param>
-    public override void BuildBlock(Chunk.ChunkRenderData chunkData)
+    public override void BuildBlock(Chunk chunk, Vector3Int localPosition, DirectionEnum direction, Chunk.ChunkRenderData chunkData)
     {
-        base.BuildBlock(chunkData);
+        base.BuildBlock(chunk, localPosition, direction, chunkData);
 
         if (blockType != BlockTypeEnum.None)
         {
             //Left
-                BuildFace(DirectionEnum.Left, localPosition + new Vector3(1f / 16f, 0, 0), Vector3.up, Vector3.forward, false, chunkData);
+            BuildFace(localPosition, direction, DirectionEnum.Left, localPosition + new Vector3(1f / 16f, 0, 0), Vector3.up, Vector3.forward, false, chunkData);
             //Right
-                BuildFace(DirectionEnum.Right, localPosition + new Vector3(15f / 16f, 0, 0), Vector3.up, Vector3.forward, true, chunkData);
+            BuildFace(localPosition, direction, DirectionEnum.Right, localPosition + new Vector3(15f / 16f, 0, 0), Vector3.up, Vector3.forward, true, chunkData);
 
             //Bottom
-            if (CheckNeedBuildFace(DirectionEnum.Down))
-                BuildFace(DirectionEnum.Down, localPosition, Vector3.forward, Vector3.right, false, chunkData);
+            if (CheckNeedBuildFace(chunk, localPosition, direction, DirectionEnum.Down))
+                BuildFace(localPosition, direction, DirectionEnum.Down, localPosition, Vector3.forward, Vector3.right, false, chunkData);
             //Top
-            if (CheckNeedBuildFace(DirectionEnum.UP))
-                BuildFace(DirectionEnum.UP, localPosition + new Vector3Int(0, 1, 0), Vector3.forward, Vector3.right, true, chunkData);
+            if (CheckNeedBuildFace(chunk, localPosition, direction, DirectionEnum.UP))
+                BuildFace(localPosition, direction, DirectionEnum.UP, localPosition + new Vector3Int(0, 1, 0), Vector3.forward, Vector3.right, true, chunkData);
 
             //Front
-                BuildFace(DirectionEnum.Forward, localPosition + new Vector3(0, 0, 1f / 16f), Vector3.up, Vector3.right, true, chunkData);
+            BuildFace(localPosition, direction, DirectionEnum.Forward, localPosition + new Vector3(0, 0, 1f / 16f), Vector3.up, Vector3.right, true, chunkData);
             //Back
-                BuildFace(DirectionEnum.Back, localPosition + new Vector3(0, 0, 15f / 16f), Vector3.up, Vector3.right, false, chunkData);
+            BuildFace(localPosition, direction, DirectionEnum.Back, localPosition + new Vector3(0, 0, 15f / 16f), Vector3.up, Vector3.right, false, chunkData);
         }
     }
 }

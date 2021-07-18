@@ -5,9 +5,9 @@ using System.Security.Cryptography;
 
 public class BlockWater : BlockLiquid
 {
-    public override void InitBlock(Chunk chunk)
+    public override void InitBlock(Chunk chunk, Vector3Int localPosition, DirectionEnum direction)
     {
-        base.InitBlock(chunk);
+        base.InitBlock(chunk, localPosition, direction);
         chunk.RegisterEventUpdate(localPosition);
     }
 
@@ -62,22 +62,14 @@ public class BlockWater : BlockLiquid
         }
     }
 
-    /// <summary>
-    /// 刷新数据
-    /// </summary>
-    public override void RefreshBlock()
-    {
-        base.RefreshBlock();
-    }
-
 
     /// <summary>
     /// 删除方块
     /// </summary>
     /// <param name="chunk"></param>
-    public override void DestoryBlock(Chunk chunk)
+    public override void DestoryBlock(Chunk chunk, Vector3Int localPosition, DirectionEnum direction)
     {
-        base.DestoryBlock(chunk);
+        base.DestoryBlock(chunk, localPosition, direction);
         //取消注册
         chunk.UnRegisterEventUpdate(localPosition);
     }

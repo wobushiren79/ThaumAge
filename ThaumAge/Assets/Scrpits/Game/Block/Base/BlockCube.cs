@@ -23,83 +23,81 @@ public class BlockCube : Block
     /// <param name="verts"></param>
     /// <param name="uvs"></param>
     /// <param name="tris"></param>
-    public override void BuildBlock(Chunk.ChunkRenderData chunkData)
+    public override void BuildBlock(Chunk chunk, Vector3Int localPosition, DirectionEnum direction, Chunk.ChunkRenderData chunkData)
     {
-        base.BuildBlock(chunkData);
+        base.BuildBlock(chunk, localPosition, direction, chunkData);
 
         if (blockType != BlockTypeEnum.None)
         {
             //Left
-            if (CheckNeedBuildFace(DirectionEnum.Left))
-                BuildFace(DirectionEnum.Left, localPosition, Vector3.up, Vector3.forward, false, chunkData);
+            if (CheckNeedBuildFace(chunk, localPosition, direction, DirectionEnum.Left))
+                BuildFace(localPosition, direction, DirectionEnum.Left, localPosition, Vector3.up, Vector3.forward, false, chunkData);
             //Right
-            if (CheckNeedBuildFace(DirectionEnum.Right))
-                BuildFace(DirectionEnum.Right, localPosition + new Vector3Int(1, 0, 0), Vector3.up, Vector3.forward, true, chunkData);
+            if (CheckNeedBuildFace(chunk, localPosition, direction, DirectionEnum.Right))
+                BuildFace(localPosition, direction, DirectionEnum.Right, localPosition + new Vector3Int(1, 0, 0), Vector3.up, Vector3.forward, true, chunkData);
 
             //Bottom
-            if (CheckNeedBuildFace(DirectionEnum.Down))
-                BuildFace(DirectionEnum.Down, localPosition, Vector3.forward, Vector3.right, false, chunkData);
+            if (CheckNeedBuildFace(chunk, localPosition, direction, DirectionEnum.Down))
+                BuildFace(localPosition, direction, DirectionEnum.Down, localPosition, Vector3.forward, Vector3.right, false, chunkData);
             //Top
-            if (CheckNeedBuildFace(DirectionEnum.UP))
-                BuildFace(DirectionEnum.UP, localPosition + new Vector3Int(0, 1, 0), Vector3.forward, Vector3.right, true, chunkData);
+            if (CheckNeedBuildFace(chunk, localPosition, direction, DirectionEnum.UP))
+                BuildFace(localPosition, direction, DirectionEnum.UP, localPosition + new Vector3Int(0, 1, 0), Vector3.forward, Vector3.right, true, chunkData);
 
             //Forward
-            if (CheckNeedBuildFace(DirectionEnum.Forward))
-                BuildFace(DirectionEnum.Forward, localPosition, Vector3.up, Vector3.right, true, chunkData);
+            if (CheckNeedBuildFace(chunk, localPosition, direction, DirectionEnum.Forward))
+                BuildFace(localPosition, direction, DirectionEnum.Forward, localPosition, Vector3.up, Vector3.right, true, chunkData);
             //Back
-            if (CheckNeedBuildFace(DirectionEnum.Back))
-                BuildFace(DirectionEnum.Back, localPosition + new Vector3Int(0, 0, 1), Vector3.up, Vector3.right, false, chunkData);
+            if (CheckNeedBuildFace(chunk, localPosition, direction, DirectionEnum.Back))
+                BuildFace(localPosition, direction, DirectionEnum.Back, localPosition + new Vector3Int(0, 0, 1), Vector3.up, Vector3.right, false, chunkData);
         }
     }
 
-    public override void BuildBlockNoCheck(Chunk.ChunkRenderData chunkData)
+    public override void BuildBlockNoCheck(Chunk chunk, Vector3Int localPosition, DirectionEnum direction, Chunk.ChunkRenderData chunkData)
     {
-        base.BuildBlock(chunkData);
+        base.BuildBlock(chunk, localPosition, direction, chunkData);
         if (blockType != BlockTypeEnum.None)
         {
-            BuildFace(DirectionEnum.Left, localPosition, Vector3.up, Vector3.forward, false, chunkData);
-            BuildFace(DirectionEnum.Right, localPosition + new Vector3Int(1, 0, 0), Vector3.up, Vector3.forward, true, chunkData);
-            BuildFace(DirectionEnum.Down, localPosition, Vector3.forward, Vector3.right, false, chunkData);
-            BuildFace(DirectionEnum.UP, localPosition + new Vector3Int(0, 1, 0), Vector3.forward, Vector3.right, true, chunkData);
-            BuildFace(DirectionEnum.Forward, localPosition, Vector3.up, Vector3.right, true, chunkData);
-            BuildFace(DirectionEnum.Back, localPosition + new Vector3Int(0, 0, 1), Vector3.up, Vector3.right, false, chunkData);
+            BuildFace(localPosition, direction, DirectionEnum.Left, localPosition, Vector3.up, Vector3.forward, false, chunkData);
+            BuildFace(localPosition, direction, DirectionEnum.Right, localPosition + new Vector3Int(1, 0, 0), Vector3.up, Vector3.forward, true, chunkData);
+            BuildFace(localPosition, direction, DirectionEnum.Down, localPosition, Vector3.forward, Vector3.right, false, chunkData);
+            BuildFace(localPosition, direction, DirectionEnum.UP, localPosition + new Vector3Int(0, 1, 0), Vector3.forward, Vector3.right, true, chunkData);
+            BuildFace(localPosition, direction, DirectionEnum.Forward, localPosition, Vector3.up, Vector3.right, true, chunkData);
+            BuildFace(localPosition, direction, DirectionEnum.Back, localPosition + new Vector3Int(0, 0, 1), Vector3.up, Vector3.right, false, chunkData);
         }
     }
+
 
     /// <summary>
     /// 构建方块的面
     /// </summary>
+    /// <param name="localPosition"></param>
     /// <param name="direction"></param>
-    /// <param name="blockData"></param>
+    /// <param name="buildDirection"></param>
     /// <param name="corner"></param>
     /// <param name="up"></param>
     /// <param name="right"></param>
     /// <param name="reversed"></param>
-    /// <param name="verts"></param>
-    /// <param name="uvs"></param>
-    /// <param name="tris"></param>
-    /// <param name="vertsCollider"></param>
-    /// <param name="trisCollider"></param>
-    public void BuildFace(DirectionEnum direction, Vector3 corner, Vector3 up, Vector3 right, bool reversed, Chunk.ChunkRenderData chunkData)
+    /// <param name="chunkData"></param>
+    public void BuildFace(Vector3Int localPosition, DirectionEnum direction, DirectionEnum buildDirection, Vector3 corner, Vector3 up, Vector3 right, bool reversed, Chunk.ChunkRenderData chunkData)
     {
         AddTris(reversed, chunkData);
-        AddVerts(corner, up, right, chunkData);
-        AddUVs(direction, chunkData);
+        AddVerts(localPosition, direction, corner, up, right, chunkData);
+        AddUVs(buildDirection, chunkData);
     }
 
-    public virtual void AddVerts(Vector3 corner, Vector3 up, Vector3 right, Chunk.ChunkRenderData chunkData)
+    public virtual void AddVerts(Vector3Int localPosition, DirectionEnum direction, Vector3 corner, Vector3 up, Vector3 right, Chunk.ChunkRenderData chunkData)
     {
-        base.AddVerts(corner, chunkData);
+        base.AddVerts(localPosition, direction, corner, chunkData);
 
-        AddVert(chunkData.verts, corner);
-        AddVert(chunkData.verts, corner + up);
-        AddVert(chunkData.verts, corner + up + right);
-        AddVert(chunkData.verts, corner + right);
+        AddVert(localPosition, direction, chunkData.verts, corner);
+        AddVert(localPosition, direction, chunkData.verts, corner + up);
+        AddVert(localPosition, direction, chunkData.verts, corner + up + right);
+        AddVert(localPosition, direction, chunkData.verts, corner + right);
 
-        AddVert(chunkData.vertsCollider, corner);
-        AddVert(chunkData.vertsCollider, corner + up);
-        AddVert(chunkData.vertsCollider, corner + up + right);
-        AddVert(chunkData.vertsCollider, corner + right);
+        AddVert(localPosition, direction, chunkData.vertsCollider, corner);
+        AddVert(localPosition, direction, chunkData.vertsCollider, corner + up);
+        AddVert(localPosition, direction, chunkData.vertsCollider, corner + up + right);
+        AddVert(localPosition, direction, chunkData.vertsCollider, corner + right);
     }
 
     public void AddUVs(DirectionEnum direction, Chunk.ChunkRenderData chunkData)
