@@ -4,20 +4,18 @@ using UnityEngine;
 
 public class BlockCross : Block
 {
-    public override void BuildBlock(Chunk.ChunkRenderData chunkData)
+    public override void BuildBlock(Chunk chunk, Vector3Int localPosition, DirectionEnum direction, Chunk.ChunkRenderData chunkData)
     {
-        base.BuildBlock(chunkData);
+        base.BuildBlock(chunk, localPosition, direction, chunkData);
         if (blockType != BlockTypeEnum.None)
         {
-            BuildFace(localPosition, chunkData);
+            BuildFace(localPosition, direction, localPosition, chunkData);
         }
     }
 
-    public override void RefreshBlock()
+    public override void RefreshBlock(Chunk chunk, Vector3Int localPosition, DirectionEnum direction)
     {
-        base.RefreshBlock();
-        //获取当前区块
-        Chunk chunk = WorldCreateHandler.Instance.manager.GetChunkForWorldPosition(worldPosition);
+        base.RefreshBlock(chunk,  localPosition,  direction);
         //获取下方方块
         chunk.GetBlockForLocal(localPosition + Vector3Int.down, out BlockTypeEnum downBlockType, out DirectionEnum downBlockdirection, out bool isInside);
         //获取下方方块数据
@@ -101,29 +99,29 @@ public class BlockCross : Block
         chunkData.uvs.Add(uvStartPosition + new Vector2(uvWidth, 0));
     }
 
-    public override void AddVerts(Vector3 corner, Chunk.ChunkRenderData chunkData)
+    public override void AddVerts(Vector3Int localPosition, DirectionEnum direction,Vector3 corner, Chunk.ChunkRenderData chunkData)
     {
-        base.AddVerts(corner, chunkData);
-        AddVert(chunkData.verts, corner + new Vector3(0.5f, 0, 0));
-        AddVert(chunkData.verts, corner + new Vector3(0.5f, 1, 0));
-        AddVert(chunkData.verts, corner + new Vector3(0.5f, 1, 1));
-        AddVert(chunkData.verts, corner + new Vector3(0.5f, 0, 1));
+        base.AddVerts(localPosition, direction,corner, chunkData);
+        AddVert(localPosition, direction,chunkData.verts, corner + new Vector3(0.5f, 0, 0));
+        AddVert(localPosition, direction, chunkData.verts, corner + new Vector3(0.5f, 1, 0));
+        AddVert(localPosition, direction, chunkData.verts, corner + new Vector3(0.5f, 1, 1));
+        AddVert(localPosition, direction, chunkData.verts, corner + new Vector3(0.5f, 0, 1));
 
-        AddVert(chunkData.verts, corner + new Vector3(0, 0, 0.5f));
-        AddVert(chunkData.verts, corner + new Vector3(0, 1, 0.5f));
-        AddVert(chunkData.verts, corner + new Vector3(1, 1, 0.5f));
-        AddVert(chunkData.verts, corner + new Vector3(1, 0, 0.5f));
+        AddVert(localPosition, direction, chunkData.verts, corner + new Vector3(0, 0, 0.5f));
+        AddVert(localPosition, direction, chunkData.verts, corner + new Vector3(0, 1, 0.5f));
+        AddVert(localPosition, direction, chunkData.verts, corner + new Vector3(1, 1, 0.5f));
+        AddVert(localPosition, direction, chunkData.verts, corner + new Vector3(1, 0, 0.5f));
 
 
-        AddVert(chunkData.vertsTrigger, corner + new Vector3(0.5f, 0, 0));
-        AddVert(chunkData.vertsTrigger, corner + new Vector3(0.5f, 1, 0));
-        AddVert(chunkData.vertsTrigger, corner + new Vector3(0.5f, 1, 1));
-        AddVert(chunkData.vertsTrigger, corner + new Vector3(0.5f, 0, 1));
+        AddVert(localPosition, direction, chunkData.vertsTrigger, corner + new Vector3(0.5f, 0, 0));
+        AddVert(localPosition, direction, chunkData.vertsTrigger, corner + new Vector3(0.5f, 1, 0));
+        AddVert(localPosition, direction, chunkData.vertsTrigger, corner + new Vector3(0.5f, 1, 1));
+        AddVert(localPosition, direction, chunkData.vertsTrigger, corner + new Vector3(0.5f, 0, 1));
 
-        AddVert(chunkData.vertsTrigger, corner + new Vector3(0, 0, 0.5f));
-        AddVert(chunkData.vertsTrigger, corner + new Vector3(0, 1, 0.5f));
-        AddVert(chunkData.vertsTrigger, corner + new Vector3(1, 1, 0.5f));
-        AddVert(chunkData.vertsTrigger, corner + new Vector3(1, 0, 0.5f));
+        AddVert(localPosition, direction, chunkData.vertsTrigger, corner + new Vector3(0, 0, 0.5f));
+        AddVert(localPosition, direction, chunkData.vertsTrigger, corner + new Vector3(0, 1, 0.5f));
+        AddVert(localPosition, direction, chunkData.vertsTrigger, corner + new Vector3(1, 1, 0.5f));
+        AddVert(localPosition, direction, chunkData.vertsTrigger, corner + new Vector3(1, 0, 0.5f));
     }
 
 

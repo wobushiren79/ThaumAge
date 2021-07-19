@@ -8,29 +8,19 @@ using UnityEngine;
 public abstract class Block
 {
     public BlockTypeEnum blockType;    //方块类型
-    public DirectionEnum direction;    //方向
-
-    public Vector3Int localPosition;
-    public Vector3Int worldPosition;
 
     protected float uvWidth = 1 / 128f;
 
-    public Vector3 centerPosition
+    public Vector3 GetCenterPosition(Vector3Int localPosition)
     {
-        get
-        {
-            return localPosition + new Vector3(0.5f, 0.5f, 0.5f);
-        }
+        return localPosition + new Vector3(0.5f, 0.5f, 0.5f);
     }
 
     protected BlockInfoBean _blockInfo;//方块信息
 
-    public Chunk chunk
+    public Chunk GetChunk(Vector3Int worldPosition)
     {
-        get
-        {
-            return WorldCreateHandler.Instance.manager.GetChunkForWorldPosition(worldPosition);
-        }
+        return WorldCreateHandler.Instance.manager.GetChunkForWorldPosition(worldPosition);
     }
 
     public BlockInfoBean blockInfo
@@ -61,55 +51,18 @@ public abstract class Block
     }
 
     /// <summary>
-    /// 获取靠近的方块
-    /// </summary>
-    /// <param name="closeDirection"></param>
-    /// <returns></returns>
-    protected Block GetCloseBlock(Vector3Int closeDirection)
-    {
-        Vector3Int closeWorldPosition = worldPosition + closeDirection;
-        WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(closeWorldPosition, out BlockTypeEnum closeBlockType, out DirectionEnum closeBlockDirection, out Chunk chunk);
-        if (chunk != null)
-        {
-            Block closeBlock = BlockHandler.Instance.manager.GetRegisterBlock(closeBlockType);
-            closeBlock.SetData(closeWorldPosition - chunk.chunkData.positionForWorld, closeWorldPosition, closeBlockDirection);
-            return closeBlock;
-        }
-        return null;
-    }
-
-    /// <summary>
-    /// 设置数据
-    /// </summary>
-    /// <param name="chunk"></param>
-    /// <param name="position"></param>
-    /// <param name="blockData"></param>
-    public virtual void SetData(Vector3Int localPosition, Vector3Int worldPosition, DirectionEnum direction)
-    {
-        this.localPosition = localPosition;
-        this.worldPosition = worldPosition;
-
-        this.direction = direction;
-    }
-
-    public virtual void SetData(Vector3Int localPosition, Vector3Int worldPosition, BlockTypeEnum blockType, DirectionEnum direction)
-    {
-        SetData(localPosition, worldPosition, direction);
-        this.blockType = blockType;
-    }
-
-    /// <summary>
     /// 检测是否需要构建面
     /// </summary>
-    /// <param name="direction"></param>
+    /// <param name="localPosition"></param>
+    /// <param name="closeDirection"></param>
     /// <param name="closeBlock"></param>
     /// <returns></returns>
-    public virtual bool CheckNeedBuildFace(DirectionEnum direction, out BlockTypeEnum closeBlock)
+    public virtual bool CheckNeedBuildFace(Chunk chunk, Vector3Int localPosition, DirectionEnum direction, DirectionEnum closeDirection, out BlockTypeEnum closeBlock)
     {
 
         closeBlock = BlockTypeEnum.None;
         if (localPosition.y == 0) return false;
-        GetCloseRotateBlockByDirection(direction, out closeBlock, out bool hasChunk);
+        GetCloseRotateBlockByDirection(chunk.chunkData.positionForWorld + localPosition, direction, closeDirection, out closeBlock, out bool hasChunk);
         if (closeBlock == BlockTypeEnum.None)
         {
             if (hasChunk)
@@ -134,9 +87,9 @@ public abstract class Block
         }
     }
 
-    public virtual bool CheckNeedBuildFace(DirectionEnum direction)
+    public virtual bool CheckNeedBuildFace(Chunk chunk, Vector3Int localPosition, DirectionEnum direction, DirectionEnum closeDirection)
     {
-        return CheckNeedBuildFace(direction, out BlockTypeEnum closeBlock);
+        return CheckNeedBuildFace(chunk, localPosition, direction, closeDirection, out BlockTypeEnum closeBlock);
     }
 
     /// <summary>
@@ -145,11 +98,11 @@ public abstract class Block
     /// <param name="verts"></param>
     /// <param name="uvs"></param>
     /// <param name="tris"></param>
-    public virtual void BuildBlock(Chunk.ChunkRenderData chunkData)
+    public virtual void BuildBlock(Chunk chunk, Vector3Int localPosition, DirectionEnum direction, Chunk.ChunkRenderData chunkData)
     {
 
     }
-    public virtual void BuildBlockNoCheck(Chunk.ChunkRenderData chunkData)
+    public virtual void BuildBlockNoCheck(Chunk chunk, Vector3Int localPosition, DirectionEnum direction, Chunk.ChunkRenderData chunkData)
     {
 
     }
@@ -164,10 +117,10 @@ public abstract class Block
     /// <param name="verts"></param>
     /// <param name="uvs"></param>
     /// <param name="tris"></param>
-    public virtual void BuildFace(Vector3 corner, Chunk.ChunkRenderData chunkData)
+    public virtual void BuildFace(Vector3Int localPosition, DirectionEnum direction, Vector3 corner, Chunk.ChunkRenderData chunkData)
     {
         AddTris(chunkData);
-        AddVerts(corner, chunkData);
+        AddVerts(localPosition, direction, corner, chunkData);
         AddUVs(chunkData);
     }
 
@@ -178,13 +131,13 @@ public abstract class Block
     /// <param name="up"></param>
     /// <param name="right"></param>
     /// <param name="verts"></param>
-    public virtual void AddVerts(Vector3 corner, Chunk.ChunkRenderData chunkData)
+    public virtual void AddVerts(Vector3Int localPosition, DirectionEnum direction, Vector3 corner, Chunk.ChunkRenderData chunkData)
     {
 
     }
-    public virtual void AddVert(List<Vector3> listVerts, Vector3 vert)
+    public virtual void AddVert(Vector3Int localPosition, DirectionEnum direction, List<Vector3> listVerts, Vector3 vert)
     {
-        listVerts.Add(RotatePosition(vert, centerPosition));
+        listVerts.Add(RotatePosition(direction, vert, GetCenterPosition(localPosition)));
     }
 
     /// <summary>
@@ -209,23 +162,22 @@ public abstract class Block
 
     }
 
-    public virtual void GetCloseRotateBlockByDirection(DirectionEnum getDirection, out BlockTypeEnum closeBlock, out bool hasChunk)
+    public virtual void GetCloseRotateBlockByDirection(Vector3Int worldPosition, DirectionEnum direction, DirectionEnum getDirection, out BlockTypeEnum closeBlock, out bool hasChunk)
     {
         if (blockInfo.rotate_state == 0)
         {
             //不旋转
-            GetCloseBlockByDirection(getDirection, out closeBlock, out hasChunk);
+            GetCloseBlockByDirection(worldPosition, getDirection, out closeBlock, out hasChunk);
         }
         else if (blockInfo.rotate_state == 1)
         {
             //旋转
-            DirectionEnum rotateDirection = GetRotateDirection(getDirection);
-            GetCloseBlockByDirection(rotateDirection, out closeBlock, out hasChunk);
+            DirectionEnum rotateDirection = GetRotateDirection(direction, getDirection);
+            GetCloseBlockByDirection(worldPosition, rotateDirection, out closeBlock, out hasChunk);
         }
         else
         {
             closeBlock = BlockTypeEnum.None;
-            direction = DirectionEnum.UP;
             hasChunk = false;
         }
     }
@@ -236,7 +188,7 @@ public abstract class Block
     /// <param name="getDirection"></param>
     /// <param name="closeBlock"></param>
     /// <param name="hasChunk"></param>
-    public virtual void GetCloseBlockByDirection(DirectionEnum getDirection, out BlockTypeEnum blockType, out bool hasChunk)
+    public virtual void GetCloseBlockByDirection(Vector3Int worldPosition, DirectionEnum getDirection, out BlockTypeEnum blockType, out bool hasChunk)
     {
         Vector3Int targetBlockWorldPosition;
         switch (getDirection)
@@ -274,12 +226,14 @@ public abstract class Block
         }
     }
 
+
     /// <summary>
     /// 根据本身坐标选择方向
     /// </summary>
+    /// <param name="direction"></param>
     /// <param name="getDirection"></param>
     /// <returns></returns>
-    public DirectionEnum GetRotateDirection(DirectionEnum getDirection)
+    public DirectionEnum GetRotateDirection(DirectionEnum direction, DirectionEnum getDirection)
     {
         DirectionEnum targetDirection = DirectionEnum.UP;
         switch (direction)
@@ -411,7 +365,7 @@ public abstract class Block
     /// </summary>
     /// <param name="vert"></param>
     /// <returns></returns>
-    public virtual Vector3 RotatePosition(Vector3 position, Vector3 centerPosition)
+    public virtual Vector3 RotatePosition(DirectionEnum direction, Vector3 position, Vector3 centerPosition)
     {
         if (blockInfo.rotate_state == 0)
         {
@@ -456,23 +410,23 @@ public abstract class Block
     /// <summary>
     /// 初始化方块
     /// </summary>
-    public virtual void InitBlock(Chunk chunk)
+    public virtual void InitBlock(Chunk chunk, Vector3Int localPosition, DirectionEnum direction)
     {
-        CreateBlockModel(chunk,localPosition);
+        CreateBlockModel(chunk, localPosition, direction);
     }
 
     /// <summary>
     /// 摧毁方块
     /// </summary>
-    public virtual void DestoryBlock(Chunk chunk)
+    public virtual void DestoryBlock(Chunk chunk, Vector3Int localPosition, DirectionEnum direction)
     {
-        DestoryBlockModel(chunk,localPosition);
+        DestoryBlockModel(chunk, localPosition, direction);
     }
 
     /// <summary>
     /// 事件方块更新
     /// </summary>
-    public virtual void EventBlockUpdate(Chunk chunk, Vector3Int localPosition,DirectionEnum direction)
+    public virtual void EventBlockUpdate(Chunk chunk, Vector3Int localPosition, DirectionEnum direction)
     {
 
     }
@@ -480,7 +434,7 @@ public abstract class Block
     /// <summary>
     /// 创建方块的模型
     /// </summary>
-    public virtual void CreateBlockModel(Chunk chunk, Vector3Int localPosition)
+    public virtual void CreateBlockModel(Chunk chunk, Vector3Int localPosition, DirectionEnum direction)
     {
         //如果有模型。则创建模型
         if (!CheckUtil.StringIsNull(blockInfo.model_name))
@@ -492,7 +446,7 @@ public abstract class Block
     /// <summary>
     /// 删除方块的模型
     /// </summary>
-    public virtual void DestoryBlockModel(Chunk chunk, Vector3Int localPosition)
+    public virtual void DestoryBlockModel(Chunk chunk, Vector3Int localPosition, DirectionEnum direction)
     {
         //摧毁模型
         chunk.listBlockModelDestroy.Enqueue(localPosition);
@@ -501,7 +455,7 @@ public abstract class Block
     /// <summary>
     /// 刷新方块
     /// </summary>
-    public virtual void RefreshBlock()
+    public virtual void RefreshBlock(Chunk chunk, Vector3Int localPosition, DirectionEnum direction)
     {
 
     }
@@ -509,22 +463,37 @@ public abstract class Block
     /// <summary>
     /// 刷新周围方块
     /// </summary>
-    public virtual void RefreshBlockRange()
+    public virtual void RefreshBlockRange(Chunk chunk, Vector3Int localPosition, DirectionEnum direction)
     {
-        GetCloseBlock(Vector3Int.up)?.RefreshBlock();
-        GetCloseBlock(Vector3Int.down)?.RefreshBlock();
-        GetCloseBlock(Vector3Int.left)?.RefreshBlock();
-        GetCloseBlock(Vector3Int.right)?.RefreshBlock();
-        GetCloseBlock(Vector3Int.forward)?.RefreshBlock();
-        GetCloseBlock(Vector3Int.back)?.RefreshBlock();
+        Vector3Int worldPosition = localPosition + chunk.chunkData.positionForWorld;
+
+        RefreshBlockClose(worldPosition + Vector3Int.up);
+        RefreshBlockClose(worldPosition + Vector3Int.down);
+        RefreshBlockClose(worldPosition + Vector3Int.left);
+        RefreshBlockClose(worldPosition + Vector3Int.right);
+        RefreshBlockClose(worldPosition + Vector3Int.forward);
+        RefreshBlockClose(worldPosition + Vector3Int.back);
+    }
+
+    /// <summary>
+    /// 刷新靠近的方块
+    /// </summary>
+    /// <param name="closeWorldPosition"></param>
+    public virtual void RefreshBlockClose(Vector3Int closeWorldPosition)
+    {
+        WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(closeWorldPosition, out BlockTypeEnum closeBlockType, out DirectionEnum closeBlockDirection, out Chunk closeChunk);
+        if (closeChunk != null)
+        {
+            Block upBlock = BlockHandler.Instance.manager.GetRegisterBlock(closeBlockType);
+            upBlock?.RefreshBlock(closeChunk, closeWorldPosition - closeChunk.chunkData.positionForWorld, closeBlockDirection);
+        }
     }
 
     /// <summary>
     /// 获取下标
     /// </summary>
-    public int GetIndex(int chunkWidth, int chunkHeight)
+    public static int GetIndex(Vector3Int localPosition, int chunkWidth, int chunkHeight)
     {
         return localPosition.x * chunkWidth * chunkHeight + localPosition.y * chunkWidth + localPosition.z;
     }
-
 }

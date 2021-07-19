@@ -17,36 +17,36 @@ public class BlockMagma : BlockWater
         chunkData.dicTris[BlockMaterialEnum.Magma].Add(index + 3);
     }
 
-    public override void InitBlock(Chunk chunk)
+    public override void InitBlock(Chunk chunk, Vector3Int localPosition, DirectionEnum direction)
     {
         if (chunk == null)
             return;
-        InitSmoke(chunk, localPosition);
+        InitSmoke(chunk, localPosition, direction);
         chunk.RegisterEventUpdate(localPosition);
     }
-        
 
-    public override void RefreshBlock()
+
+    public override void RefreshBlock(Chunk chunk, Vector3Int localPosition, DirectionEnum direction)
     {
-        base.RefreshBlock();
-        InitSmoke(chunk, localPosition);
+        base.RefreshBlock(chunk, localPosition, direction);
+        InitSmoke(chunk, localPosition, direction);
     }
-    
+
     /// <summary>
     /// 初始化烟雾
     /// </summary>
-    public void InitSmoke(Chunk chunk,Vector3Int localPosition)
+    public void InitSmoke(Chunk chunk, Vector3Int localPosition, DirectionEnum direction)
     {
-        GetCloseBlockByDirection(DirectionEnum.UP, out BlockTypeEnum blockType, out bool hasChunk);
+        GetCloseBlockByDirection(chunk.chunkData.positionForWorld + localPosition, DirectionEnum.UP, out BlockTypeEnum blockType, out bool hasChunk);
         if (blockType == BlockTypeEnum.None)
         {
             //如果上方是空得 则实例化冒烟特效
-            CreateBlockModel(chunk, localPosition);
+            CreateBlockModel(chunk, localPosition, direction);
         }
         else
         {
             //如果上方有物体，则不冒烟
-            DestoryBlockModel(chunk, localPosition);
+            DestoryBlockModel(chunk, localPosition, direction);
         }
     }
 

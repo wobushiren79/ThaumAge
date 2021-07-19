@@ -25,7 +25,6 @@ public class BuildingEditor : BaseMonoBehaviour
         BlockHandler.Instance.manager.InitData();
 
         BlockCube blockCube = new BlockCube();
-        blockCube.SetData(Vector3Int.zero, Vector3Int.zero,blockType, direction);
 
         Chunk.ChunkRenderData chunkRender = new Chunk.ChunkRenderData();
         //初始化数据
@@ -36,7 +35,7 @@ public class BuildingEditor : BaseMonoBehaviour
             chunkRender.dicTris.Add(blockMaterial, new List<int>());
         }
 
-        blockCube.BuildBlockNoCheck(chunkRender);
+        blockCube.BuildBlockNoCheck(null,Vector3Int.zero, direction, chunkRender);
 
         mesh = new Mesh();
 
