@@ -20,7 +20,6 @@ public class Player : BaseMonoBehaviour
             HandleForBeyondBorder();
             HandleForColliderTrigger();
         }
-
     }
 
     /// <summary>
