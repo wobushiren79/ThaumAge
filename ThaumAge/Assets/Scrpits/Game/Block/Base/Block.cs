@@ -62,7 +62,7 @@ public abstract class Block
 
         closeBlock = BlockTypeEnum.None;
         if (localPosition.y == 0) return false;
-        GetCloseRotateBlockByDirection(chunk.chunkData.positionForWorld + localPosition, direction, closeDirection, out closeBlock, out bool hasChunk);
+        GetCloseRotateBlockByDirection(chunk, localPosition, direction, closeDirection, out closeBlock, out bool hasChunk);
         if (closeBlock == BlockTypeEnum.None)
         {
             if (hasChunk)
@@ -162,18 +162,18 @@ public abstract class Block
 
     }
 
-    public virtual void GetCloseRotateBlockByDirection(Vector3Int worldPosition, DirectionEnum direction, DirectionEnum getDirection, out BlockTypeEnum closeBlock, out bool hasChunk)
+    public virtual void GetCloseRotateBlockByDirection(Chunk chunk, Vector3Int localPosition, DirectionEnum direction, DirectionEnum getDirection, out BlockTypeEnum closeBlock, out bool hasChunk)
     {
         if (blockInfo.rotate_state == 0)
         {
             //不旋转
-            GetCloseBlockByDirection(worldPosition, getDirection, out closeBlock, out hasChunk);
+            GetCloseBlockByDirection(chunk, localPosition, getDirection, out closeBlock, out hasChunk);
         }
         else if (blockInfo.rotate_state == 1)
         {
             //旋转
             DirectionEnum rotateDirection = GetRotateDirection(direction, getDirection);
-            GetCloseBlockByDirection(worldPosition, rotateDirection, out closeBlock, out hasChunk);
+            GetCloseBlockByDirection(chunk, localPosition, rotateDirection, out closeBlock, out hasChunk);
         }
         else
         {
@@ -188,41 +188,88 @@ public abstract class Block
     /// <param name="getDirection"></param>
     /// <param name="closeBlock"></param>
     /// <param name="hasChunk"></param>
-    public virtual void GetCloseBlockByDirection(Vector3Int worldPosition, DirectionEnum getDirection, out BlockTypeEnum blockType, out bool hasChunk)
+    public virtual void GetCloseBlockByDirection(Chunk chunk, Vector3Int localPosition, DirectionEnum getDirection, out BlockTypeEnum blockType, out bool hasChunk)
     {
-        Vector3Int targetBlockWorldPosition;
+        //获取目标的本地坐标
+        Vector3Int targetBlockLocalPosition;
         switch (getDirection)
         {
             case DirectionEnum.UP:
-                targetBlockWorldPosition = worldPosition + Vector3Int.up;
+                targetBlockLocalPosition = localPosition + Vector3Int.up;
                 break;
             case DirectionEnum.Down:
-                targetBlockWorldPosition = worldPosition + Vector3Int.down;
+                targetBlockLocalPosition = localPosition + Vector3Int.down;
                 break;
             case DirectionEnum.Left:
-                targetBlockWorldPosition = worldPosition + Vector3Int.left;
+                targetBlockLocalPosition = localPosition + Vector3Int.left;
                 break;
             case DirectionEnum.Right:
-                targetBlockWorldPosition = worldPosition + Vector3Int.right;
+                targetBlockLocalPosition = localPosition + Vector3Int.right;
                 break;
             case DirectionEnum.Forward:
-                targetBlockWorldPosition = worldPosition + Vector3Int.back;
+                targetBlockLocalPosition = localPosition + Vector3Int.back;
                 break;
             case DirectionEnum.Back:
-                targetBlockWorldPosition = worldPosition + Vector3Int.forward;
+                targetBlockLocalPosition = localPosition + Vector3Int.forward;
                 break;
             default:
-                targetBlockWorldPosition = worldPosition + Vector3Int.up;
+                targetBlockLocalPosition = localPosition + Vector3Int.up;
                 break;
         }
-        WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(targetBlockWorldPosition, out blockType, out DirectionEnum direction, out Chunk chunk);
-        if (chunk == null)
+
+        if (targetBlockLocalPosition.x < 0 || targetBlockLocalPosition.x > chunk.chunkData.chunkWidth - 1
+            || targetBlockLocalPosition.z < 0 || targetBlockLocalPosition.z > chunk.chunkData.chunkWidth - 1)
         {
-            hasChunk = false;
+            //如果超出边界
+            Vector3Int targetBlockWorldPosition;
+            Vector3Int worldPosition = chunk.chunkData.positionForWorld + localPosition;
+            switch (getDirection)
+            {
+                case DirectionEnum.UP:
+                    targetBlockWorldPosition = worldPosition + Vector3Int.up;
+                    break;
+                case DirectionEnum.Down:
+                    targetBlockWorldPosition = worldPosition + Vector3Int.down;
+                    break;
+                case DirectionEnum.Left:
+                    targetBlockWorldPosition = worldPosition + Vector3Int.left;
+                    break;
+                case DirectionEnum.Right:
+                    targetBlockWorldPosition = worldPosition + Vector3Int.right;
+                    break;
+                case DirectionEnum.Forward:
+                    targetBlockWorldPosition = worldPosition + Vector3Int.back;
+                    break;
+                case DirectionEnum.Back:
+                    targetBlockWorldPosition = worldPosition + Vector3Int.forward;
+                    break;
+                default:
+                    targetBlockWorldPosition = worldPosition + Vector3Int.up;
+                    break;
+            }
+            WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(targetBlockWorldPosition, out blockType, out DirectionEnum closeDirection, out Chunk closeChunk);
+            if (closeChunk == null)
+            {
+                hasChunk = false;
+            }
+            else
+            {
+                hasChunk = true;
+            }
+            return;
         }
         else
-        {
-            hasChunk = true;
+        {        
+            //如果在同一个chunk内
+            chunk.GetBlockForLocal(targetBlockLocalPosition, out blockType, out DirectionEnum direction, out bool isInside);
+            if (isInside)
+            {
+                hasChunk = true;
+            }
+            else
+            {
+                hasChunk = false;
+            }
         }
     }
 

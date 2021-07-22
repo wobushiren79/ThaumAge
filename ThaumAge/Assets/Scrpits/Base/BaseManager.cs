@@ -8,6 +8,18 @@ using System;
 
 public class BaseManager : BaseMonoBehaviour
 {
+
+    public virtual void InitData<T>(Dictionary<long, T> dic, List<T> listData) where T : BaseBean
+    {
+        dic.Clear();
+        for (int i = 0; i < listData.Count; i++)
+        {
+            T itemHairInfo = listData[i];
+            dic.Add(itemHairInfo.id, itemHairInfo);
+        }
+    }
+
+
     protected List<T> GetAllModel<T>(string assetBundlePath) where T : UnityEngine.Object
     {
         return GetAllModel<T>(assetBundlePath, null);

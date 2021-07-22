@@ -26,12 +26,12 @@ public class CharacterInfoController : BaseMVCController<CharacterInfoModel, ICh
     /// 获取所有数据
     /// </summary>
     /// <param name="action"></param>
-    public void GetAllCharacterInfoData(Action<List<CharacterInfoHairBean>> action)
+    public void GetAllCharacterInfoHairData(Action<List<CharacterInfoBean>> action)
     {
-        List<CharacterInfoHairBean> listData = GetModel().GetAllCharacterInfoHairData();
+        List<CharacterInfoBean> listData = GetModel().GetAllCharacterInfoHairData();
         if (CheckUtil.ListIsNull(listData))
         {
-            GetView().GetCharacterInfoFail("没有数据", null);
+            GetView().GetCharacterInfoFail("没有头发数据", null);
         }
         else
         {
@@ -39,4 +39,31 @@ public class CharacterInfoController : BaseMVCController<CharacterInfoModel, ICh
         }
     }
 
-} 
+    public void GetAllCharacterInfoEyeData(Action<List<CharacterInfoBean>> action)
+    {
+        List<CharacterInfoBean> listData = GetModel().GetAllCharacterInfoEyeData();
+        if (CheckUtil.ListIsNull(listData))
+        {
+            GetView().GetCharacterInfoFail("没有眼部数据", null);
+        }
+        else
+        {
+            GetView().GetCharacterInfoSuccess(listData, action);
+        }
+    }
+
+    public void GetAllCharacterInfoMouthData(Action<List<CharacterInfoBean>> action)
+    {
+        List<CharacterInfoBean> listData = GetModel().GetAllCharacterInfoMouthData();
+        if (CheckUtil.ListIsNull(listData))
+        {
+            GetView().GetCharacterInfoFail("没有嘴巴数据", null);
+        }
+        else
+        {
+            GetView().GetCharacterInfoSuccess(listData, action);
+        }
+    }
+
+
+}

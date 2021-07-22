@@ -37,7 +37,7 @@ public class BlockMagma : BlockWater
     /// </summary>
     public void InitSmoke(Chunk chunk, Vector3Int localPosition, DirectionEnum direction)
     {
-        GetCloseBlockByDirection(chunk.chunkData.positionForWorld + localPosition, DirectionEnum.UP, out BlockTypeEnum blockType, out bool hasChunk);
+        GetCloseBlockByDirection(chunk, localPosition, DirectionEnum.UP, out BlockTypeEnum blockType, out bool hasChunk);
         if (blockType == BlockTypeEnum.None)
         {
             //如果上方是空得 则实例化冒烟特效

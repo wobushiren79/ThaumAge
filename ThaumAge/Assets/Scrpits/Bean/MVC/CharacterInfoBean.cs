@@ -9,7 +9,7 @@ using UnityEditor;
 using System;
 
 [Serializable]
-public class CharacterInfoHairBean : BaseBean
+public class CharacterInfoBean : BaseBean
 {
     public long link_id;
     public string model_name;

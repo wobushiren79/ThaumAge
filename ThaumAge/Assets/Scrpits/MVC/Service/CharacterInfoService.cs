@@ -13,33 +13,63 @@ public class CharacterInfoService : BaseMVCService
     protected string tableNameHairForMain;
     protected string tableNameHairForLeft;
 
+    protected string tableNameEyeForMain;
+    protected string tableNameEyeForLeft;
+
+    protected string tableNameMouthForMain;
+    protected string tableNameMouthForLeft;
+
     public CharacterInfoService() : base("", "")
     {
+        GameConfigBean gameConfig = GameDataHandler.Instance.manager.GetGameConfig();
+
         tableNameHairForMain = "character_info_hair";
-        tableNameHairForLeft = "character_info_hair_detals_" + GameDataHandler.Instance.manager.GetGameConfig().language;
+        tableNameHairForLeft = "character_info_hair_detals_" + gameConfig.language;
+
+        tableNameEyeForMain = "character_info_eye";
+        tableNameEyeForLeft = "character_info_eye_detals_" + gameConfig.language;
+
+        tableNameMouthForMain = "character_info_mouth";
+        tableNameMouthForLeft = "character_info_mouth_detals_" + gameConfig.language;
     }
 
     /// <summary>
-    /// 查询所有头发数据
+    /// 查询所有数据
     /// </summary>
     /// <returns></returns>
-    public List<CharacterInfoHairBean> QueryAllHairData()
+    public List<CharacterInfoBean> QueryAllHairData()
     {
-        return QueryAllData<CharacterInfoHairBean>(tableNameHairForMain, tableNameHairForLeft);
+        return QueryAllData<CharacterInfoBean>(tableNameHairForMain, tableNameHairForLeft);
+    }
+    public List<CharacterInfoBean> QueryAllEyeData()
+    {
+        return QueryAllData<CharacterInfoBean>(tableNameEyeForMain, tableNameEyeForLeft);
+    }
+    public List<CharacterInfoBean> QueryAllMouthData()
+    {
+        return QueryAllData<CharacterInfoBean>(tableNameMouthForMain, tableNameMouthForLeft);
     }
 
     /// <summary>
-    /// 更新头发数据
+    /// 更新数据
     /// </summary>
     /// <param name="data"></param>
     /// <returns></returns>
-    public bool UpdateHairData(CharacterInfoHairBean data)
+    public bool UpdateHairData(CharacterInfoBean data)
     {
         return UpdateData(tableNameHairForMain, tableNameHairForLeft, data);
     }
+    public bool UpdateEyeData(CharacterInfoBean data)
+    {
+        return UpdateData(tableNameEyeForMain, tableNameEyeForLeft, data);
+    }
+    public bool UpdateMouthData(CharacterInfoBean data)
+    {
+        return UpdateData(tableNameMouthForMain, tableNameMouthForLeft, data);
+    }
 
     /// <summary>
-    /// 删除头发数据
+    /// 删除数据
     /// </summary>
     /// <param name="id"></param>
     /// <returns></returns>
@@ -47,9 +77,16 @@ public class CharacterInfoService : BaseMVCService
     {
         return DeleteData(tableNameHairForMain, tableNameHairForLeft, id);
     }
+    public bool DeleteEyeData(long id)
+    {
+        return DeleteData(tableNameEyeForMain, tableNameEyeForLeft, id);
+    }
+    public bool DeleteMouthData(long id)
+    {
+        return DeleteData(tableNameMouthForMain, tableNameMouthForLeft, id);
+    }
 
-
-    public List<T> QueryAllData<T>(string tableNameForMain, string tableNameForLeft)
+    protected List<T> QueryAllData<T>(string tableNameForMain, string tableNameForLeft)
     {
         this.tableNameForMain = tableNameForMain;
         this.tableNameForLeft = tableNameForLeft;
@@ -62,7 +99,7 @@ public class CharacterInfoService : BaseMVCService
     /// </summary>
     /// <param name="data"></param>
     /// <returns></returns>
-    public bool UpdateData<T>(string tableNameForMain, string tableNameForLeft, T data) where T : BaseBean
+    protected bool UpdateData<T>(string tableNameForMain, string tableNameForLeft, T data) where T : BaseBean
     {
         this.tableNameForMain = tableNameForMain;
         this.tableNameForLeft = tableNameForLeft;
@@ -80,7 +117,7 @@ public class CharacterInfoService : BaseMVCService
     /// </summary>
     /// <param name="id"></param>
     /// <returns></returns>
-    public bool DeleteData(string tableNameForMain, string tableNameForLeft, long id)
+    protected bool DeleteData(string tableNameForMain, string tableNameForLeft, long id)
     {
         this.tableNameForMain = tableNameForMain;
         this.tableNameForLeft = tableNameForLeft;

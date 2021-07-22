@@ -7,7 +7,15 @@ public class CreatureManager : BaseManager, ICharacterInfoView
 {
     //角色头发列表
     public Dictionary<string, GameObject> dicCharacterHairModel = new Dictionary<string, GameObject>();
-    public Dictionary<long, CharacterInfoHairBean> dicCharacterHairInfo = new Dictionary<long, CharacterInfoHairBean>();
+    public Dictionary<long, CharacterInfoBean> dicCharacterHairInfo = new Dictionary<long, CharacterInfoBean>();
+
+    //角色眼睛列表
+    public Dictionary<string, Texture2D> dicCharacterEyeTex = new Dictionary<string, Texture2D>();
+    public Dictionary<long, CharacterInfoBean> dicCharacterEyeInfo = new Dictionary<long, CharacterInfoBean>();
+
+    //角色嘴巴列表
+    public Dictionary<string, Texture2D> dicCharacterMouthTex = new Dictionary<string, Texture2D>();
+    public Dictionary<long, CharacterInfoBean> dicCharacterMouthInfo = new Dictionary<long, CharacterInfoBean>();
 
     //角色数据控制器
     protected CharacterInfoController controllerForCharacterInfo;
@@ -15,21 +23,26 @@ public class CreatureManager : BaseManager, ICharacterInfoView
     private void Awake()
     {
         controllerForCharacterInfo = new CharacterInfoController(this, this);
-        controllerForCharacterInfo.GetAllCharacterInfoData(InitCharacterInfoHair);
+        controllerForCharacterInfo.GetAllCharacterInfoHairData(InitCharacterInfoHair);
+        controllerForCharacterInfo.GetAllCharacterInfoEyeData(InitCharacterInfoEye);
+        controllerForCharacterInfo.GetAllCharacterInfoMouthData(InitCharacterInfoMouth);
     }
 
     /// <summary>
     /// 初始化角色发型信息
     /// </summary>
     /// <param name="listHairData"></param>
-    protected void InitCharacterInfoHair(List<CharacterInfoHairBean> listHairData)
+    protected void InitCharacterInfoHair(List<CharacterInfoBean> listData)
     {
-        dicCharacterHairInfo.Clear();
-        for (int i = 0; i < listHairData.Count; i++)
-        {
-            CharacterInfoHairBean itemHairInfo = listHairData[i];
-            dicCharacterHairInfo.Add(itemHairInfo.id, itemHairInfo);
-        }
+        InitData(dicCharacterHairInfo, listData);
+    }
+    protected void InitCharacterInfoEye(List<CharacterInfoBean> listData)
+    {
+        InitData(dicCharacterEyeInfo, listData);
+    }
+    protected void InitCharacterInfoMouth(List<CharacterInfoBean> listData)
+    {
+        InitData(dicCharacterMouthInfo, listData);
     }
 
     /// <summary>
@@ -41,6 +54,27 @@ public class CreatureManager : BaseManager, ICharacterInfoView
     {
         return GetModel(dicCharacterHairModel, "character/hair", hairName);
     }
+
+    /// <summary>
+    /// 获取眼睛贴图
+    /// </summary>
+    /// <param name="eyeName"></param>
+    /// <returns></returns>
+    public Texture2D GetCharacterEyeTex(string eyeName)
+    {
+        return GetModel(dicCharacterEyeTex, "character/eye", eyeName);
+    }
+
+    /// <summary>
+    /// 获取嘴巴贴图
+    /// </summary>
+    /// <param name="mouthName"></param>
+    /// <returns></returns>
+    public Texture2D GetCharacterMouthTex(string mouthName)
+    {
+        return GetModel(dicCharacterEyeTex, "character/mouth", mouthName);
+    }
+
 
     #region 数据回调
     public void GetCharacterInfoSuccess<T>(T data, Action<T> action)

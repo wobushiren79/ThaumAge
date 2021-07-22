@@ -21,9 +21,19 @@ public class CharacterInfoModel : BaseMVCModel
     /// 获取所有数据
     /// </summary>
     /// <returns></returns>
-    public List<CharacterInfoHairBean> GetAllCharacterInfoHairData()
+    public List<CharacterInfoBean> GetAllCharacterInfoHairData()
     {
-        List<CharacterInfoHairBean> listData = serviceCharacterInfo.QueryAllHairData();
+        List<CharacterInfoBean> listData = serviceCharacterInfo.QueryAllHairData();
+        return listData;
+    }
+    public List<CharacterInfoBean> GetAllCharacterInfoEyeData()
+    {
+        List<CharacterInfoBean> listData = serviceCharacterInfo.QueryAllEyeData();
+        return listData;
+    }
+    public List<CharacterInfoBean> GetAllCharacterInfoMouthData()
+    {
+        List<CharacterInfoBean> listData = serviceCharacterInfo.QueryAllMouthData();
         return listData;
     }
 
@@ -31,9 +41,16 @@ public class CharacterInfoModel : BaseMVCModel
     /// 保存游戏数据
     /// </summary>
     /// <param name="data"></param>
-    public void SetCharacterInfoHairData(CharacterInfoHairBean data)
+    public void SetCharacterInfoHairData(CharacterInfoBean data)
     {
         serviceCharacterInfo.UpdateHairData(data);
     }
-
+    public void SetCharacterInfoEyeData(CharacterInfoBean data)
+    {
+        serviceCharacterInfo.UpdateEyeData(data);
+    }
+    public void SetCharacterInfoMouthData(CharacterInfoBean data)
+    {
+        serviceCharacterInfo.UpdateMouthData(data);
+    }
 }
