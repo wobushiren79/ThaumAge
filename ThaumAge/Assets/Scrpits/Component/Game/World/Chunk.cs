@@ -326,6 +326,7 @@ public class Chunk : BaseMonoBehaviour
             chunkMesh.SetVertices(chunkRenderData.verts);
             //设置UV
             chunkMesh.SetUVs(0, chunkRenderData.uvs);
+          
             //设置三角（单面渲染，双面渲染,液体）
             foreach (var itemTris in chunkRenderData.dicTris)
             {

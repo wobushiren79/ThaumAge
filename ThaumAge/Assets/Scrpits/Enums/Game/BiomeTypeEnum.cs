@@ -10,5 +10,5 @@ public enum BiomeTypeEnum
     Volcano = 5,//火山
     Ocean = 6,//海洋
     MagicForest = 11,//魔法森林
-    Test = 9999,//测试
+    Test = 999,//测试
 }

@@ -69,7 +69,6 @@ public class BiomeHandler : BaseHandler<BiomeHandler, BiomeManager>
 
         //获取当前位置方块随机生成的高度值
         int genHeight = GetHeightData(wPos, biomeInfo);
-
         //当前方块位置高于随机生成的高度值时，当前方块类型为空
         if (wPos.y > genHeight)
         {
@@ -78,22 +77,13 @@ public class BiomeHandler : BaseHandler<BiomeHandler, BiomeManager>
 
         //边缘处理 逐渐减缓到最低高度
         float offsetDis = secondMinBiomeDis - minBiomeDis;
-        if (genHeight - biomeInfo.minHeight > 2//高度大于3格
-            && offsetDis <= 10) //在10范围以内
+        if (wPos.y > (biomeInfo.minHeight)// 在基础高度-4以上
+            && offsetDis <= 20) //在20范围以内
         {
-            int edgeHeight = Mathf.CeilToInt((genHeight - biomeInfo.minHeight) / 10f) * Mathf.CeilToInt(offsetDis) + biomeInfo.minHeight;
-            //只有当小于最大高度时才使用生成边缘高度
-            if (edgeHeight < genHeight)
-            {
-                genHeight = edgeHeight;
-                if (genHeight <= 64 && genHeight >= 60)
-                {
-                    //水平线
-                    return BlockTypeEnum.Water;
-                }
-            }
-            //其余情况则返回空方块
-            else
+            genHeight = Mathf.CeilToInt((genHeight - 64) / 20f) * Mathf.CeilToInt(offsetDis) + 64;
+
+            //当前方块位置高于随机生成的高度值时，当前方块类型为空
+            if (wPos.y > genHeight)
             {
                 return BlockTypeEnum.None;
             }
@@ -120,7 +110,7 @@ public class BiomeHandler : BaseHandler<BiomeHandler, BiomeManager>
     {
         ////让随机种子，振幅，频率，应用于我们的噪音采样结果
         float x0 = (wPos.x + offset0.x) * frequency;
-        float y0 = (wPos.y + offset0.y) * frequency;
+        //float y0 = (wPos.y + offset0.y) * frequency;
         float z0 = (wPos.z + offset0.z) * frequency;
 
         //float x1 = (wPos.x + offset1.x) * biomeInfo.frequency * 2;

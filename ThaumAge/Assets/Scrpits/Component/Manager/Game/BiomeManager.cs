@@ -103,9 +103,8 @@ public class BiomeManager : BaseManager
                     listBiomeForMain.Add(new BiomePrairie());
                     listBiomeForMain.Add(new BiomeForest());
                     listBiomeForMain.Add(new BiomeDesert());
-                    listBiomeForMain.Add(new BiomeVolcano());
                     listBiomeForMain.Add(new BiomeMagicForest());
-   
+                    listBiomeForMain.Add(new BiomeVolcano());
                     listBiomeForMain.Add(new BiomeMountain());
                     listBiomeForMain.Add(new BiomeOcean());
                 }

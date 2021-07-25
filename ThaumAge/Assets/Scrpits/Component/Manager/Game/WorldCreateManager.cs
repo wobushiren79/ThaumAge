@@ -8,7 +8,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
-using Pathfinding;
 
 public class WorldCreateManager : BaseManager
 {
