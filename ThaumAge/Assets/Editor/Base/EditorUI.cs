@@ -2,11 +2,32 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using UnityEditor;
 using UnityEngine;
 
 public class EditorUI
 {
+
+    /// <summary>
+    /// 打开文件夹
+    /// </summary>
+    /// <param name="path"></param>
+    public static void OpenFolder(string path)
+    {
+        Process.Start(path);
+    }
+
+    /// <summary>
+    /// 选择文件夹
+    /// </summary>
+    /// <param name="title"></param>
+    /// <returns></returns>
+    public static string GetFolderPanel(string title, string folder = "", string defName = "")
+    {
+        return EditorUtility.OpenFolderPanel(title, folder, defName);
+    }
+
     /// <summary>
     /// 按钮
     /// </summary>

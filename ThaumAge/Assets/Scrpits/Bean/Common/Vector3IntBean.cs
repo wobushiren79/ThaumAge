@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEditor;
 using System;
 
@@ -8,11 +8,6 @@ public class Vector3IntBean
     public int x;
     public int y;
     public int z;
-
-    public Vector3IntBean()
-    {
-
-    }
 
     public Vector3IntBean(Vector3Int vector)
     {
@@ -36,6 +31,6 @@ public class Vector3IntBean
 
     public Vector3Int GetVector3Int()
     {
-        return new Vector3Int(x,y,z);
+        return new Vector3Int(x, y, z);
     }
 }

@@ -11,15 +11,16 @@ public class UGUIUtil
     /// </summary>
     /// <param name="tfRoot"></param>
     /// <param name="tfIcon"></param>
-    public Vector3 GetUIRootPosForIcon(Transform tfRoot,Transform tfIcon)
+    public static  Vector3 GetUIRootPosForIcon(Transform tfRoot,Transform tfIcon)
     {
         return tfRoot.InverseTransformPoint(tfIcon.position);
     }
 
-    /// <summary>
-    /// 是否点击到了UI
-    /// </summary>
-    /// <returns></returns>
+
+   /// <summary>
+   /// 是否点击到了UI
+   /// </summary>
+   /// <returns></returns>
     public static bool IsPointerUI()
     {
         if (EventSystem.current.IsPointerOverGameObject() || GUIUtility.hotControl != 0)

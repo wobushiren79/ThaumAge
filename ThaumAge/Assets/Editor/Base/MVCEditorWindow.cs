@@ -31,7 +31,7 @@ public class MVCEditorWindow : EditorWindow
         EditorGUILayout.BeginHorizontal();
         EditorUI.GUIText("创建MVC,输入MVC名称:", 200);
         mvcClassName = EditorUI.GUIEditorText(mvcClassName, 100);
-        EditorUI.GUIText("保存类型（1.SQLite 2.FileJson）:", 200);
+        EditorUI.GUIText("保存类型（1.SQLite 2.FileJson 3.Excel）:", 200);
         saveType = EditorUI.GUIEditorText(saveType, 50);
         EditorGUILayout.EndHorizontal();
 
@@ -75,10 +75,16 @@ public class MVCEditorWindow : EditorWindow
             case 2:
                 servicePath = Application.dataPath + scrpitsTemplatesPath + "MVC_Service_FileJson.txt";
                 break;
+            case 3:
+                servicePath = Application.dataPath + scrpitsTemplatesPath + "MVC_Service_Excel.txt";
+                break;
         }
 
         //创建.CS文件
-        CreateClass(beanPath, fileName + "Bean", fileName, mvcBeanPath);
+        if (saveType != 3)
+        {
+            CreateClass(beanPath, fileName + "Bean", fileName, mvcBeanPath);
+        }
         CreateClass(viewPath, "I" + fileName + "View", fileName, mvcViewPath);
         CreateClass(modelPath, fileName + "Model", fileName, mvcModelPath);
         CreateClass(controllerPath, fileName + "Controller", fileName, mvcControllerPath);
@@ -94,7 +100,7 @@ public class MVCEditorWindow : EditorWindow
     /// <param name="fileName"></param>
     /// <param name="className"></param>
     /// <param name="createPath"></param>
-    protected void CreateClass(string templatesPath, string fileName,string className, string createPath)
+    protected void CreateClass(string templatesPath, string fileName, string className, string createPath)
     {
         if (CheckUtil.StringIsNull(templatesPath))
         {
