@@ -1,6 +1,9 @@
 ﻿
 public enum WorldTypeEnum
 {
-    Test = 0,
-    Main = 1,
+    Test = 0,//测试世界
+
+    Main = 1,//主世界
+
+    Launch = 99999,//启动世界
 }

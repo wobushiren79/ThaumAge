@@ -238,7 +238,7 @@ public class ReflexUtil : ScriptableObject
         }
         catch (Exception e)
         {
-            LogUtil.LogError("实例化失败，缺少类名为 " + className + " 的类。" + e.Message);
+            //LogUtil.LogError("实例化失败，缺少类名为 " + className + " 的类。" + e.Message);
             return default(T);
         }
     }

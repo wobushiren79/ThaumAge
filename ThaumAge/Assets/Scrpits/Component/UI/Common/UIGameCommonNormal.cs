@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UICommonNormal : BaseUIComponent
+public class UIGameCommonNormal : BaseUIComponent
 {
     public Button ui_Exit;
 

@@ -1,7 +1,7 @@
 ﻿using UnityEditor;
 using UnityEngine;
 
-public class UIGameUserDetails : UICommonNormal
+public class UIGameUserDetails : UIGameCommonNormal
 {
     public UIViewShortcuts ui_Shortcuts;
     public UIViewBackpackList ui_BackpackList;
@@ -12,7 +12,5 @@ public class UIGameUserDetails : UICommonNormal
         ui_Shortcuts.RefreshUI();
         
     }
-
-
 
 }
