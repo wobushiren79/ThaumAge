@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using UnityEditor;
-
+using UnityEngine.UI;
 public class GameUtil
 {
     /// <summary>
@@ -65,6 +65,23 @@ public class GameUtil
         downBorder = Camera.main.transform.position.y - (cornerPos.y - Camera.main.transform.position.y);
 
         return topBorder - downBorder;
+    }
+
+    /// <summary>
+    /// 刷新UI
+    /// </summary>
+    /// <param name="rectTransform"></param>
+    public static void RefreshRectTransform(RectTransform rectTransform)
+    {
+        LayoutRebuilder.ForceRebuildLayoutImmediate(rectTransform);
+    }
+    public static void RefreshRectTransform(GameObject obj)
+    {
+        RectTransform rectTransform = obj.GetComponent<RectTransform>();
+        if (rectTransform != null)
+        {
+            RefreshRectTransform(rectTransform);
+        }
     }
 
     /// <summary>

@@ -34,8 +34,9 @@ public class IconManager : BaseManager
     {
         return GetSpriteByName(dicItems, ref AtlasForItems, "SpriteAtlasForItems", "sprite/atlas", name);
     }
+    
 
-    public Texture2D GetTextureUIByName(string name)
+    public Texture2D GetTexture2DByName(string name)
     {
         return GetModel(dicTextureUI, "texture/ui", name);
     }

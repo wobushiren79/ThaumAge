@@ -30,7 +30,7 @@ public class CptUtil
     {
         for (int i = 0; i < tf.childCount; i++)
         {
-          GameObject.Destroy(tf.GetChild(i).gameObject);
+            GameObject.Destroy(tf.GetChild(i).gameObject);
         }
     }
 
@@ -100,11 +100,11 @@ public class CptUtil
     /// <param name="tf"></param>
     /// <param name="name"></param>
     /// <param name="activeSelf"></param>
-    public static void RemoveChildsByName(Transform tf,string name,bool activeSelf)
+    public static void RemoveChildsByName(Transform tf, string name, bool activeSelf)
     {
         for (int i = 0; i < tf.childCount; i++)
         {
-            if (tf.GetChild(i).gameObject.activeSelf == activeSelf&& tf.GetChild(i).gameObject.name.Contains(name))
+            if (tf.GetChild(i).gameObject.activeSelf == activeSelf && tf.GetChild(i).gameObject.name.Contains(name))
             {
                 GameObject.Destroy(tf.GetChild(i).gameObject);
             }
@@ -118,9 +118,9 @@ public class CptUtil
     /// <param name="obj"></param>
     /// <param name="name"></param>
     /// <returns></returns>
-    public static T GetCptInChildrenByName<T>(GameObject obj,string name) where T : Component
+    public static T GetCptInChildrenByName<T>(GameObject obj, string name) where T : Component
     {
-        T[] cptList= obj.GetComponentsInChildren<T>();
+        T[] cptList = obj.GetComponentsInChildren<T>();
         for (int i = 0; i < cptList.Length; i++)
         {
             T item = cptList[i];
@@ -132,7 +132,7 @@ public class CptUtil
         return null;
     }
 
-    public static Component GetCptInChildrenByName(GameObject obj,  string name, Type type, bool includeInactive)
+    public static Component GetCptInChildrenByName(GameObject obj, string name, Type type, bool includeInactive)
     {
         Component[] targets = obj.GetComponentsInChildren(type, includeInactive);
         if (targets.Length > 0)
@@ -207,7 +207,7 @@ public class CptUtil
     /// <returns></returns>
     public static int GetChildCountByActive(GameObject obj)
     {
-        int number=0;
+        int number = 0;
         for (int i = 0; i < obj.transform.childCount; i++)
         {
             if (obj.transform.GetChild(i).gameObject.activeSelf)
@@ -217,6 +217,7 @@ public class CptUtil
         }
         return number;
     }
+
 
     /// <summary>
     /// 通过名字获取OBJ
@@ -235,5 +236,4 @@ public class CptUtil
         }
         return null;
     }
-
 }

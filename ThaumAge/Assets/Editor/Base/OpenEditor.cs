@@ -33,6 +33,6 @@ public class OpenEditor : Editor
     static void OpenPersistantPath()
     {
         string path = Application.persistentDataPath;
-        Process.Start(path);
+        EditorUI.OpenFolder(path);
     }
 }

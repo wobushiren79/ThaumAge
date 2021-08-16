@@ -36,6 +36,8 @@ public class SteamManager : MonoBehaviour {
 	}
 
 	private SteamAPIWarningMessageHook_t m_SteamAPIWarningMessageHook;
+
+	[AOT.MonoPInvokeCallback(typeof(SteamAPIWarningMessageHook_t))]
 	private static void SteamAPIDebugTextHook(int nSeverity, System.Text.StringBuilder pchDebugText) {
 		Debug.LogWarning(pchDebugText);
 	}

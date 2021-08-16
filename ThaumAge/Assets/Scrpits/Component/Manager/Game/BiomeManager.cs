@@ -13,8 +13,8 @@ public class BiomeManager : BaseManager
     protected BiomeInfoBean[] arrayBiomeInfo = new BiomeInfoBean[EnumUtil.GetEnumMaxIndex<BiomeTypeEnum>() + 1];
     protected BuildingInfoBean[] arrayBuildingInfo = new BuildingInfoBean[EnumUtil.GetEnumMaxIndex<BuildingTypeEnum>() + 1];
 
-    public List<Biome> listBiomeForTest = new List<Biome>();
-    public List<Biome> listBiomeForMain = new List<Biome>();
+    //世界生态字典
+    public Dictionary<int, Biome[]> dicWorldBiome = new Dictionary<int, Biome[]>();
 
     public virtual void Awake()
     {
@@ -87,31 +87,40 @@ public class BiomeManager : BaseManager
     /// <returns></returns>
     public virtual Biome[] GetBiomeListByWorldType(WorldTypeEnum worldType)
     {
-        List<Biome> listBiome = new List<Biome>();
-        switch (worldType)
+        //如果已经有了
+        if(dicWorldBiome.TryGetValue((int)worldType,out Biome[] arrayBiome))
         {
-            case WorldTypeEnum.Test:
-                if (CheckUtil.ListIsNull(listBiomeForTest))
-                {
-                    listBiomeForTest.Add(new BiomeTest());
-                }
-                listBiome = listBiomeForTest;
-                break;
-            case WorldTypeEnum.Main:
-                if (CheckUtil.ListIsNull(listBiomeForMain))
-                {
-                    listBiomeForMain.Add(new BiomePrairie());
-                    listBiomeForMain.Add(new BiomeForest());
-                    listBiomeForMain.Add(new BiomeDesert());
-                    listBiomeForMain.Add(new BiomeMagicForest());
-                    listBiomeForMain.Add(new BiomeVolcano());
-                    listBiomeForMain.Add(new BiomeMountain());
-                    listBiomeForMain.Add(new BiomeOcean());
-                }
-                listBiome = listBiomeForMain;
-                break;
+            return arrayBiome;
         }
-        return listBiome.ToArray();
+        else
+        {
+            switch (worldType)
+            {
+                case WorldTypeEnum.Test:
+                    arrayBiome= new Biome[1];
+                    arrayBiome[0] = new BiomeTest();
+                    break;
+                case WorldTypeEnum.Main:
+                    arrayBiome = new Biome[7];
+                    arrayBiome[0] = new BiomePrairie();
+                    arrayBiome[1] = new BiomeForest();
+                    arrayBiome[2] = new BiomeDesert();
+                    arrayBiome[3] = new BiomeMagicForest();
+                    arrayBiome[4] = new BiomeVolcano();
+                    arrayBiome[5] = new BiomeMountain();
+                    arrayBiome[6] = new BiomeOcean();
+                    break;
+                case WorldTypeEnum.Launch:
+                    arrayBiome = new Biome[1];
+                    arrayBiome[0] = new BiomeForest();
+                    break;
+                default:
+                    arrayBiome = new Biome[0];
+                    break;
+            }
+            dicWorldBiome.Add((int)worldType, arrayBiome);
+            return arrayBiome;
+        }
     }
 
     #region 数据回调

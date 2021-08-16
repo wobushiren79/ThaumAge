@@ -69,5 +69,4 @@ public class VectorUtil
         direction = Quaternion.Euler(angles) * direction;
         return direction + centerPosition;
     }
-
 }
