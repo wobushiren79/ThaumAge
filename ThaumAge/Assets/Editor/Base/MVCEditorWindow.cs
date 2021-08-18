@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEditor;
@@ -83,47 +84,24 @@ public class MVCEditorWindow : EditorWindow
         //创建.CS文件
         if (saveType != 3)
         {
-            CreateClass(beanPath, fileName + "Bean", fileName, mvcBeanPath);
+            Dictionary<string, string> dicReplace= ReplaceRole(fileName + "Bean");
+            EditorUtil.CreateClass(dicReplace, beanPath, fileName + "Bean", mvcBeanPath);
         }
-        CreateClass(viewPath, "I" + fileName + "View", fileName, mvcViewPath);
-        CreateClass(modelPath, fileName + "Model", fileName, mvcModelPath);
-        CreateClass(controllerPath, fileName + "Controller", fileName, mvcControllerPath);
-        CreateClass(servicePath, fileName + "Service", fileName, mvcServicePath);
+        Dictionary<string, string> dicReplaceView = ReplaceRole("I" + fileName + "View");
+        EditorUtil.CreateClass(dicReplaceView, viewPath, "I" + fileName + "View", mvcViewPath);
+
+        Dictionary<string, string> dicReplaceModel = ReplaceRole(fileName + "Model");
+        EditorUtil.CreateClass(dicReplaceModel, modelPath, fileName + "Model", mvcModelPath);
+
+        Dictionary<string, string> dicReplaceController = ReplaceRole(fileName + "Controller");
+        EditorUtil.CreateClass(dicReplaceController, controllerPath, fileName + "Controller", mvcControllerPath);
+
+        Dictionary<string, string> dicReplaceService = ReplaceRole(fileName + "Service");
+        EditorUtil.CreateClass(dicReplaceService, servicePath, fileName + "Service", mvcServicePath);
         //刷新资源
         AssetDatabase.Refresh();
     }
 
-    /// <summary>
-    /// 创建.cs文件
-    /// </summary>
-    /// <param name="templatesPath"></param>
-    /// <param name="fileName"></param>
-    /// <param name="className"></param>
-    /// <param name="createPath"></param>
-    protected void CreateClass(string templatesPath, string fileName, string className, string createPath)
-    {
-        if (CheckUtil.StringIsNull(templatesPath))
-        {
-            LogUtil.LogError("模板路径为空");
-            return;
-        }
-        if (CheckUtil.StringIsNull(fileName))
-        {
-            LogUtil.LogError("文件名为空");
-            return;
-        }
-        if (CheckUtil.StringIsNull(createPath))
-        {
-            LogUtil.LogError("生成路径为空");
-            return;
-        }
-        //读取模板
-        string viewScriptContent = File.ReadAllText(templatesPath);
-        //替换规则
-        viewScriptContent = ReplaceRole(viewScriptContent, className);
-        //创建文件
-        FileUtil.CreateTextFile(createPath, fileName + ".cs", viewScriptContent);
-    }
 
     /// <summary>
     /// 替换规则
@@ -131,12 +109,13 @@ public class MVCEditorWindow : EditorWindow
     /// <param name="scripteContent"></param>
     /// <param name="fileName"></param>
     /// <returns></returns>
-    protected string ReplaceRole(string scripteContent, string fileName)
-    {
+    protected Dictionary<string,string> ReplaceRole(string fileName)
+    {        
         //这里实现自定义的一些规则  
-        scripteContent = scripteContent.Replace("#ScriptName#", fileName);
-        scripteContent = scripteContent.Replace("#Author#", "AppleCoffee");
-        scripteContent = scripteContent.Replace("#CreateTime#", System.DateTime.Now.ToString("yyyy-MM-dd-HH:mm:ss"));
-        return scripteContent;
+        Dictionary<string, string> dicReplaceData = new Dictionary<string, string>();
+        dicReplaceData.Add("#ScriptName#", fileName);
+        dicReplaceData.Add("#Author#", "AppleCoffee");
+        dicReplaceData.Add("#CreateTime#", System.DateTime.Now.ToString("yyyy-MM-dd-HH:mm:ss"));
+        return dicReplaceData;
     }
 }

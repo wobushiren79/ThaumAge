@@ -106,10 +106,10 @@ public class ReflexUtil : ScriptableObject
     /// <typeparam name="T"></typeparam>
     /// <param name="classType"></param>
     /// <returns></returns>
-    public static Dictionary<String, object> GetAllNameAndValue<T>(T classType)
+    public static Dictionary<string, object> GetAllNameAndValue<T>(T classType)
     {
-        Dictionary<String, object> listData = new Dictionary<string, object>();
-        Type type = typeof(T);
+        Dictionary<string, object> listData = new Dictionary<string, object>();
+        Type type = classType.GetType();
         FieldInfo[] fieldInfos = type.GetFields();
 
         if (fieldInfos == null)
@@ -120,6 +120,30 @@ public class ReflexUtil : ScriptableObject
         {
             FieldInfo fieldInfo = fieldInfos[i];
             listData.Add(fieldInfo.Name, fieldInfo.GetValue(classType));
+        };
+        return listData;
+    }
+
+    /// <summary>
+    /// 根据反射获取书友属性名称及类型
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="classType"></param>
+    /// <returns></returns>
+    public static Dictionary<string, Type> GetAllNameAndType<T>(T classType)
+    {
+        Dictionary<string, Type> listData = new Dictionary<string, Type>();
+        Type type = classType.GetType();
+        FieldInfo[] fieldInfos = type.GetFields();
+
+        if (fieldInfos == null)
+            return listData;
+
+        int propertyInfoSize = fieldInfos.Length;
+        for (int i = 0; i < propertyInfoSize; i++)
+        {
+            FieldInfo fieldInfo = fieldInfos[i];
+            listData.Add(fieldInfo.Name, fieldInfo.FieldType);
         };
         return listData;
     }
@@ -238,7 +262,7 @@ public class ReflexUtil : ScriptableObject
         }
         catch (Exception e)
         {
-            //LogUtil.LogError("实例化失败，缺少类名为 " + className + " 的类。" + e.Message);
+            LogUtil.LogError("实例化失败，缺少类名为 " + className + " 的类。" + e.Message);
             return default(T);
         }
     }
