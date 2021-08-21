@@ -62,7 +62,7 @@ public class GameManager : BaseManager
     /// 改变游戏状态
     /// </summary>
     /// <param name="gameState"></param>
-    public void ChangeGameState(GameStateEnum gameState)
+    public void SetGameState(GameStateEnum gameState)
     {
         this.gameState = gameState;
     }

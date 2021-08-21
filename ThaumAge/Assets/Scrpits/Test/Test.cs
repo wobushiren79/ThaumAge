@@ -14,7 +14,7 @@ public class Test : BaseMonoBehaviour
 
     private void Start()
     {
-        GameHandler.Instance.manager.ChangeGameState(GameStateEnum.Gaming);
+        GameHandler.Instance.manager.SetGameState(GameStateEnum.Gaming);
         //初始化摄像头数据
         CameraHandler.Instance.InitData();
         //开关角色控制

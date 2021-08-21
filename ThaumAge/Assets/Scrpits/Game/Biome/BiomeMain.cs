@@ -54,7 +54,7 @@ public class BiomeMain : Biome
     {
         BiomeForTreeData treeData = new BiomeForTreeData
         {
-            addRate = 0.05f,
+            addRate = 0.01f,
             minHeight = 3,
             maxHeight = 6,
             treeTrunk = BlockTypeEnum.TreeOak,

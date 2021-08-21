@@ -11,12 +11,16 @@ public class MainLauncher : BaseLauncher
     public override void Launch()
     {
         base.Launch();
+        //设置游戏状态
+        GameHandler.Instance.manager.SetGameState(GameStateEnum.Main);
         //设置种子
         WorldCreateHandler.Instance.manager.SetWorldSeed(worldSeed);
         //设置世界类型为启动
         WorldCreateHandler.Instance.SetWorldType(WorldTypeEnum.Launch);
         //刷新周围区块
         WorldCreateHandler.Instance.CreateChunkRangeForCenterPosition(Vector3Int.zero, worldRange, CompleteForUpdateChunk);
+        //修改灯光
+        LightHandler.Instance.InitData();
     }
 
     /// <summary>

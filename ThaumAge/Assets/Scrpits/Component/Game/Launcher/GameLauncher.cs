@@ -16,7 +16,7 @@ public class GameLauncher : BaseLauncher
         userData.userId = "Test";
         //设置种子
         WorldCreateHandler.Instance.manager.SetWorldSeed(132349);
-        GameHandler.Instance.manager.ChangeGameState(GameStateEnum.Init);
+        GameHandler.Instance.manager.SetGameState(GameStateEnum.Init);
         //开关角色控制
         GameControlHandler.Instance.manager.controlForPlayer.EnabledControl(false);
         //设置世界类型
@@ -24,7 +24,7 @@ public class GameLauncher : BaseLauncher
         //刷新周围区块
         WorldCreateHandler.Instance.CreateChunkRangeForCenterPosition(Vector3Int.zero, refreshRange, CompleteForUpdateChunk);
         //修改游戏状态
-        GameHandler.Instance.manager.ChangeGameState(GameStateEnum.Gaming);
+        GameHandler.Instance.manager.SetGameState(GameStateEnum.Gaming);
     }
 
     /// <summary>
