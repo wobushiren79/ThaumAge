@@ -13,6 +13,8 @@ public class MainLauncher : BaseLauncher
         base.Launch();
         //设置种子
         WorldCreateHandler.Instance.manager.SetWorldSeed(worldSeed);
+        //设置世界类型为启动
+        WorldCreateHandler.Instance.SetWorldType(WorldTypeEnum.Launch);
         //刷新周围区块
         WorldCreateHandler.Instance.CreateChunkRangeForCenterPosition(Vector3Int.zero, worldRange, CompleteForUpdateChunk);
     }
