@@ -282,8 +282,8 @@ public class BaseUIManager : BaseManager
     /// <returns></returns>
     protected T CreateUI<T>(string uiName) where T : BaseUIComponent
     {
-        GameObject uiModel = LoadAssetUtil.SyncLoadAsset<GameObject>("ui/ui", uiName);
-        //BaseUIComponent uiModel = LoadResourcesUtil.SyncLoadData<BaseUIComponent>("UI/"+ uiName);
+        //GameObject uiModel = LoadAssetUtil.SyncLoadAsset<GameObject>("ui/ui", uiName);
+        BaseUIComponent uiModel = LoadResourcesUtil.SyncLoadData<BaseUIComponent>("UI/"+ uiName);
         if (uiModel)
         {
             GameObject objUIComponent = Instantiate(gameObject, uiModel.gameObject);

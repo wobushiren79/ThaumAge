@@ -112,7 +112,7 @@ public class BiomeManager : BaseManager
                     break;
                 case WorldTypeEnum.Launch:
                     arrayBiome = new Biome[1];
-                    arrayBiome[0] = new BiomeForest();
+                    arrayBiome[0] = new BiomeMain();
                     break;
                 default:
                     arrayBiome = new Biome[0];
