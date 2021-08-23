@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UIMainStart : BaseUIComponent
+public partial class UIMainStart : BaseUIComponent
 {
 
     public override void OnClickForButton(Button viewButton)

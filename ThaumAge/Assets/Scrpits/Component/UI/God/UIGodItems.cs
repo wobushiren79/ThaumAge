@@ -2,7 +2,7 @@
 using UnityEditor;
 using UnityEngine;
 
-public class UIGodItems : UIGameCommonNormal
+public partial class UIGodItems : UIGameCommonNormal
 {
     public ScrollGridVertical ui_ItemList;
     public UIViewShortcuts ui_Shortcuts;

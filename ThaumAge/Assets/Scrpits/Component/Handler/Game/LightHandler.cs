@@ -11,14 +11,23 @@ public class LightHandler : BaseHandler<LightHandler, LightManager>
 
     private void Update()
     {
-        if (GameHandler.Instance.manager.GetGameState() == GameStateEnum.Gaming)
+        GameStateEnum gameState= GameHandler.Instance.manager.GetGameState();
+        switch (gameState) 
         {
-            TimeBean gameTime = GameTimeHandler.Instance.manager.GetGameTime();
-            HandleForLightTransform(gameTime);
-            HnaldeForDayNightTransition(gameTime);
+            //再菜单界面时
+            case GameStateEnum.Main:
+                TimeBean mainTime = GameTimeHandler.Instance.manager.GetMainTime();
+                HandleForLightTransform(mainTime);
+                HnaldeForDayNightTransition(mainTime);
+                break;
+            //游戏进行中
+            case GameStateEnum.Gaming:
+                TimeBean gameTime = GameTimeHandler.Instance.manager.GetGameTime();
+                HandleForLightTransform(gameTime);
+                HnaldeForDayNightTransition(gameTime);
+                break;
         }
     }
-
 
     /// <summary>
     /// 处理-光照位置旋转

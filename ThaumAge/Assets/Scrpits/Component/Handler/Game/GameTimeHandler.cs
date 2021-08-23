@@ -10,11 +10,22 @@ public class GameTimeHandler : BaseHandler<GameTimeHandler, GameTimeManager>
 
     public void Update()
     {
+        GameStateEnum gameState = GameHandler.Instance.manager.GetGameState();          
         Time.timeScale = timeScale;
         //受缩放时间影响
         if (timeOffset >= 1)
         {
-            HandleForGameTime();
+            switch (gameState) 
+            {
+                case GameStateEnum.Gaming:
+                    //游戏中游戏时间处理
+                    HandleForGameTime();
+                    break;
+                case GameStateEnum.Main:
+                    //主界面游戏时间处理
+                    HandleForMainTime();
+                    break;
+            }
             timeOffset = 0;
         }
         timeOffset += Time.deltaTime;
@@ -22,10 +33,25 @@ public class GameTimeHandler : BaseHandler<GameTimeHandler, GameTimeManager>
         //不受缩放时间影响
         if (timeOffsetForUnscaled >= 1)
         {
-            HandleForPlayTime();
+            switch (gameState)
+            {
+                case GameStateEnum.Gaming:
+                    //游玩时间处理
+                    HandleForPlayTime();
+                    break;
+            }
             timeOffsetForUnscaled = 0;
         }
         timeOffsetForUnscaled += Time.unscaledDeltaTime;
+    }
+
+    /// <summary>
+    /// 处理-主界面游戏时间
+    /// </summary>
+    public void HandleForMainTime()
+    {
+        TimeBean timeData = manager.GetMainTime();
+        timeData.AddTimeForYMHMS(0, 0, 0, 0, 1, 0);
     }
 
     /// <summary>
