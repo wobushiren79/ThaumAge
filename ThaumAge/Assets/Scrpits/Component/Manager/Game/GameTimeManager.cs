@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class GameTimeManager : BaseManager
 {
-    protected TimeBean timeForMain;
+    public TimeBean timeForMain;
 
     /// <summary>
     /// 获取主界面时间
@@ -14,8 +14,8 @@ public class GameTimeManager : BaseManager
         if (timeForMain == null)
         {
             timeForMain = new TimeBean();
-            timeForMain.SetTimeForHM(19, 0);
-        } 
+            timeForMain.SetTimeForHM(Random.Range(0, 24), 0);
+        }
         return timeForMain;
     }
 
