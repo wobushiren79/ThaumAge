@@ -30,5 +30,7 @@ public class MainLauncher : BaseLauncher
     {
         //打开主UI
         UIHandler.Instance.manager.OpenUIAndCloseOther<UIGameMain>(UIEnum.MainStart);
+
+
     }
 }

@@ -11,10 +11,10 @@ public class LightHandler : BaseHandler<LightHandler, LightManager>
 
     private void Update()
     {
-        GameStateEnum gameState= GameHandler.Instance.manager.GetGameState();
+        GameStateEnum gameState = GameHandler.Instance.manager.GetGameState();
         switch (gameState) 
         {
-            //再菜单界面时
+            //菜单界面时
             case GameStateEnum.Main:
                 TimeBean mainTime = GameTimeHandler.Instance.manager.GetMainTime();
                 HandleForLightTransform(mainTime);

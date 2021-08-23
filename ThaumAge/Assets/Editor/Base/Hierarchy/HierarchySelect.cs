@@ -19,7 +19,6 @@ public class HierarchySelect
     public static Dictionary<string, Component> dicSelectObj = new Dictionary<string, Component>();
     public static BaseUIComponent baseUIComponent = null;
 
-
     /// <summary>
     /// 视窗改变
     /// </summary>
@@ -89,7 +88,7 @@ public class HierarchySelect
 
         //控制开关
         var selectBox = new Rect(selectionrect);
-        selectBox.x = selectBox.xMax;
+        selectBox.x = selectBox.xMax-30;
         selectBox.width = 10;
         //检测是否选中
         bool hasGo = false;
@@ -118,7 +117,7 @@ public class HierarchySelect
         {
             //下拉选择
             var selectType = new Rect(selectionrect);
-            selectType.x = selectBox.xMax - 170;
+            selectType.x = selectBox.xMax - 160;
             selectType.width = 150;
             //获取该obj下所拥有的所有comnponent
             Component[] componentList = go.GetComponents<Component>();
@@ -134,9 +133,9 @@ public class HierarchySelect
                 }
             }
             //设置下拉数据
-            selectComonentIndex = EditorGUI.Popup(selectType, selectComonentIndex, listData);
+            int newSelectComonentIndex = EditorGUI.Popup(selectType, selectComonentIndex, listData, EditorStyles.popup);
             //如果下拉数据改变
-            dicSelectObj[go.name] = componentList[selectComonentIndex];
+            dicSelectObj[go.name] = componentList[newSelectComonentIndex];
         }
     }
 }

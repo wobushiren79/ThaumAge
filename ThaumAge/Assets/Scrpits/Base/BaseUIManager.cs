@@ -287,7 +287,7 @@ public class BaseUIManager : BaseManager
         if (uiModel)
         {
             GameObject objUIComponent = Instantiate(gameObject, uiModel.gameObject);
-            objUIComponent.SetActive(false);
+            objUIComponent.SetActive(true);
             objUIComponent.name = objUIComponent.name.Replace("(Clone)", "");
             T uiComponent = objUIComponent.GetComponent<T>();
             uiList.Add(uiComponent);
