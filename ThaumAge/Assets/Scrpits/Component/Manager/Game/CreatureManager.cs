@@ -5,6 +5,9 @@ using UnityEngine;
 
 public class CreatureManager : BaseManager, ICharacterInfoView
 {
+    public readonly string pathHair = "Assets/Texture/Character/Hair";
+    public readonly string pathEye = "Assets/Texture/Character/Eye";
+    public readonly string pathMouth = "Assets/Texture/Character/Mouth";
     //角色头发列表
     public Dictionary<string, GameObject> dicCharacterHairModel = new Dictionary<string, GameObject>();
     public Dictionary<long, CharacterInfoBean> dicCharacterHairInfo = new Dictionary<long, CharacterInfoBean>();
@@ -36,13 +39,52 @@ public class CreatureManager : BaseManager, ICharacterInfoView
     {
         InitData(dicCharacterHairInfo, listData);
     }
+
+    /// <summary>
+    /// 初始化角色眼睛
+    /// </summary>
+    /// <param name="listData"></param>
     protected void InitCharacterInfoEye(List<CharacterInfoBean> listData)
     {
         InitData(dicCharacterEyeInfo, listData);
     }
+
+    /// <summary>
+    /// 初始角色嘴巴
+    /// </summary>
+    /// <param name="listData"></param>
     protected void InitCharacterInfoMouth(List<CharacterInfoBean> listData)
     {
         InitData(dicCharacterMouthInfo, listData);
+    }
+
+    /// <summary>
+    /// 获取角色发型信息
+    /// </summary>
+    /// <param name="id"></param>
+    public CharacterInfoBean GetCharacterInfoHair(long id)
+    {
+        return GetDataById(id, dicCharacterHairInfo);
+    }
+
+    /// <summary>
+    /// 获取角色眼睛信息
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
+    public CharacterInfoBean GetCharacterInfoEye(long id)
+    {
+        return GetDataById(id, dicCharacterEyeInfo);
+    }
+
+    /// <summary>
+    /// 获取角色嘴巴信息
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
+    public CharacterInfoBean GetCharacterInfoMouth(long id)
+    {
+        return GetDataById(id, dicCharacterMouthInfo);
     }
 
     /// <summary>
@@ -50,9 +92,9 @@ public class CreatureManager : BaseManager, ICharacterInfoView
     /// </summary>
     /// <param name="hairName"></param>
     /// <returns></returns>
-    public GameObject GetCharacterHairModel(string hairName)
+    public void GetCharacterHairModel(string hairName, Action<GameObject> callBack)
     {
-        return GetModel(dicCharacterHairModel, "character/hair", hairName);
+        GetModelForAddressables(dicCharacterHairModel, $"{pathHair}/{hairName}", callBack);
     }
 
     /// <summary>
@@ -60,9 +102,9 @@ public class CreatureManager : BaseManager, ICharacterInfoView
     /// </summary>
     /// <param name="eyeName"></param>
     /// <returns></returns>
-    public Texture2D GetCharacterEyeTex(string eyeName)
+    public void GetCharacterEyeTex(string eyeName, Action<Texture2D> callBack)
     {
-        return GetModel(dicCharacterEyeTex, "character/eye", eyeName);
+        GetModelForAddressables(dicCharacterEyeTex, $"{pathHair}/{eyeName}", callBack);
     }
 
     /// <summary>
@@ -70,9 +112,9 @@ public class CreatureManager : BaseManager, ICharacterInfoView
     /// </summary>
     /// <param name="mouthName"></param>
     /// <returns></returns>
-    public Texture2D GetCharacterMouthTex(string mouthName)
+    public void GetCharacterMouthTex(string mouthName, Action<Texture2D> callBack)
     {
-        return GetModel(dicCharacterEyeTex, "character/mouth", mouthName);
+        GetModelForAddressables(dicCharacterMouthTex, $"{pathHair}/{mouthName}", callBack);
     }
 
 

@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: Character_Eye
+  m_EditorClassIdentifier: 
+  m_GroupName: Character_Eye
+  m_Data:
+    m_SerializedData: []
+  m_GUID: 50e7f9fe31a89f94f8cf7c190fcb05b9
+  m_SerializeEntries:
+  - m_GUID: 2c6e93a0cf22bc94ea80a41bc3250075
+    m_Address: Assets/Texture/Character/Eye/character_eye_1.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: a45d2d4d3ae385c438da8e2217efd098
+    m_Address: Assets/Texture/Character/Eye/character_eye_2.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: fd6114d87f1af534fbf270c47c0f10bf, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: 984ebf9f7cb94ad4e8a96ba26edcf0ad, type: 2}
+    - {fileID: 11400000, guid: f13150ddff5d7534ab9d1eb574b26886, type: 2}
