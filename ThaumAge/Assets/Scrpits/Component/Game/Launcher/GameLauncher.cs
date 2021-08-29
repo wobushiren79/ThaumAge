@@ -39,7 +39,7 @@ public class GameLauncher : BaseLauncher
         //修改灯光
         LightHandler.Instance.InitData();
         //初始化摄像头数据
-        CameraHandler.Instance.InitData();
+        CameraHandler.Instance.InitGameData();
         //开关角色控制
         GameControlHandler.Instance.manager.controlForPlayer.EnabledControl(true);
         //初始化位置

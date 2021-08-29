@@ -17,9 +17,13 @@ public class BiomeMain : Biome
         base.GetBlockType(chunk, biomeInfo, genHeight, localPos, wPos);
         if (wPos.y == genHeight)
         {
+            AddTree(wPos);
+            if (wPos.x <= 5 && wPos.x >= -5 && wPos.z <= 5 && wPos.z >= -5)
+            {
+                return BlockTypeEnum.Grass;
+            }
             AddWeed(wPos);
             AddFlower(wPos);
-            AddTree(wPos);
             // 地表，使用草
             return BlockTypeEnum.Grass;
         }
@@ -34,7 +38,7 @@ public class BiomeMain : Biome
     {
         BiomeForPlantData weedData = new BiomeForPlantData
         {
-            addRate = 0.3f,
+            addRate = 0.1f,
             listPlantType = new List<BlockTypeEnum> { BlockTypeEnum.Weed_Long, BlockTypeEnum.Weed_Normal, BlockTypeEnum.Weed_Short }
         };
         BiomeCreateTool.AddPlant(333, wPos, weedData);
@@ -44,7 +48,7 @@ public class BiomeMain : Biome
     {
         BiomeForFlowerData flowersData = new BiomeForFlowerData
         {
-            addRate = 0.01f,
+            addRate = 0.02f,
             listFlowerType = new List<BlockTypeEnum> { BlockTypeEnum.FlowerSun, BlockTypeEnum.FlowerRose, BlockTypeEnum.FlowerChrysanthemum, BlockTypeEnum.FlowerWood }
         };
         BiomeCreateTool.AddFlower(101, wPos, flowersData);

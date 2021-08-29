@@ -14,21 +14,22 @@ public class CameraHandler : BaseHandler<CameraHandler, CameraManager>
     protected float maxCameraDis = 10;
     protected float minCameraDis = 0;
 
-    public float timeScale = 0;
+    public float timeScale = 1;
 
-    private void Update()
+    /// <summary>
+    /// 初始化摄像头数据 主界面
+    /// </summary>
+    public void InitMainData()
     {
-        if (timeScale != Time.timeScale)
-        {
-            timeScale = Time.timeScale;
-            ChangeCameraSpeed(manager.speedForCameraMove); 
-        }
+        //第一人称
+        GameObject objStart = GameObject.Find("CameraStartPosition");
+
     }
 
     /// <summary>
-    /// 初始化数据
+    /// 初始化摄像头数据 游戏
     /// </summary>
-    public void InitData()
+    public void InitGameData()
     {
         Player player = GameHandler.Instance.manager.player;
 
