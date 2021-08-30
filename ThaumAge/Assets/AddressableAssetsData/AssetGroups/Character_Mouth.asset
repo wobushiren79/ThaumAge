@@ -12,11 +12,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
   m_Name: Character_Mouth
   m_EditorClassIdentifier: 
-  m_GroupName: Packed Assets
+  m_GroupName: Character_Mouth
   m_Data:
     m_SerializedData: []
   m_GUID: 6d8ead4c9041302429ed8f4199a1d39b
-  m_SerializeEntries: []
+  m_SerializeEntries:
+  - m_GUID: 8415c7e13735b8e4fa8927baba1e3ee3
+    m_Address: Assets/Texture/Character/Mouth/character_mouth_1.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: e22a89bc9ca77fb4aba21334555adb64
+    m_Address: Assets/Texture/Character/Mouth/character_mouth_2.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: fd6114d87f1af534fbf270c47c0f10bf, type: 2}
   m_SchemaSet:

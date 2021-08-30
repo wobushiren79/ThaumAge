@@ -5,11 +5,6 @@ using UnityEngine.UI;
 public partial class UIMainStart : BaseUIComponent
 {
 
-    public void Start()
-    {
-        
-    }
-
     public override void OnClickForButton(Button viewButton)
     {
         base.OnClickForButton(viewButton);
@@ -32,7 +27,7 @@ public partial class UIMainStart : BaseUIComponent
     /// </summary>
     public void HandleForCreate()
     {
-
+        UIMainCreate uiCreate = UIHandler.Instance.manager.OpenUI<UIMainCreate>(UIEnum.MainCreate);
     }
 
     /// <summary>
@@ -40,7 +35,7 @@ public partial class UIMainStart : BaseUIComponent
     /// </summary>
     public void HandleForContinue()
     {
-
+        UIMainContinue uiContinue = UIHandler.Instance.manager.OpenUI<UIMainContinue>(UIEnum.MainContinue);
     }
 
     /// <summary>
@@ -48,7 +43,7 @@ public partial class UIMainStart : BaseUIComponent
     /// </summary>
     public void HandleForSetting()
     {
-
+        UIGameSetting uiSetting = UIHandler.Instance.manager.OpenUI<UIGameSetting>(UIEnum.GameSettings);
     }
 
     /// <summary>

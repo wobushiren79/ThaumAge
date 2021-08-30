@@ -8,7 +8,7 @@ public class GameConfigBean
     //屏幕模式 0窗口  1全屏
     public int window = 0;
     //语言
-    public string language="cn";
+    public string language = "cn" ;
     //音效大小
     public float soundVolume = 0.5f;
     //音乐大小
@@ -23,4 +23,22 @@ public class GameConfigBean
     //帧数限制开启 1开启 0关闭
     public int stateForFrames = 1;
     public int frames = 120;
+
+    /// <summary>
+    /// 获取当前语言
+    /// </summary>
+    /// <returns></returns>
+    public LanguageEnum GetLanguage()
+    {
+       return  EnumUtil.GetEnum<LanguageEnum>(language);
+    }
+
+    /// <summary>
+    /// 设置语言
+    /// </summary>
+    /// <param name="language"></param>
+    public void SetLanguage(LanguageEnum language)
+    {
+        this.language = EnumUtil.GetEnumName(language);
+    }
 }

@@ -45,9 +45,17 @@ public class UITextController : BaseMVCController<UITextModel, IUITextView>
     {
         if (dicText == null)
             return null;
-        if (dicText.TryGetValue(id,out UITextBean value))
+        if (dicText.TryGetValue(id, out UITextBean value))
         {
-            return value.content;
+            GameConfigBean gameConfig = GameDataHandler.Instance.manager.GetGameConfig();
+            switch (gameConfig.GetLanguage())
+            {
+                case LanguageEnum.cn:
+                    return value.content_cn;
+                case LanguageEnum.en:
+                    return value.content_en;
+            }
+            return null;
         }
         else
         {
