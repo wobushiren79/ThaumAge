@@ -8,8 +8,7 @@ public partial class UIMainStart : BaseUIComponent
     public override void OnClickForButton(Button viewButton)
     {
         base.OnClickForButton(viewButton);
-        if (viewButton == ui_Create) HandleForCreate();
-        else if (viewButton == ui_Continue) HandleForContinue();
+        if (viewButton == ui_Continue) HandleForContinue();
         else if (viewButton == ui_Setting) HandleForSetting();
         else if (viewButton == ui_Exit) HandleForExit();
     }
@@ -20,14 +19,6 @@ public partial class UIMainStart : BaseUIComponent
     public void SetUIText()
     {
 
-    }
-
-    /// <summary>
-    /// 处理-创建游戏
-    /// </summary>
-    public void HandleForCreate()
-    {
-        UIMainCreate uiCreate = UIHandler.Instance.manager.OpenUI<UIMainCreate>(UIEnum.MainCreate);
     }
 
     /// <summary>
