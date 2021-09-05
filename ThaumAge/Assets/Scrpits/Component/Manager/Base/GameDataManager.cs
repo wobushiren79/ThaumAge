@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
@@ -22,6 +23,15 @@ public class GameDataManager : BaseManager,
         controllerForWorldData = new WorldDataController(this, this);
         controllerForUserData = new UserDataController(this, this);
         controllerForGameConfig.GetGameConfigData();
+    }
+
+    /// <summary>
+    /// 获取所有的用户数据
+    /// </summary>
+    /// <returns></returns>
+    public void GetAllUserData(Action<List<UserDataBean>> action)
+    {
+        controllerForUserData.GetAllUserDataData(action);
     }
 
     /// <summary>

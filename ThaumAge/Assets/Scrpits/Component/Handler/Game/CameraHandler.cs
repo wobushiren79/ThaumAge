@@ -42,6 +42,16 @@ public class CameraHandler : BaseHandler<CameraHandler, CameraManager>
         cameraForThree.LookAt = player.LookForEye;
     }
 
+    /// <summary>
+    /// 设置摄像机优先级 priority越高越优先
+    /// </summary>
+    /// <param name="cinemachineVirtual"></param>
+    /// <param name="priority"></param>
+    public void ChangeCameraPriority(CinemachineVirtualCameraBase cinemachineVirtual, int priority)
+    {
+        if (cinemachineVirtual != null)
+            cinemachineVirtual.Priority = priority;
+    }
 
     /// <summary>
     ///  修改摄像头距离
@@ -52,14 +62,14 @@ public class CameraHandler : BaseHandler<CameraHandler, CameraManager>
         CinemachineVirtualCamera cameraForFirst = manager.cameraForFirst;
         CinemachineFreeLook cameraForThree = manager.cameraForThree;
         if (distance <= 0)
-        {      
-            cameraForFirst.Priority = 1;
-            cameraForThree.Priority = 0;
+        {
+            ChangeCameraPriority(cameraForFirst, 1);
+            ChangeCameraPriority(cameraForThree, 0);
         }
         else
         {
-            cameraForFirst.Priority = 0;
-            cameraForThree.Priority = 1;
+            ChangeCameraPriority(cameraForFirst, 0);
+            ChangeCameraPriority(cameraForThree, 1);
             for (int i = 0; i < cameraForThree.m_Orbits.Length; i++)
             {
                 cameraForThree.m_Orbits[i].m_Height = manager.threeFreeLookOriginalOrbits[i].m_Height * distance;

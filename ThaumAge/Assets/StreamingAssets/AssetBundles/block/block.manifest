@@ -1,19 +1,27 @@
 ManifestFileVersion: 0
-CRC: 1528749088
+CRC: 300584443
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: f517d60a221d1e9d0c09c0e1e48a07e1
+    Hash: e216ff05edf1a46ff65a352195f37883
   TypeTreeHash:
     serializedVersion: 2
-    Hash: eec358e15b64ba850326b80c7970cecc
+    Hash: 5f0c743467afe687cbccb92c12dde3cc
 HashAppended: 0
 ClassTypes:
 - Class: 1
   Script: {instanceID: 0}
 - Class: 4
   Script: {instanceID: 0}
+- Class: 21
+  Script: {instanceID: 0}
+- Class: 23
+  Script: {instanceID: 0}
 - Class: 28
+  Script: {instanceID: 0}
+- Class: 33
+  Script: {instanceID: 0}
+- Class: 43
   Script: {instanceID: 0}
 - Class: 48
   Script: {instanceID: 0}
@@ -33,6 +41,7 @@ ClassTypes:
   Script: {instanceID: 0}
 SerializeReferenceClassIdentifiers: []
 Assets:
+- Assets/Prefabs/Block/BlockMushroomLuminous 1.prefab
 - Assets/Prefabs/Block/BlockMagma.prefab
-- Assets/Prefabs/Block/BlockMushroomLuminous.prefab
+- Assets/Prefabs/Block/BlockBonfire.prefab
 Dependencies: []

@@ -44,7 +44,7 @@ public class WorldCreateManager : BaseManager
     protected static object lockForUpdateBlock = new object();
 
     protected void Awake()
-    {
+    { 
         List<Material> listData = GetAllModel<Material>("block/mats", "Assets/Prefabs/Mats");
         for (int i = 0; i < listData.Count; i++)
         {

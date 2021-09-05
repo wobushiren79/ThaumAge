@@ -14,6 +14,9 @@ public class UserDataBean : BaseBean
 {
     public string userId;
 
+    //数据序号
+    public int dataIndex;
+
     //游戏时间
     public TimeBean timeForGame = new TimeBean();
     //游玩时间

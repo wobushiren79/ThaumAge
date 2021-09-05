@@ -29,7 +29,7 @@ public class MainLauncher : BaseLauncher
     public void CompleteForUpdateChunk()
     {
         //打开主UI
-        UIHandler.Instance.manager.OpenUIAndCloseOther<UIGameMain>(UIEnum.MainStart);
+        UIHandler.Instance.manager.OpenUIAndCloseOther<UIMainStart>(UIEnum.MainStart);
         //初始化主界面摄像头
         CameraHandler.Instance.InitMainData();
     }

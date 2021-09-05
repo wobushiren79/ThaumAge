@@ -17,6 +17,9 @@ public class BaseUIHandler<T, M> : BaseHandler<T,M>
         canvas = CptUtil.AddCpt<Canvas>(gameObject);
         canvasScaler = CptUtil.AddCpt<CanvasScaler>(gameObject);
         graphicRaycaster = CptUtil.AddCpt<GraphicRaycaster>(gameObject);
+
+        canvasScaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
+        canvasScaler.referenceResolution = new Vector2(1920, 1080);
         ChangeUIRenderMode(RenderMode.ScreenSpaceOverlay);
     }
 

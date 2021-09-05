@@ -9,7 +9,7 @@ using System;
 public class InspectorBaseUIComponent : Editor
 {
     protected readonly static string scrpitsTemplatesPath = "/Editor/ScrpitsTemplates/UI_BaseUIComponent.txt";
-
+    protected readonly static string classSuffix = "Component";
     public override void OnInspectorGUI()
     {
         base.OnInspectorGUI();
@@ -32,12 +32,11 @@ public class InspectorBaseUIComponent : Editor
     //[MenuItem("GameObject/创建/UIComponent", false, 10)]
     ////Projects视图
     //[MenuItem("Assets/创建/UIComponent", false, 10)]
-    public static void HandleForCreateUIComponent()
+    public void HandleForCreateUIComponent()
     {
         GameObject objSelect = Selection.activeGameObject;
-        string fileName = "UI" + objSelect.name + "Component";
-        string baseFileName = "UI" + objSelect.name;
-
+        string createfileName = GetCreateScriptFileName(objSelect);
+        string currentFileName = GetCurrentScriptFileName(objSelect);
         string templatesPath = Application.dataPath + scrpitsTemplatesPath;   
 
         if (!EditorUtil.CheckIsPrefabMode(out var prefabStage))
@@ -45,18 +44,18 @@ public class InspectorBaseUIComponent : Editor
             LogUtil.Log("没有进入编辑模式");
             return;
         }
-        string[] path = EditorUtil.GetScriptPath(baseFileName);
+        string[] path = EditorUtil.GetScriptPath(currentFileName);
         //string path = prefabStage.assetPath;
         //获取最后一个/的索引
         if (path.Length == 0)
         {
-            LogUtil.Log("没有名字为"+ baseFileName + "的类,请先创建");
+            LogUtil.Log("没有名字为"+ currentFileName + "的类,请先创建");
             return;
         }
         //规则替换
-        Dictionary<string, string> dicReplace = ReplaceRole("UI" + objSelect.name);
+        Dictionary<string, string> dicReplace = ReplaceRole(currentFileName);
         //创建文件
-        EditorUtil.CreateClass(dicReplace, templatesPath, fileName, path[0]);
+        EditorUtil.CreateClass(dicReplace, templatesPath, createfileName, path[0]);
 
         EditorUtility.SetDirty(objSelect);
         AssetDatabase.SaveAssets();
@@ -66,12 +65,12 @@ public class InspectorBaseUIComponent : Editor
     /// <summary>
     /// 处理 设置UI的值
     /// </summary>
-    public static void HandleForSetUICompontData()
+    public void HandleForSetUICompontData()
     {
         GameObject objSelect = Selection.activeGameObject;
         if (objSelect == null)
             return;
-        BaseUIComponent uiComponent = objSelect.GetComponent<BaseUIComponent>();
+        BaseMonoBehaviour uiComponent = objSelect.GetComponent<BaseMonoBehaviour>();
         Dictionary<string, object> dicData = ReflexUtil.GetAllNameAndValue(uiComponent);
         foreach (var itemData in dicData)
         {
@@ -117,4 +116,25 @@ public class InspectorBaseUIComponent : Editor
         return dicReplaceData;
     }
 
+    /// <summary>
+    /// 获取创建脚本名字
+    /// </summary>
+    /// <param name="objSelect"></param>
+    /// <returns></returns>
+    public virtual string GetCreateScriptFileName(GameObject objSelect)
+    {
+        string fileName = "UI" + objSelect.name + classSuffix;
+        return fileName;
+    }
+
+    /// <summary>
+    /// 获取当前脚本名字
+    /// </summary>
+    /// <param name="objSelect"></param>
+    /// <returns></returns>
+    public virtual string GetCurrentScriptFileName(GameObject objSelect)
+    {
+        string fileName = "UI" + objSelect.name;
+        return fileName;
+    }
 }

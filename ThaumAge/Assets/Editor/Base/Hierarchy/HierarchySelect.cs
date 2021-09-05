@@ -12,13 +12,13 @@ public class HierarchySelect
     {
         EditorApplication.hierarchyWindowItemOnGUI += OnHierarchyShowSelect;
         EditorApplication.hierarchyChanged += OnHierarchyChanged;
-       
+
     }
 
     //选择列表
     public static Dictionary<string, Component> dicSelectObj = new Dictionary<string, Component>();
     public static BaseUIComponent baseUIComponent = null;
-
+    public static BaseUIView baseUIView = null;
     /// <summary>
     /// 视窗改变
     /// </summary>
@@ -30,12 +30,19 @@ public class HierarchySelect
         }
         dicSelectObj.Clear();
         baseUIComponent = null;
+        baseUIView = null;
+
         GameObject root = prefabStage.prefabContentsRoot;
         baseUIComponent = root.GetComponent<BaseUIComponent>();
+        baseUIView = root.GetComponent<BaseUIView>();
 
-        if (baseUIComponent == null) return;
+        if (baseUIComponent == null && baseUIView == null) return;
         //设置初始化数据
-        Dictionary<string, Type> dicData = ReflexUtil.GetAllNameAndType(baseUIComponent);
+        Dictionary<string, Type> dicData = null;
+        if (baseUIComponent != null)
+            dicData = ReflexUtil.GetAllNameAndType(baseUIComponent);
+        if (baseUIView != null)
+            dicData = ReflexUtil.GetAllNameAndType(baseUIView);
         foreach (var itemData in dicData)
         {
             string itemKey = itemData.Key;
@@ -56,7 +63,7 @@ public class HierarchySelect
                 }
             }
         }
-        return;    
+        return;
     }
 
     /// <summary>
@@ -72,7 +79,7 @@ public class HierarchySelect
             return;
         }
         //如果不是UI也不进行操作
-        if (baseUIComponent == null)
+        if (baseUIComponent == null&& baseUIView == null)
         {
             return;
         }
@@ -85,10 +92,14 @@ public class HierarchySelect
         {
             baseUIComponent = go.GetComponent<BaseUIComponent>();
         }
+        if (baseUIView == null)
+        {
+            baseUIView = go.GetComponent<BaseUIView>();
+        }
 
         //控制开关
         var selectBox = new Rect(selectionrect);
-        selectBox.x = selectBox.xMax-30;
+        selectBox.x = selectBox.xMax - 30;
         selectBox.width = 10;
         //检测是否选中
         bool hasGo = false;
@@ -130,6 +141,15 @@ public class HierarchySelect
                 if (selectComonent != null && selectComonent.GetType().Name.Equals(listData[i]))
                 {
                     selectComonentIndex = i;
+                }
+            }
+            //默认选择
+            if (selectComonent == null)
+            {
+                //如果有设置控件
+                if (listData.Length > 2)
+                {
+                    selectComonentIndex = componentList.Length - 1;
                 }
             }
             //设置下拉数据

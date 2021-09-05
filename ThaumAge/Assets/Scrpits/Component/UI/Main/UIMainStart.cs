@@ -8,7 +8,7 @@ public partial class UIMainStart : BaseUIComponent
     public override void OnClickForButton(Button viewButton)
     {
         base.OnClickForButton(viewButton);
-        if (viewButton == ui_Continue) HandleForContinue();
+        if (viewButton == ui_Start) HandleForStart();
         else if (viewButton == ui_Setting) HandleForSetting();
         else if (viewButton == ui_Exit) HandleForExit();
     }
@@ -24,9 +24,9 @@ public partial class UIMainStart : BaseUIComponent
     /// <summary>
     /// 处理-继续游戏
     /// </summary>
-    public void HandleForContinue()
+    public void HandleForStart()
     {
-        UIMainContinue uiContinue = UIHandler.Instance.manager.OpenUI<UIMainContinue>(UIEnum.MainContinue);
+        UIMainUserData uiMainUserData = UIHandler.Instance.manager.OpenUIAndCloseOther<UIMainUserData>(UIEnum.MainUserData);
     }
 
     /// <summary>
@@ -34,7 +34,7 @@ public partial class UIMainStart : BaseUIComponent
     /// </summary>
     public void HandleForSetting()
     {
-        UIGameSetting uiSetting = UIHandler.Instance.manager.OpenUI<UIGameSetting>(UIEnum.GameSettings);
+        UIGameSetting uiSetting = UIHandler.Instance.manager.OpenUIAndCloseOther<UIGameSetting>(UIEnum.GameSettings);
     }
 
     /// <summary>

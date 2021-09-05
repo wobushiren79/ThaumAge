@@ -4,8 +4,8 @@ using UnityEditor;
 public enum UIEnum
 {
     MainStart = 1001, //主界面-开始
-    MainCreate = 1002,//主界面-新游戏
-    MainContinue = 1003,//主界面-继续
+    MainCreate = 1002,//主界面-创建游戏
+    MainUserData = 1003,//主界面-继续游戏
     MainExit = 1009,//主界面-离开
 
     GameMain = 2001,//游戏-主界面

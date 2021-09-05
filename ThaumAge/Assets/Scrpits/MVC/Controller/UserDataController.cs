@@ -47,11 +47,12 @@ public class UserDataController : BaseMVCController<UserDataModel, IUserDataView
         List<UserDataBean> listData = GetModel().GetAllUserDataData();
         if (CheckUtil.ListIsNull(listData))
         {
+            action?.Invoke(new List<UserDataBean>());
             GetView().GetUserDataFail("没有数据", null);
         }
         else
         {
-            GetView().GetUserDataSuccess<List<UserDataBean>>(listData, action);
+            GetView().GetUserDataSuccess(listData, action);
         }
     }
 

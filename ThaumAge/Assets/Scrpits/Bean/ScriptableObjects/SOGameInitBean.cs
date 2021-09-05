@@ -9,4 +9,7 @@ public class SOGameInitBean : ScriptableObject
 
     [Header("周边区块加载卸载删除范围")]
     public int rangeForWorldUpdateDestory = 10;
+
+    [Header("创建角色 浏览 旋转速度")]
+    public float speedForCreateCharacterRotate = 100;
 }

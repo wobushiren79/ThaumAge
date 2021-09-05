@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 3609651972130875556}
   - component: {fileID: 2434640157419273524}
   m_Layer: 5
-  m_Name: ItemMainStartBtn
+  m_Name: ViewMainStartBtn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -188,9 +188,9 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 1
+    m_FontSize: 40
     m_FontStyle: 0
-    m_BestFit: 1
+    m_BestFit: 0
     m_MinSize: 0
     m_MaxSize: 40
     m_Alignment: 4

@@ -1,12 +1,12 @@
 ManifestFileVersion: 0
-CRC: 3261653940
+CRC: 1113730503
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 32b5c0269b117312a546b046398554c0
+    Hash: f9bd97571a8da334e6c3347c8f38cf42
   TypeTreeHash:
     serializedVersion: 2
-    Hash: c355bba1d4a2349868cd154a18ac33b9
+    Hash: 08d02ca2bcd27542ae1dcaa50b470c9c
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -18,35 +18,39 @@ ClassTypes:
 - Class: 48
   Script: {instanceID: 0}
 - Class: 114
-  Script: {fileID: 11500000, guid: 1aa08ab6e0800fa44ae55d278d1423e3, type: 3}
-- Class: 114
   Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
-- Class: 114
-  Script: {fileID: 11500000, guid: cfabb0440166ab443bba8876756fdfa9, type: 3}
 - Class: 114
   Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
 - Class: 114
-  Script: {fileID: 11500000, guid: 31a19414c41e5ae4aae2af33fee712f6, type: 3}
-- Class: 114
-  Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
-- Class: 114
-  Script: {fileID: 11500000, guid: 7ca4dd4617605a144be1d7a1efe0255e, type: 3}
+  Script: {fileID: 11500000, guid: 1aa08ab6e0800fa44ae55d278d1423e3, type: 3}
 - Class: 114
   Script: {fileID: 11500000, guid: 3245ec927659c4140ac4f8d17403cc18, type: 3}
 - Class: 114
-  Script: {fileID: 11500000, guid: 0fb65841913946d47b46156fa38901f5, type: 3}
+  Script: {fileID: 11500000, guid: 59f8146938fff824cb5fd77236b75775, type: 3}
 - Class: 114
-  Script: {fileID: 11500000, guid: 30649d3a9faa99c48a7b1166b86bf2a0, type: 3}
-- Class: 114
-  Script: {fileID: 11500000, guid: a26739c52c9a3594789c7243337f251e, type: 3}
+  Script: {fileID: 11500000, guid: cfabb0440166ab443bba8876756fdfa9, type: 3}
 - Class: 114
   Script: {fileID: 11500000, guid: 2a4db7a114972834c8e4117be1d82ba3, type: 3}
 - Class: 114
-  Script: {fileID: 11500000, guid: 1921fcc4cb70a7e498b3423861f7cba2, type: 3}
+  Script: {fileID: 11500000, guid: 30649d3a9faa99c48a7b1166b86bf2a0, type: 3}
 - Class: 114
   Script: {fileID: 11500000, guid: e19747de3f5aca642ab2be37e372fb86, type: 3}
 - Class: 114
-  Script: {fileID: 11500000, guid: 59f8146938fff824cb5fd77236b75775, type: 3}
+  Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 31a19414c41e5ae4aae2af33fee712f6, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 7ca4dd4617605a144be1d7a1efe0255e, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 93ec85bc42644834b8aa5299dab72e0f, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 0fb65841913946d47b46156fa38901f5, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: a26739c52c9a3594789c7243337f251e, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 906e6cb954b8a7d4687715afb2b4549e, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 1921fcc4cb70a7e498b3423861f7cba2, type: 3}
 - Class: 114
   Script: {fileID: 11500000, guid: b2536db299b573a45bb2cfa73f240703, type: 3}
 - Class: 114
@@ -67,6 +71,8 @@ ClassTypes:
   Script: {instanceID: 0}
 SerializeReferenceClassIdentifiers: []
 Assets:
-- Assets/Prefabs/UI/God/GodItems.prefab
-- Assets/Prefabs/UI/Game/GameMain.prefab
+- Assets/Resources/UI/GodItems.prefab
+- Assets/Resources/UI/MainUserData.prefab
+- Assets/Resources/UI/GameMain.prefab
+- Assets/Resources/UI/MainStart.prefab
 Dependencies: []
