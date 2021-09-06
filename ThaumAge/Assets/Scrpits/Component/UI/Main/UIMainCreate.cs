@@ -37,6 +37,7 @@ public partial class UIMainCreate : BaseUIComponent
     /// </summary>
     public void HandleForBack()
     {
+        //打开用户存档界面
         UIHandler.Instance.manager.OpenUIAndCloseOther<UIMainUserData>(UIEnum.MainUserData);
         //还原摄像头
         SceneMainHandler.Instance.ChangeCameraByIndex(0);
