@@ -197,7 +197,7 @@ GameObject:
   - component: {fileID: 5885414103660756336}
   - component: {fileID: 7991424607507747138}
   - component: {fileID: 3598023368657062667}
-  - component: {fileID: 7677337120363361503}
+  - component: {fileID: 3549402108308519924}
   m_Layer: 5
   m_Name: ViewSelectColorChange
   m_TagString: Untagged
@@ -264,7 +264,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &7677337120363361503
+--- !u!114 &3549402108308519924
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -273,12 +273,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 694177253793318399}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1b7267ce7bb0e25418bcd40e077e1701, type: 3}
+  m_Script: {fileID: 11500000, guid: 60e64d770d187ec44a2297b92f2ae8b5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  selectLeft: {fileID: 0}
-  selectRight: {fileID: 0}
-  tvContent: {fileID: 0}
+  colorR: {fileID: 8980170524615238814}
+  colorG: {fileID: 9059825656821726972}
+  colorB: {fileID: 6776354533308554726}
+  tvTitle: {fileID: 7559440463096195375}
 --- !u!1 &695637511074177507
 GameObject:
   m_ObjectHideFlags: 0

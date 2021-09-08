@@ -45,7 +45,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   characterHead: {fileID: 2532596581479033649}
-  characterBody: {fileID: 0}
+  characterBody: {fileID: 8314260893460437546}
   characterSkin:
     headRenderer: {fileID: 0}
     headMat: {fileID: 0}
@@ -215,6 +215,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: BodyBase
       objectReference: {fileID: 0}
+    - target: {fileID: 1630794972795428178, guid: 7f3659f03838894499aac2a99e85a7df, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 42d0f4c6a71101d4496cb01706aaac7d, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7f3659f03838894499aac2a99e85a7df, type: 3}
 --- !u!1 &8607138444644696851 stripped
@@ -225,6 +229,11 @@ GameObject:
 --- !u!4 &8951294021491726761 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 7f3659f03838894499aac2a99e85a7df, type: 3}
+  m_PrefabInstance: {fileID: 8913708888892309058}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &8314260893460437546 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 635547659545568360, guid: 7f3659f03838894499aac2a99e85a7df, type: 3}
   m_PrefabInstance: {fileID: 8913708888892309058}
   m_PrefabAsset: {fileID: 0}
 --- !u!4 &1735086622463357252 stripped

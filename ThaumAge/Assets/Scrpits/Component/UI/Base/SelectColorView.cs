@@ -2,12 +2,15 @@
 using UnityEditor;
 using UnityEngine.UI;
 
-public class ColorView : BaseMonoBehaviour
+public class SelectColorView : BaseUIView
 {
     private ICallBack callBack;
+
     public Slider colorR;
     public Slider colorG;
     public Slider colorB;
+
+    public Text tvTitle;
 
     private void Start()
     {
@@ -19,22 +22,30 @@ public class ColorView : BaseMonoBehaviour
             colorB.onValueChanged.AddListener(ChangeValue);
     }
 
-    public void ChangeValue(float value)
+    protected void ChangeValue(float value)
     {
         if (this.callBack != null)
-            this.callBack.ColorChange(this,colorR.value, colorG.value, colorB.value);
+            this.callBack.SelectColorChange(this,colorR.value, colorG.value, colorB.value);
     }
 
-    public void RandomData()
+    /// <summary>
+    /// 设置随机颜色
+    /// </summary>
+    public void SetRandomColor()
     {
         SetData(Random.Range(0f, 1f), Random.Range(0f, 1f), Random.Range(0f, 1f));
     }
 
+   /// <summary>
+   /// 设置数据
+   /// </summary>
+   /// <param name="colorValueR"></param>
+   /// <param name="colorValueG"></param>
+   /// <param name="colorValueB"></param>
     public void SetData(float colorValueR, float colorValueG, float colorValueB)
     {
         colorR.value = colorValueR;
         colorG.value = colorValueG;
-        colorB.value = colorValueB;
         colorB.value = colorValueB;
     }
 
@@ -75,6 +86,6 @@ public class ColorView : BaseMonoBehaviour
     /// </summary>
     public interface ICallBack
     {
-        void ColorChange(ColorView colorView,float r, float g, float b);
+        void SelectColorChange(SelectColorView colorView,float r, float g, float b);
     }
 }

@@ -78,6 +78,22 @@ public class CreatureManager : BaseManager, ICharacterInfoView
     }
 
     /// <summary>
+    /// 获取角色眼睛信息
+    /// </summary>
+    /// <param name="ids"></param>
+    /// <returns></returns>
+    public List<CharacterInfoBean> GetCharacterInfoEye(List<long> ids)
+    {
+        List<CharacterInfoBean> listData = new List<CharacterInfoBean>();
+        for (int i = 0; i < ids.Count; i++)
+        {
+            CharacterInfoBean itemData = GetCharacterInfoEye(ids[i]);
+            listData.Add(itemData);
+        }
+        return listData;
+    }
+
+    /// <summary>
     /// 获取角色嘴巴信息
     /// </summary>
     /// <param name="id"></param>
@@ -85,6 +101,22 @@ public class CreatureManager : BaseManager, ICharacterInfoView
     public CharacterInfoBean GetCharacterInfoMouth(long id)
     {
         return GetDataById(id, dicCharacterMouthInfo);
+    }
+
+    /// <summary>
+    /// 获取角色嘴巴信息
+    /// </summary>
+    /// <param name="ids"></param>
+    /// <returns></returns>
+    public List<CharacterInfoBean> GetCharacterInfoMouth(List<long> ids)
+    {
+        List<CharacterInfoBean> listData = new List<CharacterInfoBean>();
+        for (int i = 0; i < ids.Count; i++)
+        {
+            CharacterInfoBean itemData = GetCharacterInfoMouth(ids[i]);
+            listData.Add(itemData);
+        }
+        return listData;
     }
 
     /// <summary>
