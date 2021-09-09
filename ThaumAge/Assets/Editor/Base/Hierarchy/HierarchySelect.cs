@@ -79,7 +79,7 @@ public class HierarchySelect
             return;
         }
         //如果不是UI也不进行操作
-        if (baseUIComponent == null&& baseUIView == null)
+        if (baseUIComponent == null && baseUIView == null)
         {
             return;
         }
@@ -152,10 +152,24 @@ public class HierarchySelect
                     selectComonentIndex = componentList.Length - 1;
                 }
             }
-            //设置下拉数据
-            int newSelectComonentIndex = EditorGUI.Popup(selectType, selectComonentIndex, listData, EditorStyles.popup);
+            //设置下拉数据 使用此方法需要连续点2次
+            //int newSelectComonentIndex = EditorGUI.Popup(selectType,selectComonentIndex, listData);
+            //int newSelectComonentIndex = GUI.Toolbar(selectType, selectComonentIndex, listData);
             //如果下拉数据改变
-            dicSelectObj[go.name] = componentList[newSelectComonentIndex];
+            //dicSelectObj[go.name] = componentList[selectComonentIndex];
+            
+            //自定义弹窗
+            if (GUI.Button(selectType,listData[selectComonentIndex]))
+            {
+                Rect popupRect = GUILayoutUtility.GetLastRect();
+                popupRect.x = selectType.x;
+                popupRect.y = selectType.y + selectType.height;
+                PopupWindow.Show(popupRect, new HierarchySelectPopupSelect((popupSelectIndex) => 
+                {
+                    dicSelectObj[go.name] = componentList[popupSelectIndex];
+                },
+                listData));
+            }
         }
     }
 }
