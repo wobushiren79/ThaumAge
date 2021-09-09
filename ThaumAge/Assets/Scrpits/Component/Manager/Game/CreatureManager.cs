@@ -136,7 +136,7 @@ public class CreatureManager : BaseManager, ICharacterInfoView
     /// <returns></returns>
     public void GetCharacterEyeTex(string eyeName, Action<Texture2D> callBack)
     {
-        GetModelForAddressables(dicCharacterEyeTex, $"{pathHair}/{eyeName}", callBack);
+        GetModelForAddressables(dicCharacterEyeTex, $"{pathEye}/{eyeName}.png", callBack);
     }
 
     /// <summary>
@@ -146,7 +146,7 @@ public class CreatureManager : BaseManager, ICharacterInfoView
     /// <returns></returns>
     public void GetCharacterMouthTex(string mouthName, Action<Texture2D> callBack)
     {
-        GetModelForAddressables(dicCharacterMouthTex, $"{pathHair}/{mouthName}", callBack);
+        GetModelForAddressables(dicCharacterMouthTex, $"{pathMouth}/{mouthName}.png", callBack);
     }
 
 

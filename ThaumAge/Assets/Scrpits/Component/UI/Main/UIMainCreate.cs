@@ -16,6 +16,16 @@ public partial class UIMainCreate : BaseUIComponent,
     /// </summary>
     protected List<CharacterInfoBean> listHairInfoData;
 
+    /// <summary>
+    /// 眼睛数据
+    /// </summary>
+    protected List<CharacterInfoBean> listEyeInfoData;
+
+    /// <summary>
+    /// 嘴巴数据
+    /// </summary>
+    protected List<CharacterInfoBean> listMouthInfoData;
+
     public override void Awake()
     {
         base.Awake();
@@ -54,15 +64,16 @@ public partial class UIMainCreate : BaseUIComponent,
         ui_ViewSelectColorChange_Hair.SetCallBack(this);
         ui_ViewSelectColorChange_Skin.SetCallBack(this);
 
-        //设置选择数据
-        listHairInfoData = CreatureHandler.Instance.manager.GetCharacterInfoEye(new List<long>());
+        listHairInfoData = CreatureHandler.Instance.manager.GetCharacterInfoEye(new List<long>() { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 });
         List<string> listHairData = CharacterInfoBean.GetNameList(listHairInfoData);
         ui_ViewSelectChange_Hair.SetListData(listHairData);
 
-        List<string> listEyeData = new List<string>();
+        listEyeInfoData = CreatureHandler.Instance.manager.GetCharacterInfoEye(new List<long>() { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 });
+        List<string> listEyeData = CharacterInfoBean.GetNameList(listEyeInfoData);
         ui_ViewSelectChange_Eye.SetListData(listEyeData);
 
-        List<string> listMouthData = new List<string>();
+        listMouthInfoData = CreatureHandler.Instance.manager.GetCharacterInfoEye(new List<long>() { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 });
+        List<string> listMouthData = CharacterInfoBean.GetNameList(listMouthInfoData);
         ui_ViewSelectChange_Mouth.SetListData(listMouthData);
 
         List<string> listClothesData = new List<string>();
@@ -128,15 +139,17 @@ public partial class UIMainCreate : BaseUIComponent,
         }
         if (selectView == ui_ViewSelectChange_Hair)
         {
- 
+
         }
         else if (selectView == ui_ViewSelectChange_Eye)
         {
-            character.characterSkin.ChangeEye(1);
+            CharacterInfoBean characterInfo = listEyeInfoData[position];
+            character.characterSkin.ChangeEye(characterInfo.id);
         }
         else if (selectView == ui_ViewSelectChange_Mouth)
         {
-            character.characterSkin.ChangeMouth(1);
+            CharacterInfoBean characterInfo = listMouthInfoData[position];
+            character.characterSkin.ChangeMouth(characterInfo.id);
         }
         else if (selectView == ui_ViewSelectChange_Clothes)
         {

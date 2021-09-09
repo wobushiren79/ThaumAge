@@ -25,6 +25,38 @@ MonoBehaviour:
     m_Address: Assets/Texture/Character/Mouth/character_mouth_2.png
     m_ReadOnly: 0
     m_SerializedLabels: []
+  - m_GUID: f1d3902f414795d49b097ec1e756dfe6
+    m_Address: Assets/Texture/Character/Mouth/character_mouth_10.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: a3fa08ca1c558cc4dac91eda29e28461
+    m_Address: Assets/Texture/Character/Mouth/character_mouth_9.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 554859143452489469f3f39930140fb3
+    m_Address: Assets/Texture/Character/Mouth/character_mouth_8.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 175107bbf1a1a284c9ec3985b67c69ce
+    m_Address: Assets/Texture/Character/Mouth/character_mouth_7.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 0dee9bb9cd7ce5e46894a1c6ac7ae79a
+    m_Address: Assets/Texture/Character/Mouth/character_mouth_6.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 6339a099b1c67ad4999c516d06a6e5e4
+    m_Address: Assets/Texture/Character/Mouth/character_mouth_5.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: c47f8ad105c29ae46abf2cf5b8a739aa
+    m_Address: Assets/Texture/Character/Mouth/character_mouth_4.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 764d8f7e60302544a945f9a5a03dbe67
+    m_Address: Assets/Texture/Character/Mouth/character_mouth_3.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: fd6114d87f1af534fbf270c47c0f10bf, type: 2}
   m_SchemaSet:

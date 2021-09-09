@@ -24,13 +24,13 @@ public class CharacterInfoService : BaseMVCService
         GameConfigBean gameConfig = GameDataHandler.Instance.manager.GetGameConfig();
 
         tableNameHairForMain = "character_info_hair";
-        tableNameHairForLeft = "character_info_hair_detals_" + gameConfig.language;
+        tableNameHairForLeft = "character_info_hair_details_" + gameConfig.language;
 
         tableNameEyeForMain = "character_info_eye";
-        tableNameEyeForLeft = "character_info_eye_detals_" + gameConfig.language;
+        tableNameEyeForLeft = "character_info_eye_details_" + gameConfig.language;
 
         tableNameMouthForMain = "character_info_mouth";
-        tableNameMouthForLeft = "character_info_mouth_detals_" + gameConfig.language;
+        tableNameMouthForLeft = "character_info_mouth_details_" + gameConfig.language;
     }
 
     /// <summary>

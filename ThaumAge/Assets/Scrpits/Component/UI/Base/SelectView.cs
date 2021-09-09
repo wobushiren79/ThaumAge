@@ -9,6 +9,7 @@ public class SelectView : BaseUIView
     public Button selectRight;
 
     public Text tvTitle;
+    public Text tvContent;
 
     private int currentIndex = 0;
     private ICallBack callBack;
@@ -33,6 +34,15 @@ public class SelectView : BaseUIView
     }
 
     /// <summary>
+    /// 设置内容
+    /// </summary>
+    /// <param name="content"></param>
+    public void SetContent(string content)
+    {
+        tvContent.text = content;
+    }
+
+    /// <summary>
     /// 设置回掉
     /// </summary>
     /// <param name="callBack"></param>
@@ -46,7 +56,7 @@ public class SelectView : BaseUIView
     /// </summary>
     public void LeftSelect()
     {
-        SetPosition(currentIndex--);
+        SetPosition(currentIndex - 1);
     }
 
     /// <summary>
@@ -54,7 +64,7 @@ public class SelectView : BaseUIView
     /// </summary>
     public void RightSelect()
     {
-        SetPosition(currentIndex++);
+        SetPosition(currentIndex + 1);
     }
 
     /// <summary>
@@ -92,8 +102,8 @@ public class SelectView : BaseUIView
         {
             currentIndex = 0;
         }
-        tvTitle.text = listData[position];
-        callBack?.ChangeSelectPosition(this,currentIndex);
+        SetContent(listData[position]);
+        callBack?.ChangeSelectPosition(this, currentIndex);
     }
 
     /// <summary>

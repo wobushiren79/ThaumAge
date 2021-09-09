@@ -25,11 +25,11 @@ public class CharacterSkin
 
         if (this.headRenderer != null)
         {
-            headMat = headRenderer.sharedMaterial;
+            headMat = headRenderer.material;
         }
         if (this.bodyRenderer != null)
         {
-            bodyMat = bodyRenderer.sharedMaterial;
+            bodyMat = bodyRenderer.material;
         }
     }
 
