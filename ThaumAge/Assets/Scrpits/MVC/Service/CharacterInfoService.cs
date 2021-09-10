@@ -11,26 +11,18 @@ using System.Collections.Generic;
 public class CharacterInfoService : BaseMVCService
 {
     protected string tableNameHairForMain;
-    protected string tableNameHairForLeft;
 
     protected string tableNameEyeForMain;
-    protected string tableNameEyeForLeft;
 
     protected string tableNameMouthForMain;
-    protected string tableNameMouthForLeft;
 
     public CharacterInfoService() : base("", "")
     {
-        GameConfigBean gameConfig = GameDataHandler.Instance.manager.GetGameConfig();
-
         tableNameHairForMain = "character_info_hair";
-        tableNameHairForLeft = "character_info_hair_details_" + gameConfig.language;
 
         tableNameEyeForMain = "character_info_eye";
-        tableNameEyeForLeft = "character_info_eye_details_" + gameConfig.language;
 
         tableNameMouthForMain = "character_info_mouth";
-        tableNameMouthForLeft = "character_info_mouth_details_" + gameConfig.language;
     }
 
     /// <summary>
@@ -39,15 +31,15 @@ public class CharacterInfoService : BaseMVCService
     /// <returns></returns>
     public List<CharacterInfoBean> QueryAllHairData()
     {
-        return QueryAllData<CharacterInfoBean>(tableNameHairForMain, tableNameHairForLeft);
+        return QueryAllData<CharacterInfoBean>(tableNameHairForMain);
     }
     public List<CharacterInfoBean> QueryAllEyeData()
     {
-        return QueryAllData<CharacterInfoBean>(tableNameEyeForMain, tableNameEyeForLeft);
+        return QueryAllData<CharacterInfoBean>(tableNameEyeForMain);
     }
     public List<CharacterInfoBean> QueryAllMouthData()
     {
-        return QueryAllData<CharacterInfoBean>(tableNameMouthForMain, tableNameMouthForLeft);
+        return QueryAllData<CharacterInfoBean>(tableNameMouthForMain);
     }
 
     /// <summary>
@@ -57,15 +49,15 @@ public class CharacterInfoService : BaseMVCService
     /// <returns></returns>
     public bool UpdateHairData(CharacterInfoBean data)
     {
-        return UpdateData(tableNameHairForMain, tableNameHairForLeft, data);
+        return UpdateData(tableNameHairForMain, data);
     }
     public bool UpdateEyeData(CharacterInfoBean data)
     {
-        return UpdateData(tableNameEyeForMain, tableNameEyeForLeft, data);
+        return UpdateData(tableNameEyeForMain, data);
     }
     public bool UpdateMouthData(CharacterInfoBean data)
     {
-        return UpdateData(tableNameMouthForMain, tableNameMouthForLeft, data);
+        return UpdateData(tableNameMouthForMain, data);
     }
 
     /// <summary>
@@ -75,22 +67,21 @@ public class CharacterInfoService : BaseMVCService
     /// <returns></returns>
     public bool DeleteHairData(long id)
     {
-        return DeleteData(tableNameHairForMain, tableNameHairForLeft, id);
+        return DeleteData(tableNameHairForMain, id);
     }
     public bool DeleteEyeData(long id)
     {
-        return DeleteData(tableNameEyeForMain, tableNameEyeForLeft, id);
+        return DeleteData(tableNameEyeForMain, id);
     }
     public bool DeleteMouthData(long id)
     {
-        return DeleteData(tableNameMouthForMain, tableNameMouthForLeft, id);
+        return DeleteData(tableNameMouthForMain, id);
     }
 
-    protected List<T> QueryAllData<T>(string tableNameForMain, string tableNameForLeft)
+    protected List<T> QueryAllData<T>(string tableNameForMain)
     {
         this.tableNameForMain = tableNameForMain;
-        this.tableNameForLeft = tableNameForLeft;
-        List<T> listData = BaseQueryAllData<T>("link_id");
+        List<T> listData = BaseQueryAllData<T>();
         return listData;
     }
 
@@ -99,10 +90,9 @@ public class CharacterInfoService : BaseMVCService
     /// </summary>
     /// <param name="data"></param>
     /// <returns></returns>
-    protected bool UpdateData<T>(string tableNameForMain, string tableNameForLeft, T data) where T : BaseBean
+    protected bool UpdateData<T>(string tableNameForMain, T data) where T : BaseBean
     {
         this.tableNameForMain = tableNameForMain;
-        this.tableNameForLeft = tableNameForLeft;
         bool deleteState = BaseDeleteDataById(data.id);
         if (deleteState)
         {
@@ -117,10 +107,9 @@ public class CharacterInfoService : BaseMVCService
     /// </summary>
     /// <param name="id"></param>
     /// <returns></returns>
-    protected bool DeleteData(string tableNameForMain, string tableNameForLeft, long id)
+    protected bool DeleteData(string tableNameForMain, long id)
     {
         this.tableNameForMain = tableNameForMain;
-        this.tableNameForLeft = tableNameForLeft;
-        return BaseDeleteDataWithLeft("id", "link_id", id + "");
+        return BaseDeleteDataById(id);
     }
 }
