@@ -14,9 +14,25 @@ public class CharacterInfoBean : BaseBean
 {
     public long link_id;
     public string model_name;
-    public string name;
-
+    public string name_cn;
+    public string name_en;
     
+    public string name
+    {
+        get
+        {
+            GameConfigBean gameConfig = GameDataHandler.Instance.manager.GetGameConfig();
+            switch (gameConfig.GetLanguage())
+            {
+                case LanguageEnum.cn:
+                    return name_cn;
+                case LanguageEnum.en:
+                    return name_en;
+            }
+            return name_en;
+        }
+    }
+
     /// <summary>
     /// 获取名字列表
     /// </summary>

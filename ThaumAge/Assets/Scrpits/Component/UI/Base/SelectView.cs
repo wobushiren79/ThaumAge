@@ -94,7 +94,7 @@ public class SelectView : BaseUIView
         if (CheckUtil.ListIsNull(listData))
             return;
         this.currentIndex = position;
-        if (currentIndex <= 0)
+        if (currentIndex < 0)
         {
             currentIndex = listData.Count - 1;
         }
@@ -102,7 +102,7 @@ public class SelectView : BaseUIView
         {
             currentIndex = 0;
         }
-        SetContent(listData[position]);
+        SetContent(listData[currentIndex]);
         callBack?.ChangeSelectPosition(this, currentIndex);
     }
 

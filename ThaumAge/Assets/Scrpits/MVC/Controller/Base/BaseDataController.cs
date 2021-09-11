@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class BaseDataController : BaseMVCController<BaseDataModel, IBaseDataView>
 {
-    private Dictionary<BaseDataEnum, BaseDataBean> mMapData;
+    protected Dictionary<long, BaseInfoBean> dicBaseInfoData;
+
     public BaseDataController(BaseMonoBehaviour content, IBaseDataView view) : base(content, view)
     {
         InitAllBaseData();
@@ -16,23 +17,23 @@ public class BaseDataController : BaseMVCController<BaseDataModel, IBaseDataView
 
     public void InitAllBaseData()
     {
-        mMapData = new Dictionary<BaseDataEnum, BaseDataBean>();
-        List<BaseDataBean> listData = GetModel().GetAllBaseData();
+        dicBaseInfoData = new Dictionary<long, BaseInfoBean>();
+        List<BaseInfoBean> listData = GetModel().GetAllBaseData();
         for (int i = 0; i < listData.Count; i++)
         {
-            BaseDataBean itemData = listData[i];
-            mMapData.Add(EnumUtil.GetEnum<BaseDataEnum>(itemData.name), itemData);
+            BaseInfoBean itemData = listData[i];
+            dicBaseInfoData.Add(itemData.id, itemData);
         }
     }
 
-    public BaseDataBean GetBaseData(BaseDataEnum baseDataType)
+    public BaseInfoBean GetBaseData(long baseInfoId)
     {
-        if (mMapData == null)
+        if (dicBaseInfoData == null)
             return null;
-        if (mMapData.TryGetValue(baseDataType,out BaseDataBean baseData))
+        if (dicBaseInfoData.TryGetValue(baseInfoId, out BaseInfoBean baseData))
         {
             return baseData;
         }
         return null;
-    } 
+    }
 }

@@ -64,15 +64,21 @@ public partial class UIMainCreate : BaseUIComponent,
         ui_ViewSelectColorChange_Hair.SetCallBack(this);
         ui_ViewSelectColorChange_Skin.SetCallBack(this);
 
-        listHairInfoData = CreatureHandler.Instance.manager.GetCharacterInfoEye(new List<long>() { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 });
+        //设置头发
+        List<long> listHairId = GameDataHandler.Instance.GetBaseInfoListLong(1);
+        listHairInfoData = CreatureHandler.Instance.manager.GetCharacterInfoEye(listHairId);
         List<string> listHairData = CharacterInfoBean.GetNameList(listHairInfoData);
         ui_ViewSelectChange_Hair.SetListData(listHairData);
 
-        listEyeInfoData = CreatureHandler.Instance.manager.GetCharacterInfoEye(new List<long>() { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 });
+        //设置眼睛
+        List<long> listEyeId = GameDataHandler.Instance.GetBaseInfoListLong(2);
+        listEyeInfoData = CreatureHandler.Instance.manager.GetCharacterInfoEye(listEyeId);
         List<string> listEyeData = CharacterInfoBean.GetNameList(listEyeInfoData);
         ui_ViewSelectChange_Eye.SetListData(listEyeData);
 
-        listMouthInfoData = CreatureHandler.Instance.manager.GetCharacterInfoEye(new List<long>() { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 });
+        //设置嘴巴
+        List<long> listMouthId = GameDataHandler.Instance.GetBaseInfoListLong(3);
+        listMouthInfoData = CreatureHandler.Instance.manager.GetCharacterInfoEye(listMouthId);
         List<string> listMouthData = CharacterInfoBean.GetNameList(listMouthInfoData);
         ui_ViewSelectChange_Mouth.SetListData(listMouthData);
 

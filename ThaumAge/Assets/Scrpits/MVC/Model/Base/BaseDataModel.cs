@@ -11,7 +11,7 @@ public class BaseDataModel : BaseMVCModel
         serviceBaseData = new BaseDataService();
     }
 
-    public List<BaseDataBean> GetAllBaseData()
+    public List<BaseInfoBean> GetAllBaseData()
     {
         return serviceBaseData.QueryAllData();
     }

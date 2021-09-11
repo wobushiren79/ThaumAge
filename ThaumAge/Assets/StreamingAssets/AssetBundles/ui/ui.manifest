@@ -1,12 +1,12 @@
 ManifestFileVersion: 0
-CRC: 1113730503
+CRC: 331080471
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: f9bd97571a8da334e6c3347c8f38cf42
+    Hash: f203869b1ae817e5e5e205c90ee75344
   TypeTreeHash:
     serializedVersion: 2
-    Hash: 08d02ca2bcd27542ae1dcaa50b470c9c
+    Hash: e076b6a5ce50ebfb78af8b23436efd7d
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -40,15 +40,31 @@ ClassTypes:
 - Class: 114
   Script: {fileID: 11500000, guid: 31a19414c41e5ae4aae2af33fee712f6, type: 3}
 - Class: 114
+  Script: {fileID: 11500000, guid: 67db9e8f0e2ae9c40bc1e2b64352a6b4, type: 3}
+- Class: 114
   Script: {fileID: 11500000, guid: 7ca4dd4617605a144be1d7a1efe0255e, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: d199490a83bb2b844b9695cbf13b01ef, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 60e64d770d187ec44a2297b92f2ae8b5, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 1b7267ce7bb0e25418bcd40e077e1701, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 2db7391385bd2a34b93e9bab3792c767, type: 3}
 - Class: 114
   Script: {fileID: 11500000, guid: 93ec85bc42644834b8aa5299dab72e0f, type: 3}
 - Class: 114
   Script: {fileID: 11500000, guid: 0fb65841913946d47b46156fa38901f5, type: 3}
 - Class: 114
+  Script: {fileID: 11500000, guid: 8a8695521f0d02e499659fee002a26c2, type: 3}
+- Class: 114
   Script: {fileID: 11500000, guid: a26739c52c9a3594789c7243337f251e, type: 3}
 - Class: 114
+  Script: {fileID: 11500000, guid: a1acfe0a11e2ad344afee701df37f5f3, type: 3}
+- Class: 114
   Script: {fileID: 11500000, guid: 906e6cb954b8a7d4687715afb2b4549e, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 3968dd4b090c9e24dba8696c29538110, type: 3}
 - Class: 114
   Script: {fileID: 11500000, guid: 1921fcc4cb70a7e498b3423861f7cba2, type: 3}
 - Class: 114
@@ -72,6 +88,8 @@ ClassTypes:
 SerializeReferenceClassIdentifiers: []
 Assets:
 - Assets/Resources/UI/GodItems.prefab
+- Assets/Resources/UI/GameSetting.prefab
+- Assets/Resources/UI/MainCreate.prefab
 - Assets/Resources/UI/MainUserData.prefab
 - Assets/Resources/UI/GameMain.prefab
 - Assets/Resources/UI/MainStart.prefab

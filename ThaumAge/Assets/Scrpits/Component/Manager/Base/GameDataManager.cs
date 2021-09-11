@@ -5,7 +5,7 @@ using UnityEditor;
 using UnityEngine;
 
 public class GameDataManager : BaseManager,
-    IGameConfigView, IWorldDataView, IUserDataView
+    IGameConfigView, IWorldDataView, IUserDataView,IBaseDataView
 {
     //游戏设置
     public GameConfigBean gameConfig;
@@ -14,6 +14,7 @@ public class GameDataManager : BaseManager,
     public GameConfigController controllerForGameConfig;
     public WorldDataController controllerForWorldData;
     public UserDataController controllerForUserData;
+    public BaseDataController controllerForBase;
 
     protected static object lockForSaveData = new object();
 
@@ -22,6 +23,7 @@ public class GameDataManager : BaseManager,
         controllerForGameConfig = new GameConfigController(this, this);
         controllerForWorldData = new WorldDataController(this, this);
         controllerForUserData = new UserDataController(this, this);
+        controllerForBase = new BaseDataController(this, this);
         controllerForGameConfig.GetGameConfigData();
     }
 
@@ -135,6 +137,7 @@ public class GameDataManager : BaseManager,
 
     public void GetWorldDataFail(string failMsg, Action action)
     {
+
     }
 
     public void GetUserDataSuccess<T>(T data, Action<T> action)
@@ -144,6 +147,17 @@ public class GameDataManager : BaseManager,
 
     public void GetUserDataFail(string failMsg, Action action)
     {
+
+    }
+
+    public void GetAllBaseDataSuccess(List<BaseDataBean> listData)
+    {
+
+    }
+
+    public void GetAllBaseDataFail(string failMsg)
+    {
+
     }
     #endregion
 }
