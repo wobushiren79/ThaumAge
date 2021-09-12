@@ -36,6 +36,11 @@ public class CharacterInfoModel : BaseMVCModel
         List<CharacterInfoBean> listData = serviceCharacterInfo.QueryAllMouthData();
         return listData;
     }
+    public List<CharacterInfoBean> GetAllCharacterInfoSkinData()
+    {
+        List<CharacterInfoBean> listData = serviceCharacterInfo.QueryAllSkinData();
+        return listData;
+    }
 
     /// <summary>
     /// 保存游戏数据

@@ -16,5 +16,11 @@ public partial class UIMainStart
 
     public Text ui_BtnNameStart;
 
+    public Text ui_TitleContent;
+
+    public Button ui_Title;
+
+    public Text ui_VersionContent;
+
 
 }

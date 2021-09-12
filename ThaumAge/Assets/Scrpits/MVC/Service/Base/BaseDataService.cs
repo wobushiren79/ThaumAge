@@ -11,7 +11,7 @@ public class BaseDataService : BaseDataRead<BaseInfoBean>
     /// <returns></returns>
     public List<BaseInfoBean> QueryAllData()
     {
-        List<BaseInfoBean> listData = BaseLoadDataForList($"{dataStoragePath}.txt");
+        List<BaseInfoBean> listData = BaseLoadDataForList("BaseInfo");
         return listData;
     }
 

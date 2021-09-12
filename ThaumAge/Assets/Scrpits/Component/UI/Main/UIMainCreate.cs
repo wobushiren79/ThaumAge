@@ -26,13 +26,16 @@ public partial class UIMainCreate : BaseUIComponent,
     /// </summary>
     protected List<CharacterInfoBean> listMouthInfoData;
 
+    /// <summary>
+    /// 衣服数据
+    /// </summary>
+    protected List<ItemsInfoBean> listClotehsInfoData;
+
     public override void Awake()
     {
         base.Awake();
         ui_RRotate.AddLongClickListener(OnLongClickForRoateR);
         ui_LRotate.AddLongClickListener(OnLongClickForRoateL);
-
-        InitData();
     }
 
     public override void OnClickForButton(Button viewButton)
@@ -41,6 +44,14 @@ public partial class UIMainCreate : BaseUIComponent,
         if (viewButton == ui_Back)
         {
             HandleForBack();
+        }
+        else if (viewButton == ui_Man)
+        {
+            ChangeSex(SexTypeEnum.Man);
+        }
+        else if (viewButton == ui_Woman)
+        {
+            ChangeSex(SexTypeEnum.Woman);
         }
     }
 
@@ -66,7 +77,7 @@ public partial class UIMainCreate : BaseUIComponent,
 
         //设置头发
         List<long> listHairId = GameDataHandler.Instance.GetBaseInfoListLong(1);
-        listHairInfoData = CreatureHandler.Instance.manager.GetCharacterInfoEye(listHairId);
+        listHairInfoData = CreatureHandler.Instance.manager.GetCharacterInfoHair(listHairId);
         List<string> listHairData = CharacterInfoBean.GetNameList(listHairInfoData);
         ui_ViewSelectChange_Hair.SetListData(listHairData);
 
@@ -78,12 +89,16 @@ public partial class UIMainCreate : BaseUIComponent,
 
         //设置嘴巴
         List<long> listMouthId = GameDataHandler.Instance.GetBaseInfoListLong(3);
-        listMouthInfoData = CreatureHandler.Instance.manager.GetCharacterInfoEye(listMouthId);
+        listMouthInfoData = CreatureHandler.Instance.manager.GetCharacterInfoMouth(listMouthId);
         List<string> listMouthData = CharacterInfoBean.GetNameList(listMouthInfoData);
         ui_ViewSelectChange_Mouth.SetListData(listMouthData);
 
-        List<string> listClothesData = new List<string>();
+        //设置衣服
+        List<long> listClothesId = GameDataHandler.Instance.GetBaseInfoListLong(4);
+        listClotehsInfoData = ItemsHandler.Instance.manager.GetItemsInfoById(listClothesId);
+        List<string> listClothesData = ItemsInfoBean.GetNameList(listClotehsInfoData);
         ui_ViewSelectChange_Clothes.SetListData(listClothesData);
+
     }
 
     /// <summary>
@@ -93,6 +108,13 @@ public partial class UIMainCreate : BaseUIComponent,
     public void SetUserDataIndex(int userDataIndex)
     {
         this.userDataIndex = userDataIndex;
+        ui_ViewSelectChange_Hair.SetPosition(0);
+        ui_ViewSelectChange_Eye.SetPosition(0);
+        ui_ViewSelectChange_Mouth.SetPosition(0);
+        ui_ViewSelectChange_Clothes.SetPosition(0);
+        ui_ViewSelectColorChange_Skin.SetData(1, 1, 1);
+        ui_ViewSelectColorChange_Hair.SetData(0, 0, 0);
+        ChangeSex(SexTypeEnum.Man);
     }
 
     /// <summary>
@@ -136,8 +158,7 @@ public partial class UIMainCreate : BaseUIComponent,
     /// <param name="position"></param>
     public void ChangeSelectPosition(SelectView selectView, int position)
     {
-        GameObject objCharacter = SceneMainHandler.Instance.manager.GetCharacterObjByIndex(userDataIndex);
-        Character character = objCharacter.GetComponent<Character>();
+        Character character = GetChanracter();
         if (character == null)
         {
             LogUtil.LogError("没有找到Character组件");
@@ -145,7 +166,8 @@ public partial class UIMainCreate : BaseUIComponent,
         }
         if (selectView == ui_ViewSelectChange_Hair)
         {
-
+            CharacterInfoBean characterInfo = listHairInfoData[position];
+            character.characterSkin.ChangeHair(characterInfo.id);
         }
         else if (selectView == ui_ViewSelectChange_Eye)
         {
@@ -159,7 +181,8 @@ public partial class UIMainCreate : BaseUIComponent,
         }
         else if (selectView == ui_ViewSelectChange_Clothes)
         {
-
+            ItemsInfoBean itemsInfo = listClotehsInfoData[position];
+            character.characterEquip.ChangeClothes(itemsInfo.id);
         }
     }
 
@@ -172,8 +195,7 @@ public partial class UIMainCreate : BaseUIComponent,
     /// <param name="b"></param>
     public void SelectColorChange(SelectColorView colorView, float r, float g, float b)
     {
-        GameObject objCharacter = SceneMainHandler.Instance.manager.GetCharacterObjByIndex(userDataIndex);
-        Character character = objCharacter.GetComponent<Character>();
+        Character character = GetChanracter();
         if (character == null)
         {
             LogUtil.LogError("没有找到Character组件");
@@ -181,11 +203,44 @@ public partial class UIMainCreate : BaseUIComponent,
         }
         if (colorView == ui_ViewSelectColorChange_Hair)
         {
-
+            character.characterSkin.ChangeHairColor(new Color(r, g, b, 1));
         }
         else if (colorView == ui_ViewSelectColorChange_Skin)
         {
-
+            character.characterSkin.ChangeSkinColor(new Color(r, g, b, 1));
         }
+    }
+
+    /// <summary>
+    /// 改变性别
+    /// </summary>
+    /// <param name="sexType"></param>
+    public void ChangeSex(SexTypeEnum sexType)
+    {
+        Character character = GetChanracter();
+        character.characterSkin.ChangeSex(sexType);
+
+        ui_Man.interactable = true;
+        ui_Woman.interactable = true;
+        switch (sexType)
+        {
+            case SexTypeEnum.Man:
+                ui_Man.interactable = false;
+                break;
+            case SexTypeEnum.Woman:
+                ui_Woman.interactable = false;
+                break;
+        }
+    }
+
+    /// <summary>
+    /// 获取角色
+    /// </summary>
+    /// <returns></returns>
+    protected Character GetChanracter()
+    {
+        GameObject objCharacter = SceneMainHandler.Instance.manager.GetCharacterObjByIndex(userDataIndex);
+        Character character = objCharacter.GetComponent<Character>();
+        return character;
     }
 }

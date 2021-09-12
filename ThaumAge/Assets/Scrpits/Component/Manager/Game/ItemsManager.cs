@@ -13,6 +13,11 @@ public class ItemsManager : BaseManager, IItemsInfoView
     //注册道具列表
     protected Item[] arrayItemRegister = new Item[EnumUtil.GetEnumMaxIndex<ItemsTypeEnum>() + 1];
 
+    //道具模型列表
+    protected Dictionary<long, GameObject> dicItemsObj = new Dictionary<long, GameObject>();
+    //道具模型贴图
+    protected Dictionary<long, Texture> dicItemsTex = new Dictionary<long, Texture>();
+
     protected void Awake()
     {
         controllerForItems = new ItemsInfoController(this, this);
@@ -47,7 +52,7 @@ public class ItemsManager : BaseManager, IItemsInfoView
     /// </summary>
     /// <param name="id"></param>
     /// <returns></returns>
-    public ItemsInfoBean GetItemsInfoById(int id)
+    public ItemsInfoBean GetItemsInfoById(long id)
     {
         if (dicItemsInfo.TryGetValue(id, out ItemsInfoBean itemsInfo))
         {
@@ -56,6 +61,43 @@ public class ItemsManager : BaseManager, IItemsInfoView
         return null;
     }
 
+    /// <summary>
+    /// 根据ID获取物品数据
+    /// </summary>
+    /// <param name="ids"></param>
+    /// <returns></returns>
+    public List<ItemsInfoBean> GetItemsInfoById(List<long> ids)
+    {
+        List<ItemsInfoBean> listData = new List<ItemsInfoBean>();
+        for (int i = 0; i < ids.Count; i++)
+        {
+            ItemsInfoBean itemData = GetItemsInfoById(ids[i]);
+            listData.Add(itemData);
+        }
+        return listData;
+    }
+
+    /// <summary>
+    /// 获取物品模型
+    /// </summary>
+    /// <param name="id"></param>
+    /// <param name="callBack"></param>
+    public void GetItemsObjById(long id, Action<GameObject> callBack)
+    {
+        ItemsInfoBean itemsInfo = GetItemsInfoById(id);
+        GetModelForAddressables(dicItemsObj, id, itemsInfo.model_name, callBack);
+    }
+
+    /// <summary>
+    /// 获取道具模型贴图
+    /// </summary>
+    /// <param name="id"></param>
+    /// <param name="callBack"></param>
+    public void GetItemsTexById(long id, Action<Texture> callBack)
+    {
+        ItemsInfoBean itemsInfo = GetItemsInfoById(id);
+        GetModelForAddressables(dicItemsTex, id, itemsInfo.tex_name, callBack);
+    }
 
     /// <summary>
     /// 获取注册物品类

@@ -151,6 +151,7 @@ public class HierarchySelect
                 {
                     selectComonentIndex = componentList.Length - 1;
                 }
+                dicSelectObj[go.name] = componentList[selectComonentIndex];
             }
             //设置下拉数据 使用此方法需要连续点2次
             //int newSelectComonentIndex = EditorGUI.Popup(selectType,selectComonentIndex, listData);
@@ -168,7 +169,7 @@ public class HierarchySelect
                 {
                     dicSelectObj[go.name] = componentList[popupSelectIndex];
                 },
-                listData));
+                listData)); 
             }
         }
     }

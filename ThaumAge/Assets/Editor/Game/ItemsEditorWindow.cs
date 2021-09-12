@@ -92,7 +92,6 @@ public class ItemsEditorWindow : EditorWindow
         {
             if (EditorUI.GUIButton("创建物品", 150))
             {
-                itemsInfo.link_id = itemsInfo.id;
                 itemsInfo.valid = 1;
                 bool isSuccess = serviceForItemsInfo.UpdateData(itemsInfo);
                 if (!isSuccess)
@@ -105,7 +104,6 @@ public class ItemsEditorWindow : EditorWindow
         {
             if (EditorUI.GUIButton("更新物品", 150))
             {
-                itemsInfo.link_id = itemsInfo.id;
                 bool isSuccess = serviceForItemsInfo.UpdateData(itemsInfo);
                 if (!isSuccess)
                 {
@@ -130,8 +128,10 @@ public class ItemsEditorWindow : EditorWindow
         GUILayout.BeginHorizontal();
         EditorUI.GUIText("物品Id", 50);
         itemsInfo.id = EditorUI.GUIEditorText(itemsInfo.id);
-        EditorUI.GUIText("名字", 50);
-        itemsInfo.name = EditorUI.GUIEditorText(itemsInfo.name);
+        EditorUI.GUIText("名字cn", 50);
+        itemsInfo.name_cn = EditorUI.GUIEditorText(itemsInfo.name_cn);
+        EditorUI.GUIText("名字en", 50);
+        itemsInfo.name_en = EditorUI.GUIEditorText(itemsInfo.name_en);
         EditorUI.GUIText("图标", 50);
         itemsInfo.icon_key = EditorUI.GUIEditorText(itemsInfo.icon_key, 100);
         EditorUI.GUIPic("Assets/Texture/Items/" + itemsInfo.icon_key + ".png");

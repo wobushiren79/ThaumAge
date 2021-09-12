@@ -172,7 +172,30 @@ public class BaseManager : BaseMonoBehaviour
 
         LoadAddressablesUtil.LoadAssetAsync<T>(keyName, data =>
         {
-            listModel.Add(keyName, data.Result);
+            if (data.Result != null)
+                listModel.Add(keyName, data.Result);
+            callBack?.Invoke(data.Result);
+        });
+    }
+
+    protected void GetModelForAddressables<T>(Dictionary<long, T> listModel, long id, string keyName, Action<T> callBack) where T : UnityEngine.Object
+    {
+        if (keyName == null)
+        {
+            callBack?.Invoke(null);
+            return;
+        }
+
+        if (listModel.TryGetValue(id, out T value))
+        {
+            callBack?.Invoke(value);
+            return;
+        }
+
+        LoadAddressablesUtil.LoadAssetAsync<T>(keyName, data =>
+        {
+            if (data.Result != null)
+                listModel.Add(id, data.Result);
             callBack?.Invoke(data.Result);
         });
     }

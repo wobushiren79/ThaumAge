@@ -16,7 +16,11 @@ MonoBehaviour:
   m_Data:
     m_SerializedData: []
   m_GUID: a83ffcffc25bfc649ba5c4561338ee7e
-  m_SerializeEntries: []
+  m_SerializeEntries:
+  - m_GUID: d18b8c39de72e9c47ad51269d3856b32
+    m_Address: Assets/Prefabs/Model/Character/Hair/character_hair_1.fbx
+    m_ReadOnly: 0
+    m_SerializedLabels: []
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: fd6114d87f1af534fbf270c47c0f10bf, type: 2}
   m_SchemaSet:

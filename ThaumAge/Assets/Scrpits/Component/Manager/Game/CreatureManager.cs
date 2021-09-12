@@ -5,9 +5,11 @@ using UnityEngine;
 
 public class CreatureManager : BaseManager, ICharacterInfoView
 {
-    public readonly string pathHair = "Assets/Texture/Character/Hair";
+    public readonly string pathHair = "Assets/Prefabs/Model/Character/Hair";
     public readonly string pathEye = "Assets/Texture/Character/Eye";
     public readonly string pathMouth = "Assets/Texture/Character/Mouth";
+    public readonly string pathSkin = "Assets/Texture/Character/Skin";
+
     //角色头发列表
     public Dictionary<string, GameObject> dicCharacterHairModel = new Dictionary<string, GameObject>();
     public Dictionary<long, CharacterInfoBean> dicCharacterHairInfo = new Dictionary<long, CharacterInfoBean>();
@@ -20,6 +22,10 @@ public class CreatureManager : BaseManager, ICharacterInfoView
     public Dictionary<string, Texture2D> dicCharacterMouthTex = new Dictionary<string, Texture2D>();
     public Dictionary<long, CharacterInfoBean> dicCharacterMouthInfo = new Dictionary<long, CharacterInfoBean>();
 
+    //皮肤列表
+    public Dictionary<string, Texture2D> dicCharacterSkinTex = new Dictionary<string, Texture2D>();
+    public Dictionary<long, CharacterInfoBean> dicCharacterSkinInfo = new Dictionary<long, CharacterInfoBean>();
+
     //角色数据控制器
     protected CharacterInfoController controllerForCharacterInfo;
 
@@ -29,6 +35,7 @@ public class CreatureManager : BaseManager, ICharacterInfoView
         controllerForCharacterInfo.GetAllCharacterInfoHairData(InitCharacterInfoHair);
         controllerForCharacterInfo.GetAllCharacterInfoEyeData(InitCharacterInfoEye);
         controllerForCharacterInfo.GetAllCharacterInfoMouthData(InitCharacterInfoMouth);
+        controllerForCharacterInfo.GetAllCharacterInfoSkinData(InitCharacterInfoSkin);
     }
 
     /// <summary>
@@ -59,12 +66,37 @@ public class CreatureManager : BaseManager, ICharacterInfoView
     }
 
     /// <summary>
+    /// 初始化皮肤
+    /// </summary>
+    /// <param name="listData"></param>
+    public void InitCharacterInfoSkin(List<CharacterInfoBean> listData)
+    {
+        InitData(dicCharacterSkinInfo, listData);
+    }
+
+    /// <summary>
     /// 获取角色发型信息
     /// </summary>
     /// <param name="id"></param>
     public CharacterInfoBean GetCharacterInfoHair(long id)
     {
         return GetDataById(id, dicCharacterHairInfo);
+    }
+
+    /// <summary>
+    /// 获取角色发型信息
+    /// </summary>
+    /// <param name="ids"></param>
+    /// <returns></returns>
+    public List<CharacterInfoBean> GetCharacterInfoHair(List<long> ids)
+    {
+        List<CharacterInfoBean> listData = new List<CharacterInfoBean>();
+        for (int i = 0; i < ids.Count; i++)
+        {
+            CharacterInfoBean itemData = GetCharacterInfoHair(ids[i]);
+            listData.Add(itemData);
+        }
+        return listData;
     }
 
     /// <summary>
@@ -120,13 +152,23 @@ public class CreatureManager : BaseManager, ICharacterInfoView
     }
 
     /// <summary>
+    /// 获取皮肤信息
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
+    public CharacterInfoBean GetCharacterInfoSkin(long id)
+    {
+        return GetDataById(id, dicCharacterSkinInfo);
+    }
+
+    /// <summary>
     /// 获取角色头发模型
     /// </summary>
     /// <param name="hairName"></param>
     /// <returns></returns>
     public void GetCharacterHairModel(string hairName, Action<GameObject> callBack)
     {
-        GetModelForAddressables(dicCharacterHairModel, $"{pathHair}/{hairName}", callBack);
+        GetModelForAddressables(dicCharacterHairModel, $"{pathHair}/{hairName}.fbx", callBack);
     }
 
     /// <summary>
@@ -149,6 +191,15 @@ public class CreatureManager : BaseManager, ICharacterInfoView
         GetModelForAddressables(dicCharacterMouthTex, $"{pathMouth}/{mouthName}.png", callBack);
     }
 
+    /// <summary>
+    /// 获取皮肤贴图
+    /// </summary>
+    /// <param name="skinName"></param>
+    /// <param name="callBack"></param>
+    public void GetCharacterSkinTex(string skinName, Action<Texture2D> callBack)
+    {
+        GetModelForAddressables(dicCharacterSkinTex, $"{pathSkin}/{skinName}.png", callBack);
+    }
 
     #region 数据回调
     public void GetCharacterInfoSuccess<T>(T data, Action<T> action)

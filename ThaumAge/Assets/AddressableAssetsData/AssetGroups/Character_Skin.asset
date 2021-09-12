@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: Character_Skin
+  m_EditorClassIdentifier: 
+  m_GroupName: Character_Skin
+  m_Data:
+    m_SerializedData: []
+  m_GUID: e21843047bef14e43a084fa206cf1db1
+  m_SerializeEntries:
+  - m_GUID: 70588b1704ad46a48867819ba5c5228d
+    m_Address: Assets/Texture/Character/Skin/character_skin_1.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: e140dfb3d4f6c3e4b8bde983fef3ebe9
+    m_Address: Assets/Texture/Character/Skin/character_skin_2.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: fd6114d87f1af534fbf270c47c0f10bf, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: c586623b984f1224caebdb43614235d1, type: 2}
+    - {fileID: 11400000, guid: 96aedc36a4ade8d48ae3b275c42d8d6b, type: 2}

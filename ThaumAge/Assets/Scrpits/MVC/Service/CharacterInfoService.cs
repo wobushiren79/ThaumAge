@@ -16,6 +16,8 @@ public class CharacterInfoService : BaseMVCService
 
     protected string tableNameMouthForMain;
 
+    protected string tableNameSkinForMain;
+
     public CharacterInfoService() : base("", "")
     {
         tableNameHairForMain = "character_info_hair";
@@ -23,6 +25,8 @@ public class CharacterInfoService : BaseMVCService
         tableNameEyeForMain = "character_info_eye";
 
         tableNameMouthForMain = "character_info_mouth";
+
+        tableNameSkinForMain = "character_info_skin";
     }
 
     /// <summary>
@@ -40,6 +44,10 @@ public class CharacterInfoService : BaseMVCService
     public List<CharacterInfoBean> QueryAllMouthData()
     {
         return QueryAllData<CharacterInfoBean>(tableNameMouthForMain);
+    }
+    public List<CharacterInfoBean> QueryAllSkinData()
+    {
+        return QueryAllData<CharacterInfoBean>(tableNameSkinForMain);
     }
 
     /// <summary>

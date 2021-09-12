@@ -10,7 +10,7 @@ using System.Collections.Generic;
 
 public class ItemsInfoService : BaseMVCService
 {
-    public ItemsInfoService() : base("items_info", "items_info_details_" + GameDataHandler.Instance.manager.GetGameConfig().language)
+    public ItemsInfoService() : base("items_info", "")
     {
 
     }
@@ -22,7 +22,7 @@ public class ItemsInfoService : BaseMVCService
     public List<ItemsInfoBean> QueryAllData()
     {
         List<ItemsInfoBean> listData = BaseQueryAllData<ItemsInfoBean>();
-        return listData; 
+        return listData;
     }
 
     /// <summary>
@@ -31,7 +31,7 @@ public class ItemsInfoService : BaseMVCService
     /// <returns></returns>
     public ItemsInfoBean QueryData()
     {
-        return null; 
+        return null;
     }
 
     /// <summary>
@@ -41,7 +41,7 @@ public class ItemsInfoService : BaseMVCService
     /// <returns></returns>
     public List<ItemsInfoBean> QueryDataById(long id)
     {
-        return BaseQueryData<ItemsInfoBean>("link_id", "id", id + "");
+        return BaseQueryData<ItemsInfoBean>("id", $"{id}");
     }
 
     /// <summary>
@@ -52,7 +52,7 @@ public class ItemsInfoService : BaseMVCService
     public List<ItemsInfoBean> QueryDataByIds(long[] ids)
     {
         string values = TypeConversionUtil.ArrayToStringBySplit(ids, ",");
-        return BaseQueryData<ItemsInfoBean>("link_id", tableNameForMain + ".id", "IN", "(" + values + ")");
+        return BaseQueryData<ItemsInfoBean>("id", "IN", "(" + values + ")");
     }
 
     /// <summary>
@@ -62,7 +62,7 @@ public class ItemsInfoService : BaseMVCService
     /// <returns></returns>
     public List<ItemsInfoBean> QueryDataByName(string name)
     {
-        return BaseQueryData<ItemsInfoBean>("link_id", tableNameForLeft + ".name", "'" + name + "'");
+        return BaseQueryData<ItemsInfoBean>("name", "'" + name + "'");
     }
 
     /// <summary>
@@ -88,6 +88,6 @@ public class ItemsInfoService : BaseMVCService
     /// <returns></returns>
     public bool DeleteData(long id)
     {
-        return BaseDeleteDataWithLeft("id", "link_id", id + "");
+        return BaseDeleteDataById(id);
     }
 }

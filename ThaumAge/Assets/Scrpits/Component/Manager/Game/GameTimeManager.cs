@@ -14,7 +14,7 @@ public class GameTimeManager : BaseManager
         if (timeForMain == null)
         {
             timeForMain = new TimeBean();
-            timeForMain.SetTimeForHM(Random.Range(0, 24), 0);
+            timeForMain.SetTimeForHM(WorldRandTools.Range(0, 24), 0);
         }
         return timeForMain;
     }

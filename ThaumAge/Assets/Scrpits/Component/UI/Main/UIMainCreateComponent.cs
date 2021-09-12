@@ -22,5 +22,9 @@ public partial class UIMainCreate
 
     public SelectView ui_ViewSelectChange_Mouth;
 
+    public Button ui_Man;
+
+    public Button ui_Woman;
+
 
 }

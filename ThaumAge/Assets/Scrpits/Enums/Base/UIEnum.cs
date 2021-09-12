@@ -6,6 +6,7 @@ public enum UIEnum
     MainStart = 1001, //主界面-开始
     MainCreate = 1002,//主界面-创建游戏
     MainUserData = 1003,//主界面-继续游戏
+    MainMaker = 1008,//主界面-制作人界面
     MainExit = 1009,//主界面-离开
 
     GameMain = 2001,//游戏-主界面

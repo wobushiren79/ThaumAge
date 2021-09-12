@@ -65,5 +65,16 @@ public class CharacterInfoController : BaseMVCController<CharacterInfoModel, ICh
         }
     }
 
-
+    public void GetAllCharacterInfoSkinData(Action<List<CharacterInfoBean>> action)
+    {
+        List<CharacterInfoBean> listData = GetModel().GetAllCharacterInfoSkinData();
+        if (CheckUtil.ListIsNull(listData))
+        {
+            GetView().GetCharacterInfoFail("没有皮肤数据", null);
+        }
+        else
+        {
+            GetView().GetCharacterInfoSuccess(listData, action);
+        }
+    }
 }
