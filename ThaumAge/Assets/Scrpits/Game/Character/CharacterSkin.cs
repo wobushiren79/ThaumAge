@@ -93,7 +93,7 @@ public class CharacterSkin
                     {
                         GameObject objHair = CreatureHandler.Instance.Instantiate(objHairContainer, data);
                         objHair.transform.localPosition = Vector3.zero;
-                        objHair.transform.localEulerAngles = Vector3.zero;
+                        //objHair.transform.localEulerAngles = Vector3.zero;
                         MeshRenderer hairMeshRebderer = objHair.GetComponent<MeshRenderer>();
                         hairMeshRebderer.material = hairMatModel;
                         hairMat = hairMeshRebderer.material;

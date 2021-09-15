@@ -1,14 +1,9 @@
 fileFormatVersion: 2
-guid: d18b8c39de72e9c47ad51269d3856b32
+guid: 5e0b6692e92f0314db75536c0e1ac392
 ModelImporter:
   serializedVersion: 21100
   internalIDToNameTable: []
-  externalObjects:
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: No Name
-    second: {fileID: 2100000, guid: 434137ef8c527154d8f036d6833b8243, type: 2}
+  externalObjects: {}
   materials:
     materialImportMode: 2
     materialName: 0
@@ -78,7 +73,7 @@ ModelImporter:
     blendShapeNormalImportMode: 1
     normalSmoothingSource: 0
   referencedClips: []
-  importAnimation: 0
+  importAnimation: 1
   humanDescription:
     serializedVersion: 3
     human: []

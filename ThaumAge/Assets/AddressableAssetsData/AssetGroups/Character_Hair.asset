@@ -21,6 +21,14 @@ MonoBehaviour:
     m_Address: Assets/Prefabs/Model/Character/Hair/character_hair_1.fbx
     m_ReadOnly: 0
     m_SerializedLabels: []
+  - m_GUID: fcff9510d67f15d4c863836d622ba545
+    m_Address: Assets/Prefabs/Model/Character/Hair/character_hair_2.fbx
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 5e0b6692e92f0314db75536c0e1ac392
+    m_Address: Assets/Prefabs/Model/Character/Hair/character_hair_3.fbx
+    m_ReadOnly: 0
+    m_SerializedLabels: []
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: fd6114d87f1af534fbf270c47c0f10bf, type: 2}
   m_SchemaSet:
