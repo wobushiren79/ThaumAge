@@ -14,7 +14,7 @@ public partial class UIMainMaker
 
     public Text ui_TitleAction;
 
-    public Button ui_Back;
+    public Button ui_ViewClose;
 
 
 }

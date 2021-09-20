@@ -16,4 +16,13 @@ public class SceneBaseHandler<H, M> : BaseHandler<H, M>
         //因为场景处理器只在本场景使用，所以跳转之后可以删除
         Destroy(this.gameObject);
     }
+
+    /// <summary>
+    /// 获取当前场景
+    /// </summary>
+    /// <returns></returns>
+    public ScenesEnum GetCurrentScene()
+    {
+        return SceneUtil.GetCurrentScene();
+    }
 }

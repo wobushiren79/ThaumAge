@@ -4,8 +4,6 @@ using UnityEngine;
 
 public partial class UIGodItems : UIGameCommonNormal
 {
-    public ScrollGridVertical ui_ItemList;
-    public UIViewShortcuts ui_Shortcuts;
 
     protected List<ItemsInfoBean> listItemsInfo = new List<ItemsInfoBean>();
 

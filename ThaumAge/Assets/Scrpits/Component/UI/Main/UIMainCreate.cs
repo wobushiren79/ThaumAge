@@ -41,7 +41,7 @@ public partial class UIMainCreate : BaseUIComponent,
     public override void OnClickForButton(Button viewButton)
     {
         base.OnClickForButton(viewButton);
-        if (viewButton == ui_Back)
+        if (viewButton == ui_ViewClose)
         {
             HandleForBack();
         }

@@ -4,8 +4,6 @@ using UnityEngine.UI;
 
 public partial class UIMainCreate
 {
-    public Button ui_Back;
-
     public ButtonExtendView ui_LRotate;
 
     public ButtonExtendView ui_RRotate;
@@ -25,6 +23,8 @@ public partial class UIMainCreate
     public Button ui_Man;
 
     public Button ui_Woman;
+
+    public Button ui_ViewClose;
 
 
 }

@@ -14,7 +14,7 @@ public class ProgressView : BaseMonoBehaviour
     }
 
     public ProgressType progressType;
-    public TextMeshProUGUI tvContent;
+    public Text tvContent;
     public Slider sliderPro;
     public string completeContent;
 

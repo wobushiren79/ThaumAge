@@ -2,7 +2,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 
-public partial class ListItemMainUserData
+public partial class UIListItemMainUserData
 {
     public Button ui_Continue;
 

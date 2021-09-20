@@ -105,11 +105,20 @@ public class InspectorBaseUIComponent : Editor
         dicReplaceData.Add("#ClassName#", className);
         Dictionary<string, Component> dicSelect = HierarchySelect.dicSelectObj;
         StringBuilder content = new StringBuilder();
+        //获取基类
+        GameObject objSelect = Selection.activeGameObject;
+        BaseMonoBehaviour uiComponent = objSelect.GetComponent<BaseMonoBehaviour>();
+        Dictionary<string,Type> dicBaseTypes =  ReflexUtil.GetAllNameAndTypeFromBase(uiComponent);
+
         foreach (var itemSelect in dicSelect)
         {
             if (itemSelect.Value == null)
                 continue;
             Type type = itemSelect.Value.GetType();
+
+            //如果基类里面已经有了这个属性，则不再添加
+            if(dicBaseTypes.ContainsKey($"ui_{itemSelect.Key}"))
+                continue;
             content.Append("    public " + type.Name + " ui_" + itemSelect.Key + ";\r\n\r\n");
         }
         dicReplaceData.Add("#PropertyList#", content.ToString());

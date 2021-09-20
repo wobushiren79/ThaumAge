@@ -125,15 +125,37 @@ public class ReflexUtil : ScriptableObject
     }
 
     /// <summary>
-    /// 根据反射获取书友属性名称及类型
+    /// 根据反射获取属性名称及类型
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <param name="classType"></param>
     /// <returns></returns>
     public static Dictionary<string, Type> GetAllNameAndType<T>(T classType)
     {
-        Dictionary<string, Type> listData = new Dictionary<string, Type>();
         Type type = classType.GetType();
+        return GetAllNameAndType(type);
+    }
+
+    /// <summary>
+    /// 根据反射获取基类属性名称及类型
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="classType"></param>
+    /// <returns></returns>
+    public static Dictionary<string, Type> GetAllNameAndTypeFromBase<T>(T classType)
+    {
+        Type baseType = classType.GetType().BaseType;
+        return GetAllNameAndType(baseType);
+    }
+
+    /// <summary>
+    /// 根据反射获取属性名称及类型
+    /// </summary>
+    /// <param name="type"></param>
+    /// <returns></returns>
+    public static Dictionary<string, Type> GetAllNameAndType(Type type)
+    {
+        Dictionary<string, Type> listData = new Dictionary<string, Type>();
         FieldInfo[] fieldInfos = type.GetFields();
 
         if (fieldInfos == null)

@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public partial class ListItemMainUserData : BaseUIView
+public partial class UIListItemMainUserData : BaseUIView
 {
     protected UserDataBean userData;
 

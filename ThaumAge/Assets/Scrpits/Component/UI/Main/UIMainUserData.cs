@@ -11,7 +11,7 @@ public partial class UIMainUserData : BaseUIComponent
     public override void OnClickForButton(Button viewButton)
     {
         base.OnClickForButton(viewButton);
-        if (viewButton == ui_Back) HandleForBackStartUI();
+        if (viewButton == ui_ViewClose) HandleForBackStartUI();
     }
 
     public override void RefreshUI()

@@ -37,7 +37,7 @@ public partial class UIMainStart : BaseUIComponent
     /// </summary>
     public void HandleForSetting()
     {
-        UIGameSetting uiSetting = UIHandler.Instance.manager.OpenUIAndCloseOther<UIGameSetting>(UIEnum.GameSettings);
+        UIGameSetting uiSetting = UIHandler.Instance.manager.OpenUIAndCloseOther<UIGameSetting>(UIEnum.GameSetting);
     }
 
     /// <summary>
