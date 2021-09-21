@@ -232,7 +232,7 @@ public class WorldCreateManager : BaseManager
     {
         this.worldSeed = worldSeed;
         //初始化随机种子
-        UnityEngine.Random.InitState(worldSeed);
+        //UnityEngine.Random.InitState(worldSeed);
         //初始化生态种子
         BiomeHandler.Instance.InitWorldBiomeSeed();
         //初始化随机种子

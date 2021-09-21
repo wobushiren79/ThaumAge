@@ -26,5 +26,11 @@ public partial class UIMainCreate
 
     public Button ui_ViewClose;
 
+    public Button ui_RandomCharacter;
+
+    public Button ui_Start;
+
+    public InputField ui_NameInput;
+
 
 }

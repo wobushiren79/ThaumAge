@@ -3,6 +3,11 @@ using UnityEngine;
 
 public class UIChildGameSettingAudioContent : UIChildGameSettingBaseContent
 {
+    //音乐
+    protected UIListItemGameSettingRange settingMusic;
+    //音效
+    protected UIListItemGameSettingRange settingSound;
+
     public UIChildGameSettingAudioContent(GameObject objListContainer) : base(objListContainer)
     {
 
@@ -12,9 +17,11 @@ public class UIChildGameSettingAudioContent : UIChildGameSettingBaseContent
     {
         base.Open();
         //音乐
-        CreateItemForRange("音乐", HandleForMusicChange);
+        settingMusic = CreateItemForRange("音乐", HandleForMusicChange);
+        settingMusic.SetPro(gameConfig.musicVolume);
         //音效
-        CreateItemForRange("音效", HandleForSoundChange);
+        settingSound = CreateItemForRange("音效", HandleForSoundChange);
+        settingSound.SetPro(gameConfig.soundVolume);
     }
 
     /// <summary>
@@ -23,7 +30,7 @@ public class UIChildGameSettingAudioContent : UIChildGameSettingBaseContent
     /// <param name="data"></param>
     public void HandleForMusicChange(float data)
     {
-
+        gameConfig.musicVolume = data;
     }
 
     /// <summary>
@@ -32,6 +39,6 @@ public class UIChildGameSettingAudioContent : UIChildGameSettingBaseContent
     /// <param name="data"></param>
     public void HandleForSoundChange(float data)
     {
-
+        gameConfig.soundVolume = data;
     }
 }

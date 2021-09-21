@@ -32,7 +32,7 @@ public partial class UIGameSetting : BaseUIComponent, IRadioGroupCallBack
     }
 
     /// <summary>
-    /// 关闭UI
+    /// 点击-关闭UI
     /// </summary>
     public void OnClickForClose()
     {

@@ -21,6 +21,8 @@ public class UserDataBean : BaseBean
     public TimeBean timeForGame = new TimeBean();
     //游玩时间
     public TimeBean timeForPlay = new TimeBean();
+    //主角数据
+    public CharacterBean characterData = new CharacterBean();
 
     //快捷栏位置
     public byte indexForShortcuts = 0;

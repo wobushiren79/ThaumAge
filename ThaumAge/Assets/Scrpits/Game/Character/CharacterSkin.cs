@@ -31,6 +31,25 @@ public class CharacterSkin
         }
     }
 
+    public CharacterBean characterData;
+
+    /// <summary>
+    /// 设置角色数据
+    /// </summary>
+    public void SetCharacterData(CharacterBean characterData)
+    {
+        this.characterData = characterData;
+
+        ChangeSex(this.characterData.GetSex());
+
+        ChangeSkinColor(this.characterData.GetColorSkin());
+        ChangeHairColor(this.characterData.GetColorHair());
+
+        ChangeHair(this.characterData.hairId);
+        ChangeEye(this.characterData.eyeId);
+        ChangeMouth(this.characterData.mouthId);
+    }
+
     /// <summary>
     /// 初始化
     /// </summary>
@@ -58,6 +77,7 @@ public class CharacterSkin
     /// <param name="color"></param>
     public void ChangeHairColor(Color color)
     {
+        this.characterData.SetColorHair(color);
         if (hairMat == null)
             return;
         hairMat.color = color;
@@ -69,6 +89,7 @@ public class CharacterSkin
     /// <param name="hairId"></param>
     public void ChangeHair(long hairId)
     {
+        this.characterData.hairId = hairId;
         CptUtil.RemoveChild(objHairContainer.transform);
         if (hairId == 0)
         {
@@ -108,6 +129,7 @@ public class CharacterSkin
     /// <param name="sexType"></param>
     public void ChangeSex(SexTypeEnum sexType)
     {
+        this.characterData.SetSex(sexType);
         long skinId = 0;
         switch (sexType)
         {
@@ -147,6 +169,7 @@ public class CharacterSkin
     /// <param name="color"></param>
     public void ChangeSkinColor(Color color)
     {
+        this.characterData.SetColorSkin(color);
         headMat.SetColor("Head_Color", color);
         bodyMat.color = color;
     }
@@ -157,6 +180,7 @@ public class CharacterSkin
     /// <param name="eyeId"></param>
     public void ChangeEye(long eyeId)
     {
+        this.characterData.eyeId = eyeId;
         CharacterInfoBean characterInfo = CreatureHandler.Instance.manager.GetCharacterInfoEye(eyeId);
         if (characterInfo == null)
         {
@@ -185,6 +209,7 @@ public class CharacterSkin
     /// <param name="mouthId"></param>
     public void ChangeMouth(long mouthId)
     {
+        this.characterData.mouthId = mouthId;
         CharacterInfoBean characterInfo = CreatureHandler.Instance.manager.GetCharacterInfoMouth(mouthId);
         if (characterInfo == null)
         {

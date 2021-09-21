@@ -3,6 +3,6 @@ using UnityEditor;
 
 public enum DialogEnum
 {
-    Normal = 0,
-    Text = 1,
+    DialogNormal = 0,
+    DialogText = 1,
 }

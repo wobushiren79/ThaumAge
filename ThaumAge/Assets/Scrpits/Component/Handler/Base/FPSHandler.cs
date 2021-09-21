@@ -4,15 +4,6 @@ using UnityEngine;
 
 public class FPSHandler : BaseHandler<FPSHandler, BaseManager>
 {
-
-    protected override void Awake()
-    {
-        base.Awake();
-        //Screen.SetResolution(1280, 800, false);	
-        GameConfigBean gameConfig = GameDataHandler.Instance.manager.GetGameConfig();
-        SetData(gameConfig.stateForFrames, gameConfig.frames);
-    }
-
     public void SetData(bool isLock, int fps)
     {
         if (isLock)

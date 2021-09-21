@@ -90,7 +90,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c84b87f3c8c29b5498adf322aed85d70, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tvTitle: {fileID: 720637711180589317}
+  ui_Title: {fileID: 720637711180589317}
+  ui_RB: {fileID: 5088302834149522320}
 --- !u!1 &4972786383730107956
 GameObject:
   m_ObjectHideFlags: 0
@@ -460,7 +461,7 @@ MonoBehaviour:
   colorTVSelected: {r: 1, g: 1, b: 1, a: 1}
   spUnselected: {fileID: 21300000, guid: 65108b77dbf2b534db4d64c1d2850ace, type: 3}
   colorIVUnselected: {r: 1, g: 1, b: 1, a: 1}
-  colorTVUnselected: {r: 1, g: 1, b: 1, a: 1}
+  colorTVUnselected: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   rbButton: {fileID: 4482135158318043617}
   rbImage: {fileID: 5622771737404335706}
   rbText: {fileID: 2648524160165140170}

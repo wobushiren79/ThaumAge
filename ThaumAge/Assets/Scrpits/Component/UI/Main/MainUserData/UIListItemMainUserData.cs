@@ -81,5 +81,7 @@ public partial class UIListItemMainUserData : BaseUIView
 
         //设施摄像头
         SceneMainHandler.Instance.ChangeCameraByIndex(userDataIndex);
+        //显示角色
+        SceneMainHandler.Instance.manager.ShowCharacterObjByIndex(userDataIndex, true);
     }
 }

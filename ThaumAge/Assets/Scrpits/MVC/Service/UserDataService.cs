@@ -42,9 +42,9 @@ public class UserDataService : BaseDataStorage<UserDataBean>
             for (int f = 0; f < files.Length; f++)
             {
                 string itemFile = files[f];
-                if (itemFile.Contains("/Base"))
+                if (itemFile.Replace(itemDir, "").Contains("Base"))
                 {
-                    UserDataBean userData = BaseLoadData(itemFile);
+                    UserDataBean userData = BaseLoadDataByPath(itemFile);
                     if (userData != null)
                         listData.Add(userData);
                     break;

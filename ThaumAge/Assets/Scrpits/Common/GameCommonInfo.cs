@@ -16,12 +16,5 @@ public class GameCommonInfo
         ScenesChangeData = new ScenesChangeBean();
     }
 
-    /// <summary>
-    /// 随机化种子
-    /// </summary>
-    public static void InitRandomSeed()
-    {
-        Random.InitState(RandomSeed);
-    }
 
 }

@@ -95,6 +95,15 @@ public class GameDataManager : BaseManager,
     }
 
     /// <summary>
+    /// 保存用户数据
+    /// </summary>
+    /// <param name="userData"></param>
+    public void SaveUserData(UserDataBean userData)
+    {
+        controllerForUserData.SetUserData(userData);
+    }
+
+    /// <summary>
     /// 删除游戏数据
     /// </summary>
     /// <param name="userId"></param>

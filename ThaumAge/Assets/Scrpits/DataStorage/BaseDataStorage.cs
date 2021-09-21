@@ -64,14 +64,14 @@ public abstract class BaseDataStorage<T>
             LogUtil.Log("删除文件失败-没有文件路径");
             return;
         }
-        FileUtil.DeleteFile(dataStoragePath+"/"+ fileName);
+        FileUtil.DeleteFile(dataStoragePath + "/" + fileName);
     }
 
-   /// <summary>
-   /// 基础-保存数据列表
-   /// </summary>
-   /// <param name="fileName"></param>
-   /// <param name="dataBeanList"></param>
+    /// <summary>
+    /// 基础-保存数据列表
+    /// </summary>
+    /// <param name="fileName"></param>
+    /// <param name="dataBeanList"></param>
     public void BaseSaveDataForList(string fileName, List<T> dataBeanList)
     {
         if (fileName == null)
@@ -102,7 +102,12 @@ public abstract class BaseDataStorage<T>
             LogUtil.Log("读取文件失败-没有文件名称");
             return default;
         }
-        string strData = FileUtil.LoadTextFile(dataStoragePath + "/" + fileName);
+        return BaseLoadDataByPath($"{dataStoragePath}/{fileName}");
+    }
+
+    public T BaseLoadDataByPath(string path)
+    {
+        string strData = FileUtil.LoadTextFile(path);
         if (strData == null)
             return default;
         T data = JsonUtil.FromJson<T>(strData);
@@ -124,7 +129,7 @@ public abstract class BaseDataStorage<T>
         string strData = FileUtil.LoadTextFile(dataStoragePath + "/" + fileName);
         if (strData == null)
             return null;
-        DataStorageListBean<T> handBean=  JsonUtil.FromJson<DataStorageListBean<T>>(strData);
+        DataStorageListBean<T> handBean = JsonUtil.FromJson<DataStorageListBean<T>>(strData);
         if (handBean == null)
             return null;
         return handBean.listData;

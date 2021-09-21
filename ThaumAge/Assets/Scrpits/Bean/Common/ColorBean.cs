@@ -5,10 +5,10 @@ using System;
 [Serializable]
 public class ColorBean
 {
-    public float r=1;
-    public float g=1;
-    public float b=1;
-    public float a=1;
+    public float r = 1;
+    public float g = 1;
+    public float b = 1;
+    public float a = 1;
 
     public ColorBean()
     {
@@ -58,6 +58,10 @@ public class ColorBean
             this.b = colors[2];
             this.a = colors[3];
         }
+    }
+
+    public ColorBean(Color color) : this(color.r, color.g, color.b, color.a)
+    {
     }
 
     public Color GetColor()

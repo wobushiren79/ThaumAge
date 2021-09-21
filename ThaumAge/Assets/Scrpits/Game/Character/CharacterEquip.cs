@@ -6,9 +6,20 @@ public class CharacterEquip
     //衣服容器
     public GameObject objClothesContainer;
 
+    //角色数据
+    public CharacterBean characterData;
+
     public CharacterEquip(GameObject objClothesContainer)
     {
         this.objClothesContainer = objClothesContainer;
+    }
+
+    /// <summary>
+    /// 设置角色数据
+    /// </summary>
+    public void SetCharacterData(CharacterBean characterData)
+    {
+        this.characterData = characterData;
     }
 
     /// <summary>
@@ -17,6 +28,7 @@ public class CharacterEquip
     /// <param name="clothesId"></param>
     public void ChangeClothes(long clothesId)
     {
+        this.characterData.clothesId = clothesId;
         CptUtil.RemoveChild(objClothesContainer.transform);
         if (clothesId == 0)
         {
@@ -44,6 +56,8 @@ public class CharacterEquip
       
                     ItemsHandler.Instance.manager.GetItemsTexById(itemsInfo.id,(itemTex)=> 
                     {
+                        if (objHair == null)
+                            return;
                         MeshRenderer hairMeshRebderer = objHair.GetComponent<MeshRenderer>();
                         hairMeshRebderer.material.mainTexture = itemTex;
                     });

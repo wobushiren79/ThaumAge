@@ -5,12 +5,50 @@ using UnityEngine.Rendering.HighDefinition;
 
 public class VolumeManager : BaseManager
 {
+    //颜色天空
+    protected GradientSky _gradientSky;
+    public GradientSky gradientSky
+    {
+        get
+        {
+            if (_gradientSky == null)
+            {
+                volumeProfile.TryGet(out _gradientSky);
+            }
+            return _gradientSky;
+        }
+    }
+
+    //物理天空
+    protected PhysicallyBasedSky _physicallyBasedSky;
+    public PhysicallyBasedSky physicallyBasedSky
+    {
+        get
+        {
+            if (_physicallyBasedSky == null)
+            {
+                volumeProfile.TryGet(out _physicallyBasedSky);
+            }
+            return _physicallyBasedSky;
+        }
+    }
+
+    //阴影设置
+    protected HDShadowSettings _shadowSettings;
+    public HDShadowSettings shadowSettings
+    {
+        get
+        {
+            if (_shadowSettings == null)
+            {
+                volumeProfile.TryGet(out _shadowSettings);
+            }
+            return _shadowSettings;
+        }
+    }
+
+    //基础设置
     protected Volume _volume;
-    protected VolumeProfile _volumeProfile;
-
-    public GradientSky gradientSky;
-    public PhysicallyBasedSky physicallyBasedSky;
-
     public Volume volume
     {
         get
@@ -23,7 +61,7 @@ public class VolumeManager : BaseManager
             return _volume;
         }
     }
-
+    protected VolumeProfile _volumeProfile;
     public VolumeProfile volumeProfile
     {
         get
@@ -37,6 +75,16 @@ public class VolumeManager : BaseManager
     }
 
     /// <summary>
+    /// 设置阴影距离
+    /// </summary>
+    /// <param name="dis"></param>
+    public void SetShadowsDistance(float dis)
+    {
+        shadowSettings.maxShadowDistance.overrideState = true;
+        shadowSettings.maxShadowDistance.value = dis;
+    }
+
+    /// <summary>
     /// 设置天空颜色
     /// </summary>
     /// <param name="colorTop"></param>
@@ -44,10 +92,6 @@ public class VolumeManager : BaseManager
     /// <param name="colorBottom"></param>
     public void SetGradientSkyColor(Color colorTop, Color colorMiddle, Color colorBottom)
     {
-        if (gradientSky == null)
-        {
-            volumeProfile.TryGet(out gradientSky);
-        }
         gradientSky.top.overrideState = true;
         gradientSky.top.value = colorTop;
         gradientSky.middle.overrideState = true;
@@ -64,10 +108,6 @@ public class VolumeManager : BaseManager
     /// <param name="colorGround"></param>
     public void SetPhysicallyBasedSkyColor(Color colorZenith, Color colorHorizon, Color colorGround)
     {
-        if (physicallyBasedSky == null)
-        {
-            volumeProfile.TryGet(out physicallyBasedSky);
-        }
         physicallyBasedSky.zenithTint.overrideState = true;
         physicallyBasedSky.zenithTint.value = colorZenith;
 

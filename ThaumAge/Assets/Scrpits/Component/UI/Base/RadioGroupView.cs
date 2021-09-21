@@ -34,16 +34,16 @@ public class RadioGroupView : BaseMonoBehaviour, IRadioButtonCallBack
             RadioButtonView itemRB = listButton[i];
             if (i == position)
             {
-                itemRB.ChangeStates(RadioButtonView.RadioButtonStatus.Selected);
+                itemRB.ChangeStates(true);
                 if (isCallBack)
                 {
                     if (mRGCallBack != null)
-                        mRGCallBack.RadioButtonSelected(this,i, itemRB);
+                        mRGCallBack.RadioButtonSelected(this, i, itemRB);
                 }
             }
             else
             {
-                itemRB.ChangeStates(RadioButtonView.RadioButtonStatus.Unselected);
+                itemRB.ChangeStates(false);
             }
         }
     }
@@ -75,7 +75,7 @@ public class RadioGroupView : BaseMonoBehaviour, IRadioButtonCallBack
         this.mRGCallBack = callback;
     }
 
-    public void RadioButtonSelected(RadioButtonView view, RadioButtonView.RadioButtonStatus buttonStates)
+    public void RadioButtonSelected(RadioButtonView view, bool isSelect)
     {
         if (CheckUtil.ListIsNull(listButton))
         {
@@ -88,16 +88,16 @@ public class RadioGroupView : BaseMonoBehaviour, IRadioButtonCallBack
             {
                 if (!isCancelSelect)
                 {
-                    itemRB.ChangeStates(RadioButtonView.RadioButtonStatus.Selected);
+                    itemRB.ChangeStates(true);
                 }
                 if (mRGCallBack != null)
-                    mRGCallBack.RadioButtonSelected(this,i, itemRB);
+                    mRGCallBack.RadioButtonSelected(this, i, itemRB);
             }
             else
             {
-                itemRB.ChangeStates(RadioButtonView.RadioButtonStatus.Unselected);
+                itemRB.ChangeStates(false);
                 if (mRGCallBack != null)
-                    mRGCallBack.RadioButtonUnSelected(this,i, itemRB);
+                    mRGCallBack.RadioButtonUnSelected(this, i, itemRB);
             }
         }
     }

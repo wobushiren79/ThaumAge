@@ -38,6 +38,12 @@ public partial class UIMainCreate : BaseUIComponent,
         ui_LRotate.AddLongClickListener(OnLongClickForRoateL);
     }
 
+    public override void OpenUI()
+    {
+        base.OpenUI();
+        InitData();
+    }
+
     public override void OnClickForButton(Button viewButton)
     {
         base.OnClickForButton(viewButton);
@@ -53,12 +59,14 @@ public partial class UIMainCreate : BaseUIComponent,
         {
             ChangeSex(SexTypeEnum.Woman);
         }
-    }
-
-    public override void OpenUI()
-    {
-        base.OpenUI();
-        InitData();
+        else if (viewButton == ui_RandomCharacter)
+        {
+            HandleForRandomCharacter();
+        }
+        else if (viewButton == ui_Start)
+        {
+            HandleForStartGame();
+        }
     }
 
     /// <summary>
@@ -118,6 +126,49 @@ public partial class UIMainCreate : BaseUIComponent,
     }
 
     /// <summary>
+    /// 处理-随机角色
+    /// </summary>
+    public void HandleForRandomCharacter()
+    {
+        Random.InitState(TimeUtil.GetTimeStampForS32());
+        ui_ViewSelectChange_Hair.RandomSelect();
+        ui_ViewSelectChange_Eye.RandomSelect();
+        ui_ViewSelectChange_Mouth.RandomSelect();
+        ui_ViewSelectChange_Clothes.RandomSelect();
+        ui_ViewSelectColorChange_Skin.SetRandomColor();
+        ui_ViewSelectColorChange_Hair.SetRandomColor();
+        //随机性别
+        int sexRandom = WorldRandTools.Range(0, 2);
+        ChangeSex(sexRandom == 0 ? SexTypeEnum.Man : SexTypeEnum.Woman);
+    }
+
+    /// <summary>
+    /// 处理-开始游戏
+    /// </summary>
+    public void HandleForStartGame()
+    {
+        Character character = GetChanracter();
+        string characterName = ui_NameInput.text;
+        string userId = $"UserId_{SystemUtil.GetUUID(SystemUtil.UUIDTypeEnum.N)}";
+        if (CheckUtil.StringIsNull(characterName))
+        {
+
+            return;
+        }
+        DialogBean dialogData = new DialogBean();
+        dialogData.content = "是否以此角色开始游戏？";
+        DialogHandler.Instance.CreateDialog<DialogView>(DialogEnum.DialogNormal, dialogData, (view, data) =>
+        {
+            UserDataBean userData = new UserDataBean();
+            userData.dataIndex = userDataIndex;
+            userData.userId = userId;
+            userData.characterData = character.GetCharacterData();
+            userData.characterData.characterName = characterName;
+            GameDataHandler.Instance.manager.SaveUserData(userData);
+        });
+    }
+
+    /// <summary>
     /// 处理-返回
     /// </summary>
     public void HandleForBack()
@@ -128,6 +179,8 @@ public partial class UIMainCreate : BaseUIComponent,
         SceneMainHandler.Instance.ChangeCameraByIndex(0);
         //还原角色角度
         SceneMainHandler.Instance.CharacterResetRotate();
+        //隐藏角色
+        SceneMainHandler.Instance.manager.ShowCharacterObjByIndex(userDataIndex, false);
     }
 
     /// <summary>

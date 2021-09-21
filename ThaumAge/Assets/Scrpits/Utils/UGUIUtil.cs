@@ -63,4 +63,13 @@ public class UGUIUtil
 
         return obj;
     }
+
+    /// <summary>
+    /// 刷新UI大小
+    /// </summary>
+    /// <param name="rectTransform"></param>
+    public static void RefreshUISize(RectTransform rectTransform)
+    {
+        LayoutRebuilder.ForceRebuildLayoutImmediate(rectTransform);
+    }
 }

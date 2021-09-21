@@ -13,7 +13,7 @@ public class BaseLauncher : BaseMonoBehaviour
     {
         //先清理一下内存
         SystemUtil.GCCollect();        
-        //设置FPS
-        FPSHandler.Instance.SetData(true, 120);
+        //游戏设置初始化
+        GameDataHandler.Instance.InitData();
     }
 }

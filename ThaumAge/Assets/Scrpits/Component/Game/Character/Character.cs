@@ -17,6 +17,9 @@ public class Character : BaseMonoBehaviour
     [HideInInspector]
     public CharacterEquip characterEquip;
 
+    //角色数据
+    protected CharacterBean characterData;
+
     private void Awake()
     {
         InitData();
@@ -51,6 +54,7 @@ public class Character : BaseMonoBehaviour
         MeshRenderer headRender = characterHead.GetComponent<MeshRenderer>();
         SkinnedMeshRenderer bodyRender = characterBody.GetComponentInChildren<SkinnedMeshRenderer>();
         characterSkin = new CharacterSkin(headRender, bodyRender, characterHair);
+        characterSkin.characterData = GetCharacterData();
     }
 
     /// <summary>
@@ -64,6 +68,30 @@ public class Character : BaseMonoBehaviour
             return;
         }
         characterEquip = new CharacterEquip(characterClothes);
+        characterEquip.characterData = GetCharacterData();
     }
 
+    /// <summary>
+    /// 设置角色数据
+    /// </summary>
+    /// <param name="characterData"></param>
+    public void SetCharacterData(CharacterBean characterData)
+    {
+        this.characterData = characterData;
+        characterSkin.SetCharacterData(characterData);
+        characterEquip.SetCharacterData(characterData);
+    }
+
+    /// <summary>
+    /// 获取角色数据
+    /// </summary>
+    /// <returns></returns>
+    public CharacterBean GetCharacterData()
+    {
+        if (characterData == null)
+        {
+            characterData = new CharacterBean();
+        }
+        return characterData;
+    }
 }

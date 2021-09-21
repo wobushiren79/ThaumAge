@@ -19,7 +19,7 @@ public class MainLauncher : BaseLauncher
         WorldCreateHandler.Instance.SetWorldType(WorldTypeEnum.Launch);
         //刷新周围区块
         WorldCreateHandler.Instance.CreateChunkRangeForCenterPosition(Vector3Int.zero, worldRange, CompleteForUpdateChunk);
-        //修改灯光ao
+        //修改灯光
         LightHandler.Instance.InitData();
     }
 
@@ -32,5 +32,7 @@ public class MainLauncher : BaseLauncher
         UIHandler.Instance.manager.OpenUIAndCloseOther<UIMainStart>(UIEnum.MainStart);
         //初始化主界面摄像头
         CameraHandler.Instance.InitMainData();
+        //显示人物
+        SceneMainHandler.Instance.ShowCharacter();
     }
 }

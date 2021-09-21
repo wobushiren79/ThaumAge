@@ -5,11 +5,13 @@ using UnityEngine.UI;
 
 public partial class UIListItemGameSettingRange : UIListItemGameSettingBase, ProgressView.ICallBack
 {
-    Action<float> callBack;
+    //改变回调
+    protected Action<float> callBack;
 
-    protected void Start()
+    public override void Awake()
     {
-        //ui_ProContent.SetCallBack(this);
+        base.Awake();
+        ui_ProContent.SetCallBack(this);
     }
 
     /// <summary>
@@ -22,14 +24,23 @@ public partial class UIListItemGameSettingRange : UIListItemGameSettingBase, Pro
         this.callBack = callBack;
         SetTitle(title);
     }
-    
+
     /// <summary>
     /// 设置进度
     /// </summary>
     /// <param name="pro"></param>
     public void SetPro(float pro)
     {
-       // ui_ProContent.SetData(pro);
+        ui_ProContent.SetData(pro);
+    }
+
+    /// <summary>
+    /// 设置内容
+    /// </summary>
+    /// <param name="data"></param>
+    public void SetContent(string data)
+    {
+        ui_ProContent.SetContent(data);
     }
 
     /// <summary>

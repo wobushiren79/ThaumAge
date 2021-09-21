@@ -3,6 +3,26 @@ using UnityEngine;
 
 public class SceneMainHandler : SceneBaseHandler<SceneMainHandler, SceneMainManager>
 {
+    /// <summary>
+    /// 显示角色
+    /// </summary>
+    public void ShowCharacter()
+    {
+        //先隐藏三个角色
+        manager.ShowCharacterObjByIndex(1, false);
+        manager.ShowCharacterObjByIndex(2, false);
+        manager.ShowCharacterObjByIndex(3, false);
+        GameDataHandler.Instance.manager.GetAllUserData((listData) =>
+        {
+            for (int i = 0; i < listData.Count; i++)
+            {
+                UserDataBean userData = listData[i];
+                GameObject objCharacter = manager.ShowCharacterObjByIndex(userData.dataIndex, true);
+                Character character = objCharacter.GetComponent<Character>();
+                character.SetCharacterData(userData.characterData);
+            }
+        });
+    }
 
     /// <summary>
     /// 改变摄像头

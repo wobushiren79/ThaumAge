@@ -1,9 +1,11 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using UnityEditor;
+using System;
 
 public class RadioButtonView : BaseMonoBehaviour
 {
+
     //选中时
     public Sprite spSelected;
     public Color colorIVSelected;
@@ -18,19 +20,14 @@ public class RadioButtonView : BaseMonoBehaviour
     public Image rbImage;
     public Text rbText;
 
-    private IRadioButtonCallBack mRBCallBack;
+    protected IRadioButtonCallBack callBackForSelect;
+    protected Action<RadioButtonView, bool> actionForSelect;
 
-    public enum RadioButtonStatus
+    //是否选中
+    public bool isSelect = true;
+
+    private void Awake()
     {
-        Selected,//选中状态
-        Unselected,//未选中状态
-    }
-
-    public RadioButtonStatus status = RadioButtonStatus.Selected;
-
-    private void Start()
-    {
-        ChangeStates(status);
         rbButton.onClick.AddListener(RadioButtonSelected);
     }
 
@@ -39,11 +36,7 @@ public class RadioButtonView : BaseMonoBehaviour
     /// </summary>
     public void RadioButtonSelected()
     {
-        ChangeStates();
-        if (mRBCallBack != null)
-        {
-            mRBCallBack.RadioButtonSelected(this, status);
-        }
+        SetStates(!isSelect);
     }
 
     /// <summary>
@@ -52,22 +45,40 @@ public class RadioButtonView : BaseMonoBehaviour
     /// <param name="callback"></param>
     public void SetCallBack(IRadioButtonCallBack callback)
     {
-        this.mRBCallBack = callback;
+        this.callBackForSelect = callback;
     }
 
+    /// <summary>
+    /// 设置文本
+    /// </summary>
+    public void SetText(string showText)
+    {
+        rbText.text = showText;
+    }
 
     /// <summary>
-    /// 改变状态
+    /// 设置状态 有回调
     /// </summary>
-    /// <param name="status"></param>
-    public void ChangeStates(RadioButtonStatus status)
+    /// <param name="isSelect"></param>
+    public void SetStates(bool isSelect)
+    {
+        ChangeStates(isSelect);
+        callBackForSelect?.RadioButtonSelected(this, isSelect);
+        actionForSelect?.Invoke(this, isSelect);
+    }
+
+    /// <summary>
+    /// 改变状态 无回调
+    /// </summary>
+    /// <param name="isSelect"></param>
+    public void ChangeStates(bool isSelect)
     {
         if (rbButton.enabled == false)
             return;
-        this.status = status;
-        switch (status)
+        this.isSelect = isSelect;
+        switch (isSelect)
         {
-            case RadioButtonStatus.Selected:
+            case true:
                 if (rbImage) {
                     rbImage.sprite = spSelected;
                     rbImage.color = colorIVSelected;
@@ -75,7 +86,7 @@ public class RadioButtonView : BaseMonoBehaviour
                 if (rbText)
                     rbText.color = colorTVSelected;
                 break;
-            case RadioButtonStatus.Unselected:
+            case false:
                 if (rbImage) {
                     rbImage.sprite = spUnselected;
                     rbImage.color = colorIVUnselected;
@@ -84,22 +95,6 @@ public class RadioButtonView : BaseMonoBehaviour
                     rbText.color = colorTVUnselected;
                 break;
         }
-    }
-
-
-    public void ChangeStates()
-    {
-        if (rbButton.enabled == false)
-            return;
-        if (status == RadioButtonStatus.Selected)
-        {
-            status = RadioButtonStatus.Unselected;
-        }
-        else
-        {
-            status = RadioButtonStatus.Selected;
-        }
-        ChangeStates(status);
     }
 
     /// <summary>

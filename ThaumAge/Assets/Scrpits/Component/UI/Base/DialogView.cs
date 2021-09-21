@@ -4,20 +4,17 @@ using DG.Tweening;
 using UnityEngine.UI;
 using System;
 
-public class DialogView : BaseMonoBehaviour
+public class DialogView : BaseUIView
 {
-    public GameObject objDialog;
+    public Button ui_Submit;
+    public Text ui_SubmitText;
 
-    public Button btSubmit;
-    public Text tvSubmit;
+    public Button ui_Cancel;
+    public Text ui_CancelText;
 
-    public Button btCancel;
-    public Text tvCancel;
-
-    public Button btBackground;
-    public Text tvTitle;
-    public Text tvContent;
-    public CanvasGroup cgDialog;
+    public Button ui_Background;
+    public Text ui_Title;
+    public Text ui_Content;
 
     protected IDialogCallBack callBack;
 
@@ -30,22 +27,9 @@ public class DialogView : BaseMonoBehaviour
 
     protected bool isSubmitDestroy = true;
 
-    public virtual void Awake()
-    {
-        AutoLinkUI();
-    }
-
     public virtual void Start()
     {
         InitData();
-    }
-
-    public virtual void OnEnable()
-    {
-        if (cgDialog != null)
-            cgDialog.DOFade(1, 0.5f).SetUpdate(true);
-        if (objDialog != null)
-            objDialog.transform.DOScale(new Vector3(0, 0, 0), 0.5f).SetEase(Ease.OutBack).From().SetUpdate(true);
     }
 
     public virtual void OnDestroy()
@@ -55,20 +39,20 @@ public class DialogView : BaseMonoBehaviour
 
     public virtual void InitData()
     {
-        if (btSubmit != null)
+        if (ui_Submit != null)
         {
-            btSubmit.onClick.RemoveAllListeners();
-            btSubmit.onClick.AddListener(SubmitOnClick);
+            ui_Submit.onClick.RemoveAllListeners();
+            ui_Submit.onClick.AddListener(SubmitOnClick);
         }
-        if (btCancel != null)
+        if (ui_Cancel != null)
         {
-            btCancel.onClick.RemoveAllListeners();
-            btCancel.onClick.AddListener(CancelOnClick);
+            ui_Cancel.onClick.RemoveAllListeners();
+            ui_Cancel.onClick.AddListener(CancelOnClick);
         }
-        if (btBackground != null)
+        if (ui_Background != null)
         {
-            btBackground.onClick.RemoveAllListeners();
-            btBackground.onClick.AddListener(CancelOnClick);
+            ui_Background.onClick.RemoveAllListeners();
+            ui_Background.onClick.AddListener(CancelOnClick);
         }
     }
 
@@ -118,7 +102,7 @@ public class DialogView : BaseMonoBehaviour
         this.actionCancel = actionCancel;
     }
 
-    public void SetData(DialogBean dialogData)
+    public virtual void SetData(DialogBean dialogData)
     {
         if (dialogData == null)
             return;
@@ -148,9 +132,9 @@ public class DialogView : BaseMonoBehaviour
     /// <param name="title"></param>
     public void SetTitle(string title)
     {
-        if (tvTitle != null)
+        if (ui_Title != null)
         {
-            tvTitle.text = title;
+            ui_Title.text = title;
         }
     }
 
@@ -160,9 +144,9 @@ public class DialogView : BaseMonoBehaviour
     /// <param name="content"></param>
     public void SetContent(string content)
     {
-        if (tvContent != null)
+        if (ui_Content != null)
         {
-            tvContent.text = content;
+            ui_Content.text = content;
         }
     }
 
@@ -172,9 +156,9 @@ public class DialogView : BaseMonoBehaviour
     /// <param name="str"></param>
     public void SetSubmitStr(string str)
     {
-        if (tvSubmit != null)
+        if (ui_SubmitText != null)
         {
-            tvSubmit.text = str;
+            ui_SubmitText.text = str;
         }
     }
 
@@ -184,9 +168,9 @@ public class DialogView : BaseMonoBehaviour
     /// <param name="str"></param>
     public void SetCancelStr(string str)
     {
-        if (tvCancel != null)
+        if (ui_CancelText != null)
         {
-            tvCancel.text = str;
+            ui_CancelText.text = str;
         }
     }
 

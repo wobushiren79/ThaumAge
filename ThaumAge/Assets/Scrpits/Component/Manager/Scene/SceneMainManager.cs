@@ -114,4 +114,14 @@ public class SceneMainManager : SceneBaseManager
         }
         return null;
     }
+
+    /// <summary>
+    /// 通过索引 展示角色
+    /// </summary>
+    public GameObject ShowCharacterObjByIndex(int index, bool isShow)
+    {
+        GameObject objCharacter = GetCharacterObjByIndex(index);
+        objCharacter.SetActive(isShow);
+        return objCharacter;
+    }
 }

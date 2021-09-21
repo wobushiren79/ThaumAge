@@ -13,6 +13,7 @@ public class GameConfigBean
     public float soundVolume = 0.5f;
     //音乐大小
     public float musicVolume = 0.5f;
+
     //环境音乐大小
     public float environmentVolume = 0.5f;
     //自动保存时间
@@ -23,7 +24,8 @@ public class GameConfigBean
     //帧数限制开启 1开启 0关闭
     public int stateForFrames = 1;
     public int frames = 120;
-
+    //阴影距离
+    public float shadowDis = 200;
     /// <summary>
     /// 获取当前语言
     /// </summary>

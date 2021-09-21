@@ -21,7 +21,7 @@ public class ProgressView : BaseMonoBehaviour
 
     protected ICallBack callBack;
 
-    private void Start()
+    private void Awake()
     {
         sliderPro.onValueChanged.AddListener(OnSliderValueChange);
     }
@@ -34,11 +34,9 @@ public class ProgressView : BaseMonoBehaviour
 
     public void SetData(float value)
     {
-        SetContent((Math.Round(value, 4) * 100) + "%");
+        SetContent(GetPercentageStr(value));
         SetSlider(value);
     }
-
-
 
     public void SetData(float maxData, float data)
     {
@@ -54,7 +52,7 @@ public class ProgressView : BaseMonoBehaviour
         switch (progressType)
         {
             case ProgressType.Percentage:
-                SetContent((Math.Round(pro, 4) * 100) + "%");
+                SetContent(GetPercentageStr(data));
                 break;
             case ProgressType.Degree:
                 SetContent(data + "/" + maxData);
@@ -106,8 +104,6 @@ public class ProgressView : BaseMonoBehaviour
         }
     }
 
-
-
     /// <summary>
     /// 设置进度条
     /// </summary>
@@ -124,7 +120,7 @@ public class ProgressView : BaseMonoBehaviour
         //是否可互动，如果是可互动的 则按百分比显示
         if (sliderPro.IsInteractable())
         {
-            SetContent((Math.Round(value, 4) * 100) + "%");
+            SetContent(GetPercentageStr(value));
         }
         if (callBack != null)
         {
@@ -132,8 +128,19 @@ public class ProgressView : BaseMonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 获取百分比文本数据
+    /// </summary>
+    /// <param name="value"></param>
+    protected string GetPercentageStr(float value)
+    {
+        string data = $"{Math.Round(value, 2) * 100}%";
+        return data;
+    }
+
     public interface ICallBack
     {
         void OnProgressViewValueChange(ProgressView progressView, float value);
     }
+
 }
