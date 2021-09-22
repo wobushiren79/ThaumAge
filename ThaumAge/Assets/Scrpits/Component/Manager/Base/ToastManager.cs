@@ -27,7 +27,7 @@ public class ToastManager : BaseManager
     /// <returns></returns>
     public GameObject GetToastModel(string toastName)
     {
-        return  GetModel(listObjModel,"ui/toast", toastName);
+        return  GetModelForResources(listObjModel,$"UI/Toast/Toast{toastName}");
     }
 
     public RectTransform GetContainer()

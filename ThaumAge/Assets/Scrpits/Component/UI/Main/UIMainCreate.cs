@@ -152,7 +152,7 @@ public partial class UIMainCreate : BaseUIComponent,
         string userId = $"UserId_{SystemUtil.GetUUID(SystemUtil.UUIDTypeEnum.N)}";
         if (CheckUtil.StringIsNull(characterName))
         {
-
+            ToastHandler.Instance.ToastHint("还有输入名字");
             return;
         }
         DialogBean dialogData = new DialogBean();
