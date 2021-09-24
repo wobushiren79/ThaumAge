@@ -24,9 +24,17 @@ public partial class UIListItemMainUserData : BaseUIView
     {
         base.RefreshUI();
         SetDataState();
+        if (userData == null)
+            return;
+        SetName(userData.characterData.characterName);
+        SetGameTime(userData.timeForGame);
+        SetPlayTime(userData.timeForPlay);
     }
 
-
+    /// <summary>
+    /// 按钮点击
+    /// </summary>
+    /// <param name="viewButton"></param>
     public override void OnClickForButton(Button viewButton)
     {
         base.OnClickForButton(viewButton);
@@ -61,6 +69,31 @@ public partial class UIListItemMainUserData : BaseUIView
             ui_Continue.gameObject.SetActive(true);
             ui_Create.gameObject.SetActive(false);
         }
+    }
+
+    /// <summary>
+    /// 设置名字
+    /// </summary>
+    /// <param name="name"></param>
+    public void SetName(string name)
+    {
+        ui_NameContent.text = name;
+    }
+
+    /// <summary>
+    /// 设置游戏时间
+    /// </summary>
+    public void SetGameTime(TimeBean time)
+    {
+        ui_GameTimeContent.text = $"{time.year}:{time.month}:{time.hour}";
+    }
+
+    /// <summary>
+    /// 设置游玩时间
+    /// </summary>
+    public void SetPlayTime(TimeBean time)
+    {
+        ui_PlayTimeContent.text = $"{time.hour}:{time.minute}";
     }
 
     /// <summary>

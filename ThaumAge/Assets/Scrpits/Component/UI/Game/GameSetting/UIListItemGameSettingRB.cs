@@ -2,7 +2,7 @@
 using UnityEditor;
 using UnityEngine;
 
-public partial class UIListItemGameSettingRB : UIListItemGameSettingBase,IRadioButtonCallBack
+public partial class UIListItemGameSettingRB : UIListItemGameSettingBase, IRadioButtonCallBack
 {
     protected Action<bool> callBack;
 
@@ -26,7 +26,7 @@ public partial class UIListItemGameSettingRB : UIListItemGameSettingBase,IRadioB
     #region 选择回掉
     public void RadioButtonSelected(RadioButtonView view, bool isSelect)
     {
-        if(isSelect) 
+        if (isSelect)
         {
             callBack?.Invoke(true);
             ui_RB.SetText("已开启");

@@ -14,14 +14,25 @@ public partial class UIMainStart : BaseUIComponent
         else if (viewButton == ui_Title) HandleForMaker();
     }
 
+    public override void RefreshUI()
+    {
+        base.RefreshUI();
+        SetUIText();
+    }
+
     /// <summary>
     /// 设置UI文本
     /// </summary>
     public void SetUIText()
     {
-
         //设置版本号
         ui_VersionContent.text = $"Ver {ProjectConfigInfo.GAME_VERSION}";
+        //设置标题
+        ui_TitleContent.text = TextHandler.Instance.GetTextById(1);
+
+        ui_BtnNameStart.text = TextHandler.Instance.GetTextById(2);
+        ui_BtnNameSetting.text = TextHandler.Instance.GetTextById(3);
+        ui_BtnNameExit.text = TextHandler.Instance.GetTextById(4);
     }
 
     /// <summary>

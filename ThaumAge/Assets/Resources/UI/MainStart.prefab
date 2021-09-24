@@ -479,7 +479,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1753194458294865011, guid: a12029f0fb6511e4aa51278836ec0209, type: 3}
       propertyPath: m_Text
-      value: "\u5F00\u59CB\u6E38\u620F"
+      value: "\u5F00\u59CB"
       objectReference: {fileID: 0}
     - target: {fileID: 4846457957412348125, guid: a12029f0fb6511e4aa51278836ec0209, type: 3}
       propertyPath: m_Pivot.x
@@ -743,7 +743,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1753194458294865011, guid: a12029f0fb6511e4aa51278836ec0209, type: 3}
       propertyPath: m_Text
-      value: "\u79BB\u5F00\u6E38\u620F"
+      value: "\u79BB\u5F00"
       objectReference: {fileID: 0}
     - target: {fileID: 4846457957412348125, guid: a12029f0fb6511e4aa51278836ec0209, type: 3}
       propertyPath: m_Pivot.x
