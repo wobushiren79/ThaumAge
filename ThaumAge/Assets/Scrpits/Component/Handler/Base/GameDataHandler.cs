@@ -49,5 +49,7 @@ public class GameDataHandler : BaseHandler<GameDataHandler, GameDataManager>
         VolumeHandler.Instance.InitData();
         //设置FPS
         FPSHandler.Instance.SetData(gameConfig.stateForFrames, gameConfig.frames);
+        //修改抗锯齿
+        CameraHandler.Instance.ChangeAntialiasing(gameConfig.GetAntialiasingMode());
     }
 }

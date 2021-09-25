@@ -334,6 +334,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1229090213}
     m_Modifications:
+    - target: {fileID: 666457158983952595, guid: e48ab55db35bda74596243c14d61528a, type: 3}
+      propertyPath: antialiasing
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 776616025876524325, guid: e48ab55db35bda74596243c14d61528a, type: 3}
       propertyPath: m_Name
       value: Camera
@@ -385,10 +389,6 @@ PrefabInstance:
     - target: {fileID: 776616026688040896, guid: e48ab55db35bda74596243c14d61528a, type: 3}
       propertyPath: field of view
       value: 50
-      objectReference: {fileID: 0}
-    - target: {fileID: 776616026688040896, guid: e48ab55db35bda74596243c14d61528a, type: 3}
-      propertyPath: far clip plane
-      value: 5000
       objectReference: {fileID: 0}
     - target: {fileID: 776616026688040897, guid: e48ab55db35bda74596243c14d61528a, type: 3}
       propertyPath: m_LocalPosition.x

@@ -26,6 +26,28 @@ public class GameConfigBean
     public int frames = 120;
     //阴影距离
     public float shadowDis = 200;
+
+    //抗锯齿模式
+    public int antialiasingMode = 0;
+
+    /// <summary>
+    /// 获取抗锯齿模式
+    /// </summary>
+    /// <returns></returns>
+    public AntialiasingEnum GetAntialiasingMode()
+    {
+        return (AntialiasingEnum)antialiasingMode;
+    }
+
+    /// <summary>
+    /// 设置抗锯齿模式
+    /// </summary>
+    /// <param name="antialiasing"></param>
+    public void SetAntialiasingMode(AntialiasingEnum antialiasing)
+    {
+        antialiasingMode = (int)antialiasing;
+    }
+
     /// <summary>
     /// 获取当前语言
     /// </summary>

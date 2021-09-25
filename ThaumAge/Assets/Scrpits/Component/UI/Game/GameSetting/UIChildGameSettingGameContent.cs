@@ -23,9 +23,16 @@ public class UIChildGameSettingGameContent : UIChildGameSettingBaseContent
         base.Open();
 
         //”Ô—‘—°‘Ò
-        settingSelectLanguage = CreateItemForSelect("”Ô—‘", listLanguageData, HandleForSelectLanguage);
+        settingSelectLanguage = CreateItemForSelect(TextHandler.Instance.GetTextById(101), listLanguageData, HandleForSelectLanguage);
         settingSelectLanguage.SetIndex((int)gameConfig.GetLanguage());
     }
+
+    public override void RefreshUI()
+    {
+        base.RefreshUI();
+        settingSelectLanguage.SetTitle(TextHandler.Instance.GetTextById(101));
+    }
+
 
     /// <summary>
     /// ¥¶¿Ì-”Ô—‘—°‘Ò
@@ -35,5 +42,6 @@ public class UIChildGameSettingGameContent : UIChildGameSettingBaseContent
     {
         gameConfig.SetLanguage((LanguageEnum)index);
         UIHandler.Instance.manager.RefreshAllUI();
+        RefreshUI();
     }
 }

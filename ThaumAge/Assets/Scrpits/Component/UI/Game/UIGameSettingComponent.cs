@@ -18,5 +18,13 @@ public partial class UIGameSetting
 
     public RectTransform ui_ListSettingContent;
 
+    public Text ui_LabelGameContent;
+
+    public Text ui_LabelDisplayContent;
+
+    public Text ui_LabelAudioContent;
+
+    public Text ui_LabelControlContent;
+
 
 }

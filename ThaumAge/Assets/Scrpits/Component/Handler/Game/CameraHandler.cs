@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering.HighDefinition;
 
 public class CameraHandler : BaseHandler<CameraHandler, CameraManager>
 {
@@ -23,7 +24,31 @@ public class CameraHandler : BaseHandler<CameraHandler, CameraManager>
     {
         //第一人称
         GameObject objStart = GameObject.Find("CameraStartPosition");
+    }
 
+    /// <summary>
+    /// 修改摄像头抗锯齿
+    /// </summary>
+    /// <param name="antialiasingEnum"></param>
+    public void ChangeAntialiasing(AntialiasingEnum antialiasingEnum)
+    {
+        HDAdditionalCameraData  hdAdditionalCamera = manager.mainCamera.GetComponent<HDAdditionalCameraData>();
+        HDAdditionalCameraData.AntialiasingMode antialiasingMode = HDAdditionalCameraData.AntialiasingMode.None;
+        switch (antialiasingEnum)
+        {
+            case AntialiasingEnum.None:
+                break;
+            case AntialiasingEnum.FXAA:
+                antialiasingMode = HDAdditionalCameraData.AntialiasingMode.FastApproximateAntialiasing;
+                break;
+            case AntialiasingEnum.TAA:
+                antialiasingMode = HDAdditionalCameraData.AntialiasingMode.TemporalAntialiasing;
+                break;
+            case AntialiasingEnum.SMAA:
+                antialiasingMode = HDAdditionalCameraData.AntialiasingMode.SubpixelMorphologicalAntiAliasing;
+                break;
+        }
+        hdAdditionalCamera.antialiasing = antialiasingMode;
     }
 
     /// <summary>

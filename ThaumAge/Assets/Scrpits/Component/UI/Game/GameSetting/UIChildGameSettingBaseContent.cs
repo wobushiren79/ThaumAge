@@ -20,6 +20,11 @@ public class UIChildGameSettingBaseContent
         gameConfig = GameDataHandler.Instance.manager.GetGameConfig();
     }
 
+    public virtual void RefreshUI()
+    {
+
+    }
+
     /// <summary>
     /// 创建范围选择
     /// </summary>

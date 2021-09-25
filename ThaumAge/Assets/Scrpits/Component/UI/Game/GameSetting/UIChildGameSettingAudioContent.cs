@@ -17,10 +17,10 @@ public class UIChildGameSettingAudioContent : UIChildGameSettingBaseContent
     {
         base.Open();
         //音乐
-        settingMusic = CreateItemForRange("音乐", HandleForMusicChange);
+        settingMusic = CreateItemForRange(TextHandler.Instance.GetTextById(106), HandleForMusicChange);
         settingMusic.SetPro(gameConfig.musicVolume);
         //音效
-        settingSound = CreateItemForRange("音效", HandleForSoundChange);
+        settingSound = CreateItemForRange(TextHandler.Instance.GetTextById(107), HandleForSoundChange);
         settingSound.SetPro(gameConfig.soundVolume);
     }
 

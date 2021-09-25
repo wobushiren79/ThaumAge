@@ -29,12 +29,12 @@ public partial class UIListItemGameSettingRB : UIListItemGameSettingBase, IRadio
         if (isSelect)
         {
             callBack?.Invoke(true);
-            ui_RB.SetText("已开启");
+            ui_RB.SetText(TextHandler.Instance.GetTextById(10001));
         }
         else
         {
             callBack?.Invoke(false);
-            ui_RB.SetText("已关闭");
+            ui_RB.SetText(TextHandler.Instance.GetTextById(10002));
         }
 
     }
