@@ -10,7 +10,7 @@ using System;
 using System.Collections.Generic;
 
 [Serializable]
-public class UserDataBean : BaseBean
+public class UserDataBean
 {
     public string userId;
 

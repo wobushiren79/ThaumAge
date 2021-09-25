@@ -4,6 +4,19 @@ using UnityEngine;
 
 public class FPSHandler : BaseHandler<FPSHandler, BaseManager>
 {
+    private float m_LastUpdateShowTime = 0f;    //上一次更新帧率的时间;
+
+    private float m_UpdateShowDeltaTime = 0.01f;//更新帧率的时间间隔;
+
+    private int m_FrameUpdate = 0;//帧数;
+
+    private float m_FPS = 0;
+
+    protected void Start()
+    {
+        m_LastUpdateShowTime = Time.realtimeSinceStartup;
+    }
+
     public void SetData(bool isLock, int fps)
     {
         if (isLock)
@@ -26,6 +39,24 @@ public class FPSHandler : BaseHandler<FPSHandler, BaseManager>
         {
             Application.targetFrameRate = -1;
         }
+    }
+
+    void Update()
+    {
+        m_FrameUpdate++;
+        if (Time.realtimeSinceStartup - m_LastUpdateShowTime >= m_UpdateShowDeltaTime)
+        {
+            m_FPS = m_FrameUpdate / (Time.realtimeSinceStartup - m_LastUpdateShowTime);
+            m_FrameUpdate = 0;
+            m_LastUpdateShowTime = Time.realtimeSinceStartup;
+        }
+    }
+
+    void OnGUI()
+    {
+        GameConfigBean gameConfig =  GameDataHandler.Instance.manager.GetGameConfig();
+        if(gameConfig.framesShow)
+            GUI.Label(new Rect(Screen.width - 100, 0, 100, 100), "FPS: " + Mathf.FloorToInt(m_FPS));
     }
 
     /// <summary>

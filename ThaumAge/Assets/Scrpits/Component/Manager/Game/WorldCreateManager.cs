@@ -44,7 +44,7 @@ public class WorldCreateManager : BaseManager
     protected static object lockForUpdateBlock = new object();
 
     protected void Awake()
-    { 
+    {
         List<Material> listData = GetAllModel<Material>("block/mats", "Assets/Prefabs/Mats");
         for (int i = 0; i < listData.Count; i++)
         {
@@ -54,6 +54,18 @@ public class WorldCreateManager : BaseManager
             int indexMat = int.Parse(nameList[1]);
             arrayBlockMat[indexMat] = itemMat;
         }
+    }
+
+    /// <summary>
+    /// 清除所有区块
+    /// </summary>
+    public void ClearAllChunk()
+    {
+        foreach (var itemChunk in dicChunk)
+        {
+            Destroy(itemChunk.Value.gameObject);
+        }
+        dicChunk.Clear();
     }
 
     /// <summary>
@@ -213,7 +225,7 @@ public class WorldCreateManager : BaseManager
         int maxHeight = int.MinValue;
         for (int y = 0; y < heightChunk; y++)
         {
-            chunk.GetBlockForWorld(new Vector3Int(x, y, z), out BlockTypeEnum blockType,out DirectionEnum direction, out bool isInside);
+            chunk.GetBlockForWorld(new Vector3Int(x, y, z), out BlockTypeEnum blockType, out DirectionEnum direction, out bool isInside);
             if (blockType == BlockTypeEnum.None || !isInside)
                 continue;
             if (blockType != BlockTypeEnum.None && isInside && y > maxHeight)

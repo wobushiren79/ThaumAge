@@ -51,6 +51,14 @@ public class GameDataManager : BaseManager,
     }
 
     /// <summary>
+    /// 使用该数据
+    /// </summary>
+    public void UseUserData(UserDataBean userData)
+    {
+        this.userData = userData;
+    }
+
+    /// <summary>
     /// 获取世界数据
     /// </summary>
     /// <returns></returns>

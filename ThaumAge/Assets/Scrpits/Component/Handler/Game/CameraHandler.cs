@@ -26,11 +26,13 @@ public class CameraHandler : BaseHandler<CameraHandler, CameraManager>
         GameObject objStart = GameObject.Find("CameraStartPosition");
     }
 
+
     /// <summary>
     /// 修改摄像头抗锯齿
     /// </summary>
     /// <param name="antialiasingEnum"></param>
-    public void ChangeAntialiasing(AntialiasingEnum antialiasingEnum)
+    /// <param name="qualityLevel"></param>
+    public void ChangeAntialiasing(AntialiasingEnum antialiasingEnum,int qualityLevel = 1)
     {
         HDAdditionalCameraData  hdAdditionalCamera = manager.mainCamera.GetComponent<HDAdditionalCameraData>();
         HDAdditionalCameraData.AntialiasingMode antialiasingMode = HDAdditionalCameraData.AntialiasingMode.None;
@@ -49,6 +51,25 @@ public class CameraHandler : BaseHandler<CameraHandler, CameraManager>
                 break;
         }
         hdAdditionalCamera.antialiasing = antialiasingMode;
+        switch (qualityLevel) 
+        {
+            case 0:
+                hdAdditionalCamera.SMAAQuality = HDAdditionalCameraData.SMAAQualityLevel.Low;
+                hdAdditionalCamera.TAAQuality = HDAdditionalCameraData.TAAQualityLevel.Low;
+                break;
+            case 1:
+                hdAdditionalCamera.SMAAQuality = HDAdditionalCameraData.SMAAQualityLevel.Medium;
+                hdAdditionalCamera.TAAQuality = HDAdditionalCameraData.TAAQualityLevel.Medium;
+                break;
+            case 2:
+                hdAdditionalCamera.SMAAQuality = HDAdditionalCameraData.SMAAQualityLevel.High;
+                hdAdditionalCamera.TAAQuality = HDAdditionalCameraData.TAAQualityLevel.High;
+                break;
+            default:
+                hdAdditionalCamera.SMAAQuality = HDAdditionalCameraData.SMAAQualityLevel.Low;
+                hdAdditionalCamera.TAAQuality = HDAdditionalCameraData.TAAQualityLevel.Low;
+                break;
+        }
     }
 
     /// <summary>

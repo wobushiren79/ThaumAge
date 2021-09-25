@@ -32,5 +32,23 @@ public partial class UIMainCreate
 
     public InputField ui_NameInput;
 
+    public Text ui_NameTitle;
+
+    public Text ui_TitleHair;
+
+    public Text ui_TitleHairColor;
+
+    public Text ui_TitleEye;
+
+    public Text ui_TitleSkin;
+
+    public Text ui_TitleMouth;
+
+    public Text ui_TitleClothes;
+
+    public Text ui_StartText;
+
+    public Text ui_SexTitle;
+
 
 }

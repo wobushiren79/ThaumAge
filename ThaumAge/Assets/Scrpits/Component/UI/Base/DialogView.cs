@@ -96,7 +96,7 @@ public class DialogView : BaseUIView
         this.callBack = callBack;
     }
 
-    public void SetAction(Action<DialogView, DialogBean> actionSubmit, Action<DialogView, DialogBean> actionCancel)
+    public virtual void SetAction(Action<DialogView, DialogBean> actionSubmit, Action<DialogView, DialogBean> actionCancel)
     {
         this.actionSubmit = actionSubmit;
         this.actionCancel = actionCancel;
@@ -130,7 +130,7 @@ public class DialogView : BaseUIView
     /// 设置标题
     /// </summary>
     /// <param name="title"></param>
-    public void SetTitle(string title)
+    public virtual void SetTitle(string title)
     {
         if (ui_Title != null)
         {
@@ -142,7 +142,7 @@ public class DialogView : BaseUIView
     /// 设置内容
     /// </summary>
     /// <param name="content"></param>
-    public void SetContent(string content)
+    public virtual void SetContent(string content)
     {
         if (ui_Content != null)
         {
@@ -154,7 +154,7 @@ public class DialogView : BaseUIView
     /// 设置提交按钮问题
     /// </summary>
     /// <param name="str"></param>
-    public void SetSubmitStr(string str)
+    public virtual void SetSubmitStr(string str)
     {
         if (ui_SubmitText != null)
         {
@@ -166,7 +166,7 @@ public class DialogView : BaseUIView
     /// 设置取消按钮文字
     /// </summary>
     /// <param name="str"></param>
-    public void SetCancelStr(string str)
+    public virtual void SetCancelStr(string str)
     {
         if (ui_CancelText != null)
         {
@@ -178,7 +178,7 @@ public class DialogView : BaseUIView
     /// 设置延迟删除
     /// </summary>
     /// <param name="delayTime"></param>
-    public void SetDelayDelete(float delayTime)
+    public virtual void SetDelayDelete(float delayTime)
     {
         this.timeDelayDelete = delayTime;
     }

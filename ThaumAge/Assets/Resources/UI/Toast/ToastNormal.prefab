@@ -41,8 +41,8 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 255, y: 0}
-  m_SizeDelta: {x: 510, y: 100}
-  m_Pivot: {x: 0.5, y: 1}
+  m_SizeDelta: {x: 510, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8341709134038537735
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -71,7 +71,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 65108b77dbf2b534db4d64c1d2850ace, type: 3}
+  m_Sprite: {fileID: 0}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -125,7 +125,7 @@ MonoBehaviour:
     m_Right: 10
     m_Top: 10
     m_Bottom: 10
-  m_ChildAlignment: 0
+  m_ChildAlignment: 1
   m_Spacing: 10
   m_ChildForceExpandWidth: 0
   m_ChildForceExpandHeight: 0
@@ -159,6 +159,7 @@ GameObject:
   - component: {fileID: 8971509265474339885}
   - component: {fileID: 941062422672768445}
   - component: {fileID: 7148861126518006582}
+  - component: {fileID: 237246068320528422}
   m_Layer: 5
   m_Name: ToastIcon
   m_TagString: Untagged
@@ -213,7 +214,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: b833f46cf63978e4282b3816697417e6, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 822a0ee7db27b734ea7df5e70249a3d5, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -223,6 +224,21 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &237246068320528422
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4666808345396030350}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cfabb0440166ab443bba8876756fdfa9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_EffectColor: {r: 0, g: 0, b: 0, a: 0.5}
+  m_EffectDistance: {x: 0, y: -3}
+  m_UseGraphicAlpha: 1
 --- !u!1 &7586890453639010438
 GameObject:
   m_ObjectHideFlags: 0
@@ -259,7 +275,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 305, y: 0}
+  m_AnchoredPosition: {x: 310, y: 0}
   m_SizeDelta: {x: 370, y: 0}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!222 &7488262202245853727

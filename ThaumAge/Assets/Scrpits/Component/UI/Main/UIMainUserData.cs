@@ -17,12 +17,6 @@ public partial class UIMainUserData : BaseUIComponent
     public override void RefreshUI()
     {
         base.RefreshUI();
-        ShowUserData();
-    }
-
-    public override void OpenUI()
-    {
-        base.OpenUI();
         GameDataHandler.Instance.manager.GetAllUserData(SetUserData);
     }
 
@@ -38,7 +32,7 @@ public partial class UIMainUserData : BaseUIComponent
     public void SetUserData(List<UserDataBean> listUserData)
     {
         this.listUserData = listUserData;
-        RefreshUI();
+        ShowUserData();
     }
 
     /// <summary>

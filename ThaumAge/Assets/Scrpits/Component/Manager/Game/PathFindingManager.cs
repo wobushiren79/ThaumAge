@@ -21,6 +21,21 @@ public class PathFindingManager : BaseManager
     }
 
     /// <summary>
+    /// 初始化寻路
+    /// </summary>
+    public void InitPathFinding()
+    {
+        switch (ProjectConfigInfo.AI_PATHFINDING)
+        {
+            case PathFindingEnum.Navigation:
+                navigationPathFinding.InitNavMesh();
+                break;
+            case PathFindingEnum.Astar:
+                break;
+        }
+    }
+
+    /// <summary>
     /// 刷新寻路
     /// </summary>
     /// <param name="chunk"></param>

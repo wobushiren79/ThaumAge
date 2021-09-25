@@ -10,29 +10,41 @@ public class ToastView : BaseMonoBehaviour
     public Text tvContent;
     public CanvasGroup cgToast;
 
-    private void Awake()
+    public void Awake()
     {
         AutoLinkUI();
         cgToast = GetComponent<CanvasGroup>();
     }
 
-    public void SetData(Sprite spIcon,string content,float destoryTime)
+    public virtual void AnimForShow()
+    {
+        if (cgToast != null)
+            cgToast.DOFade(0, 0.2f).From();
+        gameObject.transform.DOScale(Vector3.zero, 0.2f).From().SetEase(Ease.OutBack);
+    }
+
+    public void SetData(Sprite spIcon, string content, float destoryTime)
     {
         //设置Icon
-        SetIcon( spIcon);
+        SetIcon(spIcon);
         //设置内容
-        SetContent( content);
+        SetContent(content);
         //定时销毁
         DestroyToast(destoryTime);
+
+        UGUIUtil.RefreshUISize(tvContent.rectTransform);
+        UGUIUtil.RefreshUISize((RectTransform)cgToast.transform);
+
+        AnimForShow();
     }
-   
+
     /// <summary>
     /// 设置图标
     /// </summary>
     /// <param name="spIcon"></param>
     public void SetIcon(Sprite spIcon)
     {
-        if(ivIcon!= null&& spIcon != null)
+        if (ivIcon != null && spIcon != null)
         {
             ivIcon.sprite = spIcon;
         }
@@ -58,7 +70,7 @@ public class ToastView : BaseMonoBehaviour
     {
         if (cgToast != null)
             cgToast.DOFade(0, 0.2f).SetDelay(timeDelay);
-        StartCoroutine(CoroutineForDelayDestroy(timeDelay));
+        StartCoroutine(CoroutineForDelayDestroy(timeDelay + 0.2f));
     }
 
     /// <summary>

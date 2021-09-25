@@ -44,6 +44,28 @@ public partial class UIMainCreate : BaseUIComponent,
         InitData();
     }
 
+    public override void RefreshUI()
+    {
+        base.RefreshUI();
+        SetUIText();
+    }
+
+    /// <summary>
+    /// 设置文本信息
+    /// </summary>
+    public void SetUIText()
+    {
+        ui_StartText.text = TextHandler.Instance.GetTextById(31);
+
+        ui_NameTitle.text = TextHandler.Instance.GetTextById(32);
+        ui_TitleHair.text = TextHandler.Instance.GetTextById(35);
+        ui_TitleHairColor.text = TextHandler.Instance.GetTextById(36);
+        ui_TitleEye.text = TextHandler.Instance.GetTextById(37);
+        ui_TitleSkin.text = TextHandler.Instance.GetTextById(38);
+        ui_TitleMouth.text = TextHandler.Instance.GetTextById(39);
+        ui_TitleClothes.text = TextHandler.Instance.GetTextById(40);
+    }
+
     public override void OnClickForButton(Button viewButton)
     {
         base.OnClickForButton(viewButton);
@@ -152,11 +174,11 @@ public partial class UIMainCreate : BaseUIComponent,
         string userId = $"UserId_{SystemUtil.GetUUID(SystemUtil.UUIDTypeEnum.N)}";
         if (CheckUtil.StringIsNull(characterName))
         {
-            ToastHandler.Instance.ToastHint("还有输入名字");
+            ToastHandler.Instance.ToastHint(TextHandler.Instance.GetTextById(30001));
             return;
         }
         DialogBean dialogData = new DialogBean();
-        dialogData.content = "是否以此角色开始游戏？";
+        dialogData.content = TextHandler.Instance.GetTextById(20002);
         DialogHandler.Instance.CreateDialog<DialogView>(DialogEnum.DialogNormal, dialogData, (view, data) =>
         {
             UserDataBean userData = new UserDataBean();
@@ -164,7 +186,12 @@ public partial class UIMainCreate : BaseUIComponent,
             userData.userId = userId;
             userData.characterData = character.GetCharacterData();
             userData.characterData.characterName = characterName;
+            //保存数据
             GameDataHandler.Instance.manager.SaveUserData(userData);
+            //使用数据
+            GameDataHandler.Instance.manager.UseUserData(userData);
+            //改变场景
+            SceneMainHandler.Instance.ChangeScene(ScenesEnum.GameScene);
         });
     }
 
@@ -279,9 +306,11 @@ public partial class UIMainCreate : BaseUIComponent,
         {
             case SexTypeEnum.Man:
                 ui_Man.interactable = false;
+                ui_SexTitle.text = TextHandler.Instance.GetTextById(33);
                 break;
             case SexTypeEnum.Woman:
                 ui_Woman.interactable = false;
+                ui_SexTitle.text = TextHandler.Instance.GetTextById(34);
                 break;
         }
     }

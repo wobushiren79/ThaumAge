@@ -64,6 +64,7 @@ public partial class UIGameSetting : BaseUIComponent, IRadioGroupCallBack
         {
             UIHandler.Instance.manager.OpenUIAndCloseOther<UIGameMain>(UIEnum.GameMain);
         }
+        GameDataHandler.Instance.manager.SaveGameConfig();
     }
 
     #region 选择回调

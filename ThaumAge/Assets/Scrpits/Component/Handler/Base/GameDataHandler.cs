@@ -50,6 +50,6 @@ public class GameDataHandler : BaseHandler<GameDataHandler, GameDataManager>
         //设置FPS
         FPSHandler.Instance.SetData(gameConfig.stateForFrames, gameConfig.frames);
         //修改抗锯齿
-        CameraHandler.Instance.ChangeAntialiasing(gameConfig.GetAntialiasingMode());
+        CameraHandler.Instance.ChangeAntialiasing(gameConfig.GetAntialiasingMode(),gameConfig.antialiasingQualityLevel);
     }
 }

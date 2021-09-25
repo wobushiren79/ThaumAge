@@ -28,5 +28,9 @@ public partial class UIListItemMainUserData
 
     public RectTransform ui_Content;
 
+    public Text ui_NullText;
+
+    public Button ui_Delete;
+
 
 }

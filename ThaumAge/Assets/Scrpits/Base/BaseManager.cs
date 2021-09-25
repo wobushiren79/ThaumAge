@@ -173,7 +173,16 @@ public class BaseManager : BaseMonoBehaviour
         LoadAddressablesUtil.LoadAssetAsync<T>(keyName, data =>
         {
             if (data.Result != null)
-                listModel.Add(keyName, data.Result);
+            {
+                if (listModel.ContainsKey(keyName))
+                {
+                    listModel[keyName]= data.Result;
+                }
+                else
+                {
+                    listModel.Add(keyName, data.Result);
+                } 
+            }
             callBack?.Invoke(data.Result);
         });
     }

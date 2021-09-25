@@ -1,4 +1,5 @@
-﻿using UnityEditor;
+﻿using System;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -23,12 +24,27 @@ public partial class UIListItemMainUserData : BaseUIView
     public override void RefreshUI()
     {
         base.RefreshUI();
+        SetUIText();
         SetDataState();
         if (userData == null)
             return;
         SetName(userData.characterData.characterName);
         SetGameTime(userData.timeForGame);
         SetPlayTime(userData.timeForPlay);
+    }
+
+    /// <summary>
+    /// 设置UI文本
+    /// </summary>
+    public void SetUIText()
+    {
+        ui_NullText.text = TextHandler.Instance.GetTextById(201);
+        ui_CreateText.text = TextHandler.Instance.GetTextById(202);
+        ui_ContinueText.text = TextHandler.Instance.GetTextById(203);
+
+        ui_NameTitle.text = TextHandler.Instance.GetTextById(204);
+        ui_GameTimeTitle.text = TextHandler.Instance.GetTextById(205);
+        ui_PlayTimeTitle.text = TextHandler.Instance.GetTextById(206);
     }
 
     /// <summary>
@@ -46,6 +62,10 @@ public partial class UIListItemMainUserData : BaseUIView
         {
             HandleForContinue();
         }
+        else if (viewButton == ui_Delete)
+        {
+            HandleForDelete();
+        }
     }
 
     /// <summary>
@@ -60,6 +80,7 @@ public partial class UIListItemMainUserData : BaseUIView
 
             ui_Continue.gameObject.SetActive(false);
             ui_Create.gameObject.SetActive(true);
+            ui_Delete.gameObject.SetActive(false);
         }
         else
         {
@@ -68,6 +89,7 @@ public partial class UIListItemMainUserData : BaseUIView
 
             ui_Continue.gameObject.SetActive(true);
             ui_Create.gameObject.SetActive(false);
+            ui_Delete.gameObject.SetActive(true);
         }
     }
 
@@ -101,7 +123,26 @@ public partial class UIListItemMainUserData : BaseUIView
     /// </summary>
     public void HandleForContinue()
     {
+        //使用数据
+        GameDataHandler.Instance.manager.UseUserData(userData);
+        //改变场景
+        SceneMainHandler.Instance.ChangeScene(ScenesEnum.GameScene);
+    }
 
+    /// <summary>
+    /// 删除存档
+    /// </summary>
+    public void HandleForDelete()
+    {
+        DialogBean dialogData = new DialogBean();
+        dialogData.content = TextHandler.Instance.GetTextById(20001);
+        Action<DialogView, DialogBean> callBack = (view, data) =>
+         {
+             GameDataHandler.Instance.manager.DeletGameData(userData.userId);
+             UIHandler.Instance.manager.RefreshAllUI();
+             SceneMainHandler.Instance.manager.ShowCharacterObjByIndex(userDataIndex, false);
+         };
+        UIDialogNormal dialog = DialogHandler.Instance.CreateDialog<UIDialogNormal>(DialogEnum.DialogNormal, dialogData, callBack);
     }
 
     /// <summary>

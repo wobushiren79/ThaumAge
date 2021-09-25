@@ -10,7 +10,7 @@ public class NavigationPathFinding : BaseMonoBehaviour
     public NavMeshData navMeshData;
     public NavMeshDataInstance navMeshInstance;
     public AsyncOperation navMeshUpdateOperation;
-    public Dictionary<Vector3Int, NavMeshBuildSource> navMeshSources = new Dictionary<Vector3Int, NavMeshBuildSource>();
+    public Dictionary<Vector3Int, NavMeshBuildSource> navMeshSources;
 
     public bool navMeshIsUpdating = false;
     public bool navMeshHasNewData = false;
@@ -26,8 +26,13 @@ public class NavigationPathFinding : BaseMonoBehaviour
         HandleForUpdateNavMesh();
     }
 
+    /// <summary>
+    /// 初始化寻路数据
+    /// </summary>
     public void InitNavMesh()
     {
+        navMeshSources = new Dictionary<Vector3Int, NavMeshBuildSource>();
+
         navMeshData = new NavMeshData();
 
         navMeshBuildSettings = NavMesh.GetSettingsByIndex(0);

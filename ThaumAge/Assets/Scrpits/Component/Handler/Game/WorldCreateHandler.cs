@@ -31,6 +31,17 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
     }
 
     /// <summary>
+    /// 清除世界
+    /// </summary>
+    public void ClearWorld()
+    {
+        //清除所有区块
+        manager.ClearAllChunk();
+        //清除所有寻路
+        PathFindingHandler.Instance.manager.InitPathFinding();
+    }
+
+    /// <summary>
     /// 建造区块
     /// </summary>
     /// <param name="worldSeed"></param>
