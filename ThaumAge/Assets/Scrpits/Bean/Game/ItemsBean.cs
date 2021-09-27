@@ -5,7 +5,7 @@ using System;
 [Serializable]
 public class ItemsBean 
 {
-    public int itemsId;
+    public long itemsId;
     public int number;
     public string meta;
 

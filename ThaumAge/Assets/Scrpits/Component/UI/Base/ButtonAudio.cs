@@ -17,7 +17,7 @@ public class ButtonAudio : BaseMonoBehaviour
 
     public virtual void PlayClip()
     {
-        if (CheckUtil.ListIsNull(clickClip))
+        if (clickClip.IsNull())
             return;
         GameConfigBean gameConfig = GameDataHandler.Instance.manager.GetGameConfig();
         AudioClip audioClip = RandomUtil.GetRandomDataByList(clickClip);

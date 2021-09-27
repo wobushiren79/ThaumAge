@@ -45,7 +45,7 @@ public class #ScriptName#Controller : BaseMVCController<#ScriptName#Model, I#Scr
     public void GetAll#ScriptName#Data(Action<List<#ScriptName#Bean>> action)
     {
         List<#ScriptName#Bean> listData = GetModel().GetAll#ScriptName#Data();
-        if (CheckUtil.ListIsNull(listData))
+        if (listData.IsNull())
         {
             GetView().Get#ScriptName#Fail("没有数据", null);
         }
@@ -62,7 +62,7 @@ public class #ScriptName#Controller : BaseMVCController<#ScriptName#Model, I#Scr
     public void Get#ScriptName#DataById(long id,Action<#ScriptName#Bean> action)
     {
         List<#ScriptName#Bean> listData = GetModel().Get#ScriptName#DataById(id);
-        if (CheckUtil.ListIsNull(listData))
+        if (listData.IsNull())
         {
             GetView().Get#ScriptName#Fail("没有数据", null);
         }

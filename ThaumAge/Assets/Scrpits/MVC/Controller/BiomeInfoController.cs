@@ -45,7 +45,7 @@ public class BiomeInfoController : BaseMVCController<BiomeInfoModel, IBiomeInfoV
     public void GetAllBiomeInfoData(Action<List<BiomeInfoBean>> action)
     {
         List<BiomeInfoBean> listData = GetModel().GetAllBiomeInfoData();
-        if (CheckUtil.ListIsNull(listData))
+        if (listData.IsNull())
         {
             GetView().GetBiomeInfoFail("没有数据", null);
         }
@@ -62,7 +62,7 @@ public class BiomeInfoController : BaseMVCController<BiomeInfoModel, IBiomeInfoV
     public void GetBiomeInfoDataById(long id,Action<BiomeInfoBean> action)
     {
         List<BiomeInfoBean> listData = GetModel().GetBiomeInfoDataById(id);
-        if (CheckUtil.ListIsNull(listData))
+        if (listData.IsNull())
         {
             GetView().GetBiomeInfoFail("没有数据", null);
         }

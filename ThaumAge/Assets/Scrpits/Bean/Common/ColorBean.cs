@@ -33,7 +33,7 @@ public class ColorBean
 
     public ColorBean(string colorStr)
     {
-        float[] colors = StringUtil.SplitBySubstringForArrayFloat(colorStr, ',');
+        float[] colors = colorStr.SplitForArrayFloat(',');
         if (colors == null)
             return;
         else if (colors.Length == 1)

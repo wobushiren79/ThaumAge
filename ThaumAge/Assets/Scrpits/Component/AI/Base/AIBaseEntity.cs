@@ -69,7 +69,7 @@ public class AIBaseEntity : BaseMonoBehaviour
     /// <param name="aiIntent"></param>
     public void ChangeIntent(AIIntentEnum aiIntent)
     {
-        if (CheckUtil.ListIsNull(listIntent))
+        if (listIntent.IsNull())
         {
             LogUtil.LogWarning("转换AI意图" + aiIntent.ToString() + "失败，还没有初始化相关AI意图");
             return;

@@ -104,17 +104,17 @@ public static class EditorUtil
     /// <param name="createPath">创建路径</param>
     public static void CreateClass(Dictionary<string,string> dicReplace, string templatesPath, string fileName, string createPath)
     {
-        if (CheckUtil.StringIsNull(templatesPath))
+        if (templatesPath.IsNull())
         {
             LogUtil.LogError("模板路径为空");
             return;
         }
-        if (CheckUtil.StringIsNull(fileName))
+        if (fileName.IsNull())
         {
             LogUtil.LogError("文件名为空");
             return;
         }
-        if (CheckUtil.StringIsNull(createPath))
+        if (createPath.IsNull())
         {
             LogUtil.LogError("生成路径为空");
             return;

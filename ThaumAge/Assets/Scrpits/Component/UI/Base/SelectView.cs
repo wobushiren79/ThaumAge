@@ -91,7 +91,7 @@ public class SelectView : BaseUIView
     /// <param name="position"></param>
     public void SetPosition(int position)
     {
-        if (CheckUtil.ListIsNull(listData))
+        if (listData.IsNull())
             return;
         this.currentIndex = position;
         if (currentIndex < 0)

@@ -79,7 +79,7 @@ public class GameConfigBean
     /// <param name="h"></param>
     public void GetScreenResolution(out int w, out int h)
     {
-        if (CheckUtil.StringIsNull(screenResolution))
+        if (screenResolution.IsNull())
         {
             w = 0;
             h = 0;

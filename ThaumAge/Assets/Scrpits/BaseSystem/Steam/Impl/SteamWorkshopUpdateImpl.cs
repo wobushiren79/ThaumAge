@@ -48,31 +48,31 @@ public class SteamWorkshopUpdateImpl : ISteamWorkshopUpdate
             return;
         }
         //检测是否有标题
-        if (CheckUtil.StringIsNull(updateBean.title))
+        if (updateBean.title.IsNull())
         {
             callBack.UpdateFail(SteamWorkshopUpdateFailEnum.NO_TITLE);
             return;
         }
         //检测是否有介绍
-        if (CheckUtil.StringIsNull(updateBean.description))
+        if (updateBean.description.IsNull())
         {
             callBack.UpdateFail(SteamWorkshopUpdateFailEnum.NO_DESCRIPTION);
             return;
         }
         //检测是否有标签
-        if (CheckUtil.ListIsNull(updateBean.tags))
+        if (updateBean.tags.IsNull())
         {
             callBack.UpdateFail(SteamWorkshopUpdateFailEnum.NO_TAGS);
             return;
         }
         //检测是否有文件路径
-        if (CheckUtil.StringIsNull(updateBean.content))
+        if (updateBean.content.IsNull())
         {
             callBack.UpdateFail(SteamWorkshopUpdateFailEnum.NO_CONTENT);
             return;
         }
         //检测是否有浏览图路径
-        if (CheckUtil.StringIsNull(updateBean.preview))
+        if (updateBean.preview.IsNull())
         {
             callBack.UpdateFail(SteamWorkshopUpdateFailEnum.NO_PREVIEW);
             return;

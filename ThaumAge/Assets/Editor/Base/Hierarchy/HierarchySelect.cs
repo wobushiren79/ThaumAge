@@ -169,7 +169,7 @@ public class HierarchySelect
                 {
                     dicSelectObj[go.name] = componentList[popupSelectIndex];
                 },
-                listData)); 
+                listData));
             }
         }
     }

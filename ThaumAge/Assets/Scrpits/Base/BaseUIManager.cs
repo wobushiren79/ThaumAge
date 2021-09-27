@@ -50,7 +50,7 @@ public class BaseUIManager : BaseManager
     /// <returns></returns>
     public T GetUIByName<T>(string uiName) where T : BaseUIComponent
     {
-        if (uiList == null || CheckUtil.StringIsNull(uiName))
+        if (uiList == null || uiName.IsNull())
             return null;
         for (int i = 0; i < uiList.Count; i++)
         {
@@ -75,7 +75,7 @@ public class BaseUIManager : BaseManager
     /// <returns></returns>
     public T GetUI<T>(UIEnum uiEnum) where T : BaseUIComponent
     {
-        return GetUIByName<T>(EnumUtil.GetEnumName(uiEnum));
+        return GetUIByName<T>(uiEnum.GetEnumName());
     }
 
     /// <summary>
@@ -85,7 +85,7 @@ public class BaseUIManager : BaseManager
     /// <returns></returns>
     public List<BaseUIComponent> GetUIListByName(string uiName)
     {
-        if (uiList == null || CheckUtil.StringIsNull(uiName))
+        if (uiList == null || uiName.IsNull())
             return null;
         List<BaseUIComponent> tempUIList = new List<BaseUIComponent>();
         for (int i = 0; i < uiList.Count; i++)
@@ -105,7 +105,7 @@ public class BaseUIManager : BaseManager
     /// <param name="uiName"></param>
     public T OpenUIByName<T>(string uiName) where T : BaseUIComponent
     {
-        if (CheckUtil.StringIsNull(uiName))
+        if (uiName.IsNull())
             return null;
         for (int i = 0; i < uiList.Count; i++)
         {
@@ -131,7 +131,7 @@ public class BaseUIManager : BaseManager
     /// <param name="uiEnum"></param>
     public T OpenUI<T>(UIEnum uiEnum) where T : BaseUIComponent
     {
-        string uiName = EnumUtil.GetEnumName(uiEnum);
+        string uiName = uiEnum.GetEnumName();
         return OpenUIByName<T>(uiName);
     }
 
@@ -142,7 +142,7 @@ public class BaseUIManager : BaseManager
     /// <param name="uiName"></param>
     public void CloseUIByName(string uiName)
     {
-        if (uiList == null || CheckUtil.StringIsNull(uiName))
+        if (uiList == null || uiName.IsNull())
             return;
         for (int i = 0; i < uiList.Count; i++)
         {
@@ -173,7 +173,7 @@ public class BaseUIManager : BaseManager
     /// <param name="uiName"></param>
     public T OpenUIAndCloseOtherByName<T>(string uiName) where T : BaseUIComponent
     {
-        if (uiList == null || CheckUtil.StringIsNull(uiName))
+        if (uiList == null || uiName.IsNull())
             return null;
         //首先关闭其他UI
         for (int i = 0; i < uiList.Count; i++)
@@ -190,7 +190,7 @@ public class BaseUIManager : BaseManager
 
     public T OpenUIAndCloseOther<T>(UIEnum ui) where T : BaseUIComponent
     {
-        return OpenUIAndCloseOtherByName<T>(EnumUtil.GetEnumName(ui));
+        return OpenUIAndCloseOtherByName<T>(ui.GetEnumName());
     }
 
     /// <summary>
@@ -239,7 +239,7 @@ public class BaseUIManager : BaseManager
     /// <param name="uiName"></param>
     public void RefreshUIByName(string uiName)
     {
-        if (uiList == null || CheckUtil.StringIsNull(uiName))
+        if (uiList == null || uiName.IsNull())
             return;
         for (int i = 0; i < uiList.Count; i++)
         {
@@ -282,8 +282,8 @@ public class BaseUIManager : BaseManager
     /// <returns></returns>
     protected T CreateUI<T>(string uiName) where T : BaseUIComponent
     {
-        //GameObject uiModel = LoadAssetUtil.SyncLoadAsset<GameObject>("ui/ui", uiName);
-        BaseUIComponent uiModel = LoadResourcesUtil.SyncLoadData<BaseUIComponent>("UI/"+ uiName);
+        GameObject uiModel = LoadAssetUtil.SyncLoadAsset<GameObject>("ui/ui", uiName);
+        //BaseUIComponent uiModel = LoadResourcesUtil.SyncLoadData<BaseUIComponent>("UI/"+ uiName);
         if (uiModel)
         {
             GameObject objUIComponent = Instantiate(gameObject, uiModel.gameObject);

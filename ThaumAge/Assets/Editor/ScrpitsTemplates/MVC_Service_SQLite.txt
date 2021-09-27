@@ -43,7 +43,7 @@ public class #ScriptName#Service : BaseMVCService
     {
         return BaseQueryData<#ScriptName#Bean>("link_id", "id", id + "");
     }
-       
+        
     /// <summary>
     /// 根据ID查询数据
     /// </summary>

@@ -45,7 +45,7 @@ public class BlockInfoController : BaseMVCController<BlockInfoModel, IBlockInfoV
     public void GetAllBlockInfoData(Action<List<BlockInfoBean>> action)
     {
         List<BlockInfoBean> listData = GetModel().GetAllBlockInfoData();
-        if (CheckUtil.ListIsNull(listData))
+        if (listData.IsNull())
         {
             GetView().GetBlockInfoFail("没有数据", null);
         }
@@ -62,7 +62,7 @@ public class BlockInfoController : BaseMVCController<BlockInfoModel, IBlockInfoV
     public void GetBlockInfoDataById(long id,Action<BlockInfoBean> action)
     {
         List<BlockInfoBean> listData = GetModel().GetBlockInfoDataById(id);
-        if (CheckUtil.ListIsNull(listData))
+        if (listData.IsNull())
         {
             GetView().GetBlockInfoFail("没有数据", null);
         }

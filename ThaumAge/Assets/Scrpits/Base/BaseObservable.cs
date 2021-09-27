@@ -37,7 +37,7 @@ public class BaseObservable<T> : BaseMonoBehaviour
     /// <param name="observerList"></param>
     public void AddObserver(List<T> observerList)
     {
-        if (CheckUtil.ListIsNull(observerList))
+        if (observerList.IsNull())
             return;
         if (mObserverList == null)
             mObserverList = new List<T>();
@@ -50,7 +50,7 @@ public class BaseObservable<T> : BaseMonoBehaviour
     /// <param name="observer"></param>
     public void RemoveObserver(T observer)
     {
-        if (CheckUtil.ListIsNull(mObserverList) || observer == null)
+        if (mObserverList.IsNull() || observer == null)
             return;
         if (mObserverList.Contains(observer))
             mObserverList.Remove(observer);
@@ -62,7 +62,7 @@ public class BaseObservable<T> : BaseMonoBehaviour
     /// <param name="observerList"></param>
     public void RemoveObserverList(List<T> observerList)
     {
-        if (CheckUtil.ListIsNull(mObserverList) || CheckUtil.ListIsNull(observerList))
+        if (mObserverList.IsNull() || observerList.IsNull())
             return;
         for (int i = 0; i < observerList.Count; i++)
         {
@@ -75,7 +75,7 @@ public class BaseObservable<T> : BaseMonoBehaviour
     /// </summary>
     public void RemoveAllObserver()
     {
-        if (CheckUtil.ListIsNull(mObserverList))
+        if (mObserverList.IsNull())
             return;
         mObserverList.Clear();
     }
@@ -87,7 +87,7 @@ public class BaseObservable<T> : BaseMonoBehaviour
     /// <param name="objs"></param>
     public void NotifyAllObserver(int type, params System.Object[] objs)
     {
-        if (CheckUtil.ListIsNull(mObserverList))
+        if (mObserverList.IsNull())
             return;
         foreach (T item in mObserverList)
         {
@@ -109,7 +109,7 @@ public class BaseObservable<T> : BaseMonoBehaviour
     /// <param name="objs"></param>
     public void NotifyObserver(T observer, int type, params System.Object[] objs)
     {
-        if (CheckUtil.ListIsNull(mObserverList))
+        if (mObserverList.IsNull())
             return;
         foreach (T item in mObserverList)
         {

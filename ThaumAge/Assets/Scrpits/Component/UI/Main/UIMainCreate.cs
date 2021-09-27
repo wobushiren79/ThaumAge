@@ -172,7 +172,7 @@ public partial class UIMainCreate : BaseUIComponent,
         Character character = GetChanracter();
         string characterName = ui_NameInput.text;
         string userId = $"UserId_{SystemUtil.GetUUID(SystemUtil.UUIDTypeEnum.N)}";
-        if (CheckUtil.StringIsNull(characterName))
+        if (characterName.IsNull())
         {
             ToastHandler.Instance.ToastHint(TextHandler.Instance.GetTextById(30001));
             return;

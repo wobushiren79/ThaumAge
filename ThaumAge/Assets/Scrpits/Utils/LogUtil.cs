@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEditor;
 
-public class LogUtil 
+public class LogUtil
 {
     public enum LogEnum
     {
@@ -16,7 +16,7 @@ public class LogUtil
     /// <param name="msg">日志说明</param>
     public static string Log(string msg)
     {
-       return BaseDebugLog("日志输出-正常||", msg, LogEnum.Normal);
+        return BaseDebugLog("日志输出-正常||", msg, LogEnum.Normal);
     }
 
     /// <summary>
@@ -44,14 +44,15 @@ public class LogUtil
     /// <param name="content">内容</param>
     /// <param name="type">类型 详情见LogEnum</param>
     /// <returns></returns>
-    private static string  BaseDebugLog(string title,string content,LogEnum type)
+    private static string BaseDebugLog(string title, string content, LogEnum type)
     {
         //如果没有开启日志输出 则放弃打印
         if (!ProjectConfigInfo.IS_OPEN_LOG_MSG)
             return null;
         string logMsg = title + content;
         //根据不同的日志类型答应不同的日志
-        switch (type) {
+        switch (type)
+        {
             case LogEnum.Normal:
                 Debug.Log(logMsg);
                 break;

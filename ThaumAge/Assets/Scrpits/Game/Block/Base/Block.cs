@@ -484,7 +484,7 @@ public abstract class Block
     public virtual void CreateBlockModel(Chunk chunk, Vector3Int localPosition, DirectionEnum direction)
     {
         //如果有模型。则创建模型
-        if (!CheckUtil.StringIsNull(blockInfo.model_name))
+        if (!blockInfo.model_name.IsNull())
         {
             chunk.listBlockModelUpdate.Enqueue(localPosition);
         }

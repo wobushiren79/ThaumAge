@@ -80,7 +80,7 @@ public class ProgressView : BaseMonoBehaviour
     {
         if (tvContent != null)
         {
-            if (sliderPro.value == 1 && !CheckUtil.StringIsNull(completeContent))
+            if (sliderPro.value == 1 && !completeContent.IsNull())
             {
                 tvContent.text = completeContent;
             }

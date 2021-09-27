@@ -37,7 +37,7 @@ public class RandomUtil
     /// <returns></returns>
     public static T GetRandomDataByList<T>(List<T> list)
     {
-        if (CheckUtil.ListIsNull(list))
+        if (list.IsNull())
             return default;
         int position = Random.Range(0, list.Count);
         return list[position];
@@ -53,7 +53,7 @@ public class RandomUtil
     public static List<T> GetRandomDataByListForNumberNR<T>(List<T> list, int number)
     {
         List<T> listData = new List<T>();
-        if (CheckUtil.ListIsNull(list))
+        if (list.IsNull())
             return listData;
         if (list.Count < number)
         {

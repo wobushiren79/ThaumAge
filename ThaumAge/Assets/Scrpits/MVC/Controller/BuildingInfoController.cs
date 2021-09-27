@@ -45,7 +45,7 @@ public class BuildingInfoController : BaseMVCController<BuildingInfoModel, IBuil
     public void GetAllBuildingInfoData(Action<List<BuildingInfoBean>> action)
     {
         List<BuildingInfoBean> listData = GetModel().GetAllBuildingInfoData();
-        if (CheckUtil.ListIsNull(listData))
+        if (listData.IsNull())
         {
             GetView().GetBuildingInfoFail("没有数据", null);
         }
@@ -62,7 +62,7 @@ public class BuildingInfoController : BaseMVCController<BuildingInfoModel, IBuil
     public void GetBuildingInfoDataById(long id,Action<BuildingInfoBean> action)
     {
         List<BuildingInfoBean> listData = GetModel().GetBuildingInfoDataById(id);
-        if (CheckUtil.ListIsNull(listData))
+        if (listData.IsNull())
         {
             GetView().GetBuildingInfoFail("没有数据", null);
         }

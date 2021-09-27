@@ -45,7 +45,7 @@ public class UserDataController : BaseMVCController<UserDataModel, IUserDataView
     public void GetAllUserDataData(Action<List<UserDataBean>> action)
     {
         List<UserDataBean> listData = GetModel().GetAllUserDataData();
-        if (CheckUtil.ListIsNull(listData))
+        if (listData.IsNull())
         {
             action?.Invoke(new List<UserDataBean>());
             GetView().GetUserDataFail("没有数据", null);

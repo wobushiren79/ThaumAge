@@ -30,17 +30,17 @@ public class StringUtil
     /// <returns></returns>
     public static T[] SplitBySubstringForArrayEnum<T>(string data, char substring)
     {
-        if (CheckUtil.StringIsNull(data))
+        if (data.IsNull())
             return new T[0];
         string[] splitData = data.Split(new char[] { substring }, StringSplitOptions.RemoveEmptyEntries);
-        if (CheckUtil.ArrayIsNull(splitData))
+        if (splitData.IsNull())
         {
             return new T[0];
         }
         T[] listData = new T[splitData.Length];
         for (int i = 0; i < splitData.Length; i++)
         {
-            if (CheckUtil.StringIsNull(splitData[i]))
+            if (splitData[i].IsNull())
             {
 
             }
@@ -89,7 +89,7 @@ public class StringUtil
     /// <returns></returns>
     public static long[] SplitBySubstringForArrayLong(string data, char substring)
     {
-        if (CheckUtil.StringIsNull(data))
+        if (data.IsNull())
             return new long[0];
         string[] splitData = data.Split(new char[] { substring }, StringSplitOptions.RemoveEmptyEntries);
         long[] listData = TypeConversionUtil.ArrayStrToArrayLong(splitData);
@@ -105,7 +105,7 @@ public class StringUtil
     public static long SplitAndRandomForLong(string data, char substring)
     {
         long[] arrayData= SplitBySubstringForArrayLong(data, substring);
-        if (CheckUtil.ArrayIsNull(arrayData))
+        if (arrayData.IsNull())
         {
             return 0;
         }

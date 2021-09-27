@@ -35,6 +35,7 @@ public class TimeUtil
         return Convert.ToInt64(ts.TotalMilliseconds);
     }
 
+
     //获取当前时间------------------------------------------------------------------------------------------------------------
     public static int GetNowTimeForYear()
     {
@@ -70,8 +71,8 @@ public class TimeUtil
     //比较时间------------------------------------------------------------------------------------------------------------
     public static TimeSpan SubtractTime(TimeBean timeOne, TimeBean timeTwo)
     {
-        DateTime dateOne = TypeConversionUtil.TimeBeanToDateTime(timeOne);
-        DateTime dateTwo = TypeConversionUtil.TimeBeanToDateTime(timeTwo);
+        DateTime dateOne = timeOne.ToDateTime();
+        DateTime dateTwo = timeTwo.ToDateTime();
         TimeSpan timeSpan = dateOne.Subtract(dateTwo);
         return timeSpan;
     }

@@ -134,15 +134,15 @@ public class EditorUI
     /// <returns></returns>
     public static T GUIEnum<T>(string title, int type, int width, int height) where T : Enum
     {
-        return (T)EditorGUILayout.EnumPopup(title, EnumUtil.GetEnum<T>(type), GUILayout.Width(width), GUILayout.Height(height));
+        return (T)EditorGUILayout.EnumPopup(title, type.GetEnum<T>(), GUILayout.Width(width), GUILayout.Height(height));
     }
     public static T GUIEnum<T>(string title, int type, int width) where T : Enum
     {
-        return (T)EditorGUILayout.EnumPopup(title, EnumUtil.GetEnum<T>(type), GUILayout.Width(width), GUILayout.Height(20));
+        return (T)EditorGUILayout.EnumPopup(title, type.GetEnum<T>(), GUILayout.Width(width), GUILayout.Height(20));
     }
     public static T GUIEnum<T>(string title, int type) where T : Enum
     {
-        return (T)EditorGUILayout.EnumPopup(title, EnumUtil.GetEnum<T>(type), GUILayout.Width(300), GUILayout.Height(20));
+        return (T)EditorGUILayout.EnumPopup(title, type.GetEnum<T>(), GUILayout.Width(300), GUILayout.Height(20));
     }
 
     /// <summary>
@@ -194,14 +194,14 @@ public class EditorUI
         GUILayout.Label(titleName + "：", GUILayout.Width(100), GUILayout.Height(20));
         if (GUILayout.Button("添加", GUILayout.Width(100), GUILayout.Height(20)))
         {
-            content += ("|" + EnumUtil.GetEnumName(EnumUtil.GetEnumValueByPosition<E>(0)) + ":" + "1|");
+            content += ("|" + EnumExtension.GetEnumValueByPosition<E>(0).GetEnumName() + ":" + "1|");
         }
-        List<string> listConditionData = StringUtil.SplitBySubstringForListStr(content, '|');
+        List<string> listConditionData = content.SplitForListStr('|');
         content = "";
         for (int i = 0; i < listConditionData.Count; i++)
         {
             string itemConditionData = listConditionData[i];
-            if (CheckUtil.StringIsNull(itemConditionData))
+            if (itemConditionData.IsNull())
             {
                 continue;
             }
@@ -212,8 +212,8 @@ public class EditorUI
                 i--;
                 continue;
             }
-            List<string> listItemConditionData = StringUtil.SplitBySubstringForListStr(itemConditionData, ':');
-            listItemConditionData[0] = EnumUtil.GetEnumName(EditorGUILayout.EnumPopup(EnumUtil.GetEnum<E>(listItemConditionData[0]), GUILayout.Width(300), GUILayout.Height(20)));
+            List<string> listItemConditionData = itemConditionData.SplitForListStr(':');
+            listItemConditionData[0] = EditorGUILayout.EnumPopup(listItemConditionData[0].GetEnum<E>(), GUILayout.Width(300), GUILayout.Height(20)).GetEnumName();
             listItemConditionData[1] = EditorGUILayout.TextArea(listItemConditionData[1] + "", GUILayout.Width(100), GUILayout.Height(20));
             EditorGUILayout.EndHorizontal();
             content += (listItemConditionData[0] + ":" + listItemConditionData[1]) + "|";

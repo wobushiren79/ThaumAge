@@ -56,7 +56,7 @@ public class WeatherManager : BaseManager
         switch (worldType)
         {
             case WorldTypeEnum.Main:
-                if (CheckUtil.ListIsNull(listWeatherForMain))
+                if (listWeatherForMain.IsNull())
                 {
                     listWeatherForMain.Add(WeatherTypeEnum.Sunny);
                     listWeatherForMain.Add(WeatherTypeEnum.Cloudy);

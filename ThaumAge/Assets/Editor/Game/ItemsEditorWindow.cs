@@ -67,7 +67,7 @@ public class ItemsEditorWindow : EditorWindow
     /// <param name="listData"></param>
     protected void UIForItemsList(List<ItemsInfoBean> listData)
     {
-        if (CheckUtil.ListIsNull(listData))
+        if (listData.IsNull())
             return;
         for (int i = 0; i < listData.Count; i++)
         {

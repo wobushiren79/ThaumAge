@@ -74,7 +74,7 @@ public class BlockCross : Block
 
         List<Vector2Int> listData = blockInfo.GetUVPosition();
         Vector2 uvStartPosition;
-        if (CheckUtil.ListIsNull(listData))
+        if (listData.IsNull())
         {
             uvStartPosition = Vector2.zero;
         }

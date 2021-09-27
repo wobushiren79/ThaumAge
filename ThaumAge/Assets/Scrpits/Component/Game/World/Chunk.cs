@@ -640,7 +640,7 @@ public class Chunk : BaseMonoBehaviour
             return;
         //获取数据
         BlockInfoBean blockInfo = BlockHandler.Instance.manager.GetBlockInfo(blockType);
-        if (blockInfo == null || CheckUtil.StringIsNull(blockInfo.model_name))
+        if (blockInfo == null || blockInfo.model_name.IsNull())
             return;
         //获取模型
         GameObject objBlockModel = BlockHandler.Instance.CreateBlockModel(this, (ushort)blockType, blockInfo.model_name);

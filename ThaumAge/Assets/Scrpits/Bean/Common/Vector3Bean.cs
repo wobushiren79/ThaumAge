@@ -31,6 +31,6 @@ public class Vector3Bean
 
     public Vector3 GetVector3()
     {
-        return TypeConversionUtil.Vector3BeanToVector3(this);
+        return this.ToVector3();
     }
 }

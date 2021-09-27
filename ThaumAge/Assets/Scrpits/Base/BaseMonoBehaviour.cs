@@ -99,7 +99,7 @@ public class BaseMonoBehaviour : MonoBehaviour
     public T FindWithTag<T>(string tag)
     {
         GameObject[] objArray = GameObject.FindGameObjectsWithTag(tag);
-        if (CheckUtil.ArrayIsNull(objArray))
+        if (objArray.IsNull())
         {
             return default(T);
         }
@@ -117,7 +117,7 @@ public class BaseMonoBehaviour : MonoBehaviour
     {
         List<T> listData = new List<T>();
         GameObject[] objArray = GameObject.FindGameObjectsWithTag(tag);
-        if (CheckUtil.ArrayIsNull(objArray))
+        if (objArray.IsNull())
         {
             return listData;
         }

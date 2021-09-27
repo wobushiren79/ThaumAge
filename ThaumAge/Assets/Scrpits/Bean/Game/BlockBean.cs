@@ -63,7 +63,7 @@ public class BlockBean
     /// <returns></returns>
     public T GetBlockData<T>()
     {
-        if (CheckUtil.StringIsNull(meta))
+        if (meta.IsNull())
             return default;
         T data = JsonUtil.FromJson<T>(meta);
         return data;

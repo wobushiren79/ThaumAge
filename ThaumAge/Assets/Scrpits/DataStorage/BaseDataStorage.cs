@@ -39,7 +39,7 @@ public abstract class BaseDataStorage<T>
     /// <param name="dataBean"></param>
     public void BaseSaveData(string fileName, T dataBean)
     {
-        if (CheckUtil.StringIsNull(fileName))
+        if (fileName.IsNull())
         {
             LogUtil.Log("保存文件失败-没有文件名称");
             return;
@@ -59,7 +59,7 @@ public abstract class BaseDataStorage<T>
     /// <param name="fileName"></param>
     public void BaseDeleteFile(string fileName)
     {
-        if (CheckUtil.StringIsNull(fileName))
+        if (fileName.IsNull())
         {
             LogUtil.Log("删除文件失败-没有文件路径");
             return;

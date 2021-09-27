@@ -14,7 +14,7 @@ public class DataTools
         List<string> listDataStr = StringUtil.SplitBySubstringForListStr(data, '|');
         foreach (string itemData in listDataStr)
         {
-            if (CheckUtil.StringIsNull(itemData))
+            if (itemData.IsNull())
                 continue;
             List<string> itemListData = StringUtil.SplitBySubstringForListStr(itemData, ':');
             E dataType = EnumUtil.GetEnum<E>(itemListData[0]);

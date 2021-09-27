@@ -87,7 +87,7 @@ public class BaseMVCService
     /// <returns></returns>
     public List<T> BaseQueryData<T>(string leftId, string key, string value)
     {
-        if (CheckUtil.StringIsNull(leftId) || CheckUtil.StringIsNull(tableNameForLeft))
+        if (leftId.IsNull() || tableNameForLeft.IsNull())
         {
             return BaseQueryData<T>(key, value);
         }
@@ -191,7 +191,7 @@ public class BaseMVCService
         bool isDeleteAll = true;
         if (BaseDeleteData(tableNameForMain, mainName, value))
         {
-            if (CheckUtil.StringIsNull(tableNameForLeft))
+            if (tableNameForLeft.IsNull())
             {
                 isDeleteAll = true;
             }
@@ -258,7 +258,7 @@ public class BaseMVCService
             }
             else if (item.Value is string)
             {
-                if (CheckUtil.StringIsNull(valueStr))
+                if (valueStr.IsNull())
                     listValues.Add("null");
                 else
                     listValues.Add("'" + valueStr + "'");
@@ -268,7 +268,7 @@ public class BaseMVCService
                 listValues.Add(valueStr);
             }
         }
-        return SQLiteHandle.InsertValues(ProjectConfigInfo.DATA_BASE_INFO_NAME, tableName, TypeConversionUtil.ListToArray(listKeys), TypeConversionUtil.ListToArray(listValues));
+        return SQLiteHandle.InsertValues(ProjectConfigInfo.DATA_BASE_INFO_NAME, tableName, listKeys.ToArray(), listValues.ToArray());
     }
 
     /// <summary>
@@ -297,7 +297,7 @@ public class BaseMVCService
                 }
                 else if (item.Value is string)
                 {
-                    if (CheckUtil.StringIsNull(valueStr))
+                    if (valueStr.IsNull())
                         listLeftValues.Add("null");
                     else
                         listLeftValues.Add("'" + valueStr + "'");
@@ -321,7 +321,7 @@ public class BaseMVCService
                 }
                 else if (item.Value is string)
                 {
-                    if (CheckUtil.StringIsNull(valueStr))
+                    if (valueStr.IsNull())
                         listMainValues.Add("null");
                     else
                         listMainValues.Add("'" + valueStr + "'");
@@ -337,10 +337,10 @@ public class BaseMVCService
             }
         }
         bool isInsert = true;
-        isInsert = SQLiteHandle.InsertValues(ProjectConfigInfo.DATA_BASE_INFO_NAME, tableNameForMain, TypeConversionUtil.ListToArray(listMainKeys), TypeConversionUtil.ListToArray(listMainValues));
+        isInsert = SQLiteHandle.InsertValues(ProjectConfigInfo.DATA_BASE_INFO_NAME, tableNameForMain, listMainKeys.ToArray(), listMainValues.ToArray());
         if (isInsert)
         {
-            SQLiteHandle.InsertValues(ProjectConfigInfo.DATA_BASE_INFO_NAME, tableNameForLeft, TypeConversionUtil.ListToArray(listLeftKeys), TypeConversionUtil.ListToArray(listLeftValues));
+            SQLiteHandle.InsertValues(ProjectConfigInfo.DATA_BASE_INFO_NAME, tableNameForLeft, listLeftKeys.ToArray(), listMainValues.ToArray());
         }
         return isInsert;
     }

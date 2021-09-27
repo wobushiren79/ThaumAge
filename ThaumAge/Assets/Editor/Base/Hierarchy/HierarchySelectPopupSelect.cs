@@ -20,7 +20,7 @@ public class HierarchySelectPopupSelect : PopupWindowContent
     public override void OnGUI(Rect rect)
     {
         scrollViewPosition = GUILayout.BeginScrollView(scrollViewPosition);
-        if (CheckUtil.ArrayIsNull(listData))
+        if (listData.IsNull())
         {
             return;
         }

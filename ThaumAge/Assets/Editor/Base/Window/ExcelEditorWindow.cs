@@ -80,12 +80,12 @@ public class ExcelEditorWindow : EditorWindow
 
     protected void ExcelToJson()
     {
-        if (CheckUtil.StringIsNull(excelFolderPath))
+        if (excelFolderPath.IsNull())
         {
             LogUtil.LogError("Excel文件目录为null");
             return;
         }
-        if (CheckUtil.StringIsNull(jsonFolderPath))
+        if (jsonFolderPath.IsNull())
         {
             LogUtil.LogError("Json文件目录为null");
             return;
@@ -173,12 +173,12 @@ public class ExcelEditorWindow : EditorWindow
 
     void CreateEntities()
     {
-        if (CheckUtil.StringIsNull(excelFolderPath))
+        if (excelFolderPath.IsNull())
         {
             LogUtil.LogError("Excel文件目录为null");
             return;
         }
-        if (CheckUtil.StringIsNull(entityFolderPath))
+        if (entityFolderPath.IsNull())
         {
             LogUtil.LogError("Entity文件目录为null");
             return;

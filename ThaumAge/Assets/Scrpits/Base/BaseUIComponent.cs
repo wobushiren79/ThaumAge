@@ -70,12 +70,12 @@ public class BaseUIComponent : BaseMonoBehaviour
     public void InitButtons()
     {
         Button[] buttonArray = gameObject.GetComponentsInChildren<Button>();
-        if (CheckUtil.ArrayIsNull(buttonArray))
+        if (buttonArray.IsNull())
             return;
         for (int i = 0; i < buttonArray.Length; i++)
         {
             Button itemButton = buttonArray[i];
-            itemButton.onClick.AddListener(()=> { OnClickForButton(itemButton); });
+            itemButton.onClick.AddListener(() => { OnClickForButton(itemButton); });
         }
     }
 

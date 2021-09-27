@@ -45,7 +45,7 @@ public class ItemsInfoController : BaseMVCController<ItemsInfoModel, IItemsInfoV
     public void GetAllItemsInfoData(Action<List<ItemsInfoBean>> action)
     {
         List<ItemsInfoBean> listData = GetModel().GetAllItemsInfoData();
-        if (CheckUtil.ListIsNull(listData))
+        if (listData.IsNull())
         {
             GetView().GetItemsInfoFail("没有数据", null);
         }
@@ -62,7 +62,7 @@ public class ItemsInfoController : BaseMVCController<ItemsInfoModel, IItemsInfoV
     public void GetItemsInfoDataById(long id,Action<ItemsInfoBean> action)
     {
         List<ItemsInfoBean> listData = GetModel().GetItemsInfoDataById(id);
-        if (CheckUtil.ListIsNull(listData))
+        if (listData.IsNull())
         {
             GetView().GetItemsInfoFail("没有数据", null);
         }

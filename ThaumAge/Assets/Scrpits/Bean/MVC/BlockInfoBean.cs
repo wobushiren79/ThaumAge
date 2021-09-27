@@ -51,10 +51,10 @@ public class BlockInfoBean : BaseBean
     /// <returns></returns>
     public List<Vector2Int> GetUVPosition()
     {
-        if (CheckUtil.ListIsNull(listUVData))
+        if (listUVData.IsNull())
         {
             listUVData = new List<Vector2Int>();
-            if (CheckUtil.StringIsNull(uv_position))
+            if (uv_position.IsNull())
                 return listUVData;
             string[] uvArrary = StringUtil.SplitBySubstringForArrayStr(uv_position, '|');
             for (int i = 0; i < uvArrary.Length; i++)

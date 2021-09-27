@@ -48,7 +48,7 @@ public class Player : BaseMonoBehaviour
     public void HandleForColliderTrigger()
     {
         Collider[] colliderArray = RayUtil.RayToSphere(transform.position, 1, 1 << LayerInfo.Chunk | 1 << LayerInfo.ChunkTrigger);
-        if (!CheckUtil.ArrayIsNull(colliderArray))
+        if (!colliderArray.IsNull())
         {
 
         }

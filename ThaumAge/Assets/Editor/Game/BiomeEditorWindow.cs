@@ -96,7 +96,7 @@ public class BiomeEditorWindow : EditorWindow
     /// <param name="listData"></param>
     protected void UIForBiomeList(List<BiomeInfoBean> listData)
     {
-        if (CheckUtil.ListIsNull(listData))
+        if (listData.IsNull())
             return;
         for (int i = 0; i < listData.Count; i++)
         {

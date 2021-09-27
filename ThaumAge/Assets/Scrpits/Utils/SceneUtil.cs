@@ -10,10 +10,10 @@ public class SceneUtil
     {
         //获取当前场景名字
         string beforeSceneName = SceneManager.GetActiveScene().name;
-        GameCommonInfo.ScenesChangeData.beforeScene = EnumUtil.GetEnum<ScenesEnum>(beforeSceneName);
+        GameCommonInfo.ScenesChangeData.beforeScene = beforeSceneName.GetEnum<ScenesEnum>();
         GameCommonInfo.ScenesChangeData.loadingScene = scenenName;
         //SceneManager.LoadSceneAsync(EnumUtil.GetEnumName(ScenesEnum.LoadingScene));
-        SceneManager.LoadScene(EnumUtil.GetEnumName(scenenName));
+        SceneManager.LoadScene(ScenesEnum.LoadingScene.GetEnumName());
     }
 
     /// <summary>
@@ -24,7 +24,7 @@ public class SceneUtil
     {
         //获取当前场景名字
         string sceneName = SceneManager.GetActiveScene().name;
-        return EnumUtil.GetEnum<ScenesEnum>(sceneName);
+        return sceneName.GetEnum<ScenesEnum>();
     }
 
 }

@@ -17,7 +17,7 @@ public class BaseHandler<T,M> : BaseSingletonMonoBehaviour<T>
         {
             if (mManager == null)
             {
-                mManager = CptUtil.AddCpt<M>(gameObject);
+                mManager = gameObject.AddComponentEX<M>();
             }
             return mManager;
         }

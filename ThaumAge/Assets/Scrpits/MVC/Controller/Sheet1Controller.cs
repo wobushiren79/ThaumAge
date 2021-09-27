@@ -45,7 +45,7 @@ public class Sheet1Controller : BaseMVCController<Sheet1Model, ISheet1View>
     public void GetAllSheet1Data(Action<List<Sheet1Bean>> action)
     {
         List<Sheet1Bean> listData = GetModel().GetAllSheet1Data();
-        if (CheckUtil.ListIsNull(listData))
+        if (listData.IsNull())
         {
             GetView().GetSheet1Fail("没有数据", null);
         }
@@ -62,7 +62,7 @@ public class Sheet1Controller : BaseMVCController<Sheet1Model, ISheet1View>
     public void GetSheet1DataById(long id,Action<Sheet1Bean> action)
     {
         List<Sheet1Bean> listData = GetModel().GetSheet1DataById(id);
-        if (CheckUtil.ListIsNull(listData))
+        if (listData.IsNull())
         {
             GetView().GetSheet1Fail("没有数据", null);
         }

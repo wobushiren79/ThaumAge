@@ -29,7 +29,7 @@ public class CharacterInfoController : BaseMVCController<CharacterInfoModel, ICh
     public void GetAllCharacterInfoHairData(Action<List<CharacterInfoBean>> action)
     {
         List<CharacterInfoBean> listData = GetModel().GetAllCharacterInfoHairData();
-        if (CheckUtil.ListIsNull(listData))
+        if (listData.IsNull())
         {
             GetView().GetCharacterInfoFail("没有头发数据", null);
         }
@@ -42,7 +42,7 @@ public class CharacterInfoController : BaseMVCController<CharacterInfoModel, ICh
     public void GetAllCharacterInfoEyeData(Action<List<CharacterInfoBean>> action)
     {
         List<CharacterInfoBean> listData = GetModel().GetAllCharacterInfoEyeData();
-        if (CheckUtil.ListIsNull(listData))
+        if (listData.IsNull())
         {
             GetView().GetCharacterInfoFail("没有眼部数据", null);
         }
@@ -55,7 +55,7 @@ public class CharacterInfoController : BaseMVCController<CharacterInfoModel, ICh
     public void GetAllCharacterInfoMouthData(Action<List<CharacterInfoBean>> action)
     {
         List<CharacterInfoBean> listData = GetModel().GetAllCharacterInfoMouthData();
-        if (CheckUtil.ListIsNull(listData))
+        if (listData.IsNull())
         {
             GetView().GetCharacterInfoFail("没有嘴巴数据", null);
         }
@@ -68,7 +68,7 @@ public class CharacterInfoController : BaseMVCController<CharacterInfoModel, ICh
     public void GetAllCharacterInfoSkinData(Action<List<CharacterInfoBean>> action)
     {
         List<CharacterInfoBean> listData = GetModel().GetAllCharacterInfoSkinData();
-        if (CheckUtil.ListIsNull(listData))
+        if (listData.IsNull())
         {
             GetView().GetCharacterInfoFail("没有皮肤数据", null);
         }
