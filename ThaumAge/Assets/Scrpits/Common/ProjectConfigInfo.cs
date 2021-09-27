@@ -3,6 +3,23 @@ using UnityEditor;
 
 public class ProjectConfigInfo
 {
+    static ProjectConfigInfo()
+    {
+        //日志显示
+#if UNITY_EDITOR
+        Debug.unityLogger.logEnabled = true;
+#else
+        if (Debug.isDebugBuild)
+        {
+            Debug.unityLogger.logEnabled = true;
+        }
+        else
+        {
+            Debug.unityLogger.logEnabled = false;
+        }
+#endif
+    }
+
     /// <summary>
     /// 游戏版本
     /// </summary>
