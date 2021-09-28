@@ -957,6 +957,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1727070490}
     m_Modifications:
+    - target: {fileID: 627416022062228979, guid: 6a62578424d8e144fb09cb18809e2ca4, type: 3}
+      propertyPath: m_ShadowResolution.m_Level
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 966542176384893961, guid: 6a62578424d8e144fb09cb18809e2ca4, type: 3}
       propertyPath: m_Intensity
       value: 1

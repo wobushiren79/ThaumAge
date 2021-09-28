@@ -112,8 +112,8 @@ public class UIChildGameSettingDisplayContent : UIChildGameSettingBaseContent
         settingFrame.SetPro((gameConfig.frames - 20) / 100);
 
         //UI大小
-        //settingUISize = CreateItemForRange("界面大小", HandleForUISize);
-        //settingUISize.SetPro(gameConfig.uiSize);
+        settingUISize = CreateItemForRange(TextHandler.Instance.GetTextById(113), HandleForUISize);
+        settingUISize.SetPro(gameConfig.uiSize / 3f);
 
         //阴影质量等级
         settingShadowResolutionLevelData = CreateItemForSelect(TextHandler.Instance.GetTextById(112), listShadowResolutionLevelData, HandleForShadowResolutionLevel);
@@ -159,8 +159,9 @@ public class UIChildGameSettingDisplayContent : UIChildGameSettingBaseContent
     /// </summary>
     public void HandleForUISize(float value)
     {
-        gameConfig.uiSize = value;
-        UIHandler.Instance.manager.RefreshAllUI();
+        gameConfig.uiSize = value * 3;
+        UIHandler.Instance.ChangeUISize(gameConfig.uiSize);
+        settingUISize.SetContent($"{Math.Round(gameConfig.uiSize * 100, 0)}%");
     }
 
     /// <summary>
@@ -228,7 +229,7 @@ public class UIChildGameSettingDisplayContent : UIChildGameSettingBaseContent
     {
         string data = listScreenResolutionData[value];
         gameConfig.screenResolution = data;
-        gameConfig.GetScreenResolution(out int w,out int h);
+        gameConfig.GetScreenResolution(out int w, out int h);
         //只有全屏模式才使用固定分辨率，窗口模式时使用自己的分辨率
         if (Screen.fullScreen)
         {
