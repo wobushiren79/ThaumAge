@@ -30,6 +30,8 @@ public class GameConfigBean
     public bool framesShow = false;
     //阴影距离
     public float shadowDis = 200;
+    //阴影质量等级
+    public int shadowResolutionLevel = 1;
 
     //抗锯齿模式
     public int antialiasingMode = 0;

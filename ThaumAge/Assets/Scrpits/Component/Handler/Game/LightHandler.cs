@@ -1,5 +1,7 @@
-﻿using UnityEditor;
+﻿using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
+using UnityEngine.Rendering.HighDefinition;
 
 public class LightHandler : BaseHandler<LightHandler, LightManager>
 {
@@ -12,7 +14,7 @@ public class LightHandler : BaseHandler<LightHandler, LightManager>
     private void Update()
     {
         GameStateEnum gameState = GameHandler.Instance.manager.GetGameState();
-        switch (gameState) 
+        switch (gameState)
         {
             //菜单界面时
             case GameStateEnum.Main:
@@ -29,6 +31,21 @@ public class LightHandler : BaseHandler<LightHandler, LightManager>
         }
     }
 
+
+    /// <summary>
+    /// 修改光照阴影质量
+    /// </summary>
+    /// <param name="level"></param>
+    public void ChangeShadowResolutionLevel(int level)
+    {
+        List<HDAdditionalLightData> listHDLightData = manager.GetAllHDLightData();
+        for (int i = 0; i < listHDLightData.Count; i++)
+        {
+            HDAdditionalLightData lightData = listHDLightData[i];
+            lightData.SetShadowResolutionLevel(level);
+        }
+    }
+
     /// <summary>
     /// 处理-光照位置旋转
     /// </summary>
@@ -41,7 +58,7 @@ public class LightHandler : BaseHandler<LightHandler, LightManager>
         float moonRotation = sunRotation - 180;
         Quaternion sunQuaternion = Quaternion.Euler(sunRotation, -45, 0);
         Quaternion moonQuaternion = Quaternion.Euler(moonRotation, -45, 0);
-        manager.sunLight.transform.rotation = Quaternion.Lerp(manager.sunLight.transform.rotation,sunQuaternion,Time.deltaTime);
+        manager.sunLight.transform.rotation = Quaternion.Lerp(manager.sunLight.transform.rotation, sunQuaternion, Time.deltaTime);
         manager.moonLight.transform.rotation = Quaternion.Lerp(manager.moonLight.transform.rotation, moonQuaternion, Time.deltaTime);
     }
 
@@ -62,4 +79,5 @@ public class LightHandler : BaseHandler<LightHandler, LightManager>
             manager.moonLight.shadows = LightShadows.Soft;
         }
     }
+
 }

@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 3598728409896811960}
   - component: {fileID: 4127470963355377788}
   - component: {fileID: 3765206931009233996}
+  - component: {fileID: 5529692295477524527}
   m_Layer: 0
   m_Name: MoonLight
   m_TagString: Moon
@@ -217,6 +218,18 @@ MonoBehaviour:
   m_PointlightHDType: 0
   m_SpotLightShape: 0
   m_AreaLightShape: 0
+--- !u!114 &5529692295477524527
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2104580810404292378}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9ff209e2ad7d1424aacd310dee6aff72, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &6229578418684289135
 GameObject:
   m_ObjectHideFlags: 0
@@ -260,6 +273,7 @@ GameObject:
   - component: {fileID: 6229578418763899045}
   - component: {fileID: 6229578418763899044}
   - component: {fileID: 4367198098640585094}
+  - component: {fileID: 3370173266815588469}
   m_Layer: 0
   m_Name: SunLight
   m_TagString: Sun
@@ -293,7 +307,7 @@ Light:
   m_Type: 1
   m_Shape: 0
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 1
+  m_Intensity: 5
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -466,3 +480,15 @@ MonoBehaviour:
   m_PointlightHDType: 0
   m_SpotLightShape: 0
   m_AreaLightShape: 0
+--- !u!114 &3370173266815588469
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6229578418763899046}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9ff209e2ad7d1424aacd310dee6aff72, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

@@ -17,6 +17,8 @@ public class UIChildGameSettingDisplayContent : UIChildGameSettingBaseContent
     protected UIListItemGameSettingRange settingFrame;
     //UI大小
     protected UIListItemGameSettingRange settingUISize;
+    //阴影质量
+    protected UIListItemGameSettingSelect settingShadowResolutionLevelData;
     //阴影距离
     protected UIListItemGameSettingRange settingShadowDis;
     //抗锯齿
@@ -30,6 +32,8 @@ public class UIChildGameSettingDisplayContent : UIChildGameSettingBaseContent
     protected List<string> listAntiAliasingQualityLevelData;
     //屏幕分辨率
     protected List<string> listScreenResolutionData;
+    //阴影质量
+    protected List<string> listShadowResolutionLevelData;
 
     public UIChildGameSettingDisplayContent(GameObject objListContainer) : base(objListContainer)
     {
@@ -78,6 +82,14 @@ public class UIChildGameSettingDisplayContent : UIChildGameSettingBaseContent
             TextHandler.Instance.GetTextById(10013)
         };
 
+        listShadowResolutionLevelData = new List<string>()
+        {
+            TextHandler.Instance.GetTextById(10011),
+            TextHandler.Instance.GetTextById(10012),
+            TextHandler.Instance.GetTextById(10013),
+            TextHandler.Instance.GetTextById(10014)
+        };
+
         //是否全屏
         settingFullScreen = CreateItemForRB(TextHandler.Instance.GetTextById(102), HandleForFullScreen);
         settingFullScreen.SetState(gameConfig.window == 1 ? true : false);
@@ -102,6 +114,10 @@ public class UIChildGameSettingDisplayContent : UIChildGameSettingBaseContent
         //UI大小
         //settingUISize = CreateItemForRange("界面大小", HandleForUISize);
         //settingUISize.SetPro(gameConfig.uiSize);
+
+        //阴影质量等级
+        settingShadowResolutionLevelData = CreateItemForSelect(TextHandler.Instance.GetTextById(112), listShadowResolutionLevelData, HandleForShadowResolutionLevel);
+        settingShadowResolutionLevelData.SetIndex(gameConfig.shadowResolutionLevel);
 
         //阴影距离
         settingShadowDis = CreateItemForRange(TextHandler.Instance.GetTextById(105), HandleForShadowDis);
@@ -145,6 +161,15 @@ public class UIChildGameSettingDisplayContent : UIChildGameSettingBaseContent
     {
         gameConfig.uiSize = value;
         UIHandler.Instance.manager.RefreshAllUI();
+    }
+
+    /// <summary>
+    /// 处理-阴影质量
+    /// </summary>
+    public void HandleForShadowResolutionLevel(int index)
+    {
+        gameConfig.shadowResolutionLevel = index;
+        LightHandler.Instance.ChangeShadowResolutionLevel(gameConfig.shadowResolutionLevel);
     }
 
     /// <summary>
