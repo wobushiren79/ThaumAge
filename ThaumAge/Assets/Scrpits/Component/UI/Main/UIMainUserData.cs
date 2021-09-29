@@ -14,6 +14,11 @@ public partial class UIMainUserData : BaseUIComponent
         if (viewButton == ui_ViewClose) HandleForBackStartUI();
     }
 
+    public override void Awake()
+    {
+        base.Awake();
+    }
+
     public override void RefreshUI()
     {
         base.RefreshUI();

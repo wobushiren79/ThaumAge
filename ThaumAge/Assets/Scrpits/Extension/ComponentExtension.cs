@@ -11,12 +11,12 @@ public static class ComponentExtension
     /// <typeparam name="T"></typeparam>
     /// <param name="selfComponent"></param>
     /// <param name="name"></param>
-    /// <param name="includeSele"></param>
+    /// <param name="includeInactive"></param>
     /// <returns></returns>
-    public static List<T> GetComponentsInChildrenContainsName<T>(this T selfComponent, string name, bool includeSele = false) where T : Component
+    public static List<T> GetComponentsInChildrenContainsName<T>(this T selfComponent, string name, bool includeInactive = false) where T : Component
     {
         List<T> listData = new List<T>();
-        T[] cptList = selfComponent.GetComponentsInChildren<T>(includeSele);
+        T[] cptList = selfComponent.GetComponentsInChildren<T>(includeInactive);
         for (int i = 0; i < cptList.Length; i++)
         {
             T item = cptList[i];
@@ -34,11 +34,11 @@ public static class ComponentExtension
     /// <typeparam name="T"></typeparam>
     /// <param name="selfComponent"></param>
     /// <param name="name"></param>
-    /// <param name="includeSele"></param>
+    /// <param name="includeInactive"></param>
     /// <returns></returns>
-    public static T GetComponentInChildrenContainsName<T>(this T selfComponent, string name, bool includeSele = false) where T : Component
+    public static T GetComponentInChildrenContainsName<T>(this T selfComponent, string name, bool includeInactive = false) where T : Component
     {
-        T[] cptList = selfComponent.GetComponentsInChildren<T>(includeSele);
+        T[] cptList = selfComponent.GetComponentsInChildren<T>(includeInactive);
         for (int i = 0; i < cptList.Length; i++)
         {
             T item = cptList[i];
@@ -56,12 +56,12 @@ public static class ComponentExtension
     /// <typeparam name="T"></typeparam>
     /// <param name="selfComponent"></param>
     /// <param name="name"></param>
-    /// <param name="includeSele"></param>
+    /// <param name="includeInactive"></param>
     /// <returns></returns>
-    public static List<T> GetComponentsInChildren<T>(this T selfComponent, string name, bool includeSele = false) where T : Component
+    public static List<T> GetComponentsInChildren<T>(this T selfComponent, string name, bool includeInactive = false) where T : Component
     {
         List<T> listData = new List<T>();
-        T[] cptList = selfComponent.GetComponentsInChildren<T>(includeSele);
+        T[] cptList = selfComponent.GetComponentsInChildren<T>(includeInactive);
         for (int i = 0; i < cptList.Length; i++)
         {
             T item = cptList[i];
@@ -73,10 +73,10 @@ public static class ComponentExtension
         return listData;
     }
 
-    public static List<Component> GetComponentsInChildren<T>(this T selfComponent, string name, Type type,  bool includeSele = false) where T : Component
+    public static List<Component> GetComponentsInChildren<T>(this T selfComponent, string name, Type type,  bool includeInactive = false) where T : Component
     {
         List<Component> listData = new List<Component>();
-        Component[] cptList = selfComponent.GetComponentsInChildren(type , includeSele);
+        Component[] cptList = selfComponent.GetComponentsInChildren(type , includeInactive);
         for (int i = 0; i < cptList.Length; i++)
         {
             Component item = cptList[i];
@@ -88,10 +88,9 @@ public static class ComponentExtension
         return listData;
     }
 
-    public static Component GetComponentInChildren<T>(this T selfComponent, string name, Type type, bool includeSele = false) where T : Component
+    public static Component GetComponentInChildren<T>(this T selfComponent, string name, Type type, bool includeInactive = false) where T : Component
     {
-        List<Component> listData = new List<Component>();
-        Component[] cptList = selfComponent.GetComponentsInChildren(type, includeSele);
+        Component[] cptList = selfComponent.GetComponentsInChildren(type, includeInactive);
         for (int i = 0; i < cptList.Length; i++)
         {
             Component item = cptList[i];
@@ -109,11 +108,11 @@ public static class ComponentExtension
     /// <typeparam name="T"></typeparam>
     /// <param name="selfComponent"></param>
     /// <param name="name"></param>
-    /// <param name="includeSele"></param>
+    /// <param name="includeInactive"></param>
     /// <returns></returns>
-    public static T GetComponentInChildren<T>(this T selfComponent, string name, bool includeSele = false) where T : Component
+    public static T GetComponentInChildren<T>(this T selfComponent, string name, bool includeInactive = false) where T : Component
     {
-        T[] cptList = selfComponent.GetComponentsInChildren<T>(includeSele);
+        T[] cptList = selfComponent.GetComponentsInChildren<T>(includeInactive);
         for (int i = 0; i < cptList.Length; i++)
         {
             T item = cptList[i];

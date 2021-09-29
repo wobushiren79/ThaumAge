@@ -7,16 +7,6 @@ using UnityEngine;
 
 public static class TypeExtension
 {
-    /// <summary>
-    /// Array转List
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <param name="array"></param>
-    /// <returns></returns>
-    public static List<T> ToList<T>(this T[] array)
-    {
-       return array.ToList();
-    }
 
     /// <summary>
     /// 自定义时间格式转换系统时间格式
