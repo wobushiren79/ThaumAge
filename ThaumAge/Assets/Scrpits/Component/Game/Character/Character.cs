@@ -16,6 +16,8 @@ public class Character : BaseMonoBehaviour
     public CharacterSkin characterSkin;
     [HideInInspector]
     public CharacterEquip characterEquip;
+    [HideInInspector]
+    public CharacterAnim characterAnim;
 
     //角色数据
     protected CharacterBean characterData;
@@ -27,48 +29,9 @@ public class Character : BaseMonoBehaviour
 
     public void InitData()
     {
-        InitCharacterSkin();
-        InitCharacterEquip();
-    }
-
-    /// <summary>
-    /// 初始化角色皮肤
-    /// </summary>
-    private void InitCharacterSkin()
-    {
-        if (characterHead == null)
-        {
-            LogUtil.LogError($"初始化角色失败，{gameObject.name}的角色 缺少 Head 部件");
-            return;
-        }
-        if (characterBody == null)
-        {
-            LogUtil.LogError($"初始化角色失败，{gameObject.name}的角色 缺少 Body 部件");
-            return;
-        }
-        if (characterHair == null)
-        {
-            LogUtil.LogError($"初始化角色失败，{gameObject.name}的角色 缺少 Hair 部件");
-            return;
-        }
-        MeshRenderer headRender = characterHead.GetComponent<MeshRenderer>();
-        SkinnedMeshRenderer bodyRender = characterBody.GetComponentInChildren<SkinnedMeshRenderer>();
-        characterSkin = new CharacterSkin(headRender, bodyRender, characterHair);
-        characterSkin.characterData = GetCharacterData();
-    }
-
-    /// <summary>
-    /// 初始化角色装备数据
-    /// </summary>
-    private void InitCharacterEquip()
-    {
-        if (characterHead == null)
-        {
-            LogUtil.LogError($"初始化角色失败，{gameObject.name}的角色 缺少 Clothes 部件");
-            return;
-        }
-        characterEquip = new CharacterEquip(characterClothes);
-        characterEquip.characterData = GetCharacterData();
+        characterSkin = new CharacterSkin(this);
+        characterEquip = new CharacterEquip(this);
+        characterAnim = new CharacterAnim(this);
     }
 
     /// <summary>

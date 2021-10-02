@@ -121,6 +121,8 @@ public class SceneMainManager : SceneBaseManager
     public GameObject ShowCharacterObjByIndex(int index, bool isShow)
     {
         GameObject objCharacter = GetCharacterObjByIndex(index);
+        if (objCharacter == null)
+            return null;
         objCharacter.SetActive(isShow);
         return objCharacter;
     }

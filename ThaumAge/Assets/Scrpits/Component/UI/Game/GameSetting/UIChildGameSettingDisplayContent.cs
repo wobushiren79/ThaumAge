@@ -16,7 +16,7 @@ public class UIChildGameSettingDisplayContent : UIChildGameSettingBaseContent
     //帧数
     protected UIListItemGameSettingRange settingFrame;
     //UI大小
-    protected UIListItemGameSettingRange settingUISize;
+    protected UIListItemGameSettingSelect settingUISize;
     //阴影质量
     protected UIListItemGameSettingSelect settingShadowResolutionLevelData;
     //阴影距离
@@ -34,9 +34,28 @@ public class UIChildGameSettingDisplayContent : UIChildGameSettingBaseContent
     protected List<string> listScreenResolutionData;
     //阴影质量
     protected List<string> listShadowResolutionLevelData;
+    //UI大小
+    protected List<string> listUISizeData;
 
     public UIChildGameSettingDisplayContent(GameObject objListContainer) : base(objListContainer)
     {
+        listUISizeData = new List<string>
+        {
+            "40%",
+            "50%",
+            "60%",
+            "70%",
+            "80%",
+            "90%",
+            "100%"
+            //"105%",
+            //"110%",
+            //"115%",
+            //"120%",
+            //"125%",
+        };
+
+
         listAntiAliasingData = new List<string>
         {
             "None",
@@ -109,11 +128,11 @@ public class UIChildGameSettingDisplayContent : UIChildGameSettingBaseContent
 
         //帧数
         settingFrame = CreateItemForRange(TextHandler.Instance.GetTextById(104), HandleForFrame);
-        settingFrame.SetPro((gameConfig.frames - 20) / 100);
+        settingFrame.SetPro((gameConfig.frames - 20) / 100f);
 
         //UI大小
-        settingUISize = CreateItemForRange(TextHandler.Instance.GetTextById(113), HandleForUISize);
-        settingUISize.SetPro(gameConfig.uiSize / 3f);
+        settingUISize = CreateItemForSelect(TextHandler.Instance.GetTextById(113), listUISizeData, HandleForUISize);
+        settingUISize.SetIndex(GetUISizeIndex(gameConfig.uiSize));
 
         //阴影质量等级
         settingShadowResolutionLevelData = CreateItemForSelect(TextHandler.Instance.GetTextById(112), listShadowResolutionLevelData, HandleForShadowResolutionLevel);
@@ -157,11 +176,11 @@ public class UIChildGameSettingDisplayContent : UIChildGameSettingBaseContent
     /// <summary>
     /// 处理-UI大小
     /// </summary>
-    public void HandleForUISize(float value)
+    public void HandleForUISize(int value)
     {
-        gameConfig.uiSize = value * 3;
+        float uiSize = GetUISizeByIndex(value);
+        gameConfig.uiSize = uiSize;
         UIHandler.Instance.ChangeUISize(gameConfig.uiSize);
-        settingUISize.SetContent($"{Math.Round(gameConfig.uiSize * 100, 0)}%");
     }
 
     /// <summary>
@@ -171,6 +190,7 @@ public class UIChildGameSettingDisplayContent : UIChildGameSettingBaseContent
     {
         gameConfig.shadowResolutionLevel = index;
         LightHandler.Instance.ChangeShadowResolutionLevel(gameConfig.shadowResolutionLevel);
+        VolumeHandler.Instance.manager.SetShadowsDistance(gameConfig.shadowDis);
     }
 
     /// <summary>
@@ -199,7 +219,7 @@ public class UIChildGameSettingDisplayContent : UIChildGameSettingBaseContent
     public void HandleForLockFrame(bool value)
     {
         gameConfig.stateForFrames = value ? 1 : 0;
-        FPSHandler.Instance.SetData(value, gameConfig.frames);
+        FPSHandler.Instance.SetData(gameConfig.stateForFrames, gameConfig.frames);
     }
 
     /// <summary>
@@ -209,6 +229,7 @@ public class UIChildGameSettingDisplayContent : UIChildGameSettingBaseContent
     {
         gameConfig.frames = 20 + (int)(value * 100);
         settingFrame.SetContent($"{gameConfig.frames}");
+        FPSHandler.Instance.SetData(gameConfig.stateForFrames, gameConfig.frames);
     }
 
     /// <summary>
@@ -254,4 +275,34 @@ public class UIChildGameSettingDisplayContent : UIChildGameSettingBaseContent
         return 0;
     }
 
+    /// <summary>
+    /// 获取UI大小下标
+    /// </summary>
+    /// <param name="size"></param>
+    /// <returns></returns>
+    protected int GetUISizeIndex(float size)
+    {
+        string uiSizeData = $"{Mathf.RoundToInt((size * 100))}%";
+        for (int i = 0; i < listUISizeData.Count; i++)
+        {
+            string uiSizeItem = listUISizeData[i];
+            if (uiSizeData.Equals(uiSizeItem))
+            {
+                return i;
+            }
+        }
+        return 1;
+    }
+
+    /// <summary>
+    /// 通过大小获取UI
+    /// </summary>
+    /// <param name="index"></param>
+    /// <returns></returns>
+    protected float GetUISizeByIndex(int index)
+    {
+        string data = listUISizeData[index];
+        int uiSize = int.Parse(data.Replace("%", ""));
+        return uiSize / 100f;
+    }
 }

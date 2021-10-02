@@ -1,25 +1,30 @@
 ﻿using UnityEditor;
 using UnityEngine;
 
-public class CharacterEquip
+public class CharacterEquip : CharacterBase
 {
     //衣服容器
     public GameObject objClothesContainer;
 
-    //角色数据
-    public CharacterBean characterData;
-
-    public CharacterEquip(GameObject objClothesContainer)
+    public CharacterEquip(Character character) : base(character)
     {
-        this.objClothesContainer = objClothesContainer;
+        if (character.characterHead == null)
+        {
+            LogUtil.LogError($"初始化角色失败，{character.gameObject.name}的角色 缺少 Clothes 部件");
+            return;
+        }
+        objClothesContainer = character.characterClothes;
     }
 
     /// <summary>
     /// 设置角色数据
     /// </summary>
-    public void SetCharacterData(CharacterBean characterData)
+    /// <param name="characterData"></param>
+    public override void SetCharacterData(CharacterBean characterData)
     {
-        this.characterData = characterData;
+        base.SetCharacterData(characterData);
+
+        ChangeClothes(this.characterData.clothesId);
     }
 
     /// <summary>
@@ -42,28 +47,28 @@ public class CharacterEquip
         }
         else
         {
-            ItemsHandler.Instance.manager.GetItemsObjById(clothesId,(itemsObj)=> 
-            {
-                if (itemsObj == null)
-                {
-                    LogUtil.LogError($"查询道具模型失败，没有ID为 {clothesId} 的道具模型");
-                }
-                else
-                {
-                    GameObject objHair = ItemsHandler.Instance.Instantiate(objClothesContainer, itemsObj);
-                    objHair.transform.localPosition = Vector3.zero;
-                    objHair.transform.localEulerAngles = Vector3.zero;
-      
-                    ItemsHandler.Instance.manager.GetItemsTexById(itemsInfo.id,(itemTex)=> 
-                    {
-                        if (objHair == null)
-                            return;
-                        MeshRenderer hairMeshRebderer = objHair.GetComponent<MeshRenderer>();
-                        hairMeshRebderer.material.mainTexture = itemTex;
-                    });
-          
-                }
-            });
+            ItemsHandler.Instance.manager.GetItemsObjById(clothesId, (itemsObj) =>
+             {
+                 if (itemsObj == null)
+                 {
+                     LogUtil.LogError($"查询道具模型失败，没有ID为 {clothesId} 的道具模型");
+                 }
+                 else
+                 {
+                     GameObject objHair = ItemsHandler.Instance.Instantiate(objClothesContainer, itemsObj);
+                     objHair.transform.localPosition = Vector3.zero;
+                     objHair.transform.localEulerAngles = Vector3.zero;
+
+                     ItemsHandler.Instance.manager.GetItemsTexById(itemsInfo.id, (itemTex) =>
+                     {
+                         if (objHair == null)
+                             return;
+                         MeshRenderer hairMeshRebderer = objHair.GetComponent<MeshRenderer>();
+                         hairMeshRebderer.material.mainTexture = itemTex;
+                     });
+
+                 }
+             });
         }
     }
 }

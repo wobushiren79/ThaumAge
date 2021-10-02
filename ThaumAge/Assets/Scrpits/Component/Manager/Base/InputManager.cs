@@ -5,9 +5,11 @@ using UnityEngine.InputSystem;
 public class InputManager : BaseManager
 {
     public GameInputActions inputActions;
+
     public virtual void Awake()
     {
         inputActions = new GameInputActions();
+        inputActions.Player.UIOpenGodMain.Enable();
         inputActions.Player.Move.Enable();
         inputActions.Player.Jump.Enable();
         inputActions.Player.Look.Enable();
@@ -16,6 +18,15 @@ public class InputManager : BaseManager
         inputActions.Player.CameraDistance.Enable();
         inputActions.Player.Shortcuts.Enable();
         inputActions.Player.UserDetails.Enable();
+    }
+
+    /// <summary>
+    /// 获取打开GM模式数据
+    /// </summary>
+    /// <returns></returns>
+    public InputAction GetUIGodMain()
+    {
+        return inputActions.Player.UIOpenGodMain;
     }
 
     /// <summary>

@@ -1,4 +1,13 @@
-﻿/// <summary>
+﻿public enum UITypeEnum
+{
+    UIBase = 0,
+    Dialog,
+    Toast,
+    Popup,
+    Overlay
+}
+
+/// <summary>
 /// 有效值
 /// </summary>
 public enum ValidEnum
@@ -49,8 +58,8 @@ public enum DirectionEnum
 /// </summary>
 public enum LanguageEnum
 {
-    cn = 1,
-    en = 2,
+    cn = 0,
+    en = 1,
 }
 
 /// <summary>

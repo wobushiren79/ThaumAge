@@ -18,6 +18,8 @@ public class SceneMainHandler : SceneBaseHandler<SceneMainHandler, SceneMainMana
             {
                 UserDataBean userData = listData[i];
                 GameObject objCharacter = manager.ShowCharacterObjByIndex(userData.dataIndex, true);
+                if (objCharacter == null)
+                    continue;
                 Character character = objCharacter.GetComponent<Character>();
                 character.SetCharacterData(userData.characterData);
             }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -152,7 +153,7 @@ public partial class UIMainCreate : BaseUIComponent,
     /// </summary>
     public void HandleForRandomCharacter()
     {
-        Random.InitState(TimeUtil.GetTimeStampForS32());
+        UnityEngine.Random.InitState(TimeUtil.GetTimeStampForS32());
         ui_ViewSelectChange_Hair.RandomSelect();
         ui_ViewSelectChange_Eye.RandomSelect();
         ui_ViewSelectChange_Mouth.RandomSelect();
@@ -174,12 +175,13 @@ public partial class UIMainCreate : BaseUIComponent,
         string userId = $"UserId_{SystemUtil.GetUUID(SystemUtil.UUIDTypeEnum.N)}";
         if (characterName.IsNull())
         {
-            ToastHandler.Instance.ToastHint(TextHandler.Instance.GetTextById(30001));
+            UIHandler.Instance.ToastHint<ToastView>(TextHandler.Instance.GetTextById(30001));
             return;
         }
         DialogBean dialogData = new DialogBean();
         dialogData.content = TextHandler.Instance.GetTextById(20002);
-        DialogHandler.Instance.CreateDialog<DialogView>(DialogEnum.DialogNormal, dialogData, (view, data) =>
+        dialogData.dialogType = DialogEnum.DialogNormal;
+        Action<DialogView, DialogBean> actionSubmit = (view, data) =>
         {
             UserDataBean userData = new UserDataBean();
             userData.dataIndex = userDataIndex;
@@ -192,7 +194,8 @@ public partial class UIMainCreate : BaseUIComponent,
             GameDataHandler.Instance.manager.UseUserData(userData);
             //改变场景
             SceneMainHandler.Instance.ChangeScene(ScenesEnum.GameScene);
-        });
+        };
+        UIHandler.Instance.ShowDialog<DialogView>(dialogData);
     }
 
     /// <summary>
@@ -201,7 +204,7 @@ public partial class UIMainCreate : BaseUIComponent,
     public void HandleForBack()
     {
         //打开用户存档界面
-        UIHandler.Instance.manager.OpenUIAndCloseOther<UIMainUserData>(UIEnum.MainUserData);
+        UIHandler.Instance.OpenUIAndCloseOther<UIMainUserData>(UIEnum.MainUserData);
         //还原摄像头
         SceneMainHandler.Instance.ChangeCameraByIndex(0);
         //还原角色角度

@@ -134,15 +134,18 @@ public partial class UIListItemMainUserData : BaseUIView
     /// </summary>
     public void HandleForDelete()
     {
-        DialogBean dialogData = new DialogBean();
-        dialogData.content = TextHandler.Instance.GetTextById(20001);
-        Action<DialogView, DialogBean> callBack = (view, data) =>
+
+        Action<DialogView, DialogBean> actionSubmit = (view, data) =>
          {
              GameDataHandler.Instance.manager.DeletGameData(userData.userId);
-             UIHandler.Instance.manager.RefreshAllUI();
+             UIHandler.Instance.RefreshAllUI();
              SceneMainHandler.Instance.manager.ShowCharacterObjByIndex(userDataIndex, false);
          };
-        UIDialogNormal dialog = DialogHandler.Instance.CreateDialog<UIDialogNormal>(DialogEnum.DialogNormal, dialogData, callBack);
+        DialogBean dialogData = new DialogBean();
+        dialogData.dialogType = DialogEnum.DialogNormal;
+        dialogData.content = TextHandler.Instance.GetTextById(20001);
+        dialogData.actionSubmit = actionSubmit;
+        UIDialogNormal dialog = UIHandler.Instance.ShowDialog<UIDialogNormal>(dialogData);
     }
 
     /// <summary>
@@ -150,7 +153,7 @@ public partial class UIListItemMainUserData : BaseUIView
     /// </summary>
     public void HandleForCreate()
     {
-        UIMainCreate uiCreate = UIHandler.Instance.manager.OpenUIAndCloseOther<UIMainCreate>(UIEnum.MainCreate);
+        UIMainCreate uiCreate = UIHandler.Instance.OpenUIAndCloseOther<UIMainCreate>(UIEnum.MainCreate);
         uiCreate.SetUserDataIndex(userDataIndex);
 
         //设施摄像头

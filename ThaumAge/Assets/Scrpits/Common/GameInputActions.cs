@@ -81,6 +81,14 @@ public class @GameInputActions : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""UIOpenGodMain"",
+                    ""type"": ""Button"",
+                    ""id"": ""dbbc5ed1-69a2-4cd4-9a77-f2dc8589ffe1"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -499,6 +507,17 @@ public class @GameInputActions : IInputActionCollection, IDisposable
                     ""processors"": """",
                     ""groups"": ""Keyboard&Mouse"",
                     ""action"": ""UserDetails"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""ebbd6a2b-0b3e-406e-8848-d201e5345dc7"",
+                    ""path"": ""<Keyboard>/f12"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""UIOpenGodMain"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -1084,6 +1103,7 @@ public class @GameInputActions : IInputActionCollection, IDisposable
         m_Player_Cancel = m_Player.FindAction("Cancel", throwIfNotFound: true);
         m_Player_Shortcuts = m_Player.FindAction("Shortcuts", throwIfNotFound: true);
         m_Player_UserDetails = m_Player.FindAction("UserDetails", throwIfNotFound: true);
+        m_Player_UIOpenGodMain = m_Player.FindAction("UIOpenGodMain", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -1153,6 +1173,7 @@ public class @GameInputActions : IInputActionCollection, IDisposable
     private readonly InputAction m_Player_Cancel;
     private readonly InputAction m_Player_Shortcuts;
     private readonly InputAction m_Player_UserDetails;
+    private readonly InputAction m_Player_UIOpenGodMain;
     public struct PlayerActions
     {
         private @GameInputActions m_Wrapper;
@@ -1165,6 +1186,7 @@ public class @GameInputActions : IInputActionCollection, IDisposable
         public InputAction @Cancel => m_Wrapper.m_Player_Cancel;
         public InputAction @Shortcuts => m_Wrapper.m_Player_Shortcuts;
         public InputAction @UserDetails => m_Wrapper.m_Player_UserDetails;
+        public InputAction @UIOpenGodMain => m_Wrapper.m_Player_UIOpenGodMain;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1198,6 +1220,9 @@ public class @GameInputActions : IInputActionCollection, IDisposable
                 @UserDetails.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnUserDetails;
                 @UserDetails.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnUserDetails;
                 @UserDetails.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnUserDetails;
+                @UIOpenGodMain.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnUIOpenGodMain;
+                @UIOpenGodMain.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnUIOpenGodMain;
+                @UIOpenGodMain.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnUIOpenGodMain;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -1226,6 +1251,9 @@ public class @GameInputActions : IInputActionCollection, IDisposable
                 @UserDetails.started += instance.OnUserDetails;
                 @UserDetails.performed += instance.OnUserDetails;
                 @UserDetails.canceled += instance.OnUserDetails;
+                @UIOpenGodMain.started += instance.OnUIOpenGodMain;
+                @UIOpenGodMain.performed += instance.OnUIOpenGodMain;
+                @UIOpenGodMain.canceled += instance.OnUIOpenGodMain;
             }
         }
     }
@@ -1390,6 +1418,7 @@ public class @GameInputActions : IInputActionCollection, IDisposable
         void OnCancel(InputAction.CallbackContext context);
         void OnShortcuts(InputAction.CallbackContext context);
         void OnUserDetails(InputAction.CallbackContext context);
+        void OnUIOpenGodMain(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {

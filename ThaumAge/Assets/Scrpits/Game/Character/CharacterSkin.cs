@@ -3,7 +3,7 @@ using UnityEngine;
 using System;
 
 [Serializable]
-public class CharacterSkin
+public class CharacterSkin : CharacterBase
 {
     //头部渲染
     public MeshRenderer headRenderer;
@@ -31,14 +31,45 @@ public class CharacterSkin
         }
     }
 
-    public CharacterBean characterData;
+    public CharacterSkin(Character character) : base(character)
+    {
+        if (character.characterHead == null)
+        {
+            LogUtil.LogError($"初始化角色失败，{character.gameObject.name}的角色 缺少 Head 部件");
+            return;
+        }
+        if (character.characterBody == null)
+        {
+            LogUtil.LogError($"初始化角色失败，{character.gameObject.name}的角色 缺少 Body 部件");
+            return;
+        }
+        if (character.characterHair == null)
+        {
+            LogUtil.LogError($"初始化角色失败，{character.gameObject.name}的角色 缺少 Hair 部件");
+            return;
+        }
+        characterData = character.GetCharacterData();
+
+        headRenderer = character.characterHead.GetComponent<MeshRenderer>();
+        bodyRenderer = character.characterBody.GetComponentInChildren<SkinnedMeshRenderer>();
+        objHairContainer = character.characterHair;
+
+        if (this.headRenderer != null)
+        {
+            headMat = headRenderer.material;
+        }
+        if (this.bodyRenderer != null)
+        {
+            bodyMat = bodyRenderer.material;
+        }
+    }
 
     /// <summary>
     /// 设置角色数据
     /// </summary>
-    public void SetCharacterData(CharacterBean characterData)
+    public override void SetCharacterData(CharacterBean characterData)
     {
-        this.characterData = characterData;
+        base.SetCharacterData(characterData);
 
         ChangeSex(this.characterData.GetSex());
 
@@ -50,26 +81,6 @@ public class CharacterSkin
         ChangeMouth(this.characterData.mouthId);
     }
 
-    /// <summary>
-    /// 初始化
-    /// </summary>
-    /// <param name="headRenderer"></param>
-    /// <param name="bodyRenderer"></param>
-    public CharacterSkin(MeshRenderer headRenderer, SkinnedMeshRenderer bodyRenderer, GameObject objHairContainer)
-    {
-        this.headRenderer = headRenderer;
-        this.bodyRenderer = bodyRenderer;
-        this.objHairContainer = objHairContainer;
-
-        if (this.headRenderer != null)
-        {
-            headMat = headRenderer.material;
-        }
-        if (this.bodyRenderer != null)
-        {
-            bodyMat = bodyRenderer.material;
-        }
-    }
 
     /// <summary>
     /// 修改头发颜色

@@ -34,7 +34,7 @@ public class DialogView : BaseUIView
 
     public virtual void OnDestroy()
     {
-        DialogHandler.Instance.manager.RemoveDialog(this);
+        UIHandler.Instance.manager.RemoveDialog(this);
     }
 
     public virtual void InitData()
@@ -98,8 +98,8 @@ public class DialogView : BaseUIView
 
     public virtual void SetAction(Action<DialogView, DialogBean> actionSubmit, Action<DialogView, DialogBean> actionCancel)
     {
-        this.actionSubmit = actionSubmit;
-        this.actionCancel = actionCancel;
+        this.actionSubmit += actionSubmit;
+        this.actionCancel += actionCancel;
     }
 
     public virtual void SetData(DialogBean dialogData)

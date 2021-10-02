@@ -52,6 +52,7 @@ providers = {
 	}
 }
 recentSearches = [
+	"game"
 	"t:Scene"
 ]
 searchItemFavorites = [

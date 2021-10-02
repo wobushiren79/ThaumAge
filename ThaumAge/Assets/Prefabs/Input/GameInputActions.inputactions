@@ -68,6 +68,14 @@
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": ""
+                },
+                {
+                    "name": "UIOpenGodMain",
+                    "type": "Button",
+                    "id": "dbbc5ed1-69a2-4cd4-9a77-f2dc8589ffe1",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
                 }
             ],
             "bindings": [
@@ -486,6 +494,17 @@
                     "processors": "",
                     "groups": "Keyboard&Mouse",
                     "action": "UserDetails",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "ebbd6a2b-0b3e-406e-8848-d201e5345dc7",
+                    "path": "<Keyboard>/f12",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "UIOpenGodMain",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

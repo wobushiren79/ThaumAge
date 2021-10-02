@@ -23,14 +23,14 @@ public class ToastView : BaseMonoBehaviour
         gameObject.transform.DOScale(Vector3.zero, 0.2f).From().SetEase(Ease.OutBack);
     }
 
-    public void SetData(Sprite spIcon, string content, float destoryTime)
+    public void SetData(ToastBean toastData)
     {
         //设置Icon
-        SetIcon(spIcon);
+        SetIcon(toastData.toastIcon);
         //设置内容
-        SetContent(content);
+        SetContent(toastData.content);
         //定时销毁
-        DestroyToast(destoryTime);
+        DestroyToast(toastData.showTime);
 
         UGUIUtil.RefreshUISize(tvContent.rectTransform);
         UGUIUtil.RefreshUISize((RectTransform)cgToast.transform);
@@ -83,7 +83,5 @@ public class ToastView : BaseMonoBehaviour
         yield return new WaitForSeconds(timeDelay);
         Destroy(gameObject);
     }
-
-
 
 }

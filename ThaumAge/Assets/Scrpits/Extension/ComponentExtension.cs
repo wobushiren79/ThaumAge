@@ -73,10 +73,10 @@ public static class ComponentExtension
         return listData;
     }
 
-    public static List<Component> GetComponentsInChildren<T>(this T selfComponent, string name, Type type,  bool includeInactive = false) where T : Component
+    public static List<Component> GetComponentsInChildren<T>(this T selfComponent, string name, Type type, bool includeInactive = false) where T : Component
     {
         List<Component> listData = new List<Component>();
-        Component[] cptList = selfComponent.GetComponentsInChildren(type , includeInactive);
+        Component[] cptList = selfComponent.GetComponentsInChildren(type, includeInactive);
         for (int i = 0; i < cptList.Length; i++)
         {
             Component item = cptList[i];
@@ -130,7 +130,7 @@ public static class ComponentExtension
     /// <typeparam name="T"></typeparam>
     /// <param name="selfComponent"></param>
     /// <returns></returns>
-    public static T AddComponentEX<T>(this GameObject selfComponent) 
+    public static T AddComponentEX<T>(this GameObject selfComponent)
         where T : Component
     {
         T addComponet = selfComponent.GetComponent<T>();
@@ -367,7 +367,7 @@ public static class ComponentExtension
     /// <param name="selfComponent"></param>
     /// <param name="isShow"></param>
     /// <returns></returns>
-    public static T ShowObj<T>(this T selfComponent,bool isShow = true) where T : Component
+    public static T ShowObj<T>(this T selfComponent, bool isShow = true) where T : Component
     {
         selfComponent.gameObject.SetActive(isShow);
         return selfComponent;
@@ -385,4 +385,20 @@ public static class ComponentExtension
         return selfObj;
     }
 
+    /// <summary>
+    /// 查找
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="selfObj"></param>
+    /// <param name="name"></param>
+    /// <returns></returns>
+    public static T FindChild<T>(this GameObject selfObj, string name) where T : Component
+    {
+        Transform tfFind = selfObj.transform.Find(name);
+        if (tfFind)
+        {
+            return tfFind.GetComponent<T>();
+        }
+        return null;
+    }
 }

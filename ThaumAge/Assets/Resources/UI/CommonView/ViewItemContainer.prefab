@@ -126,7 +126,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 30, y: -30}
-  m_SizeDelta: {x: 60, y: 60}
+  m_SizeDelta: {x: 79, y: 79}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8425609392354803933
 CanvasRenderer:
@@ -181,6 +181,10 @@ MonoBehaviour:
   ui_IVBackground: {fileID: 0}
   ui_ViewItem: {fileID: 853812645625611826}
   viewIndex: {x: 0, y: 0}
+  itemsData:
+    itemsId: 0
+    number: 0
+    meta: 
 --- !u!1001 &3887314891564592412
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -218,11 +222,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 400634926404859955, guid: 3741f9e2d3d72704b934aa94845584ce, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 50
+      value: 70
       objectReference: {fileID: 0}
     - target: {fileID: 400634926404859955, guid: 3741f9e2d3d72704b934aa94845584ce, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 50
+      value: 70
       objectReference: {fileID: 0}
     - target: {fileID: 400634926404859955, guid: 3741f9e2d3d72704b934aa94845584ce, type: 3}
       propertyPath: m_LocalPosition.x

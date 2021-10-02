@@ -1,12 +1,13 @@
 ﻿using UnityEditor;
 using UnityEngine;
+using Cinemachine;
 
 public class Player : BaseMonoBehaviour
 {
-    //第一人称点位
-    public Transform LookForEye;
-    //第三人称点位
-    public Transform LookForFollow;
+    //第一人称
+    public CinemachineVirtualCamera cameraForFirst;
+    //第三人称
+    public CinemachineFreeLook cameraForThree;
 
     protected CharacterController characterController;
     protected float timeForWorldUpdate = 0;

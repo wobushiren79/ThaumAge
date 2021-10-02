@@ -24,7 +24,7 @@ public partial class UIGameCommonNormal : BaseUIComponent
         base.OnClickForButton(viewButton);
         if (viewButton == ui_Exit)
         {
-            UIHandler.Instance.manager.OpenUIAndCloseOther<UIGameMain>(UIEnum.GameMain);
+            UIHandler.Instance.OpenUIAndCloseOther<UIGameMain>(UIEnum.GameMain);
         }
     }
 }

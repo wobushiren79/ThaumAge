@@ -2,7 +2,7 @@
 using UnityEditor;
 using UnityEngine;
 
-public partial class UIGodItems : UIGameCommonNormal
+public partial class UIGodMain : UIGameCommonNormal
 {
 
     protected List<ItemsInfoBean> listItemsInfo = new List<ItemsInfoBean>();

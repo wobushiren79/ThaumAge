@@ -7,6 +7,7 @@ using static UnityEngine.InputSystem.InputAction;
 public class ControlForPlayer : ControlForBase
 {
     private CharacterController characterController;
+    private Character character;
 
     private float gravityValue = 10f;
     private Vector3 playerVelocity;
@@ -16,11 +17,12 @@ public class ControlForPlayer : ControlForBase
     private float timeJumpTemp = 0;
 
     private float speedJump = 5;
-    public float moveSpeed = 2;
+    private float moveSpeed = 1;
 
     private void Awake()
     {
         characterController = GetComponent<CharacterController>();
+        character = GetComponentInChildren<Character>();
 
         InputAction jumpAction = InputHandler.Instance.manager.GetJumpData();
         jumpAction.started += HandleForJumpStart;
@@ -60,7 +62,7 @@ public class ControlForPlayer : ControlForBase
     {
         if (!isActiveAndEnabled)
             return;
-        UIHandler.Instance.manager.OpenUIAndCloseOther<UIGameUserDetails>(UIEnum.GameUserDetails);
+        UIHandler.Instance.OpenUIAndCloseOther<UIGameUserDetails>(UIEnum.GameUserDetails);
     }
 
     /// <summary>
@@ -103,7 +105,7 @@ public class ControlForPlayer : ControlForBase
         userData.indexForShortcuts = (byte)(indexForShortcuts);
         if (isRefreshUI)
         {
-            UIHandler.Instance.manager.GetOpenUI().RefreshUI();
+            UIHandler.Instance.GetOpenUI().RefreshUI();
         }
     }
 
@@ -232,6 +234,15 @@ public class ControlForPlayer : ControlForBase
         right.y = 0;
         //朝摄像头方向移动
         playerVelocity = (Vector3.Normalize(forward) * moveOffset.y + Vector3.Normalize(right) * moveOffset.x) * Time.unscaledDeltaTime * moveSpeed * 5;
+
+        if (moveOffset.x == 0 && moveOffset.y == 0)
+        {
+            character.characterAnim.PlayBaseAnim(CharacterAnimBaseState.Idle);
+        }
+        else
+        {
+            character.characterAnim.PlayBaseAnim(CharacterAnimBaseState.Walk);
+        }
     }
 
     /// <summary>
@@ -246,7 +257,7 @@ public class ControlForPlayer : ControlForBase
         Vector3 rotateAngles = new Vector3(0, mainCamera.transform.rotation.eulerAngles.y, 0);
         //前进后退的旋转
         if (moveOffset.y > 0)
-        {       
+        {
             //左右移动的旋转
             if (moveOffset.x > 0)
             {
@@ -277,7 +288,7 @@ public class ControlForPlayer : ControlForBase
                 rotateAngles.y += 180;
             }
         }
-        else 
+        else
         {
             //左右移动的旋转
             if (moveOffset.x > 0)

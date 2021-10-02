@@ -13,5 +13,5 @@ public enum UIEnum
     GameUserDetails = 2002,//游戏-用户详情
     GameSetting = 2999,//游戏-设置
 
-    GodItems = 9001,//GM-所有道具
+    GodMain = 9001,//GM-主界面
 }

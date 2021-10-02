@@ -36,6 +36,6 @@ public partial class UIMainMaker : BaseUIComponent
     /// </summary>
     public void HandleForBack()
     {
-        UIMainStart uiMainStart = UIHandler.Instance.manager.OpenUIAndCloseOther<UIMainStart>(UIEnum.MainStart);
+        UIMainStart uiMainStart = UIHandler.Instance.OpenUIAndCloseOther<UIMainStart>(UIEnum.MainStart);
     }
 }

@@ -40,7 +40,7 @@ public partial class UIMainStart : BaseUIComponent
     /// </summary>
     public void HandleForStart()
     {
-        UIMainUserData uiMainUserData = UIHandler.Instance.manager.OpenUIAndCloseOther<UIMainUserData>(UIEnum.MainUserData);
+        UIMainUserData uiMainUserData = UIHandler.Instance.OpenUIAndCloseOther<UIMainUserData>(UIEnum.MainUserData);
     }
 
     /// <summary>
@@ -48,7 +48,7 @@ public partial class UIMainStart : BaseUIComponent
     /// </summary>
     public void HandleForSetting()
     {
-        UIGameSetting uiSetting = UIHandler.Instance.manager.OpenUIAndCloseOther<UIGameSetting>(UIEnum.GameSetting);
+        UIGameSetting uiSetting = UIHandler.Instance.OpenUIAndCloseOther<UIGameSetting>(UIEnum.GameSetting);
     }
 
     /// <summary>
@@ -56,7 +56,7 @@ public partial class UIMainStart : BaseUIComponent
     /// </summary>
     public void HandleForMaker()
     {
-        UIMainMaker uiMaker = UIHandler.Instance.manager.OpenUIAndCloseOther<UIMainMaker>(UIEnum.MainMaker);
+        UIMainMaker uiMaker = UIHandler.Instance.OpenUIAndCloseOther<UIMainMaker>(UIEnum.MainMaker);
     }
 
     /// <summary>

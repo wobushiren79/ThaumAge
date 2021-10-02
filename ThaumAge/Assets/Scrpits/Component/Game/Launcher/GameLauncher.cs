@@ -33,13 +33,11 @@ public class GameLauncher : BaseLauncher
     public void CompleteForUpdateChunk()
     {
         //打开主UI
-        UIHandler.Instance.manager.OpenUIAndCloseOther<UIGameMain>(UIEnum.GameMain);
+        UIHandler.Instance.OpenUIAndCloseOther<UIGameMain>(UIEnum.GameMain);
         //修改天气
         WeatherHandler.Instance.ChangeWeather(WeatherTypeEnum.Cloudy, 2000);
         //修改灯光
         LightHandler.Instance.InitData();
-        //初始化摄像头数据
-        CameraHandler.Instance.InitGameData();
         //开关角色控制
         GameControlHandler.Instance.manager.controlForPlayer.EnabledControl(true);
         //初始化位置

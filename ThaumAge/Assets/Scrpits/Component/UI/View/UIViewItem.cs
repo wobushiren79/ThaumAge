@@ -112,7 +112,7 @@ public class UIViewItem : BaseUIView, IBeginDragHandler, IDragHandler, IEndDragH
     /// <param name="eventData"></param>
     public void OnDrag(PointerEventData eventData)
     {
-        RectTransform rtfContainer = UIHandler.Instance.manager.GetContainer();
+        RectTransform rtfContainer = (RectTransform)UIHandler.Instance.manager.GetUITypeContainer(UITypeEnum.UIBase);
         transform.SetParent(rtfContainer);
         //将生成的物体设为canvas的最后一个子物体，一般来说最后一个子物体是可操作的
         transform.SetAsLastSibling();

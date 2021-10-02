@@ -21,7 +21,7 @@ public class ProgressView : BaseMonoBehaviour
 
     protected ICallBack callBack;
 
-    private void Awake()
+    protected virtual void Awake()
     {
         sliderPro.onValueChanged.AddListener(OnSliderValueChange);
     }
@@ -111,7 +111,14 @@ public class ProgressView : BaseMonoBehaviour
     public void SetSlider(float pro)
     {
         if (sliderPro != null)
+        {
+            if (sliderPro.value == pro)
+            {
+                //如果值相等，不会主动回调，所以需要手动调用
+                OnSliderValueChange(pro);
+            }
             sliderPro.value = pro;
+        }
     }
 
 

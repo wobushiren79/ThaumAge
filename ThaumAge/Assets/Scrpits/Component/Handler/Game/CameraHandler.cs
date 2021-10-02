@@ -73,22 +73,6 @@ public class CameraHandler : BaseHandler<CameraHandler, CameraManager>
     }
 
     /// <summary>
-    /// 初始化摄像头数据 游戏
-    /// </summary>
-    public void InitGameData()
-    {
-        Player player = GameHandler.Instance.manager.player;
-
-        CinemachineVirtualCamera cameraForFirst = manager.cameraForFirst;
-        //第一人称
-        cameraForFirst.Follow = player.LookForEye;
-        CinemachineFreeLook cameraForThree = manager.cameraForThree;
-        //第三人称
-        cameraForThree.Follow = player.LookForFollow;
-        cameraForThree.LookAt = player.LookForEye;
-    }
-
-    /// <summary>
     /// 设置摄像机优先级 priority越高越优先
     /// </summary>
     /// <param name="cinemachineVirtual"></param>

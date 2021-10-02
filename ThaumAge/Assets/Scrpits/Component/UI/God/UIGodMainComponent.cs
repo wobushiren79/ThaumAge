@@ -2,11 +2,11 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 
-public partial class UIGodItems
+public partial class UIGodMain
 {
     public ScrollGridVertical ui_ItemList;
 
     public UIViewShortcuts ui_Shortcuts;
 
-    public Button ui_ViewClose;
+
 }

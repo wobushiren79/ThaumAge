@@ -58,11 +58,11 @@ public partial class UIGameSetting : BaseUIComponent, IRadioGroupCallBack
     {
         if (SceneUtil.GetCurrentScene() == ScenesEnum.MainScene)
         {
-            UIHandler.Instance.manager.OpenUIAndCloseOther<UIMainStart>(UIEnum.MainStart);
+            UIHandler.Instance.OpenUIAndCloseOther<UIMainStart>(UIEnum.MainStart);
         }
         else if (SceneUtil.GetCurrentScene() == ScenesEnum.GameScene)
         {
-            UIHandler.Instance.manager.OpenUIAndCloseOther<UIGameMain>(UIEnum.GameMain);
+            UIHandler.Instance.OpenUIAndCloseOther<UIGameMain>(UIEnum.GameMain);
         }
         GameDataHandler.Instance.manager.SaveGameConfig();
     }
