@@ -16,8 +16,6 @@ public class BlockInfoBean : BaseBean
 
     public string model_name;
 
-    public string name;
-
     public int shape;
 
     public string uv_position;

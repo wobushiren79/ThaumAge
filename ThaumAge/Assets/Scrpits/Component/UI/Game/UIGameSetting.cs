@@ -22,6 +22,18 @@ public partial class UIGameSetting : BaseUIComponent, IRadioGroupCallBack
         settingControlContent = new UIChildGameSettingControlContent(ui_ListSettingContent.gameObject);
     }
 
+    public override void OpenUI()
+    {
+        base.OpenUI();
+        GameControlHandler.Instance.SetPlayerControlEnabled(false);
+    }
+
+    public override void CloseUI()
+    {
+        base.CloseUI();
+        GameControlHandler.Instance.SetPlayerControlEnabled(true);
+    }
+
     protected void Start()
     {
         ui_Labels.SetCallBack(this);
@@ -32,6 +44,12 @@ public partial class UIGameSetting : BaseUIComponent, IRadioGroupCallBack
     {
         base.OnClickForButton(viewButton);
         if (viewButton == ui_ViewClose) OnClickForClose();
+    }
+
+    public override void OnInputActionForStarted(InputActionUIEnum inputType)
+    {
+        base.OnInputActionForStarted(inputType);
+        if (inputType == InputActionUIEnum.ESC) OnClickForClose();
     }
 
     public override void RefreshUI()

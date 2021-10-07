@@ -3,7 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
+using static UnityEngine.InputSystem.InputAction;
 
 public class BaseUIComponent : BaseMonoBehaviour
 {
@@ -17,7 +19,13 @@ public class BaseUIComponent : BaseMonoBehaviour
         if (uiManager == null)
             uiManager = GetComponentInParent<BaseUIManager>();
         AutoLinkUI();
-        InitButtons();
+        RegisterButtons();
+        RegisterInputAction();
+    }
+
+    public virtual void OnDestroy()
+    {
+        UnRegisterInputAction();
     }
 
     /// <summary>
@@ -67,7 +75,7 @@ public class BaseUIComponent : BaseMonoBehaviour
     /// <summary>
     /// 初始化所有按钮点击事件
     /// </summary>
-    public void InitButtons()
+    public void RegisterButtons()
     {
         Button[] buttonArray = gameObject.GetComponentsInChildren<Button>();
         if (buttonArray.IsNull())
@@ -80,9 +88,69 @@ public class BaseUIComponent : BaseMonoBehaviour
     }
 
     /// <summary>
+    /// 初始化所有输入事件
+    /// </summary>
+    public void RegisterInputAction()
+    {
+        Dictionary<InputActionUIEnum, InputAction> dicUIData = InputHandler.Instance.manager.dicInputUI;
+        foreach (var itemData in dicUIData)
+        {
+            InputActionUIEnum itemKey = itemData.Key;
+            InputAction itemValue = itemData.Value;
+            itemValue.started += CallBackForInputActionStarted;
+        }
+    }
+
+    /// <summary>
+    /// 注销所有输入事件
+    /// </summary>
+    public void UnRegisterInputAction()
+    {
+        Dictionary<InputActionUIEnum, InputAction> dicUIData = InputHandler.Instance.manager.dicInputUI;
+        foreach (var itemData in dicUIData)
+        {
+            InputActionUIEnum itemKey = itemData.Key;
+            InputAction itemValue = itemData.Value;
+            itemValue.started -= CallBackForInputActionStarted;
+        }
+    }
+
+    /// <summary>
+    /// 回调-输入时间反馈
+    /// </summary>
+    /// <param name="callback"></param>
+    private void CallBackForInputActionStarted(CallbackContext callback)
+    {
+        if (gameObject.activeSelf)
+        {
+            StartCoroutine(CoroutineForInputActionStarted(callback));
+        }
+    }
+
+    /// <summary>
     /// 按钮点击
     /// </summary>
     public virtual void OnClickForButton(Button viewButton)
+    {
+
+    }
+
+    /// <summary>
+    /// 延迟一帧
+    /// </summary>
+    /// <param name="callback"></param>
+    /// <returns></returns>
+    public IEnumerator CoroutineForInputActionStarted(CallbackContext callback)
+    {
+        yield return new WaitForEndOfFrame();
+        OnInputActionForStarted(callback.action.name.GetEnum<InputActionUIEnum>());
+    }
+
+    /// <summary>
+    /// 数据事件点击
+    /// </summary>
+    /// <param name="inputName"></param>
+    public virtual void OnInputActionForStarted(InputActionUIEnum inputType)
     {
 
     }

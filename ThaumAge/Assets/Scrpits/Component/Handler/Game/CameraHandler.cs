@@ -32,9 +32,9 @@ public class CameraHandler : BaseHandler<CameraHandler, CameraManager>
     /// </summary>
     /// <param name="antialiasingEnum"></param>
     /// <param name="qualityLevel"></param>
-    public void ChangeAntialiasing(AntialiasingEnum antialiasingEnum,int qualityLevel = 1)
+    public void ChangeAntialiasing(AntialiasingEnum antialiasingEnum, int qualityLevel = 1)
     {
-        HDAdditionalCameraData  hdAdditionalCamera = manager.mainCamera.GetComponent<HDAdditionalCameraData>();
+        HDAdditionalCameraData hdAdditionalCamera = manager.mainCamera.GetComponent<HDAdditionalCameraData>();
         HDAdditionalCameraData.AntialiasingMode antialiasingMode = HDAdditionalCameraData.AntialiasingMode.None;
         switch (antialiasingEnum)
         {
@@ -51,7 +51,7 @@ public class CameraHandler : BaseHandler<CameraHandler, CameraManager>
                 break;
         }
         hdAdditionalCamera.antialiasing = antialiasingMode;
-        switch (qualityLevel) 
+        switch (qualityLevel)
         {
             case 0:
                 hdAdditionalCamera.SMAAQuality = HDAdditionalCameraData.SMAAQualityLevel.Low;
@@ -116,11 +116,12 @@ public class CameraHandler : BaseHandler<CameraHandler, CameraManager>
     {
         if (enabled)
         {
-            ChangeCameraSpeed(manager.speedForCameraMove);
+            GameConfigBean gameConfig = GameDataHandler.Instance.manager.GetGameConfig();
+            ChangeCameraSpeed(gameConfig.speedForPlayerCameraMoveX, gameConfig.speedForPlayerCameraMoveY);
         }
         else
         {
-            ChangeCameraSpeed(0);
+            ChangeCameraSpeed(0, 0);
         }
     }
 
@@ -128,21 +129,21 @@ public class CameraHandler : BaseHandler<CameraHandler, CameraManager>
     /// 修改摄像头速度
     /// </summary>
     /// <param name="speed"></param>
-    public void ChangeCameraSpeed(float speed)
+    public void ChangeCameraSpeed(float xSpeed, float ySpeed)
     {
         CinemachineVirtualCamera cameraForFirst = manager.cameraForFirst;
         //第一人称
         CinemachinePOV cinemachinePOV = cameraForFirst.GetCinemachineComponent<CinemachinePOV>();
         if (cinemachinePOV != null)
         {
-            cinemachinePOV.m_VerticalAxis.m_MaxSpeed = speed / timeScale;
-            cinemachinePOV.m_HorizontalAxis.m_MaxSpeed = speed / timeScale;
+            cinemachinePOV.m_VerticalAxis.m_MaxSpeed = xSpeed / timeScale;
+            cinemachinePOV.m_HorizontalAxis.m_MaxSpeed = ySpeed / timeScale;
         }
 
         CinemachineFreeLook cameraForThree = manager.cameraForThree;
         //第三人称
-        cameraForThree.m_XAxis.m_MaxSpeed = speed / timeScale;
-        cameraForThree.m_YAxis.m_MaxSpeed = (speed / 30) / timeScale;
+        cameraForThree.m_XAxis.m_MaxSpeed = xSpeed / timeScale;
+        cameraForThree.m_YAxis.m_MaxSpeed = ySpeed / timeScale;
     }
 
     /// <summary>

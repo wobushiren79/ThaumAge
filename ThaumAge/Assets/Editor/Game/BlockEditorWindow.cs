@@ -169,7 +169,8 @@ public class BlockEditorWindow : EditorWindow
         EditorUI.GUIText("方块Id", 50);
         blockInfo.id = EditorUI.GUIEditorText(blockInfo.id);
         EditorUI.GUIText("名字",50);
-        blockInfo.name = EditorUI.GUIEditorText(blockInfo.name);
+        blockInfo.name_cn = EditorUI.GUIEditorText(blockInfo.name_cn);
+        blockInfo.name_en = EditorUI.GUIEditorText(blockInfo.name_en);
         blockInfo.shape = (int)EditorUI.GUIEnum<BlockShapeEnum>("方块形状：",blockInfo.shape);
         EditorUI.GUIText("重量", 50);
         blockInfo.weight = EditorUI.GUIEditorText(blockInfo.weight);

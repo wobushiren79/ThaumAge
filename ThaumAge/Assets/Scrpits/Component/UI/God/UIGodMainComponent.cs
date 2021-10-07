@@ -8,5 +8,13 @@ public partial class UIGodMain
 
     public UIViewShortcuts ui_Shortcuts;
 
+    public Button ui_Time_1;
+
+    public Button ui_Time_2;
+
+    public Button ui_Time_3;
+
+    public Button ui_Time_4;
+
 
 }

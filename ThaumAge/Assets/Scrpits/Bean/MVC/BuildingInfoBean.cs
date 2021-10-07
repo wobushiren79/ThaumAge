@@ -12,7 +12,6 @@ using System.Collections.Generic;
 [Serializable]
 public class BuildingInfoBean : BaseBean
 {
-    public string name;
     public string data;
 
     protected List<BuildingBean> _listBuildingData;

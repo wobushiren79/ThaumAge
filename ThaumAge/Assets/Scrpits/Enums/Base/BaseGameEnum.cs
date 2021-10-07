@@ -82,3 +82,12 @@ public enum SeasonsEnum
     Autumn = 3,//秋
     Winter = 4,//冬
 }
+
+/// <summary>
+/// 输入类型枚举
+/// </summary>
+public enum InputActionUIEnum 
+{
+    F1,F2,F3,F4,F5,F6,F7,F8,F9,F10,F11,F12,
+    ESC,
+}

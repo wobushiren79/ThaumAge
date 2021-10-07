@@ -46,6 +46,18 @@ public class GameTimeHandler : BaseHandler<GameTimeHandler, GameTimeManager>
     }
 
     /// <summary>
+    /// 设置时间
+    /// </summary>
+    /// <param name="hour"></param>
+    /// <param name="minute"></param>
+    public void SetGameTime(int hour,int minute)
+    {
+        TimeBean timeData = manager.GetGameTime();
+        timeData.hour = hour;
+        timeData.minute = minute;
+    }
+
+    /// <summary>
     /// 处理-主界面游戏时间
     /// </summary>
     public void HandleForMainTime()

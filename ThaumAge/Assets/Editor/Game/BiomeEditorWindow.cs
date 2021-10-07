@@ -159,7 +159,8 @@ public class BiomeEditorWindow : EditorWindow
         EditorUI.GUIText("生态Id", 50);
         biomeInfo.id = EditorUI.GUIEditorText(biomeInfo.id);
         EditorUI.GUIText("名字", 50);
-        biomeInfo.name = EditorUI.GUIEditorText(biomeInfo.name);
+        biomeInfo.name_cn = EditorUI.GUIEditorText(biomeInfo.name_cn);
+        biomeInfo.name_en = EditorUI.GUIEditorText(biomeInfo.name_en);
         biomeInfo.id = (int)EditorUI.GUIEnum<BiomeTypeEnum>("生态类型：",(int)biomeInfo.id);
         EditorUI.GUIText("频率", 50);
         biomeInfo.frequency = EditorUI.GUIEditorText(biomeInfo.frequency);

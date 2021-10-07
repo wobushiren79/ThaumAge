@@ -1,4 +1,5 @@
-﻿using UnityEditor;
+﻿using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -6,10 +7,31 @@ public class InputManager : BaseManager
 {
     public GameInputActions inputActions;
 
+    public Dictionary<InputActionUIEnum, InputAction> dicInputUI = new Dictionary<InputActionUIEnum, InputAction>();
+    public Dictionary<string, InputAction> dicInputPlayer = new Dictionary<string, InputAction>();
+
     public virtual void Awake()
     {
         inputActions = new GameInputActions();
-        inputActions.Player.UIOpenGodMain.Enable();
+
+        InputAction F12 = inputActions.UI.F12;
+        InputAction ESC = inputActions.UI.ESC;
+
+        F12.Enable();
+        ESC.Enable();
+
+        dicInputUI.Add(F12.name.GetEnum<InputActionUIEnum>(), F12);
+        dicInputUI.Add(ESC.name.GetEnum<InputActionUIEnum>(), ESC);
+        //----------------------------------------------------------
+        InputAction Move = inputActions.Player.Move;
+        InputAction Jump = inputActions.Player.Jump;
+        InputAction Look = inputActions.Player.Look;
+        InputAction Use = inputActions.Player.Use;
+        InputAction Cancel = inputActions.Player.Cancel;
+        InputAction CameraDistance = inputActions.Player.CameraDistance;
+        InputAction Shortcuts = inputActions.Player.Shortcuts;
+        InputAction UserDetails = inputActions.Player.UserDetails;
+
         inputActions.Player.Move.Enable();
         inputActions.Player.Jump.Enable();
         inputActions.Player.Look.Enable();
@@ -18,87 +40,42 @@ public class InputManager : BaseManager
         inputActions.Player.CameraDistance.Enable();
         inputActions.Player.Shortcuts.Enable();
         inputActions.Player.UserDetails.Enable();
+
+        dicInputPlayer.Add(Move.name, Move);
+        dicInputPlayer.Add(Jump.name, Jump);
+        dicInputPlayer.Add(Look.name, Look);
+        dicInputPlayer.Add(Use.name, Use);
+        dicInputPlayer.Add(Cancel.name, Cancel);
+        dicInputPlayer.Add(CameraDistance.name, CameraDistance);
+        dicInputPlayer.Add(Shortcuts.name, Shortcuts);
+        dicInputPlayer.Add(UserDetails.name, UserDetails);
     }
 
     /// <summary>
-    /// 获取打开GM模式数据
+    /// 获取UI数据
     /// </summary>
+    /// <param name="name"></param>
     /// <returns></returns>
-    public InputAction GetUIGodMain()
+    public InputAction GetInputUIData(InputActionUIEnum name)
     {
-        return inputActions.Player.UIOpenGodMain;
+        if (dicInputUI.TryGetValue(name, out InputAction value))
+        {
+            return value;
+        }
+        return null;
     }
 
     /// <summary>
-    /// 获取移动数据
+    /// 获取Player数据
     /// </summary>
+    /// <param name="name"></param>
     /// <returns></returns>
-    public InputAction GetMoveData()
+    public InputAction GetInputPlayerData(string name)
     {
-        return inputActions.Player.Move;
-    }
-
-    /// <summary>
-    /// 获取跳跃数据
-    /// </summary>
-    /// <returns></returns>
-    public InputAction GetJumpData()
-    {
-        return inputActions.Player.Jump;
-    }
-
-    /// <summary>
-    /// 获取环顾数据
-    /// </summary>
-    /// <returns></returns>
-    public InputAction GetLookData()
-    {
-        return inputActions.Player.Look;
-    }
-
-    /// <summary>
-    /// 获取使用数据
-    /// </summary>
-    /// <returns></returns>
-    public InputAction GetUseData()
-    {
-        return inputActions.Player.Use;
-    }
-
-    /// <summary>
-    /// 获取取消数据
-    /// </summary>
-    /// <returns></returns>
-    public InputAction GetCancelData()
-    {
-        return inputActions.Player.Cancel;
-    }
-
-
-    /// <summary>
-    /// 获取摄像头距离数据
-    /// </summary>
-    /// <returns></returns>
-    public InputAction GetCameraDistanceData()
-    {
-        return inputActions.Player.CameraDistance;
-    }
-
-    /// <summary>
-    /// 获取快捷栏数据
-    /// </summary>
-    /// <returns></returns>
-    public InputAction GetShortcutsData()
-    {
-        return inputActions.Player.Shortcuts;
-    }
-
-    /// <summary>
-    /// 获取用户详情按钮数据
-    /// </summary>
-    /// <returns></returns>
-    public InputAction GetUserDetails()
-    {
-        return inputActions.Player.UserDetails;
+        if (dicInputPlayer.TryGetValue(name, out InputAction value))
+        {
+            return value;
+        }
+        return null;
     }
 }

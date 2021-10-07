@@ -121,8 +121,8 @@ public class BuildingEditorWindow : EditorWindow
         EditorUI.GUIText("id", 50);
         itemData.id = EditorUI.GUIEditorText(itemData.id, 100);
         EditorUI.GUIText("名称", 50);
-        itemData.name = EditorUI.GUIEditorText(itemData.name, 100);
-
+        itemData.name_cn = EditorUI.GUIEditorText(itemData.name_cn, 100);
+        itemData.name_en = EditorUI.GUIEditorText(itemData.name_en, 100);
         if (isCreate)
         {
 

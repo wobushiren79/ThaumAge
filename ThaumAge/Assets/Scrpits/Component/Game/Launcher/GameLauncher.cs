@@ -18,7 +18,7 @@ public class GameLauncher : BaseLauncher
         WorldCreateHandler.Instance.manager.SetWorldSeed(132349);
         GameHandler.Instance.manager.SetGameState(GameStateEnum.Init);
         //开关角色控制
-        GameControlHandler.Instance.manager.controlForPlayer.EnabledControl(false);
+        GameControlHandler.Instance.SetPlayerControlEnabled(false);
         //设置世界类型
         WorldCreateHandler.Instance.SetWorldType(worldType);
         //刷新周围区块
@@ -39,7 +39,7 @@ public class GameLauncher : BaseLauncher
         //修改灯光
         LightHandler.Instance.InitData();
         //开关角色控制
-        GameControlHandler.Instance.manager.controlForPlayer.EnabledControl(true);
+        GameControlHandler.Instance.SetPlayerControlEnabled(true);
         //初始化位置
         GameHandler.Instance.manager.player.InitPosition();
     }

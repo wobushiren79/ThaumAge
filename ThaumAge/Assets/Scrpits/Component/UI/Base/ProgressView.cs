@@ -73,6 +73,17 @@ public class ProgressView : BaseMonoBehaviour
     }
 
     /// <summary>
+    /// 设置最大值和最小值
+    /// </summary>
+    /// <param name="min"></param>
+    /// <param name="max"></param>
+    public void SetProMinMax(float min, float max)
+    {
+        sliderPro.minValue = min;
+        sliderPro.maxValue = max;
+    }
+
+    /// <summary>
     /// 设置文字显示
     /// </summary>
     /// <param name="content"></param>

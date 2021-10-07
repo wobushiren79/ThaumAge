@@ -68,14 +68,6 @@
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": ""
-                },
-                {
-                    "name": "UIOpenGodMain",
-                    "type": "Button",
-                    "id": "dbbc5ed1-69a2-4cd4-9a77-f2dc8589ffe1",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": ""
                 }
             ],
             "bindings": [
@@ -496,17 +488,6 @@
                     "action": "UserDetails",
                     "isComposite": false,
                     "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "ebbd6a2b-0b3e-406e-8848-d201e5345dc7",
-                    "path": "<Keyboard>/f12",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Keyboard&Mouse",
-                    "action": "UIOpenGodMain",
-                    "isComposite": false,
-                    "isPartOfComposite": false
                 }
             ]
         },
@@ -591,6 +572,22 @@
                     "type": "PassThrough",
                     "id": "8724fad0-64b2-4dea-a207-8c1c02604c92",
                     "expectedControlType": "Quaternion",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "F12",
+                    "type": "Button",
+                    "id": "e13a7001-5d49-439c-b893-7e8f67b19c0f",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "ESC",
+                    "type": "Button",
+                    "id": "f8150ac6-ace1-4352-bf56-3e03bbfac3df",
+                    "expectedControlType": "Button",
                     "processors": "",
                     "interactions": ""
                 }
@@ -1011,6 +1008,28 @@
                     "processors": "",
                     "groups": "XR",
                     "action": "TrackedDeviceOrientation",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "df9f3c67-d625-4f15-b966-ecddc63527fc",
+                    "path": "<Keyboard>/f12",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "F12",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "d30ecfaa-b1a0-4428-9457-14c779b405a6",
+                    "path": "<Keyboard>/escape",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "ESC",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

@@ -81,14 +81,6 @@ public class @GameInputActions : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
-                },
-                {
-                    ""name"": ""UIOpenGodMain"",
-                    ""type"": ""Button"",
-                    ""id"": ""dbbc5ed1-69a2-4cd4-9a77-f2dc8589ffe1"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -509,17 +501,6 @@ public class @GameInputActions : IInputActionCollection, IDisposable
                     ""action"": ""UserDetails"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""ebbd6a2b-0b3e-406e-8848-d201e5345dc7"",
-                    ""path"": ""<Keyboard>/f12"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard&Mouse"",
-                    ""action"": ""UIOpenGodMain"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -604,6 +585,22 @@ public class @GameInputActions : IInputActionCollection, IDisposable
                     ""type"": ""PassThrough"",
                     ""id"": ""8724fad0-64b2-4dea-a207-8c1c02604c92"",
                     ""expectedControlType"": ""Quaternion"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""F12"",
+                    ""type"": ""Button"",
+                    ""id"": ""e13a7001-5d49-439c-b893-7e8f67b19c0f"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""ESC"",
+                    ""type"": ""Button"",
+                    ""id"": ""f8150ac6-ace1-4352-bf56-3e03bbfac3df"",
+                    ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
                 }
@@ -1026,6 +1023,28 @@ public class @GameInputActions : IInputActionCollection, IDisposable
                     ""action"": ""TrackedDeviceOrientation"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""df9f3c67-d625-4f15-b966-ecddc63527fc"",
+                    ""path"": ""<Keyboard>/f12"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""F12"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""d30ecfaa-b1a0-4428-9457-14c779b405a6"",
+                    ""path"": ""<Keyboard>/escape"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""ESC"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -1103,7 +1122,6 @@ public class @GameInputActions : IInputActionCollection, IDisposable
         m_Player_Cancel = m_Player.FindAction("Cancel", throwIfNotFound: true);
         m_Player_Shortcuts = m_Player.FindAction("Shortcuts", throwIfNotFound: true);
         m_Player_UserDetails = m_Player.FindAction("UserDetails", throwIfNotFound: true);
-        m_Player_UIOpenGodMain = m_Player.FindAction("UIOpenGodMain", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -1116,6 +1134,8 @@ public class @GameInputActions : IInputActionCollection, IDisposable
         m_UI_RightClick = m_UI.FindAction("RightClick", throwIfNotFound: true);
         m_UI_TrackedDevicePosition = m_UI.FindAction("TrackedDevicePosition", throwIfNotFound: true);
         m_UI_TrackedDeviceOrientation = m_UI.FindAction("TrackedDeviceOrientation", throwIfNotFound: true);
+        m_UI_F12 = m_UI.FindAction("F12", throwIfNotFound: true);
+        m_UI_ESC = m_UI.FindAction("ESC", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -1173,7 +1193,6 @@ public class @GameInputActions : IInputActionCollection, IDisposable
     private readonly InputAction m_Player_Cancel;
     private readonly InputAction m_Player_Shortcuts;
     private readonly InputAction m_Player_UserDetails;
-    private readonly InputAction m_Player_UIOpenGodMain;
     public struct PlayerActions
     {
         private @GameInputActions m_Wrapper;
@@ -1186,7 +1205,6 @@ public class @GameInputActions : IInputActionCollection, IDisposable
         public InputAction @Cancel => m_Wrapper.m_Player_Cancel;
         public InputAction @Shortcuts => m_Wrapper.m_Player_Shortcuts;
         public InputAction @UserDetails => m_Wrapper.m_Player_UserDetails;
-        public InputAction @UIOpenGodMain => m_Wrapper.m_Player_UIOpenGodMain;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1220,9 +1238,6 @@ public class @GameInputActions : IInputActionCollection, IDisposable
                 @UserDetails.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnUserDetails;
                 @UserDetails.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnUserDetails;
                 @UserDetails.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnUserDetails;
-                @UIOpenGodMain.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnUIOpenGodMain;
-                @UIOpenGodMain.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnUIOpenGodMain;
-                @UIOpenGodMain.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnUIOpenGodMain;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -1251,9 +1266,6 @@ public class @GameInputActions : IInputActionCollection, IDisposable
                 @UserDetails.started += instance.OnUserDetails;
                 @UserDetails.performed += instance.OnUserDetails;
                 @UserDetails.canceled += instance.OnUserDetails;
-                @UIOpenGodMain.started += instance.OnUIOpenGodMain;
-                @UIOpenGodMain.performed += instance.OnUIOpenGodMain;
-                @UIOpenGodMain.canceled += instance.OnUIOpenGodMain;
             }
         }
     }
@@ -1272,6 +1284,8 @@ public class @GameInputActions : IInputActionCollection, IDisposable
     private readonly InputAction m_UI_RightClick;
     private readonly InputAction m_UI_TrackedDevicePosition;
     private readonly InputAction m_UI_TrackedDeviceOrientation;
+    private readonly InputAction m_UI_F12;
+    private readonly InputAction m_UI_ESC;
     public struct UIActions
     {
         private @GameInputActions m_Wrapper;
@@ -1286,6 +1300,8 @@ public class @GameInputActions : IInputActionCollection, IDisposable
         public InputAction @RightClick => m_Wrapper.m_UI_RightClick;
         public InputAction @TrackedDevicePosition => m_Wrapper.m_UI_TrackedDevicePosition;
         public InputAction @TrackedDeviceOrientation => m_Wrapper.m_UI_TrackedDeviceOrientation;
+        public InputAction @F12 => m_Wrapper.m_UI_F12;
+        public InputAction @ESC => m_Wrapper.m_UI_ESC;
         public InputActionMap Get() { return m_Wrapper.m_UI; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1325,6 +1341,12 @@ public class @GameInputActions : IInputActionCollection, IDisposable
                 @TrackedDeviceOrientation.started -= m_Wrapper.m_UIActionsCallbackInterface.OnTrackedDeviceOrientation;
                 @TrackedDeviceOrientation.performed -= m_Wrapper.m_UIActionsCallbackInterface.OnTrackedDeviceOrientation;
                 @TrackedDeviceOrientation.canceled -= m_Wrapper.m_UIActionsCallbackInterface.OnTrackedDeviceOrientation;
+                @F12.started -= m_Wrapper.m_UIActionsCallbackInterface.OnF12;
+                @F12.performed -= m_Wrapper.m_UIActionsCallbackInterface.OnF12;
+                @F12.canceled -= m_Wrapper.m_UIActionsCallbackInterface.OnF12;
+                @ESC.started -= m_Wrapper.m_UIActionsCallbackInterface.OnESC;
+                @ESC.performed -= m_Wrapper.m_UIActionsCallbackInterface.OnESC;
+                @ESC.canceled -= m_Wrapper.m_UIActionsCallbackInterface.OnESC;
             }
             m_Wrapper.m_UIActionsCallbackInterface = instance;
             if (instance != null)
@@ -1359,6 +1381,12 @@ public class @GameInputActions : IInputActionCollection, IDisposable
                 @TrackedDeviceOrientation.started += instance.OnTrackedDeviceOrientation;
                 @TrackedDeviceOrientation.performed += instance.OnTrackedDeviceOrientation;
                 @TrackedDeviceOrientation.canceled += instance.OnTrackedDeviceOrientation;
+                @F12.started += instance.OnF12;
+                @F12.performed += instance.OnF12;
+                @F12.canceled += instance.OnF12;
+                @ESC.started += instance.OnESC;
+                @ESC.performed += instance.OnESC;
+                @ESC.canceled += instance.OnESC;
             }
         }
     }
@@ -1418,7 +1446,6 @@ public class @GameInputActions : IInputActionCollection, IDisposable
         void OnCancel(InputAction.CallbackContext context);
         void OnShortcuts(InputAction.CallbackContext context);
         void OnUserDetails(InputAction.CallbackContext context);
-        void OnUIOpenGodMain(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {
@@ -1432,5 +1459,7 @@ public class @GameInputActions : IInputActionCollection, IDisposable
         void OnRightClick(InputAction.CallbackContext context);
         void OnTrackedDevicePosition(InputAction.CallbackContext context);
         void OnTrackedDeviceOrientation(InputAction.CallbackContext context);
+        void OnF12(InputAction.CallbackContext context);
+        void OnESC(InputAction.CallbackContext context);
     }
 }

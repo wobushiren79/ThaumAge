@@ -26,6 +26,16 @@ public partial class UIListItemGameSettingRange : UIListItemGameSettingBase, Pro
     }
 
     /// <summary>
+    /// 设置最小最大值
+    /// </summary>
+    /// <param name="max"></param>
+    /// <param name="min"></param>
+    public void SetMinMax(float min, float max) 
+    {
+        ui_ProContent.SetProMinMax(min, max);
+    }
+
+    /// <summary>
     /// 设置进度
     /// </summary>
     /// <param name="pro"></param>

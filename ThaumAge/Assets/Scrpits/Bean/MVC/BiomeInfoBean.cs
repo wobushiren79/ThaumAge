@@ -20,8 +20,6 @@ public class BiomeInfoBean : BaseBean
     public int minHeight;
     //´óĞ¡
     public float scale;
-    //Ãû×Ö
-    public string name;
 
     public BiomeTypeEnum GetBiomeType()
     {

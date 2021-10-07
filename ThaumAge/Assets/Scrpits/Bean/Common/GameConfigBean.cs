@@ -38,6 +38,12 @@ public class GameConfigBean
     //抗锯齿质量
     public int antialiasingQualityLevel = 0;
 
+    //角色X轴镜头移动速度
+    public float speedForPlayerCameraMoveX = 2f;
+    //角色Y轴镜头移动速度
+    public float speedForPlayerCameraMoveY = 0.02f;
+
+
     /// <summary>
     /// 获取抗锯齿模式
     /// </summary>

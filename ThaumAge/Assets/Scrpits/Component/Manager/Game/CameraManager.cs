@@ -19,10 +19,6 @@ public class CameraManager : BaseManager
     //第三人称摄像头初始数据
     public CinemachineFreeLook.Orbit[] threeFreeLookOriginalOrbits;
 
-    //摄像头移动速度
-    public float speedForCameraMove = 200;
-
-
     public CinemachineVirtualCamera cameraForFirst
     {
         get
