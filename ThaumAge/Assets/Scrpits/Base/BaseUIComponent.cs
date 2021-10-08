@@ -123,7 +123,10 @@ public class BaseUIComponent : BaseMonoBehaviour
     {
         if (gameObject.activeSelf)
         {
-            StartCoroutine(CoroutineForInputActionStarted(callback));
+            this.WaitExecuteEndOfFrame(1, () =>
+            {
+                OnInputActionForStarted(callback.action.name.GetEnum<InputActionUIEnum>());
+            });
         }
     }
 
@@ -133,17 +136,6 @@ public class BaseUIComponent : BaseMonoBehaviour
     public virtual void OnClickForButton(Button viewButton)
     {
 
-    }
-
-    /// <summary>
-    /// 延迟一帧
-    /// </summary>
-    /// <param name="callback"></param>
-    /// <returns></returns>
-    public IEnumerator CoroutineForInputActionStarted(CallbackContext callback)
-    {
-        yield return new WaitForEndOfFrame();
-        OnInputActionForStarted(callback.action.name.GetEnum<InputActionUIEnum>());
     }
 
     /// <summary>

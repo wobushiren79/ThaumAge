@@ -70,18 +70,11 @@ public class ToastView : BaseMonoBehaviour
     {
         if (cgToast != null)
             cgToast.DOFade(0, 0.2f).SetDelay(timeDelay);
-        StartCoroutine(CoroutineForDelayDestroy(timeDelay + 0.2f));
-    }
-
-    /// <summary>
-    /// 携程 延迟删除
-    /// </summary>
-    /// <param name="timeDelay"></param>
-    /// <returns></returns>
-    public IEnumerator CoroutineForDelayDestroy(float timeDelay)
-    {
-        yield return new WaitForSeconds(timeDelay);
-        Destroy(gameObject);
+        this.WaitExecuteSeconds(timeDelay + 0.2f, () =>
+        {
+             //延迟删除
+             Destroy(gameObject);
+        });
     }
 
 }
