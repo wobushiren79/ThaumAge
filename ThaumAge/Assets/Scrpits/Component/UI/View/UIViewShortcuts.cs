@@ -39,6 +39,67 @@ public class UIViewShortcuts : BaseUIView
         InitShortcuts();
     }
 
+    public override void OnInputActionForStarted(InputActionUIEnum inputType)
+    {
+        UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();
+        int indexForShortcuts = 0;
+        bool isRefreshUI = true;
+        base.OnInputActionForStarted(inputType);
+        switch (inputType) 
+        {
+            case InputActionUIEnum.N0:
+                indexForShortcuts = 9;
+                break;
+            case InputActionUIEnum.N1:
+                indexForShortcuts = 0;
+                break;
+            case InputActionUIEnum.N2:
+                indexForShortcuts = 1;
+                break;
+            case InputActionUIEnum.N3:
+                indexForShortcuts = 2;
+                break;
+            case InputActionUIEnum.N4:
+                indexForShortcuts = 3;
+                break;
+            case InputActionUIEnum.N5:
+                indexForShortcuts = 4;
+                break;
+            case InputActionUIEnum.N6:
+                indexForShortcuts = 5;
+                break;
+            case InputActionUIEnum.N7:
+                indexForShortcuts = 6;
+                break;
+            case InputActionUIEnum.N8:
+                indexForShortcuts = 7;
+                break;
+            case InputActionUIEnum.N9:
+                indexForShortcuts = 8;
+                break;
+            case InputActionUIEnum.NAdd:
+                indexForShortcuts = userData.indexForShortcuts + 1;
+                break;
+            case InputActionUIEnum.NSub:
+                indexForShortcuts = userData.indexForShortcuts - 1;
+                break;
+        }
+        if (indexForShortcuts > 9)
+        {
+            indexForShortcuts = 0;
+        }
+        else if (indexForShortcuts < 0)
+        {
+            indexForShortcuts = 9;
+        }
+        userData.indexForShortcuts = (byte)(indexForShortcuts);
+        if (isRefreshUI)
+        {
+            RefreshUI();
+        }
+    }
+
+
     /// <summary>
     /// 初始化状态栏
     /// </summary>
@@ -72,4 +133,5 @@ public class UIViewShortcuts : BaseUIView
             }
         }
     }
+
 }

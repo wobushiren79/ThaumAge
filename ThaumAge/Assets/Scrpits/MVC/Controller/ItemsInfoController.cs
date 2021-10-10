@@ -51,7 +51,7 @@ public class ItemsInfoController : BaseMVCController<ItemsInfoModel, IItemsInfoV
         }
         else
         {
-            GetView().GetItemsInfoSuccess<List<ItemsInfoBean>>(listData, action);
+            GetView().GetItemsInfoSuccess(listData, action);
         }
     }
 

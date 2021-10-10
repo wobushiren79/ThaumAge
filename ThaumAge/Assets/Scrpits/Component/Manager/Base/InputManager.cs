@@ -2,6 +2,7 @@
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Utilities;
 
 public class InputManager : BaseManager
 {
@@ -13,42 +14,27 @@ public class InputManager : BaseManager
     public virtual void Awake()
     {
         inputActions = new GameInputActions();
-
-        InputAction F12 = inputActions.UI.F12;
-        InputAction ESC = inputActions.UI.ESC;
-
-        F12.Enable();
-        ESC.Enable();
-
-        dicInputUI.Add(F12.name.GetEnum<InputActionUIEnum>(), F12);
-        dicInputUI.Add(ESC.name.GetEnum<InputActionUIEnum>(), ESC);
         //----------------------------------------------------------
-        InputAction Move = inputActions.Player.Move;
-        InputAction Jump = inputActions.Player.Jump;
-        InputAction Look = inputActions.Player.Look;
-        InputAction Use = inputActions.Player.Use;
-        InputAction Cancel = inputActions.Player.Cancel;
-        InputAction CameraDistance = inputActions.Player.CameraDistance;
-        InputAction Shortcuts = inputActions.Player.Shortcuts;
-        InputAction UserDetails = inputActions.Player.UserDetails;
+        GameInputActions.UIActions uiActions = inputActions.UI;
+        InputActionMap inputActionMapUI = uiActions.Get();
+        ReadOnlyArray<InputAction> listUIData = inputActionMapUI.actions;
 
-        inputActions.Player.Move.Enable();
-        inputActions.Player.Jump.Enable();
-        inputActions.Player.Look.Enable();
-        inputActions.Player.Use.Enable();
-        inputActions.Player.Cancel.Enable();
-        inputActions.Player.CameraDistance.Enable();
-        inputActions.Player.Shortcuts.Enable();
-        inputActions.Player.UserDetails.Enable();
+        foreach (var itemData in listUIData)
+        {
+            itemData.Enable();
+            dicInputUI.Add(itemData.name.GetEnum<InputActionUIEnum>(), itemData);
+        }
 
-        dicInputPlayer.Add(Move.name, Move);
-        dicInputPlayer.Add(Jump.name, Jump);
-        dicInputPlayer.Add(Look.name, Look);
-        dicInputPlayer.Add(Use.name, Use);
-        dicInputPlayer.Add(Cancel.name, Cancel);
-        dicInputPlayer.Add(CameraDistance.name, CameraDistance);
-        dicInputPlayer.Add(Shortcuts.name, Shortcuts);
-        dicInputPlayer.Add(UserDetails.name, UserDetails);
+        //----------------------------------------------------------
+        GameInputActions.PlayerActions playerActions = inputActions.Player;
+        InputActionMap inputActionMapPlayer = playerActions.Get();
+        ReadOnlyArray<InputAction> listPlayerData = inputActionMapPlayer.actions;
+
+        foreach (var itemData in listPlayerData)
+        {
+            itemData.Enable();
+            dicInputPlayer.Add(itemData.name, itemData);
+        }
     }
 
     /// <summary>

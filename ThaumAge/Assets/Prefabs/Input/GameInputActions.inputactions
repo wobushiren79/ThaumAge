@@ -54,14 +54,6 @@
                     "interactions": ""
                 },
                 {
-                    "name": "Shortcuts",
-                    "type": "Button",
-                    "id": "9c8f386d-2df2-4a51-9c35-41d1b12281e5",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": ""
-                },
-                {
                     "name": "UserDetails",
                     "type": "Button",
                     "id": "b3e0f2ef-4b70-463b-95e8-a6f00c39d08e",
@@ -337,138 +329,6 @@
                 },
                 {
                     "name": "",
-                    "id": "8aca6e07-e098-496c-bd83-73bf7eccc99d",
-                    "path": "<Keyboard>/1",
-                    "interactions": "",
-                    "processors": "Clamp(min=1,max=1)",
-                    "groups": "Keyboard&Mouse",
-                    "action": "Shortcuts",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "0109d2b6-ffc0-4090-bd0c-3ccc27bbafee",
-                    "path": "<Keyboard>/2",
-                    "interactions": "",
-                    "processors": "Clamp(min=2,max=2)",
-                    "groups": "Keyboard&Mouse",
-                    "action": "Shortcuts",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "6554e7b8-1f85-4ff2-8dea-30451e23f3fe",
-                    "path": "<Keyboard>/3",
-                    "interactions": "",
-                    "processors": "Clamp(min=3,max=3)",
-                    "groups": "Keyboard&Mouse",
-                    "action": "Shortcuts",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "baac1f71-b8c0-4aeb-ae3a-d3973aaa15cf",
-                    "path": "<Keyboard>/4",
-                    "interactions": "",
-                    "processors": "Clamp(min=4,max=4)",
-                    "groups": "Keyboard&Mouse",
-                    "action": "Shortcuts",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "fe68a9ea-62d9-4be3-8883-0ec12b2d1b31",
-                    "path": "<Keyboard>/5",
-                    "interactions": "",
-                    "processors": "Clamp(min=5,max=5)",
-                    "groups": "Keyboard&Mouse",
-                    "action": "Shortcuts",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "29a6be5e-d8ba-410a-b5bc-c8076f619d8b",
-                    "path": "<Keyboard>/6",
-                    "interactions": "",
-                    "processors": "Clamp(min=6,max=6)",
-                    "groups": "Keyboard&Mouse",
-                    "action": "Shortcuts",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "fe9f4164-98aa-4454-bd6a-4b81e26d4cb9",
-                    "path": "<Keyboard>/7",
-                    "interactions": "",
-                    "processors": "Clamp(min=7,max=7)",
-                    "groups": "Keyboard&Mouse",
-                    "action": "Shortcuts",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "c7c2f7cf-7836-4f7f-a70d-5d0fc9b446fa",
-                    "path": "<Keyboard>/8",
-                    "interactions": "",
-                    "processors": "Clamp(min=8,max=8)",
-                    "groups": "Keyboard&Mouse",
-                    "action": "Shortcuts",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "932ea63b-2023-46c6-a502-c163827efe59",
-                    "path": "<Keyboard>/9",
-                    "interactions": "",
-                    "processors": "Clamp(min=9,max=9)",
-                    "groups": "Keyboard&Mouse",
-                    "action": "Shortcuts",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "71ff012e-d16c-4fc4-ba5d-aa10728b5c3c",
-                    "path": "<Keyboard>/0",
-                    "interactions": "",
-                    "processors": "Clamp(min=10,max=10)",
-                    "groups": "Keyboard&Mouse",
-                    "action": "Shortcuts",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "090d6c72-a3e8-44a0-a60c-7b0e27acad3f",
-                    "path": "<Gamepad>/rightShoulder",
-                    "interactions": "",
-                    "processors": "Clamp(min=-1,max=-1)",
-                    "groups": "Gamepad",
-                    "action": "Shortcuts",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "b74dde96-2dac-4235-9567-cc689c6e10d7",
-                    "path": "<Gamepad>/leftShoulder",
-                    "interactions": "",
-                    "processors": "Clamp(min=-2,max=-2)",
-                    "groups": "Gamepad",
-                    "action": "Shortcuts",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "6b1d9c76-abdc-4832-a90f-99cd8d5f16db",
                     "path": "<Gamepad>/start",
                     "interactions": "",
@@ -587,6 +447,102 @@
                     "name": "ESC",
                     "type": "Button",
                     "id": "f8150ac6-ace1-4352-bf56-3e03bbfac3df",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "N0",
+                    "type": "Button",
+                    "id": "0c85748c-c38d-4a43-b930-b6345abd04d1",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "N1",
+                    "type": "Button",
+                    "id": "ea5cdf8b-bedb-4a30-a49d-530bbe6b356b",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "N2",
+                    "type": "Button",
+                    "id": "7be492b9-22ff-4fd0-95fe-31f3bdba2a61",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "N3",
+                    "type": "Button",
+                    "id": "b183e291-4e8b-4f28-98d7-415ffcab22ff",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "N4",
+                    "type": "Button",
+                    "id": "aa036b3a-f906-42ba-be9a-c229a896e8f1",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "N5",
+                    "type": "Button",
+                    "id": "571c229f-423d-4148-b380-429b32ea6041",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "N6",
+                    "type": "Button",
+                    "id": "318a6074-4e98-43a9-9b9f-60fcaa28a5f9",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "N7",
+                    "type": "Button",
+                    "id": "c582d612-8fdc-4462-a7b4-01f49a08cb99",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "N8",
+                    "type": "Button",
+                    "id": "c396f705-76d5-472e-bd0c-fb7246b41c19",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "N9",
+                    "type": "Button",
+                    "id": "a9d722fe-6f34-4048-8105-a380b90213da",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "NAdd",
+                    "type": "Button",
+                    "id": "f1bd5a73-2acb-4368-b504-568ff013a886",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "NSub",
+                    "type": "Button",
+                    "id": "1585801d-58a9-4db2-98b5-866f68c7cd56",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": ""
@@ -1030,6 +986,182 @@
                     "processors": "",
                     "groups": "Keyboard&Mouse",
                     "action": "ESC",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "82e24c27-349e-4c0a-ba0d-585548bf8573",
+                    "path": "<Keyboard>/0",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "N0",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "9cff9d81-d972-43af-a066-6ec66241eb43",
+                    "path": "<Keyboard>/1",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "N1",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "07d6994d-3275-411c-8b80-093d16848f52",
+                    "path": "<Keyboard>/2",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "N2",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "8b763a12-687d-4973-a4ca-e11a1874546e",
+                    "path": "<Keyboard>/3",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "N3",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "49fc6198-2562-4d73-a635-6e2d35e30691",
+                    "path": "<Keyboard>/4",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "N4",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "9f71c1f9-ca87-4882-9d9d-aa50957ce573",
+                    "path": "<Keyboard>/5",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "N5",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "a1d3961f-e986-4ab0-b9b2-582310917e58",
+                    "path": "<Keyboard>/6",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "N6",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "7eeb6f61-d297-42e8-b08e-fc10fe4ce9e0",
+                    "path": "<Keyboard>/7",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "N7",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "bfed1443-74ae-414f-9664-44bc0c5d2c08",
+                    "path": "<Keyboard>/8",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "N8",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "4aaf008a-231d-4fa3-b252-ec2fcafd0052",
+                    "path": "<Keyboard>/9",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad;Keyboard&Mouse",
+                    "action": "N9",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "b0e408e4-087a-43c1-90a5-ef60af5cff21",
+                    "path": "<Keyboard>/equals",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "NAdd",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "542e1373-72b3-44e4-8893-06d04af85eae",
+                    "path": "<Keyboard>/numpadEquals",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "NAdd",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "e5d5c4e4-b766-4a83-9343-c3ee5e206da7",
+                    "path": "<Gamepad>/rightShoulder",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "NAdd",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "68164b30-58e9-42c4-8bb7-07f34b1ac835",
+                    "path": "<Keyboard>/minus",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "NSub",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "e94c57a9-954f-431c-9c08-2bc97353e630",
+                    "path": "<Keyboard>/numpadMinus",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "NSub",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "01609f3a-b1ae-4da7-92e6-b9fc30b86ffb",
+                    "path": "<Gamepad>/leftShoulder",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "NSub",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

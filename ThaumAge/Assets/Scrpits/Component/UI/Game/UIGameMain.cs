@@ -9,6 +9,12 @@ public partial class UIGameMain : BaseUIComponent
 {
     protected InputAction inputGodMain;
 
+    public override void RefreshUI()
+    {
+        base.RefreshUI();
+        ui_Shortcuts.RefreshUI();
+    }
+
     public override void OnInputActionForStarted(InputActionUIEnum inputName)
     {
         base.OnInputActionForStarted(inputName);

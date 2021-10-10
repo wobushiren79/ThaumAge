@@ -31,11 +31,8 @@ public class ControlForPlayer : ControlForBase
         useAction.started += HandleForUse;
         InputAction cancelAction = InputHandler.Instance.manager.GetInputPlayerData("Cancel");
         cancelAction.started += HandleForCancel;
-        InputAction shortcutsData = InputHandler.Instance.manager.GetInputPlayerData("Shortcuts");
-        shortcutsData.started += HandleForShortcuts;
         InputAction userDetailsData = InputHandler.Instance.manager.GetInputPlayerData("UserDetails");
         userDetailsData.started += HandleForUserDetails;
-
         inputActionMove = InputHandler.Instance.manager.GetInputPlayerData("Move");
     }
 
@@ -66,50 +63,6 @@ public class ControlForPlayer : ControlForBase
         if (!isActiveAndEnabled)
             return;
         UIHandler.Instance.OpenUIAndCloseOther<UIGameUserDetails>(UIEnum.GameUserDetails);
-    }
-
-    /// <summary>
-    /// 快捷栏切换处理
-    /// </summary>
-    /// <param name="callback"></param>
-    public void HandleForShortcuts(CallbackContext callback)
-    {
-        if (!isActiveAndEnabled)
-            return;
-        float data = callback.ReadValue<float>();
-        UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();
-        bool isRefreshUI = true;
-        int indexForShortcuts;
-        switch (data)
-        {
-            case -1:
-                indexForShortcuts = userData.indexForShortcuts - 1;
-                break;
-            case -2:
-                indexForShortcuts = userData.indexForShortcuts + 1;
-                break;
-            default:
-                indexForShortcuts = (int)(data - 1);
-                //如果没有改变，则不刷新
-                if (indexForShortcuts == userData.indexForShortcuts)
-                {
-                    isRefreshUI = false;
-                }
-                break;
-        }
-        if (indexForShortcuts > 9)
-        {
-            indexForShortcuts = 0;
-        }
-        else if (indexForShortcuts < 0)
-        {
-            indexForShortcuts = 9;
-        }
-        userData.indexForShortcuts = (byte)(indexForShortcuts);
-        if (isRefreshUI)
-        {
-            UIHandler.Instance.GetOpenUI().RefreshUI();
-        }
     }
 
     /// <summary>

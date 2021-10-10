@@ -3,44 +3,57 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class UIViewItemContainer : BaseUIView
+public partial class UIViewItemContainer : BaseUIView
 {
-    public Image ui_IVBackground;
-    public UIViewItem ui_ViewItem;
-
+    //位置
     public Vector2Int viewIndex;
-    public ItemsBean itemsData;
+    //道具
     protected UIViewItem currentViewItem;
 
     public override void Awake()
     {
         base.Awake();
-        ui_ViewItem.gameObject.SetActive(false);
+        ui_ViewItemModel.ShowObj(false);
     }
 
     public void SetData(ItemsBean itemsData, Vector2Int viewIndex)
     {
         this.viewIndex = viewIndex;
-        this.itemsData = itemsData;
         SetViewItem(itemsData);
     }
 
+    /// <summary>
+    /// 清空容器
+    /// </summary>
+    public void ClearViewItem()
+    {
+        this.currentViewItem = null;
+    }
+
+    /// <summary>
+    /// 获取道具
+    /// </summary>
+    /// <returns></returns>
     public UIViewItem GetViewItem()
     {
         return currentViewItem;
     }
 
+    /// <summary>
+    /// 设置容器道具
+    /// </summary>
+    /// <param name="uiView"></param>
     public void SetViewItem(UIViewItem uiView)
     {
         this.currentViewItem = uiView;
         this.currentViewItem.originalParent = this;
         this.currentViewItem.transform.SetParent(rectTransform);
-
-        this.itemsData.itemsId = uiView.itemsData.itemsId;
-        this.itemsData.number = uiView.itemsData.number;
-        this.itemsData.meta = uiView.itemsData.meta;
     }
 
+    /// <summary>
+    /// 设置容器道具
+    /// </summary>
+    /// <param name="itemsData"></param>
     public void SetViewItem(ItemsBean itemsData)
     {
         //如果没有东西，则删除原来存在的
@@ -56,12 +69,13 @@ public class UIViewItemContainer : BaseUIView
         //如果有东西，则先实例化再设置数据
         if (currentViewItem == null)
         {
-            GameObject obj = Instantiate(gameObject, ui_ViewItem.gameObject);
+            GameObject obj = Instantiate(gameObject, ui_ViewItemModel.gameObject);
+            obj.name = "ViewItem";
             currentViewItem = obj.GetComponent<UIViewItem>();
             currentViewItem.originalParent = this;
-            currentViewItem.transform.position = ui_ViewItem.transform.position;
-            currentViewItem.transform.localScale = ui_ViewItem.transform.localScale;
-            currentViewItem.transform.rotation = ui_ViewItem.transform.rotation;
+            currentViewItem.transform.position = ui_ViewItemModel.transform.position;
+            currentViewItem.transform.localScale = ui_ViewItemModel.transform.localScale;
+            currentViewItem.transform.rotation = ui_ViewItemModel.transform.rotation;
         }
         currentViewItem.SetData(itemsData);
     }

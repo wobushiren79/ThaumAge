@@ -60,7 +60,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -178,13 +178,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1921fcc4cb70a7e498b3423861f7cba2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ui_IVBackground: {fileID: 0}
-  ui_ViewItem: {fileID: 853812645625611826}
   viewIndex: {x: 0, y: 0}
-  itemsData:
-    itemsId: 0
-    number: 0
-    meta: 
+  ui_IVBackground: {fileID: 5997811799174784006}
+  ui_ViewItemModel: {fileID: 853812645625611826}
 --- !u!1001 &3887314891564592412
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -279,10 +275,18 @@ PrefabInstance:
     - target: {fileID: 687638353793124166, guid: 3741f9e2d3d72704b934aa94845584ce, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300000, guid: 015a361a6a1c3824696b8a6e57a57e1f, type: 3}
+      objectReference: {fileID: 21300000, guid: 6c85ccde3337d784b88d46781c858b7b, type: 3}
     - target: {fileID: 4726576874008605632, guid: 3741f9e2d3d72704b934aa94845584ce, type: 3}
       propertyPath: m_Name
-      value: ViewItem
+      value: ViewItemModel
+      objectReference: {fileID: 0}
+    - target: {fileID: 7290561115005562198, guid: 3741f9e2d3d72704b934aa94845584ce, type: 3}
+      propertyPath: m_Text
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7290561115005562198, guid: 3741f9e2d3d72704b934aa94845584ce, type: 3}
+      propertyPath: m_FontData.m_MaxSize
+      value: 30
       objectReference: {fileID: 0}
     - target: {fileID: 7451433743779716937, guid: 3741f9e2d3d72704b934aa94845584ce, type: 3}
       propertyPath: m_Name

@@ -2,16 +2,15 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class BaseUIView : BaseMonoBehaviour
+public class BaseUIView : BaseUIInit
 {
     protected RectTransform rectTransform;
     //原始UI大小
     protected Vector2 uiSizeOriginal;
 
-    public virtual void Awake()
+    public override void Awake()
     {
-        AutoLinkUI();
-        InitButtons();
+        base.Awake();
         rectTransform = ((RectTransform)transform);
         uiSizeOriginal = rectTransform.sizeDelta;
     }
@@ -19,36 +18,5 @@ public class BaseUIView : BaseMonoBehaviour
     protected virtual void OnEnable()
     {
         RefreshUI();
-    }
-
-    /// <summary>
-    /// 刷新UI大小
-    /// </summary>
-    public virtual void RefreshUI()
-    {
-
-    }
-
-    /// <summary>
-    /// 初始化所有按钮点击事件
-    /// </summary>
-    public void InitButtons()
-    {
-        Button[] buttonArray = gameObject.GetComponentsInChildren<Button>();
-        if (buttonArray.IsNull())
-            return;
-        for (int i = 0; i < buttonArray.Length; i++)
-        {
-            Button itemButton = buttonArray[i];
-            itemButton.onClick.AddListener(() => { OnClickForButton(itemButton); });
-        }
-    }
-
-    /// <summary>
-    /// 按钮点击
-    /// </summary>
-    public virtual void OnClickForButton(Button viewButton)
-    {
-
     }
 }
