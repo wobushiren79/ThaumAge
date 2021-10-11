@@ -83,6 +83,8 @@ public class UIViewShortcuts : BaseUIView
             case InputActionUIEnum.NSub:
                 indexForShortcuts = userData.indexForShortcuts - 1;
                 break;
+            default:
+                return;
         }
         if (indexForShortcuts > 9)
         {
