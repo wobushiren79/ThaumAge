@@ -9,7 +9,8 @@ public partial class UIViewItemContainer : BaseUIView
     public Vector2Int viewIndex;
     //道具
     protected UIViewItem currentViewItem;
-
+    //容器指向的数据
+    protected ItemsBean itemsData;
     public override void Awake()
     {
         base.Awake();
@@ -18,6 +19,7 @@ public partial class UIViewItemContainer : BaseUIView
 
     public void SetData(ItemsBean itemsData, Vector2Int viewIndex)
     {
+        this.itemsData = itemsData;
         this.viewIndex = viewIndex;
         SetViewItem(itemsData);
     }
@@ -48,6 +50,10 @@ public partial class UIViewItemContainer : BaseUIView
         this.currentViewItem = uiView;
         this.currentViewItem.originalParent = this;
         this.currentViewItem.transform.SetParent(rectTransform);
+
+        itemsData.itemsId = uiView.itemsData.itemsId;
+        itemsData.meta = uiView.itemsData.meta;
+        itemsData.number = uiView.itemsData.number;
     }
 
     /// <summary>
