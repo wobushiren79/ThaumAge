@@ -3,11 +3,14 @@ using UnityEngine;
 
 public class ItemDrop : BaseMonoBehaviour
 {
-    public SpriteRenderer srIcon;
-    public Rigidbody rbItems;
+    protected SpriteRenderer srIcon;
+    protected Rigidbody rbItems;
 
     public ItemsInfoBean itemsInfo;
     public ItemsBean itemData;
+
+    //掉落状态 0：掉落不可拾取 1：掉落可拾取 2：拾取中
+    public int itemDrapState = 0;
 
     public void Awake()
     {
@@ -18,7 +21,10 @@ public class ItemDrop : BaseMonoBehaviour
     public void Update()
     {
         //如果摄像头距离物体过远，则删除物体
-        float dis = Vector3.Distance(CameraHandler.Instance.manager.mainCamera.transform.position, transform.position);
+        Player player = GameHandler.Instance.manager.player;
+        if (player == null) return;
+
+        float dis = Vector3.Distance(player.transform.position, transform.position);
         SOGameInitBean gameInitData = GameHandler.Instance.manager.gameInitData;
         if (dis > gameInitData.disForItemsDestory)
         {
@@ -35,7 +41,7 @@ public class ItemDrop : BaseMonoBehaviour
         itemsInfo = ItemsHandler.Instance.manager.GetItemsInfoById(itemData.itemId);
         transform.position = position;
         SetIcon(itemsInfo.icon_key);
-        rbItems.AddExplosionForce(10, position, 0, 5);
+        rbItems.AddForce(Random.Range(-100,100), Random.Range(0, 100), Random.Range(-100, 100));
     }
 
     /// <summary>
