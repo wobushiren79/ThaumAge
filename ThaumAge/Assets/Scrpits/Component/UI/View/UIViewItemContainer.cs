@@ -51,7 +51,7 @@ public partial class UIViewItemContainer : BaseUIView
         this.currentViewItem.originalParent = this;
         this.currentViewItem.transform.SetParent(rectTransform);
 
-        itemsData.itemsId = uiView.itemsData.itemsId;
+        itemsData.itemId = uiView.itemsData.itemId;
         itemsData.meta = uiView.itemsData.meta;
         itemsData.number = uiView.itemsData.number;
     }
@@ -63,7 +63,7 @@ public partial class UIViewItemContainer : BaseUIView
     public void SetViewItem(ItemsBean itemsData)
     {
         //如果没有东西，则删除原来存在的
-        if (itemsData == null || itemsData.itemsId == 0)
+        if (itemsData == null || itemsData.itemId == 0)
         {
             if (currentViewItem != null)
             {

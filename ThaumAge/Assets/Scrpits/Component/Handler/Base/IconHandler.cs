@@ -21,4 +21,13 @@ public class IconHandler : BaseHandler<IconHandler,IconManager>
         if (sa != null)
             callback?.Invoke(sa);
     }
+
+    /// <summary>
+    /// 获取未知图标
+    /// </summary>
+    /// <returns></returns>
+    public Sprite GetUnKnowSprite()
+    {
+        return manager.GetItemsSpriteByName("icon_unknow");
+    }
 }

@@ -23,8 +23,15 @@ public class ItemsManager : BaseManager, IItemsInfoView
         controllerForItems = new ItemsInfoController(this, this);
         controllerForItems.GetAllItemsInfoData(InitItemsInfo);
         RegisterItem();
+
+        //添加道具掉落模型
+        GetModelForAddressables(dicItemsObj, -1, "Assets/Prefabs/Game/ItemDrop.prefab", null);
     }
 
+    /// <summary>
+    /// 初始化道具信息
+    /// </summary>
+    /// <param name="listItemsInfo"></param>
     public void InitItemsInfo(List<ItemsInfoBean> listItemsInfo)
     {
         if (listItemsInfo == null)
@@ -72,6 +79,34 @@ public class ItemsManager : BaseManager, IItemsInfoView
     }
 
     /// <summary>
+    /// 通过方块ID获取道具ID
+    /// </summary>
+    /// <param name="blockType"></param>
+    /// <returns></returns>
+    public ItemsInfoBean GetItemsInfoByBlockId(int blockId)
+    {
+        for (int i=0;i< listItemsInfo.Count;i++)
+        {
+            ItemsInfoBean itemsInfo = listItemsInfo[i];
+            if (itemsInfo.type_id == blockId)
+            {
+                return itemsInfo;
+            }
+        }
+        return null;
+    }
+
+    /// <summary>
+    /// 通过方块类型获取道具ID
+    /// </summary>
+    /// <param name="blockType"></param>
+    /// <returns></returns>
+    public ItemsInfoBean GetItemsInfoByBlockType(BlockTypeEnum blockType)
+    {
+        return GetItemsInfoByBlockId((int)blockType);
+    }
+
+    /// <summary>
     /// 根据ID获取物品数据
     /// </summary>
     /// <param name="ids"></param>
@@ -88,14 +123,35 @@ public class ItemsManager : BaseManager, IItemsInfoView
     }
 
     /// <summary>
-    /// 获取物品模型
+    /// 通过ID获取道具图标
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
+    public Sprite GetItemsIconById(long id)
+    {
+        ItemsInfoBean itemsInfo = GetItemsInfoById(id);
+        return IconHandler.Instance.manager.GetItemsSpriteByName(itemsInfo.icon_key);     
+    }
+
+    /// <summary>
+    /// 获取物品模型(衣服 武器之类的)
     /// </summary>
     /// <param name="id"></param>
     /// <param name="callBack"></param>
     public void GetItemsObjById(long id, Action<GameObject> callBack)
     {
         ItemsInfoBean itemsInfo = GetItemsInfoById(id);
-        GetModelForAddressables(dicItemsObj, id, itemsInfo.model_name, callBack);
+        if (itemsInfo == null)
+        {
+            if (dicItemsObj.TryGetValue(id,out GameObject value))
+            {
+                callBack?.Invoke(value);
+            }
+        }
+        else
+        {
+            GetModelForAddressables(dicItemsObj, id, itemsInfo.model_name, callBack);
+        }
     }
 
     /// <summary>
@@ -106,7 +162,17 @@ public class ItemsManager : BaseManager, IItemsInfoView
     public void GetItemsTexById(long id, Action<Texture> callBack)
     {
         ItemsInfoBean itemsInfo = GetItemsInfoById(id);
-        GetModelForAddressables(dicItemsTex, id, itemsInfo.tex_name, callBack);
+        if (itemsInfo == null)
+        {
+            if (dicItemsTex.TryGetValue(id, out Texture value))
+            {
+                callBack?.Invoke(value);
+            }
+        }
+        else
+        {
+            GetModelForAddressables(dicItemsTex, id, itemsInfo.tex_name, callBack);
+        }
     }
 
     /// <summary>
@@ -118,7 +184,6 @@ public class ItemsManager : BaseManager, IItemsInfoView
     {
         return arrayItemRegister[(int)itemsType];
     }
-
 
     /// <summary>
     /// 注册所有方块
@@ -140,6 +205,7 @@ public class ItemsManager : BaseManager, IItemsInfoView
     {
         arrayItemRegister[(int)itemsType] = item;
     }
+
     #region 数据回调
     public void GetItemsInfoSuccess<T>(T data, Action<T> action)
     {

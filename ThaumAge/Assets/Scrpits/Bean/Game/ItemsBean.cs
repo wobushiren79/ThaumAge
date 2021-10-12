@@ -5,9 +5,27 @@ using System;
 [Serializable]
 public class ItemsBean 
 {
-    public long itemsId;
+    public long itemId;
     public int number;
     public string meta;
+
+    public ItemsBean()
+    {
+
+    }
+
+    public ItemsBean(long itemId, int number)
+    {
+        this.itemId = itemId;
+        this.number = number;
+    }
+
+    public ItemsBean(long itemId, int number,string meta)
+    {
+        this.itemId = itemId;
+        this.number = number;
+        this.meta = meta;
+    }
 
     public T GetMetaData<T>()
     {

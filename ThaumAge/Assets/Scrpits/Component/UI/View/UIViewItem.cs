@@ -40,7 +40,7 @@ public partial class UIViewItem : BaseUIView, IBeginDragHandler, IDragHandler, I
     public void SetData(ItemsBean itemsData)
     {
         this.itemsData = itemsData;
-        this.itemsInfo = ItemsHandler.Instance.manager.GetItemsInfoById(itemsData.itemsId);
+        this.itemsInfo = ItemsHandler.Instance.manager.GetItemsInfoById(itemsData.itemId);
         RefreshUI();
     }
 
@@ -92,7 +92,7 @@ public partial class UIViewItem : BaseUIView, IBeginDragHandler, IDragHandler, I
         Sprite spIcon = IconHandler.Instance.manager.GetItemsSpriteByName(iconKey);
         if (spIcon == null)
         {
-            spIcon = IconHandler.Instance.manager.GetItemsSpriteByName("icon_unknow");
+            spIcon = IconHandler.Instance.GetUnKnowSprite();
         }
         if (ui_IVIcon != null)
         {
@@ -271,7 +271,10 @@ public partial class UIViewItem : BaseUIView, IBeginDragHandler, IDragHandler, I
         else
         {
             //如果什么都没有检测到，说明是把物体丢到场景中
-            HandleForBackOriginalContainer();
+            Player player = GameHandler.Instance.manager.player;
+            ItemsHandler.Instance.CreateItemDrop(itemsData, player.transform.position);
+
+            DestroyImmediate(gameObject);
         }
     }
 

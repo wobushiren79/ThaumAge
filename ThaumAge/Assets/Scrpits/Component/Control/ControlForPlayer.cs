@@ -127,7 +127,7 @@ public class ControlForPlayer : ControlForBase
         {
             Vector3 targetPosition = Vector3.zero;
             //如果上手没有物品 则使用当前选中的方块
-            if (itemsData == null || itemsData.itemsId == 0)
+            if (itemsData == null || itemsData.itemId == 0)
             {
                 if (hit.normal.y > 0)
                 {
