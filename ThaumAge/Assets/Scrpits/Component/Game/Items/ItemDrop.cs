@@ -10,7 +10,7 @@ public class ItemDrop : BaseMonoBehaviour
     public ItemsBean itemData;
 
     //掉落状态 0：掉落不可拾取 1：掉落可拾取 2：拾取中
-    public ItemDropStateEnum itemDrapState =  ItemDropStateEnum.DropPick;
+    public ItemDropStateEnum itemDrapState = ItemDropStateEnum.DropPick;
     //距离玩家的最大距离
     public float disMaxPlayer = 0;
 
@@ -25,31 +25,33 @@ public class ItemDrop : BaseMonoBehaviour
     {
         srIcon = GetComponent<SpriteRenderer>();
         rbItems = GetComponent<Rigidbody>();
+        InvokeRepeating("UpdateItemData", 1, 1);
     }
 
-    float updateTime = 0;
+    public void OnDestroy()
+    {
+        CancelInvoke();
+    }
 
-    public void Update()
+    /// <summary>
+    /// 更新数据
+    /// </summary>
+    public void UpdateItemData()
     {
         //每隔1秒检测一次
-        updateTime += Time.deltaTime;
-        if (updateTime > 1)
+        timeForCreate++;
+        //如果正在捡取中 则不做处理
+        if (itemDrapState == ItemDropStateEnum.Picking)
+            return;
+        Player player = GameHandler.Instance.manager.player;
+        if (player == null) return;
+
+        float dis = Vector3.Distance(player.transform.position, transform.position);
+
+        //如果玩家距离物体过远，或者超过存在时间，则删除物体
+        if (dis > disForItemsDestory || timeForCreate > timeForItemsDestory)
         {
-            updateTime = 0;
-            timeForCreate++;
-            //如果正在捡取中 则不做处理
-            if (itemDrapState == ItemDropStateEnum.Picking)
-                return;
-            Player player = GameHandler.Instance.manager.player;
-            if (player == null) return;
-
-            float dis = Vector3.Distance(player.transform.position, transform.position);
-
-            //如果玩家距离物体过远，或者超过存在时间，则删除物体
-            if (dis > disForItemsDestory|| timeForCreate> timeForItemsDestory)
-            {
-                Destroy(gameObject);
-            }
+            Destroy(gameObject);
         }
     }
 
@@ -73,7 +75,7 @@ public class ItemDrop : BaseMonoBehaviour
         //设置头像
         SetIcon(itemsInfo.icon_key);
         //增加一个跳动的力
-        rbItems.AddForce(Random.Range(-100,100), Random.Range(0, 100), Random.Range(-100, 100));
+        rbItems.AddForce(Random.Range(-100, 100), Random.Range(0, 100), Random.Range(-100, 100));
 
         //初始化数据
         SOGameInitBean gameInitData = GameHandler.Instance.manager.gameInitData;
@@ -83,7 +85,7 @@ public class ItemDrop : BaseMonoBehaviour
 
         //设置初始距离玩家距离
         Player player = GameHandler.Instance.manager.player;
-        if (player != null) 
+        if (player != null)
         {
             disMaxPlayer = Vector3.Distance(player.transform.position, transform.position);
         }
