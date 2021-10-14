@@ -12,3 +12,11 @@ public enum ItemsTypeEnum
     Shoes = 14,//鞋子
 
 }
+
+
+public enum ItemDropStateEnum
+{
+    DropNoPick,//掉落不可捡取
+    DropPick,//掉落可捡取
+    Picking,//捡起中
+}

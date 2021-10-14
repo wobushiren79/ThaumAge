@@ -10,6 +10,9 @@ public class SOGameInitBean : ScriptableObject
     [Header("道具删除的最远距离")]
     public float disForItemsDestory = 50;
 
+    [Header("道具删除的最长时间")]
+    public float timeForItemsDestory = 100;
+
     [Header("周边区块加载卸载删除范围")]
     public int rangeForWorldUpdateDestory = 10;
 

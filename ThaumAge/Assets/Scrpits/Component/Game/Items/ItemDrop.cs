@@ -10,7 +10,16 @@ public class ItemDrop : BaseMonoBehaviour
     public ItemsBean itemData;
 
     //掉落状态 0：掉落不可拾取 1：掉落可拾取 2：拾取中
-    public int itemDrapState = 0;
+    public ItemDropStateEnum itemDrapState =  ItemDropStateEnum.DropPick;
+    //距离玩家的最大距离
+    public float disMaxPlayer = 0;
+
+    //删除的时间
+    public float timeForItemsDestory = 0;
+    //删除的距离
+    public float disForItemsDestory = 0;
+    //存在时间
+    public float timeForCreate = 0;
 
     public void Awake()
     {
@@ -18,18 +27,39 @@ public class ItemDrop : BaseMonoBehaviour
         rbItems = GetComponent<Rigidbody>();
     }
 
+    float updateTime = 0;
+
     public void Update()
     {
-        //如果摄像头距离物体过远，则删除物体
-        Player player = GameHandler.Instance.manager.player;
-        if (player == null) return;
-
-        float dis = Vector3.Distance(player.transform.position, transform.position);
-        SOGameInitBean gameInitData = GameHandler.Instance.manager.gameInitData;
-        if (dis > gameInitData.disForItemsDestory)
+        //每隔1秒检测一次
+        updateTime += Time.deltaTime;
+        if (updateTime > 1)
         {
-            Destroy(gameObject);
+            updateTime = 0;
+            timeForCreate++;
+            //如果正在捡取中 则不做处理
+            if (itemDrapState == ItemDropStateEnum.Picking)
+                return;
+            Player player = GameHandler.Instance.manager.player;
+            if (player == null) return;
+
+            float dis = Vector3.Distance(player.transform.position, transform.position);
+
+            //如果玩家距离物体过远，或者超过存在时间，则删除物体
+            if (dis > disForItemsDestory|| timeForCreate> timeForItemsDestory)
+            {
+                Destroy(gameObject);
+            }
         }
+    }
+
+    /// <summary>
+    /// 设置道具状态
+    /// </summary>
+    /// <param name="itemDropState"></param>
+    public void SetItemDropState(ItemDropStateEnum itemDropState)
+    {
+        this.itemDrapState = itemDropState;
     }
 
     /// <summary>
@@ -40,8 +70,23 @@ public class ItemDrop : BaseMonoBehaviour
         this.itemData = itemData;
         itemsInfo = ItemsHandler.Instance.manager.GetItemsInfoById(itemData.itemId);
         transform.position = position;
+        //设置头像
         SetIcon(itemsInfo.icon_key);
+        //增加一个跳动的力
         rbItems.AddForce(Random.Range(-100,100), Random.Range(0, 100), Random.Range(-100, 100));
+
+        //初始化数据
+        SOGameInitBean gameInitData = GameHandler.Instance.manager.gameInitData;
+        timeForItemsDestory = gameInitData.timeForItemsDestory;
+        disForItemsDestory = gameInitData.disForItemsDestory;
+        timeForCreate = 0;
+
+        //设置初始距离玩家距离
+        Player player = GameHandler.Instance.manager.player;
+        if (player != null) 
+        {
+            disMaxPlayer = Vector3.Distance(player.transform.position, transform.position);
+        }
     }
 
     /// <summary>

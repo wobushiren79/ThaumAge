@@ -4,11 +4,6 @@ using Cinemachine;
 
 public class Player : BaseMonoBehaviour
 {
-    //第一人称
-    public CinemachineVirtualCamera cameraForFirst;
-    //第三人称
-    public CinemachineFreeLook cameraForThree;
-
     protected CharacterController characterController;
     protected float timeForWorldUpdate = 0;
 
