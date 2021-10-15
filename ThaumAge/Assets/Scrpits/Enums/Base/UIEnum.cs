@@ -3,6 +3,8 @@ using UnityEditor;
 
 public enum UIEnum
 {
+    Loading = 1,
+
     MainStart = 1001, //主界面-开始
     MainCreate = 1002,//主界面-创建游戏
     MainUserData = 1003,//主界面-继续游戏
@@ -14,4 +16,5 @@ public enum UIEnum
     GameSetting = 2999,//游戏-设置
 
     GodMain = 9001,//GM-主界面
+
 }
