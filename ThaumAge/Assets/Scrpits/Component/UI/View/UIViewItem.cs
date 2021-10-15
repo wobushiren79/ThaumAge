@@ -272,7 +272,7 @@ public partial class UIViewItem : BaseUIView, IBeginDragHandler, IDragHandler, I
         {
             //如果什么都没有检测到，说明是把物体丢到场景中
             Player player = GameHandler.Instance.manager.player;
-            ItemsHandler.Instance.CreateItemDrop(itemsData, player.transform.position);
+            ItemsHandler.Instance.CreateItemDrop(itemsData, player.transform.position,ItemDropStateEnum.DropNoPick);
 
             DestroyImmediate(gameObject);
         }

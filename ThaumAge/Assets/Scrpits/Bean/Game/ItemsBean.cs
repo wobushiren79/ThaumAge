@@ -14,6 +14,11 @@ public class ItemsBean
 
     }
 
+    public ItemsBean(long itemId)
+    {
+        this.itemId = itemId;
+    }
+
     public ItemsBean(long itemId, int number)
     {
         this.itemId = itemId;

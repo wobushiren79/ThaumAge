@@ -36,7 +36,7 @@ public class ItemBlock : Item
                         if (oldBlockType != BlockTypeEnum.None)
                         {
                             //创建掉落物
-                            ItemsHandler.Instance.CreateItemDrop(oldBlockType, 1, targetPosition + Vector3.one * 0.5f);
+                            ItemsHandler.Instance.CreateItemDrop(oldBlockType, 1, targetPosition + Vector3.one * 0.5f, ItemDropStateEnum.DropPick);
 
                             targetChunk.RemoveBlockForWorld(targetPosition);
                             WorldCreateHandler.Instance.HandleForUpdateChunk(true, null);

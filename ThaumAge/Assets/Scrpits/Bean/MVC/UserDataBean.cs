@@ -32,6 +32,98 @@ public class UserDataBean
     public ItemsBean[] listBackpack = new ItemsBean[10 * 5];
 
     /// <summary>
+    /// 增加道具
+    /// </summary>
+    public int AddItems(long itemId, int itemNumber)
+    {
+        //首先查询背包和快捷栏里是否有同样的道具
+        //依次增加相应道具的数量 直到该道具的上限
+        itemNumber = AddOldItems(listShortcutsItems,  itemId,  itemNumber);
+        if (itemNumber <= 0) return itemNumber;
+        itemNumber = AddOldItems(listBackpack,  itemId,  itemNumber);
+        if (itemNumber <= 0) return itemNumber;
+
+        //如果还没有叠加完道具 曾创建新的用以增加
+        itemNumber = AddNewItems(listShortcutsItems, itemId, itemNumber);
+        if (itemNumber <= 0) return itemNumber;
+        itemNumber = AddNewItems(listBackpack, itemId, itemNumber);
+        return itemNumber;
+    }
+
+    /// <summary>
+    /// 在容器里有的itemdata中增加数据
+    /// </summary>
+    /// <param name="arrayContainer"></param>
+    /// <param name="itemId"></param>
+    /// <param name="itemNumber"></param>
+    /// <returns></returns>
+    public int AddOldItems(ItemsBean[] arrayContainer, long itemId, int itemNumber)
+    {
+        ItemsInfoBean itemsInfo = ItemsHandler.Instance.manager.GetItemsInfoById(itemId);
+        for (int i = 0; i < arrayContainer.Length; i++)
+        {
+            ItemsBean itemData = arrayContainer[i];
+            if (itemData != null && itemData.itemId == itemId)
+            {
+                if (itemData.number < itemsInfo.max_number)
+                {
+                    int subNumber = itemsInfo.max_number - itemData.number;
+                    //如果增加的数量在该道具的上限之内
+                    if (subNumber >= itemNumber)
+                    {
+                        itemData.number += itemNumber;
+                        itemNumber = 0;
+                        return itemNumber;
+                    }
+                    //如果增加的数量在该道具的上限之外
+                    else
+                    {
+                        itemData.number = itemsInfo.max_number;
+                        itemNumber -= subNumber;
+                    }
+                }
+            }
+        }
+        return itemNumber;
+    }
+
+    /// <summary>
+    /// 在容器中增加新的itemdata
+    /// </summary>
+    /// <param name="arrayContainer"></param>
+    /// <param name="itemId"></param>
+    /// <param name="itemNumber"></param>
+    /// <returns></returns>
+    public int AddNewItems(ItemsBean[] arrayContainer, long itemId, int itemNumber)
+    {
+        ItemsInfoBean itemsInfo = ItemsHandler.Instance.manager.GetItemsInfoById(itemId);
+        for (int i = 0; i < arrayContainer.Length; i++)
+        {
+            ItemsBean itemData = arrayContainer[i];
+            if (itemData == null)
+            {
+                ItemsBean newItemData = new ItemsBean(itemId);
+                listShortcutsItems[i] = newItemData;
+                int subNumber = itemsInfo.max_number;
+                //如果增加的数量在该道具的上限之内
+                if (subNumber >= itemNumber)
+                {
+                    newItemData.number += itemNumber;
+                    itemNumber = 0;
+                    return itemNumber;
+                }
+                //如果增加的数量在该道具的上限之外
+                else
+                {
+                    newItemData.number = itemsInfo.max_number;
+                    itemNumber -= subNumber;
+                }
+            }
+        }
+        return itemNumber;
+    }
+
+    /// <summary>
     /// 获取快捷栏道具
     /// </summary>
     /// <param name="index"></param>

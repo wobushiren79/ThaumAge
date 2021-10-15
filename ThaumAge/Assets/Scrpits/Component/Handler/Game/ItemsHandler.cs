@@ -32,28 +32,29 @@ public class ItemsHandler : BaseHandler<ItemsHandler, ItemsManager>
     /// <summary>
     ///  创建掉落道具实例
     /// </summary>
-    public void CreateItemDrop(long itemId, int itemsNumber, Vector3 position)
+    public void CreateItemDrop(long itemId, int itemsNumber, Vector3 position, ItemDropStateEnum itemDropState)
     {
-        CreateItemDrop(new ItemsBean(itemId, itemsNumber), position);
+        CreateItemDrop(new ItemsBean(itemId, itemsNumber), position, itemDropState);
     }
     /// <summary>
     ///  创建掉落道具实例
     /// </summary>
-    public void CreateItemDrop(BlockTypeEnum blockType, int itemsNumber, Vector3 position)
+    public void CreateItemDrop(BlockTypeEnum blockType, int itemsNumber, Vector3 position, ItemDropStateEnum itemDropState)
     {
         ItemsInfoBean itemsInfo = manager.GetItemsInfoByBlockType(blockType);
-        CreateItemDrop(itemsInfo.id, itemsNumber, position);
+        CreateItemDrop(itemsInfo.id, itemsNumber, position, itemDropState);
     }
     /// <summary>
     ///  创建掉落道具实例
     /// </summary>
-    public void CreateItemDrop(ItemsBean itemData, Vector3 position)
+    public void CreateItemDrop(ItemsBean itemData, Vector3 position,ItemDropStateEnum itemDropState)
     {
         manager.GetItemsObjById(-1, (objModel) =>
         {
             GameObject objCommon = Instantiate(gameObject, objModel);
             ItemDrop itemDrop = objCommon.GetComponent<ItemDrop>();
             itemDrop.SetData(itemData, position);
+            itemDrop.SetItemDropState(itemDropState);
         });
     }
 }

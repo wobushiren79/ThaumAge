@@ -4,18 +4,30 @@ using Cinemachine;
 
 public class Player : BaseMonoBehaviour
 {
-    protected CharacterController characterController;
-    protected float timeForWorldUpdate = 0;
+    protected PlayerPickUp playerPickUp;
 
-    private void LateUpdate()
+    protected Character character;
+
+    public void Awake()
     {
-        timeForWorldUpdate -= Time.deltaTime;
-        if (timeForWorldUpdate <= 0)
-        {
-            timeForWorldUpdate = 0.2f;
-            HandleForBeyondBorder();
-            HandleForColliderTrigger();
-        }
+        playerPickUp = new PlayerPickUp(this);
+        InvokeRepeating("UpdatePlayerData", 0.2f, 0.2f);
+    }
+
+    public void OnDestroy()
+    {
+        CancelInvoke();
+    }
+
+    /// <summary>
+    /// 更新数据
+    /// </summary>
+    public void UpdatePlayerData()
+    {
+        playerPickUp.UpdatePick();
+
+        HandleForBeyondBorder();
+        HandleForColliderTrigger();
     }
 
     /// <summary>
