@@ -30,6 +30,14 @@ public class ItemDrop : BaseMonoBehaviour
         InvokeRepeating("UpdateItemData", 1, 1);
     }
 
+    private void FixedUpdate()
+    {
+        if (itemDrapState == ItemDropStateEnum.Picking)
+        {
+
+        }
+    }
+
     public void OnDestroy()
     {
         CancelInvoke();
@@ -50,7 +58,7 @@ public class ItemDrop : BaseMonoBehaviour
 
         float dis = Vector3.Distance(player.transform.position, transform.position);
         //如果超过可拾取距离 则变为可拾取
-        if(itemDrapState == ItemDropStateEnum.DropNoPick && dis > disForDropNoPick)
+        if (itemDrapState == ItemDropStateEnum.DropNoPick && dis > disForDropNoPick)
         {
             SetItemDropState(ItemDropStateEnum.DropPick);
         }
@@ -160,9 +168,15 @@ public class ItemDrop : BaseMonoBehaviour
         colliderItem.isTrigger = true;
         colliderItem.enabled = false;
         float dis = Vector3.Distance(targetTF.position, transform.position);
+        float timePick = dis / pickSpeed;
+        float movePro = 0;
         //飞向玩家
-        transform
-            .DOMove(targetTF.position, dis / pickSpeed)
+        Tween tween = DOTween
+            .To(() => movePro, (data) => movePro = data, 1f, timePick)
+            .OnUpdate(() =>
+            {
+                transform.position = Vector3.Lerp(transform.position, targetTF.position + Vector3.up * 2, movePro);
+            })
             .OnComplete(() =>
             {
                 UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();
