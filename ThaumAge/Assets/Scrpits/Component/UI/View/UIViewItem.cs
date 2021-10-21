@@ -16,7 +16,10 @@ public partial class UIViewItem : BaseUIView, IBeginDragHandler, IDragHandler, I
     //移动到指定位置的时间
     public float timeForMove = 0.1f;
 
-    public ItemsBean itemsData;
+    public long itemId;
+    public int itemNumber;
+    public string meta;
+
     public ItemsInfoBean itemsInfo;
 
     //原始父级
@@ -36,21 +39,22 @@ public partial class UIViewItem : BaseUIView, IBeginDragHandler, IDragHandler, I
     /// <summary>
     /// 设置数据
     /// </summary>
-    /// <param name="itemsInfo"></param>
-    public void SetData(ItemsBean itemsData)
+    public void SetData(long itemId, int itemNumber,string meta)
     {
-        this.itemsData = itemsData;
-        this.itemsInfo = ItemsHandler.Instance.manager.GetItemsInfoById(itemsData.itemId);
+        this.itemId = itemId;
+        this.itemNumber = itemNumber;
+        this.meta = meta;
+        this.itemsInfo = ItemsHandler.Instance.manager.GetItemsInfoById(itemId);
         RefreshUI();
     }
 
     public override void RefreshUI()
     {
         base.RefreshUI();
-        if (itemsInfo != null && itemsData != null)
+        if (itemsInfo != null && itemId != 0)
         {
             SetIcon(itemsInfo.icon_key);
-            SetNumber(itemsData.number, itemsInfo.max_number);
+            SetNumber(itemNumber, itemsInfo.max_number);
         }
     }
 
@@ -114,7 +118,7 @@ public partial class UIViewItem : BaseUIView, IBeginDragHandler, IDragHandler, I
         isBeginDrag = true;
         originalParent = transform.parent.GetComponent<UIViewItemContainer>();
         //如果是无限物品格 则在原位置实例化一个新的
-        if (itemsData.number == int.MaxValue)
+        if (itemNumber == int.MaxValue)
         {
             GameObject objOriginal = Instantiate(originalParent.gameObject, gameObject);
             objOriginal.name = "ViewItem";
@@ -122,7 +126,7 @@ public partial class UIViewItem : BaseUIView, IBeginDragHandler, IDragHandler, I
             objOriginal.transform.position = gameObject.transform.position;
             originalParent.SetViewItem(viewItem);
             //设置拿出的物体数量为该物体的最大数量
-            itemsData.number = itemsInfo.max_number;
+            itemNumber = itemsInfo.max_number;
         }
         else
         {
@@ -142,7 +146,7 @@ public partial class UIViewItem : BaseUIView, IBeginDragHandler, IDragHandler, I
         {
             return;
         }
- 
+
         //将拖拽的物体移除原父级
         RectTransform rtfContainer = (RectTransform)UIHandler.Instance.manager.GetUITypeContainer(UITypeEnum.UIBase);
         transform.SetParent(rtfContainer);
@@ -175,6 +179,9 @@ public partial class UIViewItem : BaseUIView, IBeginDragHandler, IDragHandler, I
                 if (tempViewItem == null)
                 {
                     //如果容器里没有道具 则直接设置容器的道具为当前道具
+                    //首先清空原容器里的数据
+                    originalParent.ClearViewItem();
+                    //设置新的容器
                     viewItemContainer.SetViewItem(this);
                     AnimForPositionChange(timeForMove, null);
                     return;
@@ -194,7 +201,7 @@ public partial class UIViewItem : BaseUIView, IBeginDragHandler, IDragHandler, I
                 if (viewItem.itemsInfo.type_id == itemsInfo.type_id)
                 {
                     //如果目标是无限物品 则删除现有物品
-                    if (viewItem.itemsData.number == int.MaxValue)
+                    if (viewItem.itemNumber == int.MaxValue)
                     {
                         transform.SetParent(viewItem.transform.parent);
                         transform.localScale = Vector3.one;
@@ -205,23 +212,23 @@ public partial class UIViewItem : BaseUIView, IBeginDragHandler, IDragHandler, I
                     else
                     {
                         //目标数量叠加 
-                        viewItem.itemsData.number += itemsData.number;
-                        if (viewItem.itemsData.number > viewItem.itemsInfo.max_number)
+                        viewItem.itemNumber += itemNumber;
+                        if (viewItem.itemNumber > viewItem.itemsInfo.max_number)
                         {
                             //如果目标数量超出最大了
-                            itemsData.number = viewItem.itemsData.number - viewItem.itemsInfo.max_number;
-                            viewItem.itemsData.number = viewItem.itemsInfo.max_number;
+                            itemNumber = viewItem.itemNumber - viewItem.itemsInfo.max_number;
+                            viewItem.itemNumber = viewItem.itemsInfo.max_number;
                         }
                         else
                         {
                             //如果没有 则自己的数量为0
-                            itemsData.number = 0;
+                            itemNumber = 0;
                         }
                         //刷新一下UI
                         viewItem.RefreshUI();
                         RefreshUI();
 
-                        if (itemsData.number == 0)
+                        if (itemNumber == 0)
                         {
                             //如果自己没有数量了，则删除
                             DestroyImmediate(gameObject);
@@ -239,7 +246,7 @@ public partial class UIViewItem : BaseUIView, IBeginDragHandler, IDragHandler, I
                 else
                 {
                     //如果目标是无限物品 则回到原来位置
-                    if (viewItem.itemsData.number == int.MaxValue)
+                    if (viewItem.itemNumber == int.MaxValue)
                     {
                         HandleForBackOriginalContainer();
                         return;
@@ -272,7 +279,7 @@ public partial class UIViewItem : BaseUIView, IBeginDragHandler, IDragHandler, I
         {
             //如果什么都没有检测到，说明是把物体丢到场景中
             Player player = GameHandler.Instance.manager.player;
-            ItemsHandler.Instance.CreateItemDrop(itemsData, player.transform.position,ItemDropStateEnum.DropNoPick);
+            ItemsHandler.Instance.CreateItemDrop(itemId, itemNumber, player.transform.position, ItemDropStateEnum.DropNoPick);
 
             DestroyImmediate(gameObject);
         }

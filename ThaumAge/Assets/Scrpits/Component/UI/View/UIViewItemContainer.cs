@@ -30,6 +30,9 @@ public partial class UIViewItemContainer : BaseUIView
     public void ClearViewItem()
     {
         this.currentViewItem = null;
+        itemsData.itemId = 0;
+        itemsData.number = 0;
+        itemsData.meta = null;
     }
 
     /// <summary>
@@ -51,9 +54,9 @@ public partial class UIViewItemContainer : BaseUIView
         this.currentViewItem.originalParent = this;
         this.currentViewItem.transform.SetParent(rectTransform);
 
-        itemsData.itemId = uiView.itemsData.itemId;
-        itemsData.meta = uiView.itemsData.meta;
-        itemsData.number = uiView.itemsData.number;
+        itemsData.itemId = uiView.itemId;
+        itemsData.number = uiView.itemNumber;
+        itemsData.meta = uiView.meta;
     }
 
     /// <summary>
@@ -83,7 +86,7 @@ public partial class UIViewItemContainer : BaseUIView
             currentViewItem.transform.localScale = ui_ViewItemModel.transform.localScale;
             currentViewItem.transform.rotation = ui_ViewItemModel.transform.rotation;
         }
-        currentViewItem.SetData(itemsData);
+        currentViewItem.SetData(itemsData.itemId, itemsData.number, itemsData.meta);
     }
 
 

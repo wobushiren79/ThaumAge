@@ -164,18 +164,21 @@ public class ItemDrop : BaseMonoBehaviour
         //修改状态
         SetItemDropState(ItemDropStateEnum.Picking);
         //关闭碰撞
-        rbItem.isKinematic = false;
-        colliderItem.isTrigger = true;
-        colliderItem.enabled = false;
-        float dis = Vector3.Distance(targetTF.position, transform.position);
+        EnablePhysic(false);
+
+        Vector3 startPosition = transform.position;
+        Vector3 endPosition = targetTF.position + Vector3.up;
+        float dis = Vector3.Distance(endPosition, startPosition);
         float timePick = dis / pickSpeed;
         float movePro = 0;
         //飞向玩家
         Tween tween = DOTween
             .To(() => movePro, (data) => movePro = data, 1f, timePick)
+            .SetEase(Ease.InQuart)
             .OnUpdate(() =>
             {
-                transform.position = Vector3.Lerp(transform.position, targetTF.position + Vector3.up * 2, movePro);
+                endPosition = targetTF.position + Vector3.up;
+                transform.position = Vector3.Lerp(startPosition, endPosition, movePro);
             })
             .OnComplete(() =>
             {
@@ -191,7 +194,20 @@ public class ItemDrop : BaseMonoBehaviour
                     //如果还有剩余
                     itemData.number = number;
                     SetItemDropState(ItemDropStateEnum.DropNoPick);
+                    EnablePhysic(true);
                 }
+                UIHandler.Instance.RefreshAllUI();
             });
+    }
+
+    /// <summary>
+    /// 是否开启物理
+    /// </summary>
+    /// <param name="isEnable"></param>
+    public void EnablePhysic(bool isEnable)
+    {
+        rbItem.isKinematic = isEnable;
+        colliderItem.isTrigger = !isEnable;
+        colliderItem.enabled = isEnable;
     }
 }

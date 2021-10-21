@@ -159,6 +159,8 @@ public class ControlForPlayer : ControlForBase
     {
         if (!isActiveAndEnabled)
             return;
+        if (UGUIUtil.IsPointerUI())
+            return;
         //获取道具栏上的物品
         UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();
         ItemsBean itemsData = userData.GetItemsFromShortcut(userData.indexForShortcuts);

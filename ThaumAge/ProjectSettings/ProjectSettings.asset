@@ -615,7 +615,7 @@ PlayerSettings:
   webGLThreadsSupport: 0
   webGLDecompressionFallback: 0
   scriptingDefineSymbols:
-    1: RHSD;CT_TR
+    1: RHSD;CT_TR;ENABLE_RAYTRACING
     4: CT_TR
     7: CT_TR
     13: CT_TR

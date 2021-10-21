@@ -100,7 +100,7 @@ public class UserDataBean
         for (int i = 0; i < arrayContainer.Length; i++)
         {
             ItemsBean itemData = arrayContainer[i];
-            if (itemData == null)
+            if (itemData == null||itemData.itemId == 0)
             {
                 ItemsBean newItemData = new ItemsBean(itemId);
                 listShortcutsItems[i] = newItemData;
