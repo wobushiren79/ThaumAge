@@ -28,7 +28,6 @@ public class ItemsHandler : BaseHandler<ItemsHandler, ItemsManager>
         item.Use();
     }
 
-
     /// <summary>
     ///  创建掉落道具实例
     /// </summary>
@@ -36,6 +35,7 @@ public class ItemsHandler : BaseHandler<ItemsHandler, ItemsManager>
     {
         CreateItemDrop(new ItemsBean(itemId, itemsNumber), position, itemDropState);
     }
+
     /// <summary>
     ///  创建掉落道具实例
     /// </summary>
@@ -44,6 +44,7 @@ public class ItemsHandler : BaseHandler<ItemsHandler, ItemsManager>
         ItemsInfoBean itemsInfo = manager.GetItemsInfoByBlockType(blockType);
         CreateItemDrop(itemsInfo.id, itemsNumber, position, itemDropState);
     }
+
     /// <summary>
     ///  创建掉落道具实例
     /// </summary>

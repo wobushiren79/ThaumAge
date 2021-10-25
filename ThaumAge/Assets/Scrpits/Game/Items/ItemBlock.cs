@@ -75,10 +75,6 @@ public class ItemBlock : Item
                 }
             }
         }
-        else
-        {
-            GameHandler.Instance.manager.playerTargetBlock.Hide();
-        }
     }
 
     /// <summary>

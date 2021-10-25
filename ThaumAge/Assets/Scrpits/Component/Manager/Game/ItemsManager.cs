@@ -39,12 +39,6 @@ public class ItemsManager : BaseManager, IItemsInfoView
         for (int i = 0; i < listItemsInfo.Count; i++)
         {
             var itemData = listItemsInfo[i];
-            if (itemData.id == 0)
-            {
-                //移除ID为0的物品
-                listItemsInfo.Remove(itemData);
-                i--;
-            }
         }
         this.listItemsInfo = listItemsInfo
             .OrderBy(data =>

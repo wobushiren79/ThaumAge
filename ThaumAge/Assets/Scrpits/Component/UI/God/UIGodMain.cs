@@ -61,7 +61,15 @@ public partial class UIGodMain : UIGameCommonNormal
     /// </summary>
     public void InitData()
     {
-        listItemsInfo = ItemsHandler.Instance.manager.GetAllItemsInfo();
+        listItemsInfo.Clear();
+        List<ItemsInfoBean> listAllItemsInfo = ItemsHandler.Instance.manager.GetAllItemsInfo();
+        for (int i = 0; i < listAllItemsInfo.Count; i++)
+        {
+            ItemsInfoBean itemData = listAllItemsInfo[i];
+            if (itemData.id == 0)
+                continue;
+            listItemsInfo.Add(listAllItemsInfo[i]);
+        }
         ui_ItemList.SetCellCount(listItemsInfo.Count);
     }
 

@@ -24,7 +24,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 845537557030531660}
-  m_LocalRotation: {x: -0.28992525, y: 0.000000016467354, z: 0.0000000049885633, w: 0.9570493}
+  m_LocalRotation: {x: -0.28992525, y: -0.000000016467355, z: -0.0000000049885642, w: 0.9570493}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -68,7 +68,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 1.3333334, y: 1}
+    m_SensorSize: {x: 1.8763736, y: 1}
     Iso: 200
     ShutterSpeed: 0.005
     Aperture: 16
@@ -84,6 +84,36 @@ MonoBehaviour:
         m_Calls: []
   m_LegacyBlendHint: 0
   m_ComponentOwner: {fileID: 1859176667801269050}
+--- !u!1 &1064983307241888274
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5235548888007964196}
+  m_Layer: 0
+  m_Name: ThirdLook2
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5235548888007964196
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1064983307241888274}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 2, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 5604366966957996572}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1596305306478912714
 GameObject:
   m_ObjectHideFlags: 3
@@ -152,7 +182,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 1.3333334, y: 1}
+    m_SensorSize: {x: 1.8763736, y: 1}
     Iso: 200
     ShutterSpeed: 0.005
     Aperture: 16
@@ -197,6 +227,7 @@ Transform:
   m_Children:
   - {fileID: 332394479760064987}
   - {fileID: 5155094679678274451}
+  - {fileID: 5235548888007964196}
   - {fileID: 657478345584511981}
   - {fileID: 8859236596645797026}
   m_Father: {fileID: 8533266650839486888}
@@ -232,7 +263,7 @@ Transform:
   m_Children:
   - {fileID: 6296173199139185135}
   m_Father: {fileID: 5604366966957996572}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &7311094454041643296
 MonoBehaviour:
@@ -263,7 +294,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 1.3333334, y: 1}
+    m_SensorSize: {x: 1.8763736, y: 1}
     Iso: 200
     ShutterSpeed: 0.005
     Aperture: 16
@@ -342,7 +373,7 @@ Transform:
   - {fileID: 7866382187774823357}
   - {fileID: 4551723306302857165}
   m_Father: {fileID: 5604366966957996572}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1802735528286719695
 MonoBehaviour:
@@ -362,7 +393,7 @@ MonoBehaviour:
   m_StreamingVersion: 20170927
   m_Priority: 2
   m_StandbyUpdate: 2
-  m_LookAt: {fileID: 332394479760064987}
+  m_LookAt: {fileID: 5235548888007964196}
   m_Follow: {fileID: 5155094679678274451}
   m_CommonLens: 1
   m_Lens:
@@ -374,7 +405,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 1.3333334, y: 1}
+    m_SensorSize: {x: 1.8763736, y: 1}
     Iso: 200
     ShutterSpeed: 0.005
     Aperture: 16
@@ -553,7 +584,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 1.3333334, y: 1}
+    m_SensorSize: {x: 1.8763736, y: 1}
     Iso: 200
     ShutterSpeed: 0.005
     Aperture: 16

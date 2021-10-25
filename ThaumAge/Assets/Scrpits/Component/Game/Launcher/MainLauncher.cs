@@ -11,6 +11,7 @@ public class MainLauncher : BaseLauncher
     public override void Launch()
     {
         base.Launch();
+        UIHandler.Instance.OpenUIAndCloseOther<UILoading>(UIEnum.Loading);
         //设置游戏状态
         GameHandler.Instance.manager.SetGameState(GameStateEnum.Main);
         //设置种子
@@ -28,11 +29,15 @@ public class MainLauncher : BaseLauncher
     /// </summary>
     public void CompleteForUpdateChunk()
     {
-        //打开主UI
-        UIHandler.Instance.OpenUIAndCloseOther<UIMainStart>(UIEnum.MainStart);
         //初始化主界面摄像头
         CameraHandler.Instance.InitMainData();
         //显示人物
         SceneMainHandler.Instance.ShowCharacter();
+        //延迟3秒显示
+        this.WaitExecuteSeconds(2, () =>
+        {
+            //打开主UI
+            UIHandler.Instance.OpenUIAndCloseOther<UIMainStart>(UIEnum.MainStart);
+        });
     }
 }
