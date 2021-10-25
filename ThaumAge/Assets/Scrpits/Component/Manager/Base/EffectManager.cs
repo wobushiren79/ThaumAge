@@ -5,26 +5,21 @@ using UnityEngine;
 
 public class EffectManager : BaseManager
 {
-    public Dictionary<string, GameObject> dicEffect = new Dictionary<string, GameObject>();
+    public Dictionary<string, GameObject> dicEffectModel = new Dictionary<string, GameObject>();
 
-
-    public void CreateEffect(GameObject objContainer, string name, Action<GameObject> completeAction)
+    /// <summary>
+    /// 创建粒子
+    /// </summary>
+    /// <param name="objContainer"></param>
+    /// <param name="effectData"></param>
+    /// <param name="completeAction"></param>
+    public void CreateEffect(GameObject objContainer, EffectBean effectData, Action<GameObject> completeAction)
     {
-        GameObject objModel = GetModel(dicEffect, "effect/effect", name);
-        if (objContainer == null)
-            objContainer = gameObject;
-        GameObject objEffect = Instantiate(objContainer, objModel);
-        completeAction?.Invoke(objEffect);
-    }
-
-    public void CreateEffectByAddressables(GameObject objContainer, string name, Action<GameObject> completeAction)
-    {
-        GetModelForAddressables(dicEffect, name, (objModel) =>
+        GetModelForAddressables(dicEffectModel, $"Assets/Prefabs/Effects/{effectData.effectName}.prefab", (obj) =>
         {
-            if (objContainer == null)
-                objContainer = gameObject;
-            GameObject objEffect = Instantiate(objContainer, objModel);
-            completeAction?.Invoke(objEffect);
+            GameObject objEffects = Instantiate(objContainer, obj);
+            objEffects.transform.position = effectData.effectPosition;
+            completeAction?.Invoke(objEffects);
         });
     }
 }
