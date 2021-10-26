@@ -35,7 +35,7 @@ public class ControlForPlayer : ControlForBase
         userDetailsData.started += HandleForUserDetails;
         inputActionMove = InputHandler.Instance.manager.GetInputPlayerData("Move");
 
-        InvokeRepeating("HandlerForPlayerTargetPosition", 0.2f, 0.2f);
+        InvokeRepeating("HandlerForPlayerTargetPosition", 0.1f, 0.1f);
     }
 
     private void Update()
@@ -112,20 +112,18 @@ public class ControlForPlayer : ControlForBase
         isJump = true;
     }
 
+    /// <summary>
+    /// 处理角色目标位置
+    /// </summary>
     public void HandlerForPlayerTargetPosition()
     {
         if (!isActiveAndEnabled)
             return;
-        //获取摄像头到角色的距离
-        Vector3 cameraPosition = CameraHandler.Instance.manager.mainCamera.transform.position;
-        float disMax = Vector3.Distance(cameraPosition, transform.position);
-        //发射射线检测
-        RayUtil.RayToScreenPointForScreenCenter(disMax + 2, 1 << LayerInfo.Chunk, out bool isCollider, out RaycastHit hit);
-        if (isCollider)
+        Player player = GameHandler.Instance.manager.player;
+        if (player.playerRay.RayToChunkBlock(out RaycastHit hit,out Vector3 targetBlockPosition))
         {
-            Vector3 targetPosition = new Vector3Int((int)Mathf.Floor(hit.point.x), (int)Mathf.Floor(hit.point.y) - 1, (int)Mathf.Floor(hit.point.z));
             //展示目标位置
-            GameHandler.Instance.manager.playerTargetBlock.Show(targetPosition);
+            GameHandler.Instance.manager.playerTargetBlock.Show(targetBlockPosition);
         }
         else
         {

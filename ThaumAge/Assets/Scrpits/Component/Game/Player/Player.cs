@@ -4,13 +4,16 @@ using Cinemachine;
 
 public class Player : BaseMonoBehaviour
 {
-    protected PlayerPickUp playerPickUp;
+    public PlayerPickUp playerPickUp;
+    public PlayerRay playerRay;
 
     protected Character character;
 
     public void Awake()
     {
         playerPickUp = new PlayerPickUp(this);
+        playerRay = new PlayerRay(this);
+
         InvokeRepeating("UpdatePlayerData", 0.2f, 0.2f);
     }
 
@@ -61,5 +64,6 @@ public class Player : BaseMonoBehaviour
 
         }
     }
+
 
 }

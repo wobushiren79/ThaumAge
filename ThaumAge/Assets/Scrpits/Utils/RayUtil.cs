@@ -7,34 +7,66 @@ public class RayUtil
     /// <summary>
     /// 屏幕中心射线检测
     /// </summary>
+    /// <param name="maxDistance"></param>
+    /// <param name="layerMask"></param>
     /// <param name="isCollider"></param>
     /// <param name="hit"></param>
-    public static void RayToScreenPointForScreenCenter(float maxDistance, int layerMask, out bool isCollider, out RaycastHit hit)
+    /// <param name="camera"></param>
+    public static void RayToScreenPointForScreenCenter(float maxDistance, int layerMask, out bool isCollider, out RaycastHit hit, Camera camera = null)
     {
         RayToScreenPoint(new Vector3(Screen.width / 2, Screen.height / 2, 0), maxDistance, layerMask, out isCollider, out hit);
+    }
+    public static void RayAllToScreenPointForScreenCenter(float maxDistance, int layerMask, out RaycastHit[] arrayHit, Camera camera = null)
+    {
+        RayAllToScreenPoint(new Vector3(Screen.width / 2, Screen.height / 2, 0), maxDistance, layerMask,  out arrayHit);
     }
 
     /// <summary>
     /// 屏幕点击射线检测
     /// </summary>
+    /// <param name="maxDistance"></param>
+    /// <param name="layerMask"></param>
     /// <param name="isCollider"></param>
     /// <param name="hit"></param>
-    public static void RayToScreenPoint(float maxDistance, int layerMask, out bool isCollider, out RaycastHit hit)
+    /// <param name="camera"></param>
+    public static void RayToScreenPointForMousePosition(float maxDistance, int layerMask, out bool isCollider, out RaycastHit hit, Camera camera = null)
     {
         RayToScreenPoint(Input.mousePosition, maxDistance, layerMask, out isCollider, out hit);
     }
-
-    public static void RayToScreenPoint(Vector3 position, float maxDistance, int layerMask, out bool isCollider, out RaycastHit hit)
+    public static void RayAllToScreenPointForMousePosition(float maxDistance, int layerMask, out RaycastHit[] arrayHit, Camera camera = null)
     {
-        Ray ray = Camera.main.ScreenPointToRay(position);
+        RayAllToScreenPoint(Input.mousePosition, maxDistance, layerMask, out arrayHit);
+    }
+
+    /// <summary>
+    /// 屏幕位置发射涉嫌检测
+    /// </summary>
+    /// <param name="screenPoint"></param>
+    /// <param name="maxDistance"></param>
+    /// <param name="layerMask"></param>
+    /// <param name="isCollider"></param>
+    /// <param name="hit"></param>
+    /// <param name="camera"></param>
+    public static void RayToScreenPoint(Vector3 screenPoint, float maxDistance, int layerMask, out bool isCollider, out RaycastHit hit,Camera camera = null)
+    {
+        if (camera == null) camera = Camera.main;
+        Ray ray = camera.ScreenPointToRay(screenPoint);
         isCollider = Physics.Raycast(ray, out hit, maxDistance, layerMask);
     }
+    public static void RayAllToScreenPoint(Vector3 screenPoint, float maxDistance, int layerMask, out RaycastHit[] arrayHit, Camera camera = null)
+    {
+        if (camera == null) camera = Camera.main;
+        Ray ray = camera.ScreenPointToRay(screenPoint);
+        arrayHit = Physics.RaycastAll(ray,  maxDistance, layerMask);
+    }
+
 
     /// <summary>
     /// 射线-球体
     /// </summary>
     /// <param name="centerPosition"></param>
     /// <param name="radius"></param>
+    /// <param name="layer"></param>
     /// <returns></returns>
     public static Collider[] RayToSphere(Vector3 centerPosition, float radius, int layer)
     {

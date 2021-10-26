@@ -1,17 +1,16 @@
 ﻿using UnityEditor;
 using UnityEngine;
 
-public class PlayerPickUp
+public class PlayerPickUp : PlayerBase
 {
-    protected Player player;
     //拾取速度
     protected float speedPickUp = 1;
     //拾取范围
     protected float rangePickUp = 2;
 
-    public PlayerPickUp(Player player)
+    public PlayerPickUp(Player player) : base(player)
     {
-        this.player = player;
+
     }
 
     /// <summary>

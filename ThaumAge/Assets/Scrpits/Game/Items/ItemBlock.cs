@@ -3,24 +3,14 @@ using UnityEngine;
 
 public class ItemBlock : Item
 {
-
     public override void Use()
     {
         base.Use();
-
-        //获取摄像头到角色的距离
-        Vector3 cameraPosition = CameraHandler.Instance.manager.mainCamera.transform.position;
         Player player = GameHandler.Instance.manager.player;
-        float disMax = Vector3.Distance(cameraPosition, player.transform.position);
-        //发射射线检测
-        RayUtil.RayToScreenPointForScreenCenter(disMax + 2, 1 << LayerInfo.Chunk, out bool isCollider, out RaycastHit hit);
-        if (isCollider)
+        //检测玩家前方是否有方块
+        if (player.playerRay.RayToChunkBlock(out RaycastHit hit, out Vector3 targetBlockPosition))
         {
-            float disHit = Vector3.Distance(cameraPosition, hit.point);
-            if (disHit < disMax)
-                return;
             Chunk chunkForHit = hit.collider.GetComponentInParent<Chunk>();
-
             if (chunkForHit)
             {
                 //获取位置和方向
@@ -42,8 +32,6 @@ public class ItemBlock : Item
                             WorldCreateHandler.Instance.HandleForUpdateChunk(true, null);
                         }
                     }
-                    //显示位置
-                    //GameHandler.Instance.manager.playerTargetBlock.Show(targetPosition);
                 }
                 //如果手上有物品 则使用
                 else
@@ -70,8 +58,6 @@ public class ItemBlock : Item
                         //更新区块
                         WorldCreateHandler.Instance.HandleForUpdateChunk(true, null);
                     }
-                    //显示位置
-                    //GameHandler.Instance.manager.playerTargetBlock.Show(closePosition);
                 }
             }
         }
