@@ -18,4 +18,11 @@ public class Item
 
     }
 
+    /// <summary>
+    /// 使用目标
+    /// </summary>
+    public virtual void UseTarget()
+    {
+
+    }
 }

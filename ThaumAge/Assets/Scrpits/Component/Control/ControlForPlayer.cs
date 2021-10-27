@@ -35,7 +35,7 @@ public class ControlForPlayer : ControlForBase
         userDetailsData.started += HandleForUserDetails;
         inputActionMove = InputHandler.Instance.manager.GetInputPlayerData("Move");
 
-        InvokeRepeating("HandlerForPlayerTargetPosition", 0.1f, 0.1f);
+        InvokeRepeating("HandlerForUseItemTarget", 0.1f, 0.1f);
     }
 
     private void Update()
@@ -44,6 +44,11 @@ public class ControlForPlayer : ControlForBase
         {
             HandlerForMoveAndJump();
         }
+    }
+
+    private void OnDestroy()
+    {
+        CancelInvoke("HandlerForUseItemTarget");
     }
 
     /// <summary>
@@ -113,27 +118,20 @@ public class ControlForPlayer : ControlForBase
     }
 
     /// <summary>
-    /// 处理角色目标位置
+    /// 处理-使用道具目标
     /// </summary>
-    public void HandlerForPlayerTargetPosition()
+    public void HandlerForUseItemTarget()
     {
         if (!isActiveAndEnabled)
             return;
-        Player player = GameHandler.Instance.manager.player;
-        if (player.playerRay.RayToChunkBlock(out RaycastHit hit,out Vector3 targetBlockPosition))
-        {
-            //展示目标位置
-            GameHandler.Instance.manager.playerTargetBlock.Show(targetBlockPosition);
-        }
-        else
-        {
-            //展示目标位置
-            GameHandler.Instance.manager.playerTargetBlock.Hide();
-        }
+        //获取道具栏上的物品
+        UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();
+        ItemsBean itemsData = userData.GetItemsFromShortcut();
+        ItemsHandler.Instance.UseItemTarget(itemsData);
     }
 
     /// <summary>
-    /// 使用处理
+    /// 处理-使用道具
     /// </summary>
     /// <param name="callback"></param>
     public void HandleForUse(CallbackContext callback)
@@ -144,7 +142,7 @@ public class ControlForPlayer : ControlForBase
             return;
         //获取道具栏上的物品
         UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();
-        ItemsBean itemsData = userData.GetItemsFromShortcut(userData.indexForShortcuts);
+        ItemsBean itemsData = userData.GetItemsFromShortcut();
         ItemsHandler.Instance.UseItem(itemsData);
     }
 

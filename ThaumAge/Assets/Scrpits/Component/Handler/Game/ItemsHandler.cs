@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class ItemsHandler : BaseHandler<ItemsHandler, ItemsManager>
 {
+
     /// <summary>
     /// 使用物品
     /// </summary>
@@ -26,6 +27,30 @@ public class ItemsHandler : BaseHandler<ItemsHandler, ItemsManager>
             item.SetItemData(itemsData);
         }
         item.Use();
+    }
+
+    /// <summary>
+    /// 使用物品目标
+    /// </summary>
+    public void UseItemTarget(ItemsBean itemsData)
+    {
+        Item item;
+        if (itemsData == null || itemsData.itemId == 0)
+        {
+            //如果手上没有东西
+            item = manager.GetRegisterItem(ItemsTypeEnum.Block);
+            item.SetItemData(itemsData);
+        }
+        else
+        {
+            //如果手上有东西
+            ItemsInfoBean itemsInfo = manager.GetItemsInfoById(itemsData.itemId);
+            //获取对应得处理类
+            item = manager.GetRegisterItem((ItemsTypeEnum)itemsInfo.items_type);
+            //设置物品数据
+            item.SetItemData(itemsData);
+        }
+        item.UseTarget();
     }
 
     /// <summary>

@@ -139,6 +139,11 @@ public class UserDataBean
         return itemsData;
     }
 
+    public ItemsBean GetItemsFromShortcut()
+    {
+        return GetItemsFromShortcut(indexForShortcuts);
+    }
+
     /// <summary>
     /// 获取背包道具
     /// </summary>

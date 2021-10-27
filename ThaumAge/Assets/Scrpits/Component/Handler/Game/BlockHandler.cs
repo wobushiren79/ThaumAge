@@ -12,6 +12,13 @@ using UnityEngine.Scripting;
 public class BlockHandler : BaseHandler<BlockHandler, BlockManager>
 {
 
+    /// <summary>
+    /// 创建方块
+    /// </summary>
+    /// <param name="chunk"></param>
+    /// <param name="blockId"></param>
+    /// <param name="modelName"></param>
+    /// <returns></returns>
     public GameObject CreateBlockModel(Chunk chunk, ushort blockId, string modelName)
     {
         GameObject objModel = manager.GetBlockModel(blockId, modelName);
@@ -31,7 +38,6 @@ public class BlockHandler : BaseHandler<BlockHandler, BlockManager>
     //public Block CreateBlock(Chunk chunk, BlockTypeEnum blockType, Vector3Int localPosition, DirectionEnum direction)
     //{
     //    Type type = manager.GetRegisterBlock(blockType).GetType();
-
     //    Block block = FormatterServices.GetUninitializedObject(type) as Block;
     //    //Block block = CreateInstance<Block>(type);
     //    //Block block = Activator.CreateInstance(type) as Block;
