@@ -11,6 +11,7 @@ using UnityEngine.Scripting;
 
 public class BlockHandler : BaseHandler<BlockHandler, BlockManager>
 {
+    public List<string> listBreakBlock = new List<string>();
 
     /// <summary>
     /// 创建方块
@@ -28,6 +29,18 @@ public class BlockHandler : BaseHandler<BlockHandler, BlockManager>
         return objBlock;
     }
 
+    /// <summary>
+    /// 破坏方块
+    /// </summary>
+    /// <returns></returns>
+    public GameObject BreakBlock(Vector3Int worldPosition)
+    {
+        WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(worldPosition,
+            out BlockTypeEnum blockType,
+            out DirectionEnum blockDirection,
+            out Chunk chunk);
+        return null;
+    }
 
     /// <summary>
     /// 创建方块

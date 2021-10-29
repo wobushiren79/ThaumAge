@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class BlockManager : BaseManager, IBlockInfoView
 {
+   
     protected BlockInfoController controllerForBlock;
 
     //方块信息列表
