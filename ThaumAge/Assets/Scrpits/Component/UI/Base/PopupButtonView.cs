@@ -3,61 +3,55 @@ using UnityEditor;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
-public abstract class PopupButtonView<T>  : BaseMonoBehaviour, IPointerEnterHandler, IPointerExitHandler  where T : PopupShowView
+public abstract class PopupButtonView<T> : BaseUIView,
+    IPointerEnterHandler,
+    IPointerExitHandler
+    where T : PopupShowView
 {
+
+    //目标按钮
+    public Button btnTarget;
+    //弹窗数据
+    public PopupEnum popupType;
+
     protected T popupShow;
-    private Button mThisButton;
-    protected bool isActive = true;
 
-    private void Start()
+    public void Start()
     {
-        mThisButton = GetComponent<Button>();
-        if (mThisButton != null)
-            mThisButton.onClick.AddListener(ButtonClick);
+        if (btnTarget != null)
+            btnTarget.onClick.AddListener(ButtonClick);
     }
 
-    public void SetPopupShowView(T popupShow)
+    public void OnDisable()
     {
-        this.popupShow = popupShow;
-    }
-
-    public void SetActive(bool isActive)
-    {
-        this.isActive = isActive;
+        CleanData();
     }
 
     public void ButtonClick()
     {
-        OnPointerExit(null);
+        CleanData();
     }
 
     public virtual void OnPointerEnter(PointerEventData eventData)
     {
-        if (popupShow == null || !isActive)
-            return;
-        popupShow.gameObject.SetActive(true);
-        OpenPopup();
+        popupShow = UIHandler.Instance.ShowPopup<T>(new PopupBean(popupType));
         popupShow.RefreshViewSize();
     }
 
     public virtual void OnPointerExit(PointerEventData eventData)
     {
-        if (popupShow == null)
-            return;
-        StopAllCoroutines();
-        popupShow.gameObject.SetActive(false);
-        ClosePopup();
+        CleanData();
     }
-
-    public void OnDisable()
+    
+    /// <summary>
+    /// 清除数据
+    /// </summary>
+    public virtual void CleanData()
     {
         if (popupShow == null)
             return;
-        StopAllCoroutines();
-        popupShow.gameObject.SetActive(false);
-        ClosePopup();
+        UIHandler.Instance.HidePopup(popupType);
     }
 
-    public abstract void OpenPopup();
-    public abstract void ClosePopup();
+
 }

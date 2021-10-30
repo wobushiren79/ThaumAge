@@ -1,11 +1,11 @@
 fileFormatVersion: 2
-guid: 9dd35b4d69c67444784920c9760f6bd0
+guid: 062b65d4e9867d940908820f8585b525
 ModelImporter:
   serializedVersion: 21202
   internalIDToNameTable:
   - first:
-      74: 7930566718376146537
-    second: AnimationCharacterIdle
+      74: 1827226128182048838
+    second: AnimationCharacterJump
   externalObjects: {}
   materials:
     materialImportMode: 2
@@ -36,8 +36,8 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: AnimationCharacterIdle
-      takeName: Base
+      name: AnimationCharacterJump
+      takeName: Take 001
       internalID: 0
       firstFrame: 0
       lastFrame: 30
@@ -76,7 +76,7 @@ ModelImporter:
     importBlendShapes: 1
     importCameras: 1
     importLights: 1
-    nodeNameCollisionStrategy: 0
+    nodeNameCollisionStrategy: 1
     fileIdsGeneration: 2
     swapUVChannels: 0
     generateSecondaryUV: 0
@@ -88,7 +88,7 @@ ModelImporter:
     skinWeightsMode: 0
     maxBonesPerVertex: 4
     minBoneWeight: 0.001
-    optimizeBones: 1
+    optimizeBones: 0
     meshOptimizationFlags: -1
     indexFormat: 0
     secondaryUVAngleDistortion: 8

@@ -19,16 +19,20 @@ public class ControlForPlayer : ControlForBase
     private float speedJump = 5;
     private float moveSpeed = 1;
 
+    private InputAction inputActionUse;
+    private InputAction inputActionJump;
     private InputAction inputActionMove;
     private void Awake()
     {
         characterController = GetComponent<CharacterController>();
         character = GetComponentInChildren<Character>();
 
-        InputAction jumpAction = InputHandler.Instance.manager.GetInputPlayerData("Jump");
-        jumpAction.started += HandleForJumpStart;
-        InputAction useAction = InputHandler.Instance.manager.GetInputPlayerData("Use");
-        useAction.started += HandleForUse;
+        inputActionJump = InputHandler.Instance.manager.GetInputPlayerData("Jump");
+        inputActionJump.started += HandleForJumpStart;
+        inputActionUse = InputHandler.Instance.manager.GetInputPlayerData("Use");
+        inputActionUse.started += HandleForUse;
+        inputActionUse.canceled += HandleForUseCanel;
+
         InputAction cancelAction = InputHandler.Instance.manager.GetInputPlayerData("Cancel");
         cancelAction.started += HandleForCancel;
         InputAction userDetailsData = InputHandler.Instance.manager.GetInputPlayerData("UserDetails");
@@ -42,7 +46,8 @@ public class ControlForPlayer : ControlForBase
     {
         if (GameHandler.Instance.manager.GetGameState() == GameStateEnum.Gaming)
         {
-            HandlerForMoveAndJump();
+            //HandleForUseUpdate();
+            HandlerForMoveAndJumpUpdate();
         }
     }
 
@@ -75,7 +80,7 @@ public class ControlForPlayer : ControlForBase
     /// <summary>
     /// 移动处理
     /// </summary>
-    public void HandlerForMoveAndJump()
+    public void HandlerForMoveAndJumpUpdate()
     {
         Vector2 moveData = inputActionMove.ReadValue<Vector2>();
         //旋转角色
@@ -105,6 +110,8 @@ public class ControlForPlayer : ControlForBase
             playerVelocity.y -= gravityValue * Time.unscaledDeltaTime;
         }
         characterController.Move(playerVelocity);
+        //播放跳跃动画
+        character.characterAnim.PlayJump(isJump);
     }
 
     /// <summary>
@@ -144,6 +151,17 @@ public class ControlForPlayer : ControlForBase
         UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();
         ItemsBean itemsData = userData.GetItemsFromShortcut();
         ItemsHandler.Instance.UseItem(itemsData);
+
+        character.characterAnim.PlayUse(true);
+    }
+
+    /// <summary>
+    /// 处理-停止使用道具
+    /// </summary>
+    /// <param name="callback"></param>
+    public void HandleForUseCanel(CallbackContext callback)
+    {
+        character.characterAnim.PlayUse(false);
     }
 
     /// <summary>

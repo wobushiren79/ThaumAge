@@ -7,14 +7,15 @@ public class ItemBlock : Item
     {
         base.Use();
         Player player = GameHandler.Instance.manager.player;
+
         //检测玩家前方是否有方块
-        if (player.playerRay.RayToChunkBlock(out RaycastHit hit, out Vector3 targetBlockPosition))
+        if (player.playerRay.RayToChunkBlock(out RaycastHit hit, out Vector3Int targetBlockPosition))
         {
             Chunk chunkForHit = hit.collider.GetComponentInParent<Chunk>();
             if (chunkForHit)
-            {
+            {               
                 //获取位置和方向
-                GetHitPositionAndDirection(hit, out Vector3Int targetPosition, out Vector3Int closePosition, out DirectionEnum direction);
+                player.playerRay.GetHitPositionAndDirection(hit, out Vector3Int targetPosition, out Vector3Int closePosition, out DirectionEnum direction);
                 //如果上手没有物品 则挖掘
                 if (itemsData == null || itemsData.itemId == 0)
                 {
@@ -67,7 +68,7 @@ public class ItemBlock : Item
     {
         base.UseTarget();
         Player player = GameHandler.Instance.manager.player;
-        if (player.playerRay.RayToChunkBlock(out RaycastHit hit, out Vector3 targetBlockPosition))
+        if (player.playerRay.RayToChunkBlock(out RaycastHit hit, out Vector3Int targetBlockPosition))
         {
             //展示目标位置
             GameHandler.Instance.manager.playerTargetBlock.Show(targetBlockPosition);
@@ -79,54 +80,6 @@ public class ItemBlock : Item
         }
     }
 
-    /// <summary>
-    /// 获取碰撞的位置和方向
-    /// </summary>
-    /// <param name="hit"></param>
-    /// <param name="targetPosition"></param>
-    /// <param name="closePosition"></param>
-    /// <param name="direction"></param>
-    protected void GetHitPositionAndDirection(RaycastHit hit, out Vector3Int targetPosition, out Vector3Int closePosition, out DirectionEnum direction)
-    {
-        targetPosition = Vector3Int.zero;
-        closePosition = Vector3Int.zero;
-        direction = DirectionEnum.UP;
-        if (hit.normal.y > 0)
-        {
-            targetPosition = new Vector3Int((int)Mathf.Floor(hit.point.x), (int)Mathf.Floor(hit.point.y) - 1, (int)Mathf.Floor(hit.point.z));
-            closePosition = targetPosition + Vector3Int.up;
-            direction = DirectionEnum.UP;
-        }
-        else if (hit.normal.y < 0)
-        {
-            targetPosition = new Vector3Int((int)Mathf.Floor(hit.point.x), (int)Mathf.Floor(hit.point.y), (int)Mathf.Floor(hit.point.z));
-            closePosition = targetPosition + Vector3Int.down;
-            direction = DirectionEnum.Down;
-        }
-        else if (hit.normal.x > 0)
-        {
-            targetPosition = new Vector3Int((int)Mathf.Floor(hit.point.x) - 1, (int)Mathf.Floor(hit.point.y), (int)Mathf.Floor(hit.point.z));
-            closePosition = targetPosition + Vector3Int.right;
-            direction = DirectionEnum.Right;
-        }
-        else if (hit.normal.x < 0)
-        {
-            targetPosition = new Vector3Int((int)Mathf.Floor(hit.point.x), (int)Mathf.Floor(hit.point.y), (int)Mathf.Floor(hit.point.z));
-            closePosition = targetPosition + Vector3Int.left;
-            direction = DirectionEnum.Left;
-        }
-        else if (hit.normal.z > 0)
-        {
-            targetPosition = new Vector3Int((int)Mathf.Floor(hit.point.x), (int)Mathf.Floor(hit.point.y), (int)Mathf.Floor(hit.point.z) - 1);
-            closePosition = targetPosition + Vector3Int.forward;
-            direction = DirectionEnum.Forward;
-        }
-        else if (hit.normal.z < 0)
-        {
-            targetPosition = new Vector3Int((int)Mathf.Floor(hit.point.x), (int)Mathf.Floor(hit.point.y), (int)Mathf.Floor(hit.point.z));
-            closePosition = targetPosition + Vector3Int.back;
-            direction = DirectionEnum.Back;
-        }
-    }
+
 
 }

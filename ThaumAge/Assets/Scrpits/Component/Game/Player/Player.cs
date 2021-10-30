@@ -9,6 +9,10 @@ public class Player : BaseMonoBehaviour
 
     protected Character character;
 
+    public GameObject objFirstLook;
+    public GameObject objThirdLook;
+    public GameObject objThirdFollow;
+
     public void Awake()
     {
         playerPickUp = new PlayerPickUp(this);

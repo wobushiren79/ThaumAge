@@ -367,9 +367,29 @@ public class UIHandler : BaseUIHandler<UIHandler, UIManager>
     /// <typeparam name="T"></typeparam>
     /// <param name="popup"></param>
     /// <returns></returns>
-    public T ShowPopup<T>(PopopBean popupData) where T : PopupShowView
+    public T ShowPopup<T>(PopupBean popupData) where T : PopupShowView
     {
-        return manager.CreatePopup<T>(popupData);
+        if (manager.popupList.TryGetValue(popupData.PopupType, out PopupShowView popup))
+        {
+            popup.ShowObj(true);
+            return popup as T;
+        }
+        else
+        {
+            T newPopup = manager.CreatePopup<T>(popupData);
+            return newPopup;
+        }
+    }
+
+    /// <summary>
+    /// 隐藏气泡
+    /// </summary>
+    public void HidePopup(PopupEnum popupType)
+    {
+        if (manager.popupList.TryGetValue(popupType, out PopupShowView popup))
+        {
+            popup.ShowObj(false);
+        }
     }
 
 }
