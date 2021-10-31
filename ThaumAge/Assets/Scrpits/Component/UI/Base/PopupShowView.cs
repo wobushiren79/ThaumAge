@@ -11,6 +11,7 @@ public class PopupShowView : BaseUIView
     //鼠标位置和弹窗偏移量
     public float offsetX = 0;
     public float offsetY = 0;
+    public Vector2 offsetPivot = Vector2.zero;
 
     public override void Awake()
     {
@@ -39,14 +40,20 @@ public class PopupShowView : BaseUIView
         }
     }
 
-    
+
     public void InitPosition()
     {
         if (gameObject.activeSelf)
         {
 
+            Transform tfContainer = UIHandler.Instance.manager.GetUITypeContainer(UITypeEnum.Popup);
             //屏幕坐标转换为UI坐标
-            RectTransformUtility.ScreenPointToLocalPointInRectangle(rectTransform, Input.mousePosition, Camera.main, out Vector2 outPosition);
+            RectTransformUtility.ScreenPointToLocalPointInRectangle(
+                (RectTransform)tfContainer,
+                Input.mousePosition,
+                CameraHandler.Instance.manager.uiCamera,
+                out Vector2 outPosition);
+
             float moveX = outPosition.x;
             float moveY = outPosition.y;
 
@@ -56,12 +63,12 @@ public class PopupShowView : BaseUIView
             if (Input.mousePosition.x <= (Screen.width / 2))
             {
                 //左
-                rtfContent.pivot = new Vector2(0, 0.5f);
+                rtfContent.pivot = new Vector2(0 - offsetPivot.x, 0.5f + offsetPivot.y);
             }
             else
             {
                 //右
-                rtfContent.pivot = new Vector2(1, 0.5f);
+                rtfContent.pivot = new Vector2(1 + offsetPivot.x, 0.5f + offsetPivot.y);
             }
         }
     }

@@ -46,7 +46,6 @@ public class ControlForPlayer : ControlForBase
     {
         if (GameHandler.Instance.manager.GetGameState() == GameStateEnum.Gaming)
         {
-            //HandleForUseUpdate();
             HandlerForMoveAndJumpUpdate();
         }
     }
@@ -84,7 +83,7 @@ public class ControlForPlayer : ControlForBase
     {
         Vector2 moveData = inputActionMove.ReadValue<Vector2>();
         //旋转角色
-        RotateCharacter(moveData, 5);
+        RotateCharacter(moveData, 10);
         //移动角色
         MoveCharacter(moveData, moveSpeed);
         //跳跃处理

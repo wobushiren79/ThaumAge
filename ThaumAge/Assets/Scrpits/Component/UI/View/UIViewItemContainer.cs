@@ -22,6 +22,9 @@ public partial class UIViewItemContainer : BaseUIView
         this.itemsData = itemsData;
         this.viewIndex = viewIndex;
         SetViewItem(itemsData);
+
+        //设置暂时信息
+        ui_ViewItemContainer.SetItemId(itemsData.itemId);
     }
 
     /// <summary>

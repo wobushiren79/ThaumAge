@@ -2,6 +2,7 @@
 using UnityEditor;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using System;
 
 public abstract class PopupButtonView<T> : BaseUIView,
     IPointerEnterHandler,
@@ -36,6 +37,7 @@ public abstract class PopupButtonView<T> : BaseUIView,
     {
         popupShow = UIHandler.Instance.ShowPopup<T>(new PopupBean(popupType));
         popupShow.RefreshViewSize();
+        PopupShow();
     }
 
     public virtual void OnPointerExit(PointerEventData eventData)
@@ -51,7 +53,9 @@ public abstract class PopupButtonView<T> : BaseUIView,
         if (popupShow == null)
             return;
         UIHandler.Instance.HidePopup(popupType);
+        PopupHide();
     }
 
-
+    public abstract void PopupShow();
+    public abstract void PopupHide();
 }
