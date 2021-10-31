@@ -150,7 +150,7 @@ public class ControlForPlayer : ControlForBase
         UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();
         ItemsBean itemsData = userData.GetItemsFromShortcut();
         ItemsHandler.Instance.UseItem(itemsData);
-
+        //播放使用动画
         character.characterAnim.PlayUse(true);
     }
 

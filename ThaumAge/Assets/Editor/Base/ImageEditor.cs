@@ -5,6 +5,29 @@ using UnityEngine;
 
 public class ImageEditor : Editor
 {
+    [MenuItem("Assets/资源/TextureArray")]
+    public static void CreateTextureArray()
+    {
+        GameObject[] objSelectArray = Selection.gameObjects;
+        if (objSelectArray.IsNull())
+            return;
+        List<Texture2D> listTex = new List<Texture2D>();
+        foreach (var itemData in objSelectArray)
+        {
+            Texture2D tex2D = itemData.GetComponent < Texture2D >();
+            if (tex2D != null)
+                listTex.Add(tex2D);
+        }
+        if (listTex.IsNull())
+            return;
+        Texture2DArray texture2DArray = new Texture2DArray(
+            listTex[0].width, 
+            listTex[0].height,
+            listTex.Count,
+            TextureFormat.RGBA32,
+            true,
+            false);
+    }
 
     [MenuItem("Custom/Image/Single")]
     public static void Single()

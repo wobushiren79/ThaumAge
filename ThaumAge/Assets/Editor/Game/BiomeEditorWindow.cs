@@ -69,9 +69,9 @@ public class BiomeEditorWindow : EditorWindow
         }
         queryBiomeIds = EditorUI.GUIEditorText(queryBiomeIds, 150);
         GUILayout.Space(50);
-        if (EditorUI.GUIButton("name 查询生态", 150))
+        if (EditorUI.GUIButton("name 查询生态(中文)", 150))
         {
-            listQueryData = serviceForBiomeInfo.QueryDataByName(queryBiomeName);
+            listQueryData = serviceForBiomeInfo.QueryDataByName(LanguageEnum.cn, queryBiomeName);
         }
         queryBiomeName = EditorUI.GUIEditorText(queryBiomeName, 150);
         GUILayout.Space(50);
@@ -161,7 +161,7 @@ public class BiomeEditorWindow : EditorWindow
         EditorUI.GUIText("名字", 50);
         biomeInfo.name_cn = EditorUI.GUIEditorText(biomeInfo.name_cn);
         biomeInfo.name_en = EditorUI.GUIEditorText(biomeInfo.name_en);
-        biomeInfo.id = (int)EditorUI.GUIEnum<BiomeTypeEnum>("生态类型：",(int)biomeInfo.id);
+        biomeInfo.id = (int)EditorUI.GUIEnum<BiomeTypeEnum>("生态类型：", (int)biomeInfo.id);
         EditorUI.GUIText("频率", 50);
         biomeInfo.frequency = EditorUI.GUIEditorText(biomeInfo.frequency);
         EditorUI.GUIText("振幅", 50);

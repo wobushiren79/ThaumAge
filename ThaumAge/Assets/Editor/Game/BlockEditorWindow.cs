@@ -46,7 +46,7 @@ public class BlockEditorWindow : EditorWindow
         }
 
         GUILayout.Space(50);
-        UIForQuery(); 
+        UIForQuery();
         GUILayout.Space(50);
         UIForCreate();
         GUILayout.Space(50);
@@ -78,9 +78,9 @@ public class BlockEditorWindow : EditorWindow
         }
         queryBlockIds = EditorUI.GUIEditorText(queryBlockIds, 150);
         GUILayout.Space(50);
-        if (EditorUI.GUIButton("name 查询方块", 150))
+        if (EditorUI.GUIButton("name 查询方块(中文)", 150))
         {
-            listQueryData = serviceForBlockInfo.QueryDataByName(queryBlockName);
+            listQueryData = serviceForBlockInfo.QueryDataByName(LanguageEnum.cn, queryBlockName);
         }
         queryBlockName = EditorUI.GUIEditorText(queryBlockName, 150);
         GUILayout.Space(50);
@@ -168,10 +168,10 @@ public class BlockEditorWindow : EditorWindow
         GUILayout.BeginHorizontal();
         EditorUI.GUIText("方块Id", 50);
         blockInfo.id = EditorUI.GUIEditorText(blockInfo.id);
-        EditorUI.GUIText("名字",50);
+        EditorUI.GUIText("名字", 50);
         blockInfo.name_cn = EditorUI.GUIEditorText(blockInfo.name_cn);
         blockInfo.name_en = EditorUI.GUIEditorText(blockInfo.name_en);
-        blockInfo.shape = (int)EditorUI.GUIEnum<BlockShapeEnum>("方块形状：",blockInfo.shape);
+        blockInfo.shape = (int)EditorUI.GUIEnum<BlockShapeEnum>("方块形状：", blockInfo.shape);
         EditorUI.GUIText("重量", 50);
         blockInfo.weight = EditorUI.GUIEditorText(blockInfo.weight);
         EditorUI.GUIText("旋转状态（0不能旋转 1可以旋转）", 200);
@@ -192,7 +192,7 @@ public class BlockEditorWindow : EditorWindow
                 }
                 if (fileName.Contains(itemUVPosition))
                 {
-                    EditorUI.GUIPic(fileName,16,16);
+                    EditorUI.GUIPic(fileName, 16, 16);
                     break;
                 }
             }

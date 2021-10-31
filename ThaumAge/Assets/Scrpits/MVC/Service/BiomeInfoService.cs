@@ -21,7 +21,7 @@ public class BiomeInfoService : BaseMVCService
     /// <returns></returns>
     public List<BiomeInfoBean> QueryAllData()
     {
-        List<BiomeInfoBean> listData = BaseQueryAllData<BiomeInfoBean>("link_id");
+        List<BiomeInfoBean> listData = BaseQueryAllData<BiomeInfoBean>();
         return listData;
     }
 
@@ -41,7 +41,7 @@ public class BiomeInfoService : BaseMVCService
     /// <returns></returns>
     public List<BiomeInfoBean> QueryDataById(long id)
     {
-        return BaseQueryData<BiomeInfoBean>("link_id", "id", id + "");
+        return BaseQueryData<BiomeInfoBean>("id", $"{id}");
     }
 
     /// <summary>
@@ -52,7 +52,7 @@ public class BiomeInfoService : BaseMVCService
     public List<BiomeInfoBean> QueryDataByIds(long[] ids)
     {
         string values = TypeConversionUtil.ArrayToStringBySplit(ids, ",");
-        return BaseQueryData<BiomeInfoBean>("link_id", tableNameForMain + ".id", "IN", "(" + values + ")");
+        return BaseQueryData<BiomeInfoBean>("id", "IN", $"({values})");
     }
 
     /// <summary>
@@ -60,9 +60,9 @@ public class BiomeInfoService : BaseMVCService
     /// </summary>
     /// <param name="name"></param>
     /// <returns></returns>
-    public List<BiomeInfoBean> QueryDataByName(string name)
+    public List<BiomeInfoBean> QueryDataByName(LanguageEnum language, string name)
     {
-        return BaseQueryData<BiomeInfoBean>("link_id", tableNameForLeft + ".name", "'" + name + "'");
+        return BaseQueryData<BiomeInfoBean>($"name_{language.GetEnumName()}", $"'{name}'");
     }
 
     /// <summary>
@@ -72,13 +72,10 @@ public class BiomeInfoService : BaseMVCService
     /// <returns></returns>
     public bool UpdateData(BiomeInfoBean data)
     {
-        bool deleteState = BaseDeleteDataWithLeft("id", "link_id", data.id + "");
+        bool deleteState = BaseDeleteDataById(data.id);
         if (deleteState)
         {
-            List<string> listLeftData = new List<string>();
-            listLeftData.Add("link_id");
-            listLeftData.Add("name");
-            bool insertSuccess = BaseInsertDataWithLeft(data, listLeftData);
+            bool insertSuccess = BaseInsertData(tableNameForMain, data);
             return insertSuccess;
         }
         return false;
@@ -91,6 +88,6 @@ public class BiomeInfoService : BaseMVCService
     /// <returns></returns>
     public bool DeleteData(long id)
     {
-        return BaseDeleteDataWithLeft("id", "link_id", id + "");
+        return BaseDeleteData("id", $"{id}");
     }
 }
