@@ -8,5 +8,7 @@ public partial class UIViewItemContainer
 
     public UIViewItem ui_ViewItemModel;
 
+    public UIPopupItemInfoButton ui_ViewItemContainer;
+
 
 }

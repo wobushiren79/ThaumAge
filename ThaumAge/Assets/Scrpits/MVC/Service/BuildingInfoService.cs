@@ -22,7 +22,7 @@ public class BuildingInfoService : BaseMVCService
     public List<BuildingInfoBean> QueryAllData()
     {
         List<BuildingInfoBean> listData = BaseQueryAllData<BuildingInfoBean>();
-        return listData; 
+        return listData;
     }
 
     /// <summary>
@@ -31,7 +31,7 @@ public class BuildingInfoService : BaseMVCService
     /// <returns></returns>
     public BuildingInfoBean QueryData()
     {
-        return null; 
+        return null;
     }
 
     /// <summary>
@@ -41,9 +41,9 @@ public class BuildingInfoService : BaseMVCService
     /// <returns></returns>
     public List<BuildingInfoBean> QueryDataById(long id)
     {
-        return BaseQueryData<BuildingInfoBean>("link_id", "id", id + "");
+        return BaseQueryData<BuildingInfoBean>("link_id", "id", $"{id}");
     }
-       
+
     /// <summary>
     /// 根据ID查询数据
     /// </summary>
@@ -52,7 +52,7 @@ public class BuildingInfoService : BaseMVCService
     public List<BuildingInfoBean> QueryDataByIds(long[] ids)
     {
         string values = TypeConversionUtil.ArrayToStringBySplit(ids, ",");
-        return BaseQueryData<BuildingInfoBean>("link_id", tableNameForMain + ".id", "IN", "(" + values + ")");
+        return BaseQueryData<BuildingInfoBean>("id", "IN", $"({values})");
     }
 
     /// <summary>
@@ -62,7 +62,7 @@ public class BuildingInfoService : BaseMVCService
     /// <returns></returns>
     public List<BuildingInfoBean> QueryDataByName(string name)
     {
-        return BaseQueryData<BuildingInfoBean>("link_id", tableNameForLeft + ".name", "'" + name + "'");
+        return BaseQueryData<BuildingInfoBean>("name", $"'{name}'");
     }
 
     /// <summary>
@@ -88,6 +88,6 @@ public class BuildingInfoService : BaseMVCService
     /// <returns></returns>
     public bool DeleteData(long id)
     {
-       return BaseDeleteDataWithLeft("id", "link_id", id + "");
+        return BaseDeleteData("id", $"{id}");
     }
 }

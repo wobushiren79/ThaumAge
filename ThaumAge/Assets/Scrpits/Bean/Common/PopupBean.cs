@@ -1,11 +1,11 @@
 ﻿using UnityEditor;
 using UnityEngine;
 
-public class PopopBean
+public class PopupBean
 {
     public PopupEnum PopupType;
 
-    public PopopBean(PopupEnum PopupType)
+    public PopupBean(PopupEnum PopupType)
     {
         this.PopupType = PopupType;
     }

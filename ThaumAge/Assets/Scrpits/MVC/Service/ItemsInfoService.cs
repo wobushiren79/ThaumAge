@@ -52,7 +52,7 @@ public class ItemsInfoService : BaseMVCService
     public List<ItemsInfoBean> QueryDataByIds(long[] ids)
     {
         string values = TypeConversionUtil.ArrayToStringBySplit(ids, ",");
-        return BaseQueryData<ItemsInfoBean>("id", "IN", "(" + values + ")");
+        return BaseQueryData<ItemsInfoBean>("id", "IN", $"({values})");
     }
 
     /// <summary>
@@ -62,7 +62,7 @@ public class ItemsInfoService : BaseMVCService
     /// <returns></returns>
     public List<ItemsInfoBean> QueryDataByName(string name)
     {
-        return BaseQueryData<ItemsInfoBean>("name", "'" + name + "'");
+        return BaseQueryData<ItemsInfoBean>("name", $"'{name}'");
     }
 
     /// <summary>

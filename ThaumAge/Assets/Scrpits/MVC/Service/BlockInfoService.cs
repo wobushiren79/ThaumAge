@@ -21,7 +21,7 @@ public class BlockInfoService : BaseMVCService
     /// <returns></returns>
     public List<BlockInfoBean> QueryAllData()
     {
-        List<BlockInfoBean> listData = BaseQueryAllData<BlockInfoBean>("link_id");
+        List<BlockInfoBean> listData = BaseQueryAllData<BlockInfoBean>();
         return listData; 
     }
 
@@ -41,7 +41,7 @@ public class BlockInfoService : BaseMVCService
     /// <returns></returns>
     public List<BlockInfoBean> QueryDataById(long id)
     {
-        return BaseQueryData<BlockInfoBean>("link_id", "id", id + "");
+        return BaseQueryData<BlockInfoBean>( "id", $"{id}");
     }
 
     /// <summary>
@@ -52,7 +52,7 @@ public class BlockInfoService : BaseMVCService
     public List<BlockInfoBean> QueryDataByIds(long[] ids)
     {
         string values = TypeConversionUtil.ArrayToStringBySplit(ids, ",");
-        return BaseQueryData<BlockInfoBean>("link_id", tableNameForMain + ".id", "IN", "(" + values + ")");
+        return BaseQueryData<BlockInfoBean>("id", "IN", $"({values})");
     }
 
     /// <summary>
@@ -60,9 +60,9 @@ public class BlockInfoService : BaseMVCService
     /// </summary>
     /// <param name="name"></param>
     /// <returns></returns>
-    public List<BlockInfoBean> QueryDataByName(string name)
+    public List<BlockInfoBean> QueryDataByName(LanguageEnum language, string name)
     {
-        return BaseQueryData<BlockInfoBean>("link_id", tableNameForLeft + ".name", "'" + name + "'");
+        return BaseQueryData<BlockInfoBean>($"name_{language.GetEnumName()}", $"'{name}'");
     }
 
     /// <summary>
@@ -72,13 +72,10 @@ public class BlockInfoService : BaseMVCService
     /// <returns></returns>
     public bool UpdateData(BlockInfoBean data)
     {
-        bool deleteState = BaseDeleteDataWithLeft("id", "link_id", data.id+"");
+        bool deleteState = BaseDeleteDataById(data.id);
         if (deleteState)
         {
-            List<string> listLeftData = new List<string>();
-            listLeftData.Add("link_id");
-            listLeftData.Add("name");
-            bool insertSuccess = BaseInsertDataWithLeft(data, listLeftData);
+            bool insertSuccess = BaseInsertData(tableNameForMain, data);
             return insertSuccess;
         }
         return false;
@@ -91,6 +88,6 @@ public class BlockInfoService : BaseMVCService
     /// <returns></returns>
     public bool DeleteData(long id)
     {
-       return BaseDeleteDataWithLeft("id", "link_id", id + "");
+        return BaseDeleteData("id", $"{id}");
     }
 }

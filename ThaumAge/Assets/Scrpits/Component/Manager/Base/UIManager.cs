@@ -9,6 +9,8 @@ public class UIManager : BaseUIManager
     public List<BaseUIComponent> uiList = new List<BaseUIComponent>();
     //所有的dialog列表
     public List<DialogView> dialogList = new List<DialogView>();
+    //所有的popup
+    public Dictionary<PopupEnum, PopupShowView> popupList = new Dictionary<PopupEnum, PopupShowView>();
 
     //所有的dialog模型
     public Dictionary<string, GameObject> dicDialogModel = new Dictionary<string, GameObject>();
@@ -16,6 +18,7 @@ public class UIManager : BaseUIManager
     public Dictionary<string, GameObject> dicToastModel = new Dictionary<string, GameObject>();
     //所有Popup模型
     public Dictionary<string, GameObject> dicPopupModel = new Dictionary<string, GameObject>();
+
 
     /// <summary>
     /// 获取弹窗模型
@@ -181,7 +184,7 @@ public class UIManager : BaseUIManager
     /// <typeparam name="T"></typeparam>
     /// <param name="popupName"></param>
     /// <returns></returns>
-    public T CreatePopup<T>(PopopBean popopData) where T : PopupShowView
+    public T CreatePopup<T>(PopupBean popopData) where T : PopupShowView
     {
         string popupName = popopData.PopupType.GetEnumName();
         GameObject objModel = GetPopupModel(popupName);
@@ -192,7 +195,9 @@ public class UIManager : BaseUIManager
         }
         Transform objPopupContainer = GetUITypeContainer(UITypeEnum.Popup);
         GameObject objPopup = Instantiate(objPopupContainer.gameObject, objModel);
-        return objPopup.GetComponent<T>();
+        T popup = objPopup.GetComponent<T>();
+        popupList.Add(popopData.PopupType, popup);
+        return popup;
     }
 
 }

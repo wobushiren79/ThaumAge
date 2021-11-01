@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class PlayerRay : PlayerBase
 {
-    protected float disRayBlock = 2;
+    protected float disRayBlock = 3;
 
     public PlayerRay(Player player) : base(player)
     {
@@ -16,14 +16,15 @@ public class PlayerRay : PlayerBase
     /// <param name="hit"></param>
     /// <param name="targetBlockPosition"></param>
     /// <returns></returns>
-    public bool RayToChunkBlock(out RaycastHit hit,out Vector3 targetBlockPosition)
+    public bool RayToChunkBlock(out RaycastHit hit,out Vector3Int targetPosition)
     {
         hit = new RaycastHit();
-        targetBlockPosition = Vector3.zero;
+        targetPosition = Vector3Int.zero;
 
         //获取摄像头到角色的距离
         Vector3 cameraPosition = CameraHandler.Instance.manager.mainCamera.transform.position;
-        float disMax = Vector3.Distance(cameraPosition, player.transform.position);
+        float disMax = Vector3.Distance(cameraPosition, player.objThirdLook.transform.position);
+
         //发射射线检测
         RayUtil.RayAllToScreenPointForScreenCenter(disMax + disRayBlock, 1 << LayerInfo.Chunk, out RaycastHit[] arrayHit);
         //如果没有发生碰撞
@@ -53,8 +54,58 @@ public class PlayerRay : PlayerBase
                 }
             }
         }
-        //设置方块位置
-        targetBlockPosition = new Vector3Int(Mathf.FloorToInt(hit.point.x), Mathf.FloorToInt(hit.point.y) - 1, Mathf.FloorToInt(hit.point.z));
+        GetHitPositionAndDirection(hit, out targetPosition, out Vector3Int closePosition, out DirectionEnum direction);
         return hasHitData;
+    }
+
+
+    /// <summary>
+    /// 获取碰撞的位置和方向
+    /// </summary>
+    /// <param name="hit"></param>
+    /// <param name="targetPosition"></param>
+    /// <param name="closePosition"></param>
+    /// <param name="direction"></param>
+    public void GetHitPositionAndDirection(RaycastHit hit, out Vector3Int targetPosition, out Vector3Int closePosition, out DirectionEnum direction)
+    {
+        targetPosition = Vector3Int.zero;
+        closePosition = Vector3Int.zero;
+        direction = DirectionEnum.UP;
+        if (hit.normal.y > 0)
+        {
+            targetPosition = new Vector3Int((int)Mathf.Floor(hit.point.x), (int)Mathf.Floor(hit.point.y) - 1, (int)Mathf.Floor(hit.point.z));
+            closePosition = targetPosition + Vector3Int.up;
+            direction = DirectionEnum.UP;
+        }
+        else if (hit.normal.y < 0)
+        {
+            targetPosition = new Vector3Int((int)Mathf.Floor(hit.point.x), (int)Mathf.Floor(hit.point.y), (int)Mathf.Floor(hit.point.z));
+            closePosition = targetPosition + Vector3Int.down;
+            direction = DirectionEnum.Down;
+        }
+        else if (hit.normal.x > 0)
+        {
+            targetPosition = new Vector3Int((int)Mathf.Floor(hit.point.x) - 1, (int)Mathf.Floor(hit.point.y), (int)Mathf.Floor(hit.point.z));
+            closePosition = targetPosition + Vector3Int.right;
+            direction = DirectionEnum.Right;
+        }
+        else if (hit.normal.x < 0)
+        {
+            targetPosition = new Vector3Int((int)Mathf.Floor(hit.point.x), (int)Mathf.Floor(hit.point.y), (int)Mathf.Floor(hit.point.z));
+            closePosition = targetPosition + Vector3Int.left;
+            direction = DirectionEnum.Left;
+        }
+        else if (hit.normal.z > 0)
+        {
+            targetPosition = new Vector3Int((int)Mathf.Floor(hit.point.x), (int)Mathf.Floor(hit.point.y), (int)Mathf.Floor(hit.point.z) - 1);
+            closePosition = targetPosition + Vector3Int.forward;
+            direction = DirectionEnum.Forward;
+        }
+        else if (hit.normal.z < 0)
+        {
+            targetPosition = new Vector3Int((int)Mathf.Floor(hit.point.x), (int)Mathf.Floor(hit.point.y), (int)Mathf.Floor(hit.point.z));
+            closePosition = targetPosition + Vector3Int.back;
+            direction = DirectionEnum.Back;
+        }
     }
 }

@@ -23,6 +23,8 @@ public class BaseUIManager : BaseManager
         containerToast = objUIContainer.FindChild<Transform>("Toast");
         containerPopup = objUIContainer.FindChild<Transform>("Popup");
         containerOverlay = objUIContainer.FindChild<Transform>("Overlay");
+
+        ChangeCanvasCamera(CameraHandler.Instance.manager.uiCamera);
     }
 
     /// <summary>
@@ -45,6 +47,22 @@ public class BaseUIManager : BaseManager
                 return containerOverlay;
         }
         return null;
+    }
+
+    /// <summary>
+    /// 修改画布的摄像头
+    /// </summary>
+    /// <param name="camera"></param>
+    public void ChangeCanvasCamera(Camera camera)
+    {
+        Canvas uiBaseCanvas = containerUIBase.GetComponent<Canvas>();
+        uiBaseCanvas.worldCamera = camera;
+        Canvas uiDialogCanvas = containerDialog.GetComponent<Canvas>();
+        uiDialogCanvas.worldCamera = camera;
+        Canvas uiToastCanvas = containerToast.GetComponent<Canvas>();
+        uiToastCanvas.worldCamera = camera;
+        Canvas uiPopupCanvas = containerPopup.GetComponent<Canvas>();
+        uiPopupCanvas.worldCamera = camera;
     }
 
 

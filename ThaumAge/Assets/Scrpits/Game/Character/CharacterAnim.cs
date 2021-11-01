@@ -19,4 +19,22 @@ public class CharacterAnim : CharacterBase
     {
         animatorCharacter.SetInteger("state", (int)animType);
     }
+
+    /// <summary>
+    /// 播放跳跃动画
+    /// </summary>
+    /// <param name="isJump"></param>
+    public void PlayJump(bool isJump)
+    {
+        animatorCharacter.SetBool("jump", isJump);
+    }
+
+    /// <summary>
+    /// 播放使用动画
+    /// </summary>
+    /// <param name="isUse"></param>
+    public void PlayUse(bool isUse)
+    {
+        animatorCharacter.SetBool("use", isUse);
+    }
 }
