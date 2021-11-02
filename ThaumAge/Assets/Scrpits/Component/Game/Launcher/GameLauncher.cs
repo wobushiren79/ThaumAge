@@ -11,7 +11,9 @@ public class GameLauncher : BaseLauncher
 
     public override void Launch()
     {
-        base.Launch();
+        base.Launch();       
+        //打开主UI
+        UIHandler.Instance.OpenUIAndCloseOther<UILoading>(UIEnum.Loading);
         UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();
         userData.userId = "Test";
         //设置种子

@@ -39,6 +39,12 @@ public static class EditorUtil
         return AssetDatabase.GetAssetPath(obj);
     }
 
+    public static string GetSelectionPathByObj(UnityEngine.Object obj)
+    {
+        if (obj == null)
+            return null;
+        return AssetDatabase.GetAssetPath(obj);
+    }
     /// <summary>
     /// 获取选中obj在场景中的位置
     /// </summary>

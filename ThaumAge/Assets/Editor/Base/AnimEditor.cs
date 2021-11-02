@@ -7,6 +7,36 @@ using System.Linq;
 
 public class AnimEditor : Editor
 {
+    [MenuItem("Custom/Anim/CreateAnim 10张每秒 Render")]
+    public static void CreateAnim10sForSR()
+    {
+        Object obj = Selection.activeObject;
+        if (obj == null)
+            return;
+        Texture2D tex2d = obj as Texture2D;
+        if (tex2d == null)
+            return;
+
+        string path = EditorUtil.GetSelectionPathByObj(obj);
+        path = path.Replace($"/{tex2d.name}.png", "");
+        CreateAnimForImage(tex2d, path, 10);
+    }
+
+    [MenuItem("Custom/Anim/CreateAnim 10张每秒 UI")]
+    public static void CreateAnim10sForImage()
+    {
+        Object obj = Selection.activeObject;
+        if (obj == null)
+            return;
+        Texture2D tex2d = obj as Texture2D;
+        if (tex2d == null)
+            return;
+
+        string path = EditorUtil.GetSelectionPathByObj(obj);
+        path = path.Replace($"/{tex2d.name}.png", "");
+        CreateAnimForImage(tex2d, path, 10);
+    }
+
     public static void CreateAnimForSpriteRenderer(Texture2D itemPicTex, string animPath, int numberForS)
     {
         CreateAnimForTex(1, itemPicTex, animPath, numberForS);
