@@ -15,6 +15,9 @@ public class BlockManager : BaseManager, IBlockInfoView
     //方块模型列表
     protected GameObject[] arrayBlockModel = new GameObject[EnumUtil.GetEnumMaxIndex<BlockTypeEnum>() + 1];
 
+    //方块破碎模型
+    protected GameObject blockBreakModel;
+
     public virtual void Awake()
     {
         InitData();
@@ -25,6 +28,11 @@ public class BlockManager : BaseManager, IBlockInfoView
         controllerForBlock = new BlockInfoController(this, this);
         controllerForBlock.GetAllBlockInfoData(InitBlockInfo);
         RegisterBlock();
+        //加载方块破碎模型
+        LoadAddressablesUtil.LoadAssetAsync<GameObject>("Assets/Prefabs/Game/BlockBreak.prefab", (obj)=> 
+        {
+            blockBreakModel = obj.Result;
+        });
     }
 
     /// <summary>

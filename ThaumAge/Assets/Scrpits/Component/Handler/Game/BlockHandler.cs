@@ -11,7 +11,8 @@ using UnityEngine.Scripting;
 
 public class BlockHandler : BaseHandler<BlockHandler, BlockManager>
 {
-    public List<string> listBreakBlock = new List<string>();
+    //破碎方块合集
+    public Dictionary<Vector3Int, BlockBreak> dicBreakBlock = new Dictionary<Vector3Int, BlockBreak>();
 
     /// <summary>
     /// 创建方块
@@ -35,10 +36,18 @@ public class BlockHandler : BaseHandler<BlockHandler, BlockManager>
     /// <returns></returns>
     public GameObject BreakBlock(Vector3Int worldPosition)
     {
-        WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(worldPosition,
-            out BlockTypeEnum blockType,
-            out DirectionEnum blockDirection,
-            out Chunk chunk);
+        if(dicBreakBlock.TryGetValue(worldPosition,out BlockBreak value))
+        {
+
+        }
+        else
+        {
+            WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(worldPosition,
+                out BlockTypeEnum blockType,
+                out DirectionEnum blockDirection,
+                out Chunk chunk);
+        }
+
         return null;
     }
 
