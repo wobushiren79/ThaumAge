@@ -19,20 +19,7 @@ public class ItemBlock : Item
                 //如果上手没有物品 则挖掘
                 if (itemsData == null || itemsData.itemId == 0)
                 {
-                    //获取原位置方块
-                    WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(targetPosition, out BlockTypeEnum oldBlockType, out DirectionEnum oldBlockDirection, out Chunk targetChunk);
-                    if (targetChunk)
-                    {
-                        //如果原位置是空则不做处理
-                        if (oldBlockType != BlockTypeEnum.None)
-                        {
-                            //创建掉落物
-                            ItemsHandler.Instance.CreateItemDrop(oldBlockType, 1, targetPosition + Vector3.one * 0.5f, ItemDropStateEnum.DropPick);
-
-                            targetChunk.RemoveBlockForWorld(targetPosition);
-                            WorldCreateHandler.Instance.HandleForUpdateChunk(true, null);
-                        }
-                    }
+                    BreakTarget(targetPosition);
                 }
                 //如果手上有物品 则使用
                 else

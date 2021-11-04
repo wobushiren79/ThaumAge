@@ -13,7 +13,6 @@ public class BlockHandler : BaseHandler<BlockHandler, BlockManager>
 {
     //破碎方块合集
     public Dictionary<Vector3Int, BlockBreak> dicBreakBlock = new Dictionary<Vector3Int, BlockBreak>();
-
     /// <summary>
     /// 创建方块
     /// </summary>
@@ -34,20 +33,22 @@ public class BlockHandler : BaseHandler<BlockHandler, BlockManager>
     /// 破坏方块
     /// </summary>
     /// <returns></returns>
-    public GameObject BreakBlock(Vector3Int worldPosition)
+    public BlockBreak BreakBlock(Vector3Int worldPosition,BlockTypeEnum blockType)
     {
         if(dicBreakBlock.TryGetValue(worldPosition,out BlockBreak value))
         {
-
+            return value;
         }
         else
         {
-            WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(worldPosition,
-                out BlockTypeEnum blockType,
-                out DirectionEnum blockDirection,
-                out Chunk chunk);
+            //获取方块信息
+            BlockInfoBean blockInfo = manager.GetBlockInfo(blockType);
+            //创建破碎效果
+            GameObject objBlockBreak = Instantiate(gameObject, manager.blockBreakModel);
+            BlockBreak blockBreak = objBlockBreak.GetComponent<BlockBreak>();
+            blockBreak.SetData(blockInfo);
+            dicBreakBlock.Add(worldPosition, blockBreak);
         }
-
         return null;
     }
 

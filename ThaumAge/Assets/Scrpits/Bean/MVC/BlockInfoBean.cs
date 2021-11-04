@@ -24,6 +24,8 @@ public class BlockInfoBean : BaseBean
 
     public int rotate_state;
 
+    public int life;
+
     /// <summary>
     /// 获取方块类型
     /// </summary>

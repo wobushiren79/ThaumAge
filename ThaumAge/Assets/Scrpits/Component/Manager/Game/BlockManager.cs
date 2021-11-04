@@ -16,7 +16,7 @@ public class BlockManager : BaseManager, IBlockInfoView
     protected GameObject[] arrayBlockModel = new GameObject[EnumUtil.GetEnumMaxIndex<BlockTypeEnum>() + 1];
 
     //方块破碎模型
-    protected GameObject blockBreakModel;
+    public GameObject blockBreakModel;
 
     public virtual void Awake()
     {

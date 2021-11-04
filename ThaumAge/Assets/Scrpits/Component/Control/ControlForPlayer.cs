@@ -31,6 +31,7 @@ public class ControlForPlayer : ControlForBase
         inputActionJump.started += HandleForJumpStart;
         inputActionUse = InputHandler.Instance.manager.GetInputPlayerData("Use");
         inputActionUse.started += HandleForUse;
+        inputActionUse.performed += HandleForUsePerformed;
         inputActionUse.canceled += HandleForUseCanel;
 
         InputAction cancelAction = InputHandler.Instance.manager.GetInputPlayerData("Cancel");
@@ -152,6 +153,15 @@ public class ControlForPlayer : ControlForBase
         ItemsHandler.Instance.UseItem(itemsData);
         //播放使用动画
         character.characterAnim.PlayUse(true);
+    }
+
+    /// <summary>
+    /// 处理-持续使用道具
+    /// </summary>
+    /// <param name="callback"></param>
+    public void HandleForUsePerformed(CallbackContext callback)
+    {
+
     }
 
     /// <summary>
