@@ -27,6 +27,20 @@ public class BlockBreak : BaseMonoBehaviour
     }
 
     /// <summary>
+    /// 破碎方块
+    /// </summary>
+    /// <param name="damage"></param>
+    public void Break(int damage)
+    {
+        blockLife -= damage;
+        if (blockLife < 0)
+            blockLife = 0;
+
+        float breakPro =1- ((float)blockLife / blockInfo.life);
+        SetBreakPro(breakPro);
+    }
+
+    /// <summary>
     /// 设置破碎进度
     /// </summary>
     /// <param name="pro"></param>

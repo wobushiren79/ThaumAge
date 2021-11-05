@@ -38,9 +38,11 @@ public class Item
             //如果原位置是空则不做处理
             if (oldBlockType != BlockTypeEnum.None)
             {
-                BlockBreak blockBreak = BlockHandler.Instance.BreakBlock(targetPosition, oldBlockType);
+                BlockBreak blockBreak = BlockHandler.Instance.BreakBlock(targetPosition, oldBlockType, GetBreakDamage());
                 if (blockBreak.blockLife <= 0)
                 {
+                    //移除破碎效果
+                    BlockHandler.Instance.DestroyBreakBlock(targetPosition);
                     //创建掉落物
                     ItemsHandler.Instance.CreateItemDrop(oldBlockType, 1, targetPosition + Vector3.one * 0.5f, ItemDropStateEnum.DropPick);
                     //移除该方块
@@ -53,5 +55,13 @@ public class Item
                 }
             }
         }
+    }
+
+    /// <summary>
+    /// 获取道具破坏的伤害
+    /// </summary>
+    public virtual int GetBreakDamage()
+    {
+        return 1;
     }
 }

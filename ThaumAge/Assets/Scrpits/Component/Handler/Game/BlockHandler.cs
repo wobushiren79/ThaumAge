@@ -13,6 +13,9 @@ public class BlockHandler : BaseHandler<BlockHandler, BlockManager>
 {
     //破碎方块合集
     public Dictionary<Vector3Int, BlockBreak> dicBreakBlock = new Dictionary<Vector3Int, BlockBreak>();
+    //闲置的破碎方块
+    public Queue<BlockBreak> listBreakBlockIdle = new Queue<BlockBreak>();
+
     /// <summary>
     /// 创建方块
     /// </summary>
@@ -33,23 +36,48 @@ public class BlockHandler : BaseHandler<BlockHandler, BlockManager>
     /// 破坏方块
     /// </summary>
     /// <returns></returns>
-    public BlockBreak BreakBlock(Vector3Int worldPosition,BlockTypeEnum blockType)
+    public BlockBreak BreakBlock(Vector3Int worldPosition, BlockTypeEnum blockType,int damage)
     {
-        if(dicBreakBlock.TryGetValue(worldPosition,out BlockBreak value))
+        if (dicBreakBlock.TryGetValue(worldPosition, out BlockBreak value))
         {
+            value.Break(damage);
             return value;
         }
         else
-        {
+        {                
             //获取方块信息
             BlockInfoBean blockInfo = manager.GetBlockInfo(blockType);
-            //创建破碎效果
-            GameObject objBlockBreak = Instantiate(gameObject, manager.blockBreakModel);
-            BlockBreak blockBreak = objBlockBreak.GetComponent<BlockBreak>();
-            blockBreak.SetData(blockInfo);
-            dicBreakBlock.Add(worldPosition, blockBreak);
+
+            if (listBreakBlockIdle.Count > 0)
+            {
+                BlockBreak blockBreak = listBreakBlockIdle.Dequeue();
+                blockBreak.SetData(blockInfo);
+                dicBreakBlock.Add(worldPosition, blockBreak);
+            }
+            else
+            {
+                //创建破碎效果
+                GameObject objBlockBreak = Instantiate(gameObject, manager.blockBreakModel);
+                BlockBreak blockBreak = objBlockBreak.GetComponent<BlockBreak>();
+                blockBreak.SetData(blockInfo);
+                dicBreakBlock.Add(worldPosition, blockBreak);
+            }
         }
         return null;
+    }
+
+    /// <summary>
+    /// 删除破碎效果
+    /// </summary>
+    public void DestroyBreakBlock(Vector3Int worldPosition)
+    {
+        if (dicBreakBlock.TryGetValue(worldPosition, out BlockBreak value))
+        {
+            value.ShowObj(false);
+            value.SetBreakPro(0);
+            dicBreakBlock.Remove(worldPosition);
+            listBreakBlockIdle.Enqueue(value);
+        }
     }
 
     /// <summary>
