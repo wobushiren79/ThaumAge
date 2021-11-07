@@ -57,13 +57,12 @@ public abstract class Block
     /// <param name="closeDirection"></param>
     /// <param name="closeBlock"></param>
     /// <returns></returns>
-    public virtual bool CheckNeedBuildFace(Chunk chunk, Vector3Int localPosition, DirectionEnum direction, DirectionEnum closeDirection, out BlockTypeEnum closeBlock)
+    public virtual bool CheckNeedBuildFace(Chunk chunk, Vector3Int localPosition, DirectionEnum direction, DirectionEnum closeDirection, out Block closeBlock)
     {
-
-        closeBlock = BlockTypeEnum.None;
+        closeBlock = null;
         if (localPosition.y == 0) return false;
         GetCloseRotateBlockByDirection(chunk, localPosition, direction, closeDirection, out closeBlock, out bool hasChunk);
-        if (closeBlock == BlockTypeEnum.None)
+        if (closeBlock == null || closeBlock.blockType == BlockTypeEnum.None)
         {
             if (hasChunk)
             {
@@ -76,8 +75,7 @@ public abstract class Block
                 return false;
             }
         }
-        Block closeRegisterBlock = BlockHandler.Instance.manager.GetRegisterBlock(closeBlock);
-        BlockShapeEnum blockShape = closeRegisterBlock.blockInfo.GetBlockShape();
+        BlockShapeEnum blockShape = closeBlock.blockInfo.GetBlockShape();
         switch (blockShape)
         {
             case BlockShapeEnum.Cube:
@@ -89,7 +87,7 @@ public abstract class Block
 
     public virtual bool CheckNeedBuildFace(Chunk chunk, Vector3Int localPosition, DirectionEnum direction, DirectionEnum closeDirection)
     {
-        return CheckNeedBuildFace(chunk, localPosition, direction, closeDirection, out BlockTypeEnum closeBlock);
+        return CheckNeedBuildFace(chunk, localPosition, direction, closeDirection, out Block closeBlock);
     }
 
     /// <summary>
@@ -162,7 +160,7 @@ public abstract class Block
 
     }
 
-    public virtual void GetCloseRotateBlockByDirection(Chunk chunk, Vector3Int localPosition, DirectionEnum direction, DirectionEnum getDirection, out BlockTypeEnum closeBlock, out bool hasChunk)
+    public virtual void GetCloseRotateBlockByDirection(Chunk chunk, Vector3Int localPosition, DirectionEnum direction, DirectionEnum getDirection, out Block closeBlock, out bool hasChunk)
     {
         if (blockInfo.rotate_state == 0)
         {
@@ -177,7 +175,7 @@ public abstract class Block
         }
         else
         {
-            closeBlock = BlockTypeEnum.None;
+            closeBlock = BlockHandler.Instance.manager.GetRegisterBlock(BlockTypeEnum.None);
             hasChunk = false;
         }
     }
@@ -188,7 +186,7 @@ public abstract class Block
     /// <param name="getDirection"></param>
     /// <param name="closeBlock"></param>
     /// <param name="hasChunk"></param>
-    public virtual void GetCloseBlockByDirection(Chunk chunk, Vector3Int localPosition, DirectionEnum getDirection, out BlockTypeEnum blockType, out bool hasChunk)
+    public virtual void GetCloseBlockByDirection(Chunk chunk, Vector3Int localPosition, DirectionEnum getDirection, out Block block, out bool hasChunk)
     {
         //获取目标的本地坐标
         Vector3Int targetBlockLocalPosition;
@@ -247,7 +245,7 @@ public abstract class Block
                     targetBlockWorldPosition = worldPosition + Vector3Int.up;
                     break;
             }
-            WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(targetBlockWorldPosition, out blockType, out DirectionEnum closeDirection, out Chunk closeChunk);
+            WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(targetBlockWorldPosition, out block, out DirectionEnum closeDirection, out Chunk closeChunk);
             if (closeChunk == null)
             {
                 hasChunk = false;
@@ -259,9 +257,9 @@ public abstract class Block
             return;
         }
         else
-        {        
+        {
             //如果在同一个chunk内
-            chunk.GetBlockForLocal(targetBlockLocalPosition, out blockType, out DirectionEnum direction, out bool isInside);
+            chunk.GetBlockForLocal(targetBlockLocalPosition, out block, out DirectionEnum direction, out bool isInside);
             if (isInside)
             {
                 hasChunk = true;
@@ -528,11 +526,10 @@ public abstract class Block
     /// <param name="closeWorldPosition"></param>
     public virtual void RefreshBlockClose(Vector3Int closeWorldPosition)
     {
-        WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(closeWorldPosition, out BlockTypeEnum closeBlockType, out DirectionEnum closeBlockDirection, out Chunk closeChunk);
+        WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(closeWorldPosition, out Block closeBlock, out DirectionEnum closeBlockDirection, out Chunk closeChunk);
         if (closeChunk != null)
         {
-            Block upBlock = BlockHandler.Instance.manager.GetRegisterBlock(closeBlockType);
-            upBlock?.RefreshBlock(closeChunk, closeWorldPosition - closeChunk.chunkData.positionForWorld, closeBlockDirection);
+            closeBlock?.RefreshBlock(closeChunk, closeWorldPosition - closeChunk.chunkData.positionForWorld, closeBlockDirection);
         }
     }
 

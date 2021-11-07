@@ -30,10 +30,10 @@ public class BlockWater : BlockLiquid
     /// <returns></returns>
     public bool SetCloseFlowBlock(Vector3Int worldPosition)
     {
-        WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(worldPosition, out BlockTypeEnum closeBlock, out DirectionEnum closeBlockDirection, out Chunk closeChunk);
+        WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(worldPosition, out Block closeBlock, out DirectionEnum closeBlockDirection, out Chunk closeChunk);
         if (closeChunk == null)
             return false;
-        if (closeBlock == BlockTypeEnum.None)
+        if (closeBlock.blockType == BlockTypeEnum.None)
         {
             //如果是空方块 替换成当前方块
             closeChunk.SetBlockForWorld(worldPosition, blockType);
@@ -43,8 +43,6 @@ public class BlockWater : BlockLiquid
         }
         else
         {
-            //获取靠近方块信息
-            BlockInfoBean closeBlockInfo = BlockHandler.Instance.manager.GetBlockInfo(closeBlock);
             //如果是空方块 或者总量为1 则替换为当前方块
             if (blockInfo.weight == 1)
             {

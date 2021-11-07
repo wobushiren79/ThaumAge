@@ -15,13 +15,11 @@ public class BlockCross : Block
 
     public override void RefreshBlock(Chunk chunk, Vector3Int localPosition, DirectionEnum direction)
     {
-        base.RefreshBlock(chunk,  localPosition,  direction);
+        base.RefreshBlock(chunk, localPosition, direction);
         //获取下方方块
-        chunk.GetBlockForLocal(localPosition + Vector3Int.down, out BlockTypeEnum downBlockType, out DirectionEnum downBlockdirection, out bool isInside);
-        //获取下方方块数据
-        BlockInfoBean downBlockInfo = BlockHandler.Instance.manager.GetBlockInfo(downBlockType);
+        chunk.GetBlockForLocal(localPosition + Vector3Int.down, out Block downBlock, out DirectionEnum downBlockdirection, out bool isInside);
         //如果下方方块为NONE或者为液体
-        if (isInside && (downBlockType == BlockTypeEnum.None || downBlockInfo.GetBlockShape() == BlockShapeEnum.Liquid))
+        if (isInside && (downBlock == null || downBlock.blockType == BlockTypeEnum.None || downBlock.blockInfo.GetBlockShape() == BlockShapeEnum.Liquid))
         {
             chunk.SetBlockForLocal(localPosition, BlockTypeEnum.None);
             WorldCreateHandler.Instance.manager.AddUpdateChunk(chunk);
@@ -99,10 +97,10 @@ public class BlockCross : Block
         chunkData.uvs.Add(uvStartPosition + new Vector2(uvWidth, 0));
     }
 
-    public override void AddVerts(Vector3Int localPosition, DirectionEnum direction,Vector3 corner, Chunk.ChunkRenderData chunkData)
+    public override void AddVerts(Vector3Int localPosition, DirectionEnum direction, Vector3 corner, Chunk.ChunkRenderData chunkData)
     {
-        base.AddVerts(localPosition, direction,corner, chunkData);
-        AddVert(localPosition, direction,chunkData.verts, corner + new Vector3(0.5f, 0, 0));
+        base.AddVerts(localPosition, direction, corner, chunkData);
+        AddVert(localPosition, direction, chunkData.verts, corner + new Vector3(0.5f, 0, 0));
         AddVert(localPosition, direction, chunkData.verts, corner + new Vector3(0.5f, 1, 0));
         AddVert(localPosition, direction, chunkData.verts, corner + new Vector3(0.5f, 1, 1));
         AddVert(localPosition, direction, chunkData.verts, corner + new Vector3(0.5f, 0, 1));

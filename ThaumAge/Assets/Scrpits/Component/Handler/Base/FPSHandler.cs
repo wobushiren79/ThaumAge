@@ -52,11 +52,21 @@ public class FPSHandler : BaseHandler<FPSHandler, BaseManager>
         }
     }
 
+    private int FPSShow;
+    private float timeFPSShow;
     void OnGUI()
     {
         GameConfigBean gameConfig =  GameDataHandler.Instance.manager.GetGameConfig();
-        if(gameConfig.framesShow)
-            GUI.Label(new Rect(Screen.width - 100, 0, 100, 100), "FPS: " + Mathf.FloorToInt(m_FPS));
+        if (gameConfig.framesShow)
+        {
+            timeFPSShow += Time.deltaTime;
+            if (timeFPSShow >= 1)
+            {
+                FPSShow = Mathf.FloorToInt(m_FPS);
+                timeFPSShow = 0;
+            }
+            GUI.Label(new Rect(Screen.width - 100, 0, 100, 100), $"FPS: {FPSShow}");
+        }    
     }
 
     /// <summary>

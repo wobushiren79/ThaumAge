@@ -36,7 +36,7 @@ public class BlockHandler : BaseHandler<BlockHandler, BlockManager>
     /// 破坏方块
     /// </summary>
     /// <returns></returns>
-    public BlockBreak BreakBlock(Vector3Int worldPosition, BlockTypeEnum blockType,int damage)
+    public BlockBreak BreakBlock(Vector3Int worldPosition, Block block, int damage)
     {
         if (dicBreakBlock.TryGetValue(worldPosition, out BlockBreak value))
         {
@@ -44,26 +44,27 @@ public class BlockHandler : BaseHandler<BlockHandler, BlockManager>
             return value;
         }
         else
-        {                
-            //获取方块信息
-            BlockInfoBean blockInfo = manager.GetBlockInfo(blockType);
+        {
+            BlockBreak blockBreak;
 
             if (listBreakBlockIdle.Count > 0)
             {
-                BlockBreak blockBreak = listBreakBlockIdle.Dequeue();
-                blockBreak.SetData(blockInfo);
+                blockBreak = listBreakBlockIdle.Dequeue();
+                blockBreak.SetData(block, worldPosition);
+                blockBreak.ShowObj(true);
                 dicBreakBlock.Add(worldPosition, blockBreak);
             }
             else
             {
                 //创建破碎效果
                 GameObject objBlockBreak = Instantiate(gameObject, manager.blockBreakModel);
-                BlockBreak blockBreak = objBlockBreak.GetComponent<BlockBreak>();
-                blockBreak.SetData(blockInfo);
+                blockBreak = objBlockBreak.GetComponent<BlockBreak>();
+                blockBreak.SetData(block, worldPosition);
                 dicBreakBlock.Add(worldPosition, blockBreak);
             }
+            blockBreak.Break(damage);
+            return blockBreak;
         }
-        return null;
     }
 
     /// <summary>

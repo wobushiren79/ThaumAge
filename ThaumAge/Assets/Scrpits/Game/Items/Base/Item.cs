@@ -32,19 +32,19 @@ public class Item
     public virtual void BreakTarget(Vector3Int targetPosition)
     {
         //获取原位置方块
-        WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(targetPosition, out BlockTypeEnum oldBlockType, out DirectionEnum oldBlockDirection, out Chunk targetChunk);
+        WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(targetPosition, out Block oldBlock, out DirectionEnum oldBlockDirection, out Chunk targetChunk);
         if (targetChunk)
         {
             //如果原位置是空则不做处理
-            if (oldBlockType != BlockTypeEnum.None)
+            if (oldBlock != null && oldBlock.blockType != BlockTypeEnum.None)
             {
-                BlockBreak blockBreak = BlockHandler.Instance.BreakBlock(targetPosition, oldBlockType, GetBreakDamage());
+                BlockBreak blockBreak = BlockHandler.Instance.BreakBlock(targetPosition, oldBlock, GetBreakDamage());
                 if (blockBreak.blockLife <= 0)
                 {
                     //移除破碎效果
                     BlockHandler.Instance.DestroyBreakBlock(targetPosition);
                     //创建掉落物
-                    ItemsHandler.Instance.CreateItemDrop(oldBlockType, 1, targetPosition + Vector3.one * 0.5f, ItemDropStateEnum.DropPick);
+                    ItemsHandler.Instance.CreateItemDrop(oldBlock.blockType, 1, targetPosition + Vector3.one * 0.5f, ItemDropStateEnum.DropPick);
                     //移除该方块
                     targetChunk.RemoveBlockForWorld(targetPosition);
                     WorldCreateHandler.Instance.HandleForUpdateChunk(true, null);

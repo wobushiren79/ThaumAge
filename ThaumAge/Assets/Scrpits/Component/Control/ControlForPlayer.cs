@@ -18,10 +18,16 @@ public class ControlForPlayer : ControlForBase
 
     private float speedJump = 5;
     private float moveSpeed = 1;
+    private float speedCharacterRotate = 10;
 
     private InputAction inputActionUse;
     private InputAction inputActionJump;
     private InputAction inputActionMove;
+
+    //是否正在使用道具
+    private bool isUseItem = false;
+    //正在使用道具的时间
+    private float timeForUseItem;
     private void Awake()
     {
         characterController = GetComponent<CharacterController>();
@@ -31,7 +37,6 @@ public class ControlForPlayer : ControlForBase
         inputActionJump.started += HandleForJumpStart;
         inputActionUse = InputHandler.Instance.manager.GetInputPlayerData("Use");
         inputActionUse.started += HandleForUse;
-        inputActionUse.performed += HandleForUsePerformed;
         inputActionUse.canceled += HandleForUseCanel;
 
         InputAction cancelAction = InputHandler.Instance.manager.GetInputPlayerData("Cancel");
@@ -48,6 +53,7 @@ public class ControlForPlayer : ControlForBase
         if (GameHandler.Instance.manager.GetGameState() == GameStateEnum.Gaming)
         {
             HandlerForMoveAndJumpUpdate();
+            HandleForUseUpdate();
         }
     }
 
@@ -84,7 +90,7 @@ public class ControlForPlayer : ControlForBase
     {
         Vector2 moveData = inputActionMove.ReadValue<Vector2>();
         //旋转角色
-        RotateCharacter(moveData, 10);
+        RotateCharacter(moveData, speedCharacterRotate);
         //移动角色
         MoveCharacter(moveData, moveSpeed);
         //跳跃处理
@@ -147,6 +153,9 @@ public class ControlForPlayer : ControlForBase
             return;
         if (UGUIUtil.IsPointerUI())
             return;
+
+        isUseItem = true;
+        timeForUseItem = 0;
         //获取道具栏上的物品
         UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();
         ItemsBean itemsData = userData.GetItemsFromShortcut();
@@ -155,13 +164,22 @@ public class ControlForPlayer : ControlForBase
         character.characterAnim.PlayUse(true);
     }
 
+
     /// <summary>
     /// 处理-持续使用道具
     /// </summary>
-    /// <param name="callback"></param>
-    public void HandleForUsePerformed(CallbackContext callback)
+    public void HandleForUseUpdate()
     {
-
+        if (isUseItem)
+        {
+            timeForUseItem += Time.deltaTime;
+            if (timeForUseItem > 0.5f)
+            {
+                HandleForUse(new CallbackContext());
+            }
+            //转动方向
+            RotateCharacter(Vector2.up, speedCharacterRotate);
+        }        
     }
 
     /// <summary>
@@ -170,6 +188,7 @@ public class ControlForPlayer : ControlForBase
     /// <param name="callback"></param>
     public void HandleForUseCanel(CallbackContext callback)
     {
+        isUseItem = false;
         character.characterAnim.PlayUse(false);
     }
 

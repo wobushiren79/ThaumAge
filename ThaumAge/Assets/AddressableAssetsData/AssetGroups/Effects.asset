@@ -25,6 +25,10 @@ MonoBehaviour:
     m_Address: Assets/Prefabs/Effects/Effect_Test_2.prefab
     m_ReadOnly: 0
     m_SerializedLabels: []
+  - m_GUID: a95198ba0e9651d4ea1ac5f051dcbb7e
+    m_Address: Assets/Prefabs/Effects/Effect_BlockBreak_1.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: fd6114d87f1af534fbf270c47c0f10bf, type: 2}
   m_SchemaSet:

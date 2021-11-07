@@ -25,7 +25,7 @@ public class ItemBlock : Item
                 else
                 {
                     //首先获取靠近方块
-                    WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(closePosition, out BlockTypeEnum block, out DirectionEnum blockDirection, out Chunk addChunk);
+                    WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(closePosition, out Block block, out DirectionEnum blockDirection, out Chunk addChunk);
                     //如果靠近得方块有区块
                     if (addChunk)
                     {

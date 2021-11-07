@@ -4,7 +4,7 @@ using UnityEngine;
 public class ChunkDataBean
 {
     //所有的方块合集
-    public ushort[] arrayBlockIds;
+    public Block[] arrayBlock;
     //所有方块的方向集合
     public byte[] arrayBlockDirection;
     //世界坐标
@@ -19,69 +19,69 @@ public class ChunkDataBean
         this.chunkHeight = chunkHeight;
         this.positionForWorld = wPosition;
 
-        arrayBlockIds = new ushort[chunkWidth * chunkHeight * chunkWidth];
+        arrayBlock = new Block[chunkWidth * chunkHeight * chunkWidth];
         arrayBlockDirection = new byte[chunkWidth * chunkHeight * chunkWidth];
     }
 
     /// <summary>
     /// 设置方块
     /// </summary>
-    public void SetBlockForLocal(int x, int y, int z, ushort blockId, byte direction)
+    public void SetBlockForLocal(int x, int y, int z, Block block, byte direction)
     {
         int index = GetIndexByPosition(x, y, z);
-        arrayBlockIds[index] = blockId;
+        arrayBlock[index] = block;
         arrayBlockDirection[index] = direction;
     }
 
-    public void SetBlockForLocal(int x, int y, int z, BlockTypeEnum blockType, DirectionEnum direction)
+    public void SetBlockForLocal(int x, int y, int z, Block block, DirectionEnum direction)
     {
-        SetBlockForLocal(x, y, z, (ushort)blockType, (byte)direction);
+        SetBlockForLocal(x, y, z, block, (byte)direction);
+    }
+    public void SetBlockForLocal(Vector3Int blockPosition, Block block, byte direction)
+    {
+        SetBlockForLocal(blockPosition.x, blockPosition.y, blockPosition.z, block, direction);
+    }
+    public void SetBlockForLocal(Vector3Int blockPosition, Block block, DirectionEnum direction)
+    {
+        SetBlockForLocal(blockPosition.x, blockPosition.y, blockPosition.z, block, (byte)direction);
     }
 
-    public void SetBlockForLocal(Vector3Int blockPosition, ushort blockId, byte direction)
-    {
-        SetBlockForLocal(blockPosition.x, blockPosition.y, blockPosition.z, blockId, direction);
-    }
-
-    public void SetBlockForLocal(Vector3Int blockPosition, BlockTypeEnum blockType, DirectionEnum direction)
-    {
-        SetBlockForLocal(blockPosition.x, blockPosition.y, blockPosition.z, (ushort)blockType, (byte)direction);
-    }
-
-    public void SetBlockForWorld(Vector3Int worldPosition, BlockTypeEnum blockType)
+    public void SetBlockForWorld(Vector3Int worldPosition, Block block)
     {
         Vector3Int blockLocalPosition = worldPosition - this.positionForWorld;
-        SetBlockForLocal(blockLocalPosition, blockType, DirectionEnum.UP);
+        SetBlockForLocal(blockLocalPosition, block, DirectionEnum.UP);
     }
 
-    public void SetBlockForWorld(Vector3Int worldPosition, BlockTypeEnum blockType, DirectionEnum direction)
+    public void SetBlockForWorld(Vector3Int worldPosition, Block block, DirectionEnum direction)
     {
         Vector3Int blockLocalPosition = worldPosition - this.positionForWorld;
-        SetBlockForLocal(blockLocalPosition, blockType, direction);
+        SetBlockForLocal(blockLocalPosition, block, direction);
     }
 
     /// <summary>
     /// 获取方块
     /// </summary>
-    public void GetBlockForLocal(int x, int y, int z, out BlockTypeEnum blockType, out DirectionEnum direction)
+    public void GetBlockForLocal(int x, int y, int z, out Block block, out DirectionEnum direction)
     {
         int index = GetIndexByPosition(x, y, z);
-        blockType = (BlockTypeEnum)arrayBlockIds[index];
+        block = arrayBlock[index];
         direction = (DirectionEnum)arrayBlockDirection[index];
     }
-    public void GetBlockForLocal(Vector3Int blockPosition, out BlockTypeEnum blockType, out DirectionEnum direction)
+
+    public void GetBlockForLocal(Vector3Int blockPosition, out Block block, out DirectionEnum direction)
     {
-        GetBlockForLocal(blockPosition.x, blockPosition.y, blockPosition.z, out blockType, out direction);
+        GetBlockForLocal(blockPosition.x, blockPosition.y, blockPosition.z, out block, out direction);
     }
 
-    public void GetBlockForLocal(int x, int y, int z, out BlockTypeEnum blockType)
+    public void GetBlockForLocal(int x, int y, int z, out Block block)
     {
         int index = GetIndexByPosition(x, y, z);
-        blockType = (BlockTypeEnum)arrayBlockIds[index];
+        block = arrayBlock[index];
     }
-    public void GetBlockForLocal(Vector3Int blockPosition, out BlockTypeEnum blockType)
+
+    public void GetBlockForLocal(Vector3Int blockPosition, out Block block)
     {
-        GetBlockForLocal(blockPosition.x, blockPosition.y, blockPosition.z, out blockType);
+        GetBlockForLocal(blockPosition.x, blockPosition.y, blockPosition.z, out block);
     }
 
     /// <summary>

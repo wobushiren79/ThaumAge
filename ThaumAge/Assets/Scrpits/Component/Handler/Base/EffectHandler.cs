@@ -11,19 +11,24 @@ public class EffectHandler : BaseHandler<EffectHandler, EffectManager>
     /// <param name="objContainer"></param>
     /// <param name="effectData"></param>
     /// <param name="callBack"></param>
-    public void ShowEffect(GameObject objContainer,EffectBean effectData,Action<GameObject> callBack = null)
+    public void ShowEffect(GameObject objContainer, EffectBean effectData, Action<EffectBase> callBack = null)
     {
-        manager.CreateEffect(objContainer, effectData, (objEffect)=> 
+        manager.GetEffect(objContainer, effectData, (effect) =>
         {
-            callBack?.Invoke(objEffect);
-            if(effectData.timeForShow > 0) 
+            callBack?.Invoke(effect);
+            if (effectData.timeForShow > 0)
             {
                 //展示时间过后就删除
                 this.WaitExecuteSeconds(effectData.timeForShow, () =>
                 {
-                    Destroy(objEffect);
+                    manager.DestoryEffect(effect);
                 });
             }
         });
+    }
+
+    public void ShowEffect(EffectBean effectData, Action<EffectBase> callBack = null)
+    {
+        ShowEffect(gameObject, effectData, callBack);
     }
 }

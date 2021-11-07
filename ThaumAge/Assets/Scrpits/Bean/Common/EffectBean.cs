@@ -6,7 +6,7 @@ public class EffectBean
     //粒子名字
     public string effectName;
     //粒子类型
-    public EffectTypeEnum effectType;
+    public EffectTypeEnum effectType = EffectTypeEnum.Normal;
     //粒子展示时间
     public float timeForShow;
     //粒子的世界坐标

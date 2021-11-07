@@ -5,39 +5,109 @@ using UnityEngine;
 public class BlockBreak : BaseMonoBehaviour
 {
     public MeshRenderer mrBlockBreak;
-    public BlockInfoBean blockInfo;
+    public Block block;
+    public Vector3Int position;
 
     public int blockLife = 0;
+    //是否需要删除
+    public bool isNeedDestory = false;
 
     //贴图列表
     public List<Texture2D> listBreakTex = new List<Texture2D>();
     //当前破碎的进度
     protected int currentProIndex;
 
+    //更新时间
+    protected float timeForUpdate;
+    //闲置删除时间
+    protected float timeForIdleDestory = 2;
+
+    public void Update()
+    {
+        HandleForBreakBlockUpdate();
+    }
+
+    /// <summary>
+    /// 处理-破碎方块更新
+    /// </summary>
+    public void HandleForBreakBlockUpdate()
+    {
+        timeForUpdate += Time.deltaTime;
+        if (timeForUpdate >= timeForIdleDestory)
+        {
+            timeForUpdate = 0;
+            Reply(0.1f);
+        }
+    }
+
     /// <summary>
     /// 设置数据
     /// </summary>
     /// <param name="blockInfo"></param>
-    public void SetData(BlockInfoBean blockInfo)
+    public void SetData(Block block, Vector3Int position)
     {
-        if (blockInfo == null)
+        if (block == null)
             return;
-        this.blockInfo = blockInfo;
-        blockLife = blockInfo.life;
+        this.position = position;
+        this.block = block;
+        blockLife = block.blockInfo.life;
+        transform.position = position;
     }
 
     /// <summary>
     /// 破碎方块
     /// </summary>
     /// <param name="damage"></param>
-    public void Break(int damage)
+    public void Break(int damage, bool isPlayEffect = true)
     {
-        blockLife -= damage;
-        if (blockLife < 0)
-            blockLife = 0;
+        //重置刷新时间
+        timeForUpdate = 0;
 
-        float breakPro =1- ((float)blockLife / blockInfo.life);
+        //生命值扣除
+        blockLife -= damage;
+        if (blockLife < 0) blockLife = 0;
+        else if (blockLife > block.blockInfo.life) blockLife = block.blockInfo.life;
+
+        float breakPro;
+        if (block.blockInfo.life != 0)
+        {
+            breakPro = 1 - ((float)blockLife / block.blockInfo.life);
+        }
+        else
+        {
+            breakPro = 1;
+        }
         SetBreakPro(breakPro);
+
+        //播放粒子特效
+        if (isPlayEffect)
+        {
+            EffectBean effectData = new EffectBean();
+            effectData.timeForShow = 5f;
+            effectData.effectPosition = position + Vector3.one * 0.5f;
+            effectData.effectName = EffectInfo.BlockBreak_1;
+            EffectHandler.Instance.ShowEffect(effectData,(effect)=> 
+            {
+                //设置粒子颜色
+                EffectBlockBreak effectBlockBreak = (EffectBlockBreak)effect;
+                effectBlockBreak.SetEffectColor();
+            });
+        }
+    }
+
+    /// <summary>
+    /// 恢复方块
+    /// </summary>
+    /// <param name="pro"></param>
+    public void Reply(float pro)
+    {
+        int life = (int)(block.blockInfo.life * pro);
+        Break(-life, false);
+        //如果生命值回满了
+        if (blockLife >= block.blockInfo.life)
+        {
+            BlockHandler.Instance.DestroyBreakBlock(position);
+        }
     }
 
     /// <summary>
@@ -57,10 +127,10 @@ public class BlockBreak : BaseMonoBehaviour
 
         }
         //修改贴图
-        else 
+        else
         {
             Texture2D tex2D = listBreakTex[index];
-            mrBlockBreak.material.SetTexture("_MainTex",tex2D);
+            mrBlockBreak.material.SetTexture("_BaseColorMap", tex2D);
         }
         currentProIndex = index;
     }

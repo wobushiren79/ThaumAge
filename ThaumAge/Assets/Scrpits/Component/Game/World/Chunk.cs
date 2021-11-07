@@ -237,7 +237,7 @@ public class Chunk : BaseMonoBehaviour
     public async void BuildChunkForAsync(Action callBackForComplete)
     {
         //只有初始化之后的chunk才能刷新
-        if (!isInit || chunkData.arrayBlockIds.Length <= 0)
+        if (!isInit || chunkData.arrayBlock.Length <= 0)
         {
             isBuildChunk = false;
             callBackForComplete?.Invoke();
@@ -270,11 +270,10 @@ public class Chunk : BaseMonoBehaviour
                         {
                             for (int z = 0; z < chunkData.chunkWidth; z++)
                             {
-                                chunkData.GetBlockForLocal(x, y, z, out BlockTypeEnum blockType, out DirectionEnum direction);
-                                if (blockType == BlockTypeEnum.None)
+                                chunkData.GetBlockForLocal(x, y, z, out Block block, out DirectionEnum direction);
+                                if (block == null || block.blockType == BlockTypeEnum.None)
                                     continue;
                                 Vector3Int localPosition = new Vector3Int(x, y, z);
-                                Block block = BlockHandler.Instance.manager.GetRegisterBlock(blockType);
                                 block.BuildBlock(this, localPosition, direction, chunkRenderData);
                                 block.InitBlock(this, localPosition, direction);
                             }
@@ -326,7 +325,7 @@ public class Chunk : BaseMonoBehaviour
             chunkMesh.SetVertices(chunkRenderData.verts);
             //设置UV
             chunkMesh.SetUVs(0, chunkRenderData.uvs);
-          
+
             //设置三角（单面渲染，双面渲染,液体）
             foreach (var itemTris in chunkRenderData.dicTris)
             {
@@ -401,17 +400,17 @@ public class Chunk : BaseMonoBehaviour
         }
     }
 
-    public void GetBlockForWorld(Vector3Int blockWorldPosition, out BlockTypeEnum block, out DirectionEnum direction, out bool isInside)
+    public void GetBlockForWorld(Vector3Int blockWorldPosition, out Block block, out DirectionEnum direction, out bool isInside)
     {
         GetBlockForLocal(blockWorldPosition - chunkData.positionForWorld, out block, out direction, out isInside);
     }
 
 
-    public void GetBlockForLocal(Vector3Int localPosition, out BlockTypeEnum block, out DirectionEnum direction, out bool isInside)
+    public void GetBlockForLocal(Vector3Int localPosition, out Block block, out DirectionEnum direction, out bool isInside)
     {
         if (localPosition.y < 0 || localPosition.y > chunkData.chunkHeight - 1)
         {
-            block = BlockTypeEnum.None;
+            block = BlockHandler.Instance.manager.GetRegisterBlock(BlockTypeEnum.None);
             direction = DirectionEnum.UP;
             isInside = false;
             return;
@@ -474,16 +473,15 @@ public class Chunk : BaseMonoBehaviour
     public void SetBlockForLocal(Vector3Int localPosition, BlockTypeEnum blockType, DirectionEnum direction, bool isSaveData, bool isRefreshChunkRange, bool isRefreshBlockRange)
     {
         //首先移除方块
-        chunkData.GetBlockForLocal(localPosition, out BlockTypeEnum oldBlockType, out DirectionEnum oldDirection);
-        if (oldBlockType != BlockTypeEnum.None)
+        chunkData.GetBlockForLocal(localPosition, out Block oldBlock, out DirectionEnum oldDirection);
+        if (oldBlock != null && oldBlock.blockType != BlockTypeEnum.None)
         {
-            Block oldBlock = BlockHandler.Instance.manager.GetRegisterBlock(oldBlockType);
             oldBlock.DestoryBlock(this, localPosition, oldDirection);
         }
         //设置新方块
-        chunkData.SetBlockForLocal(localPosition, blockType, direction);
-
         Block newBlock = BlockHandler.Instance.manager.GetRegisterBlock(blockType);
+        chunkData.SetBlockForLocal(localPosition, newBlock, direction);
+
         newBlock.InitBlock(this, localPosition, direction);
 
 
@@ -544,13 +542,13 @@ public class Chunk : BaseMonoBehaviour
 
                     //获取方块类型
                     BlockTypeEnum blockType = BiomeHandler.Instance.CreateBiomeBlockType(this, listBiomeCenter, listBiome, position);
-
+                    Block block = BlockHandler.Instance.manager.GetRegisterBlock(blockType);
                     //如果是空 则跳过
                     if (blockType == BlockTypeEnum.None)
                         continue;
 
                     //添加方块
-                    chunkData.SetBlockForLocal(x, y, z, blockType, DirectionEnum.UP);
+                    chunkData.SetBlockForLocal(x, y, z, block, DirectionEnum.UP);
                 }
             }
         }
@@ -592,9 +590,10 @@ public class Chunk : BaseMonoBehaviour
             Vector3Int positionBlock = blockData.localPosition;
 
             //添加方块 如果已经有该方块 则先删除，优先使用存档的方块
-            chunkData.GetBlockForLocal(positionBlock, out BlockTypeEnum blockType, out DirectionEnum direction);
+            //chunkData.GetBlockForLocal(positionBlock, out Block block, out DirectionEnum direction);
 
-            chunkData.SetBlockForLocal(positionBlock, blockData.blockId, blockData.direction);
+            Block block = BlockHandler.Instance.manager.GetRegisterBlock(blockData.blockId);
+            chunkData.SetBlockForLocal(positionBlock, block, blockData.direction);
         }
         SetWorldData(worldData);
     }
@@ -607,8 +606,7 @@ public class Chunk : BaseMonoBehaviour
         for (int i = 0; i < listEventUpdate.Count; i++)
         {
             Vector3Int localPosition = listEventUpdate[i];
-            GetBlockForLocal(localPosition, out BlockTypeEnum blockType, out DirectionEnum direction, out bool isInside);
-            Block block = BlockHandler.Instance.manager.GetRegisterBlock(blockType);
+            GetBlockForLocal(localPosition, out Block block, out DirectionEnum direction, out bool isInside);
             block.EventBlockUpdate(this, localPosition, direction);
         }
     }
@@ -634,16 +632,14 @@ public class Chunk : BaseMonoBehaviour
         }
 
 
-        GetBlockForLocal(localPosition, out BlockTypeEnum blockType, out DirectionEnum direction, out bool isInside);
+        GetBlockForLocal(localPosition, out Block block, out DirectionEnum direction, out bool isInside);
 
-        if (!isInside || blockType == BlockTypeEnum.None)
+        if (!isInside || block == null || block.blockType == BlockTypeEnum.None)
             return;
-        //获取数据
-        BlockInfoBean blockInfo = BlockHandler.Instance.manager.GetBlockInfo(blockType);
-        if (blockInfo == null || blockInfo.model_name.IsNull())
+        if (block.blockInfo == null || block.blockInfo.model_name.IsNull())
             return;
         //获取模型
-        GameObject objBlockModel = BlockHandler.Instance.CreateBlockModel(this, (ushort)blockType, blockInfo.model_name);
+        GameObject objBlockModel = BlockHandler.Instance.CreateBlockModel(this, (ushort)block.blockType, block.blockInfo.model_name);
         if (objBlockModel == null)
             return;
         //设置位置
