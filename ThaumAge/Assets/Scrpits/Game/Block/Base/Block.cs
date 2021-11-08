@@ -96,11 +96,11 @@ public abstract class Block
     /// <param name="verts"></param>
     /// <param name="uvs"></param>
     /// <param name="tris"></param>
-    public virtual void BuildBlock(Chunk chunk, Vector3Int localPosition, DirectionEnum direction, Chunk.ChunkRenderData chunkData)
+    public virtual void BuildBlock(Chunk chunk, Vector3Int localPosition, DirectionEnum direction, ChunkMeshData chunkMeshData)
     {
 
     }
-    public virtual void BuildBlockNoCheck(Chunk chunk, Vector3Int localPosition, DirectionEnum direction, Chunk.ChunkRenderData chunkData)
+    public virtual void BuildBlockNoCheck(Chunk chunk, Vector3Int localPosition, DirectionEnum direction, ChunkMeshData chunkMeshData)
     {
 
     }
@@ -115,11 +115,11 @@ public abstract class Block
     /// <param name="verts"></param>
     /// <param name="uvs"></param>
     /// <param name="tris"></param>
-    public virtual void BuildFace(Vector3Int localPosition, DirectionEnum direction, Vector3 corner, Chunk.ChunkRenderData chunkData)
+    public virtual void BuildFace(Vector3Int localPosition, DirectionEnum direction, Vector3 corner, ChunkMeshData chunkMeshData)
     {
-        AddTris(chunkData);
-        AddVerts(localPosition, direction, corner, chunkData);
-        AddUVs(chunkData);
+        AddTris(chunkMeshData);
+        AddVerts(localPosition, direction, corner, chunkMeshData);
+        AddUVs(chunkMeshData);
     }
 
     /// <summary>
@@ -129,21 +129,32 @@ public abstract class Block
     /// <param name="up"></param>
     /// <param name="right"></param>
     /// <param name="verts"></param>
-    public virtual void AddVerts(Vector3Int localPosition, DirectionEnum direction, Vector3 corner, Chunk.ChunkRenderData chunkData)
+    public virtual void AddVerts(Vector3Int localPosition, DirectionEnum direction, Vector3 corner, ChunkMeshData chunkMeshData)
     {
 
     }
+
+    /// <summary>
+    /// Ìí¼Ó¶¥µã
+    /// </summary>
+    /// <param name="localPosition"></param>
+    /// <param name="direction"></param>
+    /// <param name="listVerts"></param>
+    /// <param name="vert"></param>
     public virtual void AddVert(Vector3Int localPosition, DirectionEnum direction, List<Vector3> listVerts, Vector3 vert)
     {
         listVerts.Add(RotatePosition(direction, vert, GetCenterPosition(localPosition)));
     }
-
+    public virtual void AddVert(Vector3Int localPosition, DirectionEnum direction, Vector3[] arrayVerts, int indexVerts, Vector3 vert)
+    {
+        arrayVerts[indexVerts] = RotatePosition(direction, vert, GetCenterPosition(localPosition));
+    }
     /// <summary>
     /// Ìí¼ÓUV
     /// </summary>
     /// <param name="blockData"></param>
     /// <param name="uvs"></param>
-    public virtual void AddUVs(Chunk.ChunkRenderData chunkData)
+    public virtual void AddUVs(ChunkMeshData chunkMeshData)
     {
 
     }
@@ -155,7 +166,7 @@ public abstract class Block
     /// <param name="tris"></param>
     /// <param name="indexCollider"></param>
     /// <param name="trisCollider"></param>
-    public virtual void AddTris(Chunk.ChunkRenderData chunkData)
+    public virtual void AddTris(ChunkMeshData chunkMeshData)
     {
 
     }

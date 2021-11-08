@@ -11,24 +11,6 @@ using System.Collections.Concurrent;
 
 public class Chunk : BaseMonoBehaviour
 {
-    public class ChunkRenderData
-    {
-        //普通使用的三角形合集
-        public List<Vector3> verts = new List<Vector3>();
-        public List<Vector2> uvs = new List<Vector2>();
-
-        //碰撞使用的三角形合集
-        public List<Vector3> vertsCollider = new List<Vector3>();
-        public List<int> trisCollider = new List<int>();
-
-        //出发使用的三角形合集
-        public List<Vector3> vertsTrigger = new List<Vector3>();
-        public List<int> trisTrigger = new List<int>();
-
-        //所有三角形合集，根据材质球区分
-        public Dictionary<BlockMaterialEnum, List<int>> dicTris = new Dictionary<BlockMaterialEnum, List<int>>();
-    }
-
     //需要更新事件的方块（频率每秒一次）
     public List<Vector3Int> listEventUpdate = new List<Vector3Int>();
 
@@ -36,7 +18,7 @@ public class Chunk : BaseMonoBehaviour
     public ConcurrentQueue<Vector3Int> listBlockModelUpdate = new ConcurrentQueue<Vector3Int>();
     //需要删除方块实力的列表
     public ConcurrentQueue<Vector3Int> listBlockModelDestroy = new ConcurrentQueue<Vector3Int>();
-
+    //方块模型
     public Dictionary<int, GameObject> dicBlockModel = new Dictionary<int, GameObject>();
 
     public MeshCollider meshCollider;
@@ -56,7 +38,7 @@ public class Chunk : BaseMonoBehaviour
     public bool isAnimForInit = false;
 
     //渲染数据
-    protected ChunkRenderData chunkRenderData;
+    protected ChunkMeshData chunkMeshData;
     //存储数据
     protected WorldDataBean worldData;
 
@@ -73,7 +55,6 @@ public class Chunk : BaseMonoBehaviour
         //获取自身相关组件引用
         meshRenderer = GetComponent<MeshRenderer>();
         meshFilter = GetComponent<MeshFilter>();
-        chunkRenderData = new ChunkRenderData();
         meshRenderer.materials = WorldCreateHandler.Instance.manager.GetAllMaterial();
 
         chunkMesh = new Mesh();
@@ -141,6 +122,7 @@ public class Chunk : BaseMonoBehaviour
     public void SetData(Vector3Int worldPosition, int width, int height)
     {
         chunkData = new ChunkDataBean(worldPosition, width, height);
+        chunkMeshData = new ChunkMeshData(this);
     }
 
     /// <summary>
@@ -256,13 +238,13 @@ public class Chunk : BaseMonoBehaviour
 #if UNITY_EDITOR
                     Stopwatch stopwatch = TimeUtil.GetMethodTimeStart();
 #endif
-                    chunkRenderData = new ChunkRenderData();
+                    chunkMeshData = new ChunkMeshData(this);
                     //初始化数据
                     List<BlockMaterialEnum> blockMaterialsEnum = EnumUtil.GetEnumValue<BlockMaterialEnum>();
                     for (int i = 0; i < blockMaterialsEnum.Count; i++)
                     {
                         BlockMaterialEnum blockMaterial = blockMaterialsEnum[i];
-                        chunkRenderData.dicTris.Add(blockMaterial, new List<int>());
+                        chunkMeshData.dicTris.Add(blockMaterial, new List<int>());
                     }
                     for (int x = 0; x < chunkData.chunkWidth; x++)
                     {
@@ -274,7 +256,7 @@ public class Chunk : BaseMonoBehaviour
                                 if (block == null || block.blockType == BlockTypeEnum.None)
                                     continue;
                                 Vector3Int localPosition = new Vector3Int(x, y, z);
-                                block.BuildBlock(this, localPosition, direction, chunkRenderData);
+                                block.BuildBlock(this, localPosition, direction, chunkMeshData);
                                 block.InitBlock(this, localPosition, direction);
                             }
                         }
@@ -315,30 +297,30 @@ public class Chunk : BaseMonoBehaviour
 
             chunkMesh.subMeshCount = meshRenderer.materials.Length;
             //定点数判断
-            if (chunkRenderData == null || chunkRenderData.verts.Count <= 3)
+            if (chunkMeshData == null || chunkMeshData.verts.Length <= 3)
             {
                 isDrawMesh = false;
                 return;
             }
 
             //设置顶点
-            chunkMesh.SetVertices(chunkRenderData.verts);
+            chunkMesh.SetVertices(chunkMeshData.verts);
             //设置UV
-            chunkMesh.SetUVs(0, chunkRenderData.uvs);
+            chunkMesh.SetUVs(0, chunkMeshData.uvs);
 
             //设置三角（单面渲染，双面渲染,液体）
-            foreach (var itemTris in chunkRenderData.dicTris)
+            foreach (var itemTris in chunkMeshData.dicTris)
             {
                 chunkMesh.SetTriangles(itemTris.Value.ToArray(), (int)itemTris.Key);
             }
 
             //碰撞数据设置
-            chunkMeshCollider.SetVertices(chunkRenderData.vertsCollider);
-            chunkMeshCollider.SetTriangles(chunkRenderData.trisCollider, 0);
+            chunkMeshCollider.SetVertices(chunkMeshData.vertsCollider);
+            chunkMeshCollider.SetTriangles(chunkMeshData.trisCollider, 0);
 
-            //出发数据设置
-            chunkMeshTrigger.SetVertices(chunkRenderData.vertsTrigger);
-            chunkMeshTrigger.SetTriangles(chunkRenderData.trisTrigger, 0);
+            //触发数据设置
+            chunkMeshTrigger.SetVertices(chunkMeshData.vertsTrigger);
+            chunkMeshTrigger.SetTriangles(chunkMeshData.trisTrigger, 0);
 
             //刷新
             chunkMesh.RecalculateBounds();

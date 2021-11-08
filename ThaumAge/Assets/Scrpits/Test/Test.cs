@@ -12,18 +12,88 @@ using UnityEngine.UI;
 
 public class Test : BaseMonoBehaviour
 {
-    public Canvas canvas;
+    public MeshFilter meshFilter;
+
     private void Start()
     {
+        Mesh mesh = new Mesh();
 
+        Vector3[] vertices = new Vector3[100];
+        vertices[0] = new Vector3(0, 0, 0);
+        vertices[1] = new Vector3(0, 1, 0);
+        vertices[2] = new Vector3(1, 1, 0);
+        vertices[3] = new Vector3(1, 0,0 );
+        mesh.SetVertices(vertices);
+
+        int[] tra = new int[30];
+        tra[0] = 0;
+        tra[1] = 1;
+        tra[2] = 2;
+        tra[3] = 0;
+        tra[4] = 2;
+        tra[5] = 3;
+        mesh.SetTriangles(tra,0);
+        meshFilter.mesh = mesh;
     }
 
     public void OnGUI()
     {
         if (GUILayout.Button("Test"))
         {
-            TimeTest();
+
         }
+    }
+
+    public void TimeTest3()
+    {
+        int number = 100000;
+        int[] arrayData = new int[number];
+        List<int> listData = new List<int>();
+        Stopwatch stopwatch = TimeUtil.GetMethodTimeStart();
+        for (int i = 0; i < number; i++)
+        {
+            arrayData[i] = i;
+        }
+        TimeUtil.GetMethodTimeEnd("data1:", stopwatch);
+        stopwatch.Restart();
+
+        stopwatch.Start();
+        for (int i = 0; i < number; i++)
+        {
+            listData.Add(i);
+        }
+        TimeUtil.GetMethodTimeEnd("data2:", stopwatch);
+    }
+
+    public void TimeTest2()
+    {
+        int number = 100000;
+        List<int> listData1 = new List<int>();
+        List<int> listData2 = new List<int>();
+        Stopwatch stopwatch = TimeUtil.GetMethodTimeStart();
+        for (int i = 0; i < number; i++)
+        {
+            listData1.Add(1);
+            listData1.Add(2);
+            listData1.Add(3);
+            listData1.Add(4);
+            listData1.Add(5);
+        }
+        TimeUtil.GetMethodTimeEnd("data1:", stopwatch);
+        int[] itemList1 = new int[5]
+{
+                 1,2,3,4,5
+};
+        stopwatch.Restart();
+
+        stopwatch.Start();
+
+        for (int i = 0; i < number; i++)
+        {
+
+            listData2.AddRange(itemList1);
+        }
+        TimeUtil.GetMethodTimeEnd("data2:", stopwatch);
     }
 
     public void TimeTest()
