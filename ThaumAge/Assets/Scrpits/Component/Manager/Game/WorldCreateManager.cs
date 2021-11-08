@@ -198,6 +198,17 @@ public class WorldCreateManager : BaseManager
         chunk.GetBlockForWorld(pos, out block, out direction, out bool isInside);
     }
 
+    public void GetBlockForWorldPosition(Vector3Int pos, out Block block, out Chunk chunk)
+    {
+        chunk = GetChunkForWorldPosition(pos);
+        if (chunk == null)
+        {
+            block = BlockHandler.Instance.manager.GetRegisterBlock(BlockTypeEnum.None);
+            return;
+        }
+        chunk.GetBlockForWorld(pos, out block,out bool isInside);
+    }
+
     /// <summary>
     /// 获取世界种子
     /// </summary>

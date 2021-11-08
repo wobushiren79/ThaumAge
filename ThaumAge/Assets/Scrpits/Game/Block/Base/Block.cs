@@ -256,7 +256,8 @@ public abstract class Block
                     targetBlockWorldPosition = worldPosition + Vector3Int.up;
                     break;
             }
-            WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(targetBlockWorldPosition, out block, out DirectionEnum closeDirection, out Chunk closeChunk);
+            //TODO 这里还可以优化一下 
+            WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(targetBlockWorldPosition, out block, out Chunk closeChunk);
             if (closeChunk == null)
             {
                 hasChunk = false;
@@ -270,15 +271,8 @@ public abstract class Block
         else
         {
             //如果在同一个chunk内
-            chunk.GetBlockForLocal(targetBlockLocalPosition, out block, out DirectionEnum direction, out bool isInside);
-            if (isInside)
-            {
-                hasChunk = true;
-            }
-            else
-            {
-                hasChunk = false;
-            }
+            chunk.GetBlockForLocal(targetBlockLocalPosition, out block);
+            hasChunk = true;
         }
     }
 

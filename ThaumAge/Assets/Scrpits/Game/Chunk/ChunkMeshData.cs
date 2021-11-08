@@ -11,8 +11,10 @@ public class ChunkMeshData
     public Vector2[] uvs;
 
     //碰撞使用的三角形合集
-    public List<Vector3> vertsCollider = new List<Vector3>();
-    public List<int> trisCollider = new List<int>();
+    public int indexVertCollider;
+    public Vector3[] vertsCollider;
+    public int indexTrisCollider;
+    public int[] trisCollider;
 
     //触发使用的三角形合集
     public List<Vector3> vertsTrigger = new List<Vector3>();
@@ -23,12 +25,31 @@ public class ChunkMeshData
 
     public ChunkMeshData(Chunk chunk)
     {
-        indexVert = 0;
-        indexUV = 0;
         int vertsNumber = 65536;
-        if (chunk != null) vertsNumber = chunk.chunkData.chunkWidth * chunk.chunkData.chunkWidth * chunk.chunkData.chunkHeight * 16;
-        vertsNumber= 3000;
+        if (chunk != null) 
+        {
+            vertsNumber = chunk.chunkData.chunkWidth * chunk.chunkData.chunkWidth * chunk.chunkData.chunkHeight;
+        }
+        int trisNumber = (vertsNumber / 2) * 3;
+
+        indexVert = 0;
         verts = new Vector3[vertsNumber];
+
+        indexUV = 0;
         uvs = new Vector2[vertsNumber];
+
+        indexVertCollider = 0;
+        vertsCollider = new Vector3[vertsNumber];
+
+        indexTrisCollider = 0;
+        trisCollider = new int[trisNumber];
+
+        //初始化数据
+        List<BlockMaterialEnum> blockMaterialsEnum = EnumUtil.GetEnumValue<BlockMaterialEnum>();
+        for (int i = 0; i < blockMaterialsEnum.Count; i++)
+        {
+            BlockMaterialEnum blockMaterial = blockMaterialsEnum[i];
+            dicTris.Add(blockMaterial, new List<int>());
+        }
     }
 }

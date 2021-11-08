@@ -239,13 +239,7 @@ public class Chunk : BaseMonoBehaviour
                     Stopwatch stopwatch = TimeUtil.GetMethodTimeStart();
 #endif
                     chunkMeshData = new ChunkMeshData(this);
-                    //初始化数据
-                    List<BlockMaterialEnum> blockMaterialsEnum = EnumUtil.GetEnumValue<BlockMaterialEnum>();
-                    for (int i = 0; i < blockMaterialsEnum.Count; i++)
-                    {
-                        BlockMaterialEnum blockMaterial = blockMaterialsEnum[i];
-                        chunkMeshData.dicTris.Add(blockMaterial, new List<int>());
-                    }
+
                     for (int x = 0; x < chunkData.chunkWidth; x++)
                     {
                         for (int y = 0; y < chunkData.chunkHeight; y++)
@@ -311,7 +305,7 @@ public class Chunk : BaseMonoBehaviour
             //设置三角（单面渲染，双面渲染,液体）
             foreach (var itemTris in chunkMeshData.dicTris)
             {
-                chunkMesh.SetTriangles(itemTris.Value.ToArray(), (int)itemTris.Key);
+                chunkMesh.SetTriangles(itemTris.Value, (int)itemTris.Key);
             }
 
             //碰撞数据设置
@@ -386,7 +380,11 @@ public class Chunk : BaseMonoBehaviour
     {
         GetBlockForLocal(blockWorldPosition - chunkData.positionForWorld, out block, out direction, out isInside);
     }
-
+    public void GetBlockForWorld(Vector3Int blockWorldPosition, out Block block, out bool isInside)
+    {
+        isInside = true;
+        GetBlockForLocal(blockWorldPosition - chunkData.positionForWorld, out block);
+    }
 
     public void GetBlockForLocal(Vector3Int localPosition, out Block block, out DirectionEnum direction, out bool isInside)
     {
@@ -410,6 +408,11 @@ public class Chunk : BaseMonoBehaviour
             isInside = true;
             chunkData.GetBlockForLocal(localPosition, out block, out direction);
         }
+    }
+
+    public void GetBlockForLocal(Vector3Int localPosition, out Block block)
+    {
+        chunkData.GetBlockForLocal(localPosition, out block);
     }
 
     /// <summary>
