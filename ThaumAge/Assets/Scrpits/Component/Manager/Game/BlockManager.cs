@@ -14,13 +14,15 @@ public class BlockManager : BaseManager, IBlockInfoView
     protected Block[] arrayBlockRegister = new Block[EnumUtil.GetEnumMaxIndex<BlockTypeEnum>() + 1];
     //方块模型列表
     protected GameObject[] arrayBlockModel = new GameObject[EnumUtil.GetEnumMaxIndex<BlockTypeEnum>() + 1];
+    //存储着所有的材质
+    public Material[] arrayBlockMat = new Material[16];
 
     //方块破碎模型
     public GameObject blockBreakModel;
 
     public virtual void Awake()
     {
-        InitData();
+        InitData(); 
     }
 
     public void InitData()
@@ -33,6 +35,30 @@ public class BlockManager : BaseManager, IBlockInfoView
         {
             blockBreakModel = obj.Result;
         });
+        //加载所有方块材质球
+        List<Material> listData = GetAllModel<Material>("block/mats", "Assets/Prefabs/Mats");
+        for (int i = 0; i < listData.Count; i++)
+        {
+            //按照名字中的下标 确认每个材质球的顺序
+            Material itemMat = listData[i];
+            string[] nameList = StringUtil.SplitBySubstringForArrayStr(itemMat.name, '_');
+            int indexMat = int.Parse(nameList[1]);
+            arrayBlockMat[indexMat] = itemMat;
+        }
+    }
+
+    /// <summary>
+    /// 获取所有材质
+    /// </summary>
+    /// <returns></returns>
+    public Material[] GetAllBlockMaterial()
+    {
+        return arrayBlockMat;
+    }
+
+    public Material GetBlockMaterial(BlockMaterialEnum blockMaterial)
+    {
+        return arrayBlockMat[(int)blockMaterial];
     }
 
     /// <summary>

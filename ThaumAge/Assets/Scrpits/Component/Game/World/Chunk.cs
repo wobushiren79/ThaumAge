@@ -55,7 +55,7 @@ public class Chunk : BaseMonoBehaviour
         //获取自身相关组件引用
         meshRenderer = GetComponent<MeshRenderer>();
         meshFilter = GetComponent<MeshFilter>();
-        meshRenderer.materials = WorldCreateHandler.Instance.manager.GetAllMaterial();
+        meshRenderer.materials = BlockHandler.Instance.manager.GetAllBlockMaterial();
 
         chunkMesh = new Mesh();
         chunkMeshCollider = new Mesh();
@@ -413,6 +413,10 @@ public class Chunk : BaseMonoBehaviour
     public void GetBlockForLocal(Vector3Int localPosition, out Block block)
     {
         chunkData.GetBlockForLocal(localPosition, out block);
+    }
+    public void GetBlockForLocal(int x, int y, int z, out Block block)
+    {
+        chunkData.GetBlockForLocal(x, y, z, out block);
     }
 
     /// <summary>

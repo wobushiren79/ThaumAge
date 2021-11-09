@@ -9,7 +9,7 @@ public abstract class Block
 {
     public BlockTypeEnum blockType;    //方块类型
 
-    protected float uvWidth = 1 / 128f;
+    public float uvWidth = 1 / 128f;
 
     public Vector3 GetCenterPosition(Vector3Int localPosition)
     {
@@ -53,15 +53,15 @@ public abstract class Block
     /// <summary>
     /// 检测是否需要构建面
     /// </summary>
+    /// <param name="chunk"></param>
     /// <param name="localPosition"></param>
+    /// <param name="direction"></param>
     /// <param name="closeDirection"></param>
-    /// <param name="closeBlock"></param>
     /// <returns></returns>
-    public virtual bool CheckNeedBuildFace(Chunk chunk, Vector3Int localPosition, DirectionEnum direction, DirectionEnum closeDirection, out Block closeBlock)
+    public virtual bool CheckNeedBuildFace(Chunk chunk, Vector3Int localPosition, DirectionEnum direction, DirectionEnum closeDirection)
     {
-        closeBlock = null;
         if (localPosition.y == 0) return false;
-        GetCloseRotateBlockByDirection(chunk, localPosition, direction, closeDirection, out closeBlock, out Chunk closeBlockChunk);
+        GetCloseRotateBlockByDirection(chunk, localPosition, direction, closeDirection, out Block closeBlock, out Chunk closeBlockChunk);
         if (closeBlock == null || closeBlock.blockType == BlockTypeEnum.None)
         {
             if (closeBlockChunk)
@@ -83,11 +83,6 @@ public abstract class Block
             default:
                 return true;
         }
-    }
-
-    public virtual bool CheckNeedBuildFace(Chunk chunk, Vector3Int localPosition, DirectionEnum direction, DirectionEnum closeDirection)
-    {
-        return CheckNeedBuildFace(chunk, localPosition, direction, closeDirection, out Block closeBlock);
     }
 
     /// <summary>
@@ -231,7 +226,7 @@ public abstract class Block
             blockChunk = chunk.chunkData.chunkLeft;
             if (blockChunk != null)
             {
-                blockChunk.GetBlockForLocal(new Vector3Int(chunk.chunkData.chunkWidth - 1, localPosition.y, localPosition.z), out block);
+                blockChunk.GetBlockForLocal(chunk.chunkData.chunkWidth - 1, localPosition.y, localPosition.z, out block);
             }
         }
         else if (targetBlockLocalPosition.x > chunk.chunkData.chunkWidth - 1)
@@ -239,7 +234,7 @@ public abstract class Block
             blockChunk = chunk.chunkData.chunkRight;
             if (blockChunk != null)
             {
-                blockChunk.GetBlockForLocal(new Vector3Int(0, localPosition.y, localPosition.z), out block);
+                blockChunk.GetBlockForLocal(0, localPosition.y, localPosition.z, out block);
             }
         }
         else if (targetBlockLocalPosition.z < 0)
@@ -247,7 +242,7 @@ public abstract class Block
             blockChunk = chunk.chunkData.chunkForward;
             if (blockChunk != null)
             {
-                blockChunk.GetBlockForLocal(new Vector3Int(localPosition.x, chunk.chunkData.chunkWidth - 1, localPosition.z), out block);
+                blockChunk.GetBlockForLocal(localPosition.x, chunk.chunkData.chunkWidth - 1, localPosition.z, out block);
             }
         }
         else if (targetBlockLocalPosition.z > chunk.chunkData.chunkWidth - 1)
@@ -255,7 +250,7 @@ public abstract class Block
             blockChunk = chunk.chunkData.chunkBack;
             if (blockChunk != null)
             {
-                blockChunk.GetBlockForLocal(new Vector3Int(localPosition.x, 0, localPosition.z), out block);
+                blockChunk.GetBlockForLocal(localPosition.x, 0, localPosition.z, out block);
             }
         }
         else if (targetBlockLocalPosition.y > chunk.chunkData.chunkHeight - 1)

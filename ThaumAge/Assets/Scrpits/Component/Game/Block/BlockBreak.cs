@@ -86,12 +86,28 @@ public class BlockBreak : BaseMonoBehaviour
             effectData.timeForShow = 5f;
             effectData.effectPosition = position + Vector3.one * 0.5f;
             effectData.effectName = EffectInfo.BlockBreak_1;
-            EffectHandler.Instance.ShowEffect(effectData,(effect)=> 
-            {
-                //设置粒子颜色
-                EffectBlockBreak effectBlockBreak = (EffectBlockBreak)effect;
-                effectBlockBreak.SetEffectColor();
-            });
+            EffectHandler.Instance.ShowEffect(effectData, (effect) =>
+             {
+                 //设置粒子颜色
+                 Material matNomral = BlockHandler.Instance.manager.GetBlockMaterial(BlockMaterialEnum.Normal);
+                 Texture2D texBlock = matNomral.mainTexture as Texture2D;
+
+                 List<Vector2Int> uvPosition = block.blockInfo.GetUVPosition();
+                 int randomUV = Random.Range(0, uvPosition.Count);
+                 Vector2 uvStartPosition = new Vector2(texBlock.width * (uvPosition[randomUV].y * block.uvWidth), texBlock.width * (uvPosition[randomUV].x * block.uvWidth));
+
+                 int randomXStart = Random.Range((int)uvStartPosition.x, (int)(uvStartPosition.x + (texBlock.width * block.uvWidth)));
+                 int randomYStart = Random.Range((int)uvStartPosition.y, (int)(uvStartPosition.y + (texBlock.height * block.uvWidth)));
+
+                 int randomXEnd = Random.Range((int)uvStartPosition.x, (int)(uvStartPosition.x + (texBlock.width * block.uvWidth)));
+                 int randomYEnd = Random.Range((int)uvStartPosition.y, (int)(uvStartPosition.y + (texBlock.height * block.uvWidth)));
+
+                 Color colorStart = TextureUtil.GetPixel(texBlock, new Vector2Int(randomXStart, randomYStart));
+                 Color colorEnd = TextureUtil.GetPixel(texBlock, new Vector2Int(randomXEnd, randomYEnd));
+                 EffectBlockBreak effectBlockBreak = (EffectBlockBreak)effect;
+
+                 effectBlockBreak.SetEffectColor(colorStart, colorEnd);
+             });
         }
     }
 

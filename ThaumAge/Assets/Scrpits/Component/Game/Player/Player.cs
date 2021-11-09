@@ -43,7 +43,7 @@ public class Player : BaseMonoBehaviour
     public void InitPosition()
     {
         int maxHeight = WorldCreateHandler.Instance.manager.GetMaxHeightForWorldPosition(Mathf.RoundToInt(transform.position.x), Mathf.RoundToInt(transform.position.z));
-        transform.position = new Vector3(transform.position.x, maxHeight + 5, transform.position.z);
+        transform.position = new Vector3(transform.position.x, maxHeight + 10, transform.position.z);
     }
 
     /// <summary>

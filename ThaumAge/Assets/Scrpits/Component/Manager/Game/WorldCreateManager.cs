@@ -11,9 +11,6 @@ public class WorldCreateManager : BaseManager
     //存储着世界中所有的Chunk
     public Dictionary<long, Chunk> dicChunk = new Dictionary<long, Chunk>();
 
-    //存储着所有的材质
-    public Material[] arrayBlockMat = new Material[16];
-
     //所有待修改的方块
     public ConcurrentQueue<BlockBean> listUpdateBlock = new ConcurrentQueue<BlockBean>();
     //所有待修改的区块
@@ -36,19 +33,6 @@ public class WorldCreateManager : BaseManager
     public float time;
 
     protected static object lockForUpdateBlock = new object();
-
-    protected void Awake()
-    {
-        List<Material> listData = GetAllModel<Material>("block/mats", "Assets/Prefabs/Mats");
-        for (int i = 0; i < listData.Count; i++)
-        {
-            //按照名字中的下标 确认每个材质球的顺序
-            Material itemMat = listData[i];
-            string[] nameList = StringUtil.SplitBySubstringForArrayStr(itemMat.name, '_');
-            int indexMat = int.Parse(nameList[1]);
-            arrayBlockMat[indexMat] = itemMat;
-        }
-    }
 
     /// <summary>
     /// 清除所有区块
@@ -120,15 +104,6 @@ public class WorldCreateManager : BaseManager
     public void AddUpdateBlock(BlockBean blockData)
     {
         listUpdateBlock.Enqueue(blockData);
-    }
-
-    /// <summary>
-    /// 获取所有材质
-    /// </summary>
-    /// <returns></returns>
-    public Material[] GetAllMaterial()
-    {
-        return arrayBlockMat;
     }
 
     /// <summary>

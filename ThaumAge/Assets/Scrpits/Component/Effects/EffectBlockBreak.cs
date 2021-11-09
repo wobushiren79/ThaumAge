@@ -6,7 +6,7 @@ public class EffectBlockBreak : EffectBase
     /// <summary>
     /// 设置粒子颜色
     /// </summary>
-    public void SetEffectColor()
+    public void SetEffectColor(Color start, Color end)
     {
         if (!listPS.IsNull())
         {
@@ -14,14 +14,13 @@ public class EffectBlockBreak : EffectBase
             {
                 ParticleSystem itemPS = listPS[i];
                 ParticleSystem.MainModule settings = itemPS.main;
-                Gradient gradient = new Gradient();
-                gradient.colorKeys = new GradientColorKey[]
-                {
-                    new GradientColorKey(Color.red,0f),
-                    new GradientColorKey(Color.blue,0.3f),
-                    new GradientColorKey(Color.green,0.6f)
-                };
-                settings.startColor = new ParticleSystem.MinMaxGradient(gradient);
+                //Gradient gradient = new Gradient();
+                //gradient.colorKeys = new GradientColorKey[]
+                //{
+                //    new GradientColorKey(start,0f),
+                //    new GradientColorKey(end,1f)
+                //};
+                settings.startColor = new ParticleSystem.MinMaxGradient(start, end);
             }
         }
     }
