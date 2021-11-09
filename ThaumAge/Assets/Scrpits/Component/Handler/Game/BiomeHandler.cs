@@ -5,16 +5,72 @@ using UnityEngine;
 
 public class BiomeHandler : BaseHandler<BiomeHandler, BiomeManager>
 {
+    protected int maxBiomeData = 1024;
+    protected Dictionary<Vector3Int, BiomeMapData[,]> dicBiomeMapData;
+
     public Vector3 offset0;
     public Vector3 offset1;
     public Vector3 offset2;
     public float offsetBiome;
+    protected override void Awake()
+    {
+        base.Awake();
+        dicBiomeMapData = new Dictionary<Vector3Int, BiomeMapData[,]>(maxBiomeData);
+    }
+
     public void InitWorldBiomeSeed()
     {
         offsetBiome = Random.value * 1000;
         offset0 = new Vector3(Random.value * 1000, Random.value * 1000, Random.value * 1000);
         offset1 = new Vector3(Random.value * 1000, Random.value * 1000, Random.value * 1000);
         offset2 = new Vector3(Random.value * 1000, Random.value * 1000, Random.value * 1000);
+    }
+
+    public BiomeMapData[,] GetBiomeMapData(Chunk chunk)
+    {
+        if (dicBiomeMapData.TryGetValue(chunk.chunkData.positionForWorld, out BiomeMapData[,] mapData))
+        {
+            return mapData;
+        }
+        else
+        {
+            WorldTypeEnum worldType = WorldCreateHandler.Instance.manager.worldType;
+            //获取该世界的所有生态
+            Biome[] listBiome = manager.GetBiomeListByWorldType(worldType);
+            //获取一定范围内的生态点
+            Vector3Int[] listBiomeCenter = GetBiomeCenterPosition(chunk, 5, 10);
+
+            //如果已经超过 最大缓存 则清理一波 已经没有使用的chunk数据
+            if (dicBiomeMapData.Count > maxBiomeData)
+            {
+                List<Vector3Int> listClearData = new List<Vector3Int>();
+                foreach (var itemKey in dicBiomeMapData.Keys)
+                {
+                    Chunk itemChunk = WorldCreateHandler.Instance.manager.GetChunkForWorldPosition(itemKey);
+                    if (itemChunk == null)
+                    {
+                        listClearData.Add(itemKey);
+                    }
+                }
+                for (int i = 0; i < listClearData.Count; i++)
+                {
+                    dicBiomeMapData.Remove(listClearData[i]);
+                }
+            }
+            //添加新的数据
+            mapData = new BiomeMapData[chunk.chunkData.chunkWidth, chunk.chunkData.chunkHeight];
+            for (int x = 0; x < chunk.chunkData.chunkWidth; x++)
+            {
+                for (int z = 0; z < chunk.chunkData.chunkWidth; z++)
+                {
+                    BiomeMapData biomeMap = new BiomeMapData();
+                    biomeMap.InitData(new Vector3Int(x,0,z), listBiomeCenter, listBiome);
+                    mapData[x, z] = biomeMap;
+                }
+            }
+            dicBiomeMapData.Add(chunk.chunkData.positionForWorld, mapData);
+            return mapData;
+        }
     }
 
     /// <summary>
@@ -25,71 +81,32 @@ public class BiomeHandler : BaseHandler<BiomeHandler, BiomeManager>
     /// <param name="width"></param>
     /// <param name="height"></param>
     /// <returns></returns>
-    public BlockTypeEnum CreateBiomeBlockType(Chunk chunk, Vector3Int[] listBiomeCenterPosition, Biome[] listBiome, Vector3Int blockLocPosition)
+    public BlockTypeEnum CreateBiomeBlockType(Chunk chunk, BiomeMapData biomeMapData, Vector3Int blockLocPosition)
     {
         Vector3Int wPos = blockLocPosition + chunk.chunkData.positionForWorld;
-        //y坐标是否在Chunk内
-        if (wPos.y >= chunk.chunkData.chunkHeight)
-        {
-            return BlockTypeEnum.None;
-        }
-        //距离该方块最近的生态点距离
-        float minBiomeDis = float.MaxValue;
-        //距离该方块第二近的生态点距离
-        float secondMinBiomeDis = float.MaxValue;
-        //最靠近的生态点
-        Vector3Int minBiomePosition = Vector3Int.zero;
-        //便利中心点，寻找最靠近的生态点（维诺图）
-        for (int i = 0; i < listBiomeCenterPosition.Length; i++)
-        {
-            Vector3Int itemCenterPosition = listBiomeCenterPosition[i];
-            float tempDis = Vector3Int.Distance(itemCenterPosition, new Vector3Int(wPos.x, 0, wPos.z));
 
-            //如果小于最小距离
-            if (tempDis <= minBiomeDis)
-            {
-                minBiomePosition = itemCenterPosition;
-                minBiomeDis = tempDis;
-            }
-            //如果大于最小距离 并且小于第二小距离
-            else if (tempDis > minBiomeDis && tempDis <= secondMinBiomeDis)
-            {
-                secondMinBiomeDis = tempDis;
-            }
-        }
-
-        //获取该点的生态信息
-        //int worldSeed = WorldCreateHandler.Instance.manager.GetWorldSeed();
-        //RandomTools biomeRandom = RandomUtil.GetRandom(worldSeed, biomeCenterPosition.x, biomeCenterPosition.z);
-        //int biomeIndex = biomeRandom.NextInt(listBiome.Count);
-        int biomeIndex = WorldRandTools.Range(listBiome.Length, minBiomePosition);
-
-        Biome biome = listBiome[biomeIndex];
-        BiomeInfoBean biomeInfo = manager.GetBiomeInfo(biome.biomeType);
-
-        //获取当前位置方块随机生成的高度值
-        int genHeight = GetHeightData(wPos, biomeInfo);
         //当前方块位置高于随机生成的高度值时，当前方块类型为空
-        if (wPos.y > genHeight)
+        if (wPos.y > biomeMapData.maxHeight)
         {
             return BlockTypeEnum.None;
         }
 
+        int maxHeight = biomeMapData.maxHeight;
+        Biome biome = biomeMapData.biome;
         //边缘处理 逐渐减缓到最低高度
-        float offsetDis = secondMinBiomeDis - minBiomeDis;
-        if (wPos.y > (biomeInfo.minHeight)// 在基础高度-4以上
-            && offsetDis <= 20) //在20范围以内
+        if (wPos.y > maxHeight// 在基础高度-4以上
+            && biomeMapData.offsetDis <= 20) //在20范围以内
         {
-            genHeight = Mathf.CeilToInt((genHeight - biomeInfo.minHeight) / 20f) * Mathf.CeilToInt(offsetDis) + biomeInfo.minHeight;
+            maxHeight = Mathf.CeilToInt((biomeMapData.maxHeight - biome.biomeInfo.minHeight) / 20f) * Mathf.CeilToInt(biomeMapData.offsetDis) + maxHeight;
 
             //当前方块位置高于随机生成的高度值时，当前方块类型为空
-            if (wPos.y > genHeight)
+            if (wPos.y > maxHeight)
             {
                 return BlockTypeEnum.None;
             }
         }
 
-        BlockTypeEnum blockType = biome.GetBlockType(chunk, biomeInfo, genHeight, blockLocPosition, wPos);
+        BlockTypeEnum blockType = biome.GetBlockType(chunk, biome.biomeInfo, maxHeight, blockLocPosition, wPos);
 
         //获取方块
         return blockType;
@@ -103,10 +120,10 @@ public class BiomeHandler : BaseHandler<BiomeHandler, BiomeManager>
     /// <returns></returns>
     public int GetHeightData(Vector3Int wPos, BiomeInfoBean biomeInfo)
     {
-        return GetHeightData( wPos, biomeInfo.frequency, biomeInfo.amplitude, biomeInfo.minHeight);
+        return GetHeightData(wPos, biomeInfo.frequency, biomeInfo.amplitude, biomeInfo.minHeight);
     }
 
-    public int GetHeightData(Vector3Int wPos,float frequency,float amplitude,int minHeight)
+    public int GetHeightData(Vector3Int wPos, float frequency, float amplitude, int minHeight)
     {
         ////让随机种子，振幅，频率，应用于我们的噪音采样结果
         float x0 = (wPos.x + offset0.x) * frequency;

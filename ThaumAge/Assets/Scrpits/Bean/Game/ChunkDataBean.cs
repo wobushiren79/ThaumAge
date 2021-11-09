@@ -3,6 +3,55 @@ using UnityEngine;
 
 public class ChunkDataBean
 {
+    public Chunk _chunkLeft;
+    public Chunk chunkLeft
+    {
+        get
+        {
+            if (_chunkLeft == null)
+            {
+                _chunkLeft = WorldCreateHandler.Instance.manager.GetChunk(positionForWorld + new Vector3Int(-chunkWidth, 0, 0));
+            }
+            return _chunkLeft;
+        }
+    }
+    public Chunk _chunkRight;
+    public Chunk chunkRight
+    {
+        get
+        {
+            if (_chunkRight == null)
+            {
+                _chunkRight = WorldCreateHandler.Instance.manager.GetChunk(positionForWorld + new Vector3Int(chunkWidth, 0, 0));
+            }
+            return _chunkRight;
+        }
+    }
+    public Chunk _chunkForward;
+    public Chunk chunkForward
+    {
+        get
+        {
+            if (_chunkForward == null)
+            {
+                _chunkForward = WorldCreateHandler.Instance.manager.GetChunk(positionForWorld + new Vector3Int(0, 0, -chunkWidth));
+            }
+            return _chunkForward;
+        }
+    }
+    public Chunk _chunkBack;
+    public Chunk chunkBack
+    {
+        get
+        {
+            if (_chunkBack == null)
+            {
+                _chunkBack = WorldCreateHandler.Instance.manager.GetChunk(positionForWorld + new Vector3Int(0, 0, chunkWidth));
+            }
+            return _chunkBack;
+        }
+    }
+
     //所有的方块合集
     public Block[] arrayBlock;
     //所有方块的方向集合

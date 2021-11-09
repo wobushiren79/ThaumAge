@@ -7,10 +7,12 @@ using static BiomeCreateTool;
 public class Biome
 {
     public BiomeTypeEnum biomeType;
+    public BiomeInfoBean biomeInfo;
 
     public Biome(BiomeTypeEnum biomeType)
     {
         this.biomeType = biomeType;
+        biomeInfo = BiomeHandler.Instance.manager.GetBiomeInfo(this.biomeType);
     }
 
     /// <summary>

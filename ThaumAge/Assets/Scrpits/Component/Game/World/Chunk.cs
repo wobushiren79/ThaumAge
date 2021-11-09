@@ -510,28 +510,25 @@ public class Chunk : BaseMonoBehaviour
     /// <param name="chunk"></param>
     public void HandleForBaseBlock()
     {
-        WorldTypeEnum worldType = WorldCreateHandler.Instance.manager.worldType;
-        //获取该世界的所有生态
-        Biome[] listBiome = BiomeHandler.Instance.manager.GetBiomeListByWorldType(worldType);
-        //获取一定范围内的生态点
-        Vector3Int[] listBiomeCenter = BiomeHandler.Instance.GetBiomeCenterPosition(this, 5, 10);
+        //获取地图数据
+        BiomeMapData[,] mapData = BiomeHandler.Instance.GetBiomeMapData(this);
         //遍历map，生成其中每个Block的信息 
         //生成基础地形数据
         for (int x = 0; x < chunkData.chunkWidth; x++)
         {
-            for (int y = 0; y < chunkData.chunkHeight; y++)
+            for (int z = 0; z < chunkData.chunkWidth; z++)
             {
-                for (int z = 0; z < chunkData.chunkWidth; z++)
+                BiomeMapData biomeMapData = mapData[x, z];
+                for (int y = 0; y < chunkData.chunkHeight; y++)
                 {
                     Vector3Int position = new Vector3Int(x, y, z);
 
                     //获取方块类型
-                    BlockTypeEnum blockType = BiomeHandler.Instance.CreateBiomeBlockType(this, listBiomeCenter, listBiome, position);
-                    Block block = BlockHandler.Instance.manager.GetRegisterBlock(blockType);
+                    BlockTypeEnum blockType = BiomeHandler.Instance.CreateBiomeBlockType(this, biomeMapData, position);
                     //如果是空 则跳过
                     if (blockType == BlockTypeEnum.None)
                         continue;
-
+                    Block block = BlockHandler.Instance.manager.GetRegisterBlock(blockType);
                     //添加方块
                     chunkData.SetBlockForLocal(x, y, z, block, DirectionEnum.UP);
                 }

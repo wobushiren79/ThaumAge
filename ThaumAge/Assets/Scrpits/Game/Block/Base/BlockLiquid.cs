@@ -14,10 +14,10 @@ public class BlockLiquid : Block
     {
         closeBlock = null;
         if (localPosition.y == 0) return false;
-        GetCloseRotateBlockByDirection(chunk, localPosition, direction, closeDirection, out closeBlock, out bool hasChunk);
+        GetCloseRotateBlockByDirection(chunk, localPosition, direction, closeDirection, out closeBlock, out Chunk closeBlockChunk);
         if (closeBlock == null || closeBlock.blockType == BlockTypeEnum.None)
         {
-            if (hasChunk)
+            if (closeBlockChunk)
             {
                 //只是空气方块
                 return true;

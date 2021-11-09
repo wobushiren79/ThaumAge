@@ -61,10 +61,10 @@ public abstract class Block
     {
         closeBlock = null;
         if (localPosition.y == 0) return false;
-        GetCloseRotateBlockByDirection(chunk, localPosition, direction, closeDirection, out closeBlock, out bool hasChunk);
+        GetCloseRotateBlockByDirection(chunk, localPosition, direction, closeDirection, out closeBlock, out Chunk closeBlockChunk);
         if (closeBlock == null || closeBlock.blockType == BlockTypeEnum.None)
         {
-            if (hasChunk)
+            if (closeBlockChunk)
             {
                 //只是空气方块
                 return true;
@@ -171,23 +171,23 @@ public abstract class Block
 
     }
 
-    public virtual void GetCloseRotateBlockByDirection(Chunk chunk, Vector3Int localPosition, DirectionEnum direction, DirectionEnum getDirection, out Block closeBlock, out bool hasChunk)
+    public virtual void GetCloseRotateBlockByDirection(Chunk chunk, Vector3Int localPosition, DirectionEnum direction, DirectionEnum getDirection, out Block closeBlock, out Chunk blockChunk)
     {
         if (blockInfo.rotate_state == 0)
         {
             //不旋转
-            GetCloseBlockByDirection(chunk, localPosition, getDirection, out closeBlock, out hasChunk);
+            GetCloseBlockByDirection(chunk, localPosition, getDirection, out closeBlock, out blockChunk);
         }
         else if (blockInfo.rotate_state == 1)
         {
             //旋转
             DirectionEnum rotateDirection = GetRotateDirection(direction, getDirection);
-            GetCloseBlockByDirection(chunk, localPosition, rotateDirection, out closeBlock, out hasChunk);
+            GetCloseBlockByDirection(chunk, localPosition, rotateDirection, out closeBlock, out blockChunk);
         }
         else
         {
             closeBlock = BlockHandler.Instance.manager.GetRegisterBlock(BlockTypeEnum.None);
-            hasChunk = false;
+            blockChunk = null;
         }
     }
 
@@ -197,9 +197,10 @@ public abstract class Block
     /// <param name="getDirection"></param>
     /// <param name="closeBlock"></param>
     /// <param name="hasChunk"></param>
-    public virtual void GetCloseBlockByDirection(Chunk chunk, Vector3Int localPosition, DirectionEnum getDirection, out Block block, out bool hasChunk)
+    public virtual void GetCloseBlockByDirection(Chunk chunk, Vector3Int localPosition, DirectionEnum getDirection, out Block block, out Chunk blockChunk)
     {
         //获取目标的本地坐标
+        block = null;
         Vector3Int targetBlockLocalPosition;
         switch (getDirection)
         {
@@ -225,54 +226,47 @@ public abstract class Block
                 targetBlockLocalPosition = localPosition + Vector3Int.up;
                 break;
         }
-
-        if (targetBlockLocalPosition.x < 0 || targetBlockLocalPosition.x > chunk.chunkData.chunkWidth - 1
-            || targetBlockLocalPosition.z < 0 || targetBlockLocalPosition.z > chunk.chunkData.chunkWidth - 1)
+        if (targetBlockLocalPosition.x < 0)
         {
-            //如果超出边界
-            Vector3Int targetBlockWorldPosition;
-            Vector3Int worldPosition = chunk.chunkData.positionForWorld + localPosition;
-            switch (getDirection)
+            blockChunk = chunk.chunkData.chunkLeft;
+            if (blockChunk != null)
             {
-                case DirectionEnum.UP:
-                    targetBlockWorldPosition = worldPosition + Vector3Int.up;
-                    break;
-                case DirectionEnum.Down:
-                    targetBlockWorldPosition = worldPosition + Vector3Int.down;
-                    break;
-                case DirectionEnum.Left:
-                    targetBlockWorldPosition = worldPosition + Vector3Int.left;
-                    break;
-                case DirectionEnum.Right:
-                    targetBlockWorldPosition = worldPosition + Vector3Int.right;
-                    break;
-                case DirectionEnum.Forward:
-                    targetBlockWorldPosition = worldPosition + Vector3Int.back;
-                    break;
-                case DirectionEnum.Back:
-                    targetBlockWorldPosition = worldPosition + Vector3Int.forward;
-                    break;
-                default:
-                    targetBlockWorldPosition = worldPosition + Vector3Int.up;
-                    break;
+                blockChunk.GetBlockForLocal(new Vector3Int(chunk.chunkData.chunkWidth - 1, localPosition.y, localPosition.z), out block);
             }
-            //TODO 这里还可以优化一下 
-            WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(targetBlockWorldPosition, out block, out Chunk closeChunk);
-            if (closeChunk == null)
+        }
+        else if (targetBlockLocalPosition.x > chunk.chunkData.chunkWidth - 1)
+        {
+            blockChunk = chunk.chunkData.chunkRight;
+            if (blockChunk != null)
             {
-                hasChunk = false;
+                blockChunk.GetBlockForLocal(new Vector3Int(0, localPosition.y, localPosition.z), out block);
             }
-            else
+        }
+        else if (targetBlockLocalPosition.z < 0)
+        {
+            blockChunk = chunk.chunkData.chunkForward;
+            if (blockChunk != null)
             {
-                hasChunk = true;
+                blockChunk.GetBlockForLocal(new Vector3Int(localPosition.x, chunk.chunkData.chunkWidth - 1, localPosition.z), out block);
             }
-            return;
+        }
+        else if (targetBlockLocalPosition.z > chunk.chunkData.chunkWidth - 1)
+        {
+            blockChunk = chunk.chunkData.chunkBack;
+            if (blockChunk != null)
+            {
+                blockChunk.GetBlockForLocal(new Vector3Int(localPosition.x, 0, localPosition.z), out block);
+            }
+        }
+        else if (targetBlockLocalPosition.y > chunk.chunkData.chunkHeight - 1)
+        {
+            blockChunk = chunk;
         }
         else
         {
             //如果在同一个chunk内
             chunk.GetBlockForLocal(targetBlockLocalPosition, out block);
-            hasChunk = true;
+            blockChunk = chunk;
         }
     }
 
