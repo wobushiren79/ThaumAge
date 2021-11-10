@@ -22,7 +22,7 @@ public class Test : BaseMonoBehaviour
         vertices[0] = new Vector3(0, 0, 0);
         vertices[1] = new Vector3(0, 1, 0);
         vertices[2] = new Vector3(1, 1, 0);
-        vertices[3] = new Vector3(1, 0,0 );
+        vertices[3] = new Vector3(1, 0, 0);
         mesh.SetVertices(vertices);
 
         int[] tra = new int[30];
@@ -32,7 +32,7 @@ public class Test : BaseMonoBehaviour
         tra[3] = 0;
         tra[4] = 2;
         tra[5] = 3;
-        mesh.SetTriangles(tra,0);
+        mesh.SetTriangles(tra, 0);
         meshFilter.mesh = mesh;
     }
 
@@ -40,8 +40,67 @@ public class Test : BaseMonoBehaviour
     {
         if (GUILayout.Button("Test"))
         {
-
+            TimeTest5();
         }
+    }
+    public void TimeTest5()
+    {
+        int number = 10000000;
+        int x1 = 0;
+        int x2 = -1;
+        int x3 = 1;
+        Stopwatch stopwatch = TimeUtil.GetMethodTimeStart();
+        for (int i = 0; i < number; i++)
+        {
+            if (x1 == 0 || x2==-1 || x3==1)
+            {
+
+            }
+        }
+        TimeUtil.GetMethodTimeEnd("data1:", stopwatch);
+        stopwatch.Restart();
+
+        stopwatch.Start();
+        for (int i = 0; i < number; i++)
+        {
+            switch (x1) { 
+                case -1:
+                    break;
+            }
+
+            if (x1 == 1)
+            {
+
+            }else if (x2 == -2)
+            {
+
+            }
+            else if (x3 == 1)
+            {
+
+            }
+        }
+        TimeUtil.GetMethodTimeEnd("data2:", stopwatch);
+    }
+
+    public void TimeTest4()
+    {
+        int number = 100000;
+        Vector3Int startPosition = Vector3Int.one;
+        Stopwatch stopwatch = TimeUtil.GetMethodTimeStart();
+        for (int i = 0; i < number; i++)
+        {
+            Vector3Int target = startPosition + Vector3Int.one;
+        }
+        TimeUtil.GetMethodTimeEnd("data1:", stopwatch);
+        stopwatch.Restart();
+
+        stopwatch.Start();
+        for (int i = 0; i < number; i++)
+        {
+            Vector3Int target = new Vector3Int(startPosition.x + 1, startPosition.y + 1, startPosition.z + 1);
+        }
+        TimeUtil.GetMethodTimeEnd("data2:", stopwatch);
     }
 
     public void TimeTest3()

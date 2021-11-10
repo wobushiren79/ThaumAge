@@ -196,73 +196,127 @@ public abstract class Block
     {
         //获取目标的本地坐标
         block = null;
-        Vector3Int targetBlockLocalPosition;
+        int targetX = localPosition.x;
+        int targetY = localPosition.y;
+        int targetZ = localPosition.z;
         switch (getDirection)
         {
             case DirectionEnum.UP:
-                targetBlockLocalPosition = localPosition + Vector3Int.up;
+                targetY++;
                 break;
             case DirectionEnum.Down:
-                targetBlockLocalPosition = localPosition + Vector3Int.down;
+                targetY--;
                 break;
             case DirectionEnum.Left:
-                targetBlockLocalPosition = localPosition + Vector3Int.left;
+                targetX--;
                 break;
             case DirectionEnum.Right:
-                targetBlockLocalPosition = localPosition + Vector3Int.right;
+                targetX++;
                 break;
             case DirectionEnum.Forward:
-                targetBlockLocalPosition = localPosition + Vector3Int.back;
+                targetZ--;
                 break;
             case DirectionEnum.Back:
-                targetBlockLocalPosition = localPosition + Vector3Int.forward;
+                targetZ++;
                 break;
             default:
-                targetBlockLocalPosition = localPosition + Vector3Int.up;
                 break;
         }
-        if (targetBlockLocalPosition.x < 0)
+        int maxWidth = chunk.chunkData.chunkWidth - 1;
+        //int maxHeight = chunk.chunkData.chunkHeight - 1;
+        switch (targetX) 
         {
-            blockChunk = chunk.chunkData.chunkLeft;
-            if (blockChunk != null)
-            {
-                blockChunk.GetBlockForLocal(chunk.chunkData.chunkWidth - 1, localPosition.y, localPosition.z, out block);
-            }
+            case -1:
+                blockChunk = chunk.chunkData.chunkLeft;
+                if (blockChunk != null)
+                {
+                    blockChunk.GetBlockForLocal(maxWidth, localPosition.y, localPosition.z, out block);
+                }
+                break;
+            case 16:
+                blockChunk = chunk.chunkData.chunkRight;
+                if (blockChunk != null)
+                {
+                    blockChunk.GetBlockForLocal(0, localPosition.y, localPosition.z, out block);
+                }
+                break;
+            default:
+                switch (targetZ)
+                {
+                    case -1:
+                        blockChunk = chunk.chunkData.chunkForward;
+                        if (blockChunk != null)
+                        {
+                            blockChunk.GetBlockForLocal(localPosition.x, maxWidth, localPosition.z, out block);
+                        }
+                        break;
+                    case 16:
+                        blockChunk = chunk.chunkData.chunkBack;
+                        if (blockChunk != null)
+                        {
+                            blockChunk.GetBlockForLocal(localPosition.x, 0, localPosition.z, out block);
+                        }
+                        break;
+                    default:
+                        switch (targetY) 
+                        {
+                            case 256:
+                                blockChunk = chunk;
+                                break;
+                            default:
+                                //如果在同一个chunk内
+                                chunk.GetBlockForLocal(targetX, targetY, targetZ, out block);
+                                blockChunk = chunk;
+                                break;
+                        }
+                        break;
+                }
+                break;
         }
-        else if (targetBlockLocalPosition.x > chunk.chunkData.chunkWidth - 1)
-        {
-            blockChunk = chunk.chunkData.chunkRight;
-            if (blockChunk != null)
-            {
-                blockChunk.GetBlockForLocal(0, localPosition.y, localPosition.z, out block);
-            }
-        }
-        else if (targetBlockLocalPosition.z < 0)
-        {
-            blockChunk = chunk.chunkData.chunkForward;
-            if (blockChunk != null)
-            {
-                blockChunk.GetBlockForLocal(localPosition.x, chunk.chunkData.chunkWidth - 1, localPosition.z, out block);
-            }
-        }
-        else if (targetBlockLocalPosition.z > chunk.chunkData.chunkWidth - 1)
-        {
-            blockChunk = chunk.chunkData.chunkBack;
-            if (blockChunk != null)
-            {
-                blockChunk.GetBlockForLocal(localPosition.x, 0, localPosition.z, out block);
-            }
-        }
-        else if (targetBlockLocalPosition.y > chunk.chunkData.chunkHeight - 1)
-        {
-            blockChunk = chunk;
-        }
-        else
-        {
-            //如果在同一个chunk内
-            chunk.GetBlockForLocal(targetBlockLocalPosition, out block);
-            blockChunk = chunk;
-        }
+
+
+        //if (targetX < 0)
+        //{
+        //    blockChunk = chunk.chunkData.chunkLeft;
+        //    if (blockChunk != null)
+        //    {
+        //        blockChunk.GetBlockForLocal(maxWidth, localPosition.y, localPosition.z, out block);
+        //    }
+        //}
+        //else if (targetX > maxWidth)
+        //{
+        //    blockChunk = chunk.chunkData.chunkRight;
+        //    if (blockChunk != null)
+        //    {
+        //        blockChunk.GetBlockForLocal(0, localPosition.y, localPosition.z, out block);
+        //    }
+        //}
+        //else if (targetZ < 0)
+        //{
+        //    blockChunk = chunk.chunkData.chunkForward;
+        //    if (blockChunk != null)
+        //    {
+        //        blockChunk.GetBlockForLocal(localPosition.x, maxWidth, localPosition.z, out block);
+        //    }
+        //}
+        //else if (targetZ > maxWidth)
+        //{
+        //    blockChunk = chunk.chunkData.chunkBack;
+        //    if (blockChunk != null)
+        //    {
+        //        blockChunk.GetBlockForLocal(localPosition.x, 0, localPosition.z, out block);
+        //    }
+        //}
+        //else if (targetY > maxHeight)
+        //{
+        //    blockChunk = chunk;
+        //}
+        //else
+        //{
+        //    //如果在同一个chunk内
+        //    chunk.GetBlockForLocal(targetX, targetY, targetZ, out block);
+        //    blockChunk = chunk;
+        //}
     }
 
 
