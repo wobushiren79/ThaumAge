@@ -40,7 +40,7 @@ public class Test : BaseMonoBehaviour
     {
         if (GUILayout.Button("Test"))
         {
-            TimeTest5();
+            TimeTest4();
         }
     }
     public void TimeTest5()
@@ -100,7 +100,14 @@ public class Test : BaseMonoBehaviour
         {
             Vector3Int target = new Vector3Int(startPosition.x + 1, startPosition.y + 1, startPosition.z + 1);
         }
-        TimeUtil.GetMethodTimeEnd("data2:", stopwatch);
+        TimeUtil.GetMethodTimeEnd("data2:", stopwatch); stopwatch.Restart();
+
+        stopwatch.Start();
+        for (int i = 0; i < number; i++)
+        {
+            Vector3Int target = startPosition.AddXYZ(1,1,1);
+        }
+        TimeUtil.GetMethodTimeEnd("data3:", stopwatch);
     }
 
     public void TimeTest3()

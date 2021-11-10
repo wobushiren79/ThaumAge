@@ -34,21 +34,21 @@ public class BlockCube : Block
                 BuildFace(localPosition, direction, DirectionEnum.Left, localPosition, Vector3.up, Vector3.forward, false, chunkMeshData);
             //Right
             if (CheckNeedBuildFace(chunk, localPosition, direction, DirectionEnum.Right))
-                BuildFace(localPosition, direction, DirectionEnum.Right, localPosition + new Vector3Int(1, 0, 0), Vector3.up, Vector3.forward, true, chunkMeshData);
+                BuildFace(localPosition, direction, DirectionEnum.Right, new Vector3Int(localPosition.x + 1, localPosition.y, localPosition.z), Vector3.up, Vector3.forward, true, chunkMeshData);
 
             //Bottom
             if (CheckNeedBuildFace(chunk, localPosition, direction, DirectionEnum.Down))
                 BuildFace(localPosition, direction, DirectionEnum.Down, localPosition, Vector3.forward, Vector3.right, false, chunkMeshData);
             //Top
             if (CheckNeedBuildFace(chunk, localPosition, direction, DirectionEnum.UP))
-                BuildFace(localPosition, direction, DirectionEnum.UP, localPosition + new Vector3Int(0, 1, 0), Vector3.forward, Vector3.right, true, chunkMeshData);
+                BuildFace(localPosition, direction, DirectionEnum.UP, new Vector3Int(localPosition.x, localPosition.y + 1, localPosition.z), Vector3.forward, Vector3.right, true, chunkMeshData);
 
             //Forward
             if (CheckNeedBuildFace(chunk, localPosition, direction, DirectionEnum.Forward))
                 BuildFace(localPosition, direction, DirectionEnum.Forward, localPosition, Vector3.up, Vector3.right, true, chunkMeshData);
             //Back
             if (CheckNeedBuildFace(chunk, localPosition, direction, DirectionEnum.Back))
-                BuildFace(localPosition, direction, DirectionEnum.Back, localPosition + new Vector3Int(0, 0, 1), Vector3.up, Vector3.right, false, chunkMeshData);
+                BuildFace(localPosition, direction, DirectionEnum.Back, new Vector3Int(localPosition.x, localPosition.y, localPosition.z + 1), Vector3.up, Vector3.right, false, chunkMeshData);
         }
     }
 
@@ -146,11 +146,11 @@ public class BlockCube : Block
         }
         chunkMeshData.uvs[chunkMeshData.indexUV] = uvStartPosition;
         chunkMeshData.indexUV++;
-        chunkMeshData.uvs[chunkMeshData.indexUV] = uvStartPosition + new Vector2(0, uvWidth);
+        chunkMeshData.uvs[chunkMeshData.indexUV] = new Vector2(uvStartPosition.x, uvStartPosition.y + uvWidth);
         chunkMeshData.indexUV++;
-        chunkMeshData.uvs[chunkMeshData.indexUV] = uvStartPosition + new Vector2(uvWidth, uvWidth);
+        chunkMeshData.uvs[chunkMeshData.indexUV] = new Vector2(uvStartPosition.x + uvWidth, uvStartPosition.y + uvWidth);
         chunkMeshData.indexUV++;
-        chunkMeshData.uvs[chunkMeshData.indexUV] = uvStartPosition + new Vector2(uvWidth, 0);
+        chunkMeshData.uvs[chunkMeshData.indexUV] = new Vector2(uvStartPosition.x + uvWidth, uvStartPosition.y);
         chunkMeshData.indexUV++;
     }
 

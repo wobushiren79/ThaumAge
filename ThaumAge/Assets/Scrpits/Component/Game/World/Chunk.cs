@@ -335,11 +335,12 @@ public class Chunk : BaseMonoBehaviour
             //Physics.BakeMesh(chunkMeshTrigger.GetInstanceID(), false);
 
             //初始化动画
-            AnimForInit(() =>
-            {
-                //刷新寻路
-                PathFindingHandler.Instance.manager.RefreshPathFinding(this);
-            });
+            //AnimForInit(() =>
+            //{
+
+            //});
+            //刷新寻路
+            PathFindingHandler.Instance.manager.RefreshPathFinding(this);
         }
         catch (Exception e)
         {

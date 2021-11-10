@@ -38,4 +38,28 @@ public static class VectorExtension
     {
         self.SetPositionXYZ(self.position.x, self.position.y, z);
     }
+
+    public static Vector3 AddX(this Vector3 self,float add)
+    {
+        self.x += add;
+        return self;
+    }
+
+    public static Vector3Int AddX(this Vector3Int self, int add)
+    {
+        self.x += add;
+        return self;
+    }
+    public static Vector3Int AddXYZ(this Vector3Int self, int x,int y,int z)
+    {
+        self.x += x;
+        self.y += y;
+        self.z += z;
+        return self;
+    }
+    public static Vector3Int AddY(this Vector3Int self, int add)
+    {
+        self.y += add;
+        return self;
+    }
 }
