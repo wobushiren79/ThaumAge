@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.025366426, g: 0.04727799, b: 0.09663741, a: 1}
+  m_IndirectSpecularColor: {r: 0.025181327, g: 0.04346002, b: 0.07188439, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -398,11 +398,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 776616026688040897, guid: e48ab55db35bda74596243c14d61528a, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.000000019707867
+      value: 0.000000020300764
       objectReference: {fileID: 0}
     - target: {fileID: 776616026688040897, guid: e48ab55db35bda74596243c14d61528a, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.0000000013184316
+      value: 0.0000000013725692
       objectReference: {fileID: 0}
     - target: {fileID: 887023171156619031, guid: e48ab55db35bda74596243c14d61528a, type: 3}
       propertyPath: m_Lens.m_SensorSize.x
@@ -577,15 +577,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 86783665778207764, guid: 5c61e63afb4d67740855fd8526300679, type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0.049813703
+      value: -0.04981366
       objectReference: {fileID: 0}
     - target: {fileID: 86783665778207764, guid: 5c61e63afb4d67740855fd8526300679, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.000000002148128
+      value: -0.000000003261419
       objectReference: {fileID: 0}
     - target: {fileID: 86783665778207764, guid: 5c61e63afb4d67740855fd8526300679, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -1.07139214e-10
+      value: -1.6266384e-10
       objectReference: {fileID: 0}
     - target: {fileID: 657478345584511981, guid: 5c61e63afb4d67740855fd8526300679, type: 3}
       propertyPath: m_LocalPosition.y
@@ -617,11 +617,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4551723306302857165, guid: 5c61e63afb4d67740855fd8526300679, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -1e-45
+      value: 6.665001e-36
       objectReference: {fileID: 0}
     - target: {fileID: 4551723306302857165, guid: 5c61e63afb4d67740855fd8526300679, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0
+      value: 1.2684655e-36
       objectReference: {fileID: 0}
     - target: {fileID: 7311094454041643296, guid: 5c61e63afb4d67740855fd8526300679, type: 3}
       propertyPath: m_Lens.m_SensorSize.x
@@ -645,11 +645,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7866382187774823357, guid: 5c61e63afb4d67740855fd8526300679, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.000000018216618
+      value: 0.000000018856452
       objectReference: {fileID: 0}
     - target: {fileID: 7866382187774823357, guid: 5c61e63afb4d67740855fd8526300679, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.0000000014360619
+      value: 0.0000000014865017
       objectReference: {fileID: 0}
     - target: {fileID: 8105604369806812267, guid: 5c61e63afb4d67740855fd8526300679, type: 3}
       propertyPath: m_Lens.m_SensorSize.x
