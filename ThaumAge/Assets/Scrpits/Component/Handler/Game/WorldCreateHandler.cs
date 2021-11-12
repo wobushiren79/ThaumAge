@@ -301,28 +301,28 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
 #if UNITY_EDITOR
                 Stopwatch stopwatch = TimeUtil.GetMethodTimeStart();
 #endif
-                List<BlockBean> listNoChunkBlock = new List<BlockBean>();
+                List<BlockTempBean> listNoChunkBlock = new List<BlockTempBean>();
                 //添加修改的方块信息，用于树木或建筑群等用于多个区块的数据     
-                while (manager.listUpdateBlock.TryDequeue(out BlockBean itemBlock))
+                while (manager.listUpdateBlock.TryDequeue(out BlockTempBean itemBlock))
                 {
-                    Vector3Int positionBlockWorld = itemBlock.worldPosition;
-                    Chunk chunk = manager.GetChunkForWorldPosition(positionBlockWorld);
+                    Chunk chunk = manager.GetChunkForWorldPosition(itemBlock.worldX, itemBlock.worldZ);
                     if (chunk != null && chunk.isInit)
                     {
-                        Vector3Int positionBlockLocal = itemBlock.worldPosition - chunk.chunkData.positionForWorld;
-                        //需要重新设置一下本地坐标 之前没有记录本地坐标
-                        itemBlock.localPosition = positionBlockLocal;
                         //获取保存的数据
                         WorldDataBean worldData = chunk.GetWorldData();
-
-                        if (worldData == null || worldData.chunkData == null || worldData.chunkData.GetBlockData(positionBlockLocal, out BlockBean blockData))
+                        int localX = itemBlock.worldX - chunk.chunkData.positionForWorld.x;
+                        int localY = itemBlock.worldY;
+                        int localZ = itemBlock.worldZ - chunk.chunkData.positionForWorld.z;
+                        if (worldData == null 
+                        || worldData.chunkData == null 
+                        || worldData.chunkData.GetBlockData(localX, localY, localZ, out BlockBean blockData))
                         {
                             //如果有存档方块 则不替换
                         }
                         else
                         {
                             //设置方块
-                            chunk.SetBlockForLocal(positionBlockLocal, itemBlock.GetBlockType(), itemBlock.GetDirection(), false, false, false);
+                            chunk.SetBlockForLocal(new Vector3Int(localX, localY, localZ), itemBlock.GetBlockType(), itemBlock.GetDirection(), false, false, false);
                             //添加需要更新的chunk
                             manager.AddUpdateChunk(chunk);
                         }

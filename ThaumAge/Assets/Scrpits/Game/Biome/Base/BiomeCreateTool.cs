@@ -71,11 +71,11 @@ public class BiomeCreateTool
             int treeHeight = WorldRandTools.Range(treeData.minHeight, treeData.maxHeight);
             for (int i = 0; i < treeHeight + 2; i++)
             {
-                Vector3Int treeTrunkPosition = startPosition + Vector3Int.up * (i + 1);
+                Vector3Int treeTrunkPosition = new(startPosition.x, startPosition.y + (i + 1), startPosition.z);
                 //生成树干
                 if (i < treeHeight)
                 {
-                    BlockBean blockData = new BlockBean(treeTrunkPosition, treeData.treeTrunk);
+                    BlockTempBean blockData = new(treeData.treeTrunk, treeTrunkPosition.x, treeTrunkPosition.y, treeTrunkPosition.z);
                     WorldCreateHandler.Instance.manager.AddUpdateBlock(blockData);
                 }
                 if (i > 2)
@@ -104,7 +104,7 @@ public class BiomeCreateTool
                                 if (randomLeaves == 0)
                                     continue;
                             }
-                            BlockBean blockData = new BlockBean(treeTrunkPosition + new Vector3Int(x, 0, z), treeData.treeLeaves);
+                            BlockTempBean blockData = new(treeData.treeLeaves, treeTrunkPosition.x + x, 0, treeTrunkPosition.z + z);
                             WorldCreateHandler.Instance.manager.AddUpdateBlock(blockData);
                         }
                     }
@@ -152,7 +152,7 @@ public class BiomeCreateTool
                             if (leavesRate == 0)
                                 continue;
                         }
-                        BlockBean blockData = new BlockBean(treeTrunkPosition + new Vector3Int(x, 0, z), treeData.treeLeaves);
+                        BlockTempBean blockData = new(treeData.treeLeaves, treeTrunkPosition.x + x, treeTrunkPosition.y, treeTrunkPosition.z + z);
                         WorldCreateHandler.Instance.manager.AddUpdateBlock(blockData);
                     }
                 }
@@ -168,30 +168,30 @@ public class BiomeCreateTool
                 {
                     if (i == 0)
                     {
-                        BlockBean leftData_1 = new BlockBean(treeTrunkPosition + Vector3Int.left * 2, treeData.treeTrunk, DirectionEnum.Left);
+                        BlockTempBean leftData_1 = new(treeData.treeTrunk, DirectionEnum.Left, treeTrunkPosition.x - 2, treeTrunkPosition.y, treeTrunkPosition.z);
                         WorldCreateHandler.Instance.manager.AddUpdateBlock(leftData_1);
 
-                        BlockBean rightData_1 = new BlockBean(treeTrunkPosition + Vector3Int.right * 2, treeData.treeTrunk, DirectionEnum.Right);
+                        BlockTempBean rightData_1 = new(treeData.treeTrunk, DirectionEnum.Right, treeTrunkPosition.x + 2, treeTrunkPosition.y, treeTrunkPosition.z);
                         WorldCreateHandler.Instance.manager.AddUpdateBlock(rightData_1);
 
-                        BlockBean forwardData_1 = new BlockBean(treeTrunkPosition + Vector3Int.forward * 2, treeData.treeTrunk, DirectionEnum.Forward);
+                        BlockTempBean forwardData_1 = new(treeData.treeTrunk, DirectionEnum.Forward, treeTrunkPosition.x - 2, treeTrunkPosition.y, treeTrunkPosition.z + 2);
                         WorldCreateHandler.Instance.manager.AddUpdateBlock(forwardData_1);
 
-                        BlockBean backData_1 = new BlockBean(treeTrunkPosition + Vector3Int.back * 2, treeData.treeTrunk, DirectionEnum.Back);
+                        BlockTempBean backData_1 = new(treeData.treeTrunk, DirectionEnum.Back, treeTrunkPosition.x - 2, treeTrunkPosition.y, treeTrunkPosition.z - 2);
                         WorldCreateHandler.Instance.manager.AddUpdateBlock(backData_1);
                     }
 
 
-                    BlockBean leftData_2 = new BlockBean(treeTrunkPosition + new Vector3Int(1, 0, 1), treeData.treeTrunk);
+                    BlockTempBean leftData_2 = new(treeData.treeTrunk, treeTrunkPosition.x + 1, treeTrunkPosition.y, treeTrunkPosition.z + 1);
                     WorldCreateHandler.Instance.manager.AddUpdateBlock(leftData_2);
 
-                    BlockBean rightData_2 = new BlockBean(treeTrunkPosition + new Vector3Int(-1, 0, -1), treeData.treeTrunk);
+                    BlockTempBean rightData_2 = new(treeData.treeTrunk, treeTrunkPosition.x - 1, treeTrunkPosition.y, treeTrunkPosition.z - 1);
                     WorldCreateHandler.Instance.manager.AddUpdateBlock(rightData_2);
 
-                    BlockBean forwardData_2 = new BlockBean(treeTrunkPosition + new Vector3Int(1, 0, -1), treeData.treeTrunk);
+                    BlockTempBean forwardData_2 = new(treeData.treeTrunk, treeTrunkPosition.x + 1, treeTrunkPosition.y, treeTrunkPosition.z - 1);
                     WorldCreateHandler.Instance.manager.AddUpdateBlock(forwardData_2);
 
-                    BlockBean backData_2 = new BlockBean(treeTrunkPosition + new Vector3Int(-1, 0, 1), treeData.treeTrunk);
+                    BlockTempBean backData_2 = new(treeData.treeTrunk, treeTrunkPosition.x - 1, treeTrunkPosition.y, treeTrunkPosition.z + 1);
                     WorldCreateHandler.Instance.manager.AddUpdateBlock(backData_2);
                 }
 
@@ -200,42 +200,42 @@ public class BiomeCreateTool
                     int isCreate = WorldRandTools.Range(0, 4);
                     if (isCreate == 1)
                     {
-                        BlockBean leftData_1 = new BlockBean(treeTrunkPosition + Vector3Int.left * 2, treeData.treeTrunk, DirectionEnum.Left);
+                        BlockTempBean leftData_1 = new(treeData.treeTrunk, DirectionEnum.Left, treeTrunkPosition.x - 2, treeTrunkPosition.y, treeTrunkPosition.z);
                         WorldCreateHandler.Instance.manager.AddUpdateBlock(leftData_1);
                     }
                     isCreate = WorldRandTools.Range(0, 4);
                     if (isCreate == 1)
                     {
-                        BlockBean rightData_1 = new BlockBean(treeTrunkPosition + Vector3Int.right * 2, treeData.treeTrunk, DirectionEnum.Right);
+                        BlockTempBean rightData_1 = new(treeData.treeTrunk, DirectionEnum.Right, treeTrunkPosition.x + 2, treeTrunkPosition.y, treeTrunkPosition.z);
                         WorldCreateHandler.Instance.manager.AddUpdateBlock(rightData_1);
                     }
                     isCreate = WorldRandTools.Range(0, 4);
                     if (isCreate == 1)
                     {
-                        BlockBean forwardData_1 = new BlockBean(treeTrunkPosition + Vector3Int.forward * 2, treeData.treeTrunk, DirectionEnum.Forward);
+                        BlockTempBean forwardData_1 = new(treeData.treeTrunk, DirectionEnum.Forward, treeTrunkPosition.x, treeTrunkPosition.y, treeTrunkPosition.z + 2);
                         WorldCreateHandler.Instance.manager.AddUpdateBlock(forwardData_1);
                     }
                     isCreate = WorldRandTools.Range(0, 4);
                     if (isCreate == 1)
                     {
-                        BlockBean backData_1 = new BlockBean(treeTrunkPosition + Vector3Int.back * 2, treeData.treeTrunk, DirectionEnum.Back);
+                        BlockTempBean backData_1 = new(treeData.treeTrunk, DirectionEnum.Back, treeTrunkPosition.x, treeTrunkPosition.y, treeTrunkPosition.z - 2);
                         WorldCreateHandler.Instance.manager.AddUpdateBlock(backData_1);
                     }
                 }
 
-                BlockBean blockData = new BlockBean(treeTrunkPosition, treeData.treeTrunk);
+                BlockTempBean blockData = new(treeData.treeTrunk, treeTrunkPosition.x, treeTrunkPosition.y, treeTrunkPosition.z);
                 WorldCreateHandler.Instance.manager.AddUpdateBlock(blockData);
 
-                BlockBean leftData = new BlockBean(treeTrunkPosition + Vector3Int.left, treeData.treeTrunk);
+                BlockTempBean leftData = new(treeData.treeTrunk, treeTrunkPosition.x - 1, treeTrunkPosition.y, treeTrunkPosition.z);
                 WorldCreateHandler.Instance.manager.AddUpdateBlock(leftData);
 
-                BlockBean rightData = new BlockBean(treeTrunkPosition + Vector3Int.right, treeData.treeTrunk);
+                BlockTempBean rightData = new(treeData.treeTrunk, treeTrunkPosition.x + 1, treeTrunkPosition.y, treeTrunkPosition.z + 1);
                 WorldCreateHandler.Instance.manager.AddUpdateBlock(rightData);
 
-                BlockBean forwardData = new BlockBean(treeTrunkPosition + Vector3Int.forward, treeData.treeTrunk);
+                BlockTempBean forwardData = new(treeData.treeTrunk, treeTrunkPosition.x, treeTrunkPosition.y, treeTrunkPosition.z + 1);
                 WorldCreateHandler.Instance.manager.AddUpdateBlock(forwardData);
 
-                BlockBean backData = new BlockBean(treeTrunkPosition + Vector3Int.back, treeData.treeTrunk);
+                BlockTempBean backData = new(treeData.treeTrunk, treeTrunkPosition.x, treeTrunkPosition.y, treeTrunkPosition.z - 1);
                 WorldCreateHandler.Instance.manager.AddUpdateBlock(backData);
             }
         }
@@ -248,7 +248,7 @@ public class BiomeCreateTool
     /// <param name="treeData"></param>
     public static void AddTreeForWorld(Vector3Int startPosition, BiomeForTreeData treeData)
     {
-        Dictionary<Vector3Int, BlockBean> dicData = new Dictionary<Vector3Int, BlockBean>();
+        Dictionary<Vector3Int, BlockTempBean> dicData = new();
 
         //概率小于万分之一的用RandomTools
         int seed = WorldCreateHandler.Instance.manager.GetWorldSeed();
@@ -283,13 +283,13 @@ public class BiomeCreateTool
                         else
                         {
 
-                            Vector3Int tempTrunkPosition = treeTrunkPosition + new Vector3Int(x, 0, z);
+                            Vector3Int tempTrunkPosition = new(treeTrunkPosition.x + x, treeTrunkPosition.y, treeTrunkPosition.z + z);
                             //生成树干
-                            if (dicData.TryGetValue(tempTrunkPosition, out BlockBean valueTrunk))
+                            if (dicData.ContainsKey(tempTrunkPosition))
                             {
                                 dicData.Remove(tempTrunkPosition);
                             }
-                            BlockBean blockData = new BlockBean(tempTrunkPosition, treeData.treeTrunk);
+                            BlockTempBean blockData = new(treeData.treeTrunk, tempTrunkPosition.x, tempTrunkPosition.y, tempTrunkPosition.z);
                             dicData.Add(tempTrunkPosition, blockData);
                         }
 
@@ -370,14 +370,14 @@ public class BiomeCreateTool
                                         baseDirection = DirectionEnum.UP;
                                     }
 
-                                    Vector3Int addPosition = new Vector3Int(addPositionX, addPositionY, addPositionZ);
+                                    Vector3Int addPosition = new(addPositionX, addPositionY, addPositionZ);
                                     baseStartPosition += addPosition;
                                     //干
-                                    if (dicData.TryGetValue(baseStartPosition, out BlockBean valueTrunk))
+                                    if (dicData.ContainsKey(baseStartPosition))
                                     {
                                         dicData.Remove(baseStartPosition);
                                     }
-                                    BlockBean blockData = new BlockBean(baseStartPosition, treeData.treeTrunk, baseDirection);
+                                    BlockTempBean blockData = new(treeData.treeTrunk, baseDirection, baseStartPosition.x, baseStartPosition.y, baseStartPosition.z);
                                     dicData.Add(baseStartPosition, blockData);
                                 }
                             }
@@ -451,14 +451,14 @@ public class BiomeCreateTool
 
                                         int addPositionY = (branchDirectionY == 0 ? 1 : 0);
 
-                                        Vector3Int addPosition = new Vector3Int(addPositionX, addPositionY, addPositionZ);
+                                        Vector3Int addPosition = new(addPositionX, addPositionY, addPositionZ);
                                         branchStartPosition += addPosition;
                                         //干
-                                        if (dicData.TryGetValue(branchStartPosition, out BlockBean valueTrunk))
+                                        if (dicData.ContainsKey(branchStartPosition))
                                         {
                                             dicData.Remove(branchStartPosition);
                                         }
-                                        BlockBean blockData = new BlockBean(branchStartPosition, treeData.treeTrunk, branchDirection);
+                                        BlockTempBean blockData = new(treeData.treeTrunk, branchDirection, branchStartPosition.x, branchStartPosition.y, branchStartPosition.z);
                                         dicData.Add(branchStartPosition, blockData);
                                         //叶
                                         if (b % 4 == 0)
@@ -477,9 +477,9 @@ public class BiomeCreateTool
                                                             continue;
                                                         }
                                                         Vector3Int leavesPosition = branchStartPosition + new Vector3Int(leavesX, leavesY, leavesZ);
-                                                        if (!dicData.TryGetValue(leavesPosition, out BlockBean valueLeaves))
+                                                        if (!dicData.ContainsKey(leavesPosition))
                                                         {
-                                                            BlockBean blockLeavesData = new BlockBean(leavesPosition, treeData.treeLeaves);
+                                                            BlockTempBean blockLeavesData = new(treeData.treeLeaves, leavesPosition.x, leavesPosition.y, leavesPosition.z);
                                                             dicData.Add(leavesPosition, blockLeavesData);
                                                         }
                                                     }
@@ -520,7 +520,7 @@ public class BiomeCreateTool
                 //生成树干
                 if (i < treeHeight)
                 {
-                    BlockBean blockData = new BlockBean(treeTrunkPosition, treeData.treeTrunk);
+                    BlockTempBean blockData = new(treeData.treeTrunk, treeTrunkPosition.x, treeTrunkPosition.y, treeTrunkPosition.z);
                     WorldCreateHandler.Instance.manager.AddUpdateBlock(blockData);
                 }
                 if (i > 4 && i % 2 == 0)
@@ -542,7 +542,7 @@ public class BiomeCreateTool
                                 if (randomLeaves == 0)
                                     continue;
                             }
-                            BlockBean blockData = new BlockBean(treeTrunkPosition + new Vector3Int(x, 0, z), treeData.treeLeaves);
+                            BlockTempBean blockData = new(treeData.treeLeaves, treeTrunkPosition.x + x, treeTrunkPosition.y, treeTrunkPosition.z + z);
                             WorldCreateHandler.Instance.manager.AddUpdateBlock(blockData);
                         }
                     }
@@ -563,7 +563,7 @@ public class BiomeCreateTool
         int weedTypeNumber = WorldRandTools.Range(0, plantData.listPlantType.Count);
         if (addRate < plantData.addRate)
         {
-            BlockBean blockData = new BlockBean(startPosition + Vector3Int.up, plantData.listPlantType[weedTypeNumber]);
+            BlockTempBean blockData = new(plantData.listPlantType[weedTypeNumber], startPosition.x, startPosition.y + 1, startPosition.z);
             WorldCreateHandler.Instance.manager.AddUpdateBlock(blockData);
         }
     }
@@ -589,7 +589,7 @@ public class BiomeCreateTool
                 //生成树干
                 if (i < treeHeight)
                 {
-                    BlockBean blockData = new BlockBean(treeTrunkPosition, cactusData.cactusType);
+                    BlockTempBean blockData = new(cactusData.cactusType, treeTrunkPosition.x, treeTrunkPosition.y, treeTrunkPosition.z);
                     WorldCreateHandler.Instance.manager.AddUpdateBlock(blockData);
                 }
             }
@@ -609,7 +609,7 @@ public class BiomeCreateTool
         int flowerTypeNumber = WorldRandTools.Range(0, flowerData.listFlowerType.Count);
         if (addRate < flowerData.addRate)
         {
-            BlockBean blockData = new BlockBean(startPosition + Vector3Int.up, flowerData.listFlowerType[flowerTypeNumber]);
+            BlockTempBean blockData = new(flowerData.listFlowerType[flowerTypeNumber], startPosition.x, startPosition.y + 1, startPosition.z);
             WorldCreateHandler.Instance.manager.AddUpdateBlock(blockData);
         }
     }
@@ -654,7 +654,7 @@ public class BiomeCreateTool
                             {
                                 continue;
                             }
-                            BlockBean blockData = new BlockBean(tempPosition, BlockTypeEnum.None);
+                            BlockTempBean blockData = new(BlockTypeEnum.None, tempPosition.x, tempPosition.y, tempPosition.z);
                             WorldCreateHandler.Instance.manager.AddUpdateBlock(blockData);
                         }
                     }
@@ -728,7 +728,7 @@ public class BiomeCreateTool
         //                    {
         //                        continue;
         //                    }
-        //                    BlockBean blockData = new BlockBean(BlockTypeEnum.None, tempPosition);
+        //                    BlockTempBean blockData = new BlockTempBean(BlockTypeEnum.None, tempPosition);
         //                     WorldCreateHandler.Instance.manager.AddUpdateBlock(blockData);
         //                }
         //            }
@@ -767,7 +767,7 @@ public class BiomeCreateTool
                         {
                             continue;
                         }
-                        BlockBean blockData = new BlockBean(currentPosition, BlockTypeEnum.None);
+                        BlockTempBean blockData = new(BlockTypeEnum.None, currentPosition.x, currentPosition.y, currentPosition.z);
                         WorldCreateHandler.Instance.manager.AddUpdateBlock(blockData);
                     }
                 }
@@ -794,9 +794,9 @@ public class BiomeCreateTool
             Vector3Int treeDataPosition = startPosition;
             for (int i = 0; i < treeHeight; i++)
             {
-                int x = 0;
-                int y = 0;
-                int z = 0;
+                int x;
+                int y;
+                int z;
 
                 if (i <= 1)
                 {
@@ -822,7 +822,7 @@ public class BiomeCreateTool
                 {
                     direction = DirectionEnum.Forward;
                 }
-                BlockBean blockData = new BlockBean(treeDataPosition, treeData.treeTrunk, direction);
+                BlockTempBean blockData = new(treeData.treeTrunk, direction, treeDataPosition.x, treeDataPosition.y, treeDataPosition.z);
                 WorldCreateHandler.Instance.manager.AddUpdateBlock(blockData);
             }
         }
@@ -867,7 +867,7 @@ public class BiomeCreateTool
                 if (buildingData.randomRate == 0 || createRate < buildingData.randomRate)
                 {
                     VectorUtil.GetRotatedPosition(startPosition, targetPosition, new Vector3(0, randomAngle, 0));
-                    BlockBean blockData = new BlockBean(targetPosition, (BlockTypeEnum)buildingData.blockId, (DirectionEnum)buildingData.direction);
+                    BlockTempBean blockData = new((BlockTypeEnum)buildingData.blockId, (DirectionEnum)buildingData.direction, targetPosition.x, targetPosition.y, targetPosition.z);
                     WorldCreateHandler.Instance.manager.AddUpdateBlock(blockData);
                 }
             }

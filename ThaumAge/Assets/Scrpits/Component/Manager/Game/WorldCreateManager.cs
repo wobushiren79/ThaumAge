@@ -12,7 +12,7 @@ public class WorldCreateManager : BaseManager
     public Dictionary<long, Chunk> dicChunk = new Dictionary<long, Chunk>();
 
     //所有待修改的方块
-    public ConcurrentQueue<BlockBean> listUpdateBlock = new ConcurrentQueue<BlockBean>();
+    public ConcurrentQueue<BlockTempBean> listUpdateBlock = new ConcurrentQueue<BlockTempBean>();
     //所有待修改的区块
     public ConcurrentQueue<Chunk> listUpdateChunk = new ConcurrentQueue<Chunk>();
 
@@ -93,7 +93,7 @@ public class WorldCreateManager : BaseManager
     /// </summary>
     /// <param name="chunk"></param>
     /// <param name="type">0场景创建 1创景编辑</param>
-    public void AddUpdateDrawChunk(Chunk chunk,int type)
+    public void AddUpdateDrawChunk(Chunk chunk, int type)
     {
         if (type == 0)
         {
@@ -115,7 +115,7 @@ public class WorldCreateManager : BaseManager
     /// 增加需要更新的方块
     /// </summary>
     /// <param name="blockData"></param>
-    public void AddUpdateBlock(BlockBean blockData)
+    public void AddUpdateBlock(BlockTempBean blockData)
     {
         listUpdateBlock.Enqueue(blockData);
     }
@@ -137,13 +137,19 @@ public class WorldCreateManager : BaseManager
     /// <returns></returns>
     public Chunk GetChunk(Vector3Int position)
     {
-        int index = MathUtil.GetSingleIndexForTwo(position.x / widthChunk, position.z / widthChunk, worldSize);
+        return GetChunk(position.x, position.z);
+    }
+
+    public Chunk GetChunk(int x, int z)
+    {
+        int index = MathUtil.GetSingleIndexForTwo(x / widthChunk, z / widthChunk, worldSize);
         if (dicChunk.TryGetValue(index, out Chunk value))
         {
             return value;
         }
         return null;
     }
+
 
     /// <summary>
     /// 通过随意一个世界坐标 获取chunk
@@ -154,6 +160,12 @@ public class WorldCreateManager : BaseManager
     {
         Vector3Int chunkPosition = GetChunkPositionForWorldPosition(pos);
         return GetChunk(chunkPosition);
+    }
+
+    public Chunk GetChunkForWorldPosition(int x, int z)
+    {
+        GetChunkPositionForWorldPosition(x, z, out int outX, out int outZ);
+        return GetChunk(outX, outZ);
     }
 
     /// <summary>
@@ -168,6 +180,12 @@ public class WorldCreateManager : BaseManager
         posX = Mathf.FloorToInt((float)pos.x / widthChunk) * widthChunk;
         posZ = Mathf.FloorToInt((float)pos.z / widthChunk) * widthChunk;
         return new Vector3Int(posX, 0, posZ);
+    }
+
+    public void GetChunkPositionForWorldPosition(int x, int z, out int outX, out int outZ)
+    {
+        outX = Mathf.FloorToInt((float)x / widthChunk) * widthChunk;
+        outZ = Mathf.FloorToInt((float)z / widthChunk) * widthChunk;
     }
 
     /// <summary>
@@ -195,7 +213,7 @@ public class WorldCreateManager : BaseManager
             block = BlockHandler.Instance.manager.GetRegisterBlock(BlockTypeEnum.None);
             return;
         }
-        chunk.GetBlockForWorld(pos, out block,out bool isInside);
+        chunk.GetBlockForWorld(pos, out block, out bool isInside);
     }
 
     /// <summary>
