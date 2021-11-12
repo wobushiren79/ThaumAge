@@ -30,26 +30,38 @@ public class BlockCross : Block
     {
         base.AddTris(chunkMeshData);
 
-        int index = chunkMeshData.indexVert;
+        int index = chunkMeshData.vertsData.index;
         int triggerIndex = chunkMeshData.vertsTrigger.Count;
 
-        List<int> listTrisBothFaceSwing = chunkMeshData.dicTris[BlockMaterialEnum.BothFaceSwing];
+        ChunkMeshTrisData trisBothFaceSwingData = chunkMeshData.dicTris[(int)BlockMaterialEnum.BothFaceSwing];
 
-        listTrisBothFaceSwing.Add(index + 0);
-        listTrisBothFaceSwing.Add(index + 1);
-        listTrisBothFaceSwing.Add(index + 2);
+        trisBothFaceSwingData.tris[trisBothFaceSwingData.index] = index;
+        trisBothFaceSwingData.index++;
+        trisBothFaceSwingData.tris[trisBothFaceSwingData.index] = index + 1;
+        trisBothFaceSwingData.index++;
+        trisBothFaceSwingData.tris[trisBothFaceSwingData.index] = index + 2;
+        trisBothFaceSwingData.index++;
 
-        listTrisBothFaceSwing.Add(index + 0);
-        listTrisBothFaceSwing.Add(index + 2);
-        listTrisBothFaceSwing.Add(index + 3);
+        trisBothFaceSwingData.tris[trisBothFaceSwingData.index] = index;
+        trisBothFaceSwingData.index++;
+        trisBothFaceSwingData.tris[trisBothFaceSwingData.index] = index + 2;
+        trisBothFaceSwingData.index++;
+        trisBothFaceSwingData.tris[trisBothFaceSwingData.index] = index + 3;
+        trisBothFaceSwingData.index++;
 
-        listTrisBothFaceSwing.Add(index + 4);
-        listTrisBothFaceSwing.Add(index + 5);
-        listTrisBothFaceSwing.Add(index + 6);
+        trisBothFaceSwingData.tris[trisBothFaceSwingData.index] = index + 4;
+        trisBothFaceSwingData.index++;
+        trisBothFaceSwingData.tris[trisBothFaceSwingData.index] = index + 5;
+        trisBothFaceSwingData.index++;
+        trisBothFaceSwingData.tris[trisBothFaceSwingData.index] = index + 6;
+        trisBothFaceSwingData.index++;
 
-        listTrisBothFaceSwing.Add(index + 4);
-        listTrisBothFaceSwing.Add(index + 6);
-        listTrisBothFaceSwing.Add(index + 7);
+        trisBothFaceSwingData.tris[trisBothFaceSwingData.index] = index + 4;
+        trisBothFaceSwingData.index++;
+        trisBothFaceSwingData.tris[trisBothFaceSwingData.index] = index + 6;
+        trisBothFaceSwingData.index++;
+        trisBothFaceSwingData.tris[trisBothFaceSwingData.index] = index + 7;
+        trisBothFaceSwingData.index++;
 
         chunkMeshData.trisTrigger.Add(triggerIndex + 0);
         chunkMeshData.trisTrigger.Add(triggerIndex + 1);
@@ -88,45 +100,49 @@ public class BlockCross : Block
             //随机选一个
             uvStartPosition = Vector2.zero;
         }
-        chunkMeshData.uvs[chunkMeshData.indexUV] = uvStartPosition;
-        chunkMeshData.indexUV++;
-        chunkMeshData.uvs[chunkMeshData.indexUV] = uvStartPosition + new Vector2(0, uvWidth);
-        chunkMeshData.indexUV++;
-        chunkMeshData.uvs[chunkMeshData.indexUV] = uvStartPosition + new Vector2(uvWidth, uvWidth);
-        chunkMeshData.indexUV++;
-        chunkMeshData.uvs[chunkMeshData.indexUV] = uvStartPosition + new Vector2(uvWidth, 0);
-        chunkMeshData.indexUV++;
+        ChunkMeshUVData uvsData = chunkMeshData.uvsData;
 
-        chunkMeshData.uvs[chunkMeshData.indexUV] = uvStartPosition;
-        chunkMeshData.indexUV++;
-        chunkMeshData.uvs[chunkMeshData.indexUV] = uvStartPosition + new Vector2(0, uvWidth);
-        chunkMeshData.indexUV++;
-        chunkMeshData.uvs[chunkMeshData.indexUV] = uvStartPosition + new Vector2(uvWidth, uvWidth);
-        chunkMeshData.indexUV++;
-        chunkMeshData.uvs[chunkMeshData.indexUV] = uvStartPosition + new Vector2(uvWidth, 0);
-        chunkMeshData.indexUV++;
+        uvsData.uvs[uvsData.index] = uvStartPosition;
+        uvsData.index++;
+        uvsData.uvs[uvsData.index] = uvStartPosition + new Vector2(0, uvWidth);
+        uvsData.index++;
+        uvsData.uvs[uvsData.index] = uvStartPosition + new Vector2(uvWidth, uvWidth);
+        uvsData.index++;
+        uvsData.uvs[uvsData.index] = uvStartPosition + new Vector2(uvWidth, 0);
+        uvsData.index++;
+
+        uvsData.uvs[uvsData.index] = uvStartPosition;
+        uvsData.index++;
+        uvsData.uvs[uvsData.index] = uvStartPosition + new Vector2(0, uvWidth);
+        uvsData.index++;
+        uvsData.uvs[uvsData.index] = uvStartPosition + new Vector2(uvWidth, uvWidth);
+        uvsData.index++;
+        uvsData.uvs[uvsData.index] = uvStartPosition + new Vector2(uvWidth, 0);
+        uvsData.index++;
     }
 
     public override void AddVerts(Vector3Int localPosition, DirectionEnum direction, Vector3 corner, ChunkMeshData chunkMeshData)
     {
         base.AddVerts(localPosition, direction, corner, chunkMeshData);
-        AddVert(localPosition, direction, chunkMeshData.verts, chunkMeshData.indexVert, corner + new Vector3(0.5f, 0, 0));
-        chunkMeshData.indexVert++;
-        AddVert(localPosition, direction, chunkMeshData.verts, chunkMeshData.indexVert, corner + new Vector3(0.5f, 1, 0));
-        chunkMeshData.indexVert++;
-        AddVert(localPosition, direction, chunkMeshData.verts, chunkMeshData.indexVert, corner + new Vector3(0.5f, 1, 1));
-        chunkMeshData.indexVert++;
-        AddVert(localPosition, direction, chunkMeshData.verts, chunkMeshData.indexVert, corner + new Vector3(0.5f, 0, 1));
-        chunkMeshData.indexVert++;
+        ChunkMeshVertsData vertsData = chunkMeshData.vertsData;
 
-        AddVert(localPosition, direction, chunkMeshData.verts, chunkMeshData.indexVert, corner + new Vector3(0, 0, 0.5f));
-        chunkMeshData.indexVert++;
-        AddVert(localPosition, direction, chunkMeshData.verts, chunkMeshData.indexVert, corner + new Vector3(0, 1, 0.5f));
-        chunkMeshData.indexVert++;
-        AddVert(localPosition, direction, chunkMeshData.verts, chunkMeshData.indexVert, corner + new Vector3(1, 1, 0.5f));
-        chunkMeshData.indexVert++;
-        AddVert(localPosition, direction, chunkMeshData.verts, chunkMeshData.indexVert, corner + new Vector3(1, 0, 0.5f));
-        chunkMeshData.indexVert++;
+        AddVert(localPosition, direction, vertsData.verts, vertsData.index, corner + new Vector3(0.5f, 0, 0));
+        vertsData.index++;
+        AddVert(localPosition, direction, vertsData.verts, vertsData.index, corner + new Vector3(0.5f, 1, 0));
+        vertsData.index++;
+        AddVert(localPosition, direction, vertsData.verts, vertsData.index, corner + new Vector3(0.5f, 1, 1));
+        vertsData.index++;
+        AddVert(localPosition, direction, vertsData.verts, vertsData.index, corner + new Vector3(0.5f, 0, 1));
+        vertsData.index++;
+
+        AddVert(localPosition, direction, vertsData.verts, vertsData.index, corner + new Vector3(0, 0, 0.5f));
+        vertsData.index++;
+        AddVert(localPosition, direction, vertsData.verts, vertsData.index, corner + new Vector3(0, 1, 0.5f));
+        vertsData.index++;
+        AddVert(localPosition, direction, vertsData.verts, vertsData.index, corner + new Vector3(1, 1, 0.5f));
+        vertsData.index++;
+        AddVert(localPosition, direction, vertsData.verts, vertsData.index, corner + new Vector3(1, 0, 0.5f));
+        vertsData.index++;
 
 
         AddVert(localPosition, direction, chunkMeshData.vertsTrigger, corner + new Vector3(0.5f, 0, 0));

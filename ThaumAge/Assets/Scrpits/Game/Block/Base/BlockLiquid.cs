@@ -103,14 +103,16 @@ public class BlockLiquid : Block
 
     public virtual void AddVerts(Vector3Int localPosition, DirectionEnum direction, Vector3 corner, Vector3 up, Vector3 right, ChunkMeshData chunkMeshData)
     {
-        AddVert(localPosition, direction, chunkMeshData.verts, chunkMeshData.indexVert, corner);
-        chunkMeshData.indexVert++;
-        AddVert(localPosition, direction, chunkMeshData.verts, chunkMeshData.indexVert, corner + up);
-        chunkMeshData.indexVert++;
-        AddVert(localPosition, direction, chunkMeshData.verts, chunkMeshData.indexVert, corner + up + right);
-        chunkMeshData.indexVert++;
-        AddVert(localPosition, direction, chunkMeshData.verts, chunkMeshData.indexVert, corner + right);
-        chunkMeshData.indexVert++;
+        ChunkMeshVertsData vertsData = chunkMeshData.vertsData;
+
+        AddVert(localPosition, direction, vertsData.verts, vertsData.index, corner);
+        vertsData.index++;
+        AddVert(localPosition, direction, vertsData.verts, vertsData.index, corner + up);
+        vertsData.index++;
+        AddVert(localPosition, direction, vertsData.verts, vertsData.index, corner + up + right);
+        vertsData.index++;
+        AddVert(localPosition, direction, vertsData.verts, vertsData.index, corner + right);
+        vertsData.index++;
 
         AddVert(localPosition, direction, chunkMeshData.vertsTrigger, corner);
         AddVert(localPosition, direction, chunkMeshData.vertsTrigger, corner + up);
@@ -120,30 +122,38 @@ public class BlockLiquid : Block
 
     public virtual void AddUVs(DirectionEnum direction, ChunkMeshData chunkMeshData)
     {
-        chunkMeshData.uvs[chunkMeshData.indexUV] = Vector2.zero;
-        chunkMeshData.indexUV++;
-        chunkMeshData.uvs[chunkMeshData.indexUV] = Vector2.zero + new Vector2(0, 1);
-        chunkMeshData.indexUV++;
-        chunkMeshData.uvs[chunkMeshData.indexUV] = Vector2.zero + new Vector2(1, 1);
-        chunkMeshData.indexUV++;
-        chunkMeshData.uvs[chunkMeshData.indexUV] = Vector2.zero + new Vector2(1, 0);
-        chunkMeshData.indexUV++;
+        ChunkMeshUVData uvsData = chunkMeshData.uvsData;
+
+        uvsData.uvs[uvsData.index] = Vector2.zero;
+        uvsData.index++;
+        uvsData.uvs[uvsData.index] = Vector2.zero + new Vector2(0, 1);
+        uvsData.index++;
+        uvsData.uvs[uvsData.index] = Vector2.zero + new Vector2(1, 1);
+        uvsData.index++;
+        uvsData.uvs[uvsData.index] = Vector2.zero + new Vector2(1, 0);
+        uvsData.index++;
     }
 
     public override void AddTris(ChunkMeshData chunkMeshData)
     {
-        int index = chunkMeshData.indexVert;
+        int index = chunkMeshData.vertsData.index;
         int triggerIndex = chunkMeshData.vertsTrigger.Count;
 
-        List<int> listTrisWater = chunkMeshData.dicTris[BlockMaterialEnum.Water];
+        ChunkMeshTrisData trisWater = chunkMeshData.dicTris[(int)BlockMaterialEnum.Water];
 
-        listTrisWater.Add(index + 0);
-        listTrisWater.Add(index + 1);
-        listTrisWater.Add(index + 2);
+        trisWater.tris[trisWater.index] = index;
+        trisWater.index++;
+        trisWater.tris[trisWater.index] = index+1;
+        trisWater.index++;
+        trisWater.tris[trisWater.index] = index+2;
+        trisWater.index++;
 
-        listTrisWater.Add(index + 0);
-        listTrisWater.Add(index + 2);
-        listTrisWater.Add(index + 3);
+        trisWater.tris[trisWater.index] = index;
+        trisWater.index++;
+        trisWater.tris[trisWater.index] = index+2;
+        trisWater.index++;
+        trisWater.tris[trisWater.index] = index+3;
+        trisWater.index++;
 
         chunkMeshData.trisTrigger.Add(triggerIndex + 0);
         chunkMeshData.trisTrigger.Add(triggerIndex + 1);

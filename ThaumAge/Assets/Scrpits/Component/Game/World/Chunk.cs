@@ -287,26 +287,28 @@ public class Chunk : BaseMonoBehaviour
 
             chunkMesh.subMeshCount = meshRenderer.materials.Length;
             //定点数判断
-            if (chunkMeshData == null || chunkMeshData.verts.Length <= 3)
+            if (chunkMeshData == null || chunkMeshData.vertsData.verts.Length <= 3)
             {
                 isDrawMesh = false;
                 return;
             }
 
             //设置顶点
-            chunkMesh.SetVertices(chunkMeshData.verts);
+            chunkMesh.SetVertices(chunkMeshData.vertsData.verts);
             //设置UV
-            chunkMesh.SetUVs(0, chunkMeshData.uvs);
+            chunkMesh.SetUVs(0, chunkMeshData.uvsData.uvs);
 
             //设置三角（单面渲染，双面渲染,液体）
-            foreach (var itemTris in chunkMeshData.dicTris)
+            for (int i=0;i<chunkMeshData.dicTris.Length;i++)
             {
-                chunkMesh.SetTriangles(itemTris.Value, (int)itemTris.Key);
+                ChunkMeshTrisData trisData = chunkMeshData.dicTris[i];
+                chunkMesh.SetTriangles(trisData.tris, i);
             }
 
+
             //碰撞数据设置
-            chunkMeshCollider.SetVertices(chunkMeshData.vertsCollider);
-            chunkMeshCollider.SetTriangles(chunkMeshData.trisCollider, 0);
+            chunkMeshCollider.SetVertices(chunkMeshData.vertsColliderData.verts);
+            chunkMeshCollider.SetTriangles(chunkMeshData.trisColliderData.tris, 0);
 
             //触发数据设置
             chunkMeshTrigger.SetVertices(chunkMeshData.vertsTrigger);

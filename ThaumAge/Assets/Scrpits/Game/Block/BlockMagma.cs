@@ -7,17 +7,23 @@ public class BlockMagma : BlockWater
 {
     public override void AddTris(ChunkMeshData chunkMeshData)
     {
-        int index = chunkMeshData.indexVert;
+        int index = chunkMeshData.vertsData.index;
 
-        List<int> listTrisMagma = chunkMeshData.dicTris[BlockMaterialEnum.Magma];
+        ChunkMeshTrisData trisMagmaData = chunkMeshData.dicTris[(int)BlockMaterialEnum.Magma];
 
-        listTrisMagma.Add(index + 0);
-        listTrisMagma.Add(index + 1);
-        listTrisMagma.Add(index + 2);
+        trisMagmaData.tris[trisMagmaData.index] = index;
+        trisMagmaData.index++;
+        trisMagmaData.tris[trisMagmaData.index] = index+1;
+        trisMagmaData.index++;
+        trisMagmaData.tris[trisMagmaData.index] = index+2;
+        trisMagmaData.index++;
 
-        listTrisMagma.Add(index + 0);
-        listTrisMagma.Add(index + 2);
-        listTrisMagma.Add(index + 3);
+        trisMagmaData.tris[trisMagmaData.index] = index;
+        trisMagmaData.index++;
+        trisMagmaData.tris[trisMagmaData.index] = index+2;
+        trisMagmaData.index++;
+        trisMagmaData.tris[trisMagmaData.index] = index+3;
+        trisMagmaData.index++;
     }
 
     public override void InitBlock(Chunk chunk, Vector3Int localPosition, DirectionEnum direction)

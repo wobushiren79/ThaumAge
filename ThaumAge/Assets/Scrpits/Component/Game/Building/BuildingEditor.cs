@@ -29,28 +29,27 @@ public class BuildingEditor : BaseMonoBehaviour
         ChunkMeshData chunkMeshData = new ChunkMeshData(null);
         //初始化数据
         List<BlockMaterialEnum> blockMaterialsEnum = EnumUtil.GetEnumValue<BlockMaterialEnum>();
-        for (int i = 0; i < blockMaterialsEnum.Count; i++)
+        for (int i = 0; i < blockMaterialsEnum.Count + 1; i++)
         {
-            BlockMaterialEnum blockMaterial = blockMaterialsEnum[i];
-            chunkMeshData.dicTris.Add(blockMaterial, new List<int>());
+            chunkMeshData.dicTris[i] = new ChunkMeshTrisData(100);
         }
 
         blockCube.BuildBlockNoCheck(null,Vector3Int.zero, direction, chunkMeshData);
 
         mesh = new Mesh();
 
-        Vector3[] arrayVertsData = chunkMeshData.verts;
-        for (int i = 0; i < arrayVertsData.Length; i++)
+        ChunkMeshVertsData vertsData = chunkMeshData.vertsData;
+        for (int i = 0; i < vertsData.verts.Length; i++)
         {
-            Vector3 itemPosition = arrayVertsData[i];
+            Vector3 itemPosition = vertsData.verts[i];
             //向下移动0.5个单位
             itemPosition -= new Vector3(0.5f, 0.5f, 0.5f);
-            arrayVertsData[i] = itemPosition;
+            vertsData.verts[i] = itemPosition;
         }
 
-        mesh.SetVertices(arrayVertsData);
-        mesh.SetTriangles(chunkMeshData.dicTris[BlockMaterialEnum.Normal], 0);
-        mesh.SetUVs(0, chunkMeshData.uvs);
+        mesh.SetVertices(vertsData.verts);
+        mesh.SetTriangles(chunkMeshData.dicTris[(int)BlockMaterialEnum.Normal].tris, 0);
+        mesh.SetUVs(0, chunkMeshData.uvsData.uvs);
         meshFilter.mesh = mesh;
     }
 }

@@ -89,23 +89,25 @@ public class BlockCube : Block
     {
         base.AddVerts(localPosition, direction, corner, chunkMeshData);
 
-        AddVert(localPosition, direction, chunkMeshData.verts, chunkMeshData.indexVert, corner);
-        chunkMeshData.indexVert++;
-        AddVert(localPosition, direction, chunkMeshData.verts, chunkMeshData.indexVert, corner + up);
-        chunkMeshData.indexVert++;
-        AddVert(localPosition, direction, chunkMeshData.verts, chunkMeshData.indexVert, corner + up + right);
-        chunkMeshData.indexVert++;
-        AddVert(localPosition, direction, chunkMeshData.verts, chunkMeshData.indexVert, corner + right);
-        chunkMeshData.indexVert++;
+        ChunkMeshVertsData vertsData = chunkMeshData.vertsData;
+        AddVert(localPosition, direction, vertsData.verts, vertsData.index, corner);
+        vertsData.index++;
+        AddVert(localPosition, direction, vertsData.verts, vertsData.index, corner + up);
+        vertsData.index++;
+        AddVert(localPosition, direction, vertsData.verts, vertsData.index, corner + up + right);
+        vertsData.index++;
+        AddVert(localPosition, direction, vertsData.verts, vertsData.index, corner + right);
+        vertsData.index++;
 
-        AddVert(localPosition, direction, chunkMeshData.vertsCollider, chunkMeshData.indexVertCollider, corner);
-        chunkMeshData.indexVertCollider++;
-        AddVert(localPosition, direction, chunkMeshData.vertsCollider, chunkMeshData.indexVertCollider, corner + up);
-        chunkMeshData.indexVertCollider++;
-        AddVert(localPosition, direction, chunkMeshData.vertsCollider, chunkMeshData.indexVertCollider, corner + up + right);
-        chunkMeshData.indexVertCollider++;
-        AddVert(localPosition, direction, chunkMeshData.vertsCollider, chunkMeshData.indexVertCollider, corner + right);
-        chunkMeshData.indexVertCollider++;
+        ChunkMeshVertsData vertsColliderData = chunkMeshData.vertsColliderData;
+        AddVert(localPosition, direction, vertsColliderData.verts, vertsColliderData.index, corner);
+        vertsColliderData.index++;
+        AddVert(localPosition, direction, vertsColliderData.verts, vertsColliderData.index, corner + up);
+        vertsColliderData.index++;
+        AddVert(localPosition, direction, vertsColliderData.verts, vertsColliderData.index, corner + up + right);
+        vertsColliderData.index++;
+        AddVert(localPosition, direction, vertsColliderData.verts, vertsColliderData.index, corner + right);
+        vertsColliderData.index++;
     }
 
     public void AddUVs(DirectionEnum direction, ChunkMeshData chunkMeshData)
@@ -144,71 +146,85 @@ public class BlockCube : Block
         {
             uvStartPosition = Vector2.zero;
         }
-        chunkMeshData.uvs[chunkMeshData.indexUV] = uvStartPosition;
-        chunkMeshData.indexUV++;
-        chunkMeshData.uvs[chunkMeshData.indexUV] = new Vector2(uvStartPosition.x, uvStartPosition.y + uvWidth);
-        chunkMeshData.indexUV++;
-        chunkMeshData.uvs[chunkMeshData.indexUV] = new Vector2(uvStartPosition.x + uvWidth, uvStartPosition.y + uvWidth);
-        chunkMeshData.indexUV++;
-        chunkMeshData.uvs[chunkMeshData.indexUV] = new Vector2(uvStartPosition.x + uvWidth, uvStartPosition.y);
-        chunkMeshData.indexUV++;
+        ChunkMeshUVData uvsData = chunkMeshData.uvsData;
+        uvsData.uvs[uvsData.index] = uvStartPosition;
+        uvsData.index++;
+        uvsData.uvs[uvsData.index] = new Vector2(uvStartPosition.x, uvStartPosition.y + uvWidth);
+        uvsData.index++;
+        uvsData.uvs[uvsData.index] = new Vector2(uvStartPosition.x + uvWidth, uvStartPosition.y + uvWidth);
+        uvsData.index++;
+        uvsData.uvs[uvsData.index] = new Vector2(uvStartPosition.x + uvWidth, uvStartPosition.y);
+        uvsData.index++;
     }
 
     public void AddTris(bool reversed, ChunkMeshData chunkMeshData)
     {
         base.AddTris(chunkMeshData);
 
-        int index = chunkMeshData.indexVert;
-        int indexCollider = chunkMeshData.indexVertCollider;
+        int index = chunkMeshData.vertsData.index;
+        int indexCollider = chunkMeshData.vertsColliderData.index;
 
-        List<int> listTrisNormal = chunkMeshData.dicTris[BlockMaterialEnum.Normal];
+        ChunkMeshTrisData trisData = chunkMeshData.dicTris[(int)BlockMaterialEnum.Normal];
+        ChunkMeshTrisData trisColliderData = chunkMeshData.trisColliderData;
         if (reversed)
         {
-            listTrisNormal.Add(index + 0);
-            listTrisNormal.Add(index + 1);
-            listTrisNormal.Add(index + 2);
+            trisData.tris[trisData.index] = index;
+            trisData.index++;
+            trisData.tris[trisData.index] = index+1;
+            trisData.index++;
+            trisData.tris[trisData.index] = index+2;
+            trisData.index++;
 
-            listTrisNormal.Add(index + 0);
-            listTrisNormal.Add(index + 2);
-            listTrisNormal.Add(index + 3);
+            trisData.tris[trisData.index] = index;
+            trisData.index++;
+            trisData.tris[trisData.index] = index+2;
+            trisData.index++;
+            trisData.tris[trisData.index] = index+3;
+            trisData.index++;
 
-            chunkMeshData.trisCollider[chunkMeshData.indexTrisCollider] = indexCollider + 0;
-            chunkMeshData.indexTrisCollider++;
-            chunkMeshData.trisCollider[chunkMeshData.indexTrisCollider] = indexCollider + 1;
-            chunkMeshData.indexTrisCollider++;
-            chunkMeshData.trisCollider[chunkMeshData.indexTrisCollider] = indexCollider + 2;
-            chunkMeshData.indexTrisCollider++;
+            trisColliderData.tris[trisColliderData.index] = indexCollider;
+            trisColliderData.index++;
+            trisColliderData.tris[trisColliderData.index] = indexCollider + 1;
+            trisColliderData.index++;
+            trisColliderData.tris[trisColliderData.index] = indexCollider + 2;
+            trisColliderData.index++;
 
-            chunkMeshData.trisCollider[chunkMeshData.indexTrisCollider] = indexCollider + 0;
-            chunkMeshData.indexTrisCollider++;
-            chunkMeshData.trisCollider[chunkMeshData.indexTrisCollider] = indexCollider + 2;
-            chunkMeshData.indexTrisCollider++;
-            chunkMeshData.trisCollider[chunkMeshData.indexTrisCollider] = indexCollider + 3;
-            chunkMeshData.indexTrisCollider++;
+            trisColliderData.tris[trisColliderData.index] = indexCollider;
+            trisColliderData.index++;
+            trisColliderData.tris[trisColliderData.index] = indexCollider + 2;
+            trisColliderData.index++;
+            trisColliderData.tris[trisColliderData.index] = indexCollider + 3;
+            trisColliderData.index++;
         }
         else
         {
-            listTrisNormal.Add(index + 0);
-            listTrisNormal.Add(index + 2);
-            listTrisNormal.Add(index + 1);
+            trisData.tris[trisData.index] = index;
+            trisData.index++;
+            trisData.tris[trisData.index] = index + 2;
+            trisData.index++;
+            trisData.tris[trisData.index] = index + 1;
+            trisData.index++;
 
-            listTrisNormal.Add(index + 0);
-            listTrisNormal.Add(index + 3);
-            listTrisNormal.Add(index + 2);
+            trisData.tris[trisData.index] = index;
+            trisData.index++;
+            trisData.tris[trisData.index] = index + 3;
+            trisData.index++;
+            trisData.tris[trisData.index] = index + 2;
+            trisData.index++;
 
-            chunkMeshData.trisCollider[chunkMeshData.indexTrisCollider] = indexCollider + 0;
-            chunkMeshData.indexTrisCollider++;
-            chunkMeshData.trisCollider[chunkMeshData.indexTrisCollider] = indexCollider + 2;
-            chunkMeshData.indexTrisCollider++;
-            chunkMeshData.trisCollider[chunkMeshData.indexTrisCollider] = indexCollider + 1;
-            chunkMeshData.indexTrisCollider++;
+            trisColliderData.tris[trisColliderData.index] = indexCollider;
+            trisColliderData.index++;
+            trisColliderData.tris[trisColliderData.index] = indexCollider + 2;
+            trisColliderData.index++;
+            trisColliderData.tris[trisColliderData.index] = indexCollider + 1;
+            trisColliderData.index++;
 
-            chunkMeshData.trisCollider[chunkMeshData.indexTrisCollider] = indexCollider + 0;
-            chunkMeshData.indexTrisCollider++;
-            chunkMeshData.trisCollider[chunkMeshData.indexTrisCollider] = indexCollider + 3;
-            chunkMeshData.indexTrisCollider++;
-            chunkMeshData.trisCollider[chunkMeshData.indexTrisCollider] = indexCollider + 2;
-            chunkMeshData.indexTrisCollider++;
+            trisColliderData.tris[trisColliderData.index] = indexCollider;
+            trisColliderData.index++;
+            trisColliderData.tris[trisColliderData.index] = indexCollider + 3;
+            trisColliderData.index++;
+            trisColliderData.tris[trisColliderData.index] = indexCollider + 2;
+            trisColliderData.index++;
         }
     }
 
