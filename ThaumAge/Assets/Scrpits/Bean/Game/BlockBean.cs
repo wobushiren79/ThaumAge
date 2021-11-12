@@ -82,50 +82,7 @@ public class BlockBean
     }
 }
 
-//public struct BlockBean
-//{
-//    //方块的本地坐标
-//    public Vector3Int localPosition;
-//    //方块的世界坐标
-//    public Vector3Int worldPosition;
+public struct BlockTempBean
+{
 
-//    //方块类型
-//    public ushort blockId;
-//    //方向
-//    public byte direction;
-//    //方块数据
-//    public string meta;
-
-//    public BlockBean(Vector3Int worldPosition, BlockTypeEnum blockType = BlockTypeEnum.None, DirectionEnum direction = DirectionEnum.UP)
-//    {
-//        this.localPosition = Vector3Int.zero;
-//        this.worldPosition = worldPosition;
-
-//        this.blockId = (ushort)blockType;
-//        this.direction = (byte)direction;
-//        this.meta = null;
-//    }
-
-//    public BlockBean(Vector3Int localPosition, Vector3Int worldPosition, BlockTypeEnum blockType = BlockTypeEnum.None, DirectionEnum direction = DirectionEnum.UP)
-//    {
-//        this.localPosition = localPosition;
-//        this.worldPosition = worldPosition;
-
-//        this.blockId = (ushort)blockType;
-//        this.direction = (byte)direction;
-//        this.meta = null;
-//    }
-
-//    public BlockTypeEnum GetBlockType()
-//    {
-//        return (BlockTypeEnum)blockId;
-//    }
-
-//    public DirectionEnum GetDirection()
-//    {
-//        if (direction == 0)
-//            return DirectionEnum.UP;
-//        return (DirectionEnum)direction;
-//    }
-
-//}
+}

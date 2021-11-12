@@ -35,7 +35,6 @@ public class Chunk : BaseMonoBehaviour
     public bool isBuildChunk = false;
     public bool isDrawMesh = false;
     public bool isFirstDraw = true;
-    public bool isAnimForInit = false;
 
     //渲染数据
     protected ChunkMeshData chunkMeshData;
@@ -79,9 +78,6 @@ public class Chunk : BaseMonoBehaviour
         meshFilter.mesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
         meshCollider.sharedMesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
         meshTrigger.sharedMesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
-
-        Physics.BakeMesh(chunkMeshCollider.GetInstanceID(), false);
-        Physics.BakeMesh(chunkMeshTrigger.GetInstanceID(), false);
     }
 
     protected float eventUpdateTime = 0;
@@ -352,29 +348,6 @@ public class Chunk : BaseMonoBehaviour
             isDrawMesh = false;
         }
 
-    }
-
-    /// <summary>
-    /// 初始化动画
-    /// </summary>
-    public void AnimForInit(Action callBack)
-    {
-        if (isFirstDraw)
-        {
-            isFirstDraw = false;
-            //动画
-            transform.DOLocalMoveY(-50, 1).From().OnComplete(() =>
-            {
-                callBack?.Invoke();
-                isAnimForInit = true;
-            });
-            callBack?.Invoke();
-        }
-        else
-        {
-            if (isAnimForInit)
-                callBack?.Invoke();
-        }
     }
 
     public void GetBlockForWorld(Vector3Int blockWorldPosition, out Block block, out DirectionEnum direction, out bool isInside)

@@ -81,12 +81,10 @@ public class BiomeHandler : BaseHandler<BiomeHandler, BiomeManager>
     /// <param name="width"></param>
     /// <param name="height"></param>
     /// <returns></returns>
-    public BlockTypeEnum CreateBiomeBlockType(Chunk chunk, BiomeMapData biomeMapData, Vector3Int blockLocPosition)
+    public BlockTypeEnum CreateBiomeBlockType(Chunk chunk, BiomeMapData biomeMapData, Vector3Int blockLocalPosition)
     {
-        Vector3Int wPos = blockLocPosition + chunk.chunkData.positionForWorld;
-
         //当前方块位置高于随机生成的高度值时，当前方块类型为空
-        if (wPos.y > biomeMapData.maxHeight)
+        if (blockLocalPosition.y > biomeMapData.maxHeight)
         {
             return BlockTypeEnum.None;
         }
@@ -94,19 +92,19 @@ public class BiomeHandler : BaseHandler<BiomeHandler, BiomeManager>
         int maxHeight = biomeMapData.maxHeight;
         Biome biome = biomeMapData.biome;
         //边缘处理 逐渐减缓到最低高度
-        if (wPos.y > maxHeight// 在基础高度-4以上
+        if (blockLocalPosition.y > maxHeight// 在基础高度-4以上
             && biomeMapData.offsetDis <= 20) //在20范围以内
         {
             maxHeight = Mathf.CeilToInt((biomeMapData.maxHeight - biome.biomeInfo.minHeight) / 20f) * Mathf.CeilToInt(biomeMapData.offsetDis) + maxHeight;
 
             //当前方块位置高于随机生成的高度值时，当前方块类型为空
-            if (wPos.y > maxHeight)
+            if (blockLocalPosition.y > maxHeight)
             {
                 return BlockTypeEnum.None;
             }
         }
-
-        BlockTypeEnum blockType = biome.GetBlockType(chunk, biome.biomeInfo, maxHeight, blockLocPosition, wPos);
+        Vector3Int wPos = blockLocalPosition + chunk.chunkData.positionForWorld;
+        BlockTypeEnum blockType = biome.GetBlockType(chunk, biome.biomeInfo, maxHeight, blockLocalPosition, wPos);
 
         //获取方块
         return blockType;

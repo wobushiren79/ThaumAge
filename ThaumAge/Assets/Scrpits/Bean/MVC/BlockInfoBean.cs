@@ -16,15 +16,23 @@ public class BlockInfoBean : BaseBean
 
     public string model_name;
 
-    public int shape;
+    public int shape;//形状
 
-    public string uv_position;
+    public string uv_position;//uv位置
 
-    public float weight;
+    public float weight;//重量
 
-    public int rotate_state;
+    public int rotate_state;//是否能旋转 0不能旋转 1能旋转
 
-    public int life;
+    public int life;//生命值
+
+    public int plough_state;//耕地状态 0不能耕地 1能耕地
+
+    public int plough_change;//耕地后改变的方块
+
+    public int plant_state;//种植状态 0不能种植 1能种植
+
+
 
     /// <summary>
     /// 获取方块类型

@@ -11,6 +11,8 @@ public enum ItemsTypeEnum
     Gloves = 13,//手套
     Shoes = 14,//鞋子
 
+    Hoe = 21,//锄头
+
 }
 
 

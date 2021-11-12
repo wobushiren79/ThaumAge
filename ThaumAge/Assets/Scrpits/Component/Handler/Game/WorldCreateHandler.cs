@@ -18,6 +18,7 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
         if (GameHandler.Instance.manager.GetGameState() == GameStateEnum.Gaming)
         {
             HandleForWorldUpdate();
+            HandleForDrawChunk();
         }
     }
 
@@ -192,23 +193,33 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
     /// </summary>
     public void HandleForDrawChunk()
     {
-        if (manager.listUpdateDrawChunk.Count > 0)
+        if (manager.listUpdateDrawChunkInit.Count > 0)
         {
-            Chunk updateDrawChunk = manager.listUpdateDrawChunk.Peek();
-            if (updateDrawChunk != null && updateDrawChunk.isInit && updateDrawChunk.isAnimForInit)
+            Chunk updateDrawChunk = manager.listUpdateDrawChunkInit.Dequeue();
+            if (updateDrawChunk != null && updateDrawChunk.isInit)
             {
                 if (!updateDrawChunk.isBuildChunk)
                 {
-                    updateDrawChunk = manager.listUpdateDrawChunk.Dequeue();
+                    updateDrawChunk.DrawMesh();
+                }
+            }
+        }
+        if (manager.listUpdateDrawChunkEditor.Count > 0)
+        {
+            //按照顺序依次渲染 编辑的区块 
+            Chunk updateDrawChunk = manager.listUpdateDrawChunkEditor.Peek();
+            if (updateDrawChunk != null && updateDrawChunk.isInit)
+            {  
+                if (!updateDrawChunk.isBuildChunk)
+                {
+                    updateDrawChunk = manager.listUpdateDrawChunkEditor.Dequeue();
                     //构建修改过的区块
                     updateDrawChunk.DrawMesh();
-                    //继续下一个
-                    HandleForDrawChunk();
                 }
             }
             else
             {
-                manager.listUpdateDrawChunk.Dequeue();
+                manager.listUpdateDrawChunkEditor.Dequeue();
             }
         }
     }
@@ -233,7 +244,7 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
             }
             if (isOrderDraw)
             {
-                manager.AddUpdateDrawChunk(updateChunk);
+                manager.AddUpdateDrawChunk(updateChunk,1);
             }
             //构建修改过的区块
             updateChunk.BuildChunkForAsync(() =>
@@ -241,11 +252,7 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
                 if (!isOrderDraw)
                 {
                     //构建修改过的区块
-                    updateChunk.DrawMesh();
-                }
-                else
-                {
-                    HandleForDrawChunk();
+                    manager.AddUpdateDrawChunk(updateChunk, 0);
                 }
             });
         }

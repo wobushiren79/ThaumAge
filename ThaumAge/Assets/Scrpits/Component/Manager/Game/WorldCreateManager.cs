@@ -15,8 +15,11 @@ public class WorldCreateManager : BaseManager
     public ConcurrentQueue<BlockBean> listUpdateBlock = new ConcurrentQueue<BlockBean>();
     //所有待修改的区块
     public ConcurrentQueue<Chunk> listUpdateChunk = new ConcurrentQueue<Chunk>();
-    //待绘制的区块
-    public Queue<Chunk> listUpdateDrawChunk = new Queue<Chunk>();
+
+    //待绘制的区块 用于角色修改
+    public Queue<Chunk> listUpdateDrawChunkEditor = new Queue<Chunk>();
+    //待绘制的区块 用于场景初始化
+    public Queue<Chunk> listUpdateDrawChunkInit = new Queue<Chunk>();
 
     //世界种子
     protected int worldSeed;
@@ -89,11 +92,22 @@ public class WorldCreateManager : BaseManager
     /// 增加待绘制区块
     /// </summary>
     /// <param name="chunk"></param>
-    public void AddUpdateDrawChunk(Chunk chunk)
+    /// <param name="type">0场景创建 1创景编辑</param>
+    public void AddUpdateDrawChunk(Chunk chunk,int type)
     {
-        if (!listUpdateDrawChunk.Contains(chunk))
+        if (type == 0)
         {
-            listUpdateDrawChunk.Enqueue(chunk);
+            if (!listUpdateDrawChunkInit.Contains(chunk))
+            {
+                listUpdateDrawChunkInit.Enqueue(chunk);
+            }
+        }
+        else if (type == 1)
+        {
+            if (!listUpdateDrawChunkEditor.Contains(chunk))
+            {
+                listUpdateDrawChunkEditor.Enqueue(chunk);
+            }
         }
     }
 

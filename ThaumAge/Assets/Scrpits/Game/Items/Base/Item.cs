@@ -23,7 +23,17 @@ public class Item
     /// </summary>
     public virtual void UseTarget()
     {
-
+        Player player = GameHandler.Instance.manager.player;
+        if (player.playerRay.RayToChunkBlock(out RaycastHit hit, out Vector3Int targetBlockPosition))
+        {
+            //展示目标位置
+            GameHandler.Instance.manager.playerTargetBlock.Show(targetBlockPosition);
+        }
+        else
+        {
+            //展示目标位置
+            GameHandler.Instance.manager.playerTargetBlock.Hide();
+        }
     }
 
     /// <summary>
