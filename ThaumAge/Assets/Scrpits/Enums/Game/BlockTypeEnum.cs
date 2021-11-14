@@ -10,8 +10,12 @@ public enum BlockTypeEnum
     StoneVolcanic = 7,//鳶刓旂
 
     Grass = 101,    //翌華
-    Grass_Magic = 102,    //堄藹翌華
-    Grass_Wild = 103,    //酸翌華
+    GrassMagic = 102,    //堄藹翌華
+    GrassWild = 103,    //酸翌華
+
+    PloughGrass = 201,//較華
+    PloughMagic = 202,//堄藹較華
+    PloughWild = 203,//酸較華
 
     TreeOak = 1001,//砎躂
     TreeSilver = 1002,//窅攷

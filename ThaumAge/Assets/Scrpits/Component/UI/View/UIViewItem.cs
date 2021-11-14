@@ -66,14 +66,24 @@ public partial class UIViewItem : BaseUIView, IBeginDragHandler, IDragHandler, I
     {
         if (ui_TVNumber == null)
             return;
-        if (number == int.MaxValue)
+
+        if (maxNumber == 1)
         {
-            //如果是无限 则不显示数量
-            ui_TVNumber.gameObject.SetActive(false);
+            ui_TVNumber.ShowObj(false);
         }
         else
         {
-            ui_TVNumber.gameObject.SetActive(true);
+            ui_TVNumber.ShowObj(true);
+        }
+        //如果是无限 则不显示数量
+        //如果上限是1 则不显示数量
+        if (number == int.MaxValue || maxNumber == 1)
+        {
+            ui_TVNumber.ShowObj(false);
+        }
+        else
+        {
+            ui_TVNumber.ShowObj(true);
         }
         ui_TVNumber.text = number + "";
         if (number == maxNumber)

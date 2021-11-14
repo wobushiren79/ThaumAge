@@ -40,9 +40,70 @@ public class Test : BaseMonoBehaviour
     {
         if (GUILayout.Button("Test"))
         {
-            TimeTest4();
+            TimeTest6();
         }
     }
+
+    public void TimeTest6()
+    {
+        int number = 16 * 16 * 256;
+        List<BlockBean> listData1 = new List<BlockBean>();
+        List<BlockBean> listData2 = new List<BlockBean>();
+        Stopwatch stopwatch = TimeUtil.GetMethodTimeStart();
+
+        for (int i = 0; i < number; i++)
+        {
+            BlockBean blockBean1 = new BlockBean();
+            int id = 123;
+            int di = 1;
+            string remakr = "remak";
+            blockBean1.meta = $"{id}|{di}|{remakr}";
+            listData1.Add(blockBean1);
+        }
+        TimeUtil.GetMethodTimeEnd("data1:", stopwatch);
+        stopwatch.Restart();
+
+        stopwatch.Start();
+        for (int i = 0; i < number; i++)
+        {
+            BlockBean blockBean1 = new BlockBean();
+            blockBean1.meta = JsonUtil.ToJson(new TestBean() { id = 123, di = 1, remark = "remak" });
+            listData2.Add(blockBean1);
+        }
+        TimeUtil.GetMethodTimeEnd("data2:", stopwatch);
+        stopwatch.Restart();
+
+        stopwatch.Start();
+        for (int i = 0; i < listData1.Count; i++)
+        {
+            BlockBean itemData= listData1[i];
+            string[] dataList = StringUtil.SplitBySubstringForArrayStr(itemData.meta, '|');
+            int id = int.Parse(dataList[0]);
+            int di = int.Parse(dataList[1]);
+            string remak = dataList[2];
+        }
+        TimeUtil.GetMethodTimeEnd("data1find:", stopwatch);
+        stopwatch.Restart();
+
+        stopwatch.Start();
+        for (int i = 0; i < listData2.Count; i++)
+        {
+            BlockBean itemData = listData2[2];
+            TestBean test = JsonUtil.FromJson<TestBean>(itemData.meta);
+            int id = test.id;
+            int di = test.di;
+            string remak = test.remark;
+        }
+        TimeUtil.GetMethodTimeEnd("data2find:", stopwatch);
+    }
+
+    public class TestBean
+    {
+        public int id;
+        public int di;
+        public string remark;
+    }
+
     public void TimeTest5()
     {
         int number = 10000000;
@@ -52,7 +113,7 @@ public class Test : BaseMonoBehaviour
         Stopwatch stopwatch = TimeUtil.GetMethodTimeStart();
         for (int i = 0; i < number; i++)
         {
-            if (x1 == 0 || x2==-1 || x3==1)
+            if (x1 == 0 || x2 == -1 || x3 == 1)
             {
 
             }
@@ -63,7 +124,8 @@ public class Test : BaseMonoBehaviour
         stopwatch.Start();
         for (int i = 0; i < number; i++)
         {
-            switch (x1) { 
+            switch (x1)
+            {
                 case -1:
                     break;
             }
@@ -71,7 +133,8 @@ public class Test : BaseMonoBehaviour
             if (x1 == 1)
             {
 
-            }else if (x2 == -2)
+            }
+            else if (x2 == -2)
             {
 
             }
@@ -105,7 +168,7 @@ public class Test : BaseMonoBehaviour
         stopwatch.Start();
         for (int i = 0; i < number; i++)
         {
-            Vector3Int target = startPosition.AddXYZ(1,1,1);
+            Vector3Int target = startPosition.AddXYZ(1, 1, 1);
         }
         TimeUtil.GetMethodTimeEnd("data3:", stopwatch);
     }

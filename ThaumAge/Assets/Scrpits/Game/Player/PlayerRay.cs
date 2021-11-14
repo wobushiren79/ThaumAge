@@ -16,7 +16,7 @@ public class PlayerRay : PlayerBase
     /// <param name="hit"></param>
     /// <param name="targetBlockPosition"></param>
     /// <returns></returns>
-    public bool RayToChunkBlock(out RaycastHit hit,out Vector3Int targetPosition)
+    public bool RayToChunkBlock(out RaycastHit hit, out Vector3Int targetPosition)
     {
         hit = new RaycastHit();
         targetPosition = Vector3Int.zero;
@@ -29,7 +29,7 @@ public class PlayerRay : PlayerBase
         RayUtil.RayAllToScreenPointForScreenCenter(disMax + disRayBlock, 1 << LayerInfo.Chunk, out RaycastHit[] arrayHit);
         //如果没有发生碰撞
         if (arrayHit == null || arrayHit.Length == 0)
-        {    
+        {
             return false;
         }
         bool hasHitData = false;
@@ -39,14 +39,14 @@ public class PlayerRay : PlayerBase
             RaycastHit itemHit = arrayHit[i];
             float disHit = Vector3.Distance(itemHit.point, cameraPosition);
             //如果发射点到碰撞点的距离 小于 发射点到角色的距离 那说明在背后发生了碰撞 则不处理
-            if(disHit <= disMax)
+            if (disHit <= disMax)
             {
                 continue;
             }
             else
             {
                 //选取前方最近的点
-                if(disHit < disTemp)
+                if (disHit < disTemp)
                 {
                     disTemp = disHit;
                     hit = itemHit;
@@ -73,37 +73,38 @@ public class PlayerRay : PlayerBase
         direction = DirectionEnum.UP;
         if (hit.normal.y > 0)
         {
-            targetPosition = new Vector3Int((int)Mathf.Floor(hit.point.x), (int)Mathf.Floor(hit.point.y) - 1, (int)Mathf.Floor(hit.point.z));
+            targetPosition = new Vector3Int(Mathf.FloorToInt(hit.point.x), Mathf.CeilToInt(hit.point.y) - 1, Mathf.FloorToInt(hit.point.z));
             closePosition = targetPosition + Vector3Int.up;
             direction = DirectionEnum.UP;
         }
         else if (hit.normal.y < 0)
         {
-            targetPosition = new Vector3Int((int)Mathf.Floor(hit.point.x), (int)Mathf.Floor(hit.point.y), (int)Mathf.Floor(hit.point.z));
+            targetPosition = new Vector3Int(Mathf.FloorToInt(hit.point.x), Mathf.FloorToInt(hit.point.y), Mathf.FloorToInt(hit.point.z));
             closePosition = targetPosition + Vector3Int.down;
             direction = DirectionEnum.Down;
         }
         else if (hit.normal.x > 0)
         {
-            targetPosition = new Vector3Int((int)Mathf.Floor(hit.point.x) - 1, (int)Mathf.Floor(hit.point.y), (int)Mathf.Floor(hit.point.z));
+            targetPosition = new Vector3Int(Mathf.CeilToInt(hit.point.x) - 1, Mathf.FloorToInt(hit.point.y), Mathf.FloorToInt(hit.point.z));
             closePosition = targetPosition + Vector3Int.right;
             direction = DirectionEnum.Right;
         }
         else if (hit.normal.x < 0)
         {
-            targetPosition = new Vector3Int((int)Mathf.Floor(hit.point.x), (int)Mathf.Floor(hit.point.y), (int)Mathf.Floor(hit.point.z));
+            targetPosition = new Vector3Int(Mathf.FloorToInt(hit.point.x), Mathf.FloorToInt(hit.point.y), Mathf.FloorToInt(hit.point.z));
             closePosition = targetPosition + Vector3Int.left;
             direction = DirectionEnum.Left;
         }
         else if (hit.normal.z > 0)
         {
-            targetPosition = new Vector3Int((int)Mathf.Floor(hit.point.x), (int)Mathf.Floor(hit.point.y), (int)Mathf.Floor(hit.point.z) - 1);
+           int z=  Mathf.FloorToInt(hit.point.z);
+            targetPosition = new Vector3Int(Mathf.FloorToInt(hit.point.x), Mathf.FloorToInt(hit.point.y), Mathf.CeilToInt(hit.point.z) - 1);
             closePosition = targetPosition + Vector3Int.forward;
             direction = DirectionEnum.Forward;
         }
         else if (hit.normal.z < 0)
         {
-            targetPosition = new Vector3Int((int)Mathf.Floor(hit.point.x), (int)Mathf.Floor(hit.point.y), (int)Mathf.Floor(hit.point.z));
+            targetPosition = new Vector3Int(Mathf.FloorToInt(hit.point.x), Mathf.FloorToInt(hit.point.y), Mathf.FloorToInt(hit.point.z));
             closePosition = targetPosition + Vector3Int.back;
             direction = DirectionEnum.Back;
         }

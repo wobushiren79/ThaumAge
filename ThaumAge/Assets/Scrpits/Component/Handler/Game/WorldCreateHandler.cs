@@ -322,7 +322,7 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
                         else
                         {
                             //设置方块
-                            chunk.SetBlockForLocal(new Vector3Int(localX, localY, localZ), itemBlock.GetBlockType(), itemBlock.GetDirection(), false, false, false);
+                            chunk.SetBlockForLocal(new Vector3Int(localX, localY, localZ), itemBlock.GetBlockType(), itemBlock.GetDirection(),null, false, false, false);
                             //添加需要更新的chunk
                             manager.AddUpdateChunk(chunk);
                         }

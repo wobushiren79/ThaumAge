@@ -64,7 +64,7 @@ public class BiomeHandler : BaseHandler<BiomeHandler, BiomeManager>
                 for (int z = 0; z < chunk.chunkData.chunkWidth; z++)
                 {
                     BiomeMapData biomeMap = new BiomeMapData();
-                    biomeMap.InitData(new Vector3Int(x,0,z), listBiomeCenter, listBiome);
+                    biomeMap.InitData(new Vector3Int(x + chunk.chunkData.positionForWorld.x, chunk.chunkData.positionForWorld.y, chunk.chunkData.positionForWorld.z + z), listBiomeCenter, listBiome);
                     mapData[x, z] = biomeMap;
                 }
             }

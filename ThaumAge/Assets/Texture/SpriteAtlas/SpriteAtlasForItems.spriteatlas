@@ -53,6 +53,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: b31d648132a133c43850570ce05c59e6, type: 3}
   - {fileID: 21300000, guid: c84110b19e6b18b4a9404d8c68d49363, type: 3}
   - {fileID: 21300000, guid: 34daaf0223462eb499ca801194f1c1cf, type: 3}
+  - {fileID: 21300000, guid: 91f28222d63869f43bdd60bc005bce84, type: 3}
   - {fileID: 21300000, guid: dd882182ed9807849a0f9361dd7e32fd, type: 3}
   - {fileID: 21300000, guid: 68b4dfa3189dae74298a1ab031e6cee0, type: 3}
   - {fileID: 21300000, guid: 693413c3d6d220349b07ae10bd1c6000, type: 3}
@@ -85,13 +86,16 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 0761178d69f59134b969d8c55ec45be7, type: 3}
   - {fileID: 21300000, guid: 5466a31ec854ee3429fe6949bc4c4737, type: 3}
   - {fileID: 21300000, guid: d0c1a91ed33b55a4292833e482611494, type: 3}
+  - {fileID: 21300000, guid: 3986f84e20d8a0143833e60968e2307a, type: 3}
   - {fileID: 21300000, guid: 6c85ccde3337d784b88d46781c858b7b, type: 3}
   - {fileID: 21300000, guid: 9fb7765f63c19f043a167bf941dcd02a, type: 3}
   - {fileID: 21300000, guid: 31eccf8fe76d0f742b3ae195aa302fc4, type: 3}
+  - {fileID: 21300000, guid: 2ee93b9f138965343a3ccb2c1b60c872, type: 3}
   m_PackedSpriteNamesToIndex:
   - icon_flower_fireflower
   - icon_cactus
   - icon_stone_moss
+  - icon_item_2100001
   - icon_tree_world
   - icon_flower_sunflower
   - icon_stone_volcanic
@@ -124,9 +128,11 @@ SpriteAtlas:
   - icon_leaves_world
   - icon_tree_mushroom
   - icon_weed_2
+  - icon_item_1200001
   - icon_unknow
   - icon_grass_magic
   - icon_grass
+  - icon_item_1200002
   m_RenderDataMap: {}
   m_Tag: SpriteAtlasForItems
   m_IsVariant: 0

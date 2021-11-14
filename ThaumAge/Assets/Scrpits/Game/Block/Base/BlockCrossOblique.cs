@@ -5,37 +5,30 @@ using UnityEngine;
 public class BlockCrossOblique : BlockCross
 {
 
-    public override void AddVerts(Vector3Int localPosition, DirectionEnum direction, Vector3 corner, ChunkMeshData chunkMeshData)
+    public override void AddVerts(Chunk chunk, Vector3Int localPosition, DirectionEnum direction, ChunkMeshData chunkMeshData, Vector3 corner)
     {
-        ChunkMeshVertsData vertsData = chunkMeshData.vertsData;
+        List<Vector3> verts = chunkMeshData.verts;
+        List<Vector3> vertsTrigger = chunkMeshData.vertsTrigger;
 
-        AddVert(localPosition, direction, vertsData.verts, vertsData.index, corner);
-        vertsData.index++;
-        AddVert(localPosition, direction, vertsData.verts, vertsData.index, corner + new Vector3(0, 1, 0));
-        vertsData.index++;
-        AddVert(localPosition, direction, vertsData.verts, vertsData.index, corner + new Vector3(1, 1, 1));
-        vertsData.index++;
-        AddVert(localPosition, direction, vertsData.verts, vertsData.index, corner + new Vector3(1, 0, 1));
-        vertsData.index++;
+        AddVert(localPosition, direction, verts, corner);
+        AddVert(localPosition, direction, verts, new Vector3(corner.x, corner.y + 1f, corner.z));
+        AddVert(localPosition, direction, verts, new Vector3(corner.x + 1f, corner.y + 1f, corner.z + 1f));
+        AddVert(localPosition, direction, verts, new Vector3(corner.x + 1f, corner.y, corner.z + 1f));
 
-        AddVert(localPosition, direction, vertsData.verts, vertsData.index, corner + new Vector3(1, 0, 0));
-        vertsData.index++;
-        AddVert(localPosition, direction, vertsData.verts, vertsData.index, corner + new Vector3(1, 1, 0));
-        vertsData.index++;
-        AddVert(localPosition, direction, vertsData.verts, vertsData.index, corner + new Vector3(0, 1, 1));
-        vertsData.index++;
-        AddVert(localPosition, direction, vertsData.verts, vertsData.index, corner + new Vector3(0, 0, 1));
-        vertsData.index++;
+        AddVert(localPosition, direction, verts, new Vector3(corner.x + 1f, corner.y, corner.z));
+        AddVert(localPosition, direction, verts, new Vector3(corner.x + 1f, corner.y + 1f, corner.z));
+        AddVert(localPosition, direction, verts, new Vector3(corner.x, corner.y + 1f, corner.z + 1f));
+        AddVert(localPosition, direction, verts, new Vector3(corner.x, corner.y, corner.z + 1f));
 
-        AddVert(localPosition, direction, chunkMeshData.vertsTrigger, corner);
-        AddVert(localPosition, direction, chunkMeshData.vertsTrigger, corner + new Vector3(0, 1, 0));
-        AddVert(localPosition, direction, chunkMeshData.vertsTrigger, corner + new Vector3(1, 1, 1));
-        AddVert(localPosition, direction, chunkMeshData.vertsTrigger, corner + new Vector3(1, 0, 1));
+        AddVert(localPosition, direction, vertsTrigger, corner);
+        AddVert(localPosition, direction, vertsTrigger, new Vector3(corner.x, corner.y + 1f, corner.z));
+        AddVert(localPosition, direction, vertsTrigger, new Vector3(corner.x + 1f, corner.y + 1f, corner.z + 1f));
+        AddVert(localPosition, direction, vertsTrigger, new Vector3(corner.x + 1f, corner.y, corner.z + 1f));
 
-        AddVert(localPosition, direction, chunkMeshData.vertsTrigger, corner + new Vector3(1, 0, 0));
-        AddVert(localPosition, direction, chunkMeshData.vertsTrigger, corner + new Vector3(1, 1, 0));
-        AddVert(localPosition, direction, chunkMeshData.vertsTrigger, corner + new Vector3(0, 1, 1));
-        AddVert(localPosition, direction, chunkMeshData.vertsTrigger, corner + new Vector3(0, 0, 1));
+        AddVert(localPosition, direction, vertsTrigger, new Vector3(corner.x + 1f, corner.y, corner.z));
+        AddVert(localPosition, direction, vertsTrigger, new Vector3(corner.x + 1f, corner.y + 1f, corner.z));
+        AddVert(localPosition, direction, vertsTrigger, new Vector3(corner.x, corner.y + 1f, corner.z + 1f));
+        AddVert(localPosition, direction, vertsTrigger, new Vector3(corner.x, corner.y, corner.z + 1f));
     }
 
 

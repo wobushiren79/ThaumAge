@@ -20,6 +20,8 @@ public class BlockInfoBean : BaseBean
 
     public string uv_position;//uv位置
 
+    public string offset_border;//边偏移
+
     public float weight;//重量
 
     public int rotate_state;//是否能旋转 0不能旋转 1能旋转
@@ -52,26 +54,43 @@ public class BlockInfoBean : BaseBean
         return (BlockShapeEnum)shape;
     }
 
-    protected List<Vector2Int> listUVData = new List<Vector2Int>();
+    protected Vector2Int[] arrayUVData;
+
     /// <summary>
     /// 获取UV坐标点
     /// </summary>
     /// <returns></returns>
-    public List<Vector2Int> GetUVPosition()
+    public Vector2Int[] GetUVPosition()
     {
-        if (listUVData.IsNull())
+        if (arrayUVData.IsNull())
         {
-            listUVData = new List<Vector2Int>();
             if (uv_position.IsNull())
-                return listUVData;
+                return arrayUVData;
             string[] uvArrary = StringUtil.SplitBySubstringForArrayStr(uv_position, '|');
+            arrayUVData = new Vector2Int[uvArrary.Length];
             for (int i = 0; i < uvArrary.Length; i++)
             {
                 string uvItemStr = uvArrary[i];
                 int[] uvPositionArray = StringUtil.SplitBySubstringForArrayInt(uvItemStr, ',');
-                listUVData.Add(new Vector2Int(uvPositionArray[0], uvPositionArray[1]));
+                arrayUVData[i] = new Vector2Int(uvPositionArray[0], uvPositionArray[1]);
             }
         }
-        return listUVData;
+        return arrayUVData;
     }
+
+    protected float[] offsetBorder;
+
+    /// <summary>
+    /// 获取偏移边坐标
+    /// </summary>
+    /// <returns></returns>
+    public float[] GetOffsetBorder()
+    {
+        if (offsetBorder.IsNull())
+        {
+            offsetBorder = StringUtil.SplitBySubstringForArrayFloat(offset_border, '|');
+        }
+        return offsetBorder;
+    }
+
 }

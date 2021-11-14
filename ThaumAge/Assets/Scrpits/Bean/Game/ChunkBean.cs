@@ -42,11 +42,11 @@ public class ChunkBean
         }
     }
 
-    public bool GetBlockData(int x,int y,int z, out BlockBean blockData)
+    public bool GetBlockData(int x, int y, int z, out BlockBean blockData)
     {
         int widthChunk = WorldCreateHandler.Instance.manager.widthChunk;
         int heightChunk = WorldCreateHandler.Instance.manager.heightChunk;
-        int index = MathUtil.GetSingleIndexForThree(x,y,z, widthChunk, heightChunk);
+        int index = MathUtil.GetSingleIndexForThree(x, y, z, widthChunk, heightChunk);
         if (dicBlockData.TryGetValue(index, out blockData))
         {
             return true;

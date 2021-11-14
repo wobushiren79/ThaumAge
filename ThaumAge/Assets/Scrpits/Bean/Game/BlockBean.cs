@@ -6,8 +6,6 @@ public class BlockBean
 {
     //方块的本地坐标
     public Vector3Int localPosition;
-    //方块的世界坐标
-    public Vector3Int worldPosition;
 
     //方块类型
     public ushort blockId;
@@ -20,14 +18,10 @@ public class BlockBean
     {
 
     }
-    public BlockBean(Vector3Int worldPosition, BlockTypeEnum blockType = BlockTypeEnum.None, DirectionEnum direction = DirectionEnum.UP)
-    {
-        SetData(Vector3Int.zero, worldPosition, blockType, direction);
-    }
 
-    public BlockBean(Vector3Int localposition, Vector3Int worldPosition, BlockTypeEnum blockType = BlockTypeEnum.None, DirectionEnum direction = DirectionEnum.UP)
+    public BlockBean(Vector3Int localposition, BlockTypeEnum blockType = BlockTypeEnum.None, DirectionEnum direction = DirectionEnum.UP, string meta = null)
     {
-        SetData(localposition, worldPosition, blockType, direction);
+        SetData(localposition, blockType, direction, meta);
     }
 
     /// <summary>
@@ -36,14 +30,13 @@ public class BlockBean
     /// <param name="blockType"></param>
     /// <param name="localposition"></param>
     /// <param name="worldPosition"></param>
-    public void SetData(Vector3Int localPosition, Vector3Int worldPosition, BlockTypeEnum blockType = BlockTypeEnum.None, DirectionEnum direction = DirectionEnum.UP)
+    public void SetData(Vector3Int localPosition, BlockTypeEnum blockType = BlockTypeEnum.None, DirectionEnum direction = DirectionEnum.UP, string meta = null)
     {
         this.localPosition = localPosition;
-        this.worldPosition = worldPosition;
 
         this.blockId = (ushort)blockType;
         this.direction = (byte)direction;
-        this.meta = null;
+        this.meta = meta;
     }
 
     public void SetBlockType(BlockTypeEnum blockType)
@@ -106,7 +99,7 @@ public struct BlockTempBean
         meta = null;
     }
 
-    public BlockTempBean(BlockTypeEnum blockType,DirectionEnum direction, int worldX, int worldY, int worldZ)
+    public BlockTempBean(BlockTypeEnum blockType, DirectionEnum direction, int worldX, int worldY, int worldZ)
     {
         this.blockId = (int)blockType;
         this.direction = (byte)direction;

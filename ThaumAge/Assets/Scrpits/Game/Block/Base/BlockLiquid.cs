@@ -55,9 +55,9 @@ public class BlockLiquid : Block
     /// <param name="up"></param>
     /// <param name="right"></param>
     /// <param name="chunkData"></param>
-    public void BuildFace(Vector3Int localPosition, DirectionEnum direction, Vector3 corner, Vector3 up, Vector3 right, ChunkMeshData chunkMeshData)
+    public void BuildFace(Chunk chunk, Vector3Int localPosition, DirectionEnum direction, ChunkMeshData chunkMeshData, Vector3 corner, Vector3 up, Vector3 right)
     {
-        AddTris(chunkMeshData);
+        AddTris(chunk, localPosition, direction,chunkMeshData);
         AddVerts(localPosition, direction, corner, up, right, chunkMeshData);
         AddUVs(direction, chunkMeshData);
     }
@@ -79,40 +79,36 @@ public class BlockLiquid : Block
         {
             //Left
             if (CheckNeedBuildFace(chunk, localPosition, direction, DirectionEnum.Left))
-                BuildFace(localPosition, DirectionEnum.Left, localPosition, Vector3.up, Vector3.forward, chunkMeshData);
+                BuildFace(chunk, localPosition, DirectionEnum.Left, chunkMeshData, localPosition, Vector3.up, Vector3.forward);
             //Right
             if (CheckNeedBuildFace(chunk, localPosition, direction, DirectionEnum.Right))
-                BuildFace(localPosition, DirectionEnum.Right, localPosition + new Vector3Int(1, 0, 0), Vector3.up, Vector3.forward, chunkMeshData);
+                BuildFace(chunk, localPosition, DirectionEnum.Right, chunkMeshData, localPosition + new Vector3Int(1, 0, 0), Vector3.up, Vector3.forward);
 
             //Bottom
             if (CheckNeedBuildFace(chunk, localPosition, direction, DirectionEnum.Down))
-                BuildFace(localPosition, DirectionEnum.Down, localPosition, Vector3.forward, Vector3.right, chunkMeshData);
+                BuildFace(chunk, localPosition, DirectionEnum.Down, chunkMeshData, localPosition, Vector3.forward, Vector3.right);
             //Top
             if (CheckNeedBuildFace(chunk, localPosition, direction, DirectionEnum.UP))
-                BuildFace(localPosition, DirectionEnum.UP, localPosition + new Vector3Int(0, 1, 0), Vector3.forward, Vector3.right, chunkMeshData);
+                BuildFace(chunk, localPosition, DirectionEnum.UP, chunkMeshData, localPosition + new Vector3Int(0, 1, 0), Vector3.forward, Vector3.right);
 
             //Forward
             if (CheckNeedBuildFace(chunk, localPosition, direction, DirectionEnum.Forward))
-                BuildFace(localPosition, DirectionEnum.Forward, localPosition, Vector3.up, Vector3.right, chunkMeshData);
+                BuildFace(chunk, localPosition, DirectionEnum.Forward, chunkMeshData, localPosition, Vector3.up, Vector3.right);
             //Back
             if (CheckNeedBuildFace(chunk, localPosition, direction, DirectionEnum.Back))
-                BuildFace(localPosition, DirectionEnum.Back, localPosition + new Vector3Int(0, 0, 1), Vector3.up, Vector3.right, chunkMeshData);
+                BuildFace(chunk, localPosition, DirectionEnum.Back, chunkMeshData, localPosition + new Vector3Int(0, 0, 1), Vector3.up, Vector3.right);
         }
     }
 
 
     public virtual void AddVerts(Vector3Int localPosition, DirectionEnum direction, Vector3 corner, Vector3 up, Vector3 right, ChunkMeshData chunkMeshData)
     {
-        ChunkMeshVertsData vertsData = chunkMeshData.vertsData;
+        List<Vector3> verts = chunkMeshData.verts;
 
-        AddVert(localPosition, direction, vertsData.verts, vertsData.index, corner);
-        vertsData.index++;
-        AddVert(localPosition, direction, vertsData.verts, vertsData.index, corner + up);
-        vertsData.index++;
-        AddVert(localPosition, direction, vertsData.verts, vertsData.index, corner + up + right);
-        vertsData.index++;
-        AddVert(localPosition, direction, vertsData.verts, vertsData.index, corner + right);
-        vertsData.index++;
+        AddVert(localPosition, direction, verts, corner);
+        AddVert(localPosition, direction, verts, corner + up);
+        AddVert(localPosition, direction, verts, corner + up + right);
+        AddVert(localPosition, direction, verts, corner + right);
 
         AddVert(localPosition, direction, chunkMeshData.vertsTrigger, corner);
         AddVert(localPosition, direction, chunkMeshData.vertsTrigger, corner + up);
@@ -122,38 +118,27 @@ public class BlockLiquid : Block
 
     public virtual void AddUVs(DirectionEnum direction, ChunkMeshData chunkMeshData)
     {
-        ChunkMeshUVData uvsData = chunkMeshData.uvsData;
-
-        uvsData.uvs[uvsData.index] = Vector2.zero;
-        uvsData.index++;
-        uvsData.uvs[uvsData.index] = Vector2.zero + new Vector2(0, 1);
-        uvsData.index++;
-        uvsData.uvs[uvsData.index] = Vector2.zero + new Vector2(1, 1);
-        uvsData.index++;
-        uvsData.uvs[uvsData.index] = Vector2.zero + new Vector2(1, 0);
-        uvsData.index++;
+        List<Vector2> uvs = chunkMeshData.uvs;
+        uvs.Add(Vector2.zero);
+        uvs.Add(new Vector2(0, 1));
+        uvs.Add(new Vector2(1, 1));
+        uvs.Add(new Vector2(1, 0));
     }
 
-    public override void AddTris(ChunkMeshData chunkMeshData)
+    public override void AddTris(Chunk chunk, Vector3Int localPosition, DirectionEnum direction, ChunkMeshData chunkMeshData)
     {
-        int index = chunkMeshData.vertsData.index;
+        int index = chunkMeshData.verts.Count;
         int triggerIndex = chunkMeshData.vertsTrigger.Count;
 
-        ChunkMeshTrisData trisWater = chunkMeshData.dicTris[(int)BlockMaterialEnum.Water];
+        List<int> trisWater = chunkMeshData.dicTris[(int)BlockMaterialEnum.Water];
 
-        trisWater.tris[trisWater.index] = index;
-        trisWater.index++;
-        trisWater.tris[trisWater.index] = index+1;
-        trisWater.index++;
-        trisWater.tris[trisWater.index] = index+2;
-        trisWater.index++;
+        trisWater.Add(index);
+        trisWater.Add(index + 1);
+        trisWater.Add(index + 2);
 
-        trisWater.tris[trisWater.index] = index;
-        trisWater.index++;
-        trisWater.tris[trisWater.index] = index+2;
-        trisWater.index++;
-        trisWater.tris[trisWater.index] = index+3;
-        trisWater.index++;
+        trisWater.Add(index);
+        trisWater.Add(index + 2);
+        trisWater.Add(index + 3);
 
         chunkMeshData.trisTrigger.Add(triggerIndex + 0);
         chunkMeshData.trisTrigger.Add(triggerIndex + 1);

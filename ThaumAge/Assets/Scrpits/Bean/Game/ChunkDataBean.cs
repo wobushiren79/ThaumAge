@@ -56,6 +56,7 @@ public class ChunkDataBean
     public Block[] arrayBlock;
     //所有方块的方向集合
     public byte[] arrayBlockDirection;
+
     //世界坐标
     public Vector3Int positionForWorld;
 

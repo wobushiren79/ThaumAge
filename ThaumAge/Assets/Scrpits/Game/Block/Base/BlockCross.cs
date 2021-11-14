@@ -9,7 +9,7 @@ public class BlockCross : Block
         base.BuildBlock(chunk, localPosition, direction, chunkMeshData);
         if (blockType != BlockTypeEnum.None)
         {
-            BuildFace(localPosition, direction, localPosition, chunkMeshData);
+            BuildFace(chunk, localPosition, direction, chunkMeshData, localPosition);
         }
     }
 
@@ -26,42 +26,30 @@ public class BlockCross : Block
         }
     }
 
-    public override void AddTris(ChunkMeshData chunkMeshData)
+    public override void AddTris(Chunk chunk, Vector3Int localPosition, DirectionEnum direction, ChunkMeshData chunkMeshData)
     {
-        base.AddTris(chunkMeshData);
+        base.AddTris(chunk, localPosition, direction, chunkMeshData);
 
-        int index = chunkMeshData.vertsData.index;
+        int index = chunkMeshData.verts.Count;
         int triggerIndex = chunkMeshData.vertsTrigger.Count;
 
-        ChunkMeshTrisData trisBothFaceSwingData = chunkMeshData.dicTris[(int)BlockMaterialEnum.BothFaceSwing];
+        List<int> trisBothFaceSwingData = chunkMeshData.dicTris[(int)BlockMaterialEnum.BothFaceSwing];
 
-        trisBothFaceSwingData.tris[trisBothFaceSwingData.index] = index;
-        trisBothFaceSwingData.index++;
-        trisBothFaceSwingData.tris[trisBothFaceSwingData.index] = index + 1;
-        trisBothFaceSwingData.index++;
-        trisBothFaceSwingData.tris[trisBothFaceSwingData.index] = index + 2;
-        trisBothFaceSwingData.index++;
+        trisBothFaceSwingData.Add(index);
+        trisBothFaceSwingData.Add(index + 1);
+        trisBothFaceSwingData.Add(index + 2);
 
-        trisBothFaceSwingData.tris[trisBothFaceSwingData.index] = index;
-        trisBothFaceSwingData.index++;
-        trisBothFaceSwingData.tris[trisBothFaceSwingData.index] = index + 2;
-        trisBothFaceSwingData.index++;
-        trisBothFaceSwingData.tris[trisBothFaceSwingData.index] = index + 3;
-        trisBothFaceSwingData.index++;
+        trisBothFaceSwingData.Add(index);
+        trisBothFaceSwingData.Add(index + 2);
+        trisBothFaceSwingData.Add(index + 3);
 
-        trisBothFaceSwingData.tris[trisBothFaceSwingData.index] = index + 4;
-        trisBothFaceSwingData.index++;
-        trisBothFaceSwingData.tris[trisBothFaceSwingData.index] = index + 5;
-        trisBothFaceSwingData.index++;
-        trisBothFaceSwingData.tris[trisBothFaceSwingData.index] = index + 6;
-        trisBothFaceSwingData.index++;
+        trisBothFaceSwingData.Add(index + 4);
+        trisBothFaceSwingData.Add(index + 5);
+        trisBothFaceSwingData.Add(index + 6);
 
-        trisBothFaceSwingData.tris[trisBothFaceSwingData.index] = index + 4;
-        trisBothFaceSwingData.index++;
-        trisBothFaceSwingData.tris[trisBothFaceSwingData.index] = index + 6;
-        trisBothFaceSwingData.index++;
-        trisBothFaceSwingData.tris[trisBothFaceSwingData.index] = index + 7;
-        trisBothFaceSwingData.index++;
+        trisBothFaceSwingData.Add(index + 4);
+        trisBothFaceSwingData.Add(index + 6);
+        trisBothFaceSwingData.Add(index + 7);
 
         chunkMeshData.trisTrigger.Add(triggerIndex + 0);
         chunkMeshData.trisTrigger.Add(triggerIndex + 1);
@@ -80,69 +68,37 @@ public class BlockCross : Block
         chunkMeshData.trisTrigger.Add(triggerIndex + 7);
     }
 
-    public override void AddUVs(ChunkMeshData chunkMeshData)
+    public override void AddUVs(Chunk chunk, Vector3Int localPosition, DirectionEnum direction, ChunkMeshData chunkMeshData)
     {
-        base.AddUVs(chunkMeshData);
+        base.AddUVs(chunk, localPosition, direction, chunkMeshData);
+        Vector2 uvStartPosition =  GetUVStartPosition();
 
-        List<Vector2Int> listData = blockInfo.GetUVPosition();
-        Vector2 uvStartPosition;
-        if (listData.IsNull())
-        {
-            uvStartPosition = Vector2.zero;
-        }
-        else if (listData.Count == 1)
-        {
-            //只有一种面
-            uvStartPosition = new Vector2(uvWidth * listData[0].y, uvWidth * listData[0].x);
-        }
-        else
-        {
-            //随机选一个
-            uvStartPosition = Vector2.zero;
-        }
-        ChunkMeshUVData uvsData = chunkMeshData.uvsData;
+        List<Vector2> uvs = chunkMeshData.uvs;
+        uvs.Add(uvStartPosition);
+        uvs.Add(new Vector2(uvStartPosition.x, uvStartPosition.y + uvWidth));
+        uvs.Add(new Vector2(uvStartPosition.x + uvWidth, uvStartPosition.y + uvWidth));
+        uvs.Add(new Vector2(uvStartPosition.x + uvWidth, uvStartPosition.y));
 
-        uvsData.uvs[uvsData.index] = uvStartPosition;
-        uvsData.index++;
-        uvsData.uvs[uvsData.index] = uvStartPosition + new Vector2(0, uvWidth);
-        uvsData.index++;
-        uvsData.uvs[uvsData.index] = uvStartPosition + new Vector2(uvWidth, uvWidth);
-        uvsData.index++;
-        uvsData.uvs[uvsData.index] = uvStartPosition + new Vector2(uvWidth, 0);
-        uvsData.index++;
-
-        uvsData.uvs[uvsData.index] = uvStartPosition;
-        uvsData.index++;
-        uvsData.uvs[uvsData.index] = uvStartPosition + new Vector2(0, uvWidth);
-        uvsData.index++;
-        uvsData.uvs[uvsData.index] = uvStartPosition + new Vector2(uvWidth, uvWidth);
-        uvsData.index++;
-        uvsData.uvs[uvsData.index] = uvStartPosition + new Vector2(uvWidth, 0);
-        uvsData.index++;
+        uvs.Add(new Vector2(uvStartPosition.x, uvStartPosition.y));
+        uvs.Add(new Vector2(uvStartPosition.x, uvStartPosition.y + uvWidth));
+        uvs.Add(new Vector2(uvStartPosition.x + uvWidth, uvStartPosition.y + uvWidth));
+        uvs.Add(new Vector2(uvStartPosition.x + uvWidth, uvStartPosition.y));
     }
 
-    public override void AddVerts(Vector3Int localPosition, DirectionEnum direction, Vector3 corner, ChunkMeshData chunkMeshData)
+    public override void AddVerts(Chunk chunk, Vector3Int localPosition, DirectionEnum direction, ChunkMeshData chunkMeshData, Vector3 corner)
     {
-        base.AddVerts(localPosition, direction, corner, chunkMeshData);
-        ChunkMeshVertsData vertsData = chunkMeshData.vertsData;
+        base.AddVerts(chunk, localPosition, direction, chunkMeshData, corner);
+        List<Vector3> verts = chunkMeshData.verts;
 
-        AddVert(localPosition, direction, vertsData.verts, vertsData.index, corner + new Vector3(0.5f, 0, 0));
-        vertsData.index++;
-        AddVert(localPosition, direction, vertsData.verts, vertsData.index, corner + new Vector3(0.5f, 1, 0));
-        vertsData.index++;
-        AddVert(localPosition, direction, vertsData.verts, vertsData.index, corner + new Vector3(0.5f, 1, 1));
-        vertsData.index++;
-        AddVert(localPosition, direction, vertsData.verts, vertsData.index, corner + new Vector3(0.5f, 0, 1));
-        vertsData.index++;
+        AddVert(localPosition, direction, verts, new Vector3(corner.x + 0.5f, corner.y, corner.z));
+        AddVert(localPosition, direction, verts, new Vector3(corner.x + 0.5f, corner.y + 1f, corner.z));
+        AddVert(localPosition, direction, verts, new Vector3(corner.x + 0.5f, corner.y + 1f, corner.z + 1f));
+        AddVert(localPosition, direction, verts, new Vector3(corner.x + 0.5f, corner.y, corner.z + 1f));
 
-        AddVert(localPosition, direction, vertsData.verts, vertsData.index, corner + new Vector3(0, 0, 0.5f));
-        vertsData.index++;
-        AddVert(localPosition, direction, vertsData.verts, vertsData.index, corner + new Vector3(0, 1, 0.5f));
-        vertsData.index++;
-        AddVert(localPosition, direction, vertsData.verts, vertsData.index, corner + new Vector3(1, 1, 0.5f));
-        vertsData.index++;
-        AddVert(localPosition, direction, vertsData.verts, vertsData.index, corner + new Vector3(1, 0, 0.5f));
-        vertsData.index++;
+        AddVert(localPosition, direction, verts, new Vector3(corner.x, corner.y, corner.z + 0.5f));
+        AddVert(localPosition, direction, verts, new Vector3(corner.x, corner.y + 1f, corner.z + 0.5f));
+        AddVert(localPosition, direction, verts, new Vector3(corner.x + 1f, corner.y + 1f, corner.z + 0.5f));
+        AddVert(localPosition, direction, verts, new Vector3(corner.x + 1f, corner.y, corner.z + 0.5f));
 
 
         AddVert(localPosition, direction, chunkMeshData.vertsTrigger, corner + new Vector3(0.5f, 0, 0));
@@ -156,5 +112,26 @@ public class BlockCross : Block
         AddVert(localPosition, direction, chunkMeshData.vertsTrigger, corner + new Vector3(1, 0, 0.5f));
     }
 
+
+    public virtual Vector2 GetUVStartPosition()
+    {
+        Vector2Int[] arrayUVData = blockInfo.GetUVPosition();
+        Vector2 uvStartPosition;
+        if (arrayUVData.IsNull())
+        {
+            uvStartPosition = Vector2.zero;
+        }
+        else if (arrayUVData.Length == 1)
+        {
+            //只有一种面
+            uvStartPosition = new Vector2(uvWidth * arrayUVData[0].y, uvWidth * arrayUVData[0].x);
+        }
+        else
+        {
+            //随机选一个
+            uvStartPosition = Vector2.zero;
+        }
+        return uvStartPosition;
+    }
 
 }

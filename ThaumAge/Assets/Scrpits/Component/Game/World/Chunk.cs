@@ -118,7 +118,7 @@ public class Chunk : BaseMonoBehaviour
     public void SetData(Vector3Int worldPosition, int width, int height)
     {
         chunkData = new ChunkDataBean(worldPosition, width, height);
-        chunkMeshData = new ChunkMeshData(this);
+        chunkMeshData = new ChunkMeshData();
     }
 
     /// <summary>
@@ -234,7 +234,7 @@ public class Chunk : BaseMonoBehaviour
 #if UNITY_EDITOR
                     Stopwatch stopwatch = TimeUtil.GetMethodTimeStart();
 #endif
-                    chunkMeshData = new ChunkMeshData(this);
+                    chunkMeshData = new ChunkMeshData();
 
                     for (int x = 0; x < chunkData.chunkWidth; x++)
                     {
@@ -287,28 +287,29 @@ public class Chunk : BaseMonoBehaviour
 
             chunkMesh.subMeshCount = meshRenderer.materials.Length;
             //定点数判断
-            if (chunkMeshData == null || chunkMeshData.vertsData.verts.Length <= 3)
+            if (chunkMeshData == null
+                || chunkMeshData.verts.Count <= 3)
             {
                 isDrawMesh = false;
                 return;
             }
 
             //设置顶点
-            chunkMesh.SetVertices(chunkMeshData.vertsData.verts);
+            chunkMesh.SetVertices(chunkMeshData.verts);
             //设置UV
-            chunkMesh.SetUVs(0, chunkMeshData.uvsData.uvs);
+            chunkMesh.SetUVs(0, chunkMeshData.uvs);
 
             //设置三角（单面渲染，双面渲染,液体）
-            for (int i=0;i<chunkMeshData.dicTris.Length;i++)
+            for (int i = 0; i < chunkMeshData.dicTris.Length; i++)
             {
-                ChunkMeshTrisData trisData = chunkMeshData.dicTris[i];
-                chunkMesh.SetTriangles(trisData.tris, i);
+                List<int> trisData = chunkMeshData.dicTris[i];
+                chunkMesh.SetTriangles(trisData, i);
             }
 
 
             //碰撞数据设置
-            chunkMeshCollider.SetVertices(chunkMeshData.vertsColliderData.verts);
-            chunkMeshCollider.SetTriangles(chunkMeshData.trisColliderData.tris, 0);
+            chunkMeshCollider.SetVertices(chunkMeshData.vertsCollider);
+            chunkMeshCollider.SetTriangles(chunkMeshData.trisCollider, 0);
 
             //触发数据设置
             chunkMeshTrigger.SetVertices(chunkMeshData.vertsTrigger);
@@ -325,9 +326,9 @@ public class Chunk : BaseMonoBehaviour
             //chunkMeshTrigger.RecalculateNormals();
 
             //meshFilter.mesh.Optimize();
-            meshFilter.sharedMesh = chunkMesh;
-            meshCollider.sharedMesh = chunkMeshCollider;
-            meshTrigger.sharedMesh = chunkMeshTrigger;
+            if (chunkMesh.vertexCount >= 3) meshFilter.sharedMesh = chunkMesh;
+            if (chunkMeshCollider.vertexCount >= 3) meshCollider.sharedMesh = chunkMeshCollider;
+            if (chunkMeshTrigger.vertexCount >= 3) meshTrigger.sharedMesh = chunkMeshTrigger;
 
             //Physics.BakeMesh(chunkMeshCollider.GetInstanceID(), false);
             //Physics.BakeMesh(chunkMeshTrigger.GetInstanceID(), false);
@@ -414,28 +415,18 @@ public class Chunk : BaseMonoBehaviour
     /// <param name="worldPosition"></param>
     /// <param name="blockType"></param>
     /// <returns></returns>
-    public void SetBlockForWorld(Vector3Int worldPosition, BlockTypeEnum blockType)
-    {
-        SetBlockForWorld(worldPosition, blockType, DirectionEnum.UP);
-    }
-
-    public void SetBlockForWorld(Vector3Int worldPosition, BlockTypeEnum blockType, DirectionEnum direction)
+    public void SetBlockForWorld(Vector3Int worldPosition, BlockTypeEnum blockType, DirectionEnum direction = DirectionEnum.UP)
     {
         Vector3Int blockLocalPosition = worldPosition - chunkData.positionForWorld;
         SetBlockForLocal(blockLocalPosition, blockType, direction);
     }
 
-    public void SetBlockForLocal(Vector3Int localPosition, BlockTypeEnum blockType)
+    public void SetBlockForLocal(Vector3Int localPosition, BlockTypeEnum blockType = BlockTypeEnum.None, DirectionEnum direction = DirectionEnum.UP, string meta = null)
     {
-        SetBlockForLocal(localPosition, blockType, DirectionEnum.UP);
+        SetBlockForLocal(localPosition, blockType, direction, meta, true, true, true);
     }
 
-    public void SetBlockForLocal(Vector3Int localPosition, BlockTypeEnum blockType, DirectionEnum direction)
-    {
-        SetBlockForLocal(localPosition, blockType, direction, true, true, true);
-    }
-
-    public void SetBlockForLocal(Vector3Int localPosition, BlockTypeEnum blockType, DirectionEnum direction, bool isSaveData, bool isRefreshChunkRange, bool isRefreshBlockRange)
+    public void SetBlockForLocal(Vector3Int localPosition, BlockTypeEnum blockType, DirectionEnum direction, string meta, bool isSaveData, bool isRefreshChunkRange, bool isRefreshBlockRange)
     {
         //首先移除方块
         chunkData.GetBlockForLocal(localPosition, out Block oldBlock, out DirectionEnum oldDirection);
@@ -469,15 +460,8 @@ public class Chunk : BaseMonoBehaviour
             //保存数据
             if (worldData != null && worldData.chunkData != null)
             {
-                BlockBean blockData = new BlockBean(localPosition, localPosition + chunkData.positionForWorld, blockType, direction);
-                if (worldData.chunkData.dicBlockData.ContainsKey(index))
-                {
-                    worldData.chunkData.dicBlockData[index] = blockData;
-                }
-                else
-                {
-                    worldData.chunkData.dicBlockData.Add(index, blockData);
-                }
+                BlockBean blockData = new BlockBean(localPosition, blockType, direction, meta);
+                worldData.chunkData.dicBlockData[index] = blockData;
             }
             //异步保存数据
             GameDataHandler.Instance.manager.SaveGameDataAsync(worldData);
@@ -525,13 +509,13 @@ public class Chunk : BaseMonoBehaviour
         //获取数据中的chunk
         UserDataBean userData = gameDataManager.GetUserData();
 
-        WorldDataBean worldData = gameDataManager.GetWorldData(userData.userId, WorldTypeEnum.Main, chunkData.positionForWorld);
+        WorldDataBean worldData = gameDataManager.GetWorldData(userData.userId, WorldCreateHandler.Instance.manager.worldType, chunkData.positionForWorld);
 
         //如果没有世界数据 则创建一个
         if (worldData == null)
         {
             worldData = new WorldDataBean();
-            worldData.workdType = (int)WorldTypeEnum.Main;
+            worldData.workdType = (int)WorldCreateHandler.Instance.manager.worldType;
             worldData.userId = userData.userId;
         }
         Dictionary<int, BlockBean> dicBlockData = new Dictionary<int, BlockBean>();

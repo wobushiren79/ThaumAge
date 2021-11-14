@@ -20,7 +20,7 @@ public class BiomePrairie : Biome
             AddFlower(wPos);
             AddTree(wPos);
             // 地表，使用草
-            return BlockTypeEnum.Grass_Wild;
+            return BlockTypeEnum.GrassWild;
         }
         if (wPos.y < genHeight && wPos.y > genHeight - 5)
         {

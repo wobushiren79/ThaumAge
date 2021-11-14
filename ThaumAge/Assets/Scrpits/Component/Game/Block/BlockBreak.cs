@@ -92,9 +92,9 @@ public class BlockBreak : BaseMonoBehaviour
                  Material matNomral = BlockHandler.Instance.manager.GetBlockMaterial(BlockMaterialEnum.Normal);
                  Texture2D texBlock = matNomral.mainTexture as Texture2D;
 
-                 List<Vector2Int> uvPosition = block.blockInfo.GetUVPosition();
-                 int randomUV = Random.Range(0, uvPosition.Count);
-                 Vector2 uvStartPosition = new Vector2(texBlock.width * (uvPosition[randomUV].y * block.uvWidth), texBlock.width * (uvPosition[randomUV].x * block.uvWidth));
+                 Vector2Int[] arrayUVData = block.blockInfo.GetUVPosition();
+                 int randomUV = Random.Range(0, arrayUVData.Length);
+                 Vector2 uvStartPosition = new Vector2(texBlock.width * (arrayUVData[randomUV].y * block.uvWidth), texBlock.width * (arrayUVData[randomUV].x * block.uvWidth));
 
                  int randomXStart = Random.Range((int)uvStartPosition.x, (int)(uvStartPosition.x + (texBlock.width * block.uvWidth)));
                  int randomYStart = Random.Range((int)uvStartPosition.y, (int)(uvStartPosition.y + (texBlock.height * block.uvWidth)));

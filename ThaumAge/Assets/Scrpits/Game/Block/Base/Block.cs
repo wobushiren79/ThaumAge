@@ -13,7 +13,7 @@ public abstract class Block
 
     public Vector3 GetCenterPosition(Vector3Int localPosition)
     {
-        return localPosition + new Vector3(0.5f, 0.5f, 0.5f);
+        return new Vector3(localPosition.x + 0.5f, localPosition.y + 0.5f, localPosition.z + 0.5f);
     }
 
     protected BlockInfoBean _blockInfo;//方块信息
@@ -85,6 +85,7 @@ public abstract class Block
         }
     }
 
+
     /// <summary>
     /// 构建方块
     /// </summary>
@@ -110,11 +111,11 @@ public abstract class Block
     /// <param name="verts"></param>
     /// <param name="uvs"></param>
     /// <param name="tris"></param>
-    public virtual void BuildFace(Vector3Int localPosition, DirectionEnum direction, Vector3 corner, ChunkMeshData chunkMeshData)
+    public virtual void BuildFace(Chunk chunk, Vector3Int localPosition, DirectionEnum direction, ChunkMeshData chunkMeshData, Vector3 corner)
     {
-        AddTris(chunkMeshData);
-        AddVerts(localPosition, direction, corner, chunkMeshData);
-        AddUVs(chunkMeshData);
+        AddTris(chunk, localPosition, direction, chunkMeshData);
+        AddVerts(chunk, localPosition, direction, chunkMeshData, corner);
+        AddUVs(chunk, localPosition, direction, chunkMeshData);
     }
 
     /// <summary>
@@ -124,7 +125,7 @@ public abstract class Block
     /// <param name="up"></param>
     /// <param name="right"></param>
     /// <param name="verts"></param>
-    public virtual void AddVerts(Vector3Int localPosition, DirectionEnum direction, Vector3 corner, ChunkMeshData chunkMeshData)
+    public virtual void AddVerts(Chunk chunk, Vector3Int localPosition, DirectionEnum direction, ChunkMeshData chunkMeshData, Vector3 corner)
     {
 
     }
@@ -149,7 +150,7 @@ public abstract class Block
     /// </summary>
     /// <param name="blockData"></param>
     /// <param name="uvs"></param>
-    public virtual void AddUVs(ChunkMeshData chunkMeshData)
+    public virtual void AddUVs(Chunk chunk, Vector3Int localPosition, DirectionEnum direction, ChunkMeshData chunkMeshData)
     {
 
     }
@@ -161,7 +162,7 @@ public abstract class Block
     /// <param name="tris"></param>
     /// <param name="indexCollider"></param>
     /// <param name="trisCollider"></param>
-    public virtual void AddTris(ChunkMeshData chunkMeshData)
+    public virtual void AddTris(Chunk chunk, Vector3Int localPosition, DirectionEnum direction, ChunkMeshData chunkMeshData)
     {
 
     }
@@ -185,6 +186,7 @@ public abstract class Block
             blockChunk = null;
         }
     }
+
 
     /// <summary>
     /// 获取不同方向的方块
@@ -246,7 +248,7 @@ public abstract class Block
             blockChunk = chunk.chunkData.chunkForward;
             if (blockChunk != null)
             {
-                blockChunk.GetBlockForLocal(localPosition.x, maxWidth, localPosition.z, out block);
+                blockChunk.GetBlockForLocal(localPosition.x, localPosition.y, maxWidth, out block);
             }
         }
         else if (targetZ > maxWidth)
@@ -254,7 +256,7 @@ public abstract class Block
             blockChunk = chunk.chunkData.chunkBack;
             if (blockChunk != null)
             {
-                blockChunk.GetBlockForLocal(localPosition.x, 0, localPosition.z, out block);
+                blockChunk.GetBlockForLocal(localPosition.x, localPosition.y, 0, out block);
             }
         }
         else if (targetY > maxHeight)

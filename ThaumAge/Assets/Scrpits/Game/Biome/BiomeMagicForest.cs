@@ -24,7 +24,7 @@ public class BiomeMagicForest : Biome
             AddStoneMoss(wPos);
             AddFlower(wPos);
             // 地表，使用草
-            return BlockTypeEnum.Grass_Magic;
+            return BlockTypeEnum.GrassMagic;
         }
         if (wPos.y < genHeight && wPos.y > genHeight - 10)
         {

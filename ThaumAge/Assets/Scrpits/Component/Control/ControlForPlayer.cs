@@ -17,7 +17,7 @@ public class ControlForPlayer : ControlForBase
     private float timeJumpTemp = 0;
 
     private float speedJump = 5;
-    private float moveSpeed = 1;
+    public float moveSpeed = 1;
     private float speedCharacterRotate = 10;
 
     private InputAction inputActionUse;
