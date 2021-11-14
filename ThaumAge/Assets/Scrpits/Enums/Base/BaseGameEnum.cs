@@ -91,7 +91,7 @@ public enum InputActionUIEnum
     Navigate, Submit, Cancel, Point, Click, ScrollWheel, MiddleClick, RightClick, TrackedDevicePosition, TrackedDeviceOrientation,
     F1, F2, F3, F4, F5, F6, F7, F8, F9, F10, F11, F12,
     N1, N2, N3, N4, N5, N6, N7, N8, N9, N0, NAdd, NSub,//1234567890+-
-    ESC,
+    ESC,B
 }
 
 /// <summary>

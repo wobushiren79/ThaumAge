@@ -599,6 +599,15 @@ public partial class @GameInputActions : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""B"",
+                    ""type"": ""Button"",
+                    ""id"": ""2b0c4b06-0ea6-4123-8cfc-209ae6a14acc"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -1217,6 +1226,17 @@ public partial class @GameInputActions : IInputActionCollection2, IDisposable
                     ""action"": ""NSub"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""464126b1-322a-481b-9c8b-5b3a040c7dd5"",
+                    ""path"": ""<Keyboard>/b"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""B"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -1319,6 +1339,7 @@ public partial class @GameInputActions : IInputActionCollection2, IDisposable
         m_UI_N9 = m_UI.FindAction("N9", throwIfNotFound: true);
         m_UI_NAdd = m_UI.FindAction("NAdd", throwIfNotFound: true);
         m_UI_NSub = m_UI.FindAction("NSub", throwIfNotFound: true);
+        m_UI_B = m_UI.FindAction("B", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -1483,6 +1504,7 @@ public partial class @GameInputActions : IInputActionCollection2, IDisposable
     private readonly InputAction m_UI_N9;
     private readonly InputAction m_UI_NAdd;
     private readonly InputAction m_UI_NSub;
+    private readonly InputAction m_UI_B;
     public struct UIActions
     {
         private @GameInputActions m_Wrapper;
@@ -1511,6 +1533,7 @@ public partial class @GameInputActions : IInputActionCollection2, IDisposable
         public InputAction @N9 => m_Wrapper.m_UI_N9;
         public InputAction @NAdd => m_Wrapper.m_UI_NAdd;
         public InputAction @NSub => m_Wrapper.m_UI_NSub;
+        public InputAction @B => m_Wrapper.m_UI_B;
         public InputActionMap Get() { return m_Wrapper.m_UI; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1592,6 +1615,9 @@ public partial class @GameInputActions : IInputActionCollection2, IDisposable
                 @NSub.started -= m_Wrapper.m_UIActionsCallbackInterface.OnNSub;
                 @NSub.performed -= m_Wrapper.m_UIActionsCallbackInterface.OnNSub;
                 @NSub.canceled -= m_Wrapper.m_UIActionsCallbackInterface.OnNSub;
+                @B.started -= m_Wrapper.m_UIActionsCallbackInterface.OnB;
+                @B.performed -= m_Wrapper.m_UIActionsCallbackInterface.OnB;
+                @B.canceled -= m_Wrapper.m_UIActionsCallbackInterface.OnB;
             }
             m_Wrapper.m_UIActionsCallbackInterface = instance;
             if (instance != null)
@@ -1668,6 +1694,9 @@ public partial class @GameInputActions : IInputActionCollection2, IDisposable
                 @NSub.started += instance.OnNSub;
                 @NSub.performed += instance.OnNSub;
                 @NSub.canceled += instance.OnNSub;
+                @B.started += instance.OnB;
+                @B.performed += instance.OnB;
+                @B.canceled += instance.OnB;
             }
         }
     }
@@ -1753,5 +1782,6 @@ public partial class @GameInputActions : IInputActionCollection2, IDisposable
         void OnN9(InputAction.CallbackContext context);
         void OnNAdd(InputAction.CallbackContext context);
         void OnNSub(InputAction.CallbackContext context);
+        void OnB(InputAction.CallbackContext context);
     }
 }

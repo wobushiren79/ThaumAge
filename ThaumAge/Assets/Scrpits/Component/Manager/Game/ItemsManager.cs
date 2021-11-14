@@ -191,6 +191,10 @@ public class ItemsManager : BaseManager, IItemsInfoView
             string itemsTypeName = EnumUtil.GetEnumName(itemsType);
             //通过反射获取类
             Item item = ReflexUtil.CreateInstance<Item>("Item" + itemsTypeName);
+            if (item == null)
+            {
+                item = new Item();
+            }
             RegisterItem(itemsType, item);
         }
     }

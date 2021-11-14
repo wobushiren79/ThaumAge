@@ -15,18 +15,63 @@ public partial class UIGameMain : BaseUIComponent
         ui_Shortcuts.RefreshUI();
     }
 
+    public override void OnClickForButton(Button viewButton)
+    {
+        base.OnClickForButton(viewButton);
+        if(viewButton == ui_Details)
+        {
+            OpenUserDetailsUI();
+        }
+        else if (viewButton == ui_Setting)
+        {
+            OpenSettingUI();
+        }
+    }
+
     public override void OnInputActionForStarted(InputActionUIEnum inputName)
     {
         base.OnInputActionForStarted(inputName);
-        if (inputName == InputActionUIEnum.F12 && ProjectConfigInfo.BUILD_TYPE == ProjectBuildTypeEnum.Debug)
+        if (inputName == InputActionUIEnum.F12)
         {
-            //打开GM菜单
-            UIHandler.Instance.OpenUIAndCloseOther<UIGodMain>(UIEnum.GodMain);
+            OpenGodMain();
         }
         else if (inputName == InputActionUIEnum.ESC)
         {
-            //打开设置
-            UIHandler.Instance.OpenUIAndCloseOther<UIGameSetting>(UIEnum.GameSetting);
+            OpenSettingUI();
+        }
+        else if (inputName == InputActionUIEnum.B)
+        {
+            OpenUserDetailsUI();
+        }
+    }
+
+    /// <summary>
+    /// 打开用户详情
+    /// </summary>
+    public void OpenUserDetailsUI()
+    {
+        //打开用户详情
+        UIHandler.Instance.OpenUIAndCloseOther<UIGameUserDetails>(UIEnum.GameUserDetails);
+    }
+
+    /// <summary>
+    ///  打开设置
+    /// </summary>
+    public void OpenSettingUI()
+    {
+        //打开设置
+        UIHandler.Instance.OpenUIAndCloseOther<UIGameSetting>(UIEnum.GameSetting);
+    }
+
+    /// <summary>
+    /// 打开GM菜单
+    /// </summary>
+    public void OpenGodMain()
+    {
+        if (ProjectConfigInfo.BUILD_TYPE == ProjectBuildTypeEnum.Debug)
+        {
+            //打开GM菜单
+            UIHandler.Instance.OpenUIAndCloseOther<UIGodMain>(UIEnum.GodMain);
         }
     }
 }
