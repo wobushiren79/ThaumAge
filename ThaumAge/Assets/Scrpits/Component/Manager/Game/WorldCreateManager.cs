@@ -25,7 +25,7 @@ public class WorldCreateManager : BaseManager
     protected int worldSeed;
 
     public int widthChunk = 16;
-    public int heightChunk = 255;
+    public int heightChunk = 256;
     //世界大小
     public int worldSize = 10000;
     //世界范围
