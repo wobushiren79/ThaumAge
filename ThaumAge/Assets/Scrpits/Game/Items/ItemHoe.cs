@@ -20,14 +20,14 @@ public class ItemHoe : Item
 
                 Vector3Int localPosition = targetPosition - chunkForHit.chunkData.positionForWorld;
                 //获取原位置方块
-                chunkForHit.GetBlockForLocal(localPosition, out Block tagetBlock);
+                Block tagetBlock = chunkForHit.chunkData.GetBlockForLocal(localPosition);
 
                 //如果不能锄地
                 if (tagetBlock.blockInfo.plough_state == 0)
                     return;
 
                 //获取上方方块
-                chunkForHit.GetBlockForLocal(localPosition + Vector3Int.up, out Block upBlock);
+                Block upBlock = chunkForHit.chunkData.GetBlockForLocal(localPosition + Vector3Int.up);
 
                 //如果上方有方块 则无法使用锄头
                 if (upBlock != null && upBlock.blockType != BlockTypeEnum.None)

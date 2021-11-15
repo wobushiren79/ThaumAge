@@ -194,7 +194,8 @@ public abstract class Block
     /// <param name="getDirection"></param>
     /// <param name="closeBlock"></param>
     /// <param name="hasChunk"></param>
-    public virtual void GetCloseBlockByDirection(Chunk chunk, Vector3Int localPosition, DirectionEnum getDirection, out Block block, out Chunk blockChunk)
+    public virtual void GetCloseBlockByDirection(Chunk chunk, Vector3Int localPosition, DirectionEnum getDirection, 
+        out Block block, out Chunk blockChunk)
     {
         //获取目标的本地坐标
         block = null;
@@ -226,47 +227,55 @@ public abstract class Block
         }
         int maxWidth = chunk.chunkData.chunkWidth - 1;
         int maxHeight = chunk.chunkData.chunkHeight - 1;
-
         if (targetX < 0)
         {
             blockChunk = chunk.chunkData.chunkLeft;
             if (blockChunk != null)
             {
-                blockChunk.GetBlockForLocal(maxWidth, localPosition.y, localPosition.z, out block);
+                block = blockChunk.chunkData.GetBlockForLocal(maxWidth, localPosition.y, localPosition.z);
+                return;
             }
+            return;
         }
         else if (targetX > maxWidth)
         {
             blockChunk = chunk.chunkData.chunkRight;
             if (blockChunk != null)
             {
-                blockChunk.GetBlockForLocal(0, localPosition.y, localPosition.z, out block);
+                block = blockChunk.chunkData.GetBlockForLocal(0, localPosition.y, localPosition.z);
+                return;
             }
+            return;
         }
         else if (targetZ < 0)
         {
             blockChunk = chunk.chunkData.chunkForward;
             if (blockChunk != null)
             {
-                blockChunk.GetBlockForLocal(localPosition.x, localPosition.y, maxWidth, out block);
+                block = blockChunk.chunkData.GetBlockForLocal(localPosition.x, localPosition.y, maxWidth);
+                return;
             }
+            return;
         }
         else if (targetZ > maxWidth)
         {
             blockChunk = chunk.chunkData.chunkBack;
             if (blockChunk != null)
             {
-                blockChunk.GetBlockForLocal(localPosition.x, localPosition.y, 0, out block);
+                block = blockChunk.chunkData.GetBlockForLocal(localPosition.x, localPosition.y, 0);
+                return;
             }
+            return;
         }
         else if (targetY > maxHeight)
         {
             blockChunk = chunk;
+            return;
         }
         else
         {
             //如果在同一个chunk内
-            chunk.GetBlockForLocal(targetX, targetY, targetZ, out block);
+            block = chunk.chunkData.GetBlockForLocal(targetX, targetY, targetZ);
             blockChunk = chunk;
         }
     }

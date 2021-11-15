@@ -40,10 +40,39 @@ public class Test : BaseMonoBehaviour
     {
         if (GUILayout.Button("Test"))
         {
-            TimeTest6();
+            TimeTest7();
         }
     }
 
+    public void TimeTest7()
+    {
+        int number = 16 * 16 * 2560;
+        Stopwatch stopwatch = TimeUtil.GetMethodTimeStart();
+
+        for (int i = 0; i < number; i++)
+        {
+            Test1(out BlockBean data1);
+        }
+        TimeUtil.GetMethodTimeEnd("data1:", stopwatch);
+        stopwatch.Restart();
+
+        stopwatch.Start();
+        for (int i = 0; i < number; i++)
+        {
+            BlockBean block = Test2();
+        }
+        TimeUtil.GetMethodTimeEnd("data2:", stopwatch);
+    }
+
+
+    public void Test1(out BlockBean data1)
+    {
+        data1 = new BlockBean();
+    }
+    public BlockBean Test2()
+    {
+        return new BlockBean();
+    }
     public void TimeTest6()
     {
         int number = 16 * 16 * 256;

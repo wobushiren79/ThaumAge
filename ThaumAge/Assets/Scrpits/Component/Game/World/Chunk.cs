@@ -360,7 +360,7 @@ public class Chunk : BaseMonoBehaviour
     public void GetBlockForWorld(Vector3Int blockWorldPosition, out Block block, out bool isInside)
     {
         isInside = true;
-        GetBlockForLocal(blockWorldPosition - chunkData.positionForWorld, out block);
+        block = chunkData.GetBlockForLocal(blockWorldPosition - chunkData.positionForWorld);
     }
 
     public void GetBlockForLocal(Vector3Int localPosition, out Block block, out DirectionEnum direction, out bool isInside)
@@ -385,15 +385,6 @@ public class Chunk : BaseMonoBehaviour
             isInside = true;
             chunkData.GetBlockForLocal(localPosition, out block, out direction);
         }
-    }
-
-    public void GetBlockForLocal(Vector3Int localPosition, out Block block)
-    {
-        chunkData.GetBlockForLocal(localPosition, out block);
-    }
-    public void GetBlockForLocal(int x, int y, int z, out Block block)
-    {
-        chunkData.GetBlockForLocal(x, y, z, out block);
     }
 
     /// <summary>

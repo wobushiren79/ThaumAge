@@ -123,15 +123,15 @@ public class ChunkDataBean
         GetBlockForLocal(blockPosition.x, blockPosition.y, blockPosition.z, out block, out direction);
     }
 
-    public void GetBlockForLocal(int x, int y, int z, out Block block)
+    public Block GetBlockForLocal(int x, int y, int z)
     {
         int index = GetIndexByPosition(x, y, z);
-        block = arrayBlock[index];
+        return  arrayBlock[index];
     }
 
-    public void GetBlockForLocal(Vector3Int blockPosition, out Block block)
+    public Block GetBlockForLocal(Vector3Int blockPosition)
     {
-        GetBlockForLocal(blockPosition.x, blockPosition.y, blockPosition.z, out block);
+        return GetBlockForLocal(blockPosition.x, blockPosition.y, blockPosition.z);
     }
 
     /// <summary>
