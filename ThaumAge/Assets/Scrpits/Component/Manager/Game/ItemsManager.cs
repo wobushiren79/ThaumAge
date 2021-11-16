@@ -79,7 +79,7 @@ public class ItemsManager : BaseManager, IItemsInfoView
     /// <returns></returns>
     public ItemsInfoBean GetItemsInfoByBlockId(int blockId)
     {
-        for (int i=0;i< listItemsInfo.Count;i++)
+        for (int i = 0; i < listItemsInfo.Count; i++)
         {
             ItemsInfoBean itemsInfo = listItemsInfo[i];
             if (itemsInfo.type_id == blockId)
@@ -121,10 +121,10 @@ public class ItemsManager : BaseManager, IItemsInfoView
     /// </summary>
     /// <param name="id"></param>
     /// <returns></returns>
-    public Sprite GetItemsIconById(long id)
+    public void GetItemsIconById(long id, Action<Sprite> callBack)
     {
         ItemsInfoBean itemsInfo = GetItemsInfoById(id);
-        return IconHandler.Instance.manager.GetItemsSpriteByName(itemsInfo.icon_key);     
+        IconHandler.Instance.manager.GetItemsSpriteByName(itemsInfo.icon_key, callBack);
     }
 
     /// <summary>
@@ -137,7 +137,7 @@ public class ItemsManager : BaseManager, IItemsInfoView
         ItemsInfoBean itemsInfo = GetItemsInfoById(id);
         if (itemsInfo == null)
         {
-            if (dicItemsObj.TryGetValue(id,out GameObject value))
+            if (dicItemsObj.TryGetValue(id, out GameObject value))
             {
                 callBack?.Invoke(value);
             }

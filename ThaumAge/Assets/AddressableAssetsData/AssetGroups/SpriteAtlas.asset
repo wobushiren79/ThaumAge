@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: SpriteAtlas
+  m_EditorClassIdentifier: 
+  m_GroupName: SpriteAtlas
+  m_Data:
+    m_SerializedData: []
+  m_GUID: f1d0fa8d78da86c48a6a85c002e480fc
+  m_SerializeEntries:
+  - m_GUID: 8f9bd3aae34e2d145b112b70f60dc0bb
+    m_Address: Assets/Texture/SpriteAtlas/SpriteAtlasForItems.spriteatlas
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: fd6114d87f1af534fbf270c47c0f10bf, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: a667690d9ddb4ed46a81d3aefb6e96d5, type: 2}
+    - {fileID: 11400000, guid: 8f46416404ab5ab438248bcdc2d12cb5, type: 2}

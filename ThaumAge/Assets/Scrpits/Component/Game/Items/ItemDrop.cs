@@ -115,16 +115,20 @@ public class ItemDrop : BaseMonoBehaviour
     /// <param name="itemId"></param>
     public void SetIcon(long itemId)
     {
-        Sprite spIcon = ItemsHandler.Instance.manager.GetItemsIconById(itemId);
-        if (spIcon == null)
+        ItemsHandler.Instance.manager.GetItemsIconById(itemId, (spIcon) =>
         {
-            spIcon = IconHandler.Instance.GetUnKnowSprite();
-            SetIcon(spIcon);
-        }
-        else
-        {
-            SetIcon(spIcon);
-        }
+            if (spIcon == null)
+            {
+                IconHandler.Instance.GetUnKnowSprite((spIcon) =>
+                {
+                    SetIcon(spIcon);
+                });
+            }
+            else
+            {
+                SetIcon(spIcon);
+            }
+        });
     }
 
     /// <summary>
@@ -133,16 +137,20 @@ public class ItemDrop : BaseMonoBehaviour
     /// <param name="iconKey"></param>
     public void SetIcon(string iconKey)
     {
-        Sprite spIcon = IconHandler.Instance.manager.GetItemsSpriteByName(iconKey);
-        if (spIcon == null)
+        IconHandler.Instance.manager.GetItemsSpriteByName(iconKey, (spIcon) =>
         {
-            spIcon = IconHandler.Instance.GetUnKnowSprite();
-            SetIcon(spIcon);
-        }
-        else
-        {
-            SetIcon(spIcon);
-        }
+            if (spIcon == null)
+            {
+                IconHandler.Instance.GetUnKnowSprite((spIcon) =>
+                {
+                    SetIcon(spIcon);
+                });
+            }
+            else
+            {
+                SetIcon(spIcon);
+            }
+        });
     }
 
     /// <summary>

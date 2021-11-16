@@ -78,6 +78,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 91deda1c0db202f46af9477a1166fefc, type: 3}
   - {fileID: 21300000, guid: eae48e3cf338f41408444294e890f651, type: 3}
   - {fileID: 21300000, guid: 0a78d65c50add214089c05e46d4a0fbc, type: 3}
+  - {fileID: 21300000, guid: 98d1085c9848ff8458c5e002f486aa0b, type: 3}
   - {fileID: 21300000, guid: afddf66c1247585499f66a8bf5056a7a, type: 3}
   - {fileID: 21300000, guid: 3f18219ca88c6454fba5a49d5ca324d4, type: 3}
   - {fileID: 21300000, guid: b0d748acc4b51684ca302bc03196f25a, type: 3}
@@ -86,6 +87,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 0761178d69f59134b969d8c55ec45be7, type: 3}
   - {fileID: 21300000, guid: 5466a31ec854ee3429fe6949bc4c4737, type: 3}
   - {fileID: 21300000, guid: d0c1a91ed33b55a4292833e482611494, type: 3}
+  - {fileID: 21300000, guid: 16d4bd1e6c6d5344ab09325e246c4d9b, type: 3}
   - {fileID: 21300000, guid: 3986f84e20d8a0143833e60968e2307a, type: 3}
   - {fileID: 21300000, guid: 6c85ccde3337d784b88d46781c858b7b, type: 3}
   - {fileID: 21300000, guid: 9fb7765f63c19f043a167bf941dcd02a, type: 3}
@@ -120,6 +122,7 @@ SpriteAtlas:
   - icon_flower_earthflower
   - icon_flower_chrysanthemum
   - icon_flower_woodflower
+  - icon_item_300001
   - icon_ore_iron
   - icon_base
   - icon_grass_wild
@@ -128,6 +131,7 @@ SpriteAtlas:
   - icon_leaves_world
   - icon_tree_mushroom
   - icon_weed_2
+  - icon_item_200001
   - icon_item_1200001
   - icon_unknow
   - icon_grass_magic

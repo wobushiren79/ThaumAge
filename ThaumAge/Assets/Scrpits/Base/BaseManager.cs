@@ -5,6 +5,7 @@ using UnityEngine.Tilemaps;
 using UnityEngine.U2D;
 using RotaryHeart.Lib.SerializableDictionary;
 using System;
+using UnityEngine.ResourceManagement.AsyncOperations;
 
 public class BaseManager : BaseMonoBehaviour
 {
@@ -211,6 +212,36 @@ public class BaseManager : BaseMonoBehaviour
         {
             callBack?.Invoke(listData.Result);
         });
+    }
+
+    protected void GetSpriteByName(Dictionary<string, Sprite> dicIcon,SpriteAtlas spriteAtlas, string resName, string name,Action<SpriteAtlas> callBackForSpriteAtlas, Action<Sprite> callBackForSprite)
+    {
+        if (name == null)
+            return;
+        //从字典获取sprite
+        if (dicIcon.TryGetValue(name, out Sprite value))
+        {
+            callBackForSprite?.Invoke(value);
+            return;
+        }
+        //如果字典没有 尝试从atlas获取sprite
+        if (spriteAtlas != null)
+        {
+            Sprite itemSprite = GetSpriteByName(name, spriteAtlas);
+            if (itemSprite != null)
+                dicIcon.Add(name, itemSprite);
+            callBackForSprite?.Invoke(value);
+            return;
+        }
+        Action<AsyncOperationHandle<SpriteAtlas>> loadCallBack = (data) =>
+        {
+            if (data.Result != null)
+            {
+                SpriteAtlas spriteAtlas = data.Result;
+                callBackForSpriteAtlas?.Invoke(spriteAtlas);
+            }
+        };
+        LoadAddressablesUtil.LoadAssetAsync(resName, loadCallBack);
     }
 
     protected Sprite GetSpriteByName(IconBeanDictionary dicIcon, ref SpriteAtlas spriteAtlas, string atlasName, string assetBundlePath, string name)

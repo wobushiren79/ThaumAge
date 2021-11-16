@@ -3,8 +3,9 @@ using UnityEngine;
 
 public enum ItemsTypeEnum
 {
-    Block = 1,
-
+    Block = 1,//方块
+    Seed = 2,//种子
+    Food=3,//食物
     //装备类
     Hats = 11,//帽子
     Clothes = 12,//衣服

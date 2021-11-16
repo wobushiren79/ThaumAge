@@ -11,7 +11,7 @@ public class GameLauncher : BaseLauncher
 
     public override void Launch()
     {
-        base.Launch();       
+        base.Launch();
         //´ò¿ªÖ÷UI
         UIHandler.Instance.OpenUIAndCloseOther<UILoading>(UIEnum.Loading);
         UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();

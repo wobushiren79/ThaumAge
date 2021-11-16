@@ -39,7 +39,7 @@ public partial class UIViewItem : BaseUIView, IBeginDragHandler, IDragHandler, I
     /// <summary>
     /// 设置数据
     /// </summary>
-    public void SetData(long itemId, int itemNumber,string meta)
+    public void SetData(long itemId, int itemNumber, string meta)
     {
         this.itemId = itemId;
         this.itemNumber = itemNumber;
@@ -103,15 +103,24 @@ public partial class UIViewItem : BaseUIView, IBeginDragHandler, IDragHandler, I
     /// <param name="iconKey"></param>
     public void SetIcon(string iconKey)
     {
-        Sprite spIcon = IconHandler.Instance.manager.GetItemsSpriteByName(iconKey);
-        if (spIcon == null)
-        {
-            spIcon = IconHandler.Instance.GetUnKnowSprite();
-        }
-        if (ui_IVIcon != null)
-        {
-            ui_IVIcon.sprite = spIcon;
-        }
+        IconHandler.Instance.manager.GetItemsSpriteByName(iconKey, (spIcon) =>
+         {
+             if (spIcon == null)
+             {
+                 IconHandler.Instance.GetUnKnowSprite((spIcon) =>
+                 {
+                     if (ui_IVIcon != null)
+                     {
+                         ui_IVIcon.sprite = spIcon;
+                     }
+                 });
+             }
+             if (ui_IVIcon != null)
+             {
+                 ui_IVIcon.sprite = spIcon;
+             }
+         });
+
     }
 
     /// <summary>

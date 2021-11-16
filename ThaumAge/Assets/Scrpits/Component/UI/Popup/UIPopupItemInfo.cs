@@ -12,8 +12,11 @@ public partial class UIPopupItemInfo : PopupShowView
 
         this.itemId = itemId;
         ItemsInfo = ItemsHandler.Instance.manager.GetItemsInfoById(itemId);
-        Sprite itemIcon = ItemsHandler.Instance.manager.GetItemsIconById(itemId);
-        SetItemIcon(itemIcon);
+        
+        ItemsHandler.Instance.manager.GetItemsIconById(itemId,(itemIcon) => 
+        {
+            SetItemIcon(itemIcon);
+        });
         SetItemName(ItemsInfo.name);
         SetItemDetails("");
     }
@@ -26,7 +29,10 @@ public partial class UIPopupItemInfo : PopupShowView
     {
         if (iconSp == null)
         {
-            ui_ItemIcon.sprite = IconHandler.Instance.GetUnKnowSprite();
+            IconHandler.Instance.GetUnKnowSprite((iconSp) => 
+            {
+                ui_ItemIcon.sprite = iconSp;
+            });
         }
         else
         {
