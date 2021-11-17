@@ -37,11 +37,16 @@ public abstract class Block
 
     }
 
-    public Block(BlockTypeEnum blockType)
+    /// <summary>
+    /// …Ë÷√ ˝æ›
+    /// </summary>
+    /// <param name="blockType"></param>
+    public virtual void SetData(BlockTypeEnum blockType)
     {
         this.blockType = blockType;
+    } 
 
-    }
+
     public Vector3 GetCenterPosition(Vector3Int localPosition)
     {
         return new Vector3(localPosition.x + 0.5f, localPosition.y + 0.5f, localPosition.z + 0.5f);

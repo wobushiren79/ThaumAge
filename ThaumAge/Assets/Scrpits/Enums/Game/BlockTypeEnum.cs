@@ -45,7 +45,7 @@ public enum BlockTypeEnum
 
     Cactus = 4001,    //仙人掌
 
-
+    PlantPotato = 5001,//种植 土豆
 
     Water = 9001,//水
     Magma = 9002,//岩浆

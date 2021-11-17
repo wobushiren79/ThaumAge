@@ -113,8 +113,8 @@ public class BlockManager : BaseManager, IBlockInfoView
                 string blockShapeName = EnumUtil.GetEnumName(blockShape);
                 block = ReflexUtil.CreateInstance<Block>("Block" + blockShapeName);
             }
+            block.SetData(blockType);
             block.blockInfo = blockInfo;
-            block.blockType = blockType;
             RegisterBlock(blockType, block);
         }
     }

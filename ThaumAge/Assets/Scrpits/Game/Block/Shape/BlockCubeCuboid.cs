@@ -4,14 +4,16 @@ using UnityEngine;
 
 public class BlockCubeCuboid : BlockCube
 {
-    float leftOffsetBorder;
-    float rightOffsetBorder;
-    float downOffsetBorder;
-    float upOffsetBorder;
-    float forwardOffsetBorder;
-    float backOffsetBorder;
-    public BlockCubeCuboid() : base()
+    protected float leftOffsetBorder;
+    protected float rightOffsetBorder;
+    protected float downOffsetBorder;
+    protected float upOffsetBorder;
+    protected float forwardOffsetBorder;
+    protected float backOffsetBorder;
+
+    public override void SetData(BlockTypeEnum blockType)
     {
+        base.SetData(blockType);
         float[] offsetBorder = blockInfo.GetOffsetBorder();
         leftOffsetBorder = offsetBorder[0];
         rightOffsetBorder = offsetBorder[1];
@@ -20,7 +22,7 @@ public class BlockCubeCuboid : BlockCube
         forwardOffsetBorder = offsetBorder[4];
         backOffsetBorder = offsetBorder[5];
 
-        for (int i=0;i< vertsAddLeft.Length;i++)
+        for (int i = 0; i < vertsAddLeft.Length; i++)
         {
             vertsAddLeft[i] = vertsAddLeft[i].AddX(leftOffsetBorder);
         }

@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class BlockMagma : BlockWater
 {
-    public override void AddTris(Chunk chunk, Vector3Int localPosition, DirectionEnum direction, ChunkMeshData chunkMeshData)
+    public override void BaseAddTris(Chunk chunk, Vector3Int localPosition, DirectionEnum direction, ChunkMeshData chunkMeshData)
     {
         int index = chunkMeshData.verts.Count;
 
