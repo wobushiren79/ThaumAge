@@ -5,7 +5,7 @@ using UnityEngine;
 public class BlockPloughGrass : BlockCubeCuboid
 {
 
-    public override void AddUVs(Chunk chunk, Vector3Int localPosition, DirectionEnum direction, ChunkMeshData chunkMeshData, DirectionEnum buildDirection)
+    public override void BaseAddUVs(Chunk chunk, Vector3Int localPosition, DirectionEnum direction, ChunkMeshData chunkMeshData, DirectionEnum buildDirection)
     {
         Vector2 uvStartPosition = GetUVStartPosition(buildDirection);
 

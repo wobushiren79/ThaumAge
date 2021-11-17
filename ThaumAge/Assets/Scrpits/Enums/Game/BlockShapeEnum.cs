@@ -12,6 +12,7 @@ public enum BlockShapeEnum
 
     Liquid = 201,//液体
 
+    PlantCross = 301,//种植，正交叉
     PlantCrossOblique = 302,//种植，斜交叉
 
     Custom = 99999,//自定义

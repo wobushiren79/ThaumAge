@@ -4,6 +4,48 @@ using UnityEngine;
 
 public class BlockCubeCuboid : BlockCube
 {
+    float leftOffsetBorder;
+    float rightOffsetBorder;
+    float downOffsetBorder;
+    float upOffsetBorder;
+    float forwardOffsetBorder;
+    float backOffsetBorder;
+    public BlockCubeCuboid() : base()
+    {
+        float[] offsetBorder = blockInfo.GetOffsetBorder();
+        leftOffsetBorder = offsetBorder[0];
+        rightOffsetBorder = offsetBorder[1];
+        downOffsetBorder = offsetBorder[2];
+        upOffsetBorder = offsetBorder[3];
+        forwardOffsetBorder = offsetBorder[4];
+        backOffsetBorder = offsetBorder[5];
+
+        for (int i=0;i< vertsAddLeft.Length;i++)
+        {
+            vertsAddLeft[i] = vertsAddLeft[i].AddX(leftOffsetBorder);
+        }
+        for (int i = 0; i < vertsAddRight.Length; i++)
+        {
+            vertsAddRight[i] = vertsAddRight[i].AddX(rightOffsetBorder);
+        }
+        for (int i = 0; i < vertsAddDown.Length; i++)
+        {
+            vertsAddDown[i] = vertsAddDown[i].AddY(downOffsetBorder);
+        }
+        for (int i = 0; i < vertsAddUp.Length; i++)
+        {
+            vertsAddUp[i] = vertsAddUp[i].AddY(upOffsetBorder);
+        }
+        for (int i = 0; i < vertsAddForward.Length; i++)
+        {
+            vertsAddForward[i] = vertsAddForward[i].AddZ(forwardOffsetBorder);
+        }
+        for (int i = 0; i < vertsAddBack.Length; i++)
+        {
+            vertsAddBack[i] = vertsAddBack[i].AddZ(backOffsetBorder);
+        }
+    }
+
     /// <summary>
     /// 构建方块的六个面
     /// </summary>
@@ -15,35 +57,28 @@ public class BlockCubeCuboid : BlockCube
     /// <param name="tris"></param>
     public override void BuildBlock(Chunk chunk, Vector3Int localPosition, DirectionEnum direction, ChunkMeshData chunkMeshData)
     {
-        float[] offsetBorder = blockInfo.GetOffsetBorder();
-        float leftOffsetBorder = offsetBorder[0];
-        float rightOffsetBorder = offsetBorder[1];
-        float downOffsetBorder = offsetBorder[2];
-        float upOffsetBorder = offsetBorder[3];
-        float forwardOffsetBorder = offsetBorder[4];
-        float backOffsetBorder = offsetBorder[5];
         if (blockType != BlockTypeEnum.None)
         {
             //Left
             if (leftOffsetBorder == 0 ? CheckNeedBuildFace(chunk, localPosition, direction, DirectionEnum.Left) : true)
-                BuildFace(chunk, localPosition, direction, chunkMeshData, DirectionEnum.Left, new Vector3(localPosition.x + leftOffsetBorder, localPosition.y, localPosition.z), Vector3.up, Vector3.forward, false);
+                BuildFace(chunk, localPosition, direction, chunkMeshData, DirectionEnum.Left, vertsAddLeft, false);
             //Right
             if (rightOffsetBorder == 1 ? CheckNeedBuildFace(chunk, localPosition, direction, DirectionEnum.Right) : true)
-                BuildFace(chunk, localPosition, direction, chunkMeshData, DirectionEnum.Right, new Vector3(localPosition.x + rightOffsetBorder, localPosition.y, localPosition.z), Vector3.up, Vector3.forward, true);
+                BuildFace(chunk, localPosition, direction, chunkMeshData, DirectionEnum.Right, vertsAddRight, true);
 
             //Bottom
             if (downOffsetBorder == 0 ? CheckNeedBuildFace(chunk, localPosition, direction, DirectionEnum.Down) : true)
-                BuildFace(chunk, localPosition, direction, chunkMeshData, DirectionEnum.Down, new Vector3(localPosition.x, localPosition.y + downOffsetBorder, localPosition.z), Vector3.forward, Vector3.right, false);
+                BuildFace(chunk, localPosition, direction, chunkMeshData, DirectionEnum.Down, vertsAddDown, false);
             //Top
             if (upOffsetBorder == 1 ? CheckNeedBuildFace(chunk, localPosition, direction, DirectionEnum.UP) : true)
-                BuildFace(chunk, localPosition, direction, chunkMeshData, DirectionEnum.UP, new Vector3(localPosition.x, localPosition.y + upOffsetBorder, localPosition.z), Vector3.forward, Vector3.right, true);
+                BuildFace(chunk, localPosition, direction, chunkMeshData, DirectionEnum.UP, vertsAddUp, true);
 
             //Front
             if (forwardOffsetBorder == 0 ? CheckNeedBuildFace(chunk, localPosition, direction, DirectionEnum.Forward) : true)
-                BuildFace(chunk, localPosition, direction, chunkMeshData, DirectionEnum.Forward, new Vector3(localPosition.x, localPosition.y, localPosition.z + forwardOffsetBorder), Vector3.up, Vector3.right, true);
+                BuildFace(chunk, localPosition, direction, chunkMeshData, DirectionEnum.Forward, vertsAddForward, true);
             //Back
             if (backOffsetBorder == 1 ? CheckNeedBuildFace(chunk, localPosition, direction, DirectionEnum.Back) : true)
-                BuildFace(chunk, localPosition, direction, chunkMeshData, DirectionEnum.Back, new Vector3(localPosition.x, localPosition.y, localPosition.z + backOffsetBorder), Vector3.up, Vector3.right, false);
+                BuildFace(chunk, localPosition, direction, chunkMeshData, DirectionEnum.Back, vertsAddBack, false);
         }
     }
 

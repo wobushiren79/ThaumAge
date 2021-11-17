@@ -4,15 +4,58 @@ using UnityEditor;
 using UnityEngine;
 public class BlockCube : Block
 {
-    public BlockCube() : base()
+    protected Vector3[] vertsAddLeft;
+    protected Vector3[] vertsAddRight;
+    protected Vector3[] vertsAddDown;
+    protected Vector3[] vertsAddUp;
+    protected Vector3[] vertsAddForward;
+    protected Vector3[] vertsAddBack;
+    public BlockCube()
     {
-
+        vertsAddLeft = new Vector3[]
+        {
+            new Vector3(0,0,0),
+            new Vector3(0,1,0),
+            new Vector3(0,1,1),
+            new Vector3(0,0,1)
+        };
+        vertsAddRight = new Vector3[]
+        {
+            new Vector3(1,0,0),
+            new Vector3(1,1,0),
+            new Vector3(1,1,1),
+            new Vector3(1,0,1)
+        };
+        vertsAddDown = new Vector3[]
+        {
+            new Vector3(0,0,0),
+            new Vector3(0,0,1),
+            new Vector3(1,0,1),
+            new Vector3(1,0,0)
+        };
+        vertsAddUp = new Vector3[]
+        {
+            new Vector3(0,1,0),
+            new Vector3(0,1,1),
+            new Vector3(1,1,1),
+            new Vector3(1,1,0)
+        };
+        vertsAddForward = new Vector3[]
+        {
+            new Vector3(0,0,0),
+            new Vector3(0,1,0),
+            new Vector3(1,1,0),
+            new Vector3(1,0,0)
+        };
+        vertsAddBack = new Vector3[]
+        {
+            new Vector3(0,0,1),
+            new Vector3(0,1,1),
+            new Vector3(1,1,1),
+            new Vector3(1,0,1)
+        };
     }
 
-    public BlockCube(BlockTypeEnum blockType) : base(blockType)
-    {
-
-    }
 
     /// <summary>
     /// 构建方块的六个面
@@ -31,24 +74,24 @@ public class BlockCube : Block
         {
             //Left
             if (CheckNeedBuildFace(chunk, localPosition, direction, DirectionEnum.Left))
-                BuildFace(chunk, localPosition, direction, chunkMeshData, DirectionEnum.Left, localPosition, Vector3.up, Vector3.forward, false);
+                BuildFace(chunk, localPosition, direction, chunkMeshData, DirectionEnum.Left, vertsAddLeft, false);
             //Right
             if (CheckNeedBuildFace(chunk, localPosition, direction, DirectionEnum.Right))
-                BuildFace(chunk, localPosition, direction, chunkMeshData, DirectionEnum.Right, new Vector3Int(localPosition.x + 1, localPosition.y, localPosition.z), Vector3.up, Vector3.forward, true);
+                BuildFace(chunk, localPosition, direction, chunkMeshData, DirectionEnum.Right, vertsAddRight, true);
 
             //Bottom
             if (CheckNeedBuildFace(chunk, localPosition, direction, DirectionEnum.Down))
-                BuildFace(chunk, localPosition, direction, chunkMeshData, DirectionEnum.Down, localPosition, Vector3.forward, Vector3.right, false);
+                BuildFace(chunk, localPosition, direction, chunkMeshData, DirectionEnum.Down, vertsAddDown, false);
             //Top
             if (CheckNeedBuildFace(chunk, localPosition, direction, DirectionEnum.UP))
-                BuildFace(chunk, localPosition, direction, chunkMeshData, DirectionEnum.UP, new Vector3Int(localPosition.x, localPosition.y + 1, localPosition.z), Vector3.forward, Vector3.right, true);
+                BuildFace(chunk, localPosition, direction, chunkMeshData, DirectionEnum.UP, vertsAddUp, true);
 
             //Forward
             if (CheckNeedBuildFace(chunk, localPosition, direction, DirectionEnum.Forward))
-                BuildFace(chunk, localPosition, direction, chunkMeshData, DirectionEnum.Forward, localPosition, Vector3.up, Vector3.right, true);
+                BuildFace(chunk, localPosition, direction, chunkMeshData, DirectionEnum.Forward, vertsAddForward, true);
             //Back
             if (CheckNeedBuildFace(chunk, localPosition, direction, DirectionEnum.Back))
-                BuildFace(chunk, localPosition, direction, chunkMeshData, DirectionEnum.Back, new Vector3Int(localPosition.x, localPosition.y, localPosition.z + 1), Vector3.up, Vector3.right, false);
+                BuildFace(chunk, localPosition, direction, chunkMeshData, DirectionEnum.Back, vertsAddBack, false);
         }
     }
 
@@ -57,12 +100,12 @@ public class BlockCube : Block
         base.BuildBlock(chunk, localPosition, direction, chunkMeshData);
         if (blockType != BlockTypeEnum.None)
         {
-            BuildFace(chunk, localPosition, direction, chunkMeshData, DirectionEnum.Left, localPosition, Vector3.up, Vector3.forward, false);
-            BuildFace(chunk, localPosition, direction, chunkMeshData, DirectionEnum.Right,  localPosition + new Vector3Int(1, 0, 0), Vector3.up, Vector3.forward, true);
-            BuildFace(chunk, localPosition, direction, chunkMeshData, DirectionEnum.Down, localPosition, Vector3.forward, Vector3.right, false);
-            BuildFace(chunk, localPosition, direction, chunkMeshData, DirectionEnum.UP, localPosition + new Vector3Int(0, 1, 0), Vector3.forward, Vector3.right, true);
-            BuildFace(chunk, localPosition, direction, chunkMeshData, DirectionEnum.Forward, localPosition, Vector3.up, Vector3.right, true);
-            BuildFace(chunk, localPosition, direction, chunkMeshData, DirectionEnum.Back, localPosition + new Vector3Int(0, 0, 1), Vector3.up, Vector3.right, false);
+            BuildFace(chunk, localPosition, direction, chunkMeshData, DirectionEnum.Left, vertsAddLeft, false);
+            BuildFace(chunk, localPosition, direction, chunkMeshData, DirectionEnum.Right, vertsAddRight, true);
+            BuildFace(chunk, localPosition, direction, chunkMeshData, DirectionEnum.Down, vertsAddDown, false);
+            BuildFace(chunk, localPosition, direction, chunkMeshData, DirectionEnum.UP, vertsAddUp, true);
+            BuildFace(chunk, localPosition, direction, chunkMeshData, DirectionEnum.Forward, vertsAddForward, true);
+            BuildFace(chunk, localPosition, direction, chunkMeshData, DirectionEnum.Back, vertsAddBack, false);
         }
     }
 
@@ -78,33 +121,23 @@ public class BlockCube : Block
     /// <param name="right"></param>
     /// <param name="reversed"></param>
     /// <param name="chunkData"></param>
-    public virtual void BuildFace(Chunk chunk, Vector3Int localPosition, DirectionEnum direction, ChunkMeshData chunkMeshData, DirectionEnum buildDirection, Vector3 corner, Vector3 up, Vector3 right, bool reversed)
+    public virtual void BuildFace(Chunk chunk, Vector3Int localPosition, DirectionEnum direction, ChunkMeshData chunkMeshData, DirectionEnum buildDirection, Vector3[] vertsAddFace, bool reversed)
     {
-        AddTris(chunk, localPosition, direction, chunkMeshData,reversed);
-        AddVerts(chunk, localPosition, direction, chunkMeshData, corner, up, right);
-        AddUVs(chunk, localPosition, direction, chunkMeshData, buildDirection);
+        BaseAddTris(chunk, localPosition, direction, chunkMeshData,reversed);
+        BaseAddVerts(chunk, localPosition, direction, chunkMeshData, vertsAddFace);
+        BaseAddUVs(chunk, localPosition, direction, chunkMeshData, buildDirection);
     }
 
-    public virtual void AddVerts(Chunk chunk, Vector3Int localPosition, DirectionEnum direction, ChunkMeshData chunkMeshData, Vector3 corner, Vector3 up, Vector3 right)
+    public override void BaseAddVerts(Chunk chunk, Vector3Int localPosition, DirectionEnum direction, ChunkMeshData chunkMeshData, Vector3[] vertsAdd)
     {
-        base.AddVerts(chunk, localPosition, direction, chunkMeshData, corner);
-
-        List<Vector3> verts = chunkMeshData.verts;
-        AddVert(localPosition, direction, verts, corner);
-        AddVert(localPosition, direction, verts, corner + up);
-        AddVert(localPosition, direction, verts, corner + up + right);
-        AddVert(localPosition, direction, verts, corner + right);
-
-        List<Vector3> vertsCollider = chunkMeshData.vertsCollider;
-        AddVert(localPosition, direction, vertsCollider, corner);
-        AddVert(localPosition, direction, vertsCollider, corner + up);
-        AddVert(localPosition, direction, vertsCollider, corner + up + right);
-        AddVert(localPosition, direction, vertsCollider, corner + right);
+        base.BaseAddVerts(chunk, localPosition, direction, chunkMeshData, vertsAdd);
+        AddVerts(localPosition, direction, chunkMeshData.verts, vertsAdd);
+        AddVerts(localPosition, direction, chunkMeshData.vertsCollider, vertsAdd);
     }
 
-    public virtual void AddUVs(Chunk chunk, Vector3Int localPosition, DirectionEnum direction, ChunkMeshData chunkMeshData, DirectionEnum buildDirection)
+    public virtual void BaseAddUVs(Chunk chunk, Vector3Int localPosition, DirectionEnum direction, ChunkMeshData chunkMeshData, DirectionEnum buildDirection)
     {
-        base.AddUVs(chunk, localPosition, direction, chunkMeshData);
+        base.BaseAddUVs(chunk, localPosition, direction, chunkMeshData);
 
         Vector2 uvStartPosition = GetUVStartPosition(buildDirection);
 
@@ -116,9 +149,9 @@ public class BlockCube : Block
     }
 
 
-    public virtual void AddTris(Chunk chunk, Vector3Int localPosition, DirectionEnum direction, ChunkMeshData chunkMeshData, bool reversed)
+    public virtual void BaseAddTris(Chunk chunk, Vector3Int localPosition, DirectionEnum direction, ChunkMeshData chunkMeshData, bool reversed)
     {
-        base.AddTris(chunk, localPosition, direction, chunkMeshData);
+        base.BaseAddTris(chunk, localPosition, direction, chunkMeshData);
 
         int index = chunkMeshData.verts.Count;
         int indexCollider = chunkMeshData.vertsCollider.Count;
@@ -162,6 +195,12 @@ public class BlockCube : Block
             trisCollider.Add(indexCollider + 2);
         }
     }
+
+    /// <summary>
+    /// 获取起始UV
+    /// </summary>
+    /// <param name="buildDirection"></param>
+    /// <returns></returns>
     public virtual Vector2 GetUVStartPosition(DirectionEnum buildDirection)
     {
         Vector2Int[] arrayUVData = blockInfo.GetUVPosition();

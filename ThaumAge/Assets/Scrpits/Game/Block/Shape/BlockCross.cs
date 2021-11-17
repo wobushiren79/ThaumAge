@@ -4,12 +4,28 @@ using UnityEngine;
 
 public class BlockCross : Block
 {
+    public BlockCross()
+    {
+        vertsAdd = new Vector3[]
+        {
+            new Vector3(0.5f,0f,0f),
+            new Vector3(0.5f,1f,0f),
+            new Vector3(0.5f,1f,1f),
+            new Vector3(0.5f,0f,1f),
+
+            new Vector3(0f,0f,0.5f),
+            new Vector3(0f,1f,0.5f),
+            new Vector3(1f,1f,0.5f),
+            new Vector3(1f,0f,0.5f)
+        };
+    }
+
     public override void BuildBlock(Chunk chunk, Vector3Int localPosition, DirectionEnum direction, ChunkMeshData chunkMeshData)
     {
         base.BuildBlock(chunk, localPosition, direction, chunkMeshData);
         if (blockType != BlockTypeEnum.None)
         {
-            BuildFace(chunk, localPosition, direction, chunkMeshData, localPosition);
+            BuildFace(chunk, localPosition, direction, chunkMeshData, vertsAdd);
         }
     }
 
@@ -26,9 +42,9 @@ public class BlockCross : Block
         }
     }
 
-    public override void AddTris(Chunk chunk, Vector3Int localPosition, DirectionEnum direction, ChunkMeshData chunkMeshData)
+    public override void BaseAddTris(Chunk chunk, Vector3Int localPosition, DirectionEnum direction, ChunkMeshData chunkMeshData)
     {
-        base.AddTris(chunk, localPosition, direction, chunkMeshData);
+        base.BaseAddTris(chunk, localPosition, direction, chunkMeshData);
 
         int index = chunkMeshData.verts.Count;
         int triggerIndex = chunkMeshData.vertsTrigger.Count;
@@ -68,9 +84,9 @@ public class BlockCross : Block
         chunkMeshData.trisTrigger.Add(triggerIndex + 7);
     }
 
-    public override void AddUVs(Chunk chunk, Vector3Int localPosition, DirectionEnum direction, ChunkMeshData chunkMeshData)
+    public override void BaseAddUVs(Chunk chunk, Vector3Int localPosition, DirectionEnum direction, ChunkMeshData chunkMeshData)
     {
-        base.AddUVs(chunk, localPosition, direction, chunkMeshData);
+        base.BaseAddUVs(chunk, localPosition, direction, chunkMeshData);
         Vector2 uvStartPosition =  GetUVStartPosition();
 
         List<Vector2> uvs = chunkMeshData.uvs;
@@ -85,31 +101,11 @@ public class BlockCross : Block
         uvs.Add(new Vector2(uvStartPosition.x + uvWidth, uvStartPosition.y));
     }
 
-    public override void AddVerts(Chunk chunk, Vector3Int localPosition, DirectionEnum direction, ChunkMeshData chunkMeshData, Vector3 corner)
+    public override void BaseAddVerts(Chunk chunk, Vector3Int localPosition, DirectionEnum direction, ChunkMeshData chunkMeshData, Vector3[] vertsAdd)
     {
-        base.AddVerts(chunk, localPosition, direction, chunkMeshData, corner);
-        List<Vector3> verts = chunkMeshData.verts;
-
-        AddVert(localPosition, direction, verts, new Vector3(corner.x + 0.5f, corner.y, corner.z));
-        AddVert(localPosition, direction, verts, new Vector3(corner.x + 0.5f, corner.y + 1f, corner.z));
-        AddVert(localPosition, direction, verts, new Vector3(corner.x + 0.5f, corner.y + 1f, corner.z + 1f));
-        AddVert(localPosition, direction, verts, new Vector3(corner.x + 0.5f, corner.y, corner.z + 1f));
-
-        AddVert(localPosition, direction, verts, new Vector3(corner.x, corner.y, corner.z + 0.5f));
-        AddVert(localPosition, direction, verts, new Vector3(corner.x, corner.y + 1f, corner.z + 0.5f));
-        AddVert(localPosition, direction, verts, new Vector3(corner.x + 1f, corner.y + 1f, corner.z + 0.5f));
-        AddVert(localPosition, direction, verts, new Vector3(corner.x + 1f, corner.y, corner.z + 0.5f));
-
-
-        AddVert(localPosition, direction, chunkMeshData.vertsTrigger, corner + new Vector3(0.5f, 0, 0));
-        AddVert(localPosition, direction, chunkMeshData.vertsTrigger, corner + new Vector3(0.5f, 1, 0));
-        AddVert(localPosition, direction, chunkMeshData.vertsTrigger, corner + new Vector3(0.5f, 1, 1));
-        AddVert(localPosition, direction, chunkMeshData.vertsTrigger, corner + new Vector3(0.5f, 0, 1));
-
-        AddVert(localPosition, direction, chunkMeshData.vertsTrigger, corner + new Vector3(0, 0, 0.5f));
-        AddVert(localPosition, direction, chunkMeshData.vertsTrigger, corner + new Vector3(0, 1, 0.5f));
-        AddVert(localPosition, direction, chunkMeshData.vertsTrigger, corner + new Vector3(1, 1, 0.5f));
-        AddVert(localPosition, direction, chunkMeshData.vertsTrigger, corner + new Vector3(1, 0, 0.5f));
+        base.BaseAddVerts(chunk, localPosition, direction, chunkMeshData, vertsAdd);
+        AddVerts(localPosition, direction, chunkMeshData.verts, vertsAdd);
+        AddVerts(localPosition, direction, chunkMeshData.vertsTrigger, vertsAdd);
     }
 
 
