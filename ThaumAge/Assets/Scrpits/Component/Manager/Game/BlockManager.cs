@@ -105,13 +105,13 @@ public class BlockManager : BaseManager, IBlockInfoView
             BlockInfoBean blockInfo = GetBlockInfo(blockType);
             string blockTypeName = EnumUtil.GetEnumName(blockType);
             //通过反射获取类
-            Block block = ReflexUtil.CreateInstance<Block>("Block" + blockTypeName);
+            Block block = ReflexUtil.CreateInstance<Block>($"Block{blockTypeName}");
             if (block == null)
             {
                 //如果没有指定类 则根据形状使用基础方块类
                 BlockShapeEnum blockShape = blockInfo.GetBlockShape();
                 string blockShapeName = EnumUtil.GetEnumName(blockShape);
-                block = ReflexUtil.CreateInstance<Block>("Block" + blockShapeName);
+                block = ReflexUtil.CreateInstance<Block>($"BlockShape{blockShapeName}");
             }
             block.SetData(blockType);
             block.blockInfo = blockInfo;

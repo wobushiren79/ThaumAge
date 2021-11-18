@@ -2,9 +2,9 @@
 using UnityEditor;
 using UnityEngine;
 
-public class BlockPlantCrossOblique : BlockCrossOblique
+public class BlockShapePlantCrossOblique : BlockShapeCrossOblique
 {
-    public BlockPlantCrossOblique() : base()
+    public BlockShapePlantCrossOblique() : base()
     {
         //往下偏移的位置
         float offsetY = -1f / 16f;

@@ -2,16 +2,18 @@
 using UnityEditor;
 using UnityEngine;
 
-public class BlockPloughGrass : BlockCubeCuboid
+public class BlockPloughGrass : BlockShapeCubeCuboid
 {
 
-    public override void BaseAddUVs(Chunk chunk, Vector3Int localPosition, DirectionEnum direction, ChunkMeshData chunkMeshData, DirectionEnum buildDirection)
+    public override void SetData(BlockTypeEnum blockType)
     {
-        Vector2 uvStartPosition = GetUVStartPosition(buildDirection);
+        base.SetData(blockType);
+    }
 
-        List<Vector2> uvs = chunkMeshData.uvs;
+    public override void BaseAddUVs(Chunk chunk, Vector3Int localPosition, DirectionEnum direction, ChunkMeshData chunkMeshData, Vector2[] uvsAdd)
+    {
         WorldDataBean worldData = chunk.GetWorldData();
-        if (worldData.chunkData.GetBlockData(localPosition.x, localPosition.y, localPosition.z, out BlockBean blockData))
+        if (buildDirection == DirectionEnum.UP && worldData.chunkData.GetBlockData(localPosition.x, localPosition.y, localPosition.z, out BlockBean blockData))
         {
             FromMetaData(blockData.meta, out int rotate);
             if (rotate == 1)
@@ -23,10 +25,7 @@ public class BlockPloughGrass : BlockCubeCuboid
                 return;
             }
         }
-        uvs.Add(uvStartPosition);
-        uvs.Add(new Vector2(uvStartPosition.x, uvStartPosition.y + uvWidth));
-        uvs.Add(new Vector2(uvStartPosition.x + uvWidth, uvStartPosition.y + uvWidth));
-        uvs.Add(new Vector2(uvStartPosition.x + uvWidth, uvStartPosition.y));
+        base.BaseAddUVs( chunk,  localPosition,  direction,  chunkMeshData, uvsAdd);
     }
 
     /// <summary>

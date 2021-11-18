@@ -24,7 +24,7 @@ public class BuildingEditor : BaseMonoBehaviour
     {
         BlockHandler.Instance.manager.InitData();
 
-        BlockCube blockCube = new BlockCube();
+        BlockShapeCube blockCube = new BlockShapeCube();
 
         ChunkMeshData chunkMeshData = new ChunkMeshData();
 

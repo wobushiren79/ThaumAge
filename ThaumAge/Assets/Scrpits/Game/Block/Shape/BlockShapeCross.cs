@@ -2,9 +2,9 @@
 using UnityEditor;
 using UnityEngine;
 
-public class BlockCross : Block
+public class BlockShapeCross : Block
 {
-    public BlockCross()
+    public BlockShapeCross()
     {
         vertsAdd = new Vector3[]
         {
@@ -29,13 +29,13 @@ public class BlockCross : Block
         }
     }
 
-    public override void RefreshBlock(Chunk chunk, Vector3Int localPosition, DirectionEnum direction)
+    public override void RefreshBlock(Chunk chunk, Vector3Int localPosition)
     {
-        base.RefreshBlock(chunk, localPosition, direction);
+        base.RefreshBlock(chunk, localPosition);
         //获取下方方块
-        chunk.GetBlockForLocal(localPosition + Vector3Int.down, out Block downBlock, out DirectionEnum downBlockdirection, out bool isInside);
+        Block downBlock = chunk.chunkData.GetBlockForLocal(localPosition + Vector3Int.down);
         //如果下方方块为NONE或者为液体
-        if (isInside && (downBlock == null || downBlock.blockType == BlockTypeEnum.None || downBlock.blockInfo.GetBlockShape() == BlockShapeEnum.Liquid))
+        if (downBlock == null || downBlock.blockType == BlockTypeEnum.None || downBlock.blockInfo.GetBlockShape() == BlockShapeEnum.Liquid)
         {
             chunk.SetBlockForLocal(localPosition, BlockTypeEnum.None);
             WorldCreateHandler.Instance.manager.AddUpdateChunk(chunk);

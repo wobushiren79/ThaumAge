@@ -1,0 +1,44 @@
+﻿using UnityEditor;
+using UnityEngine;
+
+public class ItemSeed : Item
+{
+    public override void Use()
+    {
+        base.Use();
+
+        Player player = GameHandler.Instance.manager.player;
+
+        //检测玩家前方是否有方块
+        if (player.playerRay.RayToChunkBlock(out RaycastHit hit, out Vector3Int targetBlockPosition))
+        {
+            Chunk chunkForHit = hit.collider.GetComponentInParent<Chunk>();
+            if (chunkForHit)
+            {
+                //获取位置和方向
+                player.playerRay.GetHitPositionAndDirection(hit, out Vector3Int targetPosition, out Vector3Int closePosition, out DirectionEnum direction);
+
+                Vector3Int localPosition = targetPosition - chunkForHit.chunkData.positionForWorld;
+                //获取原位置方块
+                Block tagetBlock = chunkForHit.chunkData.GetBlockForLocal(localPosition);
+
+                //如果不能种地
+                if (tagetBlock.blockInfo.plant_state == 0)
+                    return;
+
+                //获取上方方块
+                Block upBlock = chunkForHit.chunkData.GetBlockForLocal(localPosition + Vector3Int.up);
+
+                //如果上方有方块 则无法种植
+                if (upBlock != null && upBlock.blockType != BlockTypeEnum.None)
+                    return;
+
+                //替换为种植
+                chunkForHit.SetBlockForLocal(localPosition, (BlockTypeEnum)tagetBlock.blockInfo.plough_change,DirectionEnum.UP);
+
+                //更新区块
+                WorldCreateHandler.Instance.HandleForUpdateChunk(true, null);
+            }
+        }
+    }
+}

@@ -3,23 +3,23 @@ using UnityEngine;
 using System.Collections;
 using System.Security.Cryptography;
 
-public class BlockWater : BlockLiquid
+public class BlockWater : BlockShapeLiquid
 {
-    public override void InitBlock(Chunk chunk, Vector3Int localPosition, DirectionEnum direction)
+    public override void InitBlock(Chunk chunk, Vector3Int localPosition)
     {
-        base.InitBlock(chunk, localPosition, direction);
-        chunk.RegisterEventUpdate(localPosition);
+        base.InitBlock(chunk, localPosition);
+        chunk.RegisterEventUpdate(localPosition, 1);
     }
 
-    public override void EventBlockUpdate(Chunk chunk, Vector3Int localPosition, DirectionEnum direction)
+    public override void EventBlockUpdateFor1(Chunk chunk, Vector3Int localPosition)
     {
-        base.EventBlockUpdate(chunk, localPosition, direction);
+        base.EventBlockUpdateFor1(chunk, localPosition);
         //添加下方水方块
         Vector3Int downBlockWorldPosition = localPosition + Vector3Int.down + chunk.chunkData.positionForWorld;
         //设置下方方块
         bool isSuccess = SetCloseFlowBlock(downBlockWorldPosition);
         //取消注册
-        chunk.UnRegisterEventUpdate(localPosition);
+        chunk.UnRegisterEventUpdate(localPosition, 1);
     }
 
     /// <summary>
@@ -65,10 +65,10 @@ public class BlockWater : BlockLiquid
     /// 删除方块
     /// </summary>
     /// <param name="chunk"></param>
-    public override void DestoryBlock(Chunk chunk, Vector3Int localPosition, DirectionEnum direction)
+    public override void DestoryBlock(Chunk chunk, Vector3Int localPosition)
     {
-        base.DestoryBlock(chunk, localPosition, direction);
+        base.DestoryBlock(chunk, localPosition);
         //取消注册
-        chunk.UnRegisterEventUpdate(localPosition);
+        chunk.UnRegisterEventUpdate(localPosition,1);
     }
 }

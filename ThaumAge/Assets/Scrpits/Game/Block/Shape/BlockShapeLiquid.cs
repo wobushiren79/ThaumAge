@@ -2,7 +2,7 @@
 using UnityEditor;
 using UnityEngine;
 
-public class BlockLiquid : Block
+public class BlockShapeLiquid : Block
 {
 
     /// <summary>

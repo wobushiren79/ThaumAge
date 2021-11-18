@@ -2,9 +2,9 @@
 using UnityEditor;
 using UnityEngine;
 
-public class BlockCrossOblique : BlockCross
+public class BlockShapeCrossOblique : BlockShapeCross
 {
-    public BlockCrossOblique()
+    public BlockShapeCrossOblique()
     {
         vertsAdd = new Vector3[]
         {

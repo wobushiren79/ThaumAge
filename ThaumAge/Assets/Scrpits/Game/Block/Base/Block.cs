@@ -183,6 +183,20 @@ public abstract class Block
         arrayVerts[indexVerts] = RotatePosition(direction, vert, GetCenterPosition(localPosition));
     }
 
+    /// <summary>
+    /// 增加UV
+    /// </summary>
+    /// <param name="localPosition"></param>
+    /// <param name="direction"></param>
+    /// <param name="listUVs"></param>
+    /// <param name="uvsAdd"></param>
+    public virtual void AddUVs(List<Vector2> listUVs, Vector2[] uvsAdd)
+    {
+        for (int i = 0; i < uvsAdd.Length; i++)
+        {
+            listUVs.Add(uvsAdd[i]);
+        }
+    }
 
     /// <summary>
     /// 获取旋转方向
@@ -490,23 +504,30 @@ public abstract class Block
     /// <summary>
     /// 初始化方块
     /// </summary>
-    public virtual void InitBlock(Chunk chunk, Vector3Int localPosition, DirectionEnum direction)
+    public virtual void InitBlock(Chunk chunk, Vector3Int localPosition)
     {
-        CreateBlockModel(chunk, localPosition, direction);
+        CreateBlockModel(chunk, localPosition);
     }
 
     /// <summary>
     /// 摧毁方块
     /// </summary>
-    public virtual void DestoryBlock(Chunk chunk, Vector3Int localPosition, DirectionEnum direction)
+    public virtual void DestoryBlock(Chunk chunk, Vector3Int localPosition)
     {
-        DestoryBlockModel(chunk, localPosition, direction);
+        DestoryBlockModel(chunk, localPosition);
     }
 
     /// <summary>
-    /// 事件方块更新
+    /// 事件方块更新_1秒
     /// </summary>
-    public virtual void EventBlockUpdate(Chunk chunk, Vector3Int localPosition, DirectionEnum direction)
+    public virtual void EventBlockUpdateFor1(Chunk chunk, Vector3Int localPosition)
+    {
+
+    }
+    /// <summary>
+    /// 事件方块更新_60秒
+    /// </summary>
+    public virtual void EventBlockUpdateFor60(Chunk chunk, Vector3Int localPosition)
     {
 
     }
@@ -514,7 +535,7 @@ public abstract class Block
     /// <summary>
     /// 创建方块的模型
     /// </summary>
-    public virtual void CreateBlockModel(Chunk chunk, Vector3Int localPosition, DirectionEnum direction)
+    public virtual void CreateBlockModel(Chunk chunk, Vector3Int localPosition)
     {
         //如果有模型。则创建模型
         if (!blockInfo.model_name.IsNull())
@@ -526,7 +547,7 @@ public abstract class Block
     /// <summary>
     /// 删除方块的模型
     /// </summary>
-    public virtual void DestoryBlockModel(Chunk chunk, Vector3Int localPosition, DirectionEnum direction)
+    public virtual void DestoryBlockModel(Chunk chunk, Vector3Int localPosition)
     {
         //摧毁模型
         chunk.listBlockModelDestroy.Enqueue(localPosition);
@@ -535,7 +556,7 @@ public abstract class Block
     /// <summary>
     /// 刷新方块
     /// </summary>
-    public virtual void RefreshBlock(Chunk chunk, Vector3Int localPosition, DirectionEnum direction)
+    public virtual void RefreshBlock(Chunk chunk, Vector3Int localPosition)
     {
 
     }
@@ -561,10 +582,10 @@ public abstract class Block
     /// <param name="closeWorldPosition"></param>
     public virtual void RefreshBlockClose(Vector3Int closeWorldPosition)
     {
-        WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(closeWorldPosition, out Block closeBlock, out DirectionEnum closeBlockDirection, out Chunk closeChunk);
+        WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(closeWorldPosition, out Block closeBlock, out Chunk closeChunk);
         if (closeChunk != null)
         {
-            closeBlock?.RefreshBlock(closeChunk, closeWorldPosition - closeChunk.chunkData.positionForWorld, closeBlockDirection);
+            closeBlock?.RefreshBlock(closeChunk, closeWorldPosition - closeChunk.chunkData.positionForWorld);
         }
     }
 

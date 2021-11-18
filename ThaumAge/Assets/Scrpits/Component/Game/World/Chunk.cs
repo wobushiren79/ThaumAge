@@ -12,7 +12,9 @@ using System.Collections.Concurrent;
 public class Chunk : BaseMonoBehaviour
 {
     //需要更新事件的方块（频率每秒一次）
-    public List<Vector3Int> listEventUpdate = new List<Vector3Int>();
+    public List<Vector3Int> listEventUpdateFor1 = new List<Vector3Int>();
+    //需要更新事件的方块（频率每秒一次）
+    public List<Vector3Int> listEventUpdateFor60 = new List<Vector3Int>();
 
     //需要创建方块实力的列表
     public ConcurrentQueue<Vector3Int> listBlockModelUpdate = new ConcurrentQueue<Vector3Int>();
@@ -80,17 +82,24 @@ public class Chunk : BaseMonoBehaviour
         meshTrigger.sharedMesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
     }
 
-    protected float eventUpdateTime = 0;
+    protected float eventUpdateTimeFor1 = 0;
+    protected float eventUpdateTimeFor60 = 0;
 
     private void Update()
     {
         if (!isInit)
             return;
-        eventUpdateTime -= Time.deltaTime;
-        if (eventUpdateTime < 0)
+        eventUpdateTimeFor1 += Time.deltaTime;
+        eventUpdateTimeFor60 += Time.deltaTime;
+        if (eventUpdateTimeFor1 > 1)
         {
-            eventUpdateTime = 1;
-            HandleForEventUpdate();
+            eventUpdateTimeFor1 = 0;
+            HandleForEventUpdateFor1();
+        }
+        if (eventUpdateTimeFor60 > 60)
+        {
+            eventUpdateTimeFor60 = 0;
+            HandleForEventUpdateFor60();
         }
         HandleForBlockModelUpdate(out bool hasUpdate);
         //先更新完全部需要更新的东西 在进行删除
@@ -247,7 +256,7 @@ public class Chunk : BaseMonoBehaviour
                                     continue;
                                 Vector3Int localPosition = new Vector3Int(x, y, z);
                                 block.BuildBlock(this, localPosition, direction, chunkMeshData);
-                                block.InitBlock(this, localPosition, direction);
+                                block.InitBlock(this, localPosition);
                             }
                         }
                     }
@@ -420,16 +429,16 @@ public class Chunk : BaseMonoBehaviour
     public void SetBlockForLocal(Vector3Int localPosition, BlockTypeEnum blockType, DirectionEnum direction, string meta, bool isSaveData, bool isRefreshChunkRange, bool isRefreshBlockRange)
     {
         //首先移除方块
-        chunkData.GetBlockForLocal(localPosition, out Block oldBlock, out DirectionEnum oldDirection);
+        Block oldBlock = chunkData.GetBlockForLocal(localPosition);
         if (oldBlock != null && oldBlock.blockType != BlockTypeEnum.None)
         {
-            oldBlock.DestoryBlock(this, localPosition, oldDirection);
+            oldBlock.DestoryBlock(this, localPosition);
         }
         //设置新方块
         Block newBlock = BlockHandler.Instance.manager.GetRegisterBlock(blockType);
         chunkData.SetBlockForLocal(localPosition, newBlock, direction);
 
-        newBlock.InitBlock(this, localPosition, direction);
+        newBlock.InitBlock(this, localPosition);
 
 
         //刷新六个方向的方块
@@ -538,15 +547,25 @@ public class Chunk : BaseMonoBehaviour
     /// <summary>
     /// 事件处理
     /// </summary>
-    public void HandleForEventUpdate()
+    public void HandleForEventUpdateFor1()
     {
-        for (int i = 0; i < listEventUpdate.Count; i++)
+        for (int i = 0; i < listEventUpdateFor1.Count; i++)
         {
-            Vector3Int localPosition = listEventUpdate[i];
-            GetBlockForLocal(localPosition, out Block block, out DirectionEnum direction, out bool isInside);
-            block.EventBlockUpdate(this, localPosition, direction);
+            Vector3Int localPosition = listEventUpdateFor1[i];
+            Block block = chunkData.GetBlockForLocal(localPosition);
+            block.EventBlockUpdateFor1(this, localPosition);
         }
     }
+    public void HandleForEventUpdateFor60()
+    {
+        for (int i = 0; i < listEventUpdateFor60.Count; i++)
+        {
+            Vector3Int localPosition = listEventUpdateFor60[i];
+            Block block = chunkData.GetBlockForLocal(localPosition);
+            block.EventBlockUpdateFor60(this, localPosition);
+        }
+    }
+
 
     /// <summary>
     /// 处理实例化模型的方块
@@ -605,16 +624,43 @@ public class Chunk : BaseMonoBehaviour
     }
 
     #region 事件注册
-    public void RegisterEventUpdate(Vector3Int position)
+
+    /// <summary>
+    /// 注册事件
+    /// </summary>
+    /// <param name="position"></param>
+    /// <param name="updateTime">1,60</param>
+    public void RegisterEventUpdate(Vector3Int position, int updateTime)
     {
-        if (!listEventUpdate.Contains(position))
-            listEventUpdate.Add(position);
+        if (updateTime == 1)
+        {
+            if (!listEventUpdateFor1.Contains(position))
+                listEventUpdateFor1.Add(position);
+        }
+        else if (updateTime == 60)
+        {
+            if (!listEventUpdateFor60.Contains(position))
+                listEventUpdateFor60.Add(position);
+        }
     }
 
-    public void UnRegisterEventUpdate(Vector3Int position)
+    /// <summary>
+    /// 注销事件
+    /// </summary>
+    /// <param name="position"></param>
+    /// <param name="updateTime"></param>
+    public void UnRegisterEventUpdate(Vector3Int position, int updateTime)
     {
-        if (listEventUpdate.Contains(position))
-            listEventUpdate.Remove(position);
+        if (updateTime == 1)
+        {
+            if (!listEventUpdateFor1.Contains(position))
+                listEventUpdateFor1.Remove(position);
+        }
+        else if (updateTime == 60)
+        {
+            if (!listEventUpdateFor60.Contains(position))
+                listEventUpdateFor60.Remove(position);
+        }
     }
     #endregion
 

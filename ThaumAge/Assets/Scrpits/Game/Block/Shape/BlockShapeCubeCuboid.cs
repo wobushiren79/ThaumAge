@@ -2,7 +2,7 @@
 using UnityEditor;
 using UnityEngine;
 
-public class BlockCubeCuboid : BlockCube
+public class BlockShapeCubeCuboid : BlockShapeCube
 {
     protected float leftOffsetBorder;
     protected float rightOffsetBorder;
@@ -65,21 +65,21 @@ public class BlockCubeCuboid : BlockCube
             if (leftOffsetBorder == 0 ? CheckNeedBuildFace(chunk, localPosition, direction, DirectionEnum.Left) : true)
                 BuildFace(chunk, localPosition, direction, chunkMeshData, DirectionEnum.Left, vertsAddLeft, false);
             //Right
-            if (rightOffsetBorder == 1 ? CheckNeedBuildFace(chunk, localPosition, direction, DirectionEnum.Right) : true)
+            if (rightOffsetBorder == 0 ? CheckNeedBuildFace(chunk, localPosition, direction, DirectionEnum.Right) : true)
                 BuildFace(chunk, localPosition, direction, chunkMeshData, DirectionEnum.Right, vertsAddRight, true);
 
             //Bottom
             if (downOffsetBorder == 0 ? CheckNeedBuildFace(chunk, localPosition, direction, DirectionEnum.Down) : true)
                 BuildFace(chunk, localPosition, direction, chunkMeshData, DirectionEnum.Down, vertsAddDown, false);
             //Top
-            if (upOffsetBorder == 1 ? CheckNeedBuildFace(chunk, localPosition, direction, DirectionEnum.UP) : true)
+            if (upOffsetBorder == 0 ? CheckNeedBuildFace(chunk, localPosition, direction, DirectionEnum.UP) : true)
                 BuildFace(chunk, localPosition, direction, chunkMeshData, DirectionEnum.UP, vertsAddUp, true);
 
             //Front
             if (forwardOffsetBorder == 0 ? CheckNeedBuildFace(chunk, localPosition, direction, DirectionEnum.Forward) : true)
                 BuildFace(chunk, localPosition, direction, chunkMeshData, DirectionEnum.Forward, vertsAddForward, true);
             //Back
-            if (backOffsetBorder == 1 ? CheckNeedBuildFace(chunk, localPosition, direction, DirectionEnum.Back) : true)
+            if (backOffsetBorder == 0 ? CheckNeedBuildFace(chunk, localPosition, direction, DirectionEnum.Back) : true)
                 BuildFace(chunk, localPosition, direction, chunkMeshData, DirectionEnum.Back, vertsAddBack, false);
         }
     }

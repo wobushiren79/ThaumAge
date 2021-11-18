@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using UnityEditor;
 using UnityEngine;
-public class BlockCube : Block
+public class BlockShapeCube : Block
 {
     protected Vector3[] vertsAddLeft;
     protected Vector3[] vertsAddRight;
@@ -10,7 +10,14 @@ public class BlockCube : Block
     protected Vector3[] vertsAddUp;
     protected Vector3[] vertsAddForward;
     protected Vector3[] vertsAddBack;
-    public BlockCube()
+
+    protected Vector2[] uvsAddLeft;
+    protected Vector2[] uvsAddRight;
+    protected Vector2[] uvsAddDown;
+    protected Vector2[] uvsAddUp;
+    protected Vector2[] uvsAddForward;
+    protected Vector2[] uvsAddBack;
+    public BlockShapeCube()
     {
         vertsAddLeft = new Vector3[]
         {
@@ -56,6 +63,64 @@ public class BlockCube : Block
         };
     }
 
+    public override void SetData(BlockTypeEnum blockType)
+    {
+        base.SetData(blockType);
+        Vector2 uvStart = GetUVStartPosition(DirectionEnum.Left);
+        uvsAddLeft = new Vector2[]
+        {
+            new Vector2(uvStart.x,uvStart.y),
+            new Vector2(uvStart.x,uvStart.y + uvWidth),
+            new Vector2(uvStart.x+ uvWidth,uvStart.y+ uvWidth),
+            new Vector2(uvStart.x+ uvWidth,uvStart.y)
+        };
+
+        uvStart = GetUVStartPosition(DirectionEnum.Right);
+        uvsAddRight = new Vector2[]
+        {
+            new Vector2(uvStart.x,uvStart.y),
+            new Vector2(uvStart.x,uvStart.y + uvWidth),
+            new Vector2(uvStart.x+ uvWidth,uvStart.y+ uvWidth),
+            new Vector2(uvStart.x+ uvWidth,uvStart.y)
+        };
+
+        uvStart = GetUVStartPosition(DirectionEnum.Down);
+        uvsAddDown = new Vector2[]
+        {
+            new Vector2(uvStart.x,uvStart.y),
+            new Vector2(uvStart.x,uvStart.y + uvWidth),
+            new Vector2(uvStart.x+ uvWidth,uvStart.y+ uvWidth),
+            new Vector2(uvStart.x+ uvWidth,uvStart.y)
+        };
+
+        uvStart = GetUVStartPosition(DirectionEnum.UP);
+        uvsAddUp = new Vector2[]
+        {
+            new Vector2(uvStart.x,uvStart.y),
+            new Vector2(uvStart.x,uvStart.y + uvWidth),
+            new Vector2(uvStart.x+ uvWidth,uvStart.y+ uvWidth),
+            new Vector2(uvStart.x+ uvWidth,uvStart.y)
+        };
+
+        uvStart = GetUVStartPosition(DirectionEnum.Forward);
+        uvsAddForward = new Vector2[]
+        {
+            new Vector2(uvStart.x,uvStart.y),
+            new Vector2(uvStart.x,uvStart.y + uvWidth),
+            new Vector2(uvStart.x+ uvWidth,uvStart.y+ uvWidth),
+            new Vector2(uvStart.x+ uvWidth,uvStart.y)
+        };
+
+        uvStart = GetUVStartPosition(DirectionEnum.Back);
+        uvsAddBack = new Vector2[]
+        {
+            new Vector2(uvStart.x,uvStart.y),
+            new Vector2(uvStart.x,uvStart.y + uvWidth),
+            new Vector2(uvStart.x+ uvWidth,uvStart.y+ uvWidth),
+            new Vector2(uvStart.x+ uvWidth,uvStart.y)
+        };
+    }
+
 
     /// <summary>
     /// 构建方块的六个面
@@ -74,24 +139,24 @@ public class BlockCube : Block
         {
             //Left
             if (CheckNeedBuildFace(chunk, localPosition, direction, DirectionEnum.Left))
-                BuildFace(chunk, localPosition, direction, chunkMeshData, DirectionEnum.Left, vertsAddLeft, false);
+                BuildFace(chunk, localPosition, direction, chunkMeshData, vertsAddLeft, uvsAddLeft, false);
             //Right
             if (CheckNeedBuildFace(chunk, localPosition, direction, DirectionEnum.Right))
-                BuildFace(chunk, localPosition, direction, chunkMeshData, DirectionEnum.Right, vertsAddRight, true);
+                BuildFace(chunk, localPosition, direction, chunkMeshData, vertsAddRight, uvsAddRight, true);
 
             //Bottom
             if (CheckNeedBuildFace(chunk, localPosition, direction, DirectionEnum.Down))
-                BuildFace(chunk, localPosition, direction, chunkMeshData, DirectionEnum.Down, vertsAddDown, false);
+                BuildFace(chunk, localPosition, direction, chunkMeshData, vertsAddDown, uvsAddDown, false);
             //Top
             if (CheckNeedBuildFace(chunk, localPosition, direction, DirectionEnum.UP))
-                BuildFace(chunk, localPosition, direction, chunkMeshData, DirectionEnum.UP, vertsAddUp, true);
+                BuildFace(chunk, localPosition, direction, chunkMeshData, vertsAddUp, uvsAddUp, true);
 
             //Forward
             if (CheckNeedBuildFace(chunk, localPosition, direction, DirectionEnum.Forward))
-                BuildFace(chunk, localPosition, direction, chunkMeshData, DirectionEnum.Forward, vertsAddForward, true);
+                BuildFace(chunk, localPosition, direction, chunkMeshData, vertsAddForward, uvsAddForward, true);
             //Back
             if (CheckNeedBuildFace(chunk, localPosition, direction, DirectionEnum.Back))
-                BuildFace(chunk, localPosition, direction, chunkMeshData, DirectionEnum.Back, vertsAddBack, false);
+                BuildFace(chunk, localPosition, direction, chunkMeshData, vertsAddBack, uvsAddBack, false);
         }
     }
 
@@ -100,12 +165,12 @@ public class BlockCube : Block
         base.BuildBlock(chunk, localPosition, direction, chunkMeshData);
         if (blockType != BlockTypeEnum.None)
         {
-            BuildFace(chunk, localPosition, direction, chunkMeshData, DirectionEnum.Left, vertsAddLeft, false);
-            BuildFace(chunk, localPosition, direction, chunkMeshData, DirectionEnum.Right, vertsAddRight, true);
-            BuildFace(chunk, localPosition, direction, chunkMeshData, DirectionEnum.Down, vertsAddDown, false);
-            BuildFace(chunk, localPosition, direction, chunkMeshData, DirectionEnum.UP, vertsAddUp, true);
-            BuildFace(chunk, localPosition, direction, chunkMeshData, DirectionEnum.Forward, vertsAddForward, true);
-            BuildFace(chunk, localPosition, direction, chunkMeshData, DirectionEnum.Back, vertsAddBack, false);
+            BuildFace(chunk, localPosition, direction, chunkMeshData, vertsAddLeft, uvsAddLeft, false);
+            BuildFace(chunk, localPosition, direction, chunkMeshData, vertsAddRight, uvsAddRight, true);
+            BuildFace(chunk, localPosition, direction, chunkMeshData, vertsAddDown, uvsAddDown, false);
+            BuildFace(chunk, localPosition, direction, chunkMeshData, vertsAddUp, uvsAddUp, true);
+            BuildFace(chunk, localPosition, direction, chunkMeshData, vertsAddForward, uvsAddForward, true);
+            BuildFace(chunk, localPosition, direction, chunkMeshData, vertsAddBack, uvsAddBack, false);
         }
     }
 
@@ -121,11 +186,11 @@ public class BlockCube : Block
     /// <param name="right"></param>
     /// <param name="reversed"></param>
     /// <param name="chunkData"></param>
-    public virtual void BuildFace(Chunk chunk, Vector3Int localPosition, DirectionEnum direction, ChunkMeshData chunkMeshData, DirectionEnum buildDirection, Vector3[] vertsAddFace, bool reversed)
+    public virtual void BuildFace(Chunk chunk, Vector3Int localPosition, DirectionEnum direction, ChunkMeshData chunkMeshData, DirectionEnum face, Vector3[] vertsAddFace, Vector2[] uvsAdd, bool reversed)
     {
-        BaseAddTris(chunk, localPosition, direction, chunkMeshData,reversed);
+        BaseAddTris(chunk, localPosition, direction, chunkMeshData, reversed);
         BaseAddVerts(chunk, localPosition, direction, chunkMeshData, vertsAddFace);
-        BaseAddUVs(chunk, localPosition, direction, chunkMeshData, buildDirection);
+        BaseAddUVs(chunk, localPosition, direction, chunkMeshData, uvsAdd);
     }
 
     public override void BaseAddVerts(Chunk chunk, Vector3Int localPosition, DirectionEnum direction, ChunkMeshData chunkMeshData, Vector3[] vertsAdd)
@@ -135,17 +200,10 @@ public class BlockCube : Block
         AddVerts(localPosition, direction, chunkMeshData.vertsCollider, vertsAdd);
     }
 
-    public virtual void BaseAddUVs(Chunk chunk, Vector3Int localPosition, DirectionEnum direction, ChunkMeshData chunkMeshData, DirectionEnum buildDirection)
+    public virtual void BaseAddUVs(Chunk chunk, Vector3Int localPosition, DirectionEnum direction, ChunkMeshData chunkMeshData, Vector2[] uvsAdd)
     {
         base.BaseAddUVs(chunk, localPosition, direction, chunkMeshData);
-
-        Vector2 uvStartPosition = GetUVStartPosition(buildDirection);
-
-        List<Vector2> uvs = chunkMeshData.uvs;
-        uvs.Add(uvStartPosition);
-        uvs.Add(new Vector2(uvStartPosition.x, uvStartPosition.y + uvWidth));
-        uvs.Add(new Vector2(uvStartPosition.x + uvWidth, uvStartPosition.y + uvWidth));
-        uvs.Add(new Vector2(uvStartPosition.x + uvWidth, uvStartPosition.y));
+        AddUVs(chunkMeshData.uvs, uvsAdd);
     }
 
 
@@ -204,7 +262,6 @@ public class BlockCube : Block
     public virtual Vector2 GetUVStartPosition(DirectionEnum buildDirection)
     {
         Vector2Int[] arrayUVData = blockInfo.GetUVPosition();
-
         Vector2 uvStartPosition;
         if (arrayUVData.IsNull())
         {
