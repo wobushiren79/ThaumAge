@@ -4,6 +4,20 @@ using UnityEngine;
 public class Item
 {
     public ItemsBean itemsData;
+    public ItemsInfoBean _itemsInfo;
+
+    public ItemsInfoBean itemsInfo 
+    {
+        get
+        {
+            if (_itemsInfo == null)
+            {
+                _itemsInfo = ItemsHandler.Instance.manager.GetItemsInfoById(itemsData.itemId);
+            }
+            return _itemsInfo;
+        }
+    }
+
 
     public void SetItemData(ItemsBean itemsData)
     {

@@ -34,7 +34,7 @@ public class ItemSeed : Item
                     return;
 
                 //替换为种植
-                chunkForHit.SetBlockForLocal(localPosition, (BlockTypeEnum)tagetBlock.blockInfo.plough_change,DirectionEnum.UP);
+                chunkForHit.SetBlockForLocal(localPosition + Vector3Int.up, (BlockTypeEnum)itemsInfo.type_id, DirectionEnum.UP);
 
                 //更新区块
                 WorldCreateHandler.Instance.HandleForUpdateChunk(true, null);

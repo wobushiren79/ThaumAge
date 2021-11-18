@@ -11,13 +11,7 @@ public class BlockMagma : BlockWater
 
         List<int> trisMagma = chunkMeshData.dicTris[(int)BlockMaterialEnum.Magma];
 
-        trisMagma.Add(index);
-        trisMagma.Add(index + 1);
-        trisMagma.Add(index + 2);
-
-        trisMagma.Add(index);
-        trisMagma.Add(index + 2);
-        trisMagma.Add(index + 3);
+        AddTris(index, trisMagma, trisAdd);
     }
 
     public override void InitBlock(Chunk chunk, Vector3Int localPosition)
@@ -25,7 +19,7 @@ public class BlockMagma : BlockWater
         if (chunk == null)
             return;
         InitSmoke(chunk, localPosition);
-        chunk.RegisterEventUpdate(localPosition,1);
+        chunk.RegisterEventUpdate(localPosition, 1);
     }
 
 

@@ -2,8 +2,20 @@
 using UnityEditor;
 using UnityEngine;
 
-public class BlockShapeLiquid : Block
+public class BlockShapeLiquid : BlockShapeCube
 {
+
+    public BlockShapeLiquid() : base()
+    {
+        uvsAdd = new Vector2[]
+        {
+            new Vector2(0,0),
+            new Vector2(0,1),
+            new Vector2(1,1),
+            new Vector2(1,0),
+        };
+    }
+
 
     /// <summary>
     /// 检测是否需要构建面
@@ -54,11 +66,7 @@ public class BlockShapeLiquid : Block
 
     public override void BaseAddUVs(Chunk chunk, Vector3Int localPosition, DirectionEnum direction, ChunkMeshData chunkMeshData)
     {
-        List<Vector2> uvs = chunkMeshData.uvs;
-        uvs.Add(Vector2.zero);
-        uvs.Add(new Vector2(0, 1));
-        uvs.Add(new Vector2(1, 1));
-        uvs.Add(new Vector2(1, 0));
+        AddUVs(chunkMeshData.uvs, uvsAdd);
     }
 
     public override void BaseAddTris(Chunk chunk, Vector3Int localPosition, DirectionEnum direction, ChunkMeshData chunkMeshData)
@@ -68,20 +76,7 @@ public class BlockShapeLiquid : Block
 
         List<int> trisWater = chunkMeshData.dicTris[(int)BlockMaterialEnum.Water];
 
-        trisWater.Add(index);
-        trisWater.Add(index + 1);
-        trisWater.Add(index + 2);
-
-        trisWater.Add(index);
-        trisWater.Add(index + 2);
-        trisWater.Add(index + 3);
-
-        chunkMeshData.trisTrigger.Add(triggerIndex + 0);
-        chunkMeshData.trisTrigger.Add(triggerIndex + 1);
-        chunkMeshData.trisTrigger.Add(triggerIndex + 2);
-
-        chunkMeshData.trisTrigger.Add(triggerIndex + 0);
-        chunkMeshData.trisTrigger.Add(triggerIndex + 2);
-        chunkMeshData.trisTrigger.Add(triggerIndex + 3);
+        AddTris(index, trisWater, trisAdd);
+        AddTris(triggerIndex, chunkMeshData.trisTrigger, trisAdd);
     }
 }

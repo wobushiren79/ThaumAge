@@ -4,28 +4,33 @@ using UnityEngine;
 
 public class BlockPloughGrass : BlockShapeCubeCuboid
 {
-
+    protected Vector2[] uvsAddUpRotate;
     public override void SetData(BlockTypeEnum blockType)
     {
         base.SetData(blockType);
+        Vector2 uvStart = GetUVStartPosition(DirectionEnum.UP);
+        uvsAddUpRotate = new Vector2[]
+        {
+            new Vector2(uvStart.x,uvStart.y + uvWidth),
+            new Vector2(uvStart.x+ uvWidth,uvStart.y+ uvWidth),
+            new Vector2(uvStart.x+ uvWidth,uvStart.y),
+            new Vector2(uvStart.x,uvStart.y),
+        };
     }
 
-    public override void BaseAddUVs(Chunk chunk, Vector3Int localPosition, DirectionEnum direction, ChunkMeshData chunkMeshData, Vector2[] uvsAdd)
+    public override void BaseAddUVs(Chunk chunk, Vector3Int localPosition, DirectionEnum direction, ChunkMeshData chunkMeshData, DirectionEnum face, Vector2[] uvsAdd)
     {
         WorldDataBean worldData = chunk.GetWorldData();
-        if (buildDirection == DirectionEnum.UP && worldData.chunkData.GetBlockData(localPosition.x, localPosition.y, localPosition.z, out BlockBean blockData))
+        if (face == DirectionEnum.UP && worldData.chunkData.GetBlockData(localPosition.x, localPosition.y, localPosition.z, out BlockBean blockData))
         {
             FromMetaData(blockData.meta, out int rotate);
             if (rotate == 1)
             {
-                uvs.Add(new Vector2(uvStartPosition.x, uvStartPosition.y + uvWidth));
-                uvs.Add(new Vector2(uvStartPosition.x + uvWidth, uvStartPosition.y + uvWidth));
-                uvs.Add(new Vector2(uvStartPosition.x + uvWidth, uvStartPosition.y));
-                uvs.Add(uvStartPosition);
+                AddUVs(chunkMeshData.uvs, uvsAddUpRotate);
                 return;
             }
         }
-        base.BaseAddUVs( chunk,  localPosition,  direction,  chunkMeshData, uvsAdd);
+        base.BaseAddUVs(chunk, localPosition, direction, chunkMeshData, face, uvsAdd);
     }
 
     /// <summary>

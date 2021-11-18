@@ -9,6 +9,7 @@ public abstract class Block
 {
     public Vector3[] vertsAdd;
     public Vector2[] uvsAdd;
+    public int[] trisAdd;
 
     public BlockTypeEnum blockType;    //方块类型
 
@@ -44,7 +45,7 @@ public abstract class Block
     public virtual void SetData(BlockTypeEnum blockType)
     {
         this.blockType = blockType;
-    } 
+    }
 
 
     public Vector3 GetCenterPosition(Vector3Int localPosition)
@@ -117,7 +118,7 @@ public abstract class Block
     /// <param name="verts"></param>
     /// <param name="uvs"></param>
     /// <param name="tris"></param>
-    public virtual void BuildFace(Chunk chunk, Vector3Int localPosition, DirectionEnum direction, ChunkMeshData chunkMeshData,Vector3[] vertsAdd)
+    public virtual void BuildFace(Chunk chunk, Vector3Int localPosition, DirectionEnum direction, ChunkMeshData chunkMeshData, Vector3[] vertsAdd)
     {
         BaseAddTris(chunk, localPosition, direction, chunkMeshData);
         BaseAddVerts(chunk, localPosition, direction, chunkMeshData, vertsAdd);
@@ -195,6 +196,19 @@ public abstract class Block
         for (int i = 0; i < uvsAdd.Length; i++)
         {
             listUVs.Add(uvsAdd[i]);
+        }
+    }
+
+    /// <summary>
+    /// 增加三角下标顺序
+    /// </summary>
+    /// <param name="listTris"></param>
+    /// <param name="trisAdd"></param>
+    public virtual void AddTris(int startIndex, List<int> listTris, int[] trisAdd)
+    {
+        for (int i = 0; i < trisAdd.Length; i++)
+        {
+            listTris.Add(startIndex + trisAdd[i]);
         }
     }
 

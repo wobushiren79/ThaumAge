@@ -18,6 +18,29 @@ public class BlockShapeCross : Block
             new Vector3(1f,1f,0.5f),
             new Vector3(1f,0f,0.5f)
         };
+        trisAdd = new int[]
+        {
+            0,1,2, 0,2,3, 4,5,6, 4,6,7
+        };
+    }
+
+    public override void SetData(BlockTypeEnum blockType)
+    {
+        base.SetData(blockType);
+        Vector2 uvStartPosition = GetUVStartPosition();
+
+        uvsAdd = new Vector2[]
+        {
+            new Vector2(uvStartPosition.x,uvStartPosition.y),
+            new Vector2(uvStartPosition.x,uvStartPosition.y + uvWidth),
+            new Vector2(uvStartPosition.x + uvWidth,uvStartPosition.y + uvWidth),
+            new Vector2(uvStartPosition.x + uvWidth,uvStartPosition.y),
+
+            new Vector2(uvStartPosition.x,uvStartPosition.y),
+            new Vector2(uvStartPosition.x,uvStartPosition.y + uvWidth),
+            new Vector2(uvStartPosition.x + uvWidth,uvStartPosition.y + uvWidth),
+            new Vector2(uvStartPosition.x + uvWidth,uvStartPosition.y)
+        };
     }
 
     public override void BuildBlock(Chunk chunk, Vector3Int localPosition, DirectionEnum direction, ChunkMeshData chunkMeshData)
@@ -51,54 +74,15 @@ public class BlockShapeCross : Block
 
         List<int> trisBothFaceSwingData = chunkMeshData.dicTris[(int)BlockMaterialEnum.BothFaceSwing];
 
-        trisBothFaceSwingData.Add(index);
-        trisBothFaceSwingData.Add(index + 1);
-        trisBothFaceSwingData.Add(index + 2);
-
-        trisBothFaceSwingData.Add(index);
-        trisBothFaceSwingData.Add(index + 2);
-        trisBothFaceSwingData.Add(index + 3);
-
-        trisBothFaceSwingData.Add(index + 4);
-        trisBothFaceSwingData.Add(index + 5);
-        trisBothFaceSwingData.Add(index + 6);
-
-        trisBothFaceSwingData.Add(index + 4);
-        trisBothFaceSwingData.Add(index + 6);
-        trisBothFaceSwingData.Add(index + 7);
-
-        chunkMeshData.trisTrigger.Add(triggerIndex + 0);
-        chunkMeshData.trisTrigger.Add(triggerIndex + 1);
-        chunkMeshData.trisTrigger.Add(triggerIndex + 2);
-
-        chunkMeshData.trisTrigger.Add(triggerIndex + 0);
-        chunkMeshData.trisTrigger.Add(triggerIndex + 2);
-        chunkMeshData.trisTrigger.Add(triggerIndex + 3);
-
-        chunkMeshData.trisTrigger.Add(triggerIndex + 4);
-        chunkMeshData.trisTrigger.Add(triggerIndex + 5);
-        chunkMeshData.trisTrigger.Add(triggerIndex + 6);
-
-        chunkMeshData.trisTrigger.Add(triggerIndex + 4);
-        chunkMeshData.trisTrigger.Add(triggerIndex + 6);
-        chunkMeshData.trisTrigger.Add(triggerIndex + 7);
+        AddTris(index, trisBothFaceSwingData, trisAdd);
+        AddTris(triggerIndex, chunkMeshData.trisTrigger, trisAdd);
     }
 
     public override void BaseAddUVs(Chunk chunk, Vector3Int localPosition, DirectionEnum direction, ChunkMeshData chunkMeshData)
     {
         base.BaseAddUVs(chunk, localPosition, direction, chunkMeshData);
-        Vector2 uvStartPosition =  GetUVStartPosition();
 
-        List<Vector2> uvs = chunkMeshData.uvs;
-        uvs.Add(uvStartPosition);
-        uvs.Add(new Vector2(uvStartPosition.x, uvStartPosition.y + uvWidth));
-        uvs.Add(new Vector2(uvStartPosition.x + uvWidth, uvStartPosition.y + uvWidth));
-        uvs.Add(new Vector2(uvStartPosition.x + uvWidth, uvStartPosition.y));
-
-        uvs.Add(new Vector2(uvStartPosition.x, uvStartPosition.y));
-        uvs.Add(new Vector2(uvStartPosition.x, uvStartPosition.y + uvWidth));
-        uvs.Add(new Vector2(uvStartPosition.x + uvWidth, uvStartPosition.y + uvWidth));
-        uvs.Add(new Vector2(uvStartPosition.x + uvWidth, uvStartPosition.y));
+        AddUVs(chunkMeshData.uvs, uvsAdd);
     }
 
     public override void BaseAddVerts(Chunk chunk, Vector3Int localPosition, DirectionEnum direction, ChunkMeshData chunkMeshData, Vector3[] vertsAdd)
@@ -125,7 +109,7 @@ public class BlockShapeCross : Block
         else
         {
             //随机选一个
-            uvStartPosition = Vector2.zero;
+            uvStartPosition = new Vector2(uvWidth * arrayUVData[0].y, uvWidth * arrayUVData[0].x);
         }
         return uvStartPosition;
     }
