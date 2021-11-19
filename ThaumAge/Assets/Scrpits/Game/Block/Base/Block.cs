@@ -171,17 +171,17 @@ public abstract class Block
         listVerts.Add(RotatePosition(direction, vert, GetCenterPosition(localPosition)));
     }
 
+    public virtual void AddVert(Vector3Int localPosition, DirectionEnum direction, Vector3[] arrayVerts, int indexVerts, Vector3 vert)
+    {
+        arrayVerts[indexVerts] = RotatePosition(direction, vert, GetCenterPosition(localPosition));
+    }
+
     public virtual void AddVerts(Vector3Int localPosition, DirectionEnum direction, List<Vector3> listVerts, Vector3[] vertsAdd)
     {
         for (int i = 0; i < vertsAdd.Length; i++)
         {
             listVerts.Add(RotatePosition(direction, localPosition + vertsAdd[i], GetCenterPosition(localPosition)));
         }
-    }
-
-    public virtual void AddVert(Vector3Int localPosition, DirectionEnum direction, Vector3[] arrayVerts, int indexVerts, Vector3 vert)
-    {
-        arrayVerts[indexVerts] = RotatePosition(direction, vert, GetCenterPosition(localPosition));
     }
 
     /// <summary>
