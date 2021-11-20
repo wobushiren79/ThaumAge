@@ -19,6 +19,8 @@ public class ChunkMeshData
     //所有三角形合集，根据材质球区分
     public List<int>[] dicTris;
 
+    public Dictionary<Vector3, ChunkMeshIndexData> dicIndexData;
+
     public ChunkMeshData()
     {
         verts = new List<Vector3>();
@@ -35,47 +37,27 @@ public class ChunkMeshData
         {
             dicTris[i] = new List<int>();
         }
+
+        dicIndexData = new Dictionary<Vector3, ChunkMeshIndexData>();
     }
 
-    Dictionary<Vector3Int, ChunkMeshDetailsData> detailsData = new Dictionary<Vector3Int, ChunkMeshDetailsData>();
-
-    public void GetListData(out List<Vector3> verts, out List<Vector2> uvs, out List<int> tris)
+    public void AddMeshIndexData(Vector3 position,int vertsStartIndex, int vertsEndIndex,int trisStartIndex,int trisEndIndex)
     {
-        verts = new List<Vector3>();
-        uvs = new List<Vector2>();
-        tris = new List<int>();
-        foreach (var itemData in detailsData)
-        {
-            ChunkMeshDetailsData itemValue = itemData.Value;
-            for (int i = 0; i < itemValue.verts.Length; i++)
-            {
-                verts.Add(itemValue.verts[i]);
-                uvs.Add(itemValue.uvs[i]);
-            }
-            for (int i = 0; i < itemValue.tris.Length; i++)
-            {
-                tris.Add(itemValue.tris[i]);
-            }
-        }
-    }
-
-    public void AddVerts(Vector3Int localPosition, Vector3[] verts, Vector2[] uvs,int[] tris)
-    {
-        detailsData.Add(localPosition, new ChunkMeshDetailsData(verts, uvs, tris));
+        ChunkMeshIndexData chunkMeshIndex = new ChunkMeshIndexData();
+        chunkMeshIndex.vertsStartIndex = vertsStartIndex;
+        chunkMeshIndex.vertsEndIndex = vertsEndIndex;
+        chunkMeshIndex.trisStartIndex = trisStartIndex;
+        chunkMeshIndex.trisEndIndex = trisEndIndex;
+        dicIndexData.Add(position, chunkMeshIndex);
     }
 }
 
-
-public struct ChunkMeshDetailsData
+public struct ChunkMeshIndexData 
 {
-    public Vector3[] verts;
-    public Vector2[] uvs;
-    public int[] tris;
-
-    public ChunkMeshDetailsData(Vector3[] verts, Vector2[] uvs, int[] tris)
-    {
-        this.verts = verts;
-        this.uvs = uvs;
-        this.tris = tris;
-    }
+    public int vertsStartIndex;
+    public int vertsEndIndex;
+    public int trisStartIndex;
+    public int trisEndIndex;
 }
+
+

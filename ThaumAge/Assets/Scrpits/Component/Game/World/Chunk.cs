@@ -39,7 +39,7 @@ public class Chunk : BaseMonoBehaviour
     public bool isFirstDraw = true;
 
     //渲染数据
-    protected ChunkMeshData chunkMeshData;
+    public ChunkMeshData chunkMeshData;
     //存储数据
     protected WorldDataBean worldData;
 

@@ -259,6 +259,19 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
         callBackForUpdateChunk?.Invoke();
     }
 
+    public void HandleForUpdateChunkTest(Chunk chunk,Vector3Int position, Block block)
+    {
+        if (chunk.chunkMeshData.dicIndexData.TryGetValue(position,out ChunkMeshIndexData data))
+        {
+
+        }
+        else
+        {
+            block.BuildBlock(chunk, position,DirectionEnum.UP, chunk.chunkMeshData);
+        }
+        manager.AddUpdateDrawChunk(chunk, 1);
+    }
+
 
     /// <summary>
     /// 处理-世界刷新
