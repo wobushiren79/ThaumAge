@@ -277,18 +277,18 @@ public partial class UIViewItem : BaseUIView, IBeginDragHandler, IDragHandler, I
                         UIViewItemContainer dargContainer = this.originalParent;
                         UIViewItemContainer targetContainer = viewItem.originalParent;
                         //交换父级
-                        if(dargContainer.GetViewItem() == null)
-                        {                       
+                        if(dargContainer.GetViewItem()!=null && dargContainer.GetViewItem().itemNumber == int.MaxValue)
+                        {                         
+                            //如果原父级有东西 则把目标容器里的物品丢出来
+                            viewItem.DropItem();
+                        }
+                        else
+                        {
                             //如果原父级没有东西 则交换父级
                             dargContainer.SetViewItem(viewItem);
                             //设置位置
                             viewItem.rectTransform.anchoredPosition = Vector2.zero;
                             viewItem.transform.localScale = Vector3.one;
-                        }
-                        else
-                        {
-                            //如果原父级有东西 则把目标容器里的物品丢出来
-                            viewItem.DropItem();
                         }
                         targetContainer.SetViewItem(this);
                         //设置位置
@@ -317,9 +317,16 @@ public partial class UIViewItem : BaseUIView, IBeginDragHandler, IDragHandler, I
     {
         //如果什么都没有检测到，说明是把物体丢到场景中
         Player player = GameHandler.Instance.manager.player;
-        ItemsHandler.Instance.CreateItemDrop(itemId, itemNumber, player.transform.position, ItemDropStateEnum.DropNoPick);
-
+        ItemsHandler.Instance.CreateItemDrop(itemId, itemNumber, player.transform.position + Vector3.up, ItemDropStateEnum.DropNoPick);
         DestroyImmediate(gameObject);
+        if (originalParent!=null)
+        {
+            //如果原容器的是本道具
+            if (originalParent.GetViewItem() == this)
+            {
+                originalParent.ClearItemsData();
+            }
+        }
     }
 
     /// <summary>

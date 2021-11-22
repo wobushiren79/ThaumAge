@@ -255,7 +255,7 @@ public class Chunk : BaseMonoBehaviour
                                 if (block == null || block.blockType == BlockTypeEnum.None)
                                     continue;
                                 Vector3Int localPosition = new Vector3Int(x, y, z);
-                                block.BuildBlock(this, localPosition, direction, chunkMeshData);
+                                block.BuildBlock(this, localPosition, direction);
                                 block.InitBlock(this, localPosition);
                             }
                         }
@@ -362,9 +362,9 @@ public class Chunk : BaseMonoBehaviour
 
     }
 
-    public void GetBlockForWorld(Vector3Int blockWorldPosition, out Block block, out DirectionEnum direction, out bool isInside)
+    public void GetBlockForWorld(Vector3Int blockWorldPosition, out Block block, out DirectionEnum direction, out Chunk chunk)
     {
-        GetBlockForLocal(blockWorldPosition - chunkData.positionForWorld, out block, out direction, out isInside);
+        GetBlockForLocal(blockWorldPosition - chunkData.positionForWorld, out block, out direction, out chunk);
     }
     public void GetBlockForWorld(Vector3Int blockWorldPosition, out Block block, out bool isInside)
     {
@@ -372,27 +372,27 @@ public class Chunk : BaseMonoBehaviour
         block = chunkData.GetBlockForLocal(blockWorldPosition - chunkData.positionForWorld);
     }
 
-    public void GetBlockForLocal(Vector3Int localPosition, out Block block, out DirectionEnum direction, out bool isInside)
+    public void GetBlockForLocal(Vector3Int localPosition, out Block block, out DirectionEnum direction, out Chunk chunk)
     {
         if (localPosition.y < 0 || localPosition.y > chunkData.chunkHeight - 1)
         {
             block = BlockHandler.Instance.manager.GetRegisterBlock(BlockTypeEnum.None);
             direction = DirectionEnum.UP;
-            isInside = false;
+            chunk = null;
             return;
         }
         //当前位置是否在Chunk内
         if ((localPosition.x < 0) || (localPosition.z < 0) || (localPosition.x >= chunkData.chunkWidth) || (localPosition.z >= chunkData.chunkWidth))
         {
             Vector3Int blockWorldPosition = localPosition + chunkData.positionForWorld;
-            WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(blockWorldPosition, out block, out direction, out Chunk chunk);
-            isInside = false;
+            WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(blockWorldPosition, out block, out direction, out chunk);
             return;
         }
         else
         {
-            isInside = true;
+            chunk = this;
             chunkData.GetBlockForLocal(localPosition, out block, out direction);
+            return;
         }
     }
 
@@ -450,8 +450,9 @@ public class Chunk : BaseMonoBehaviour
         //是否实时刷新
         if (isRefreshChunkRange)
         {
-            //异步构建chunk
-            AddUpdateChunkForRange(localPosition + chunkData.positionForWorld);
+            //异步构建周围chunk
+            //暂时取消周围方块刷新
+            //AddUpdateChunkForRange(localPosition + chunkData.positionForWorld);
         }
 
         if (isSaveData)
@@ -587,10 +588,9 @@ public class Chunk : BaseMonoBehaviour
             return;
         }
 
+        Block block = chunkData.GetBlockForLocal(localPosition);
 
-        GetBlockForLocal(localPosition, out Block block, out DirectionEnum direction, out bool isInside);
-
-        if (!isInside || block == null || block.blockType == BlockTypeEnum.None)
+        if (block == null || block.blockType == BlockTypeEnum.None)
             return;
         if (block.blockInfo == null || block.blockInfo.model_name.IsNull())
             return;

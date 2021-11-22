@@ -33,6 +33,14 @@ public partial class UIViewItemContainer : BaseUIView
     public void ClearViewItem()
     {
         this.currentViewItem = null;
+        ClearItemsData();
+    }
+
+    /// <summary>
+    /// 清空数据
+    /// </summary>
+    public void ClearItemsData()
+    {
         itemsData.itemId = 0;
         itemsData.number = 0;
         itemsData.meta = null;

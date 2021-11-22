@@ -19,8 +19,11 @@ public class ChunkMeshData
     //所有三角形合集，根据材质球区分
     public List<int>[] dicTris;
 
+    //下标数据
     public Dictionary<Vector3, ChunkMeshIndexData> dicIndexData;
 
+    //刷新次数
+    public int refreshNumber;
     public ChunkMeshData()
     {
         verts = new List<Vector3>();
@@ -39,25 +42,44 @@ public class ChunkMeshData
         }
 
         dicIndexData = new Dictionary<Vector3, ChunkMeshIndexData>();
+
+        refreshNumber = 0;
     }
 
-    public void AddMeshIndexData(Vector3 position,int vertsStartIndex, int vertsEndIndex,int trisStartIndex,int trisEndIndex)
+    /// <summary>
+    /// 添加mesh下标
+    /// </summary>
+    public void AddMeshIndexData(Vector3 position,
+        int vertsStartIndex, int vertsCount, int trisStartIndex, int trisCount,
+        int vertsColliderStartIndex = 0, int vertsColliderCount = 0, int trisColliderStartIndex = 0, int trisColliderCount = 0)
     {
         ChunkMeshIndexData chunkMeshIndex = new ChunkMeshIndexData();
         chunkMeshIndex.vertsStartIndex = vertsStartIndex;
-        chunkMeshIndex.vertsEndIndex = vertsEndIndex;
+        chunkMeshIndex.vertsCount = vertsCount;
         chunkMeshIndex.trisStartIndex = trisStartIndex;
-        chunkMeshIndex.trisEndIndex = trisEndIndex;
+        chunkMeshIndex.trisCount = trisCount;
+
+        chunkMeshIndex.vertsColliderStartIndex = vertsColliderStartIndex;
+        chunkMeshIndex.vertsColliderCount = vertsColliderCount;
+        chunkMeshIndex.trisColliderStartIndex = trisColliderStartIndex;
+        chunkMeshIndex.trisColliderCount = trisColliderCount;
         dicIndexData.Add(position, chunkMeshIndex);
     }
 }
 
-public struct ChunkMeshIndexData 
+public struct ChunkMeshIndexData
 {
     public int vertsStartIndex;
-    public int vertsEndIndex;
+    public int vertsCount;
+
     public int trisStartIndex;
-    public int trisEndIndex;
+    public int trisCount;
+
+    public int vertsColliderStartIndex;
+    public int vertsColliderCount;
+
+    public int trisColliderStartIndex;
+    public int trisColliderCount;
 }
 
 

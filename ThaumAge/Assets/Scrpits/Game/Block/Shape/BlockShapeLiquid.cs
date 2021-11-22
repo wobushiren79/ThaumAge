@@ -58,25 +58,25 @@ public class BlockShapeLiquid : BlockShapeCube
         }
     }
 
-    public override void BaseAddVerts(Chunk chunk, Vector3Int localPosition, DirectionEnum direction, ChunkMeshData chunkMeshData, Vector3[] vertsAdd)
+    public override void BaseAddVerts(Chunk chunk, Vector3Int localPosition, DirectionEnum direction, Vector3[] vertsAdd)
     {
-        AddVerts(localPosition, direction, chunkMeshData.verts, vertsAdd);
-        AddVerts(localPosition, direction, chunkMeshData.vertsTrigger, vertsAdd);
+        AddVerts(localPosition, direction, chunk.chunkMeshData.verts, vertsAdd);
+        AddVerts(localPosition, direction, chunk.chunkMeshData.vertsTrigger, vertsAdd);
     }
 
-    public override void BaseAddUVs(Chunk chunk, Vector3Int localPosition, DirectionEnum direction, ChunkMeshData chunkMeshData)
+    public override void BaseAddUVs(Chunk chunk, Vector3Int localPosition, DirectionEnum direction)
     {
-        AddUVs(chunkMeshData.uvs, uvsAdd);
+        AddUVs(chunk.chunkMeshData.uvs, uvsAdd);
     }
 
-    public override void BaseAddTris(Chunk chunk, Vector3Int localPosition, DirectionEnum direction, ChunkMeshData chunkMeshData)
+    public override void BaseAddTris(Chunk chunk, Vector3Int localPosition, DirectionEnum direction)
     {
-        int index = chunkMeshData.verts.Count;
-        int triggerIndex = chunkMeshData.vertsTrigger.Count;
+        int index = chunk.chunkMeshData.verts.Count;
+        int triggerIndex = chunk.chunkMeshData.vertsTrigger.Count;
 
-        List<int> trisWater = chunkMeshData.dicTris[(int)BlockMaterialEnum.Water];
+        List<int> trisWater = chunk.chunkMeshData.dicTris[(int)BlockMaterialEnum.Water];
 
         AddTris(index, trisWater, trisAdd);
-        AddTris(triggerIndex, chunkMeshData.trisTrigger, trisAdd);
+        AddTris(triggerIndex, chunk.chunkMeshData.trisTrigger, trisAdd);
     }
 }

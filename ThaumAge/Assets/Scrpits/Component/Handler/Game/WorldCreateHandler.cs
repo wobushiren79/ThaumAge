@@ -63,7 +63,7 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
         GameObject objChunk = Instantiate(gameObject, objModel);
         objChunk.transform.position = position;
         chunk = objChunk.GetComponent<Chunk>();
-        chunk.name = "Chunk_X:" + position.x + "_Y:" + position.y + "_Z:" + position.z;
+        chunk.name = $"Chunk_X:{position.x}_Y:{ position.y}_Z:{position.z}";
         //设置数据
         chunk.SetData(position, manager.widthChunk, manager.heightChunk);
         //添加区块
@@ -209,7 +209,7 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
             //按照顺序依次渲染 编辑的区块 
             Chunk updateDrawChunk = manager.listUpdateDrawChunkEditor.Peek();
             if (updateDrawChunk != null && updateDrawChunk.isInit)
-            {  
+            {
                 if (!updateDrawChunk.isBuildChunk)
                 {
                     updateDrawChunk = manager.listUpdateDrawChunkEditor.Dequeue();
@@ -244,7 +244,7 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
             }
             if (isOrderDraw)
             {
-                manager.AddUpdateDrawChunk(updateChunk,1);
+                manager.AddUpdateDrawChunk(updateChunk, 1);
             }
             //构建修改过的区块
             updateChunk.BuildChunkForAsync(() =>
@@ -259,17 +259,62 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
         callBackForUpdateChunk?.Invoke();
     }
 
-    public void HandleForUpdateChunkTest(Chunk chunk,Vector3Int position, Block block)
-    {
-        if (chunk.chunkMeshData.dicIndexData.TryGetValue(position,out ChunkMeshIndexData data))
-        {
 
+    /// <summary>
+    /// 处理 待更新区块
+    /// </summary>
+    /// <param name="chunk"></param>
+    /// <param name="localPosition"></param>
+    /// <param name="block"></param>
+    /// <param name="direction"></param>
+    /// <param name="isRefreshRange">是否刷新周围方块</param>
+    public void HandleForUpdateChunk(Chunk chunk, Vector3Int localPosition, Block block, DirectionEnum direction = DirectionEnum.UP, bool isRefreshRange = true)
+    {
+        //如果超过刷新上限 则重新刷新
+        if (chunk.chunkMeshData.refreshNumber >= 1024)
+        {
+            manager.AddUpdateChunk(chunk);
+            HandleForUpdateChunk(true, null);
+            return;
+        }
+
+        //如果是需要刷新周围方块
+        if (isRefreshRange)
+        {
+            //上
+            HandleForUpdateChunkClose(chunk, localPosition + Vector3Int.up);
+            //下
+            HandleForUpdateChunkClose(chunk, localPosition + Vector3Int.down);
+            //左
+            HandleForUpdateChunkClose(chunk, localPosition + Vector3Int.left);
+            //右
+            HandleForUpdateChunkClose(chunk, localPosition + Vector3Int.right);
+            //前
+            HandleForUpdateChunkClose(chunk, localPosition + Vector3Int.forward);
+            //后
+            HandleForUpdateChunkClose(chunk, localPosition + Vector3Int.back);
+        }
+
+        if (chunk.chunkMeshData.dicIndexData.TryGetValue(localPosition, out ChunkMeshIndexData meshIndexData))
+        {
+            //先删除指定方块
+            block.RemoveBlockMesh(chunk, localPosition, direction, meshIndexData);
         }
         else
         {
-            block.BuildBlock(chunk, position,DirectionEnum.UP, chunk.chunkMeshData);
+
         }
+        block.BuildBlock(chunk, localPosition, direction);
         manager.AddUpdateDrawChunk(chunk, 1);
+    }
+
+    protected void HandleForUpdateChunkClose(Chunk chunk, Vector3Int localPosition)
+    {
+        chunk.GetBlockForLocal(localPosition, out Block closeBlock, out DirectionEnum closeBlockDirection, out Chunk closeChunk);
+        if (closeChunk != null && closeBlock != null && closeBlock.blockType != BlockTypeEnum.None)
+        {
+            HandleForUpdateChunk(closeChunk, localPosition + chunk.chunkData.positionForWorld- closeChunk.chunkData.positionForWorld, closeBlock, closeBlockDirection, false);
+        }
     }
 
 
@@ -326,8 +371,8 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
                         int localX = itemBlock.worldX - chunk.chunkData.positionForWorld.x;
                         int localY = itemBlock.worldY;
                         int localZ = itemBlock.worldZ - chunk.chunkData.positionForWorld.z;
-                        if (worldData == null 
-                        || worldData.chunkData == null 
+                        if (worldData == null
+                        || worldData.chunkData == null
                         || worldData.chunkData.GetBlockData(localX, localY, localZ, out BlockBean blockData))
                         {
                             //如果有存档方块 则不替换
@@ -335,7 +380,7 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
                         else
                         {
                             //设置方块
-                            chunk.SetBlockForLocal(new Vector3Int(localX, localY, localZ), itemBlock.GetBlockType(), itemBlock.GetDirection(),null, false, false, false);
+                            chunk.SetBlockForLocal(new Vector3Int(localX, localY, localZ), itemBlock.GetBlockType(), itemBlock.GetDirection(), null, false, false, false);
                             //添加需要更新的chunk
                             manager.AddUpdateChunk(chunk);
                         }

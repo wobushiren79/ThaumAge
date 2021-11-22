@@ -59,30 +59,30 @@ public class BlockShapeCubeCuboid : BlockShapeCube
     /// <param name="verts"></param>
     /// <param name="uvs"></param>
     /// <param name="tris"></param>
-    public override void BuildBlock(Chunk chunk, Vector3Int localPosition, DirectionEnum direction, ChunkMeshData chunkMeshData)
+    public override void BuildBlock(Chunk chunk, Vector3Int localPosition, DirectionEnum direction)
     {
         if (blockType != BlockTypeEnum.None)
         {
             //Left
             if (leftOffsetBorder == 0 ? CheckNeedBuildFace(chunk, localPosition, direction, DirectionEnum.Left) : true)
-                BuildFace(chunk, localPosition, direction, chunkMeshData, DirectionEnum.Left, vertsAddLeft, uvsAddLeft, false);
+                BuildFace(chunk, localPosition, direction, DirectionEnum.Left, vertsAddLeft, uvsAddLeft, false);
             //Right
             if (rightOffsetBorder == 0 ? CheckNeedBuildFace(chunk, localPosition, direction, DirectionEnum.Right) : true)
-                BuildFace(chunk, localPosition, direction, chunkMeshData, DirectionEnum.Right, vertsAddRight, uvsAddRight, true);
+                BuildFace(chunk, localPosition, direction, DirectionEnum.Right, vertsAddRight, uvsAddRight, true);
 
             //Bottom
             if (downOffsetBorder == 0 ? CheckNeedBuildFace(chunk, localPosition, direction, DirectionEnum.Down) : true)
-                BuildFace(chunk, localPosition, direction, chunkMeshData, DirectionEnum.Down, vertsAddDown, uvsAddDown, false);
+                BuildFace(chunk, localPosition, direction, DirectionEnum.Down, vertsAddDown, uvsAddDown, false);
             //Top
             if (upOffsetBorder == 0 ? CheckNeedBuildFace(chunk, localPosition, direction, DirectionEnum.UP) : true)
-                BuildFace(chunk, localPosition, direction, chunkMeshData, DirectionEnum.UP, vertsAddUp, uvsAddUp, true);
+                BuildFace(chunk, localPosition, direction, DirectionEnum.UP, vertsAddUp, uvsAddUp, true);
 
             //Front
             if (forwardOffsetBorder == 0 ? CheckNeedBuildFace(chunk, localPosition, direction, DirectionEnum.Forward) : true)
-                BuildFace(chunk, localPosition, direction, chunkMeshData, DirectionEnum.Forward, vertsAddForward, uvsAddForward, true);
+                BuildFace(chunk, localPosition, direction, DirectionEnum.Forward, vertsAddForward, uvsAddForward, true);
             //Back
             if (backOffsetBorder == 0 ? CheckNeedBuildFace(chunk, localPosition, direction, DirectionEnum.Back) : true)
-                BuildFace(chunk, localPosition, direction, chunkMeshData, DirectionEnum.Back, vertsAddBack, uvsAddBack, false);
+                BuildFace(chunk, localPosition, direction, DirectionEnum.Back, vertsAddBack, uvsAddBack, false);
         }
     }
 

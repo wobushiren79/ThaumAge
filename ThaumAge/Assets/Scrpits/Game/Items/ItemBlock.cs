@@ -13,7 +13,7 @@ public class ItemBlock : Item
         {
             Chunk chunkForHit = hit.collider.GetComponentInParent<Chunk>();
             if (chunkForHit)
-            {               
+            {
                 //获取位置和方向
                 player.playerRay.GetHitPositionAndDirection(hit, out Vector3Int targetPosition, out Vector3Int closePosition, out DirectionEnum direction);
                 //如果上手没有物品 则挖掘
@@ -31,22 +31,24 @@ public class ItemBlock : Item
                     {
                         //获取物品信息
                         ItemsInfoBean itemsInfo = ItemsHandler.Instance.manager.GetItemsInfoById(itemsData.itemId);
-                        ItemsTypeEnum itemsType = itemsInfo.GetItemsType();
                         //如果是可放置的方块
                         BlockInfoBean blockInfo = BlockHandler.Instance.manager.GetBlockInfo(itemsInfo.type_id);
+
+                        BlockTypeEnum changeBlockType = blockInfo.GetBlockType();
                         //更新方块并 添加更新区块
                         if (blockInfo.rotate_state == 0)
                         {
-                            addChunk.SetBlockForWorld(closePosition, blockInfo.GetBlockType(), DirectionEnum.UP);
+                            addChunk.SetBlockForWorld(closePosition, changeBlockType, DirectionEnum.UP);
                         }
                         else
                         {
-                            addChunk.SetBlockForWorld(closePosition, blockInfo.GetBlockType(), direction);
+                            addChunk.SetBlockForWorld(closePosition, changeBlockType, direction);
                         }
-                        //更新区块
+                        //更新区块(全更新)
                         //WorldCreateHandler.Instance.HandleForUpdateChunk(true, null);
-                        Block newBlock = BlockHandler.Instance.manager.GetRegisterBlock(blockInfo.GetBlockType());
-                        WorldCreateHandler.Instance.HandleForUpdateChunkTest(addChunk, closePosition, newBlock);
+                        //更新区域（只更新指定方块）
+                        Block newBlock = BlockHandler.Instance.manager.GetRegisterBlock(changeBlockType);
+                        WorldCreateHandler.Instance.HandleForUpdateChunk(addChunk, closePosition - addChunk.chunkData.positionForWorld, newBlock, blockDirection);
                     }
                 }
             }

@@ -28,7 +28,7 @@ public class BuildingEditor : BaseMonoBehaviour
 
         ChunkMeshData chunkMeshData = new ChunkMeshData();
 
-        blockCube.BuildBlockNoCheck(null,Vector3Int.zero, direction, chunkMeshData);
+        blockCube.BuildBlockNoCheck(null,Vector3Int.zero, direction);
 
         mesh = new Mesh();
 

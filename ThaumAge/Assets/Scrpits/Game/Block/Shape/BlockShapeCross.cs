@@ -43,12 +43,12 @@ public class BlockShapeCross : Block
         };
     }
 
-    public override void BuildBlock(Chunk chunk, Vector3Int localPosition, DirectionEnum direction, ChunkMeshData chunkMeshData)
+    public override void BuildBlock(Chunk chunk, Vector3Int localPosition, DirectionEnum direction)
     {
-        base.BuildBlock(chunk, localPosition, direction, chunkMeshData);
+        base.BuildBlock(chunk, localPosition, direction);
         if (blockType != BlockTypeEnum.None)
         {
-            BuildFace(chunk, localPosition, direction, chunkMeshData, vertsAdd);
+            BuildFace(chunk, localPosition, direction, vertsAdd);
         }
     }
 
@@ -65,31 +65,30 @@ public class BlockShapeCross : Block
         }
     }
 
-    public override void BaseAddTris(Chunk chunk, Vector3Int localPosition, DirectionEnum direction, ChunkMeshData chunkMeshData)
+    public override void BaseAddTris(Chunk chunk, Vector3Int localPosition, DirectionEnum direction)
     {
-        base.BaseAddTris(chunk, localPosition, direction, chunkMeshData);
+        base.BaseAddTris(chunk, localPosition, direction);
 
-        int index = chunkMeshData.verts.Count;
-        int triggerIndex = chunkMeshData.vertsTrigger.Count;
+        int index = chunk.chunkMeshData.verts.Count;
+        int triggerIndex = chunk.chunkMeshData.vertsTrigger.Count;
 
-        List<int> trisBothFaceSwingData = chunkMeshData.dicTris[(int)BlockMaterialEnum.BothFaceSwing];
+        List<int> trisBothFaceSwingData = chunk.chunkMeshData.dicTris[(int)BlockMaterialEnum.BothFaceSwing];
 
         AddTris(index, trisBothFaceSwingData, trisAdd);
-        AddTris(triggerIndex, chunkMeshData.trisTrigger, trisAdd);
+        AddTris(triggerIndex, chunk.chunkMeshData.trisTrigger, trisAdd);
     }
 
-    public override void BaseAddUVs(Chunk chunk, Vector3Int localPosition, DirectionEnum direction, ChunkMeshData chunkMeshData)
+    public override void BaseAddUVs(Chunk chunk, Vector3Int localPosition, DirectionEnum direction)
     {
-        base.BaseAddUVs(chunk, localPosition, direction, chunkMeshData);
-
-        AddUVs(chunkMeshData.uvs, uvsAdd);
+        base.BaseAddUVs(chunk, localPosition, direction);
+        AddUVs(chunk.chunkMeshData.uvs, uvsAdd);
     }
 
-    public override void BaseAddVerts(Chunk chunk, Vector3Int localPosition, DirectionEnum direction, ChunkMeshData chunkMeshData, Vector3[] vertsAdd)
+    public override void BaseAddVerts(Chunk chunk, Vector3Int localPosition, DirectionEnum direction,Vector3[] vertsAdd)
     {
-        base.BaseAddVerts(chunk, localPosition, direction, chunkMeshData, vertsAdd);
-        AddVerts(localPosition, direction, chunkMeshData.verts, vertsAdd);
-        AddVerts(localPosition, direction, chunkMeshData.vertsTrigger, vertsAdd);
+        base.BaseAddVerts(chunk, localPosition, direction, vertsAdd);
+        AddVerts(localPosition, direction, chunk.chunkMeshData.verts, vertsAdd);
+        AddVerts(localPosition, direction, chunk.chunkMeshData.vertsTrigger, vertsAdd);
     }
 
 

@@ -104,9 +104,8 @@ public class ItemDrop : BaseMonoBehaviour
         SOGameInitBean gameInitData = GameHandler.Instance.manager.gameInitData;
         timeForItemsDestory = gameInitData.timeForItemsDestory;
         disForItemsDestory = gameInitData.disForItemsDestory;
-        disForDropNoPick = gameInitData.disForItemsDestory;
+        disForDropNoPick = gameInitData.disForDropNoPick;
         timeForCreate = 0;
-
     }
 
     /// <summary>

@@ -1,4 +1,5 @@
-﻿using UnityEditor;
+﻿using System.Diagnostics;
+using UnityEditor;
 using UnityEngine;
 
 public class Item
@@ -71,11 +72,10 @@ public class Item
                     ItemsHandler.Instance.CreateItemDrop(oldBlock.blockType, 1, targetPosition + Vector3.one * 0.5f, ItemDropStateEnum.DropPick);
                     //移除该方块
                     targetChunk.RemoveBlockForWorld(targetPosition);
-                    WorldCreateHandler.Instance.HandleForUpdateChunk(true, null);
-                }
-                else
-                {
 
+                    Block nullBlock = BlockHandler.Instance.manager.GetRegisterBlock(BlockTypeEnum.None);
+
+                    WorldCreateHandler.Instance.HandleForUpdateChunk(targetChunk, targetPosition - targetChunk.chunkData.positionForWorld, nullBlock);
                 }
             }
         }

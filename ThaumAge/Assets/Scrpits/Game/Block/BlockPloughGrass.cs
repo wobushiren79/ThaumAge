@@ -18,7 +18,7 @@ public class BlockPloughGrass : BlockShapeCubeCuboid
         };
     }
 
-    public override void BaseAddUVs(Chunk chunk, Vector3Int localPosition, DirectionEnum direction, ChunkMeshData chunkMeshData, DirectionEnum face, Vector2[] uvsAdd)
+    public override void BaseAddUVs(Chunk chunk, Vector3Int localPosition, DirectionEnum direction, DirectionEnum face, Vector2[] uvsAdd)
     {
         WorldDataBean worldData = chunk.GetWorldData();
         if (face == DirectionEnum.UP && worldData.chunkData.GetBlockData(localPosition.x, localPosition.y, localPosition.z, out BlockBean blockData))
@@ -26,11 +26,11 @@ public class BlockPloughGrass : BlockShapeCubeCuboid
             FromMetaData(blockData.meta, out int rotate);
             if (rotate == 1)
             {
-                AddUVs(chunkMeshData.uvs, uvsAddUpRotate);
+                AddUVs(chunk.chunkMeshData.uvs, uvsAddUpRotate);
                 return;
             }
         }
-        base.BaseAddUVs(chunk, localPosition, direction, chunkMeshData, face, uvsAdd);
+        base.BaseAddUVs(chunk, localPosition, direction, face, uvsAdd);
     }
 
     /// <summary>

@@ -47,11 +47,11 @@ public abstract class Block
         this.blockType = blockType;
     }
 
-
     public Vector3 GetCenterPosition(Vector3Int localPosition)
     {
         return new Vector3(localPosition.x + 0.5f, localPosition.y + 0.5f, localPosition.z + 0.5f);
     }
+
     public Chunk GetChunk(Vector3Int worldPosition)
     {
         return WorldCreateHandler.Instance.manager.GetChunkForWorldPosition(worldPosition);
@@ -92,6 +92,51 @@ public abstract class Block
         }
     }
 
+    /// <summary>
+    /// 移除方块mesh
+    /// </summary>
+    public virtual void RemoveBlockMesh(Chunk chunk, Vector3Int localPosition, DirectionEnum direction, ChunkMeshIndexData meshIndexData)
+    {
+        RemoveBlockMesh(chunk, localPosition, direction, meshIndexData, BlockMaterialEnum.Normal, true, false);
+    }
+
+    /// <summary>
+    /// 删除方块mesh
+    /// </summary>
+    public virtual void RemoveBlockMesh(Chunk chunk, Vector3Int localPosition, DirectionEnum direction, ChunkMeshIndexData meshIndexData,
+        BlockMaterialEnum blockMaterial = BlockMaterialEnum.Normal, bool hasCollider = false, bool hasTrigger = false)
+    {
+        //删除该条下标信息
+        chunk.chunkMeshData.dicIndexData.Remove(localPosition);
+        //移除对应三角数据
+        List<int> tris = chunk.chunkMeshData.dicTris[(int)blockMaterial];
+        MeshTrisRemove(tris, meshIndexData.trisStartIndex, meshIndexData.trisCount);
+        //如果有碰撞 还需要删除碰撞
+        if (hasCollider)
+        {
+            //移除对应三角数据
+            List<int> trisCollider = chunk.chunkMeshData.trisCollider;
+            MeshTrisRemove(trisCollider, meshIndexData.trisColliderStartIndex, meshIndexData.trisColliderCount);
+        }
+        //如果有触发 还需要删除触发
+        if (hasTrigger)
+        {
+            //移除对应三角数据
+            List<int> trisTrigger = chunk.chunkMeshData.trisTrigger;
+            MeshTrisRemove(trisTrigger, meshIndexData.trisColliderStartIndex, meshIndexData.trisColliderCount);
+        }
+    }
+
+    /// <summary>
+    /// 三角形删除处理
+    /// </summary>
+    protected virtual void MeshTrisRemove(List<int> listTris, int trisStartIndex, int trisCount)
+    {
+        for (int i = 0; i < trisCount; i++)
+        {
+            listTris[trisStartIndex + i] = 0;
+        }
+    }
 
     /// <summary>
     /// 构建方块
@@ -99,14 +144,16 @@ public abstract class Block
     /// <param name="verts"></param>
     /// <param name="uvs"></param>
     /// <param name="tris"></param>
-    public virtual void BuildBlock(Chunk chunk, Vector3Int localPosition, DirectionEnum direction, ChunkMeshData chunkMeshData)
+    public virtual void BuildBlock(Chunk chunk, Vector3Int localPosition, DirectionEnum direction)
     {
 
     }
-    public virtual void BuildBlockNoCheck(Chunk chunk, Vector3Int localPosition, DirectionEnum direction, ChunkMeshData chunkMeshData)
+
+    public virtual void BuildBlockNoCheck(Chunk chunk, Vector3Int localPosition, DirectionEnum direction)
     {
 
     }
+
     /// <summary>
     /// 构建面
     /// </summary>
@@ -118,11 +165,11 @@ public abstract class Block
     /// <param name="verts"></param>
     /// <param name="uvs"></param>
     /// <param name="tris"></param>
-    public virtual void BuildFace(Chunk chunk, Vector3Int localPosition, DirectionEnum direction, ChunkMeshData chunkMeshData, Vector3[] vertsAdd)
+    public virtual void BuildFace(Chunk chunk, Vector3Int localPosition, DirectionEnum direction, Vector3[] vertsAdd)
     {
-        BaseAddTris(chunk, localPosition, direction, chunkMeshData);
-        BaseAddVerts(chunk, localPosition, direction, chunkMeshData, vertsAdd);
-        BaseAddUVs(chunk, localPosition, direction, chunkMeshData);
+        BaseAddTris(chunk, localPosition, direction);
+        BaseAddVerts(chunk, localPosition, direction, vertsAdd);
+        BaseAddUVs(chunk, localPosition, direction);
     }
 
     /// <summary>
@@ -132,7 +179,7 @@ public abstract class Block
     /// <param name="up"></param>
     /// <param name="right"></param>
     /// <param name="verts"></param>
-    public virtual void BaseAddVerts(Chunk chunk, Vector3Int localPosition, DirectionEnum direction, ChunkMeshData chunkMeshData, Vector3[] vertsAdd)
+    public virtual void BaseAddVerts(Chunk chunk, Vector3Int localPosition, DirectionEnum direction, Vector3[] vertsAdd)
     {
 
     }
@@ -142,7 +189,7 @@ public abstract class Block
     /// </summary>
     /// <param name="blockData"></param>
     /// <param name="uvs"></param>
-    public virtual void BaseAddUVs(Chunk chunk, Vector3Int localPosition, DirectionEnum direction, ChunkMeshData chunkMeshData)
+    public virtual void BaseAddUVs(Chunk chunk, Vector3Int localPosition, DirectionEnum direction)
     {
 
     }
@@ -154,7 +201,7 @@ public abstract class Block
     /// <param name="tris"></param>
     /// <param name="indexCollider"></param>
     /// <param name="trisCollider"></param>
-    public virtual void BaseAddTris(Chunk chunk, Vector3Int localPosition, DirectionEnum direction, ChunkMeshData chunkMeshData)
+    public virtual void BaseAddTris(Chunk chunk, Vector3Int localPosition, DirectionEnum direction)
     {
 
     }

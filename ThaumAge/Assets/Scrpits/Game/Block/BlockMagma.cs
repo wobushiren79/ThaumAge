@@ -5,11 +5,11 @@ using UnityEngine;
 
 public class BlockMagma : BlockWater
 {
-    public override void BaseAddTris(Chunk chunk, Vector3Int localPosition, DirectionEnum direction, ChunkMeshData chunkMeshData)
+    public override void BaseAddTris(Chunk chunk, Vector3Int localPosition, DirectionEnum direction)
     {
-        int index = chunkMeshData.verts.Count;
+        int index = chunk.chunkMeshData.verts.Count;
 
-        List<int> trisMagma = chunkMeshData.dicTris[(int)BlockMaterialEnum.Magma];
+        List<int> trisMagma = chunk.chunkMeshData.dicTris[(int)BlockMaterialEnum.Magma];
 
         AddTris(index, trisMagma, trisAdd);
     }

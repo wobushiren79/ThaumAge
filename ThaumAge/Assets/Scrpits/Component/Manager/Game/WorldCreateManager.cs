@@ -202,7 +202,7 @@ public class WorldCreateManager : BaseManager
             direction = DirectionEnum.UP;
             return;
         }
-        chunk.GetBlockForWorld(pos, out block, out direction, out bool isInside);
+        chunk.chunkData.GetBlockForLocal(pos - chunk.chunkData.positionForWorld, out block, out direction);
     }
 
     public void GetBlockForWorldPosition(Vector3Int pos, out Block block, out Chunk chunk)
@@ -237,10 +237,10 @@ public class WorldCreateManager : BaseManager
         int maxHeight = int.MinValue;
         for (int y = 0; y < heightChunk; y++)
         {
-            chunk.GetBlockForWorld(new Vector3Int(x, y, z), out Block block, out DirectionEnum direction, out bool isInside);
-            if (block == null || block.blockType == BlockTypeEnum.None || !isInside)
+            chunk.chunkData.GetBlockForLocal(new Vector3Int(x, y, z) - chunk.chunkData.positionForWorld, out Block block, out DirectionEnum direction);
+            if (block == null || block.blockType == BlockTypeEnum.None)
                 continue;
-            if (block.blockType != BlockTypeEnum.None && isInside && y > maxHeight)
+            if (block.blockType != BlockTypeEnum.None && y > maxHeight)
             {
                 maxHeight = y;
             }
