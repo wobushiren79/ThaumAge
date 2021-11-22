@@ -63,10 +63,10 @@ public partial class UIGameSetting : BaseUIComponent, IRadioGroupCallBack
     /// </summary>
     public void SetTextUI()
     {
-        ui_LabelGameContent.text = TextHandler.Instance.manager.GetTextById(21);
-        ui_LabelDisplayContent.text = TextHandler.Instance.manager.GetTextById(22);
-        ui_LabelAudioContent.text = TextHandler.Instance.manager.GetTextById(23);
-        ui_LabelControlContent.text = TextHandler.Instance.manager.GetTextById(24);
+        ui_LabelGameContent.text = TextHandler.Instance.GetTextById(21);
+        ui_LabelDisplayContent.text = TextHandler.Instance.GetTextById(22);
+        ui_LabelAudioContent.text = TextHandler.Instance.GetTextById(23);
+        ui_LabelControlContent.text = TextHandler.Instance.GetTextById(24);
     }
 
     /// <summary>

@@ -8,13 +8,15 @@ public partial class UIGameUserDetails
 
     public UIViewBackpackList ui_BackPack;
 
-    public Text ui_LabelGameContent;
+    public RadioButtonView ui_ViewLabel_Equip;
 
-    public Button ui_ViewLabel_Equip;
+    public RadioButtonView ui_ViewLabel_Synthesis;
 
-    public Text ui_LabelDisplayContent;
+    public RadioGroupView ui_Labels;
 
-    public Button ui_ViewLabel_Synthesis;
+    public Text ui_LabelEquipContent;
+
+    public Text ui_LabelSynthesisContent;
 
 
 }
