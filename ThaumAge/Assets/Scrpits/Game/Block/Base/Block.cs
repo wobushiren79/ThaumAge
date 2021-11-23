@@ -93,33 +93,24 @@ public abstract class Block
     }
 
     /// <summary>
-    /// 移除方块mesh
-    /// </summary>
-    public virtual void RemoveBlockMesh(Chunk chunk, Vector3Int localPosition, DirectionEnum direction, ChunkMeshIndexData meshIndexData)
-    {
-        RemoveBlockMesh(chunk, localPosition, direction, meshIndexData, BlockMaterialEnum.Normal, true, false);
-    }
-
-    /// <summary>
     /// 删除方块mesh
     /// </summary>
-    public virtual void RemoveBlockMesh(Chunk chunk, Vector3Int localPosition, DirectionEnum direction, ChunkMeshIndexData meshIndexData,
-        BlockMaterialEnum blockMaterial = BlockMaterialEnum.Normal, bool hasCollider = false, bool hasTrigger = false)
+    public virtual void RemoveBlockMesh(Chunk chunk, Vector3Int localPosition, DirectionEnum direction, ChunkMeshIndexData meshIndexData)
     {
         //删除该条下标信息
         chunk.chunkMeshData.dicIndexData.Remove(localPosition);
         //移除对应三角数据
-        List<int> tris = chunk.chunkMeshData.dicTris[(int)blockMaterial];
+        List<int> tris = chunk.chunkMeshData.dicTris[blockInfo.material_type];
         MeshTrisRemove(tris, meshIndexData.trisStartIndex, meshIndexData.trisCount);
         //如果有碰撞 还需要删除碰撞
-        if (hasCollider)
+        if (blockInfo.collider_state == 1)
         {
             //移除对应三角数据
             List<int> trisCollider = chunk.chunkMeshData.trisCollider;
             MeshTrisRemove(trisCollider, meshIndexData.trisColliderStartIndex, meshIndexData.trisColliderCount);
         }
         //如果有触发 还需要删除触发
-        if (hasTrigger)
+        if (blockInfo.trigger_state == 1)
         {
             //移除对应三角数据
             List<int> trisTrigger = chunk.chunkMeshData.trisTrigger;
@@ -581,14 +572,14 @@ public abstract class Block
     /// <summary>
     /// 事件方块更新_1秒
     /// </summary>
-    public virtual void EventBlockUpdateFor1(Chunk chunk, Vector3Int localPosition)
+    public virtual void EventBlockUpdateForSec(Chunk chunk, Vector3Int localPosition)
     {
 
     }
     /// <summary>
     /// 事件方块更新_60秒
     /// </summary>
-    public virtual void EventBlockUpdateFor60(Chunk chunk, Vector3Int localPosition)
+    public virtual void EventBlockUpdateForMin(Chunk chunk, Vector3Int localPosition)
     {
 
     }

@@ -150,7 +150,7 @@ public class BlockShapeCube : Block
         if (blockType != BlockTypeEnum.None)
         {
             int startVertsIndex = chunk.chunkMeshData.verts.Count;
-            int startTrisIndex = chunk.chunkMeshData.dicTris[(int)BlockMaterialEnum.Normal].Count;
+            int startTrisIndex = chunk.chunkMeshData.dicTris[blockInfo.material_type].Count;
             int buildFaceCount = 0;
 
             //Left
@@ -314,10 +314,5 @@ public class BlockShapeCube : Block
             uvStartPosition = Vector2.zero;
         }
         return uvStartPosition;
-    }
-
-    public override void RemoveBlockMesh(Chunk chunk, Vector3Int localPosition, DirectionEnum direction, ChunkMeshIndexData meshIndexData)
-    {
-        base.RemoveBlockMesh(chunk, localPosition, direction, meshIndexData, BlockMaterialEnum.Normal, true, false);
     }
 }

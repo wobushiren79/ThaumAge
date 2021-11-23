@@ -7,8 +7,10 @@ public enum BlockShapeEnum
     Cube = 1, //方块
     CubeTransparent = 2,//透明方块
     CubeCuboid = 3,//长方体方块
+    
     Cross = 101,// 正交叉
     CrossOblique = 102,//斜交叉
+    Well = 111,//＃字型
 
     Liquid = 201,//液体
 

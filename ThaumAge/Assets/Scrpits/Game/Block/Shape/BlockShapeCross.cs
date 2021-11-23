@@ -48,7 +48,14 @@ public class BlockShapeCross : Block
         base.BuildBlock(chunk, localPosition, direction);
         if (blockType != BlockTypeEnum.None)
         {
+            int startVertsIndex = chunk.chunkMeshData.verts.Count;
+            int startTrisIndex = chunk.chunkMeshData.dicTris[blockInfo.material_type].Count;
+
             BuildFace(chunk, localPosition, direction, vertsAdd);
+
+            chunk.chunkMeshData.AddMeshIndexData(localPosition,
+                     startVertsIndex, vertsAdd.Length, startTrisIndex, trisAdd.Length,
+                     startVertsIndex, vertsAdd.Length, startTrisIndex, trisAdd.Length);
         }
     }
 
@@ -72,7 +79,7 @@ public class BlockShapeCross : Block
         int index = chunk.chunkMeshData.verts.Count;
         int triggerIndex = chunk.chunkMeshData.vertsTrigger.Count;
 
-        List<int> trisBothFaceSwingData = chunk.chunkMeshData.dicTris[(int)BlockMaterialEnum.BothFaceSwing];
+        List<int> trisBothFaceSwingData = chunk.chunkMeshData.dicTris[blockInfo.material_type];
 
         AddTris(index, trisBothFaceSwingData, trisAdd);
         AddTris(triggerIndex, chunk.chunkMeshData.trisTrigger, trisAdd);
@@ -84,7 +91,7 @@ public class BlockShapeCross : Block
         AddUVs(chunk.chunkMeshData.uvs, uvsAdd);
     }
 
-    public override void BaseAddVerts(Chunk chunk, Vector3Int localPosition, DirectionEnum direction,Vector3[] vertsAdd)
+    public override void BaseAddVerts(Chunk chunk, Vector3Int localPosition, DirectionEnum direction, Vector3[] vertsAdd)
     {
         base.BaseAddVerts(chunk, localPosition, direction, vertsAdd);
         AddVerts(localPosition, direction, chunk.chunkMeshData.verts, vertsAdd);
@@ -112,5 +119,4 @@ public class BlockShapeCross : Block
         }
         return uvStartPosition;
     }
-
 }

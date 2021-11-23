@@ -63,26 +63,55 @@ public class BlockShapeCubeCuboid : BlockShapeCube
     {
         if (blockType != BlockTypeEnum.None)
         {
+            int startVertsIndex = chunk.chunkMeshData.verts.Count;
+            int startTrisIndex = chunk.chunkMeshData.dicTris[blockInfo.material_type].Count;
+            int buildFaceCount = 0;
+
             //Left
             if (leftOffsetBorder == 0 ? CheckNeedBuildFace(chunk, localPosition, direction, DirectionEnum.Left) : true)
+            {
                 BuildFace(chunk, localPosition, direction, DirectionEnum.Left, vertsAddLeft, uvsAddLeft, false);
+                buildFaceCount++;
+            }     
             //Right
             if (rightOffsetBorder == 0 ? CheckNeedBuildFace(chunk, localPosition, direction, DirectionEnum.Right) : true)
+            {
                 BuildFace(chunk, localPosition, direction, DirectionEnum.Right, vertsAddRight, uvsAddRight, true);
-
+                buildFaceCount++;
+            }
             //Bottom
             if (downOffsetBorder == 0 ? CheckNeedBuildFace(chunk, localPosition, direction, DirectionEnum.Down) : true)
+            {
                 BuildFace(chunk, localPosition, direction, DirectionEnum.Down, vertsAddDown, uvsAddDown, false);
+                buildFaceCount++;
+            }
             //Top
             if (upOffsetBorder == 0 ? CheckNeedBuildFace(chunk, localPosition, direction, DirectionEnum.UP) : true)
+            {
                 BuildFace(chunk, localPosition, direction, DirectionEnum.UP, vertsAddUp, uvsAddUp, true);
-
+                buildFaceCount++;
+            }
             //Front
             if (forwardOffsetBorder == 0 ? CheckNeedBuildFace(chunk, localPosition, direction, DirectionEnum.Forward) : true)
+            {
                 BuildFace(chunk, localPosition, direction, DirectionEnum.Forward, vertsAddForward, uvsAddForward, true);
+                buildFaceCount++;
+            }     
             //Back
             if (backOffsetBorder == 0 ? CheckNeedBuildFace(chunk, localPosition, direction, DirectionEnum.Back) : true)
+            {
                 BuildFace(chunk, localPosition, direction, DirectionEnum.Back, vertsAddBack, uvsAddBack, false);
+                buildFaceCount++;
+            }
+            int vertsCount = buildFaceCount * 4;
+            int trisIndex = buildFaceCount * 6;
+
+            if (vertsCount != 0)
+            {
+                chunk.chunkMeshData.AddMeshIndexData(localPosition,
+                    startVertsIndex, vertsCount, startTrisIndex, trisIndex,
+                    startVertsIndex, vertsCount, startTrisIndex, trisIndex);
+            }
         }
     }
 

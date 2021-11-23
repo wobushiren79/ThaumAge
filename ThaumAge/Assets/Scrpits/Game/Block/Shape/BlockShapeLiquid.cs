@@ -74,7 +74,7 @@ public class BlockShapeLiquid : BlockShapeCube
         int index = chunk.chunkMeshData.verts.Count;
         int triggerIndex = chunk.chunkMeshData.vertsTrigger.Count;
 
-        List<int> trisWater = chunk.chunkMeshData.dicTris[(int)BlockMaterialEnum.Water];
+        List<int> trisWater = chunk.chunkMeshData.dicTris[blockInfo.material_type];
 
         AddTris(index, trisWater, trisAdd);
         AddTris(triggerIndex, chunk.chunkMeshData.trisTrigger, trisAdd);

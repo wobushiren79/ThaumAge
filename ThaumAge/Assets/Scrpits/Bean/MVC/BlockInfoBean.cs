@@ -28,13 +28,17 @@ public class BlockInfoBean : BaseBean
 
     public int life;//生命值
 
+    public int material_type = 1;//材质类型
+
+    public int collider_state;//是否碰撞 0没有碰撞 1有碰撞
+
+    public int trigger_state;//是否触碰 0没有触碰 1有触碰
+
     public int plough_state;//耕地状态 0不能耕地 1能耕地
 
     public int plough_change;//耕地后改变的方块
 
     public int plant_state;//种植状态 0不能种植 1能种植
-
-
 
     /// <summary>
     /// 获取方块类型
@@ -52,6 +56,15 @@ public class BlockInfoBean : BaseBean
     public BlockShapeEnum GetBlockShape()
     {
         return (BlockShapeEnum)shape;
+    }
+   
+    /// <summary>
+    /// 获取材质类型
+    /// </summary>
+    /// <returns></returns>
+    public BlockMaterialEnum GetBlockMaterialType()
+    {
+        return (BlockMaterialEnum)material_type;
     }
 
     protected Vector2Int[] arrayUVData;

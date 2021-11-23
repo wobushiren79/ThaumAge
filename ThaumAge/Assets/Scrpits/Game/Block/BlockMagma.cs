@@ -5,21 +5,12 @@ using UnityEngine;
 
 public class BlockMagma : BlockWater
 {
-    public override void BaseAddTris(Chunk chunk, Vector3Int localPosition, DirectionEnum direction)
-    {
-        int index = chunk.chunkMeshData.verts.Count;
-
-        List<int> trisMagma = chunk.chunkMeshData.dicTris[(int)BlockMaterialEnum.Magma];
-
-        AddTris(index, trisMagma, trisAdd);
-    }
-
     public override void InitBlock(Chunk chunk, Vector3Int localPosition)
     {
         if (chunk == null)
             return;
         InitSmoke(chunk, localPosition);
-        chunk.RegisterEventUpdate(localPosition, 1);
+        chunk.RegisterEventUpdate(localPosition,  TimeUpdateEventTypeEnum.Sec);
     }
 
 
@@ -46,5 +37,4 @@ public class BlockMagma : BlockWater
             DestoryBlockModel(chunk, localPosition);
         }
     }
-
 }

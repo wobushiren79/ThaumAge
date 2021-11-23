@@ -12,9 +12,9 @@ using System.Collections.Concurrent;
 public class Chunk : BaseMonoBehaviour
 {
     //需要更新事件的方块（频率每秒一次）
-    public List<Vector3Int> listEventUpdateFor1 = new List<Vector3Int>();
+    public List<Vector3Int> listEventUpdateForSec = new List<Vector3Int>();
     //需要更新事件的方块（频率每秒一次）
-    public List<Vector3Int> listEventUpdateFor60 = new List<Vector3Int>();
+    public List<Vector3Int> listEventUpdateForMin = new List<Vector3Int>();
 
     //需要创建方块实力的列表
     public ConcurrentQueue<Vector3Int> listBlockModelUpdate = new ConcurrentQueue<Vector3Int>();
@@ -82,39 +82,29 @@ public class Chunk : BaseMonoBehaviour
         meshTrigger.sharedMesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
     }
 
-    protected float eventUpdateTimeFor1 = 0;
-    protected float eventUpdateTimeFor60 = 0;
+    protected float eventUpdateTimeForSec = 0;
+    protected float eventUpdateTimeForMin = 0;
 
-    private void Update()
+    protected void Update()
     {
         if (!isInit)
             return;
-        eventUpdateTimeFor1 += Time.deltaTime;
-        eventUpdateTimeFor60 += Time.deltaTime;
-        if (eventUpdateTimeFor1 > 1)
+        eventUpdateTimeForSec += Time.deltaTime;
+        eventUpdateTimeForMin += Time.deltaTime;
+        if (eventUpdateTimeForSec > 1)
         {
-            eventUpdateTimeFor1 = 0;
-            HandleForEventUpdateFor1();
+            eventUpdateTimeForSec = 0;
+            HandleForEventUpdateForSec();
         }
-        if (eventUpdateTimeFor60 > 60)
+        if (eventUpdateTimeForMin > 60)
         {
-            eventUpdateTimeFor60 = 0;
-            HandleForEventUpdateFor60();
+            eventUpdateTimeForMin = 0;
+            HandleForEventUpdateForMin();
         }
         HandleForBlockModelUpdate(out bool hasUpdate);
         //先更新完全部需要更新的东西 在进行删除
         if (!hasUpdate)
             HandleForBlockModelDestory();
-    }
-
-
-    /// <summary>
-    /// 获取存储数据
-    /// </summary>
-    /// <returns></returns>
-    public WorldDataBean GetWorldData()
-    {
-        return worldData;
     }
 
     /// <summary>
@@ -138,7 +128,38 @@ public class Chunk : BaseMonoBehaviour
     {
         this.worldData = worldData;
     }
+    /// <summary>
+    /// 获取存储数据
+    /// </summary>
+    /// <returns></returns>
+    public WorldDataBean GetWorldData()
+    {
+        return worldData;
+    }
 
+    /// <summary>
+    /// 获取存储的方块数据
+    /// </summary>
+    public BlockBean GetBlockData(int x,int y,int z)
+    {
+        WorldDataBean worldData = GetWorldData();
+        if (worldData == null)
+            return null;
+        if (worldData.chunkData == null)
+            return null;
+        worldData.chunkData.GetBlockData(x, y, z, out BlockBean blockData);
+        return blockData;
+    }
+
+    /// <summary>
+    /// 获取存储的方块数据
+    /// </summary>
+    /// <param name="localPosition"></param>
+    /// <returns></returns>
+    public BlockBean GetBlockData(Vector3Int localPosition)
+    {
+        return GetBlockData(localPosition.x, localPosition.y, localPosition.z);
+    }
 
     /// <summary>
     /// 增加四周待更新的区块
@@ -548,22 +569,22 @@ public class Chunk : BaseMonoBehaviour
     /// <summary>
     /// 事件处理
     /// </summary>
-    public void HandleForEventUpdateFor1()
+    public void HandleForEventUpdateForSec()
     {
-        for (int i = 0; i < listEventUpdateFor1.Count; i++)
+        for (int i = 0; i < listEventUpdateForSec.Count; i++)
         {
-            Vector3Int localPosition = listEventUpdateFor1[i];
+            Vector3Int localPosition = listEventUpdateForSec[i];
             Block block = chunkData.GetBlockForLocal(localPosition);
-            block.EventBlockUpdateFor1(this, localPosition);
+            block.EventBlockUpdateForSec(this, localPosition);
         }
     }
-    public void HandleForEventUpdateFor60()
+    public void HandleForEventUpdateForMin()
     {
-        for (int i = 0; i < listEventUpdateFor60.Count; i++)
+        for (int i = 0; i < listEventUpdateForMin.Count; i++)
         {
-            Vector3Int localPosition = listEventUpdateFor60[i];
+            Vector3Int localPosition = listEventUpdateForMin[i];
             Block block = chunkData.GetBlockForLocal(localPosition);
-            block.EventBlockUpdateFor60(this, localPosition);
+            block.EventBlockUpdateForMin(this, localPosition);
         }
     }
 
@@ -630,17 +651,17 @@ public class Chunk : BaseMonoBehaviour
     /// </summary>
     /// <param name="position"></param>
     /// <param name="updateTime">1,60</param>
-    public void RegisterEventUpdate(Vector3Int position, int updateTime)
+    public void RegisterEventUpdate(Vector3Int position, TimeUpdateEventTypeEnum updateTimeType)
     {
-        if (updateTime == 1)
+        if (updateTimeType == TimeUpdateEventTypeEnum.Sec)
         {
-            if (!listEventUpdateFor1.Contains(position))
-                listEventUpdateFor1.Add(position);
+            if (!listEventUpdateForSec.Contains(position))
+                listEventUpdateForSec.Add(position);
         }
-        else if (updateTime == 60)
+        else if (updateTimeType == TimeUpdateEventTypeEnum.Min)
         {
-            if (!listEventUpdateFor60.Contains(position))
-                listEventUpdateFor60.Add(position);
+            if (!listEventUpdateForMin.Contains(position))
+                listEventUpdateForMin.Add(position);
         }
     }
 
@@ -653,13 +674,13 @@ public class Chunk : BaseMonoBehaviour
     {
         if (updateTime == 1)
         {
-            if (!listEventUpdateFor1.Contains(position))
-                listEventUpdateFor1.Remove(position);
+            if (!listEventUpdateForSec.Contains(position))
+                listEventUpdateForSec.Remove(position);
         }
         else if (updateTime == 60)
         {
-            if (!listEventUpdateFor60.Contains(position))
-                listEventUpdateFor60.Remove(position);
+            if (!listEventUpdateForMin.Contains(position))
+                listEventUpdateForMin.Remove(position);
         }
     }
     #endregion
