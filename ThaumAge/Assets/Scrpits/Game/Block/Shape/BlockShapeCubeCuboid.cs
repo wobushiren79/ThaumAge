@@ -65,6 +65,21 @@ public class BlockShapeCubeCuboid : BlockShapeCube
         {
             int startVertsIndex = chunk.chunkMeshData.verts.Count;
             int startTrisIndex = chunk.chunkMeshData.dicTris[blockInfo.material_type].Count;
+
+            int startVertsColliderIndex = 0;
+            int startTrisColliderIndex = 0;
+
+            if (blockInfo.collider_state == 1)
+            {
+                startVertsColliderIndex = chunk.chunkMeshData.vertsCollider.Count;
+                startTrisColliderIndex = chunk.chunkMeshData.trisCollider.Count;
+            }
+            else if (blockInfo.trigger_state == 1)
+            {
+                startVertsColliderIndex = chunk.chunkMeshData.vertsTrigger.Count;
+                startTrisColliderIndex = chunk.chunkMeshData.trisTrigger.Count;
+            }
+
             int buildFaceCount = 0;
 
             //Left
@@ -110,7 +125,7 @@ public class BlockShapeCubeCuboid : BlockShapeCube
             {
                 chunk.chunkMeshData.AddMeshIndexData(localPosition,
                     startVertsIndex, vertsCount, startTrisIndex, trisIndex,
-                    startVertsIndex, vertsCount, startTrisIndex, trisIndex);
+                    startVertsColliderIndex, vertsCount, startTrisColliderIndex, trisIndex);
             }
         }
     }

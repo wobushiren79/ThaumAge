@@ -51,11 +51,25 @@ public class BlockShapeCross : Block
             int startVertsIndex = chunk.chunkMeshData.verts.Count;
             int startTrisIndex = chunk.chunkMeshData.dicTris[blockInfo.material_type].Count;
 
+            int startVertsColliderIndex = 0;
+            int startTrisColliderIndex = 0;
+
+            if (blockInfo.collider_state == 1)
+            {
+                startVertsColliderIndex = chunk.chunkMeshData.vertsCollider.Count;
+                startTrisColliderIndex = chunk.chunkMeshData.trisCollider.Count;
+            }
+            else if (blockInfo.trigger_state == 1)
+            {
+                startVertsColliderIndex = chunk.chunkMeshData.vertsTrigger.Count;
+                startTrisColliderIndex = chunk.chunkMeshData.trisTrigger.Count;
+            }
+
             BuildFace(chunk, localPosition, direction, vertsAdd);
 
             chunk.chunkMeshData.AddMeshIndexData(localPosition,
                      startVertsIndex, vertsAdd.Length, startTrisIndex, trisAdd.Length,
-                     startVertsIndex, vertsAdd.Length, startTrisIndex, trisAdd.Length);
+                     startVertsColliderIndex, vertsAdd.Length, startTrisColliderIndex, trisAdd.Length);
         }
     }
 
@@ -80,9 +94,14 @@ public class BlockShapeCross : Block
         int triggerIndex = chunk.chunkMeshData.vertsTrigger.Count;
 
         List<int> trisBothFaceSwingData = chunk.chunkMeshData.dicTris[blockInfo.material_type];
+        List<int> trisCollider = chunk.chunkMeshData.trisCollider;
+        List<int> trisTrigger = chunk.chunkMeshData.trisTrigger;
 
         AddTris(index, trisBothFaceSwingData, trisAdd);
-        AddTris(triggerIndex, chunk.chunkMeshData.trisTrigger, trisAdd);
+        if (blockInfo.collider_state == 1)
+            AddTris(triggerIndex, trisCollider, trisAdd);
+        if (blockInfo.trigger_state == 1)
+            AddTris(triggerIndex, trisTrigger, trisAdd);
     }
 
     public override void BaseAddUVs(Chunk chunk, Vector3Int localPosition, DirectionEnum direction)
@@ -95,7 +114,10 @@ public class BlockShapeCross : Block
     {
         base.BaseAddVerts(chunk, localPosition, direction, vertsAdd);
         AddVerts(localPosition, direction, chunk.chunkMeshData.verts, vertsAdd);
-        AddVerts(localPosition, direction, chunk.chunkMeshData.vertsTrigger, vertsAdd);
+        if (blockInfo.collider_state == 1)
+            AddVerts(localPosition, direction, chunk.chunkMeshData.vertsCollider, vertsAdd);
+        if (blockInfo.trigger_state == 1)
+            AddVerts(localPosition, direction, chunk.chunkMeshData.vertsTrigger, vertsAdd);
     }
 
 

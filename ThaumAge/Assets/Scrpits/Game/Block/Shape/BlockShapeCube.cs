@@ -151,6 +151,20 @@ public class BlockShapeCube : Block
         {
             int startVertsIndex = chunk.chunkMeshData.verts.Count;
             int startTrisIndex = chunk.chunkMeshData.dicTris[blockInfo.material_type].Count;
+
+            int startVertsColliderIndex = 0;
+            int startTrisColliderIndex = 0;
+
+            if (blockInfo.collider_state == 1)
+            {
+                startVertsColliderIndex = chunk.chunkMeshData.vertsCollider.Count;
+                startTrisColliderIndex = chunk.chunkMeshData.trisCollider.Count;
+            }
+            else if (blockInfo.trigger_state == 1)
+            {
+                startVertsColliderIndex = chunk.chunkMeshData.vertsTrigger.Count;
+                startTrisColliderIndex = chunk.chunkMeshData.trisTrigger.Count;
+            }
             int buildFaceCount = 0;
 
             //Left
@@ -202,7 +216,7 @@ public class BlockShapeCube : Block
             {
                 chunk.chunkMeshData.AddMeshIndexData(localPosition,
                     startVertsIndex, vertsCount, startTrisIndex, trisIndex,
-                    startVertsIndex, vertsCount, startTrisIndex, trisIndex);
+                    startVertsColliderIndex, vertsCount, startTrisColliderIndex, trisIndex);
             }
         }
     }
@@ -243,8 +257,12 @@ public class BlockShapeCube : Block
     public override void BaseAddVerts(Chunk chunk, Vector3Int localPosition, DirectionEnum direction, Vector3[] vertsAdd)
     {
         base.BaseAddVerts(chunk, localPosition, direction, vertsAdd);
+
         AddVerts(localPosition, direction, chunk.chunkMeshData.verts, vertsAdd);
-        AddVerts(localPosition, direction, chunk.chunkMeshData.vertsCollider, vertsAdd);
+        if (blockInfo.collider_state == 1)
+            AddVerts(localPosition, direction, chunk.chunkMeshData.vertsCollider, vertsAdd);
+        if (blockInfo.trigger_state == 1)
+            AddVerts(localPosition, direction, chunk.chunkMeshData.vertsTrigger, vertsAdd);
     }
 
     public virtual void BaseAddUVs(Chunk chunk, Vector3Int localPosition, DirectionEnum direction, DirectionEnum face, Vector2[] uvsAdd)
@@ -261,17 +279,24 @@ public class BlockShapeCube : Block
         int index = chunk.chunkMeshData.verts.Count;
         int indexCollider = chunk.chunkMeshData.vertsCollider.Count;
 
-        List<int> trisNormal = chunk.chunkMeshData.dicTris[(int)BlockMaterialEnum.Normal];
+        List<int> trisNormal = chunk.chunkMeshData.dicTris[blockInfo.material_type];
         List<int> trisCollider = chunk.chunkMeshData.trisCollider;
+        List<int> trisTrigger = chunk.chunkMeshData.trisTrigger;
         if (reversed)
         {
             AddTris(index, trisNormal, trisAdd);
-            AddTris(indexCollider, trisCollider, trisAdd);
+            if (blockInfo.collider_state == 1)
+                AddTris(indexCollider, trisCollider, trisAdd);
+            if (blockInfo.trigger_state == 1)
+                AddTris(indexCollider, trisTrigger, trisAdd);
         }
         else
         {
             AddTris(index, trisNormal, trisAddReversed);
-            AddTris(indexCollider, trisCollider, trisAddReversed);
+            if (blockInfo.collider_state == 1)
+                AddTris(indexCollider, trisCollider, trisAddReversed);
+            if (blockInfo.trigger_state == 1)
+                AddTris(indexCollider, trisTrigger, trisAddReversed);
         }
     }
 

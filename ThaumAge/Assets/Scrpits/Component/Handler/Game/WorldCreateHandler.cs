@@ -268,7 +268,7 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
     /// <param name="block"></param>
     /// <param name="direction"></param>
     /// <param name="isRefreshRange">是否刷新周围方块</param>
-    public void HandleForUpdateChunk(Chunk chunk, Vector3Int localPosition, Block block, DirectionEnum direction = DirectionEnum.UP, bool isRefreshRange = true)
+    public void HandleForUpdateChunk(Chunk chunk, Vector3Int localPosition, Block oldBlock, Block newBlock, DirectionEnum direction = DirectionEnum.UP, bool isRefreshRange = true)
     {
         //如果超过刷新上限 则重新刷新
         if (chunk.chunkMeshData.refreshNumber >= 1024)
@@ -298,13 +298,14 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
         if (chunk.chunkMeshData.dicIndexData.TryGetValue(localPosition, out ChunkMeshIndexData meshIndexData))
         {
             //先删除指定方块
-            block.RemoveBlockMesh(chunk, localPosition, direction, meshIndexData);
+            if (oldBlock != null)
+                oldBlock.RemoveBlockMesh(chunk, localPosition, direction, meshIndexData);
         }
         else
         {
 
         }
-        block.BuildBlock(chunk, localPosition, direction);
+        newBlock.BuildBlock(chunk, localPosition, direction);
         manager.AddUpdateDrawChunk(chunk, 1);
     }
 
@@ -313,7 +314,7 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
         chunk.GetBlockForLocal(localPosition, out Block closeBlock, out DirectionEnum closeBlockDirection, out Chunk closeChunk);
         if (closeChunk != null && closeBlock != null && closeBlock.blockType != BlockTypeEnum.None)
         {
-            HandleForUpdateChunk(closeChunk, localPosition + chunk.chunkData.positionForWorld- closeChunk.chunkData.positionForWorld, closeBlock, closeBlockDirection, false);
+            HandleForUpdateChunk(closeChunk, localPosition + chunk.chunkData.positionForWorld - closeChunk.chunkData.positionForWorld, closeBlock, closeBlock, closeBlockDirection, false);
         }
     }
 

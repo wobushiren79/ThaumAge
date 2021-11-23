@@ -76,7 +76,7 @@ public static class BlockPlantExtension
         //设置新数据
         string newMeta =  self.ToMetaData(growth, isStartGrow);
         chunk.SetBlockForLocal(localPosition, blockInfo.GetBlockType(), direction, newMeta);
-        WorldCreateHandler.Instance.HandleForUpdateChunk(chunk, localPosition, block, direction);
+        WorldCreateHandler.Instance.HandleForUpdateChunk(chunk, localPosition, block, block, direction);
     }
 
     /// <summary>

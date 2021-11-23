@@ -75,7 +75,7 @@ public class Item
 
                     Block nullBlock = BlockHandler.Instance.manager.GetRegisterBlock(BlockTypeEnum.None);
 
-                    WorldCreateHandler.Instance.HandleForUpdateChunk(targetChunk, targetPosition - targetChunk.chunkData.positionForWorld, nullBlock);
+                    WorldCreateHandler.Instance.HandleForUpdateChunk(targetChunk, targetPosition - targetChunk.chunkData.positionForWorld, oldBlock, nullBlock);
                 }
             }
         }

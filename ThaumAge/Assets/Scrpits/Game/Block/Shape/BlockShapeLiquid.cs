@@ -57,26 +57,4 @@ public class BlockShapeLiquid : BlockShapeCube
                 return true;
         }
     }
-
-    public override void BaseAddVerts(Chunk chunk, Vector3Int localPosition, DirectionEnum direction, Vector3[] vertsAdd)
-    {
-        AddVerts(localPosition, direction, chunk.chunkMeshData.verts, vertsAdd);
-        AddVerts(localPosition, direction, chunk.chunkMeshData.vertsTrigger, vertsAdd);
-    }
-
-    public override void BaseAddUVs(Chunk chunk, Vector3Int localPosition, DirectionEnum direction)
-    {
-        AddUVs(chunk.chunkMeshData.uvs, uvsAdd);
-    }
-
-    public override void BaseAddTris(Chunk chunk, Vector3Int localPosition, DirectionEnum direction)
-    {
-        int index = chunk.chunkMeshData.verts.Count;
-        int triggerIndex = chunk.chunkMeshData.vertsTrigger.Count;
-
-        List<int> trisWater = chunk.chunkMeshData.dicTris[blockInfo.material_type];
-
-        AddTris(index, trisWater, trisAdd);
-        AddTris(triggerIndex, chunk.chunkMeshData.trisTrigger, trisAdd);
-    }
 }

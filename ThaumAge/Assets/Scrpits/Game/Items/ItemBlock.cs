@@ -29,6 +29,9 @@ public class ItemBlock : Item
                     //如果靠近得方块有区块
                     if (addChunk)
                     {
+                        //如果不是空方块 则不放置
+                        if (block != null && block.blockType != BlockTypeEnum.None)
+                            return;
                         //获取物品信息
                         ItemsInfoBean itemsInfo = ItemsHandler.Instance.manager.GetItemsInfoById(itemsData.itemId);
                         //如果是可放置的方块
@@ -48,7 +51,7 @@ public class ItemBlock : Item
                         //WorldCreateHandler.Instance.HandleForUpdateChunk(true, null);
                         //更新区域（只更新指定方块）
                         Block newBlock = BlockHandler.Instance.manager.GetRegisterBlock(changeBlockType);
-                        WorldCreateHandler.Instance.HandleForUpdateChunk(addChunk, closePosition - addChunk.chunkData.positionForWorld, newBlock, blockDirection);
+                        WorldCreateHandler.Instance.HandleForUpdateChunk(addChunk, closePosition - addChunk.chunkData.positionForWorld,null, newBlock, blockDirection);
                     }
                 }
             }
