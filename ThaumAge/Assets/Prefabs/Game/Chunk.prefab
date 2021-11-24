@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6222198577715119112}
   - component: {fileID: 594269507512757033}
-  m_Layer: 6
+  m_Layer: 8
   m_Name: Collider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -27,6 +27,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 7675334834579374579}
   m_RootOrder: 0
@@ -72,6 +73,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 7675334834579374579}
   m_RootOrder: 1
@@ -119,6 +121,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6222198577715119112}
   - {fileID: 7130997840432259309}
@@ -188,6 +191,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 69b06d9efcc6cf44d8c498189f2539c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  listEventUpdateForSec: []
+  listEventUpdateForMin: []
   meshCollider: {fileID: 594269507512757033}
   meshTrigger: {fileID: 5609496997631579717}
   meshRenderer: {fileID: 0}
@@ -195,6 +200,7 @@ MonoBehaviour:
   isInit: 0
   isBuildChunk: 0
   isDrawMesh: 0
+  isFirstDraw: 1
   chunkMesh: {fileID: 0}
   chunkMeshCollider: {fileID: 0}
   chunkMeshTrigger: {fileID: 0}
@@ -225,6 +231,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 7675334834579374579}
   m_RootOrder: 2

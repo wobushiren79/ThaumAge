@@ -7,7 +7,7 @@ public class BlockShapeWell : BlockShapeCross
     protected float rightOffsetBorder;
     protected float forwardOffsetBorder;
     protected float backOffsetBorder;
-    public BlockShapeWell()
+    public BlockShapeWell() : base()
     {
         trisAdd = new int[]
         {

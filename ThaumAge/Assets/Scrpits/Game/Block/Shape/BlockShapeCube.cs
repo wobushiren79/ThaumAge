@@ -19,7 +19,7 @@ public class BlockShapeCube : Block
     protected Vector2[] uvsAddBack;
 
     protected int[] trisAddReversed;
-    public BlockShapeCube()
+    public BlockShapeCube() : base()
     {
         vertsAddLeft = new Vector3[]
         {

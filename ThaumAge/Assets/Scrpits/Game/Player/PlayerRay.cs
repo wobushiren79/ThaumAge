@@ -26,7 +26,7 @@ public class PlayerRay : PlayerBase
         float disMax = Vector3.Distance(cameraPosition, player.objThirdLook.transform.position);
 
         //发射射线检测
-        RayUtil.RayAllToScreenPointForScreenCenter(disMax + disRayBlock, 1 << LayerInfo.Chunk, out RaycastHit[] arrayHit);
+        RayUtil.RayAllToScreenPointForScreenCenter(disMax + disRayBlock, 1 << LayerInfo.ChunkTrigger | 1 << LayerInfo.ChunkCollider, out RaycastHit[] arrayHit);
         //如果没有发生碰撞
         if (arrayHit == null || arrayHit.Length == 0)
         {

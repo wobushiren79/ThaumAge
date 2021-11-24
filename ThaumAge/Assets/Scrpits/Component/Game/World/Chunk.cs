@@ -538,7 +538,6 @@ public class Chunk : BaseMonoBehaviour
         UserDataBean userData = gameDataManager.GetUserData();
 
         ChunkSaveBean chunkSaveData = gameDataManager.GetChunkSaveData(userData.userId, WorldCreateHandler.Instance.manager.worldType, chunkData.positionForWorld);
-
         //如果没有世界数据 则创建一个
         if (chunkSaveData == null)
         {
@@ -547,6 +546,7 @@ public class Chunk : BaseMonoBehaviour
             chunkSaveData.userId = userData.userId;
             chunkSaveData.position = chunkData.positionForWorld;
         }
+        chunkSaveData.InitData();
         Dictionary<int, BlockBean> dicBlockData = chunkSaveData.dicBlockData;
         foreach (var itemData in dicBlockData)
         {

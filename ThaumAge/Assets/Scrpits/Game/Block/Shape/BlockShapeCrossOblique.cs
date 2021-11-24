@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class BlockShapeCrossOblique : BlockShapeCross
 {
-    public BlockShapeCrossOblique()
+    public BlockShapeCrossOblique() : base()
     {
         vertsAdd = new Vector3[]
         {

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class BlockShapeCross : Block
 {
-    public BlockShapeCross()
+    public BlockShapeCross() : base()
     {
         vertsAdd = new Vector3[]
         {
@@ -69,7 +69,7 @@ public class BlockShapeCross : Block
 
             chunk.chunkMeshData.AddMeshIndexData(localPosition,
                      startVertsIndex, vertsAdd.Length, startTrisIndex, trisAdd.Length,
-                     startVertsColliderIndex, vertsAdd.Length, startTrisColliderIndex, trisAdd.Length);
+                     startVertsColliderIndex, vertsColliderAdd.Length, startTrisColliderIndex, trisColliderAdd.Length);
         }
     }
 
@@ -99,9 +99,9 @@ public class BlockShapeCross : Block
 
         AddTris(index, trisBothFaceSwingData, trisAdd);
         if (blockInfo.collider_state == 1)
-            AddTris(triggerIndex, trisCollider, trisAdd);
+            AddTris(triggerIndex, trisCollider, trisColliderAdd);
         if (blockInfo.trigger_state == 1)
-            AddTris(triggerIndex, trisTrigger, trisAdd);
+            AddTris(triggerIndex, trisTrigger, trisColliderAdd);
     }
 
     public override void BaseAddUVs(Chunk chunk, Vector3Int localPosition, DirectionEnum direction)
@@ -115,9 +115,9 @@ public class BlockShapeCross : Block
         base.BaseAddVerts(chunk, localPosition, direction, vertsAdd);
         AddVerts(localPosition, direction, chunk.chunkMeshData.verts, vertsAdd);
         if (blockInfo.collider_state == 1)
-            AddVerts(localPosition, direction, chunk.chunkMeshData.vertsCollider, vertsAdd);
+            AddVerts(localPosition, direction, chunk.chunkMeshData.vertsCollider, vertsColliderAdd);
         if (blockInfo.trigger_state == 1)
-            AddVerts(localPosition, direction, chunk.chunkMeshData.vertsTrigger, vertsAdd);
+            AddVerts(localPosition, direction, chunk.chunkMeshData.vertsTrigger, vertsColliderAdd);
     }
 
 

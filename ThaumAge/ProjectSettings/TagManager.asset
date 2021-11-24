@@ -21,9 +21,9 @@ TagManager:
   - UI
   - Chunk
   - ChunkTrigger
-  - Character
+  - ChunkCollider
   - Items
-  - 
+  - Character
   - 
   - 
   - 
