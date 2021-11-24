@@ -11,11 +11,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Diagnostics;
 
-public class WorldDataService : BaseDataStorage<WorldDataBean>
+public class ChunkSaveService : BaseDataStorage<ChunkSaveBean>
 {
     protected readonly string saveFileName = "WorldData";
 
-    public WorldDataService()
+    public ChunkSaveService()
     {
 
     }
@@ -24,7 +24,7 @@ public class WorldDataService : BaseDataStorage<WorldDataBean>
     /// 查询数据
     /// </summary>
     /// <returns></returns>
-    public WorldDataBean QueryData(string userId, WorldTypeEnum worldType, Vector3Int position)
+    public ChunkSaveBean QueryData(string userId, WorldTypeEnum worldType, Vector3Int position)
     {
         string worldName = saveFileName + "_" + EnumUtil.GetEnumName(worldType);
         string fileName = "w_" + position.x + "_" + position.z;
@@ -35,11 +35,11 @@ public class WorldDataService : BaseDataStorage<WorldDataBean>
     /// 更新数据
     /// </summary>
     /// <param name="gameConfig"></param>
-    public void UpdateData(WorldDataBean data)
+    public void UpdateData(ChunkSaveBean data)
     {
         WorldTypeEnum worldType = data.GetWorkType();
         string worldName = saveFileName + "_" + EnumUtil.GetEnumName(worldType);
-        string fileName = "w_" + data.chunkData.position.x + "_" + data.chunkData.position.z;
+        string fileName = "w_" + data.position.x + "_" + data.position.z;
         FileUtil.CreateDirectory(dataStoragePath + "/" + data.userId);
         FileUtil.CreateDirectory(dataStoragePath + "/" + data.userId + "/" + worldName);
         if (data.userId != null)

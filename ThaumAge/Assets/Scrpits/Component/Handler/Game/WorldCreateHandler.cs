@@ -368,13 +368,12 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
                     if (chunk != null && chunk.isInit)
                     {
                         //获取保存的数据
-                        WorldDataBean worldData = chunk.GetWorldData();
+                        ChunkSaveBean chunkSaveData = chunk.GetChunkSaveData();
                         int localX = itemBlock.worldX - chunk.chunkData.positionForWorld.x;
                         int localY = itemBlock.worldY;
                         int localZ = itemBlock.worldZ - chunk.chunkData.positionForWorld.z;
-                        if (worldData == null
-                        || worldData.chunkData == null
-                        || worldData.chunkData.GetBlockData(localX, localY, localZ, out BlockBean blockData))
+                        BlockBean blockData = chunk.GetBlockData(localX, localY, localZ);
+                        if (blockData == null)
                         {
                             //如果有存档方块 则不替换
                         }

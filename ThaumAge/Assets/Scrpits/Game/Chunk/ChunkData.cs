@@ -1,7 +1,7 @@
 ﻿using UnityEditor;
 using UnityEngine;
 
-public class ChunkDataBean
+public class ChunkData
 {
     public Chunk _chunkLeft;
     public Chunk chunkLeft
@@ -63,7 +63,7 @@ public class ChunkDataBean
     public int chunkWidth;
     public int chunkHeight;
 
-    public ChunkDataBean(Vector3Int wPosition, int chunkWidth, int chunkHeight)
+    public ChunkData(Vector3Int wPosition, int chunkWidth, int chunkHeight)
     {
         this.chunkWidth = chunkWidth;
         this.chunkHeight = chunkHeight;

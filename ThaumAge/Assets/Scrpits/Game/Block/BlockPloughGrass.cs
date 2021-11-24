@@ -20,8 +20,8 @@ public class BlockPloughGrass : BlockShapeCubeCuboid
 
     public override void BaseAddUVs(Chunk chunk, Vector3Int localPosition, DirectionEnum direction, DirectionEnum face, Vector2[] uvsAdd)
     {
-        WorldDataBean worldData = chunk.GetWorldData();
-        if (face == DirectionEnum.UP && worldData.chunkData.GetBlockData(localPosition.x, localPosition.y, localPosition.z, out BlockBean blockData))
+        BlockBean blockData = chunk.GetBlockData(localPosition);
+        if (blockData != null && face == DirectionEnum.UP)
         {
             FromMetaData(blockData.meta, out int rotate);
             if (rotate == 1)

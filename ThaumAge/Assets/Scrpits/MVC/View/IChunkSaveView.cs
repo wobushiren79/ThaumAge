@@ -8,9 +8,9 @@ using UnityEngine;
 using System;
 using System.Collections.Generic;
 
-public interface IWorldDataView
+public interface IChunkSaveView
 {
-	void GetWorldDataSuccess<T>(T data, Action<T> action);
+	void GetChunkSaveSuccess<T>(T data, Action<T> action);
 
-	void GetWorldDataFail(string failMsg, Action action);
+	void GetChunkSaveFail(string failMsg, Action action);
 }

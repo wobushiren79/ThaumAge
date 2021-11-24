@@ -29,19 +29,18 @@ public class Chunk : BaseMonoBehaviour
     public MeshRenderer meshRenderer;
     public MeshFilter meshFilter;
 
-    //存储着此Chunk内的所有信息
-    public ChunkDataBean chunkData;
-
     //是否初始化
     public bool isInit = false;
     public bool isBuildChunk = false;
     public bool isDrawMesh = false;
     public bool isFirstDraw = true;
 
+    //包含Chunk内的所有信息
+    public ChunkData chunkData;
     //渲染数据
     public ChunkMeshData chunkMeshData;
     //存储数据
-    protected WorldDataBean worldData;
+    protected ChunkSaveBean chunkSaveData;
 
     public Mesh chunkMesh;
     public Mesh chunkMeshCollider;
@@ -116,25 +115,25 @@ public class Chunk : BaseMonoBehaviour
     /// <param name="minHeight"></param>
     public void SetData(Vector3Int worldPosition, int width, int height)
     {
-        chunkData = new ChunkDataBean(worldPosition, width, height);
+        chunkData = new ChunkData(worldPosition, width, height);
         chunkMeshData = new ChunkMeshData();
     }
 
     /// <summary>
-    /// 设置世界数据 用于保存
+    /// 设置存储数据
     /// </summary>
     /// <param name="worldData"></param>
-    public void SetWorldData(WorldDataBean worldData)
+    public void SetChunkSaveData(ChunkSaveBean chunkSaveData)
     {
-        this.worldData = worldData;
+        this.chunkSaveData = chunkSaveData;
     }
     /// <summary>
     /// 获取存储数据
     /// </summary>
     /// <returns></returns>
-    public WorldDataBean GetWorldData()
+    public ChunkSaveBean GetChunkSaveData()
     {
-        return worldData;
+        return chunkSaveData;
     }
 
     /// <summary>
@@ -142,13 +141,20 @@ public class Chunk : BaseMonoBehaviour
     /// </summary>
     public BlockBean GetBlockData(int x,int y,int z)
     {
-        WorldDataBean worldData = GetWorldData();
-        if (worldData == null)
+        if (chunkSaveData == null)
             return null;
-        if (worldData.chunkData == null)
-            return null;
-        worldData.chunkData.GetBlockData(x, y, z, out BlockBean blockData);
+        BlockBean blockData = chunkSaveData.GetBlockData(x, y, z);
         return blockData;
+    }
+
+    /// <summary>
+    /// 设置存储方块数据
+    /// </summary>
+    /// <param name="blockData"></param>
+    public void SetBlockData(BlockBean blockData)
+    {
+        int index = chunkData.GetIndexByPosition(blockData.localPosition);
+        chunkSaveData.dicBlockData[index] = blockData;
     }
 
     /// <summary>
@@ -478,17 +484,17 @@ public class Chunk : BaseMonoBehaviour
 
         if (isSaveData)
         {
-            int index = chunkData.GetIndexByPosition(localPosition);
             //保存数据
-            if (worldData != null && worldData.chunkData != null)
+            if (chunkSaveData != null)
             {
                 BlockBean blockData = new BlockBean(localPosition, blockType, direction, meta);
-                worldData.chunkData.dicBlockData[index] = blockData;
+                SetBlockData(blockData);
             }
             //异步保存数据
-            GameDataHandler.Instance.manager.SaveGameDataAsync(worldData);
+            GameDataHandler.Instance.manager.SaveGameDataAsync(chunkSaveData);
         }
     }
+
 
     /// <summary>
     /// 处理-基础地形方块
@@ -531,27 +537,17 @@ public class Chunk : BaseMonoBehaviour
         //获取数据中的chunk
         UserDataBean userData = gameDataManager.GetUserData();
 
-        WorldDataBean worldData = gameDataManager.GetWorldData(userData.userId, WorldCreateHandler.Instance.manager.worldType, chunkData.positionForWorld);
+        ChunkSaveBean chunkSaveData = gameDataManager.GetChunkSaveData(userData.userId, WorldCreateHandler.Instance.manager.worldType, chunkData.positionForWorld);
 
         //如果没有世界数据 则创建一个
-        if (worldData == null)
+        if (chunkSaveData == null)
         {
-            worldData = new WorldDataBean();
-            worldData.workdType = (int)WorldCreateHandler.Instance.manager.worldType;
-            worldData.userId = userData.userId;
+            chunkSaveData = new ChunkSaveBean();
+            chunkSaveData.workdType = (int)WorldCreateHandler.Instance.manager.worldType;
+            chunkSaveData.userId = userData.userId;
+            chunkSaveData.position = chunkData.positionForWorld;
         }
-        Dictionary<int, BlockBean> dicBlockData = new Dictionary<int, BlockBean>();
-        //如果有数据 则读取数据
-        if (worldData.chunkData != null)
-        {
-            worldData.chunkData.InitData();
-            dicBlockData = worldData.chunkData.dicBlockData;
-        }
-        else
-        {
-            worldData.chunkData = new ChunkBean();
-            worldData.chunkData.position = chunkData.positionForWorld;
-        }
+        Dictionary<int, BlockBean> dicBlockData = chunkSaveData.dicBlockData;
         foreach (var itemData in dicBlockData)
         {
             BlockBean blockData = itemData.Value;
@@ -563,7 +559,7 @@ public class Chunk : BaseMonoBehaviour
             Block block = BlockHandler.Instance.manager.GetRegisterBlock(blockData.blockId);
             chunkData.SetBlockForLocal(positionBlock, block, blockData.direction);
         }
-        SetWorldData(worldData);
+        SetChunkSaveData(chunkSaveData);
     }
 
     /// <summary>

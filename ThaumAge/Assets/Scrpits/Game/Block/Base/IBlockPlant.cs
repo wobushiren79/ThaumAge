@@ -13,15 +13,14 @@ public static class BlockPlantExtension
     /// 获取meta数据
     /// </summary>
     /// <returns></returns>
-    public static string ToMetaData<T>(this T self, int growth,bool isStartGrow) where T : IBlockPlant
+    public static string ToMetaData<T>(this T self, int growPro, bool isStartGrow) where T : IBlockPlant
     {
-        return $"{growth}:{isStartGrow}";
+        return $"{growPro}:{isStartGrow}";
     }
-
-    public static void FromMetaData<T>(this T self, string data, out int growth,out bool isStartGrow) where T : IBlockPlant
+    public static void FromMetaData<T>(this T self, string data, out int growPro,out bool isStartGrow) where T : IBlockPlant
     {
         string[] dataList= StringUtil.SplitBySubstringForArrayStr(data,':');
-        growth = int.Parse(dataList[0]);
+        growPro = int.Parse(dataList[0]);
         isStartGrow = bool.Parse(dataList[1]);
     }
 
@@ -48,7 +47,6 @@ public static class BlockPlantExtension
         chunk.RegisterEventUpdate(localPosition, TimeUpdateEventTypeEnum.Min);
     }
 
-
     /// <summary>
     /// 刷新植物
     /// </summary>
@@ -59,14 +57,18 @@ public static class BlockPlantExtension
 
         BlockBean blockData = chunk.GetBlockData(localPosition);
         if (blockData == null)
-            return;
+        {
+            string meta = self.ToMetaData(0, false);
+            blockData = new BlockBean(localPosition,blockInfo.GetBlockType(), direction, meta);
+            chunk.SetBlockData(blockData);
+        }
         //获取成长周期
-        self.FromMetaData(blockData.meta, out int growth,out bool isStartGrow);
+        self.FromMetaData(blockData.meta, out int growPro, out bool isStartGrow);
         //成长周期+1
         if (isStartGrow)
         {
             //是否开始生长
-            growth++;
+            growPro++;
         }
         else
         {
@@ -74,17 +76,22 @@ public static class BlockPlantExtension
         }
 
         //设置新数据
-        string newMeta =  self.ToMetaData(growth, isStartGrow);
-        chunk.SetBlockForLocal(localPosition, blockInfo.GetBlockType(), direction, newMeta);
+        string newMeta = self.ToMetaData(growPro, isStartGrow);
+        blockData.meta = newMeta;
+        chunk.SetBlockData(blockData);
+        //刷新
         WorldCreateHandler.Instance.HandleForUpdateChunk(chunk, localPosition, block, block, direction);
     }
 
     /// <summary>
     /// 获取UVAdd
     /// </summary>
-    public static Vector2[] GetUVsAddForPlant<T>(this T self, BlockInfoBean blockInfo, float uvWidth, int growth) where T : IBlockPlant
+    public static Vector2[] GetUVsAddForPlant<T>(this T self, Chunk chunk, Vector3Int localPosition, BlockInfoBean blockInfo, float uvWidth) where T : IBlockPlant
     {
-        Vector2 uvStartPosition = GetUVStartPositionForPlant(self, blockInfo, uvWidth, growth);
+        BlockBean blockData = chunk.GetBlockData(localPosition);
+        self.FromMetaData(blockData.meta, out int growPro, out bool isStartGrow);
+
+        Vector2 uvStartPosition = GetUVStartPositionForPlant(self, blockInfo, uvWidth, growPro);
         Vector2[] uvsAdd = new Vector2[]
         {
             new Vector2(uvStartPosition.x,uvStartPosition.y),

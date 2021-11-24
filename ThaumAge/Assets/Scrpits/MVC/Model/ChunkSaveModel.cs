@@ -8,22 +8,22 @@ using UnityEngine;
 using UnityEditor;
 using System.Collections.Generic;
 
-public class WorldDataModel : BaseMVCModel
+public class ChunkSaveModel : BaseMVCModel
 {
-    protected WorldDataService serviceWorldData;
+    protected ChunkSaveService serviceChunkSave;
 
     public override void InitData()
     {
-        serviceWorldData = new WorldDataService();
+        serviceChunkSave = new ChunkSaveService();
     }
 
     /// <summary>
     /// 获取游戏数据
     /// </summary>
     /// <returns></returns>
-    public WorldDataBean GetWorldDataData(string userId, WorldTypeEnum worldType, Vector3Int position)
+    public ChunkSaveBean GetChunkSaveData(string userId, WorldTypeEnum worldType, Vector3Int position)
     {
-        WorldDataBean data = serviceWorldData.QueryData(userId, worldType, position);
+        ChunkSaveBean data = serviceChunkSave.QueryData(userId, worldType, position);
         return data;
     }
 
@@ -31,9 +31,9 @@ public class WorldDataModel : BaseMVCModel
     /// 保存游戏数据
     /// </summary>
     /// <param name="data"></param>
-    public void SetWorldDataData(WorldDataBean data)
+    public void SetChunkSaveData(ChunkSaveBean data)
     {
-        serviceWorldData.UpdateData(data);
+        serviceChunkSave.UpdateData(data);
     }
 
 }

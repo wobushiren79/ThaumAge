@@ -3,13 +3,19 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [Serializable]
-public class ChunkBean
+public class ChunkSaveBean : BaseBean
 {
+    //世界类型
+    public int workdType = 0;
+    //所属账号
+    public string userId;
+    //chunk坐标
     public Vector3Int position;
-
+    //保存的方块数据
     public List<BlockBean> listBlockData = new List<BlockBean>();
 
     public Dictionary<int, BlockBean> dicBlockData = new Dictionary<int, BlockBean>();
+
 
     public void InitData()
     {
@@ -42,15 +48,20 @@ public class ChunkBean
         }
     }
 
-    public bool GetBlockData(int x, int y, int z, out BlockBean blockData)
+    public BlockBean GetBlockData(int x, int y, int z)
     {
         int widthChunk = WorldCreateHandler.Instance.manager.widthChunk;
         int heightChunk = WorldCreateHandler.Instance.manager.heightChunk;
         int index = MathUtil.GetSingleIndexForThree(x, y, z, widthChunk, heightChunk);
-        if (dicBlockData.TryGetValue(index, out blockData))
+        if (dicBlockData.TryGetValue(index, out BlockBean blockData))
         {
-            return true;
+            return blockData;
         }
-        return false;
+        return null;
+    }
+
+    public WorldTypeEnum GetWorkType()
+    {
+        return (WorldTypeEnum)workdType;
     }
 }

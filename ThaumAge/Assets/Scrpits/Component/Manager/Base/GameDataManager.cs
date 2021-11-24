@@ -5,14 +5,14 @@ using UnityEditor;
 using UnityEngine;
 
 public class GameDataManager : BaseManager,
-    IGameConfigView, IWorldDataView, IUserDataView,IBaseDataView
+    IGameConfigView, IChunkSaveView, IUserDataView,IBaseDataView
 {
     //游戏设置
     public GameConfigBean gameConfig;
     public UserDataBean userData;
 
     public GameConfigController controllerForGameConfig;
-    public WorldDataController controllerForWorldData;
+    public ChunkSaveController controllerForChunkSave;
     public UserDataController controllerForUserData;
     public BaseDataController controllerForBase;
 
@@ -21,7 +21,7 @@ public class GameDataManager : BaseManager,
     protected void Awake()
     {
         controllerForGameConfig = new GameConfigController(this, this);
-        controllerForWorldData = new WorldDataController(this, this);
+        controllerForChunkSave = new ChunkSaveController(this, this);
         controllerForUserData = new UserDataController(this, this);
         controllerForBase = new BaseDataController(this, this);
         controllerForGameConfig.GetGameConfigData();
@@ -62,9 +62,9 @@ public class GameDataManager : BaseManager,
     /// 获取世界数据
     /// </summary>
     /// <returns></returns>
-    public WorldDataBean GetWorldData(string userId, WorldTypeEnum worldType,Vector3Int position)
+    public ChunkSaveBean GetChunkSaveData(string userId, WorldTypeEnum worldType,Vector3Int position)
     {
-        return controllerForWorldData.GetWorldData( userId,  worldType, position,  null);
+        return controllerForChunkSave.GetChunkSaveData( userId,  worldType, position,  null);
     }
 
     /// <summary>
@@ -89,15 +89,15 @@ public class GameDataManager : BaseManager,
     /// <summary>
     /// 异步保存游戏数据
     /// </summary>
-    public async void SaveGameDataAsync(WorldDataBean worldData)
+    public async void SaveGameDataAsync(ChunkSaveBean chunkSaveData)
     {
         await Task.Run(() =>
         {
             lock (lockForSaveData)
             {
-                worldData.chunkData.SaveData();
+                chunkSaveData.SaveData();
                 controllerForUserData.SetUserData(userData);
-                controllerForWorldData.SetWorldData(worldData, null);
+                controllerForChunkSave.SetChunkSaveData(chunkSaveData, null);
             }
         });
     }
@@ -119,12 +119,11 @@ public class GameDataManager : BaseManager,
     {
         controllerForUserData.RemoveUserData(userId);
     }
+
     public void DeletGameData()
     {
         DeletGameData(userData.userId);
     }
-
-
 
     #region 游戏设置数据回掉
     public void GetGameConfigFail()
@@ -147,16 +146,6 @@ public class GameDataManager : BaseManager,
 
     }
 
-    public void GetWorldDataSuccess<T>(T data, Action<T> action)
-    {
-        action?.Invoke(data);
-    }
-
-    public void GetWorldDataFail(string failMsg, Action action)
-    {
-
-    }
-
     public void GetUserDataSuccess<T>(T data, Action<T> action)
     {
         action?.Invoke(data);
@@ -173,6 +162,16 @@ public class GameDataManager : BaseManager,
     }
 
     public void GetAllBaseDataFail(string failMsg)
+    {
+
+    }
+
+    public void GetChunkSaveSuccess<T>(T data, Action<T> action)
+    {
+        action?.Invoke(data);
+    }
+
+    public void GetChunkSaveFail(string failMsg, Action action)
     {
 
     }
