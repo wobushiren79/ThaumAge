@@ -94,13 +94,13 @@ public class BlockBreak : BaseMonoBehaviour
 
                  Vector2Int[] arrayUVData = block.blockInfo.GetUVPosition();
                  int randomUV = Random.Range(0, arrayUVData.Length);
-                 Vector2 uvStartPosition = new Vector2(texBlock.width * (arrayUVData[randomUV].y * block.uvWidth), texBlock.width * (arrayUVData[randomUV].x * block.uvWidth));
+                 Vector2 uvStartPosition = new Vector2(texBlock.width * (arrayUVData[randomUV].y * Block.uvWidth), texBlock.width * (arrayUVData[randomUV].x * Block.uvWidth));
 
-                 int randomXStart = Random.Range((int)uvStartPosition.x, (int)(uvStartPosition.x + (texBlock.width * block.uvWidth)));
-                 int randomYStart = Random.Range((int)uvStartPosition.y, (int)(uvStartPosition.y + (texBlock.height * block.uvWidth)));
+                 int randomXStart = Random.Range((int)uvStartPosition.x, (int)(uvStartPosition.x + (texBlock.width * Block.uvWidth)));
+                 int randomYStart = Random.Range((int)uvStartPosition.y, (int)(uvStartPosition.y + (texBlock.height * Block.uvWidth)));
 
-                 int randomXEnd = Random.Range((int)uvStartPosition.x, (int)(uvStartPosition.x + (texBlock.width * block.uvWidth)));
-                 int randomYEnd = Random.Range((int)uvStartPosition.y, (int)(uvStartPosition.y + (texBlock.height * block.uvWidth)));
+                 int randomXEnd = Random.Range((int)uvStartPosition.x, (int)(uvStartPosition.x + (texBlock.width * Block.uvWidth)));
+                 int randomYEnd = Random.Range((int)uvStartPosition.y, (int)(uvStartPosition.y + (texBlock.height * Block.uvWidth)));
 
                  Color colorStart = TextureUtil.GetPixel(texBlock, new Vector2Int(randomXStart, randomYStart));
                  Color colorEnd = TextureUtil.GetPixel(texBlock, new Vector2Int(randomXEnd, randomYEnd));

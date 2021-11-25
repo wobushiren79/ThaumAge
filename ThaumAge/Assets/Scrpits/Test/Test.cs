@@ -12,28 +12,9 @@ using UnityEngine.UI;
 
 public class Test : BaseMonoBehaviour
 {
-    public MeshFilter meshFilter;
-
     private void Start()
     {
-        Mesh mesh = new Mesh();
-
-        Vector3[] vertices = new Vector3[100];
-        vertices[0] = new Vector3(0, 0, 0);
-        vertices[1] = new Vector3(0, 1, 0);
-        vertices[2] = new Vector3(1, 1, 0);
-        vertices[3] = new Vector3(1, 0, 0);
-        mesh.SetVertices(vertices);
-
-        int[] tra = new int[30];
-        tra[0] = 0;
-        tra[1] = 1;
-        tra[2] = 2;
-        tra[3] = 0;
-        tra[4] = 2;
-        tra[5] = 3;
-        mesh.SetTriangles(tra, 0);
-        meshFilter.mesh = mesh;
+        FastNoise fastNoise = new FastNoise("Test");
     }
 
     public void OnGUI()

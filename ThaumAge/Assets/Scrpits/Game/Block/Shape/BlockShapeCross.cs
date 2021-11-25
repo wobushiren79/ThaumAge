@@ -77,12 +77,14 @@ public class BlockShapeCross : Block
     {
         base.RefreshBlock(chunk, localPosition);
         //获取下方方块
-        Block downBlock = chunk.chunkData.GetBlockForLocal(localPosition + Vector3Int.down);
+        Vector3Int downLocalPosition = localPosition + Vector3Int.down;
+        chunk.chunkData.GetBlockForLocal(downLocalPosition, out Block downBlock, out DirectionEnum downDirection);
         //如果下方方块为NONE或者为液体
         if (downBlock == null || downBlock.blockType == BlockTypeEnum.None || downBlock.blockInfo.GetBlockShape() == BlockShapeEnum.Liquid)
         {
             chunk.SetBlockForLocal(localPosition, BlockTypeEnum.None);
-            WorldCreateHandler.Instance.manager.AddUpdateChunk(chunk);
+            Block newBlock = BlockHandler.Instance.manager.GetRegisterBlock(BlockTypeEnum.None);
+            WorldCreateHandler.Instance.HandleForUpdateChunk(chunk, downLocalPosition, downBlock, newBlock, downDirection, false);
         }
     }
 
@@ -119,7 +121,6 @@ public class BlockShapeCross : Block
         if (blockInfo.trigger_state == 1)
             AddVerts(localPosition, direction, chunk.chunkMeshData.vertsTrigger, vertsColliderAdd);
     }
-
 
     public virtual Vector2 GetUVStartPosition()
     {

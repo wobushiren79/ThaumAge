@@ -86,23 +86,23 @@ public static class BlockPlantExtension
     /// <summary>
     /// 获取UVAdd
     /// </summary>
-    public static Vector2[] GetUVsAddForPlant<T>(this T self, Chunk chunk, Vector3Int localPosition, BlockInfoBean blockInfo, float uvWidth) where T : IBlockPlant
+    public static Vector2[] GetUVsAddForPlant<T>(this T self, Chunk chunk, Vector3Int localPosition, BlockInfoBean blockInfo) where T : IBlockPlant
     {
         BlockBean blockData = chunk.GetBlockData(localPosition);
         self.FromMetaData(blockData.meta, out int growPro, out bool isStartGrow);
 
-        Vector2 uvStartPosition = GetUVStartPositionForPlant(self, blockInfo, uvWidth, growPro);
+        Vector2 uvStartPosition = GetUVStartPositionForPlant(self, blockInfo, Block.uvWidth, growPro);
         Vector2[] uvsAdd = new Vector2[]
         {
             new Vector2(uvStartPosition.x,uvStartPosition.y),
-            new Vector2(uvStartPosition.x,uvStartPosition.y + uvWidth),
-            new Vector2(uvStartPosition.x + uvWidth,uvStartPosition.y + uvWidth),
-            new Vector2(uvStartPosition.x + uvWidth,uvStartPosition.y),
+            new Vector2(uvStartPosition.x,uvStartPosition.y + Block.uvWidth),
+            new Vector2(uvStartPosition.x + Block.uvWidth,uvStartPosition.y + Block.uvWidth),
+            new Vector2(uvStartPosition.x + Block.uvWidth,uvStartPosition.y),
 
             new Vector2(uvStartPosition.x,uvStartPosition.y),
-            new Vector2(uvStartPosition.x,uvStartPosition.y + uvWidth),
-            new Vector2(uvStartPosition.x + uvWidth,uvStartPosition.y + uvWidth),
-            new Vector2(uvStartPosition.x + uvWidth,uvStartPosition.y)
+            new Vector2(uvStartPosition.x,uvStartPosition.y + Block.uvWidth),
+            new Vector2(uvStartPosition.x + Block.uvWidth,uvStartPosition.y + Block.uvWidth),
+            new Vector2(uvStartPosition.x + Block.uvWidth,uvStartPosition.y)
         };
         return uvsAdd;
     }

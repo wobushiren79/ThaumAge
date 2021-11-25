@@ -11,7 +11,7 @@ public class BlockShapePlantCross : BlockShapeCross, IBlockPlant
 
     public override void BaseAddUVs(Chunk chunk, Vector3Int localPosition, DirectionEnum direction)
     {
-        Vector2[] uvsAdd = this.GetUVsAddForPlant(chunk, localPosition, blockInfo, uvWidth);
+        Vector2[] uvsAdd = this.GetUVsAddForPlant(chunk, localPosition, blockInfo);
         AddUVs(chunk.chunkMeshData.uvs, uvsAdd);
     }
 
