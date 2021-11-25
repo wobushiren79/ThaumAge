@@ -33,15 +33,16 @@ public class ItemHoe : Item
                 if (upBlock != null && upBlock.blockType != BlockTypeEnum.None)
                     return;
 
-
                 Vector3 face = Vector3.Normalize(player.transform.position - hit.point);
                 int rotate = Mathf.Abs(face.x) > Mathf.Abs(face.z) ? 0 : 1;
 
+                BlockTypeEnum ploughBlockType = (BlockTypeEnum)tagetBlock.blockInfo.plough_change;
                 //替换为耕地方块
-                chunkForHit.SetBlockForLocal(localPosition, (BlockTypeEnum)tagetBlock.blockInfo.plough_change, direction, BlockPloughGrass.ToMetaData(rotate));
+                chunkForHit.SetBlockForLocal(localPosition, ploughBlockType, direction, BlockPloughGrass.ToMetaData(rotate));
 
+                Block ploughBlock =  BlockHandler.Instance.manager.GetRegisterBlock(ploughBlockType);
                 //更新区块
-                WorldCreateHandler.Instance.HandleForUpdateChunk(true, null);
+                WorldCreateHandler.Instance.HandleForUpdateChunk(chunkForHit, localPosition, ploughBlock, ploughBlock, direction, true);
             }
         }
     }

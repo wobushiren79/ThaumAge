@@ -15,11 +15,22 @@ public static class BlockPlantExtension
     /// <returns></returns>
     public static string ToMetaData<T>(this T self, int growPro, bool isStartGrow) where T : IBlockPlant
     {
+        return ToMetaData(growPro, isStartGrow);
+    }
+
+    public static string ToMetaData(int growPro, bool isStartGrow)
+    {
         return $"{growPro}:{isStartGrow}";
     }
+
     public static void FromMetaData<T>(this T self, string data, out int growPro,out bool isStartGrow) where T : IBlockPlant
     {
-        string[] dataList= StringUtil.SplitBySubstringForArrayStr(data,':');
+        FromMetaData(data, out growPro, out isStartGrow);
+    }
+
+    public static void FromMetaData(string data, out int growPro, out bool isStartGrow)
+    {
+        string[] dataList = StringUtil.SplitBySubstringForArrayStr(data, ':');
         growPro = int.Parse(dataList[0]);
         isStartGrow = bool.Parse(dataList[1]);
     }

@@ -14,9 +14,9 @@ public class BlockMagma : BlockWater
     }
 
 
-    public override void RefreshBlock(Chunk chunk, Vector3Int localPosition)
+    public override void RefreshBlock(Chunk chunk, Vector3Int localPosition,DirectionEnum direction)
     {
-        base.RefreshBlock(chunk, localPosition);
+        base.RefreshBlock(chunk, localPosition, direction);
         InitSmoke(chunk, localPosition);
     }
 

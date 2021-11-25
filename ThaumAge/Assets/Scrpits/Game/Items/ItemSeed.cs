@@ -26,18 +26,24 @@ public class ItemSeed : Item
                 if (tagetBlock.blockInfo.plant_state == 0)
                     return;
 
+                //种植位置
+                Vector3Int upLocalPosition = localPosition + Vector3Int.up;
                 //获取上方方块
-                Block upBlock = chunkForHit.chunkData.GetBlockForLocal(localPosition + Vector3Int.up);
+                Block upBlock = chunkForHit.chunkData.GetBlockForLocal(upLocalPosition);
 
                 //如果上方有方块 则无法种植
                 if (upBlock != null && upBlock.blockType != BlockTypeEnum.None)
                     return;
 
+                //种植的方块
+                BlockTypeEnum plantBlockType = (BlockTypeEnum)itemsInfo.type_id;
+                Block plantBlock = BlockHandler.Instance.manager.GetRegisterBlock(plantBlockType);
+                //初始化meta数据
+                string metaData= BlockPlantExtension.ToMetaData(0,false);
                 //替换为种植
-                chunkForHit.SetBlockForLocal(localPosition + Vector3Int.up, (BlockTypeEnum)itemsInfo.type_id, DirectionEnum.UP);
-
+                chunkForHit.SetBlockForLocal(upLocalPosition, plantBlockType, DirectionEnum.UP, metaData);
                 //更新区块
-                WorldCreateHandler.Instance.HandleForUpdateChunk(true, null);
+                WorldCreateHandler.Instance.HandleForUpdateChunk(chunkForHit, upLocalPosition, upBlock, plantBlock, direction, true);
             }
         }
     }

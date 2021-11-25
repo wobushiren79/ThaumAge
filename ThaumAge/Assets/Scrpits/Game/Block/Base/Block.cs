@@ -42,11 +42,16 @@ public abstract class Block
 
     public static int[] trisColliderAdd = new int[]
     {   
-            0,1,2, 0,2,3,
-            4,6,5, 4,7,6,
-            8,9,10, 8,10,11,
-            12,14,13, 12,15,14,
+            0,2,1, 0,3,2,
+
+            4,5,6, 4,6,7,
+
+            8,10,9, 8,11,10,
+
+            12,13,14, 12,14,15,
+
             16,17,18, 16,18,19,
+
             20,22,21, 20,23,22
     };
 
@@ -649,9 +654,10 @@ public abstract class Block
     /// <summary>
     /// 刷新方块
     /// </summary>
-    public virtual void RefreshBlock(Chunk chunk, Vector3Int localPosition)
+    public virtual void RefreshBlock(Chunk chunk, Vector3Int localPosition,DirectionEnum direction)
     {
-
+        //更新方块
+        WorldCreateHandler.Instance.HandleForUpdateChunk(chunk, localPosition, this, this, direction, false);
     }
 
     /// <summary>
@@ -675,10 +681,10 @@ public abstract class Block
     /// <param name="closeWorldPosition"></param>
     public virtual void RefreshBlockClose(Vector3Int closeWorldPosition)
     {
-        WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(closeWorldPosition, out Block closeBlock, out Chunk closeChunk);
+        WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(closeWorldPosition, out Block closeBlock, out DirectionEnum direction, out Chunk closeChunk);
         if (closeChunk != null)
         {
-            closeBlock?.RefreshBlock(closeChunk, closeWorldPosition - closeChunk.chunkData.positionForWorld);
+            closeBlock?.RefreshBlock(closeChunk, closeWorldPosition - closeChunk.chunkData.positionForWorld, direction);
         }
     }
 

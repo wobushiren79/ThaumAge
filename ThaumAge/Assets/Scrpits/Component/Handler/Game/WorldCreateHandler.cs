@@ -281,18 +281,19 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
         //如果是需要刷新周围方块
         if (isRefreshRange)
         {
+            //暂时不需要 放在每个方块的refres方法中刷新
             //上
-            HandleForUpdateChunkClose(chunk, localPosition + Vector3Int.up);
+            //HandleForUpdateChunkClose(chunk, localPosition + Vector3Int.up);
             //下
-            HandleForUpdateChunkClose(chunk, localPosition + Vector3Int.down);
+            //HandleForUpdateChunkClose(chunk, localPosition + Vector3Int.down);
             //左
-            HandleForUpdateChunkClose(chunk, localPosition + Vector3Int.left);
+            //HandleForUpdateChunkClose(chunk, localPosition + Vector3Int.left);
             //右
-            HandleForUpdateChunkClose(chunk, localPosition + Vector3Int.right);
+            //HandleForUpdateChunkClose(chunk, localPosition + Vector3Int.right);
             //前
-            HandleForUpdateChunkClose(chunk, localPosition + Vector3Int.forward);
+            //HandleForUpdateChunkClose(chunk, localPosition + Vector3Int.forward);
             //后
-            HandleForUpdateChunkClose(chunk, localPosition + Vector3Int.back);
+            //HandleForUpdateChunkClose(chunk, localPosition + Vector3Int.back);
         }
 
         if (chunk.chunkMeshData.dicIndexData.TryGetValue(localPosition, out ChunkMeshIndexData meshIndexData))

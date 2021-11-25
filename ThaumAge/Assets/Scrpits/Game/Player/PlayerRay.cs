@@ -73,38 +73,37 @@ public class PlayerRay : PlayerBase
         direction = DirectionEnum.UP;
         if (hit.normal.y > 0)
         {
-            targetPosition = new Vector3Int(Mathf.FloorToInt(hit.point.x), Mathf.CeilToInt(hit.point.y) - 1, Mathf.FloorToInt(hit.point.z));
+            targetPosition = new Vector3Int(Mathf.FloorToInt(hit.point.x), Mathf.FloorToInt(hit.point.y - 0.01f), Mathf.FloorToInt(hit.point.z));
             closePosition = targetPosition + Vector3Int.up;
             direction = DirectionEnum.UP;
         }
         else if (hit.normal.y < 0)
         {
-            targetPosition = new Vector3Int(Mathf.FloorToInt(hit.point.x), Mathf.FloorToInt(hit.point.y), Mathf.FloorToInt(hit.point.z));
+            targetPosition = new Vector3Int(Mathf.FloorToInt(hit.point.x), Mathf.FloorToInt(hit.point.y + 0.01f), Mathf.FloorToInt(hit.point.z));
             closePosition = targetPosition + Vector3Int.down;
             direction = DirectionEnum.Down;
         }
         else if (hit.normal.x > 0)
         {
-            targetPosition = new Vector3Int(Mathf.CeilToInt(hit.point.x) - 1, Mathf.FloorToInt(hit.point.y), Mathf.FloorToInt(hit.point.z));
+            targetPosition = new Vector3Int(Mathf.FloorToInt(hit.point.x - 0.01f), Mathf.FloorToInt(hit.point.y), Mathf.FloorToInt(hit.point.z));
             closePosition = targetPosition + Vector3Int.right;
             direction = DirectionEnum.Right;
         }
         else if (hit.normal.x < 0)
         {
-            targetPosition = new Vector3Int(Mathf.FloorToInt(hit.point.x), Mathf.FloorToInt(hit.point.y), Mathf.FloorToInt(hit.point.z));
+            targetPosition = new Vector3Int(Mathf.FloorToInt(hit.point.x + 0.01f), Mathf.FloorToInt(hit.point.y), Mathf.FloorToInt(hit.point.z));
             closePosition = targetPosition + Vector3Int.left;
             direction = DirectionEnum.Left;
         }
         else if (hit.normal.z > 0)
         {
-           int z=  Mathf.FloorToInt(hit.point.z);
-            targetPosition = new Vector3Int(Mathf.FloorToInt(hit.point.x), Mathf.FloorToInt(hit.point.y), Mathf.CeilToInt(hit.point.z) - 1);
+            targetPosition = new Vector3Int(Mathf.FloorToInt(hit.point.x), Mathf.FloorToInt(hit.point.y), Mathf.FloorToInt(hit.point.z - 0.01f));
             closePosition = targetPosition + Vector3Int.forward;
             direction = DirectionEnum.Forward;
         }
         else if (hit.normal.z < 0)
         {
-            targetPosition = new Vector3Int(Mathf.FloorToInt(hit.point.x), Mathf.FloorToInt(hit.point.y), Mathf.FloorToInt(hit.point.z));
+            targetPosition = new Vector3Int(Mathf.FloorToInt(hit.point.x), Mathf.FloorToInt(hit.point.y), Mathf.FloorToInt(hit.point.z + 0.01f));
             closePosition = targetPosition + Vector3Int.back;
             direction = DirectionEnum.Back;
         }
