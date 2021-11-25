@@ -61,11 +61,6 @@ public class Chunk : BaseMonoBehaviour
         chunkMeshCollider = new Mesh();
         chunkMeshTrigger = new Mesh();
 
-        //设置为动态变更，理论上可以提高效率
-        chunkMesh.MarkDynamic();
-        chunkMeshCollider.MarkDynamic();
-        chunkMeshTrigger.MarkDynamic();
-
         //设置mesh的三角形上限
         chunkMesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
         chunkMeshCollider.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
@@ -79,6 +74,11 @@ public class Chunk : BaseMonoBehaviour
         meshFilter.mesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
         meshCollider.sharedMesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
         meshTrigger.sharedMesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
+
+        //设置为动态变更，理论上可以提高效率
+        chunkMesh.MarkDynamic();
+        chunkMeshCollider.MarkDynamic();
+        chunkMeshTrigger.MarkDynamic();
     }
 
     protected float eventUpdateTimeForSec = 0;
@@ -317,10 +317,6 @@ public class Chunk : BaseMonoBehaviour
         {
             isDrawMesh = true;
 
-            chunkMesh.Clear();
-            chunkMeshCollider.Clear();
-            chunkMeshTrigger.Clear();
-
             chunkMesh.subMeshCount = meshRenderer.materials.Length;
             //定点数判断
             if (chunkMeshData == null
@@ -362,9 +358,10 @@ public class Chunk : BaseMonoBehaviour
             //chunkMeshTrigger.RecalculateNormals();
 
             //meshFilter.mesh.Optimize();
-            if (chunkMesh.vertexCount >= 3) meshFilter.sharedMesh = chunkMesh;
-            if (chunkMeshCollider.vertexCount >= 3) meshCollider.sharedMesh = chunkMeshCollider;
-            if (chunkMeshTrigger.vertexCount >= 3) meshTrigger.sharedMesh = chunkMeshTrigger;
+
+            //if (chunkMesh.vertexCount >= 3) meshFilter.sharedMesh = chunkMesh;
+            //if (chunkMeshCollider.vertexCount >= 3) meshCollider.sharedMesh = chunkMeshCollider;
+            //if (chunkMeshTrigger.vertexCount >= 3) meshTrigger.sharedMesh = chunkMeshTrigger;
 
             //Physics.BakeMesh(chunkMeshCollider.GetInstanceID(), false);
             //Physics.BakeMesh(chunkMeshTrigger.GetInstanceID(), false);
