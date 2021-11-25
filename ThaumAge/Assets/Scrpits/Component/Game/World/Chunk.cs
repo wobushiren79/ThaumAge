@@ -359,9 +359,9 @@ public class Chunk : BaseMonoBehaviour
 
             //meshFilter.mesh.Optimize();
 
-            //if (chunkMesh.vertexCount >= 3) meshFilter.sharedMesh = chunkMesh;
-            //if (chunkMeshCollider.vertexCount >= 3) meshCollider.sharedMesh = chunkMeshCollider;
-            //if (chunkMeshTrigger.vertexCount >= 3) meshTrigger.sharedMesh = chunkMeshTrigger;
+            if (chunkMesh.vertexCount >= 3) meshFilter.sharedMesh = chunkMesh;
+            if (chunkMeshCollider.vertexCount >= 3) meshCollider.sharedMesh = chunkMeshCollider;
+            if (chunkMeshTrigger.vertexCount >= 3) meshTrigger.sharedMesh = chunkMeshTrigger;
 
             //Physics.BakeMesh(chunkMeshCollider.GetInstanceID(), false);
             //Physics.BakeMesh(chunkMeshTrigger.GetInstanceID(), false);
