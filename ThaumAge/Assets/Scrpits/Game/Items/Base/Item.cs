@@ -78,16 +78,14 @@ public class Item
                         //如果是种植类物品
                         //首先判断生长周期
                         BlockBean blockData = targetChunk.GetBlockData(targetPosition);
-                        if (blockData == null)
+                        if (blockData != null)
                         {
-                            BlockPlantExtension.FromMetaData(blockData.meta,out int growPro,out bool isStartGrow);
+                            BlockPlantExtension.FromMetaData(blockData.meta, out int growPro, out bool isStartGrow);
                         }
                         else
                         {
 
                         }
-
-
                         ItemsHandler.Instance.CreateItemDrop(oldBlock.blockType, 1, targetPosition + Vector3.one * 0.5f, ItemDropStateEnum.DropPick);
                     }
                     else
