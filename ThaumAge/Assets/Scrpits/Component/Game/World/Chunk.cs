@@ -84,6 +84,7 @@ public class Chunk : BaseMonoBehaviour
     protected float eventUpdateTimeForSec = 0;
     protected float eventUpdateTimeForMin = 0;
 
+    public bool isSaveData = false;
     protected void Update()
     {
         if (!isInit)
@@ -104,6 +105,12 @@ public class Chunk : BaseMonoBehaviour
         //先更新完全部需要更新的东西 在进行删除
         if (!hasUpdate)
             HandleForBlockModelDestory();
+        //数据保存
+        if (isSaveData)
+        {
+            GameDataHandler.Instance.manager.SaveGameDataAsync(chunkSaveData);
+            isSaveData = false;
+        }
     }
 
     /// <summary>
@@ -151,10 +158,13 @@ public class Chunk : BaseMonoBehaviour
     /// 设置存储方块数据
     /// </summary>
     /// <param name="blockData"></param>
-    public void SetBlockData(BlockBean blockData)
+    public void SetBlockData(BlockBean blockData, bool isSaveData = true)
     {
         int index = chunkData.GetIndexByPosition(blockData.localPosition);
         chunkSaveData.dicBlockData[index] = blockData;
+
+        //异步保存数据
+        this.isSaveData = isSaveData;
     }
 
     /// <summary>
@@ -482,13 +492,8 @@ public class Chunk : BaseMonoBehaviour
         if (isSaveData)
         {
             //保存数据
-            if (chunkSaveData != null)
-            {
-                BlockBean blockData = new BlockBean(localPosition, blockType, direction, meta);
-                SetBlockData(blockData);
-            }
-            //异步保存数据
-            GameDataHandler.Instance.manager.SaveGameDataAsync(chunkSaveData);
+            BlockBean blockData = new BlockBean(localPosition, blockType, direction, meta);
+            SetBlockData(blockData);
         }
     }
 
@@ -663,14 +668,14 @@ public class Chunk : BaseMonoBehaviour
     /// </summary>
     /// <param name="position"></param>
     /// <param name="updateTime"></param>
-    public void UnRegisterEventUpdate(Vector3Int position, int updateTime)
+    public void UnRegisterEventUpdate(Vector3Int position, TimeUpdateEventTypeEnum updateTimeType)
     {
-        if (updateTime == 1)
+        if (updateTimeType == TimeUpdateEventTypeEnum.Sec)
         {
             if (!listEventUpdateForSec.Contains(position))
                 listEventUpdateForSec.Remove(position);
         }
-        else if (updateTime == 60)
+        else if (updateTimeType == TimeUpdateEventTypeEnum.Min)
         {
             if (!listEventUpdateForMin.Contains(position))
                 listEventUpdateForMin.Remove(position);

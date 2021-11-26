@@ -23,9 +23,6 @@ public class ItemsManager : BaseManager, IItemsInfoView
         controllerForItems = new ItemsInfoController(this, this);
         controllerForItems.GetAllItemsInfoData(InitItemsInfo);
         RegisterItem();
-
-        //添加道具掉落模型
-        GetModelForAddressables(dicItemsObj, -1, "Assets/Prefabs/Game/ItemDrop.prefab", null);
     }
 
     /// <summary>
@@ -140,6 +137,15 @@ public class ItemsManager : BaseManager, IItemsInfoView
             if (dicItemsObj.TryGetValue(id, out GameObject value))
             {
                 callBack?.Invoke(value);
+            }
+            else
+            {
+                //如果找不到该模型
+                if (id == -1)
+                {
+                    //添加道具掉落模型
+                    GetModelForAddressables(dicItemsObj, -1, "Assets/Prefabs/Game/ItemDrop.prefab", callBack);
+                }
             }
         }
         else

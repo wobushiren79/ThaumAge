@@ -68,8 +68,34 @@ public class Item
                 {
                     //移除破碎效果
                     BlockHandler.Instance.DestroyBreakBlock(targetPosition);
-                    //创建掉落物
-                    ItemsHandler.Instance.CreateItemDrop(oldBlock.blockType, 1, targetPosition + Vector3.one * 0.5f, ItemDropStateEnum.DropPick);
+
+                    BlockShapeEnum oldBlockShape = oldBlock.blockInfo.GetBlockShape();
+                    
+                    if (oldBlockShape == BlockShapeEnum.PlantCross
+                        || oldBlockShape == BlockShapeEnum.PlantCrossOblique
+                        || oldBlockShape == BlockShapeEnum.PlantWell)
+                    {
+                        //如果是种植类物品
+                        //首先判断生长周期
+                        BlockBean blockData = targetChunk.GetBlockData(targetPosition);
+                        if (blockData == null)
+                        {
+                            BlockPlantExtension.FromMetaData(blockData.meta,out int growPro,out bool isStartGrow);
+                        }
+                        else
+                        {
+
+                        }
+
+
+                        ItemsHandler.Instance.CreateItemDrop(oldBlock.blockType, 1, targetPosition + Vector3.one * 0.5f, ItemDropStateEnum.DropPick);
+                    }
+                    else
+                    {
+                        //创建掉落物
+                        ItemsHandler.Instance.CreateItemDrop(oldBlock.blockType, 1, targetPosition + Vector3.one * 0.5f, ItemDropStateEnum.DropPick);
+                    }
+     
                     //移除该方块
                     targetChunk.RemoveBlockForWorld(targetPosition);
 

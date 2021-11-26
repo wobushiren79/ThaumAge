@@ -16,6 +16,7 @@ public enum BlockShapeEnum
 
     PlantCross = 301,//种植，正交叉
     PlantCrossOblique = 302,//种植，斜交叉
+    PlantWell = 303,//种植，＃字型
 
     Custom = 99999,//自定义
 }

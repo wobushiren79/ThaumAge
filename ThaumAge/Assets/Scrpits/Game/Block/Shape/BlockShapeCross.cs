@@ -82,7 +82,8 @@ public class BlockShapeCross : Block
         if (downBlock == null || downBlock.blockType == BlockTypeEnum.None || downBlock.blockInfo.GetBlockShape() == BlockShapeEnum.Liquid)
         {
             Block newBlock = BlockHandler.Instance.manager.GetRegisterBlock(BlockTypeEnum.None);
-            chunk.chunkData.SetBlockForLocal(localPosition, newBlock, DirectionEnum.UP);
+            //设置数据
+            chunk.SetBlockForLocal(localPosition, BlockTypeEnum.None, DirectionEnum.UP);
             //更新方块
             WorldCreateHandler.Instance.HandleForUpdateChunk(chunk, localPosition, this, newBlock, DirectionEnum.UP, false);
         }

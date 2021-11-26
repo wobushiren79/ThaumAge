@@ -40,6 +40,8 @@ public class BlockInfoBean : BaseBean
 
     public int plant_state;//种植状态 0不能种植 1能种植
 
+    public string plant_harvest;//种植收获
+
     /// <summary>
     /// 获取方块类型
     /// </summary>

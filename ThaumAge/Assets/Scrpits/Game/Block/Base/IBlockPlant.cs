@@ -36,6 +36,17 @@ public static class BlockPlantExtension
     }
 
     /// <summary>
+    /// 获取种植收获
+    /// </summary>
+    public static void GetPlantHarvest(BlockBean blockData, BlockInfoBean blockInfo)
+    {
+        if (blockData == null || blockData.meta.IsNull())
+            return;
+        FromMetaData(blockData.meta, out int growPro, out bool isStartGrow);
+        Vector2Int[] uvPosition = blockInfo.GetUVPosition();
+    }
+
+    /// <summary>
     /// 初始化植物定点
     /// </summary>
     /// <typeparam name="T"></typeparam>
@@ -71,7 +82,7 @@ public static class BlockPlantExtension
         {
             string meta = self.ToMetaData(0, false);
             blockData = new BlockBean(localPosition,blockInfo.GetBlockType(), direction, meta);
-            chunk.SetBlockData(blockData);
+            chunk.SetBlockData(blockData,false);
         }
         //获取成长周期
         self.FromMetaData(blockData.meta, out int growPro, out bool isStartGrow);
@@ -92,6 +103,13 @@ public static class BlockPlantExtension
         chunk.SetBlockData(blockData);
         //刷新
         WorldCreateHandler.Instance.HandleForUpdateChunk(chunk, localPosition, block, block, direction);
+
+        //判断是否已经是最大生长周期
+        Vector2Int[] arrayUVData = blockInfo.GetUVPosition();
+        if (growPro >= arrayUVData.Length - 1)
+        {
+            chunk.UnRegisterEventUpdate(localPosition, TimeUpdateEventTypeEnum.Min);
+        }
     }
 
     /// <summary>
