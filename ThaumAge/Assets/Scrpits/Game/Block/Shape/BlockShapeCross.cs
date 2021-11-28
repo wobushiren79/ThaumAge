@@ -73,19 +73,19 @@ public class BlockShapeCross : Block
         }
     }
 
-    public override void RefreshBlock(Chunk chunk, Vector3Int localPosition,DirectionEnum direction)
+    public override void RefreshBlock(Chunk chunk, Vector3Int localPosition, DirectionEnum direction)
     {
         //获取下方方块
         Vector3Int downLocalPosition = localPosition + Vector3Int.down;
-        chunk.chunkData.GetBlockForLocal(downLocalPosition, out Block downBlock, out DirectionEnum downDirection);
+        chunk.chunkData.GetBlockForLocal(downLocalPosition, out Block downBlock, out DirectionEnum downBlockDirection);
         //如果下方方块为NONE或者为液体
         if (downBlock == null || downBlock.blockType == BlockTypeEnum.None || downBlock.blockInfo.GetBlockShape() == BlockShapeEnum.Liquid)
         {
-            Block newBlock = BlockHandler.Instance.manager.GetRegisterBlock(BlockTypeEnum.None);
-            //设置数据
-            chunk.SetBlockForLocal(localPosition, BlockTypeEnum.None, DirectionEnum.UP);
-            //更新方块
-            WorldCreateHandler.Instance.HandleForUpdateChunk(chunk, localPosition, this, newBlock, DirectionEnum.UP, false);
+            //移除方块
+            chunk.RemoveBlockForLocal(localPosition);
+            //创建道具
+            ItemsInfoBean itemsInfo = ItemsHandler.Instance.manager.GetItemsInfoByBlockType(blockType);
+            ItemsHandler.Instance.CreateItemDrop(itemsInfo.id, 1, chunk.chunkData.positionForWorld + localPosition, ItemDropStateEnum.DropPick);
         }
     }
 

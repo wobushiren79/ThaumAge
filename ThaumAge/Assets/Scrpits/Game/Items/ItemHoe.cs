@@ -39,10 +39,6 @@ public class ItemHoe : Item
                 BlockTypeEnum ploughBlockType = (BlockTypeEnum)tagetBlock.blockInfo.plough_change;
                 //替换为耕地方块
                 chunkForHit.SetBlockForLocal(localPosition, ploughBlockType, direction, BlockPloughGrass.ToMetaData(rotate));
-
-                Block ploughBlock =  BlockHandler.Instance.manager.GetRegisterBlock(ploughBlockType);
-                //更新区块
-                WorldCreateHandler.Instance.HandleForUpdateChunk(chunkForHit, localPosition, ploughBlock, ploughBlock, direction, true);
             }
         }
     }

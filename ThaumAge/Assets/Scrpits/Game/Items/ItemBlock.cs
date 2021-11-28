@@ -47,11 +47,6 @@ public class ItemBlock : Item
                         {
                             addChunk.SetBlockForWorld(closePosition, changeBlockType, direction);
                         }
-                        //更新区块(全更新)
-                        //WorldCreateHandler.Instance.HandleForUpdateChunk(true, null);
-                        //更新区域（只更新指定方块）
-                        Block newBlock = BlockHandler.Instance.manager.GetRegisterBlock(changeBlockType);
-                        WorldCreateHandler.Instance.HandleForUpdateChunk(addChunk, closePosition - addChunk.chunkData.positionForWorld,null, newBlock, blockDirection);
                     }
                 }
             }

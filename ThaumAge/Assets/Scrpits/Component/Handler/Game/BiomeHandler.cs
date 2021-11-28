@@ -7,6 +7,7 @@ public class BiomeHandler : BaseHandler<BiomeHandler, BiomeManager>
 {
     protected int maxBiomeData = 1024;
     protected Dictionary<Vector3Int, BiomeMapData[,]> dicBiomeMapData;
+    public FastNoise fastNoise;
 
     public Vector3 offset0;
     public Vector3 offset1;
@@ -20,10 +21,12 @@ public class BiomeHandler : BaseHandler<BiomeHandler, BiomeManager>
 
     public void InitWorldBiomeSeed()
     {
+        int seed = WorldCreateHandler.Instance.manager.GetWorldSeed();
         offsetBiome = Random.value * 1000;
         offset0 = new Vector3(Random.value * 1000, Random.value * 1000, Random.value * 1000);
         offset1 = new Vector3(Random.value * 1000, Random.value * 1000, Random.value * 1000);
         offset2 = new Vector3(Random.value * 1000, Random.value * 1000, Random.value * 1000);
+        fastNoise = new FastNoise(seed);
     }
 
     public BiomeMapData[,] GetBiomeMapData(Chunk chunk)
@@ -64,7 +67,7 @@ public class BiomeHandler : BaseHandler<BiomeHandler, BiomeManager>
                 for (int z = 0; z < chunk.chunkData.chunkWidth; z++)
                 {
                     BiomeMapData biomeMap = new BiomeMapData();
-                    biomeMap.InitData(new Vector3Int(x + chunk.chunkData.positionForWorld.x, chunk.chunkData.positionForWorld.y, chunk.chunkData.positionForWorld.z + z), listBiomeCenter, listBiome);
+                    biomeMap.InitData(fastNoise, new Vector3Int(x + chunk.chunkData.positionForWorld.x, chunk.chunkData.positionForWorld.y, chunk.chunkData.positionForWorld.z + z), listBiomeCenter, listBiome);
                     mapData[x, z] = biomeMap;
                 }
             }

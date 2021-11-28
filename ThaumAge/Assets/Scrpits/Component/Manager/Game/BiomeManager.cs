@@ -101,14 +101,16 @@ public class BiomeManager : BaseManager
                     arrayBiome[0] = new BiomeTest();
                     break;
                 case WorldTypeEnum.Main:
-                    arrayBiome = new Biome[7];
-                    arrayBiome[0] = new BiomePrairie();
-                    arrayBiome[1] = new BiomeForest();
-                    arrayBiome[2] = new BiomeDesert();
-                    arrayBiome[3] = new BiomeMagicForest();
-                    arrayBiome[4] = new BiomeVolcano();
-                    arrayBiome[5] = new BiomeMountain();
-                    arrayBiome[6] = new BiomeOcean();
+                    arrayBiome = new Biome[1];
+                    arrayBiome[0] = new BiomeMagicForest();
+                    //arrayBiome = new Biome[7];
+                    //arrayBiome[0] = new BiomePrairie();
+                    //arrayBiome[1] = new BiomeForest();
+                    //arrayBiome[2] = new BiomeDesert();
+                    //arrayBiome[3] = new BiomeMagicForest();
+                    //arrayBiome[4] = new BiomeVolcano();
+                    //arrayBiome[5] = new BiomeMountain();
+                    //arrayBiome[6] = new BiomeOcean();
                     break;
                 case WorldTypeEnum.Launch:
                     arrayBiome = new Biome[1];

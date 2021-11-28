@@ -7,6 +7,8 @@ public class GameLauncher : BaseLauncher
 {
     public int refreshRange = 5;
 
+    public int seed = 132349;
+
     public WorldTypeEnum worldType = WorldTypeEnum.Test;
 
     public override void Launch()
@@ -17,7 +19,7 @@ public class GameLauncher : BaseLauncher
         UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();
         userData.userId = "Test";
         //设置种子
-        WorldCreateHandler.Instance.manager.SetWorldSeed(132349);
+        WorldCreateHandler.Instance.manager.SetWorldSeed(seed);
         GameHandler.Instance.manager.SetGameState(GameStateEnum.Init);
         //开关角色控制
         GameControlHandler.Instance.SetPlayerControlEnabled(false);

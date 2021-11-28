@@ -92,13 +92,28 @@ public class ItemDrop : BaseMonoBehaviour
     /// </summary>
     public void SetData(ItemsBean itemData, Vector3 position)
     {
+        SetData(itemData, position, Vector3.zero);
+    }
+    public void SetData(ItemsBean itemData, Vector3 position, Vector3 dropdirection)
+    {
         this.itemData = itemData;
         itemsInfo = ItemsHandler.Instance.manager.GetItemsInfoById(itemData.itemId);
         transform.position = position;
         //设置头像
         SetIcon(itemsInfo.icon_key);
         //增加一个跳动的力
-        rbItem.AddForce(Random.Range(-100, 100), Random.Range(0, 100), Random.Range(-100, 100));
+        //随机方向
+        if(dropdirection == Vector3.zero)
+        {
+            System.Random random = new System.Random();
+            rbItem.AddForce(random.Next(-100, 100), random.Next(-100, 100), random.Next(-100, 100));
+        }
+        //指定方向
+        else
+        {
+            rbItem.AddForce(dropdirection.x * 100, dropdirection.y * 100, dropdirection.z * 100);
+        }
+
 
         //初始化数据
         SOGameInitBean gameInitData = GameHandler.Instance.manager.gameInitData;

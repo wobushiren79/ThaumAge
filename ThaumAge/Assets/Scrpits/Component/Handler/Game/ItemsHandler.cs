@@ -1,4 +1,5 @@
-﻿using UnityEditor;
+﻿using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 public class ItemsHandler : BaseHandler<ItemsHandler, ItemsManager>
@@ -54,32 +55,55 @@ public class ItemsHandler : BaseHandler<ItemsHandler, ItemsManager>
     }
 
     /// <summary>
+    /// 创建掉落道具实例
+    /// </summary>
+    public void CreateItemDropList(List<ItemsBean> itemDatas, Vector3 position, ItemDropStateEnum itemDropState)
+    {
+        CreateItemDropList(itemDatas, position, itemDropState, Vector3.zero);
+    }
+    public void CreateItemDropList(List<ItemsBean> itemDatas, Vector3 position, ItemDropStateEnum itemDropState, Vector3 dropDirection)
+    {
+        for (int i = 0; i < itemDatas.Count; i++)
+        {
+            CreateItemDrop(itemDatas[i], position, itemDropState, dropDirection);
+        }
+    }
+
+    /// <summary>
     ///  创建掉落道具实例
     /// </summary>
+    public void CreateItemDrop(long itemId, int itemsNumber, Vector3 position, ItemDropStateEnum itemDropState, Vector3 dropDirection)
+    {
+        CreateItemDrop(new ItemsBean(itemId, itemsNumber), position, itemDropState, dropDirection);
+    }
     public void CreateItemDrop(long itemId, int itemsNumber, Vector3 position, ItemDropStateEnum itemDropState)
     {
-        CreateItemDrop(new ItemsBean(itemId, itemsNumber), position, itemDropState);
+        CreateItemDrop(new ItemsBean(itemId, itemsNumber), position, itemDropState, Vector3.zero);
     }
 
     /// <summary>
     ///  创建掉落道具实例
     /// </summary>
-    public void CreateItemDrop(BlockTypeEnum blockType, int itemsNumber, Vector3 position, ItemDropStateEnum itemDropState)
+    public void CreateItemDrop(BlockTypeEnum blockType, int itemsNumber, Vector3 position, ItemDropStateEnum itemDropState, Vector3 dropDirection)
     {
         ItemsInfoBean itemsInfo = manager.GetItemsInfoByBlockType(blockType);
-        CreateItemDrop(itemsInfo.id, itemsNumber, position, itemDropState);
+        CreateItemDrop(itemsInfo.id, itemsNumber, position, itemDropState, dropDirection);
+    }
+    public void CreateItemDrop(BlockTypeEnum blockType, int itemsNumber, Vector3 position, ItemDropStateEnum itemDropState)
+    {
+        CreateItemDrop(blockType, itemsNumber, position, itemDropState, Vector3.zero);
     }
 
     /// <summary>
     ///  创建掉落道具实例
     /// </summary>
-    public void CreateItemDrop(ItemsBean itemData, Vector3 position,ItemDropStateEnum itemDropState)
+    public void CreateItemDrop(ItemsBean itemData, Vector3 position, ItemDropStateEnum itemDropState, Vector3 dropDirection)
     {
         manager.GetItemsObjById(-1, (objModel) =>
         {
             GameObject objCommon = Instantiate(gameObject, objModel);
             ItemDrop itemDrop = objCommon.GetComponent<ItemDrop>();
-            itemDrop.SetData(itemData, position);
+            itemDrop.SetData(itemData, position, dropDirection);
             itemDrop.SetItemDropState(itemDropState);
         });
     }

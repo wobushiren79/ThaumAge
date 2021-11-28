@@ -19,7 +19,7 @@ public class BlockWater : BlockShapeLiquid
         //设置下方方块
         bool isSuccess = SetCloseFlowBlock(downBlockWorldPosition);
         //取消注册
-        chunk.UnRegisterEventUpdate(localPosition, 1);
+        chunk.UnRegisterEventUpdate(localPosition,  TimeUpdateEventTypeEnum.Sec);
     }
 
     /// <summary>
@@ -69,6 +69,6 @@ public class BlockWater : BlockShapeLiquid
     {
         base.DestoryBlock(chunk, localPosition);
         //取消注册
-        chunk.UnRegisterEventUpdate(localPosition,1);
+        chunk.UnRegisterEventUpdate(localPosition, TimeUpdateEventTypeEnum.Sec);
     }
 }

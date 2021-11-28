@@ -1,5 +1,6 @@
 ﻿using UnityEditor;
 using UnityEngine;
+using System.Collections.Generic;
 
 public interface IBlockPlant
 {
@@ -23,7 +24,7 @@ public static class BlockPlantExtension
         return $"{growPro}:{isStartGrow}";
     }
 
-    public static void FromMetaData<T>(this T self, string data, out int growPro,out bool isStartGrow) where T : IBlockPlant
+    public static void FromMetaData<T>(this T self, string data, out int growPro, out bool isStartGrow) where T : IBlockPlant
     {
         FromMetaData(data, out growPro, out isStartGrow);
     }
@@ -38,12 +39,33 @@ public static class BlockPlantExtension
     /// <summary>
     /// 获取种植收获
     /// </summary>
-    public static void GetPlantHarvest(BlockBean blockData, BlockInfoBean blockInfo)
+    public static List<ItemsBean> GetPlantHarvest(BlockBean blockData, BlockInfoBean blockInfo)
     {
+        List<ItemsBean> listData = new List<ItemsBean>();
         if (blockData == null || blockData.meta.IsNull())
-            return;
+        {
+            ItemsInfoBean itemsInfo = ItemsHandler.Instance.manager.GetItemsInfoByBlockType(blockInfo.GetBlockType());
+            listData.Add(new ItemsBean(itemsInfo.id, 1));
+            return listData;
+        }
         FromMetaData(blockData.meta, out int growPro, out bool isStartGrow);
         Vector2Int[] uvPosition = blockInfo.GetUVPosition();
+        if (growPro >= uvPosition.Length - 1)
+        {
+            //已经成熟
+            long[] harvetsIds = StringUtil.SplitBySubstringForArrayLong(blockInfo.plant_harvest, '|');
+            for (int i = 0; i < harvetsIds.Length; i++)
+            {
+                listData.Add(new ItemsBean(harvetsIds[i], 1));
+            }
+        }
+        else
+        {
+            //没有成熟
+            ItemsInfoBean itemsInfo = ItemsHandler.Instance.manager.GetItemsInfoByBlockType(blockInfo.GetBlockType());
+            listData.Add(new ItemsBean(itemsInfo.id, 1));
+        }
+        return listData;
     }
 
     /// <summary>
@@ -81,8 +103,8 @@ public static class BlockPlantExtension
         if (blockData == null)
         {
             string meta = self.ToMetaData(0, false);
-            blockData = new BlockBean(localPosition,blockInfo.GetBlockType(), direction, meta);
-            chunk.SetBlockData(blockData,false);
+            blockData = new BlockBean(localPosition, blockInfo.GetBlockType(), direction, meta);
+            chunk.SetBlockData(blockData, false);
         }
         //获取成长周期
         self.FromMetaData(blockData.meta, out int growPro, out bool isStartGrow);

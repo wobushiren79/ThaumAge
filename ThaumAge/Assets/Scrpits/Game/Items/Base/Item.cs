@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System.Collections.Generic;
+using System.Diagnostics;
 using UnityEditor;
 using UnityEngine;
 
@@ -7,7 +8,7 @@ public class Item
     public ItemsBean itemsData;
     public ItemsInfoBean _itemsInfo;
 
-    public ItemsInfoBean itemsInfo 
+    public ItemsInfoBean itemsInfo
     {
         get
         {
@@ -70,36 +71,27 @@ public class Item
                     BlockHandler.Instance.DestroyBreakBlock(targetPosition);
 
                     BlockShapeEnum oldBlockShape = oldBlock.blockInfo.GetBlockShape();
-                    
+
+                    //如果是种植类物品
                     if (oldBlockShape == BlockShapeEnum.PlantCross
                         || oldBlockShape == BlockShapeEnum.PlantCrossOblique
                         || oldBlockShape == BlockShapeEnum.PlantWell)
                     {
-                        //如果是种植类物品
                         //首先判断生长周期
-                        BlockBean blockData = targetChunk.GetBlockData(targetPosition);
-                        if (blockData != null)
-                        {
-                            BlockPlantExtension.FromMetaData(blockData.meta, out int growPro, out bool isStartGrow);
-                        }
-                        else
-                        {
-
-                        }
-                        ItemsHandler.Instance.CreateItemDrop(oldBlock.blockType, 1, targetPosition + Vector3.one * 0.5f, ItemDropStateEnum.DropPick);
+                        BlockBean blockData = targetChunk.GetBlockData(targetPosition - targetChunk.chunkData.positionForWorld);
+                        //获取种植收货
+                        List<ItemsBean> listHarvest = BlockPlantExtension.GetPlantHarvest(blockData, oldBlock.blockInfo);
+                        //创建掉落物
+                        ItemsHandler.Instance.CreateItemDropList(listHarvest, targetPosition + Vector3.one * 0.5f, ItemDropStateEnum.DropPick);
                     }
                     else
                     {
                         //创建掉落物
                         ItemsHandler.Instance.CreateItemDrop(oldBlock.blockType, 1, targetPosition + Vector3.one * 0.5f, ItemDropStateEnum.DropPick);
                     }
-     
+
                     //移除该方块
                     targetChunk.RemoveBlockForWorld(targetPosition);
-
-                    Block nullBlock = BlockHandler.Instance.manager.GetRegisterBlock(BlockTypeEnum.None);
-
-                    WorldCreateHandler.Instance.HandleForUpdateChunk(targetChunk, targetPosition - targetChunk.chunkData.positionForWorld, oldBlock, nullBlock);
                 }
             }
         }

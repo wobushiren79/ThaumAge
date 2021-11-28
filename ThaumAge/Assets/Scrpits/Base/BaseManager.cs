@@ -173,9 +173,15 @@ public class BaseManager : BaseMonoBehaviour
 
         LoadAddressablesUtil.LoadAssetAsync<T>(keyName, data =>
         {
-            if (data.Result != null)
+            if (listModel.TryGetValue(keyName, out T result))
+            {
+                callBack?.Invoke(result);
+            }
+            else
+            {
                 listModel.Add(keyName, data.Result);
-            callBack?.Invoke(data.Result);
+                callBack?.Invoke(data.Result);
+            }
         });
     }
 
@@ -196,8 +202,17 @@ public class BaseManager : BaseMonoBehaviour
         LoadAddressablesUtil.LoadAssetAsync<T>(keyName, data =>
         {
             if (data.Result != null)
-                listModel.Add(id, data.Result);
-            callBack?.Invoke(data.Result);
+            {
+                if (listModel.TryGetValue(id,out T result))
+                {
+                    callBack?.Invoke(result);
+                }
+                else
+                {
+                    listModel.Add(id, data.Result);
+                    callBack?.Invoke(data.Result);
+                }
+            }
         });
     }
 
@@ -230,7 +245,7 @@ public class BaseManager : BaseMonoBehaviour
             Sprite itemSprite = GetSpriteByName(name, spriteAtlas);
             if (itemSprite != null)
                 dicIcon.Add(name, itemSprite);
-            callBackForSprite?.Invoke(value);
+            callBackForSprite?.Invoke(itemSprite);
             return;
         }
         Action<AsyncOperationHandle<SpriteAtlas>> loadCallBack = (data) =>

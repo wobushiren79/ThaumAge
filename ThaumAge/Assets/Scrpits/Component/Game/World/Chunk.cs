@@ -146,7 +146,7 @@ public class Chunk : BaseMonoBehaviour
     /// <summary>
     /// 获取存储的方块数据
     /// </summary>
-    public BlockBean GetBlockData(int x,int y,int z)
+    public BlockBean GetBlockData(int x, int y, int z)
     {
         if (chunkSaveData == null)
             return null;
@@ -329,13 +329,12 @@ public class Chunk : BaseMonoBehaviour
 
             chunkMesh.subMeshCount = meshRenderer.materials.Length;
             //定点数判断
-            if (chunkMeshData == null
-                || chunkMeshData.verts.Count <= 3)
+            if (chunkMeshData == null && chunkMeshData.verts.Count < 3)
             {
                 isDrawMesh = false;
                 return;
             }
-
+            chunkMesh.subMeshCount = chunkMeshData.dicTris.Length;
             //设置顶点
             chunkMesh.SetVertices(chunkMeshData.verts);
             //设置UV
@@ -348,14 +347,21 @@ public class Chunk : BaseMonoBehaviour
                 chunkMesh.SetTriangles(trisData, i);
             }
 
-
             //碰撞数据设置
-            chunkMeshCollider.SetVertices(chunkMeshData.vertsCollider);
-            chunkMeshCollider.SetTriangles(chunkMeshData.trisCollider, 0);
-
+            if (chunkMeshData.vertsCollider.Count >= 3)
+            {
+                chunkMeshCollider.Clear();
+                chunkMeshCollider.SetVertices(chunkMeshData.vertsCollider);
+                chunkMeshCollider.SetTriangles(chunkMeshData.trisCollider, 0);
+            }
             //触发数据设置
-            chunkMeshTrigger.SetVertices(chunkMeshData.vertsTrigger);
-            chunkMeshTrigger.SetTriangles(chunkMeshData.trisTrigger, 0);
+            if (chunkMeshData.vertsTrigger.Count >= 3)
+            {
+                chunkMeshTrigger.Clear();
+                chunkMeshTrigger.SetVertices(chunkMeshData.vertsTrigger);
+                chunkMeshTrigger.SetTriangles(chunkMeshData.trisTrigger, 0);
+            }
+
 
             //刷新
             chunkMesh.RecalculateBounds();
@@ -446,21 +452,14 @@ public class Chunk : BaseMonoBehaviour
     /// <summary>
     /// 设置方块
     /// </summary>
-    /// <param name="worldPosition"></param>
-    /// <param name="blockType"></param>
-    /// <returns></returns>
-    public void SetBlockForWorld(Vector3Int worldPosition, BlockTypeEnum blockType, DirectionEnum direction = DirectionEnum.UP)
+    public void SetBlockForWorld(Vector3Int worldPosition, BlockTypeEnum blockType, DirectionEnum direction = DirectionEnum.UP, string meta = null, bool isRefreshMesh = true, bool isSaveData = true, bool isRefreshBlockRange = true)
     {
         Vector3Int blockLocalPosition = worldPosition - chunkData.positionForWorld;
-        SetBlockForLocal(blockLocalPosition, blockType, direction);
+        SetBlockForLocal(blockLocalPosition, blockType, direction, meta, isRefreshMesh, isSaveData, isRefreshBlockRange);
     }
 
-    public void SetBlockForLocal(Vector3Int localPosition, BlockTypeEnum blockType = BlockTypeEnum.None, DirectionEnum direction = DirectionEnum.UP, string meta = null)
-    {
-        SetBlockForLocal(localPosition, blockType, direction, meta, true, true, true);
-    }
 
-    public void SetBlockForLocal(Vector3Int localPosition, BlockTypeEnum blockType, DirectionEnum direction, string meta, bool isSaveData, bool isRefreshChunkRange, bool isRefreshBlockRange)
+    public void SetBlockForLocal(Vector3Int localPosition, BlockTypeEnum blockType, DirectionEnum direction = DirectionEnum.UP, string meta = null, bool isRefreshMesh = true, bool isSaveData = true, bool isRefreshBlockRange = true)
     {
         //首先移除方块
         Block oldBlock = chunkData.GetBlockForLocal(localPosition);
@@ -474,26 +473,21 @@ public class Chunk : BaseMonoBehaviour
 
         newBlock.InitBlock(this, localPosition);
 
-
+        //保存数据
+        if (isSaveData)
+        {
+            BlockBean blockData = new BlockBean(localPosition, blockType, direction, meta);
+            SetBlockData(blockData);
+        }
+        //刷新BLOKCmesh
+        if (isRefreshMesh)
+        {
+            WorldCreateHandler.Instance.HandleForUpdateChunk(this, localPosition, oldBlock, newBlock, direction);
+        }
         //刷新六个方向的方块
         if (isRefreshBlockRange)
         {
             newBlock.RefreshBlockRange(this, localPosition, direction);
-        }
-
-        //是否实时刷新
-        if (isRefreshChunkRange)
-        {
-            //异步构建周围chunk
-            //暂时取消周围方块刷新
-            //AddUpdateChunkForRange(localPosition + chunkData.positionForWorld);
-        }
-
-        if (isSaveData)
-        {
-            //保存数据
-            BlockBean blockData = new BlockBean(localPosition, blockType, direction, meta);
-            SetBlockData(blockData);
         }
     }
 
@@ -515,6 +509,10 @@ public class Chunk : BaseMonoBehaviour
                 BiomeMapData biomeMapData = mapData[x, z];
                 for (int y = 0; y < chunkData.chunkHeight; y++)
                 {
+                    //如果是镂空的 则不生成
+                    if (y < biomeMapData.yHasBlock.Length && !biomeMapData.yHasBlock[y])
+                        continue;
+
                     Vector3Int position = new Vector3Int(x, y, z);
 
                     //获取方块类型

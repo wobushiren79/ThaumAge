@@ -41,7 +41,7 @@ public abstract class Block
     };
 
     public static int[] trisColliderAdd = new int[]
-    {   
+    {
             0,2,1, 0,3,2,
 
             4,5,6, 4,6,7,
@@ -654,7 +654,7 @@ public abstract class Block
     /// <summary>
     /// 刷新方块
     /// </summary>
-    public virtual void RefreshBlock(Chunk chunk, Vector3Int localPosition,DirectionEnum direction)
+    public virtual void RefreshBlock(Chunk chunk, Vector3Int localPosition, DirectionEnum direction)
     {
         //更新方块
         WorldCreateHandler.Instance.HandleForUpdateChunk(chunk, localPosition, this, this, direction, false);

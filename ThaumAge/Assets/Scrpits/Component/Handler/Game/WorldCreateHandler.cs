@@ -270,6 +270,9 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
     /// <param name="isRefreshRange">是否刷新周围方块</param>
     public void HandleForUpdateChunk(Chunk chunk, Vector3Int localPosition, Block oldBlock, Block newBlock, DirectionEnum direction = DirectionEnum.UP, bool isRefreshRange = true)
     {
+        //如果正在构建方块 则先不更新mesh
+        if (chunk.isBuildChunk)
+            return;
         //如果超过刷新上限 则重新刷新
         if (chunk.chunkMeshData.refreshNumber >= 1024)
         {
@@ -374,7 +377,7 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
                         int localY = itemBlock.worldY;
                         int localZ = itemBlock.worldZ - chunk.chunkData.positionForWorld.z;
                         BlockBean blockData = chunk.GetBlockData(localX, localY, localZ);
-                        if (blockData == null)
+                        if (blockData != null)
                         {
                             //如果有存档方块 则不替换
                         }

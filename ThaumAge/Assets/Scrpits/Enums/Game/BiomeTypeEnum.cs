@@ -11,6 +11,7 @@ public enum BiomeTypeEnum
     Ocean = 6,//海洋
     MagicForest = 11,//魔法森林
 
-    Main = 998,//登录
-    Test = 999,//测试
+    Test = 998,//测试
+    Main = 999,//登录
+
 }

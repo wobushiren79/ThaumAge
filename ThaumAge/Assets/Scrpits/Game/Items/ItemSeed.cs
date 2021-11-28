@@ -37,13 +37,10 @@ public class ItemSeed : Item
 
                 //种植的方块
                 BlockTypeEnum plantBlockType = (BlockTypeEnum)itemsInfo.type_id;
-                Block plantBlock = BlockHandler.Instance.manager.GetRegisterBlock(plantBlockType);
                 //初始化meta数据
-                string metaData= BlockPlantExtension.ToMetaData(0,false);
+                string metaData = BlockPlantExtension.ToMetaData(0,false);
                 //替换为种植
                 chunkForHit.SetBlockForLocal(upLocalPosition, plantBlockType, DirectionEnum.UP, metaData);
-                //更新区块
-                WorldCreateHandler.Instance.HandleForUpdateChunk(chunkForHit, upLocalPosition, upBlock, plantBlock, direction, true);
             }
         }
     }

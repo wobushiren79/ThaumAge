@@ -14,7 +14,6 @@ public class Test : BaseMonoBehaviour
 {
     private void Start()
     {
-        FastNoise fastNoise = new FastNoise("Test");
     }
 
     public void OnGUI()
