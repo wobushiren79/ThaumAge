@@ -334,6 +334,7 @@ public class Chunk : BaseMonoBehaviour
                 isDrawMesh = false;
                 return;
             }
+            chunkMesh.Clear();
             chunkMesh.subMeshCount = chunkMeshData.dicTris.Length;
             //设置顶点
             chunkMesh.SetVertices(chunkMeshData.verts);
