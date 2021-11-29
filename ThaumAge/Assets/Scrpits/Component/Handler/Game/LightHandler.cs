@@ -6,11 +6,6 @@ using UnityEngine.Rendering.HighDefinition;
 public class LightHandler : BaseHandler<LightHandler, LightManager>
 {
 
-    public void InitData()
-    {
-
-    }
-
     private void Update()
     {
         GameStateEnum gameState = GameHandler.Instance.manager.GetGameState();

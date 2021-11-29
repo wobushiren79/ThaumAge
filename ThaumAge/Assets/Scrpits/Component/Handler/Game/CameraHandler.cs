@@ -17,15 +17,6 @@ public class CameraHandler : BaseHandler<CameraHandler, CameraManager>
 
     public float timeScale = 1;
 
-    /// <summary>
-    /// 初始化摄像头数据 主界面
-    /// </summary>
-    public void InitMainData()
-    {
-        //第一人称
-        GameObject objStart = GameObject.Find("CameraStartPosition");
-    }
-
 
     /// <summary>
     /// 修改摄像头抗锯齿

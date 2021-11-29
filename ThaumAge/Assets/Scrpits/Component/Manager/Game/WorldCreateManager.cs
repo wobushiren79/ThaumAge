@@ -1,4 +1,5 @@
-﻿using System.Collections.Concurrent;
+﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -33,9 +34,38 @@ public class WorldCreateManager : BaseManager
 
     public WorldTypeEnum worldType = WorldTypeEnum.Main;
 
-    public float time;
-
     protected static object lockForUpdateBlock = new object();
+
+    public static string pathForChunk = "Assets/Prefabs/Game/Chunk.prefab";
+
+
+    /// <summary>
+    /// 加载资源
+    /// </summary>
+    public void LoadResources(Action callBack)
+    {
+        //加载区块模型
+        GetModelForAddressables(dicModel, pathForChunk, (data) =>
+        {
+            callBack?.Invoke();
+        });
+    }
+
+    /// <summary>
+    /// 获取区块模型
+    /// </summary>
+    /// <returns></returns>
+    public GameObject GetChunkModel()
+    {
+        if (dicModel.TryGetValue(pathForChunk, out GameObject objChunkModel)) 
+        {
+            return objChunkModel;
+        }
+        else
+        {
+            return null;
+        }
+    }
 
     /// <summary>
     /// 清除所有区块
@@ -120,15 +150,6 @@ public class WorldCreateManager : BaseManager
         listUpdateBlock.Enqueue(blockData);
     }
 
-    /// <summary>
-    /// 获取区块模型
-    /// </summary>
-    /// <returns></returns>
-    public GameObject GetChunkModel()
-    {
-        GameObject objModel = GetModel(dicModel, "block/base", "Chunk", "Assets/Prefabs/Game/Chunk.prefab");
-        return objModel;
-    }
 
     /// <summary>
     /// 获取区块

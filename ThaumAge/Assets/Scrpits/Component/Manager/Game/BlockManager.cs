@@ -29,7 +29,7 @@ public class BlockManager : BaseManager, IBlockInfoView
 
     public virtual void Awake()
     {
-        InitData(); 
+        InitData();
     }
 
     public void InitData()
@@ -37,11 +37,13 @@ public class BlockManager : BaseManager, IBlockInfoView
         controllerForBlock = new BlockInfoController(this, this);
         controllerForBlock.GetAllBlockInfoData(InitBlockInfo);
         RegisterBlock();
-        //加载方块破碎模型
-        LoadAddressablesUtil.LoadAssetAsync<GameObject>(pathForBlockBreak, (obj)=> 
-        {
-            blockBreakModel = obj.Result;
-        });
+    }
+
+    /// <summary>
+    /// 加载资源
+    /// </summary>
+    public void LoadResources(Action callBack)
+    {
         //加载所有方块材质球
         LoadAddressablesUtil.LoadAssetsAsync<Material>(pathForBlockMats, (data) =>
         {
@@ -54,6 +56,13 @@ public class BlockManager : BaseManager, IBlockInfoView
                 int indexMat = int.Parse(nameList[1]);
                 arrayBlockMat[indexMat] = itemMat;
             }
+
+            //加载方块破碎模型
+            LoadAddressablesUtil.LoadAssetAsync<GameObject>(pathForBlockBreak, (obj) =>
+            {
+                blockBreakModel = obj.Result;
+                callBack?.Invoke();
+            });
         });
     }
 

@@ -25,6 +25,10 @@ MonoBehaviour:
     m_Address: Assets/Prefabs/Game/BlockBreak.prefab
     m_ReadOnly: 0
     m_SerializedLabels: []
+  - m_GUID: d0610a3371524764982dc615be3d9255
+    m_Address: Assets/Prefabs/Game/Chunk.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: fd6114d87f1af534fbf270c47c0f10bf, type: 2}
   m_SchemaSet:

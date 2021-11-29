@@ -12,16 +12,18 @@ public class MainLauncher : BaseLauncher
     {
         base.Launch();
         UIHandler.Instance.OpenUIAndCloseOther<UILoading>(UIEnum.Loading);
-        //设置游戏状态
-        GameHandler.Instance.manager.SetGameState(GameStateEnum.Main);
-        //设置种子
-        WorldCreateHandler.Instance.manager.SetWorldSeed(worldSeed);
-        //设置世界类型为启动
-        WorldCreateHandler.Instance.SetWorldType(WorldTypeEnum.Launch);
-        //刷新周围区块
-        WorldCreateHandler.Instance.CreateChunkRangeForCenterPosition(Vector3Int.zero, worldRange, CompleteForUpdateChunk);
-        //修改灯光
-        LightHandler.Instance.InitData();
+
+        GameHandler.Instance.LoadGameResources(() => 
+        {
+            //设置游戏状态
+            GameHandler.Instance.manager.SetGameState(GameStateEnum.Main);
+            //设置种子
+            WorldCreateHandler.Instance.manager.SetWorldSeed(worldSeed);
+            //设置世界类型为启动
+            WorldCreateHandler.Instance.SetWorldType(WorldTypeEnum.Launch);
+            //刷新周围区块
+            WorldCreateHandler.Instance.CreateChunkRangeForCenterPosition(Vector3Int.zero, worldRange, CompleteForUpdateChunk);
+        });
     }
 
     /// <summary>
@@ -29,8 +31,6 @@ public class MainLauncher : BaseLauncher
     /// </summary>
     public void CompleteForUpdateChunk()
     {
-        //初始化主界面摄像头
-        CameraHandler.Instance.InitMainData();
         //显示人物
         SceneMainHandler.Instance.ShowCharacter();
         //延迟3秒显示

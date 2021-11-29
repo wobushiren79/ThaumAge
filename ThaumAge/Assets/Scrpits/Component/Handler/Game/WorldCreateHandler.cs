@@ -15,11 +15,8 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
 
     protected void Update()
     {
-        if (GameHandler.Instance.manager.GetGameState() == GameStateEnum.Gaming)
-        {
-            HandleForWorldUpdate();
-            HandleForDrawChunk();
-        }
+        HandleForWorldUpdate();
+        HandleForDrawChunk();
     }
 
     /// <summary>

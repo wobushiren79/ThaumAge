@@ -28,6 +28,7 @@ RectTransform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4543247494885314037}
   m_RootOrder: 0
@@ -103,6 +104,7 @@ RectTransform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4261391391248593202}
   m_RootOrder: 0
@@ -179,6 +181,7 @@ RectTransform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4543247494885314037}
   - {fileID: 5202688906072413427}
@@ -287,6 +290,7 @@ RectTransform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4261391391248593202}
   m_Father: {fileID: 6431257547271031362}
@@ -412,6 +416,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6431257547271031362}
   - {fileID: 2233460284936734977}
@@ -486,6 +491,7 @@ RectTransform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 480934316046770182}
   m_Father: {fileID: 6431257547271031362}
@@ -576,6 +582,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8636349625582479008}
   - {fileID: 976261112680686818}
@@ -667,6 +674,7 @@ RectTransform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4928252222370434262}
   m_Father: {fileID: 5202688906072413427}
@@ -696,6 +704,10 @@ PrefabInstance:
       propertyPath: m_Text
       value: "\u6E38\u620F"
       objectReference: {fileID: 0}
+    - target: {fileID: 5438621218689403032, guid: 9d10cca67ada2b04b8fc9d0b6881bda5, type: 3}
+      propertyPath: m_FontData.m_Font
+      value: 
+      objectReference: {fileID: 12800000, guid: 1b55002fea9009a46bd1c17470cdb9b8, type: 3}
     - target: {fileID: 7276969618304960994, guid: 9d10cca67ada2b04b8fc9d0b6881bda5, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -949,6 +961,10 @@ PrefabInstance:
       propertyPath: m_Text
       value: "\u663E\u793A"
       objectReference: {fileID: 0}
+    - target: {fileID: 5438621218689403032, guid: 9d10cca67ada2b04b8fc9d0b6881bda5, type: 3}
+      propertyPath: m_FontData.m_Font
+      value: 
+      objectReference: {fileID: 12800000, guid: 1b55002fea9009a46bd1c17470cdb9b8, type: 3}
     - target: {fileID: 7276969618304960994, guid: 9d10cca67ada2b04b8fc9d0b6881bda5, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -1081,6 +1097,10 @@ PrefabInstance:
       propertyPath: m_Text
       value: "\u97F3\u6548"
       objectReference: {fileID: 0}
+    - target: {fileID: 5438621218689403032, guid: 9d10cca67ada2b04b8fc9d0b6881bda5, type: 3}
+      propertyPath: m_FontData.m_Font
+      value: 
+      objectReference: {fileID: 12800000, guid: 1b55002fea9009a46bd1c17470cdb9b8, type: 3}
     - target: {fileID: 7276969618304960994, guid: 9d10cca67ada2b04b8fc9d0b6881bda5, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -1213,6 +1233,10 @@ PrefabInstance:
       propertyPath: m_Text
       value: "\u64CD\u4F5C"
       objectReference: {fileID: 0}
+    - target: {fileID: 5438621218689403032, guid: 9d10cca67ada2b04b8fc9d0b6881bda5, type: 3}
+      propertyPath: m_FontData.m_Font
+      value: 
+      objectReference: {fileID: 12800000, guid: 1b55002fea9009a46bd1c17470cdb9b8, type: 3}
     - target: {fileID: 7276969618304960994, guid: 9d10cca67ada2b04b8fc9d0b6881bda5, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
