@@ -20,6 +20,13 @@ public class BlockManager : BaseManager, IBlockInfoView
     //方块破碎模型
     public GameObject blockBreakModel;
 
+    //路径-方块模型
+    public static string pathForBlockModel = "Assets/Prefabs/Block";
+    //路径-破碎方块
+    public static string pathForBlockBreak = "Assets/Prefabs/Game/BlockBreak.prefab";
+    //路径-方块材质 （使用标签）
+    public static string pathForBlockMats = "BlockMats";
+
     public virtual void Awake()
     {
         InitData(); 
@@ -31,20 +38,23 @@ public class BlockManager : BaseManager, IBlockInfoView
         controllerForBlock.GetAllBlockInfoData(InitBlockInfo);
         RegisterBlock();
         //加载方块破碎模型
-        LoadAddressablesUtil.LoadAssetAsync<GameObject>("Assets/Prefabs/Game/BlockBreak.prefab", (obj)=> 
+        LoadAddressablesUtil.LoadAssetAsync<GameObject>(pathForBlockBreak, (obj)=> 
         {
             blockBreakModel = obj.Result;
         });
         //加载所有方块材质球
-        List<Material> listData = GetAllModel<Material>("block/mats", "Assets/Prefabs/Mats");
-        for (int i = 0; i < listData.Count; i++)
+        LoadAddressablesUtil.LoadAssetsAsync<Material>(pathForBlockMats, (data) =>
         {
-            //按照名字中的下标 确认每个材质球的顺序
-            Material itemMat = listData[i];
-            string[] nameList = StringUtil.SplitBySubstringForArrayStr(itemMat.name, '_');
-            int indexMat = int.Parse(nameList[1]);
-            arrayBlockMat[indexMat] = itemMat;
-        }
+            IList<Material> listMat = data.Result;
+            for (int i = 0; i < listMat.Count; i++)
+            {
+                //按照名字中的下标 确认每个材质球的顺序
+                Material itemMat = listMat[i];
+                string[] nameList = StringUtil.SplitBySubstringForArrayStr(itemMat.name, '_');
+                int indexMat = int.Parse(nameList[1]);
+                arrayBlockMat[indexMat] = itemMat;
+            }
+        });
     }
 
     /// <summary>
@@ -71,7 +81,7 @@ public class BlockManager : BaseManager, IBlockInfoView
         GameObject objModel = arrayBlockModel[blockId];
         if (objModel == null)
         {
-            objModel = GetModel<GameObject>("block/block", modelName);
+            objModel = LoadAddressablesUtil.LoadAssetSync<GameObject>($"{pathForBlockModel}/{modelName}.prefab");
             arrayBlockModel[blockId] = objModel;
         }
         return objModel;

@@ -242,7 +242,7 @@ GameObject:
   - component: {fileID: 8228715776554647998}
   - component: {fileID: 1442911306976538108}
   m_Layer: 0
-  m_Name: BlockMushroomLuminous 1
+  m_Name: BlockMushroomLuminous
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

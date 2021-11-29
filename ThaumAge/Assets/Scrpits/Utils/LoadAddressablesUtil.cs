@@ -9,6 +9,20 @@ public class LoadAddressablesUtil
 {
 
     /// <summary>
+    /// 同步加载数据
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="key"></param>
+    /// <returns></returns>
+    public static T LoadAssetSync<T>(string key)
+    {
+        var op = Addressables.LoadAssetAsync<T>(key);
+        T go = op.WaitForCompletion();
+        Addressables.Release(op);
+        return go;
+    }
+
+    /// <summary>
     /// 根据KEY 异步读取 读取之后还需要实例化
     /// </summary>
     /// <typeparam name="T"></typeparam>

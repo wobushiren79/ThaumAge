@@ -14,7 +14,7 @@ public class SceneElementManager : BaseManager
         {
             if (_star == null)
             {
-                _star = CreateElement<SceneElementStar>("game/element", "Star", "Assets/Prefabs/Game/Element/Star.prefab");
+                _star = CreateElement<SceneElementStar>("Star", "Assets/Prefabs/Game/Element/Star.prefab");
 
             }
             return _star;
@@ -28,7 +28,7 @@ public class SceneElementManager : BaseManager
         {
             if (_sky == null)
             {
-                _sky = CreateElement<SceneElementSky>("game/element", "Sky", "Assets/Prefabs/Game/Element/Sky.prefab");
+                _sky = CreateElement<SceneElementSky>("Sky", "Assets/Prefabs/Game/Element/Sky.prefab");
 
             }
             return _sky;
@@ -41,7 +41,7 @@ public class SceneElementManager : BaseManager
         {
             if (_clouds == null)
             {
-                _clouds = CreateElement<SceneElementClouds>("game/weather", "Clouds", "Assets/Prefabs/Game/Weather/Clouds.prefab");
+                _clouds = CreateElement<SceneElementClouds>("Clouds", "Assets/Prefabs/Game/Weather/Clouds.prefab");
             }
             return _clouds;
         }
@@ -54,7 +54,7 @@ public class SceneElementManager : BaseManager
         {
             if (_rain == null)
             {
-                _rain = CreateElement<SceneElementRain>("game/weather", "Rain", "Assets/Prefabs/Game/Weather/Rain.prefab");
+                _rain = CreateElement<SceneElementRain>("Rain", "Assets/Prefabs/Game/Weather/Rain.prefab");
             }
             return _rain;
         }
@@ -70,10 +70,11 @@ public class SceneElementManager : BaseManager
     }
 
 
-    private T CreateElement<T>(string assetBundlePath, string name, string remarkResourcesPath)
+    private T CreateElement<T>(string name,string key)
     {
-        GameObject objRainModel = GetModel<GameObject>(assetBundlePath, name, remarkResourcesPath);
-        GameObject objRain = Instantiate(gameObject, objRainModel);
+        GameObject objModel = LoadAddressablesUtil.LoadAssetSync<GameObject>(key);
+        GameObject objRain = Instantiate(gameObject, objModel);
+        objRain.name = name;
         return objRain.GetComponent<T>();
     }
 }
