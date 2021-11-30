@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "com.alelievr.hdrp-ui-camera-stacking": "1.1.2",
     "com.unity.2d.sprite": "1.0.0",
     "com.unity.addressables": "1.19.11",
     "com.unity.burst": "1.6.0",
@@ -52,6 +53,13 @@
       "url": "https://npm.cloudsmith.io/jillejr/newtonsoft-json-for-unity",
       "scopes": [
         "jillejr.newtonsoft.json-for-unity"
+      ]
+    },
+    {
+      "name": "Open UPM",
+      "url": "https://package.openupm.com",
+      "scopes": [
+        "com.alelievr"
       ]
     }
   ]

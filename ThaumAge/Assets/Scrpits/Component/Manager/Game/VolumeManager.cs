@@ -47,6 +47,21 @@ public class VolumeManager : BaseManager
         }
     }
 
+    //远近模糊
+    protected DepthOfField _depthOfField;
+    public DepthOfField depthOfField
+    {
+        get
+        {
+            if (_depthOfField == null)
+            {
+                volumeProfile.TryGet(out _depthOfField);
+            }
+            return _depthOfField;
+        }
+    }
+
+
     //基础设置
     protected Volume _volume;
     public Volume volume
@@ -116,5 +131,21 @@ public class VolumeManager : BaseManager
 
         physicallyBasedSky.groundTint.overrideState = true;
         physicallyBasedSky.groundTint.value = colorGround;
+    }
+
+    /// <summary>
+    /// 设置远景模糊
+    /// </summary>
+    public void SetDepthOfField(float nearStart,float nearEnd,float farStart, float farEnd)
+    {
+        depthOfField.nearFocusStart.overrideState = true;
+        depthOfField.nearFocusStart.value = nearStart;
+        depthOfField.nearFocusEnd.overrideState = true;
+        depthOfField.nearFocusEnd.value = nearEnd;
+
+        depthOfField.farFocusStart.overrideState = true;
+        depthOfField.farFocusStart.value = farStart;
+        depthOfField.farFocusEnd.overrideState = true;
+        depthOfField.farFocusEnd.value = farEnd;
     }
 }

@@ -71,8 +71,8 @@ public class CameraManager : BaseManager
         {
             if (_uiCamera == null)
             {
-                //_uiCamera = FindWithTag<Camera>(TagInfo.Tag_UICamera);
-                _uiCamera = Camera.main;
+                _uiCamera = FindWithTag<Camera>(TagInfo.Tag_UICamera);
+                //_uiCamera = Camera.main;
             }
             return _uiCamera;
         }

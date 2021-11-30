@@ -22,6 +22,8 @@ public class GameLauncher : BaseLauncher
         {
             UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();
             userData.userId = "Test";
+
+
             //设置游戏状态
             GameHandler.Instance.manager.SetGameState(GameStateEnum.Init);
             //设置种子
@@ -30,6 +32,8 @@ public class GameLauncher : BaseLauncher
             GameControlHandler.Instance.SetPlayerControlEnabled(false);
             //设置世界类型
             WorldCreateHandler.Instance.SetWorldType(worldType);
+            //设置远景模糊
+            VolumeHandler.Instance.SetDepthOfField(worldType);
             //刷新周围区块
             WorldCreateHandler.Instance.CreateChunkRangeForCenterPosition(Vector3Int.zero, refreshRange, CompleteForUpdateChunk);
             //修改游戏状态

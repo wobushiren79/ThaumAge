@@ -12,8 +12,34 @@ using UnityEngine.UI;
 
 public class Test : BaseMonoBehaviour
 {
+    public MeshFilter meshFilter;
     private void Start()
     {
+        Mesh mesh = new Mesh();
+
+        Vector3[] verts = new Vector3[]
+        {
+            new Vector3(0,0,0),
+            new Vector3(0,1,0),
+            new Vector3(1,1,0),
+            new Vector3(1,0,0)
+        };
+        Vector2[] uvs = new Vector2[]
+        {
+            new Vector2(0f, 0f),
+            new Vector2(0f, 1/128f),
+            new Vector2(1/128f, 1/128f),
+            new Vector2(1/128f, 0f)
+        };
+        int[] tris = new int[]
+        {
+            0,1,2, 0,2,3
+        };
+        mesh.Clear();
+        mesh.SetVertices(verts);
+        mesh.SetTriangles(tris, 0);
+        mesh.SetUVs(0, uvs);
+        meshFilter.mesh = mesh;
     }
 
     public void OnGUI()
@@ -85,7 +111,7 @@ public class Test : BaseMonoBehaviour
         stopwatch.Start();
         for (int i = 0; i < listData1.Count; i++)
         {
-            BlockBean itemData= listData1[i];
+            BlockBean itemData = listData1[i];
             string[] dataList = StringUtil.SplitBySubstringForArrayStr(itemData.meta, '|');
             int id = int.Parse(dataList[0]);
             int di = int.Parse(dataList[1]);

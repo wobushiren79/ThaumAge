@@ -17,7 +17,7 @@ public class BiomeMain : Biome
         base.GetBlockType(chunk, biomeInfo, genHeight, localPos, wPos);
         if (wPos.y == genHeight)
         {
-            if (wPos.x <= 5 && wPos.x >= -5 && wPos.z <= 5 && wPos.z >= -5)
+            if (wPos.x <= 3 && wPos.x >= -3 && wPos.z <= 4 && wPos.z >= -10)
             {
 
             }
@@ -25,8 +25,9 @@ public class BiomeMain : Biome
             {
                 AddWeed(wPos);
                 AddFlower(wPos);
+                AddTree(wPos);
             }
-            AddTree(wPos);
+
             // 地表，使用草
             return BlockTypeEnum.Grass;
         }

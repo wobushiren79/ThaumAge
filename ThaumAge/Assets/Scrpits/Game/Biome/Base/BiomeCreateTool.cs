@@ -104,7 +104,7 @@ public class BiomeCreateTool
                                 if (randomLeaves == 0)
                                     continue;
                             }
-                            BlockTempBean blockData = new(treeData.treeLeaves, treeTrunkPosition.x + x, 0, treeTrunkPosition.z + z);
+                            BlockTempBean blockData = new(treeData.treeLeaves, treeTrunkPosition.x + x, treeTrunkPosition.y, treeTrunkPosition.z + z);
                             WorldCreateHandler.Instance.manager.AddUpdateBlock(blockData);
                         }
                     }
