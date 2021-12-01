@@ -46,7 +46,7 @@ public class StringUtil
             }
             else
             {
-                listData[i] = EnumUtil.GetEnum<T>(splitData[i]);
+                listData[i] = EnumExtension.GetEnum<T>(splitData[i]);
             }
         }
         return listData;

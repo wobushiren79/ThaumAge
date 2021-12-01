@@ -17,7 +17,7 @@ public class DataTools
             if (itemData.IsNull())
                 continue;
             List<string> itemListData = StringUtil.SplitBySubstringForListStr(itemData, ':');
-            E dataType = EnumUtil.GetEnum<E>(itemListData[0]);
+            E dataType = EnumExtension.GetEnum<E>(itemListData[0]);
             string dataValue = itemListData[1];
 
             T dataBean = new T();

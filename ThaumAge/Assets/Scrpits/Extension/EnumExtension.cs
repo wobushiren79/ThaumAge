@@ -92,4 +92,14 @@ public static class EnumExtension
         }
         return listDat;
     }
+
+    /// <summary>
+    /// 获取所有名字
+    /// </summary>
+    /// <typeparam name="E"></typeparam>
+    /// <returns></returns>
+    public static string[] GetEnumNames<E>()
+    {
+        return Enum.GetNames(typeof(E));
+    }
 }

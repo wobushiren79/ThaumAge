@@ -12,7 +12,7 @@ public class SceneUtil
         string beforeSceneName = SceneManager.GetActiveScene().name;
         GameCommonInfo.ScenesChangeData.beforeScene = beforeSceneName.GetEnum<ScenesEnum>();
         GameCommonInfo.ScenesChangeData.loadingScene = scenenName;
-        //SceneManager.LoadSceneAsync(EnumUtil.GetEnumName(ScenesEnum.LoadingScene));
+        //SceneManager.LoadSceneAsync(EnumExtension.GetEnumName(ScenesEnum.LoadingScene));
         SceneManager.LoadScene(ScenesEnum.LoadingScene.GetEnumName());
     }
 

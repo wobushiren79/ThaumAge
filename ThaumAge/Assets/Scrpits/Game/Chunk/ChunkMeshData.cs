@@ -35,7 +35,7 @@ public class ChunkMeshData
         vertsTrigger = new List<Vector3>();
         trisTrigger = new List<int>();
 
-        dicTris = new List<int>[EnumUtil.GetEnumMaxIndex<BlockMaterialEnum>() + 1];
+        dicTris = new List<int>[EnumExtension.GetEnumMaxIndex<BlockMaterialEnum>() + 1];
         for (int i = 0; i < dicTris.Length; i++)
         {
             dicTris[i] = new List<int>();

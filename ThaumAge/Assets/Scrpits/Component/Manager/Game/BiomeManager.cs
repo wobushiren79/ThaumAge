@@ -10,8 +10,8 @@ public class BiomeManager : BaseManager
     protected BiomeInfoController controllerForBiome;
     protected BuildingInfoController controllerForBuilding;
 
-    protected BiomeInfoBean[] arrayBiomeInfo = new BiomeInfoBean[EnumUtil.GetEnumMaxIndex<BiomeTypeEnum>() + 1];
-    protected BuildingInfoBean[] arrayBuildingInfo = new BuildingInfoBean[EnumUtil.GetEnumMaxIndex<BuildingTypeEnum>() + 1];
+    protected BiomeInfoBean[] arrayBiomeInfo = new BiomeInfoBean[EnumExtension.GetEnumMaxIndex<BiomeTypeEnum>() + 1];
+    protected BuildingInfoBean[] arrayBuildingInfo = new BuildingInfoBean[EnumExtension.GetEnumMaxIndex<BuildingTypeEnum>() + 1];
 
     //世界生态字典
     public Dictionary<int, Biome[]> dicWorldBiome = new Dictionary<int, Biome[]>();

@@ -41,7 +41,7 @@ public class BaseMonoBehaviour : MonoBehaviour
     /// <returns></returns>
     //public T FindObjectOfType<T>(GameObjectTagEnum tagType)
     //{
-    //    GameObject objsFind=  GameObject.FindGameObjectWithTag(EnumUtil.GetEnumName(tagType));
+    //    GameObject objsFind=  GameObject.FindGameObjectWithTag(EnumExtension.GetEnumName(tagType));
     //    return objsFind.GetComponent<T>();
     //}
 

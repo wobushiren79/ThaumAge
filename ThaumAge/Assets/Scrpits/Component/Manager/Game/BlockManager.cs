@@ -9,11 +9,11 @@ public class BlockManager : BaseManager, IBlockInfoView
     protected BlockInfoController controllerForBlock;
 
     //方块信息列表
-    protected BlockInfoBean[] arrayBlockInfo = new BlockInfoBean[EnumUtil.GetEnumMaxIndex<BlockTypeEnum>() + 1];
+    protected BlockInfoBean[] arrayBlockInfo = new BlockInfoBean[EnumExtension.GetEnumMaxIndex<BlockTypeEnum>() + 1];
     //注册方块列表
-    protected Block[] arrayBlockRegister = new Block[EnumUtil.GetEnumMaxIndex<BlockTypeEnum>() + 1];
+    protected Block[] arrayBlockRegister = new Block[EnumExtension.GetEnumMaxIndex<BlockTypeEnum>() + 1];
     //方块模型列表
-    protected GameObject[] arrayBlockModel = new GameObject[EnumUtil.GetEnumMaxIndex<BlockTypeEnum>() + 1];
+    protected GameObject[] arrayBlockModel = new GameObject[EnumExtension.GetEnumMaxIndex<BlockTypeEnum>() + 1];
     //存储着所有的材质
     public Material[] arrayBlockMat = new Material[16];
 
@@ -116,20 +116,20 @@ public class BlockManager : BaseManager, IBlockInfoView
     /// </summary>
     public void RegisterBlock()
     {
-        List<BlockTypeEnum> listBlockType = EnumUtil.GetEnumValue<BlockTypeEnum>();
+        List<BlockTypeEnum> listBlockType = EnumExtension.GetEnumValue<BlockTypeEnum>();
         for (int i = 0; i < listBlockType.Count; i++)
         {
             BlockTypeEnum blockType = listBlockType[i];
             //获取方块数据
             BlockInfoBean blockInfo = GetBlockInfo(blockType);
-            string blockTypeName = EnumUtil.GetEnumName(blockType);
+            string blockTypeName = EnumExtension.GetEnumName(blockType);
             //通过反射获取类
             Block block = ReflexUtil.CreateInstance<Block>($"Block{blockTypeName}");
             if (block == null)
             {
                 //如果没有指定类 则根据形状使用基础方块类
                 BlockShapeEnum blockShape = blockInfo.GetBlockShape();
-                string blockShapeName = EnumUtil.GetEnumName(blockShape);
+                string blockShapeName = EnumExtension.GetEnumName(blockShape);
                 block = ReflexUtil.CreateInstance<Block>($"BlockShape{blockShapeName}");
             }
             block.SetData(blockType);

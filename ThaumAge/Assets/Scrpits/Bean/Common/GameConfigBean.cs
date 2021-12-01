@@ -68,7 +68,7 @@ public class GameConfigBean
     /// <returns></returns>
     public LanguageEnum GetLanguage()
     {
-        return EnumUtil.GetEnum<LanguageEnum>(language);
+        return EnumExtension.GetEnum<LanguageEnum>(language);
     }
 
     /// <summary>
@@ -77,7 +77,7 @@ public class GameConfigBean
     /// <param name="language"></param>
     public void SetLanguage(LanguageEnum language)
     {
-        this.language = EnumUtil.GetEnumName(language);
+        this.language = EnumExtension.GetEnumName(language);
     }
 
     /// <summary>

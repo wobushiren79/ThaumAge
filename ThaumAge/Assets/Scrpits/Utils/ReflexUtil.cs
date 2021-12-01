@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System;
 using System.Reflection;
 
-public class ReflexUtil : ScriptableObject
+public class ReflexUtil
 {
     /// <summary>
     /// 通过反射自动连接自己的数据

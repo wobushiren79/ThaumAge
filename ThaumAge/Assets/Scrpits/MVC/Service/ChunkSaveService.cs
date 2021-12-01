@@ -26,7 +26,7 @@ public class ChunkSaveService : BaseDataStorage<ChunkSaveBean>
     /// <returns></returns>
     public ChunkSaveBean QueryData(string userId, WorldTypeEnum worldType, Vector3Int position)
     {
-        string worldName = saveFileName + "_" + EnumUtil.GetEnumName(worldType);
+        string worldName = saveFileName + "_" + EnumExtension.GetEnumName(worldType);
         string fileName = "w_" + position.x + "_" + position.z;
         return BaseLoadData(userId + "/" + worldName + "/" + fileName);
     }
@@ -38,7 +38,7 @@ public class ChunkSaveService : BaseDataStorage<ChunkSaveBean>
     public void UpdateData(ChunkSaveBean data)
     {
         WorldTypeEnum worldType = data.GetWorkType();
-        string worldName = saveFileName + "_" + EnumUtil.GetEnumName(worldType);
+        string worldName = saveFileName + "_" + EnumExtension.GetEnumName(worldType);
         string fileName = "w_" + data.position.x + "_" + data.position.z;
         FileUtil.CreateDirectory(dataStoragePath + "/" + data.userId);
         FileUtil.CreateDirectory(dataStoragePath + "/" + data.userId + "/" + worldName);
@@ -51,7 +51,7 @@ public class ChunkSaveService : BaseDataStorage<ChunkSaveBean>
     /// </summary>
     public void DeleteData(string userId, WorldTypeEnum worldType, Vector3Int position)
     {
-        string worldName = saveFileName + "_" + EnumUtil.GetEnumName(worldType);
+        string worldName = saveFileName + "_" + EnumExtension.GetEnumName(worldType);
         string fileName = "w_" + position.x + "_" + position.z;
         BaseDeleteFile(userId + "/" + worldName + "/" + fileName);
     }

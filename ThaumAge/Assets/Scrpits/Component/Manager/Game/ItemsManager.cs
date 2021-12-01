@@ -11,7 +11,7 @@ public class ItemsManager : BaseManager, IItemsInfoView
     protected List<ItemsInfoBean> listItemsInfo = new List<ItemsInfoBean>();
 
     //注册道具列表
-    protected Item[] arrayItemRegister = new Item[EnumUtil.GetEnumMaxIndex<ItemsTypeEnum>() + 1];
+    protected Item[] arrayItemRegister = new Item[EnumExtension.GetEnumMaxIndex<ItemsTypeEnum>() + 1];
 
     //道具模型列表
     protected Dictionary<long, GameObject> dicItemsObj = new Dictionary<long, GameObject>();
@@ -192,11 +192,11 @@ public class ItemsManager : BaseManager, IItemsInfoView
     /// </summary>
     public void RegisterItem()
     {
-        List<ItemsTypeEnum> listItemsType = EnumUtil.GetEnumValue<ItemsTypeEnum>();
+        List<ItemsTypeEnum> listItemsType = EnumExtension.GetEnumValue<ItemsTypeEnum>();
         for (int i = 0; i < listItemsType.Count; i++)
         {
             ItemsTypeEnum itemsType = listItemsType[i];
-            string itemsTypeName = EnumUtil.GetEnumName(itemsType);
+            string itemsTypeName = EnumExtension.GetEnumName(itemsType);
             //通过反射获取类
             Item item = ReflexUtil.CreateInstance<Item>($"Item{itemsTypeName}");
             if (item == null)

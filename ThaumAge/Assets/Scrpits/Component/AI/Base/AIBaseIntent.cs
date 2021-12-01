@@ -4,9 +4,19 @@ using UnityEngine;
 public abstract class AIBaseIntent
 {
     public AIBaseEntity aiEntity;
-    public AIIntentEnum aiIntent;
+    public System.Enum aiIntent;
 
-    public AIBaseIntent(AIIntentEnum aiIntent,AIBaseEntity aiEntity)
+    public AIBaseIntent()
+    {
+
+    }
+
+    /// <summary>
+    /// 初始化数据
+    /// </summary>
+    /// <param name="aiIntent"></param>
+    /// <param name="aiEntity"></param>
+    public void InitData(System.Enum aiIntent, AIBaseEntity aiEntity)
     {
         this.aiIntent = aiIntent;
         this.aiEntity = aiEntity;
@@ -15,16 +25,29 @@ public abstract class AIBaseIntent
     /// <summary>
     /// 进入意图
     /// </summary>
-    public abstract void IntentEntering();
+    public virtual void IntentEntering(AIBaseEntity aiEntity)
+    { 
+
+    }
 
     /// <summary>
     /// 表现意图
     /// </summary>
-    public abstract void IntentActUpdate();
-    public abstract void IntentActFixUpdate();
+    public virtual void IntentUpdate(AIBaseEntity aiEntity)
+    {
+
+    }
+
+    public virtual void IntentFixUpdate(AIBaseEntity aiEntity)
+    {
+
+    }
 
     /// <summary>
     /// 离开意图
     /// </summary>
-    public abstract void IntentLeaving();
+    public virtual void IntentLeaving(AIBaseEntity aiEntity)
+    { 
+    
+    }
 }
