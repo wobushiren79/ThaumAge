@@ -1,333 +1,129 @@
-﻿using System;
+﻿using UnityEngine;
+using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
-using Unity.Jobs;
-using UnityEngine;
-using UnityEngine.AI;
-using UnityEngine.InputSystem;
-using UnityEngine.Rendering;
-using UnityEngine.UI;
 
+[RequireComponent(typeof(MeshFilter), typeof(MeshRenderer))]
 public class Test : BaseMonoBehaviour
 {
-    public MeshFilter meshFilter;
-    private void Start()
-    {
-        Mesh mesh = new Mesh();
+    private enum Edge { top, left, bottom, right };
 
-        Vector3[] verts = new Vector3[]
+    public Material spriteMat;
+    public int alphaTheshold = 0;
+    public float depth = 0.0625f;
+    private Color32[] m_Colors;
+    private int m_Width;
+    private int m_Height;
+
+    private List<Vector3> m_Vertices = new List<Vector3>();
+    private List<Vector3> m_Normals = new List<Vector3>();
+    private List<Vector2> m_TexCoords = new List<Vector2>();
+
+    private bool HasPixel(int aX, int aY)
+    {
+        return m_Colors[aX + aY * m_Width].a > alphaTheshold;
+    }
+    void AddQuad(Vector3 aFirstEdgeP1, Vector3 aFirstEdgeP2, Vector3 aSecondRelative, Vector3 aNormal, Vector2 aUV1, Vector2 aUV2, bool aFlipUVs)
+    {
+        m_Vertices.Add(aFirstEdgeP1);
+        m_Vertices.Add(aFirstEdgeP2);
+        m_Vertices.Add(aFirstEdgeP2 + aSecondRelative);
+        m_Vertices.Add(aFirstEdgeP1 + aSecondRelative);
+        m_Normals.Add(aNormal);
+        m_Normals.Add(aNormal);
+        m_Normals.Add(aNormal);
+        m_Normals.Add(aNormal);
+        if (aFlipUVs)
         {
-            new Vector3(0,0,0),
-            new Vector3(0,1,0),
-            new Vector3(1,1,0),
-            new Vector3(1,0,0)
-        };
-        Vector2[] uvs = new Vector2[]
+            m_TexCoords.Add(new Vector2(aUV1.x, aUV1.y));
+            m_TexCoords.Add(new Vector2(aUV2.x, aUV1.y));
+            m_TexCoords.Add(new Vector2(aUV2.x, aUV2.y));
+            m_TexCoords.Add(new Vector2(aUV1.x, aUV2.y));
+        }
+        else
         {
-            new Vector2(0f, 0f),
-            new Vector2(0f, 1/128f),
-            new Vector2(1/128f, 1/128f),
-            new Vector2(1/128f, 0f)
-        };
-        int[] tris = new int[]
-        {
-            0,1,2, 0,2,3
-        };
-        mesh.Clear();
-        mesh.SetVertices(verts);
-        mesh.SetTriangles(tris, 0);
-        mesh.SetUVs(0, uvs);
-        meshFilter.mesh = mesh;
+            m_TexCoords.Add(new Vector2(aUV1.x, aUV1.y));
+            m_TexCoords.Add(new Vector2(aUV1.x, aUV2.y));
+            m_TexCoords.Add(new Vector2(aUV2.x, aUV2.y));
+            m_TexCoords.Add(new Vector2(aUV2.x, aUV1.y));
+        }
+
     }
 
-    public void OnGUI()
+    void AddEdge(int aX, int aY, Edge aEdge)
     {
-        if (GUILayout.Button("Test"))
+        Vector2 size = new Vector2(1.0f / m_Width, 1.0f / m_Height);
+        Vector2 uv = new Vector3(aX * size.x, aY * size.y);
+        Vector2 P = uv - Vector2.one * 0.5f;
+        uv += size * 0.5f;
+        Vector2 P2 = P;
+        Vector3 normal;
+        if (aEdge == Edge.top)
         {
-            TimeTest7();
+            P += size;
+            P2.y += size.y;
+            normal = Vector3.up;
         }
+        else if (aEdge == Edge.left)
+        {
+            P.y += size.y;
+            normal = Vector3.left;
+        }
+        else if (aEdge == Edge.bottom)
+        {
+            P2.x += size.x;
+            normal = Vector3.down;
+        }
+        else
+        {
+            P2 += size;
+            P.x += size.x;
+            normal = Vector3.right;
+        }
+        AddQuad(P, P2, Vector3.forward * depth, normal, uv, uv, false);
     }
 
-    public void TimeTest7()
+    void GenerateMesh()
     {
-        int number = 16 * 16 * 2560;
-        Stopwatch stopwatch = TimeUtil.GetMethodTimeStart();
+        Texture2D tex = spriteMat.mainTexture as Texture2D;
+        m_Colors = tex.GetPixels32();
+        m_Width = tex.width;
+        m_Height = tex.height;
+        //      first point                     , second point                    , relative 3. P, normal,          lower UV,     Upper UV,    flipUV
+        AddQuad(new Vector3(-0.5f, -0.5f, 0), new Vector3(-0.5f, 0.5f, 0), Vector3.right, Vector3.back, Vector2.zero, Vector2.one, false);
+        AddQuad(new Vector3(-0.5f, -0.5f, depth), new Vector3(0.5f, -0.5f, depth), Vector3.up, Vector3.forward, Vector2.zero, Vector2.one, true);
 
-        for (int i = 0; i < number; i++)
+        for (int y = 0; y < m_Height; y++) // bottom to top
         {
-            Test1(out BlockBean data1);
-        }
-        TimeUtil.GetMethodTimeEnd("data1:", stopwatch);
-        stopwatch.Restart();
-
-        stopwatch.Start();
-        for (int i = 0; i < number; i++)
-        {
-            BlockBean block = Test2();
-        }
-        TimeUtil.GetMethodTimeEnd("data2:", stopwatch);
-    }
-
-
-    public void Test1(out BlockBean data1)
-    {
-        data1 = new BlockBean();
-    }
-    public BlockBean Test2()
-    {
-        return new BlockBean();
-    }
-    public void TimeTest6()
-    {
-        int number = 16 * 16 * 256;
-        List<BlockBean> listData1 = new List<BlockBean>();
-        List<BlockBean> listData2 = new List<BlockBean>();
-        Stopwatch stopwatch = TimeUtil.GetMethodTimeStart();
-
-        for (int i = 0; i < number; i++)
-        {
-            BlockBean blockBean1 = new BlockBean();
-            int id = 123;
-            int di = 1;
-            string remakr = "remak";
-            blockBean1.meta = $"{id}|{di}|{remakr}";
-            listData1.Add(blockBean1);
-        }
-        TimeUtil.GetMethodTimeEnd("data1:", stopwatch);
-        stopwatch.Restart();
-
-        stopwatch.Start();
-        for (int i = 0; i < number; i++)
-        {
-            BlockBean blockBean1 = new BlockBean();
-            blockBean1.meta = JsonUtil.ToJson(new TestBean() { id = 123, di = 1, remark = "remak" });
-            listData2.Add(blockBean1);
-        }
-        TimeUtil.GetMethodTimeEnd("data2:", stopwatch);
-        stopwatch.Restart();
-
-        stopwatch.Start();
-        for (int i = 0; i < listData1.Count; i++)
-        {
-            BlockBean itemData = listData1[i];
-            string[] dataList = StringUtil.SplitBySubstringForArrayStr(itemData.meta, '|');
-            int id = int.Parse(dataList[0]);
-            int di = int.Parse(dataList[1]);
-            string remak = dataList[2];
-        }
-        TimeUtil.GetMethodTimeEnd("data1find:", stopwatch);
-        stopwatch.Restart();
-
-        stopwatch.Start();
-        for (int i = 0; i < listData2.Count; i++)
-        {
-            BlockBean itemData = listData2[2];
-            TestBean test = JsonUtil.FromJson<TestBean>(itemData.meta);
-            int id = test.id;
-            int di = test.di;
-            string remak = test.remark;
-        }
-        TimeUtil.GetMethodTimeEnd("data2find:", stopwatch);
-    }
-
-    public class TestBean
-    {
-        public int id;
-        public int di;
-        public string remark;
-    }
-
-    public void TimeTest5()
-    {
-        int number = 10000000;
-        int x1 = 0;
-        int x2 = -1;
-        int x3 = 1;
-        Stopwatch stopwatch = TimeUtil.GetMethodTimeStart();
-        for (int i = 0; i < number; i++)
-        {
-            if (x1 == 0 || x2 == -1 || x3 == 1)
+            for (int x = 0; x < m_Width; x++) // left to right
             {
-
-            }
-        }
-        TimeUtil.GetMethodTimeEnd("data1:", stopwatch);
-        stopwatch.Restart();
-
-        stopwatch.Start();
-        for (int i = 0; i < number; i++)
-        {
-            switch (x1)
-            {
-                case -1:
-                    break;
-            }
-
-            if (x1 == 1)
-            {
-
-            }
-            else if (x2 == -2)
-            {
-
-            }
-            else if (x3 == 1)
-            {
-
-            }
-        }
-        TimeUtil.GetMethodTimeEnd("data2:", stopwatch);
-    }
-
-    public void TimeTest4()
-    {
-        int number = 100000;
-        Vector3Int startPosition = Vector3Int.one;
-        Stopwatch stopwatch = TimeUtil.GetMethodTimeStart();
-        for (int i = 0; i < number; i++)
-        {
-            Vector3Int target = startPosition + Vector3Int.one;
-        }
-        TimeUtil.GetMethodTimeEnd("data1:", stopwatch);
-        stopwatch.Restart();
-
-        stopwatch.Start();
-        for (int i = 0; i < number; i++)
-        {
-            Vector3Int target = new Vector3Int(startPosition.x + 1, startPosition.y + 1, startPosition.z + 1);
-        }
-        TimeUtil.GetMethodTimeEnd("data2:", stopwatch); stopwatch.Restart();
-
-        stopwatch.Start();
-        for (int i = 0; i < number; i++)
-        {
-            Vector3Int target = startPosition.AddXYZ(1, 1, 1);
-        }
-        TimeUtil.GetMethodTimeEnd("data3:", stopwatch);
-    }
-
-    public void TimeTest3()
-    {
-        int number = 100000;
-        int[] arrayData = new int[number];
-        List<int> listData = new List<int>();
-        Stopwatch stopwatch = TimeUtil.GetMethodTimeStart();
-        for (int i = 0; i < number; i++)
-        {
-            arrayData[i] = i;
-        }
-        TimeUtil.GetMethodTimeEnd("data1:", stopwatch);
-        stopwatch.Restart();
-
-        stopwatch.Start();
-        for (int i = 0; i < number; i++)
-        {
-            listData.Add(i);
-        }
-        TimeUtil.GetMethodTimeEnd("data2:", stopwatch);
-    }
-
-    public void TimeTest2()
-    {
-        int number = 100000;
-        List<int> listData1 = new List<int>();
-        List<int> listData2 = new List<int>();
-        Stopwatch stopwatch = TimeUtil.GetMethodTimeStart();
-        for (int i = 0; i < number; i++)
-        {
-            listData1.Add(1);
-            listData1.Add(2);
-            listData1.Add(3);
-            listData1.Add(4);
-            listData1.Add(5);
-        }
-        TimeUtil.GetMethodTimeEnd("data1:", stopwatch);
-        int[] itemList1 = new int[5]
-{
-                 1,2,3,4,5
-};
-        stopwatch.Restart();
-
-        stopwatch.Start();
-
-        for (int i = 0; i < number; i++)
-        {
-
-            listData2.AddRange(itemList1);
-        }
-        TimeUtil.GetMethodTimeEnd("data2:", stopwatch);
-    }
-
-    public void TimeTest()
-    {
-        int xNumber = 100;
-        int yNumber = 100;
-        int zNumber = 100;
-        Stopwatch stopwatch = TimeUtil.GetMethodTimeStart();
-        string[,,] data1 = new string[xNumber, yNumber, zNumber];
-        for (int x = 0; x < xNumber; x++)
-        {
-            for (int y = 0; y < yNumber; y++)
-            {
-                for (int z = 0; z < zNumber; z++)
+                if (HasPixel(x, y))
                 {
-                    data1[x, y, z] = $"i";
+                    if (x == 0 || !HasPixel(x - 1, y))
+                        AddEdge(x, y, Edge.left);
+
+                    if (x == m_Width - 1 || !HasPixel(x + 1, y))
+                        AddEdge(x, y, Edge.right);
+
+                    if (y == 0 || !HasPixel(x, y - 1))
+                        AddEdge(x, y, Edge.bottom);
+
+                    if (y == m_Height - 1 || !HasPixel(x, y + 1))
+                        AddEdge(x, y, Edge.top);
                 }
             }
         }
-        TimeUtil.GetMethodTimeEnd("data1 init:", stopwatch);
-        stopwatch.Restart();
-
-        stopwatch.Start();
-        int number = xNumber * yNumber * zNumber;
-        string[] data2 = new string[number];
-        for (int i = 0; i < number; i++)
-        {
-            data2[i] = $"i";
-        }
-        TimeUtil.GetMethodTimeEnd("data2 init:", stopwatch);
-        stopwatch.Restart();
-
-        stopwatch.Start();
-        for (int x = 0; x < xNumber; x++)
-        {
-            for (int y = 0; y < yNumber; y++)
-            {
-                for (int z = 0; z < zNumber; z++)
-                {
-                    string itemData = data1[x, y, z];
-                }
-            }
-        }
-        TimeUtil.GetMethodTimeEnd("data1 for:", stopwatch);
-        stopwatch.Restart();
-
-        stopwatch.Start();
-        for (int i = 0; i < number; i++)
-        {
-            string itemData = data2[i];
-        }
-        TimeUtil.GetMethodTimeEnd("data2 for:", stopwatch);
-        stopwatch.Restart();
-
-        stopwatch.Start();
-        for (int i = 0; i < 100000; i++)
-        {
-            string itemData = data1[50, 50, 50];
-        }
-        TimeUtil.GetMethodTimeEnd("data2 get10000:", stopwatch);
-        stopwatch.Restart();
-
-        int Half = number / 2;
-        stopwatch.Start();
-        for (int i = 0; i < 100000; i++)
-        {
-            string itemData = data2[(xNumber / 2) * yNumber * zNumber + (yNumber / 2) * zNumber + zNumber / 2];
-        }
-        TimeUtil.GetMethodTimeEnd("data2 get10000:", stopwatch);
-        stopwatch.Restart();
+        var mesh = new Mesh();
+        mesh.vertices = m_Vertices.ToArray();
+        mesh.normals = m_Normals.ToArray();
+        mesh.uv = m_TexCoords.ToArray();
+        int[] quads = new int[m_Vertices.Count];
+        for (int i = 0; i < quads.Length; i++)
+            quads[i] = i;
+        mesh.SetIndices(quads, MeshTopology.Quads, 0);
+        GetComponent<MeshFilter>().sharedMesh = mesh;
     }
-
+    void Start()
+    {
+        GenerateMesh();
+    }
 }
