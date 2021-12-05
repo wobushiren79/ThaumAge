@@ -48,7 +48,7 @@ public class ControlForPlayer : ControlForBase
         InvokeRepeating("HandlerForUseItemTarget", 0.1f, 0.1f);
     }
 
-    private void Update()
+    public void Update()
     {
         if (GameHandler.Instance.manager.GetGameState() == GameStateEnum.Gaming)
         {
@@ -57,7 +57,7 @@ public class ControlForPlayer : ControlForBase
         }
     }
 
-    private void OnDestroy()
+    public void OnDestroy()
     {
         CancelInvoke("HandlerForUseItemTarget");
     }

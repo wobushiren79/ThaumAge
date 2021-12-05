@@ -18,13 +18,13 @@ public class PlayerPickUp : PlayerBase
     /// </summary>
     public void UpdatePick()
     {
-        HandleForCheckItemDrop();
+        HandleForCheckItemCptDrop();
     }
 
     /// <summary>
     /// 处理-检测周围掉落道具
     /// </summary>
-    public void HandleForCheckItemDrop()
+    public void HandleForCheckItemCptDrop()
     {
         Collider[] colliderArray = RayUtil.RayToSphere(player.transform.position, rangePickUp, 1 << LayerInfo.Items);
         if (!colliderArray.IsNull())
@@ -32,12 +32,12 @@ public class PlayerPickUp : PlayerBase
             for (int i = 0; i < colliderArray.Length; i++)
             {
                 Collider itemCollider = colliderArray[i];
-                ItemDrop itemDrop = itemCollider.GetComponent<ItemDrop>();
+                ItemCptDrop ItemCptDrop = itemCollider.GetComponent<ItemCptDrop>();
                 //如果是丢掉的道具，并且拾取状态为可拾取
-                if (itemDrop != null 
-                    && itemDrop.GetItemDropState() == ItemDropStateEnum.DropPick)
+                if (ItemCptDrop != null 
+                    && ItemCptDrop.GetItemCptDropState() == ItemDropStateEnum.DropPick)
                 {
-                    itemDrop.PickItem(player.transform, speedPickUp);
+                    ItemCptDrop.PickItem(player.transform, speedPickUp);
                 }
             }
         }

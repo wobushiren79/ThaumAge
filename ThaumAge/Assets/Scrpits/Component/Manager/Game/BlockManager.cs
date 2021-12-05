@@ -15,15 +15,15 @@ public class BlockManager : BaseManager, IBlockInfoView
     //方块模型列表
     protected GameObject[] arrayBlockModel = new GameObject[EnumExtension.GetEnumMaxIndex<BlockTypeEnum>() + 1];
     //存储着所有的材质
-    public Material[] arrayBlockMat = new Material[16];
+    public Material[] arrayBlockMat;
 
     //方块破碎模型
-    public GameObject blockBreakModel;
+    public GameObject BlockCptBreakModel;
 
     //路径-方块模型
     public static string pathForBlockModel = "Assets/Prefabs/Block";
     //路径-破碎方块
-    public static string pathForBlockBreak = "Assets/Prefabs/Game/BlockBreak.prefab";
+    public static string pathForBlockCptBreak = "Assets/Prefabs/Game/BlockCptBreak.prefab";
     //路径-方块材质 （使用标签）
     public static string pathForBlockMats = "BlockMats";
 
@@ -48,6 +48,7 @@ public class BlockManager : BaseManager, IBlockInfoView
         LoadAddressablesUtil.LoadAssetsAsync<Material>(pathForBlockMats, (data) =>
         {
             IList<Material> listMat = data.Result;
+            arrayBlockMat = new Material[listMat.Count+1];
             for (int i = 0; i < listMat.Count; i++)
             {
                 //按照名字中的下标 确认每个材质球的顺序
@@ -58,9 +59,9 @@ public class BlockManager : BaseManager, IBlockInfoView
             }
 
             //加载方块破碎模型
-            LoadAddressablesUtil.LoadAssetAsync<GameObject>(pathForBlockBreak, (obj) =>
+            LoadAddressablesUtil.LoadAssetAsync<GameObject>(pathForBlockCptBreak, (obj) =>
             {
-                blockBreakModel = obj.Result;
+                BlockCptBreakModel = obj.Result;
                 callBack?.Invoke();
             });
         });

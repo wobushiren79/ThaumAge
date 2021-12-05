@@ -85,7 +85,7 @@ public class BlockShapeCross : Block
             chunk.RemoveBlockForLocal(localPosition);
             //创建道具
             ItemsInfoBean itemsInfo = ItemsHandler.Instance.manager.GetItemsInfoByBlockType(blockType);
-            ItemsHandler.Instance.CreateItemDrop(itemsInfo.id, 1, chunk.chunkData.positionForWorld + localPosition, ItemDropStateEnum.DropPick);
+            ItemsHandler.Instance.CreateItemCptDrop(itemsInfo.id, 1, chunk.chunkData.positionForWorld + localPosition, ItemDropStateEnum.DropPick);
         }
     }
 

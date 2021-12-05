@@ -25,7 +25,7 @@ public class UserDataBean
     public CharacterBean characterData = new CharacterBean();
 
     //快捷栏位置
-    public byte indexForShortcuts = 0;
+    public int indexForShortcuts = 0;
     //快捷栏道具
     public ItemsBean[] listShortcutsItems = new ItemsBean[10];
     //背包道具
@@ -121,6 +121,23 @@ public class UserDataBean
             }
         }
         return itemNumber;
+    }
+
+    /// <summary>
+    /// 改变快捷栏
+    /// </summary>
+    /// <param name="indexForShortcuts"></param>
+    public void SetShortcuts(int indexForShortcuts)
+    {
+        this.indexForShortcuts = indexForShortcuts;
+        //改变手中的物品
+        Player player = GameHandler.Instance.manager.player;
+        if (player != null)
+        {
+            Character character = player.GetCharacter();
+            ItemsBean itemsData = GetItemsFromShortcut();
+            character.CharacterItems.ChangeRightHandItem(itemsData.itemId);
+        }
     }
 
     /// <summary>

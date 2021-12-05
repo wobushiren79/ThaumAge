@@ -42,10 +42,11 @@ public class UIViewShortcuts : BaseUIView
     public override void OnInputActionForStarted(InputActionUIEnum inputType)
     {
         UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();
-        int indexForShortcuts = 0;
+        int indexForShortcutsBefore = userData.indexForShortcuts;
+        int indexForShortcuts;
         bool isRefreshUI = true;
         base.OnInputActionForStarted(inputType);
-        switch (inputType) 
+        switch (inputType)
         {
             case InputActionUIEnum.N0:
                 indexForShortcuts = 9;
@@ -86,6 +87,11 @@ public class UIViewShortcuts : BaseUIView
             default:
                 return;
         }
+        //如果没有改变 则不处理
+        if (indexForShortcutsBefore == indexForShortcuts)
+        {
+            return;
+        }
         if (indexForShortcuts > 9)
         {
             indexForShortcuts = 0;
@@ -94,7 +100,7 @@ public class UIViewShortcuts : BaseUIView
         {
             indexForShortcuts = 9;
         }
-        userData.indexForShortcuts = (byte)(indexForShortcuts);
+        userData.SetShortcuts(indexForShortcuts);
         if (isRefreshUI)
         {
             RefreshUI();
@@ -109,16 +115,10 @@ public class UIViewShortcuts : BaseUIView
     {
         UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();
 
-        ui_ShortcutItem_1.SetData(userData.GetItemsFromShortcut(0), new Vector2Int(0, 0));
-        ui_ShortcutItem_2.SetData(userData.GetItemsFromShortcut(1), new Vector2Int(1, 0));
-        ui_ShortcutItem_3.SetData(userData.GetItemsFromShortcut(2), new Vector2Int(2, 0));
-        ui_ShortcutItem_4.SetData(userData.GetItemsFromShortcut(3), new Vector2Int(3, 0));
-        ui_ShortcutItem_5.SetData(userData.GetItemsFromShortcut(4), new Vector2Int(4, 0));
-        ui_ShortcutItem_6.SetData(userData.GetItemsFromShortcut(5), new Vector2Int(5, 0));
-        ui_ShortcutItem_7.SetData(userData.GetItemsFromShortcut(6), new Vector2Int(6, 0));
-        ui_ShortcutItem_8.SetData(userData.GetItemsFromShortcut(7), new Vector2Int(7, 0));
-        ui_ShortcutItem_9.SetData(userData.GetItemsFromShortcut(8), new Vector2Int(8, 0));
-        ui_ShortcutItem_10.SetData(userData.GetItemsFromShortcut(9), new Vector2Int(9, 0));
+        for (int i = 0; i < listShortcut.Count; i++)
+        {
+            listShortcut[i].SetData(userData.GetItemsFromShortcut(i), new Vector2Int(i, 0));
+        }
 
         for (int i = 0; i < listShortcut.Count; i++)
         {

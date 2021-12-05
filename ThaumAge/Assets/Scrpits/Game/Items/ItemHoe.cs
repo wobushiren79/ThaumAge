@@ -41,7 +41,7 @@ public class ItemHoe : Item
                 chunkForHit.SetBlockForLocal(localPosition, ploughBlockType, direction, BlockPloughGrass.ToMetaData(rotate));
 
                 //播放粒子特效
-                BlockBreak.PlayBlockBreakEffect(ploughBlockType, targetPosition + new Vector3(0.5f, 0.5f, 0.5f));
+                BlockCptBreak.PlayBlockCptBreakEffect(ploughBlockType, targetPosition + new Vector3(0.5f, 0.5f, 0.5f));
             }
         }
     }

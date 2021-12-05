@@ -12,9 +12,9 @@ using UnityEngine.Scripting;
 public class BlockHandler : BaseHandler<BlockHandler, BlockManager>
 {
     //破碎方块合集
-    public Dictionary<Vector3Int, BlockBreak> dicBreakBlock = new Dictionary<Vector3Int, BlockBreak>();
+    public Dictionary<Vector3Int, BlockCptBreak> dicBreakBlock = new Dictionary<Vector3Int, BlockCptBreak>();
     //闲置的破碎方块
-    public Queue<BlockBreak> listBreakBlockIdle = new Queue<BlockBreak>();
+    public Queue<BlockCptBreak> listBreakBlockIdle = new Queue<BlockCptBreak>();
 
     /// <summary>
     /// 创建方块
@@ -36,34 +36,34 @@ public class BlockHandler : BaseHandler<BlockHandler, BlockManager>
     /// 破坏方块
     /// </summary>
     /// <returns></returns>
-    public BlockBreak BreakBlock(Vector3Int worldPosition, Block block, int damage)
+    public BlockCptBreak BreakBlock(Vector3Int worldPosition, Block block, int damage)
     {
-        if (dicBreakBlock.TryGetValue(worldPosition, out BlockBreak value))
+        if (dicBreakBlock.TryGetValue(worldPosition, out BlockCptBreak value))
         {
             value.Break(damage);
             return value;
         }
         else
         {
-            BlockBreak blockBreak;
+            BlockCptBreak BlockCptBreak;
 
             if (listBreakBlockIdle.Count > 0)
             {
-                blockBreak = listBreakBlockIdle.Dequeue();
-                blockBreak.SetData(block, worldPosition);
-                blockBreak.ShowObj(true);
-                dicBreakBlock.Add(worldPosition, blockBreak);
+                BlockCptBreak = listBreakBlockIdle.Dequeue();
+                BlockCptBreak.SetData(block, worldPosition);
+                BlockCptBreak.ShowObj(true);
+                dicBreakBlock.Add(worldPosition, BlockCptBreak);
             }
             else
             {
                 //创建破碎效果
-                GameObject objBlockBreak = Instantiate(gameObject, manager.blockBreakModel);
-                blockBreak = objBlockBreak.GetComponent<BlockBreak>();
-                blockBreak.SetData(block, worldPosition);
-                dicBreakBlock.Add(worldPosition, blockBreak);
+                GameObject objBlockCptBreak = Instantiate(gameObject, manager.BlockCptBreakModel);
+                BlockCptBreak = objBlockCptBreak.GetComponent<BlockCptBreak>();
+                BlockCptBreak.SetData(block, worldPosition);
+                dicBreakBlock.Add(worldPosition, BlockCptBreak);
             }
-            blockBreak.Break(damage);
-            return blockBreak;
+            BlockCptBreak.Break(damage);
+            return BlockCptBreak;
         }
     }
 
@@ -72,7 +72,7 @@ public class BlockHandler : BaseHandler<BlockHandler, BlockManager>
     /// </summary>
     public void DestroyBreakBlock(Vector3Int worldPosition)
     {
-        if (dicBreakBlock.TryGetValue(worldPosition, out BlockBreak value))
+        if (dicBreakBlock.TryGetValue(worldPosition, out BlockCptBreak value))
         {
             value.ShowObj(false);
             value.SetBreakPro(0);

@@ -64,8 +64,8 @@ public class Item
             //如果原位置是空则不做处理
             if (oldBlock != null && oldBlock.blockType != BlockTypeEnum.None)
             {
-                BlockBreak blockBreak = BlockHandler.Instance.BreakBlock(targetPosition, oldBlock, GetBreakDamage());
-                if (blockBreak.blockLife <= 0)
+                BlockCptBreak BlockCptBreak = BlockHandler.Instance.BreakBlock(targetPosition, oldBlock, GetBreakDamage());
+                if (BlockCptBreak.blockLife <= 0)
                 {
                     //移除破碎效果
                     BlockHandler.Instance.DestroyBreakBlock(targetPosition);
@@ -82,12 +82,12 @@ public class Item
                         //获取种植收货
                         List<ItemsBean> listHarvest = BlockPlantExtension.GetPlantHarvest(blockData, oldBlock.blockInfo);
                         //创建掉落物
-                        ItemsHandler.Instance.CreateItemDropList(listHarvest, targetPosition + Vector3.one * 0.5f, ItemDropStateEnum.DropPick);
+                        ItemsHandler.Instance.CreateItemCptDropList(listHarvest, targetPosition + Vector3.one * 0.5f, ItemDropStateEnum.DropPick);
                     }
                     else
                     {
                         //创建掉落物
-                        ItemsHandler.Instance.CreateItemDrop(oldBlock.blockType, 1, targetPosition + Vector3.one * 0.5f, ItemDropStateEnum.DropPick);
+                        ItemsHandler.Instance.CreateItemCptDrop(oldBlock.blockType, 1, targetPosition + Vector3.one * 0.5f, ItemDropStateEnum.DropPick);
                     }
 
                     //移除该方块

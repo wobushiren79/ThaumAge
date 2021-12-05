@@ -7,7 +7,7 @@ using UnityEngine;
 
 public class BlockEditorWindow : EditorWindow
 {
-    protected readonly string Path_Block_Png = "Assets/Texture/block.png";
+    protected readonly string Path_Block_Png = "Assets/Texture";
     protected readonly string Path_Block_Textures = "Assets/Texture/Block";
 
     protected string queryBlockIds;
@@ -209,7 +209,12 @@ public class BlockEditorWindow : EditorWindow
     {
         if (EditorUI.GUIButton("生成方块图片", 150))
             CreateBlockTexture(2048);
-        EditorUI.GUIPic(Path_Block_Png, 2048, 2048);
+        string nameBothFaceSwingUniform = BlockMaterialEnum.BothFaceSwingUniform.GetEnumName();
+        string nameBothFaceSwing = BlockMaterialEnum.BothFaceSwing.GetEnumName();
+
+        EditorUI.GUIPic($"{Path_Block_Png}/Block.png", 2048, 2048);
+        EditorUI.GUIPic($"{Path_Block_Png}/Block{nameBothFaceSwing}.png", 2048, 2048);
+        EditorUI.GUIPic($"{Path_Block_Png}/Block{nameBothFaceSwingUniform}.png", 2048, 2048);
     }
 
     /// <summary>
@@ -221,12 +226,20 @@ public class BlockEditorWindow : EditorWindow
         string[] filesName = Directory.GetFiles(Path_Block_Textures);
         //生成图片tex
         Texture2D outTexture = new Texture2D(size, size, TextureFormat.RGBA32, true);
+        Texture2D outTextureBothFaceSwing = new Texture2D(size, size, TextureFormat.RGBA32, true);
+        Texture2D outTextureBothFaceSwingUniform = new Texture2D(size, size, TextureFormat.RGBA32, true);
+
         //设置每一个方块所占的区域大小
         int itemSize = size / 128;
+
+        string nameBothFaceSwing = BlockMaterialEnum.BothFaceSwing.GetEnumName();
+        string nameBothFaceSwingUniform = BlockMaterialEnum.BothFaceSwingUniform.GetEnumName();
+
         for (int i = 0; i < filesName.Length; i++)
         {
             //获取方块名字
             string fileName = filesName[i];
+
             if (fileName.Contains(".meta"))
             {
                 continue;
@@ -234,16 +247,34 @@ public class BlockEditorWindow : EditorWindow
             //根据名字获取每个图片所在的位置
             Texture2D itemTex = AssetDatabase.LoadAssetAtPath<Texture2D>(fileName);
             string[] itemDataArray = StringUtil.SplitBySubstringForArrayStr(itemTex.name, '_');
-            int positionStartX = int.Parse(itemDataArray[1]) * itemSize;
-            int positionStartY = int.Parse(itemDataArray[0]) * itemSize;
 
             //设置方块位置
             int width = itemTex.width;
             int height = itemTex.height;
-            outTexture.SetPixels(positionStartX, positionStartY, width, height, itemTex.GetPixels());
+
+            if (fileName.Contains(nameBothFaceSwingUniform))
+            {
+                int positionStartX = int.Parse(itemDataArray[2]) * itemSize;
+                int positionStartY = int.Parse(itemDataArray[1]) * itemSize;
+                outTextureBothFaceSwingUniform.SetPixels(positionStartX, positionStartY, width, height, itemTex.GetPixels());
+            }
+            else if (fileName.Contains(nameBothFaceSwing))
+            {
+                int positionStartX = int.Parse(itemDataArray[2]) * itemSize;
+                int positionStartY = int.Parse(itemDataArray[1]) * itemSize;
+                outTextureBothFaceSwing.SetPixels(positionStartX, positionStartY, width, height, itemTex.GetPixels());
+            }
+            else
+            {
+                int positionStartX = int.Parse(itemDataArray[1]) * itemSize;
+                int positionStartY = int.Parse(itemDataArray[0]) * itemSize;
+                outTexture.SetPixels(positionStartX, positionStartY, width, height, itemTex.GetPixels());
+            }
         }
         //保存图片
-        File.WriteAllBytes(Path_Block_Png, outTexture.EncodeToPNG());
+        File.WriteAllBytes($"{Path_Block_Png}/Block.png", outTexture.EncodeToPNG());
+        File.WriteAllBytes($"{Path_Block_Png}/Block{nameBothFaceSwing}.png", outTextureBothFaceSwing.EncodeToPNG());
+        File.WriteAllBytes($"{Path_Block_Png}/Block{nameBothFaceSwingUniform}.png", outTextureBothFaceSwingUniform.EncodeToPNG());
         AssetDatabase.Refresh();
     }
 

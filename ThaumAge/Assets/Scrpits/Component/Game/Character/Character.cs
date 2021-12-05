@@ -11,6 +11,8 @@ public class Character : BaseMonoBehaviour
     public GameObject characterBody;
     [Header("角色身体（需要指定）")]
     public GameObject characterClothes;
+    [Header("角色右手（需要指定）")]
+    public GameObject characterRightHand;
 
     [HideInInspector]
     public CharacterSkin characterSkin;
@@ -18,6 +20,8 @@ public class Character : BaseMonoBehaviour
     public CharacterEquip characterEquip;
     [HideInInspector]
     public CharacterAnim characterAnim;
+    [HideInInspector]
+    public CharacterItems CharacterItems;
 
     //角色数据
     protected CharacterBean characterData;
@@ -32,6 +36,7 @@ public class Character : BaseMonoBehaviour
         characterSkin = new CharacterSkin(this);
         characterEquip = new CharacterEquip(this);
         characterAnim = new CharacterAnim(this);
+        CharacterItems = new CharacterItems(this);
     }
 
     /// <summary>

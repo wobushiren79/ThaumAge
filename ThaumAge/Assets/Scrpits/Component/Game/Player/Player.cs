@@ -15,6 +15,8 @@ public class Player : BaseMonoBehaviour
 
     public void Awake()
     {
+        character = GetComponentInChildren<Character>();
+
         playerPickUp = new PlayerPickUp(this);
         playerRay = new PlayerRay(this);
 
@@ -51,7 +53,7 @@ public class Player : BaseMonoBehaviour
     /// </summary>
     public void HandleForBeyondBorder()
     {
-        if (transform.position.y <= -10)
+        if (transform.position.y <= -1)
         {
             InitPosition();
         }
@@ -69,5 +71,12 @@ public class Player : BaseMonoBehaviour
         }
     }
 
-
+    /// <summary>
+    /// 获取角色
+    /// </summary>
+    /// <returns></returns>
+    public Character GetCharacter()
+    {
+        return character;
+    }
 }
