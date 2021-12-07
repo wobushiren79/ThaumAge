@@ -29,7 +29,7 @@ public class UserDataBean
     //快捷栏道具
     public ItemsBean[] listShortcutsItems = new ItemsBean[10];
     //背包道具
-    public ItemsBean[] listBackpack = new ItemsBean[10 * 5];
+    public ItemsBean[] listBackpack = new ItemsBean[10 * 10];
 
     /// <summary>
     /// 增加道具

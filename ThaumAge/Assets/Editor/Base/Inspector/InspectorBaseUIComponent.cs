@@ -56,7 +56,7 @@ public class InspectorBaseUIComponent : Editor
         Dictionary<string, string> dicReplace = ReplaceRole(currentFileName);
         //创建文件
         EditorUtil.CreateClass(dicReplace, templatesPath, createfileName, path[0]);
-
+        Undo.RecordObject(objSelect, objSelect.gameObject.name);
         EditorUtility.SetDirty(objSelect);
         AssetDatabase.SaveAssets();
         AssetDatabase.Refresh();
@@ -87,6 +87,7 @@ public class InspectorBaseUIComponent : Editor
                 }
             }
         }
+        Undo.RecordObject(objSelect, objSelect.gameObject.name);
         EditorUtility.SetDirty(objSelect);
         AssetDatabase.SaveAssets();
         AssetDatabase.Refresh();
