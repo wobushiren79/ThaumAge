@@ -16,12 +16,12 @@ public class NavigationPathFinding : BaseMonoBehaviour
     public bool navMeshHasNewData = false;
 
     public Bounds worldBounds;
-    private void Awake()
+    public void Awake()
     {
         InitNavMesh();
     }
 
-    private void Update()
+    public void Update()
     {
         HandleForUpdateNavMesh();
     }
@@ -39,7 +39,7 @@ public class NavigationPathFinding : BaseMonoBehaviour
         navMeshBuildSettings.agentClimb = 1.5f;
         navMeshBuildSettings.agentSlope = 60;
         navMeshBuildSettings.agentHeight = 1.8f;
-
+        
         navMeshInstance = NavMesh.AddNavMeshData(navMeshData);
         worldBounds = new Bounds();
     }
@@ -74,6 +74,7 @@ public class NavigationPathFinding : BaseMonoBehaviour
             sourceNew.size = new Vector3(chunk.chunkData.chunkWidth, chunk.chunkData.chunkHeight + 1, chunk.chunkData.chunkWidth);
             sourceNew.sourceObject = chunk.chunkMeshCollider;
             sourceNew.transform = chunk.transform.localToWorldMatrix;
+            sourceNew.area = 0;
             navMeshSources.Add(chunk.chunkData.positionForWorld, sourceNew);
         }
         worldBounds.Encapsulate(chunk.meshRenderer.bounds);

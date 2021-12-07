@@ -14,6 +14,7 @@ public enum ItemsTypeEnum
 
     Hoe = 21,//锄头
 
+    Creature = 101,//生物
 }
 
 

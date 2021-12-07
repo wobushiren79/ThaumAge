@@ -3,12 +3,15 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-public class CreatureManager : BaseManager, ICharacterInfoView
+public class CreatureManager : BaseManager,
+    ICharacterInfoView,ICreatureInfoView
 {
     public readonly string pathHair = "Assets/Prefabs/Model/Character/Hair";
     public readonly string pathEye = "Assets/Texture/Character/Eye";
     public readonly string pathMouth = "Assets/Texture/Character/Mouth";
     public readonly string pathSkin = "Assets/Texture/Character/Skin";
+
+    public readonly string pathCreature = "Assets/Prefabs/Model/Creature";
 
     //角色头发列表
     public Dictionary<string, GameObject> dicCharacterHairModel = new Dictionary<string, GameObject>();
@@ -26,16 +29,34 @@ public class CreatureManager : BaseManager, ICharacterInfoView
     public Dictionary<string, Texture2D> dicCharacterSkinTex = new Dictionary<string, Texture2D>();
     public Dictionary<long, CharacterInfoBean> dicCharacterSkinInfo = new Dictionary<long, CharacterInfoBean>();
 
+    //生物列表
+    public Dictionary<long, CreatureInfoBean> dicCreatureInfo = new Dictionary<long, CreatureInfoBean>();
+    public Dictionary<string, GameObject> dicCreatureModel = new Dictionary<string, GameObject>();
+
     //角色数据控制器
     protected CharacterInfoController controllerForCharacterInfo;
+    //生物数据控制器
+    protected CreatureInfoController controllerForCreatureInfo;
 
-    private void Awake()
+    public void Awake()
     {
         controllerForCharacterInfo = new CharacterInfoController(this, this);
         controllerForCharacterInfo.GetAllCharacterInfoHairData(InitCharacterInfoHair);
         controllerForCharacterInfo.GetAllCharacterInfoEyeData(InitCharacterInfoEye);
         controllerForCharacterInfo.GetAllCharacterInfoMouthData(InitCharacterInfoMouth);
         controllerForCharacterInfo.GetAllCharacterInfoSkinData(InitCharacterInfoSkin);
+
+        controllerForCreatureInfo = new CreatureInfoController(this,this);
+        controllerForCreatureInfo.GetAllCreatureInfoData(InitCreatureInfo);
+    }
+
+    /// <summary>
+    /// 初始化所有生物信息
+    /// </summary>
+    /// <param name="listData"></param>
+    protected void InitCreatureInfo(List<CreatureInfoBean> listData)
+    {
+        InitData(dicCreatureInfo, listData);
     }
 
     /// <summary>
@@ -81,6 +102,16 @@ public class CreatureManager : BaseManager, ICharacterInfoView
     public CharacterInfoBean GetCharacterInfoHair(long id)
     {
         return GetDataById(id, dicCharacterHairInfo);
+    }
+
+    /// <summary>
+    /// 获取生物信息
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
+    public CreatureInfoBean GetCreatureInfo(long id)
+    {
+        return GetDataById(id, dicCreatureInfo);
     }
 
     /// <summary>
@@ -201,6 +232,16 @@ public class CreatureManager : BaseManager, ICharacterInfoView
         GetModelForAddressables(dicCharacterSkinTex, $"{pathSkin}/{skinName}.png", callBack);
     }
 
+    /// <summary>
+    /// 获取生物模组
+    /// </summary>
+    /// <param name="modelName"></param>
+    /// <param name="callBack"></param>
+    public void GetCreatureModel(string modelName, Action<GameObject> callBack)
+    {
+        GetModelForAddressables(dicCreatureModel, $"{pathCreature}/{modelName}.prefab", callBack);
+    }
+
     #region 数据回调
     public void GetCharacterInfoSuccess<T>(T data, Action<T> action)
     {
@@ -210,6 +251,15 @@ public class CreatureManager : BaseManager, ICharacterInfoView
     public void GetCharacterInfoFail(string failMsg, Action action)
     {
 
+    }
+
+    public void GetCreatureInfoSuccess<T>(T data, Action<T> action)
+    {
+        action?.Invoke(data);
+    }
+
+    public void GetCreatureInfoFail(string failMsg, Action action)
+    {
     }
     #endregion
 }

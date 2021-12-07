@@ -233,11 +233,13 @@ public class ExcelEditorWindow : EditorWindow
 
         sb.AppendLine($"using System;");
         sb.AppendLine($"\t[Serializable]");
-        sb.AppendLine($"\tpublic class {sheet.Name}Bean");
+        sb.AppendLine($"\tpublic class {sheet.Name}Bean : BaseBean");
         sb.AppendLine("\t{");
         //遍历sheet首行每个字段描述的值
         for (int i = 1; i <= sheet.Dimension.End.Column; i++)
         {
+            if (sheet.Cells[1, i].Text.Equals("id"))
+                continue;
             sb.AppendLine("\t\t/// <summary>");
             sb.AppendLine($"\t\t///{sheet.Cells[3, i].Text}");
             sb.AppendLine("\t\t/// </summary>");

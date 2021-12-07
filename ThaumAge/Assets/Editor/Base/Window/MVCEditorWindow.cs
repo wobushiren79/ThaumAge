@@ -84,19 +84,19 @@ public class MVCEditorWindow : EditorWindow
         //创建.CS文件
         if (saveType != 3)
         {
-            Dictionary<string, string> dicReplace= ReplaceRole(fileName + "Bean");
+            Dictionary<string, string> dicReplace= ReplaceRole(fileName);
             EditorUtil.CreateClass(dicReplace, beanPath, fileName + "Bean", mvcBeanPath);
         }
-        Dictionary<string, string> dicReplaceView = ReplaceRole("I" + fileName + "View");
+        Dictionary<string, string> dicReplaceView = ReplaceRole(fileName);
         EditorUtil.CreateClass(dicReplaceView, viewPath, "I" + fileName + "View", mvcViewPath);
 
-        Dictionary<string, string> dicReplaceModel = ReplaceRole(fileName + "Model");
+        Dictionary<string, string> dicReplaceModel = ReplaceRole(fileName);
         EditorUtil.CreateClass(dicReplaceModel, modelPath, fileName + "Model", mvcModelPath);
 
-        Dictionary<string, string> dicReplaceController = ReplaceRole(fileName + "Controller");
+        Dictionary<string, string> dicReplaceController = ReplaceRole(fileName);
         EditorUtil.CreateClass(dicReplaceController, controllerPath, fileName + "Controller", mvcControllerPath);
 
-        Dictionary<string, string> dicReplaceService = ReplaceRole(fileName + "Service");
+        Dictionary<string, string> dicReplaceService = ReplaceRole(fileName);
         EditorUtil.CreateClass(dicReplaceService, servicePath, fileName + "Service", mvcServicePath);
         //刷新资源
         AssetDatabase.Refresh();

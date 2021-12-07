@@ -15,10 +15,45 @@ public class AINavigation
     /// <summary>
     /// 设置移动
     /// </summary>
-    public void SetMovePosition(Vector3 position)
+    public bool SetMovePosition(Vector3 position)
     {
+        //代理是否在寻路面上
+        if (!aiAgent.isOnNavMesh)
+        {
+            aiAgent.enabled = false;
+            aiAgent.enabled = true;
+        }
+        //如果依旧不在寻路面上则设置路径失败
+        if (!aiAgent.isOnNavMesh)
+        {
+            LogUtil.LogError("设置路径失败，代理不在寻路面上");
+            return false;
+        }
+        //检测目标点是否再寻路面以内
+        bool isTargetPositionIn = NavMesh.SamplePosition(position, out NavMeshHit navigationHit, 5, aiAgent.areaMask);
+
         aiAgent.isStopped = false;
-        aiAgent.SetDestination(position);
+        if (isTargetPositionIn)
+        {        
+            //如果目标点在寻路面上
+            aiAgent.SetDestination(position);
+            return true;
+        }
+        else
+        {   
+            if (navigationHit.hit)
+            {
+                //如果目标点不在寻路面上 则使用附近的点
+                aiAgent.SetDestination(navigationHit.position);
+                return true;
+            }
+            else
+            {
+                //如果附近没有点 则设置失败
+                LogUtil.LogError("设置路径失败，目标点不在寻路面上");
+                return false;
+            }
+        }
     }
 
     /// <summary>

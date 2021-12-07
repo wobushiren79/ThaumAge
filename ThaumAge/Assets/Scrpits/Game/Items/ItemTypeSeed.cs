@@ -1,7 +1,7 @@
 ﻿using UnityEditor;
 using UnityEngine;
 
-public class ItemHoe : Item
+public class ItemTypeSeed : Item
 {
     public override void Use()
     {
@@ -22,28 +22,26 @@ public class ItemHoe : Item
                 //获取原位置方块
                 Block tagetBlock = chunkForHit.chunkData.GetBlockForLocal(localPosition);
 
-                //如果不能锄地
-                if (tagetBlock.blockInfo.plough_state == 0)
+                //如果不能种地
+                if (tagetBlock.blockInfo.plant_state == 0)
                     return;
 
+                //种植位置
+                Vector3Int upLocalPosition = localPosition + Vector3Int.up;
                 //获取上方方块
-                Block upBlock = chunkForHit.chunkData.GetBlockForLocal(localPosition + Vector3Int.up);
+                Block upBlock = chunkForHit.chunkData.GetBlockForLocal(upLocalPosition);
 
-                //如果上方有方块 则无法使用锄头
+                //如果上方有方块 则无法种植
                 if (upBlock != null && upBlock.blockType != BlockTypeEnum.None)
                     return;
 
-                Vector3 face = Vector3.Normalize(player.transform.position - hit.point);
-                int rotate = Mathf.Abs(face.x) > Mathf.Abs(face.z) ? 0 : 1;
-
-                BlockTypeEnum ploughBlockType = (BlockTypeEnum)tagetBlock.blockInfo.plough_change;
-                //替换为耕地方块
-                chunkForHit.SetBlockForLocal(localPosition, ploughBlockType, direction, BlockPloughGrass.ToMetaData(rotate));
-
-                //播放粒子特效
-                BlockCptBreak.PlayBlockCptBreakEffect(ploughBlockType, targetPosition + new Vector3(0.5f, 0.5f, 0.5f));
+                //种植的方块
+                BlockTypeEnum plantBlockType = (BlockTypeEnum)itemsInfo.type_id;
+                //初始化meta数据
+                string metaData = BlockPlantExtension.ToMetaData(0,false);
+                //替换为种植
+                chunkForHit.SetBlockForLocal(upLocalPosition, plantBlockType, DirectionEnum.UP, metaData);
             }
         }
     }
-
 }

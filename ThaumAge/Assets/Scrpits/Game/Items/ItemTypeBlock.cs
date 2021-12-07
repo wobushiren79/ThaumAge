@@ -1,7 +1,7 @@
 ﻿using UnityEditor;
 using UnityEngine;
 
-public class ItemBlock : Item
+public class ItemTypeBlock : Item
 {
     public override void Use()
     {
