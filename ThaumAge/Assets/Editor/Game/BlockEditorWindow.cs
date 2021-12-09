@@ -9,6 +9,7 @@ public class BlockEditorWindow : EditorWindow
 {
     protected readonly string Path_Block_Png = "Assets/Texture";
     protected readonly string Path_Block_Textures = "Assets/Texture/Block";
+    protected readonly string Path_Block_Mesh = "Assets/Art/FBX/Block";
 
     protected string queryBlockIds;
     protected string queryBlockName;
@@ -39,12 +40,7 @@ public class BlockEditorWindow : EditorWindow
     {
         scrollPosition = GUILayout.BeginScrollView(scrollPosition);
         GUILayout.BeginVertical();
-
-        if (EditorUI.GUIButton("刷新数据"))
-        {
-            RefreshData();
-        }
-
+        UIForBase();
         GUILayout.Space(50);
         UIForQuery();
         GUILayout.Space(50);
@@ -63,6 +59,21 @@ public class BlockEditorWindow : EditorWindow
     {
         filesNameForTexture = Directory.GetFiles(Path_Block_Textures);
         listQueryData.Clear();
+    }
+
+    protected void UIForBase()
+    {
+        GUILayout.BeginHorizontal();
+        if (EditorUI.GUIButton("刷新数据"))
+        {
+            RefreshData();
+        }
+        if (EditorUI.GUIButton("刷新所有方块资源（贴图 mesh数据）", 300))
+        {
+            CreateBlockTexture(2048);
+            CreateBlockMeshData();
+        }
+        GUILayout.EndHorizontal();
     }
 
     /// <summary>
@@ -278,5 +289,24 @@ public class BlockEditorWindow : EditorWindow
         AssetDatabase.Refresh();
     }
 
-
+    /// <summary>
+    /// 创建所有方块的mesh数据
+    /// </summary>
+    public void CreateBlockMeshData()
+    {
+        FileInfo[] files = FileUtil.GetFilesByPath($"{Path_Block_Mesh}");
+        if (files.IsNull())
+        {
+            LogUtil.Log("CreateBlockMeshData Fail No Block");
+            return;
+        }
+        for (int i = 0; i < files.Length; i++)
+        {
+            FileInfo itemFile = files[i];
+            if (itemFile.Name.Contains(".meta"))
+                continue;
+            LogUtil.Log($"CreateBlockMeshData:{itemFile.Name}");
+            Object[] objs = EditorUtil.GetAssetsByPath(Path_Block_Mesh);
+        }
+    }
 }

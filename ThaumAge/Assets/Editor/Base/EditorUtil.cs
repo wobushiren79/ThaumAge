@@ -81,13 +81,31 @@ public static class EditorUtil
     }
 
     /// <summary>
+    /// 通过路径获取资源 具体到每一个资源路径
+    /// </summary>
+    /// <param name="path">例如：“Assets/MyTextures/hello.png”</param>
+    /// <param name="type">0所有子资源 1只返回可见的子资源</param>
+    /// <returns></returns>
+    public static UnityEngine.Object[] GetAssetsByPath(string path,int type = 0)
+    {
+        switch (type) 
+        {
+            case 0:
+                return AssetDatabase.LoadAllAssetsAtPath(path);
+            case 1:
+                return AssetDatabase.LoadAllAssetRepresentationsAtPath(path);
+        }
+        return null;
+    }
+
+    /// <summary>
     /// 获取脚本路径
     /// </summary>
     /// <param name="scriptName"></param>
     /// <returns></returns>
     public static string[] GetScriptPath(string scriptName)
     {
-        string[] uuids = AssetDatabase.FindAssets(scriptName,new string[] { "Assets" } );
+        string[] uuids = AssetDatabase.FindAssets(scriptName, new string[] { "Assets" });
         List<string> listData = new List<string>();
         for (int i = 0; i < uuids.Length; i++)
         {
@@ -108,7 +126,7 @@ public static class EditorUtil
     /// <param name="templatesPath">模板路径</param>
     /// <param name="fileName">文件名（不用加.cs）</param>
     /// <param name="createPath">创建路径</param>
-    public static void CreateClass(Dictionary<string,string> dicReplace, string templatesPath, string fileName, string createPath)
+    public static void CreateClass(Dictionary<string, string> dicReplace, string templatesPath, string fileName, string createPath)
     {
         if (templatesPath.IsNull())
         {
@@ -157,7 +175,7 @@ public static class EditorUtil
     }
     public static bool CheckIsPrefabMode()
     {
-       return  CheckIsPrefabMode(out UnityEditor.SceneManagement.PrefabStage prefabStage);
+        return CheckIsPrefabMode(out UnityEditor.SceneManagement.PrefabStage prefabStage);
     }
 
 
