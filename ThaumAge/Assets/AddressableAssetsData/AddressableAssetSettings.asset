@@ -55,6 +55,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: de886578659efa544a01d3cfcfa83ca0, type: 2}
   - {fileID: 11400000, guid: e043cc008b1ee0442a2751e7e86125ad, type: 2}
   - {fileID: 11400000, guid: 3da29fcc08da2854e8500bc964684a22, type: 2}
+  - {fileID: 11400000, guid: c76edfd232aa6dd47b8002dc5da409b7, type: 2}
   m_BuildSettings:
     m_CompileScriptsInVirtualMode: 0
     m_CleanupStreamingAssetsAfterBuilds: 1
@@ -96,6 +97,7 @@ MonoBehaviour:
   m_LabelTable:
     m_LabelNames:
     - BlockMats
+    - BlockMesh
   m_SchemaTemplates: []
   m_GroupTemplateObjects:
   - {fileID: 11400000, guid: dcf7ac851c1308e459fd8f7bbf93c897, type: 2}
