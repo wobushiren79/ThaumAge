@@ -16,7 +16,7 @@ public class FileUtil
         StreamWriter writer = null;
         try
         {
-            String filePathName = filePath + "/" + fileName;
+            string filePathName = filePath + "/" + fileName;
             DeleteFile(filePathName);
             writer = new StreamWriter(filePathName, false, Encoding.Default);
             writer.Write(strData);

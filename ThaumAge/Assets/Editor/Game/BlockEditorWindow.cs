@@ -73,6 +73,14 @@ public class BlockEditorWindow : EditorWindow
             CreateBlockTexture(2048);
             CreateBlockMeshData();
         }
+        if (EditorUI.GUIButton("生成方块图片", 150))
+        {
+            CreateBlockTexture(2048);
+        }
+        if (EditorUI.GUIButton("生成方块mesh数据", 150))
+        {
+            CreateBlockMeshData();
+        }
         GUILayout.EndHorizontal();
     }
 
@@ -218,8 +226,6 @@ public class BlockEditorWindow : EditorWindow
     /// </summary>
     protected void UIForCreateTexture()
     {
-        if (EditorUI.GUIButton("生成方块图片", 150))
-            CreateBlockTexture(2048);
         string nameBothFaceSwingUniform = BlockMaterialEnum.BothFaceSwingUniform.GetEnumName();
         string nameBothFaceSwing = BlockMaterialEnum.BothFaceSwing.GetEnumName();
 
@@ -306,7 +312,12 @@ public class BlockEditorWindow : EditorWindow
             if (itemFile.Name.Contains(".meta"))
                 continue;
             LogUtil.Log($"CreateBlockMeshData:{itemFile.Name}");
-            Object[] objs = EditorUtil.GetAssetsByPath(Path_Block_Mesh);
+            MeshFilter meshFilter = EditorUtil.GetAssetByPath<MeshFilter>($"{Path_Block_Mesh}/{itemFile.Name}");
+            MeshData meshData = new MeshData(meshFilter.sharedMesh);
+            string jsonData = JsonUtil.ToJson(meshData);
+            FileUtil.CreateTextFile($"{Application.dataPath}/Prefabs/BlockMesh",$"{itemFile.Name.Replace(".prefab","")}", jsonData);
+
+            AddressableUtil.FindOrCreateGroup("BlockMesh");
         }
     }
 }
