@@ -108,4 +108,13 @@ public class BlockInfoBean : BaseBean
         return offsetBorder;
     }
 
+    /// <summary>
+    /// 获取方块网格数据
+    /// </summary>
+    public MeshData GetBlockMeshData()
+    {
+        BlockTypeEnum blockType = GetBlockType();
+        TextAsset textAsset = LoadAddressablesUtil.LoadAssetSync<TextAsset>($"Assets/Prefabs/BlockMesh/Block{blockType.GetEnumName()}");
+        return JsonUtil.FromJson<MeshData>(textAsset.text);
+    }
 }

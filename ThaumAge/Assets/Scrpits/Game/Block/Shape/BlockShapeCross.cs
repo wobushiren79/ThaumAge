@@ -96,11 +96,11 @@ public class BlockShapeCross : Block
         int index = chunk.chunkMeshData.verts.Count;
         int triggerIndex = chunk.chunkMeshData.vertsTrigger.Count;
 
-        List<int> trisBothFaceSwingData = chunk.chunkMeshData.dicTris[blockInfo.material_type];
+        List<int> trisData = chunk.chunkMeshData.dicTris[blockInfo.material_type];
         List<int> trisCollider = chunk.chunkMeshData.trisCollider;
         List<int> trisTrigger = chunk.chunkMeshData.trisTrigger;
 
-        AddTris(index, trisBothFaceSwingData, trisAdd);
+        AddTris(index, trisData, trisAdd);
         if (blockInfo.collider_state == 1)
             AddTris(triggerIndex, trisCollider, trisColliderAdd);
         if (blockInfo.trigger_state == 1)

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UnityEditor;
+using UnityEditor.AddressableAssets.Settings;
 using UnityEngine;
 
 public class BlockEditorWindow : EditorWindow
@@ -306,6 +307,8 @@ public class BlockEditorWindow : EditorWindow
             LogUtil.Log("CreateBlockMeshData Fail No Block");
             return;
         }
+        AddressableAssetGroup addressableAssetGroup = AddressableUtil.FindOrCreateGroup("BlockMesh");
+
         for (int i = 0; i < files.Length; i++)
         {
             FileInfo itemFile = files[i];
@@ -315,9 +318,11 @@ public class BlockEditorWindow : EditorWindow
             MeshFilter meshFilter = EditorUtil.GetAssetByPath<MeshFilter>($"{Path_Block_Mesh}/{itemFile.Name}");
             MeshData meshData = new MeshData(meshFilter.sharedMesh);
             string jsonData = JsonUtil.ToJson(meshData);
-            FileUtil.CreateTextFile($"{Application.dataPath}/Prefabs/BlockMesh",$"{itemFile.Name.Replace(".prefab","")}", jsonData);
-
-            AddressableUtil.FindOrCreateGroup("BlockMesh");
+            string saveFileName= $"{itemFile.Name.Replace(".prefab", "")}";
+            //创建文件
+            FileUtil.CreateTextFile($"{Application.dataPath}/Prefabs/BlockMesh", saveFileName, jsonData);
+            //添加到addressable中
+            AddressableUtil.AddAssetEntry(addressableAssetGroup,$"Assets/Prefabs/BlockMesh/{saveFileName}", saveFileName);
         }
     }
 }
