@@ -117,7 +117,7 @@ public class ControlForPlayer : ControlForBase
         }
         characterController.Move(playerVelocity);
         //播放跳跃动画
-        character.characterAnim.PlayJump(isJump);
+        character.characterAnim.aiCreatureAnim.PlayJump(isJump);
     }
 
     /// <summary>
@@ -161,7 +161,7 @@ public class ControlForPlayer : ControlForBase
         ItemsBean itemsData = userData.GetItemsFromShortcut();
         ItemsHandler.Instance.UseItem(itemsData);
         //播放使用动画
-        character.characterAnim.PlayUse(true);
+        character.characterAnim.aiCreatureAnim.PlayUse(true);
     }
 
 
@@ -189,7 +189,7 @@ public class ControlForPlayer : ControlForBase
     public void HandleForUseCanel(CallbackContext callback)
     {
         isUseItem = false;
-        character.characterAnim.PlayUse(false);
+        character.characterAnim.aiCreatureAnim.PlayUse(false);
     }
 
     /// <summary>
@@ -219,11 +219,11 @@ public class ControlForPlayer : ControlForBase
 
         if (moveOffset.x == 0 && moveOffset.y == 0)
         {
-            character.characterAnim.PlayBaseAnim(CharacterAnimBaseState.Idle);
+            character.characterAnim.aiCreatureAnim.PlayBaseAnim(CharacterAnimBaseState.Idle);
         }
         else
         {
-            character.characterAnim.PlayBaseAnim(CharacterAnimBaseState.Walk);
+            character.characterAnim.aiCreatureAnim.PlayBaseAnim(CharacterAnimBaseState.Walk);
         }
     }
 

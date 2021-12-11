@@ -7,6 +7,11 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
+      name: Skeleton-0_palette
+    second: {fileID: 2100000, guid: 3253928a358acce409c8a8caea306dbc, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
       name: skeleton_palette
     second: {fileID: 2100000, guid: 322b0d973c0671a42b0ece0bb2a7d89e, type: 2}
   materials:
