@@ -167,8 +167,8 @@ public class ExcelEditorWindow : EditorWindow
             {
                 fs.Close();
             }
-
         }
+        AssetDatabase.Refresh();
     }
 
     void CreateEntities()
@@ -223,6 +223,7 @@ public class ExcelEditorWindow : EditorWindow
                 fs.Close();
             }
         }
+        AssetDatabase.Refresh();
     }
 
     void CreateEntity(ExcelWorksheet sheet)
@@ -262,5 +263,6 @@ public class ExcelEditorWindow : EditorWindow
         {
             LogUtil.LogError($"Excel转json时创建对应的实体类出错，实体类为：{sheet.Name},e:{e.Message}");
         }
+        AssetDatabase.Refresh();
     }
 }

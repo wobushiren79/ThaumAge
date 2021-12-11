@@ -314,15 +314,22 @@ public class BlockEditorWindow : EditorWindow
             FileInfo itemFile = files[i];
             if (itemFile.Name.Contains(".meta"))
                 continue;
+            if (itemFile.Name.Contains("_Model"))
+                continue;
             LogUtil.Log($"CreateBlockMeshData:{itemFile.Name}");
-            MeshFilter meshFilter = EditorUtil.GetAssetByPath<MeshFilter>($"{Path_Block_Mesh}/{itemFile.Name}");
-            MeshData meshData = new MeshData(meshFilter.sharedMesh);
+            GameObject obj = EditorUtil.GetAssetByPath<GameObject>($"{Path_Block_Mesh}/{itemFile.Name}");
+            MeshFilter meshFilter = obj.GetComponentInChildren<MeshFilter>();
+            Collider collider = obj.GetComponentInChildren<Collider>();
+            MeshData meshData = new MeshData(collider,meshFilter.sharedMesh,0.625f,new Vector3(0.5f,0f,0.5f));
             string jsonData = JsonUtil.ToJson(meshData);
-            string saveFileName= $"{itemFile.Name.Replace(".prefab", "")}";
+            string saveFileName = $"{itemFile.Name.Replace(".prefab", "").Replace(".obj","")}";
             //创建文件
-            FileUtil.CreateTextFile($"{Application.dataPath}/Prefabs/BlockMesh", saveFileName, jsonData);
+            FileUtil.CreateTextFile($"{Application.dataPath}/Prefabs/BlockMesh", $"{saveFileName}.txt", jsonData);
             //添加到addressable中
-            AddressableUtil.AddAssetEntry(addressableAssetGroup,$"Assets/Prefabs/BlockMesh/{saveFileName}", saveFileName);
+            string addressName = $"Assets/Prefabs/BlockMesh/{saveFileName}.txt";
+            AddressableUtil.AddAssetEntry(addressableAssetGroup, addressName, addressName);
         }
+
+        AssetDatabase.Refresh();
     }
 }

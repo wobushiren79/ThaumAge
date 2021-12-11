@@ -94,7 +94,6 @@ public class BlockShapeCross : Block
         base.BaseAddTris(chunk, localPosition, direction);
 
         int index = chunk.chunkMeshData.verts.Count;
-        int triggerIndex = chunk.chunkMeshData.vertsTrigger.Count;
 
         List<int> trisData = chunk.chunkMeshData.dicTris[blockInfo.material_type];
         List<int> trisCollider = chunk.chunkMeshData.trisCollider;
@@ -102,9 +101,15 @@ public class BlockShapeCross : Block
 
         AddTris(index, trisData, trisAdd);
         if (blockInfo.collider_state == 1)
-            AddTris(triggerIndex, trisCollider, trisColliderAdd);
+        {
+            int colliderIndex = chunk.chunkMeshData.vertsCollider.Count;
+            AddTris(colliderIndex, trisCollider, trisColliderAdd);
+        }
         if (blockInfo.trigger_state == 1)
+        {
+            int triggerIndex = chunk.chunkMeshData.vertsTrigger.Count;
             AddTris(triggerIndex, trisTrigger, trisColliderAdd);
+        }
     }
 
     public override void BaseAddUVs(Chunk chunk, Vector3Int localPosition, DirectionEnum direction)

@@ -277,7 +277,12 @@ public class BlockShapeCube : Block
         base.BaseAddTris(chunk, localPosition, direction);
 
         int index = chunk.chunkMeshData.verts.Count;
-        int indexCollider = chunk.chunkMeshData.vertsCollider.Count;
+        int indexCollider = 0;
+
+        if (blockInfo.collider_state == 1)
+            indexCollider = chunk.chunkMeshData.vertsCollider.Count;
+        if (blockInfo.trigger_state == 1)
+            indexCollider = chunk.chunkMeshData.trisCollider.Count;
 
         List<int> trisNormal = chunk.chunkMeshData.dicTris[blockInfo.material_type];
         List<int> trisCollider = chunk.chunkMeshData.trisCollider;

@@ -16,7 +16,12 @@ MonoBehaviour:
   m_Data:
     m_SerializedData: []
   m_GUID: 4402f9f4a00ec714db35e5caa08d74f6
-  m_SerializeEntries: []
+  m_SerializeEntries:
+  - m_GUID: 7dba8aa21ba23a34c8d9433694bdf350
+    m_Address: Assets/Prefabs/BlockMesh/BlockStairsWood.txt
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - BlockMesh
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: fd6114d87f1af534fbf270c47c0f10bf, type: 2}
   m_SchemaSet:

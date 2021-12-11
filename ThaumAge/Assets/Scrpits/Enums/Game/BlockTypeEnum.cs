@@ -47,6 +47,8 @@ public enum BlockTypeEnum
 
     PlantPotato = 5001,//ÖÖÖ² ÍÁ¶¹
 
+    StairsWood = 6001,//Ä¾Â¥Ìİ
+
     Water = 9001,//Ë®
     Magma = 9002,//ÑÒ½¬
 }

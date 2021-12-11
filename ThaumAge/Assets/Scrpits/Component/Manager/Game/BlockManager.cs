@@ -48,7 +48,7 @@ public class BlockManager : BaseManager, IBlockInfoView
         LoadAddressablesUtil.LoadAssetsAsync<Material>(pathForBlockMats, (data) =>
         {
             IList<Material> listMat = data.Result;
-            arrayBlockMat = new Material[listMat.Count+1];
+            arrayBlockMat = new Material[listMat.Count];
             for (int i = 0; i < listMat.Count; i++)
             {
                 //按照名字中的下标 确认每个材质球的顺序

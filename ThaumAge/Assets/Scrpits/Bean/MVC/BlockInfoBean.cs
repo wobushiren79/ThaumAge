@@ -114,7 +114,7 @@ public class BlockInfoBean : BaseBean
     public MeshData GetBlockMeshData()
     {
         BlockTypeEnum blockType = GetBlockType();
-        TextAsset textAsset = LoadAddressablesUtil.LoadAssetSync<TextAsset>($"Assets/Prefabs/BlockMesh/Block{blockType.GetEnumName()}");
+        TextAsset textAsset = LoadAddressablesUtil.LoadAssetSync<TextAsset>($"Assets/Prefabs/BlockMesh/Block{blockType.GetEnumName()}.txt");
         return JsonUtil.FromJson<MeshData>(textAsset.text);
     }
 }

@@ -47,6 +47,11 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels:
     - BlockMats
+  - m_GUID: 322b0d973c0671a42b0ece0bb2a7d89e
+    m_Address: Assets/Prefabs/Mats/BlockCommon_0.mat
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - BlockMats
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: fd6114d87f1af534fbf270c47c0f10bf, type: 2}
   m_SchemaSet:
