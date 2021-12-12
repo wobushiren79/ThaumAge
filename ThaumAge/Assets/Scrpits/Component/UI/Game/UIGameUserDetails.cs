@@ -5,6 +5,13 @@ using UnityEngine.UI;
 public partial class UIGameUserDetails : UIGameCommonNormal,IRadioGroupCallBack
 {
     public int labelIndex = 0;
+
+    public override void OpenUI()
+    {
+        base.OpenUI();
+        ui_ViewBackPack.InitData();
+    }
+
     public override void RefreshUI()
     {
         base.RefreshUI();

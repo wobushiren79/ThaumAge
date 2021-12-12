@@ -11,6 +11,7 @@ public partial class UIViewBackpackList : BaseUIView
     {
         UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();
         listBackpack = userData.listBackpack;
+        ui_ItemList.AddCellListener(OnCellForItem);
         ui_ItemList.SetCellCount(listBackpack.Length);
     }
 
@@ -20,8 +21,9 @@ public partial class UIViewBackpackList : BaseUIView
     /// <param name="itemCell"></param>
     public void OnCellForItem(ScrollGridCell itemCell)
     {
+        UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();
         UIViewItemContainer viewItemContainer = itemCell.GetComponent<UIViewItemContainer>();
-        ItemsBean itemsData = listBackpack[itemCell.index];
-        viewItemContainer.SetData(itemsData, new Vector2Int(itemCell.index, 0));
+        ItemsBean itemsData = userData.GetItemsFromBackpack(itemCell.index);
+        viewItemContainer.SetData(itemsData, itemCell.index);
     }
 }

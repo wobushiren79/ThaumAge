@@ -19,7 +19,7 @@ public class ItemsManager : BaseManager, IItemsInfoView
     protected Dictionary<long, Texture> dicItemsTex = new Dictionary<long, Texture>();
 
     //路径-道具丢弃模型
-    public static string pathForItemCptDrop = "Assets/Prefabs/Game/ItemCptDrop.prefab";
+    public static string pathForItemDrop = "Assets/Prefabs/Game/ItemDrop.prefab";
     protected void Awake()
     {
         controllerForItems = new ItemsInfoController(this, this);
@@ -146,7 +146,7 @@ public class ItemsManager : BaseManager, IItemsInfoView
                 if (id == -1)
                 {
                     //添加道具掉落模型
-                    GetModelForAddressables(dicItemsObj, -1, pathForItemCptDrop, callBack);
+                    GetModelForAddressables(dicItemsObj, -1, pathForItemDrop, callBack);
                 }
             }
         }

@@ -129,6 +129,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mrBlockBreak: {fileID: 7449960917816759502}
+  position: {x: 0, y: 0, z: 0}
+  blockLife: 0
+  isNeedDestory: 0
   listBreakTex:
   - {fileID: 2800000, guid: a05a46604d5fbcb48861cb9ffe729e84, type: 3}
   - {fileID: 2800000, guid: 9c534514365ee4340bd15aa55153f31a, type: 3}

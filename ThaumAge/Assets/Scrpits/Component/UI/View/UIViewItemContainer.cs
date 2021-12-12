@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public partial class UIViewItemContainer : BaseUIView
 {
     //位置
-    public Vector2Int viewIndex;
+    public int viewIndex;
     //道具
     protected UIViewItem currentViewItem;
     //容器指向的数据
@@ -17,7 +17,7 @@ public partial class UIViewItemContainer : BaseUIView
         ui_ViewItemModel.ShowObj(false);
     }
 
-    public void SetData(ItemsBean itemsData, Vector2Int viewIndex)
+    public void SetData(ItemsBean itemsData, int viewIndex)
     {
         this.itemsData = itemsData;
         this.viewIndex = viewIndex;

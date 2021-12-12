@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class BlockCptBreak : BaseMonoBehaviour
 {
-    public MeshRenderer mrBlockCptBreak;
+    public MeshRenderer mrBlockBreak;
     public Block block;
     public Vector3Int position;
 
@@ -121,7 +121,7 @@ public class BlockCptBreak : BaseMonoBehaviour
         else
         {
             Texture2D tex2D = listBreakTex[index];
-            mrBlockCptBreak.material.SetTexture("_BaseColorMap", tex2D);
+            mrBlockBreak.material.SetTexture("_BaseColorMap", tex2D);
         }
         currentProIndex = index;
     }

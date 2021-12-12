@@ -57,8 +57,8 @@ public class BlockHandler : BaseHandler<BlockHandler, BlockManager>
             else
             {
                 //创建破碎效果
-                GameObject objBlockCptBreak = Instantiate(gameObject, manager.BlockCptBreakModel);
-                BlockCptBreak = objBlockCptBreak.GetComponent<BlockCptBreak>();
+                GameObject objBlockBreak = Instantiate(gameObject, manager.blockBreakModel);
+                BlockCptBreak = objBlockBreak.GetComponent<BlockCptBreak>();
                 BlockCptBreak.SetData(block, worldPosition);
                 dicBreakBlock.Add(worldPosition, BlockCptBreak);
             }

@@ -117,13 +117,13 @@ public class UIViewShortcuts : BaseUIView
 
         for (int i = 0; i < listShortcut.Count; i++)
         {
-            listShortcut[i].SetData(userData.GetItemsFromShortcut(i), new Vector2Int(i, 0));
+            listShortcut[i].SetData(userData.GetItemsFromShortcut(i), i);
         }
 
         for (int i = 0; i < listShortcut.Count; i++)
         {
             UIViewItemContainer uiViewItem = listShortcut[i];
-            if (uiViewItem.viewIndex.x == userData.indexForShortcuts)
+            if (uiViewItem.viewIndex == userData.indexForShortcuts)
             {
                 //如果选中的是当前状态栏
                 uiViewItem.SetSelectState(true);

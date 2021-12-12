@@ -18,12 +18,12 @@ public class BlockManager : BaseManager, IBlockInfoView
     public Material[] arrayBlockMat;
 
     //方块破碎模型
-    public GameObject BlockCptBreakModel;
+    public GameObject blockBreakModel;
 
     //路径-方块模型
     public static string pathForBlockModel = "Assets/Prefabs/Block";
     //路径-破碎方块
-    public static string pathForBlockCptBreak = "Assets/Prefabs/Game/BlockCptBreak.prefab";
+    public static string pathForBlockCptBreak = "Assets/Prefabs/Game/BlockBreak.prefab";
     //路径-方块材质 （使用标签）
     public static string pathForBlockMats = "BlockMats";
 
@@ -61,7 +61,7 @@ public class BlockManager : BaseManager, IBlockInfoView
             //加载方块破碎模型
             LoadAddressablesUtil.LoadAssetAsync<GameObject>(pathForBlockCptBreak, (obj) =>
             {
-                BlockCptBreakModel = obj.Result;
+                blockBreakModel = obj.Result;
                 callBack?.Invoke();
             });
         });

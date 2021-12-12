@@ -130,7 +130,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 30, y: -30}
-  m_SizeDelta: {x: 79, y: 79}
+  m_SizeDelta: {x: 80, y: 80}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8425609392354803933
 CanvasRenderer:
@@ -362,11 +362,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3741f9e2d3d72704b934aa94845584ce, type: 3}
---- !u!224 &3494181000994542895 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 400634926404859955, guid: 3741f9e2d3d72704b934aa94845584ce, type: 3}
-  m_PrefabInstance: {fileID: 3887314891564592412}
-  m_PrefabAsset: {fileID: 0}
 --- !u!114 &853812645625611826 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 4479918756613286702, guid: 3741f9e2d3d72704b934aa94845584ce, type: 3}
@@ -378,3 +373,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b00a7a395f3a5fc40ac50fddb76f274d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!224 &3494181000994542895 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 400634926404859955, guid: 3741f9e2d3d72704b934aa94845584ce, type: 3}
+  m_PrefabInstance: {fileID: 3887314891564592412}
+  m_PrefabAsset: {fileID: 0}
