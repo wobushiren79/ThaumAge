@@ -12,7 +12,14 @@ public enum ItemsTypeEnum
     Gloves = 13,//手套
     Shoes = 14,//鞋子
 
+    Headwear = 15,//头饰
+    Ring = 16,//戒指
+    Cape = 17,//披风
+
     Hoe = 21,//锄头
+    Sword = 31,//剑
+    Knife = 32,//刀
+    Bow = 33, //弓
 
     Creature = 101,//生物
 }

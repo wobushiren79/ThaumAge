@@ -1,10 +1,13 @@
-﻿using UnityEditor;
+﻿using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public partial class UIViewItemContainer : BaseUIView
 {
+    [Header("限制的物品类型")]
+    public List<ItemsTypeEnum> listLimitTypes;
     //位置
     public int viewIndex;
     //道具
@@ -17,6 +20,11 @@ public partial class UIViewItemContainer : BaseUIView
         ui_ViewItemModel.ShowObj(false);
     }
 
+    /// <summary>
+    /// 设置数据
+    /// </summary>
+    /// <param name="itemsData"></param>
+    /// <param name="viewIndex"></param>
     public void SetData(ItemsBean itemsData, int viewIndex)
     {
         this.itemsData = itemsData;
@@ -25,6 +33,45 @@ public partial class UIViewItemContainer : BaseUIView
 
         //设置暂时信息
         ui_ViewItemContainer.SetItemId(itemsData.itemId);
+    }
+
+    /// <summary>
+    /// 设置提示文本
+    /// </summary>
+    /// <param name="hintText"></param>
+    public void SetHintText(string hintText)
+    {
+
+    }
+
+    /// <summary>
+    /// 设置限制放置的道具类型
+    /// </summary>
+    public void SetLimitTypes(List<ItemsTypeEnum> listLimitTypes)
+    {
+        this.listLimitTypes = listLimitTypes;
+    }
+
+    /// <summary>
+    /// 检测是否能放置该道具
+    /// </summary>
+    /// <param name="itemsType"></param>
+    /// <returns>true能设置 false不能设置</returns>
+    public bool CheckCanSetItem(ItemsTypeEnum itemsType)
+    {
+        if (listLimitTypes.IsNull())
+        {
+            return true;
+        }
+        for (int i = 0; i < listLimitTypes.Count; i++)
+        {
+            ItemsTypeEnum limitType = listLimitTypes[i];
+            if (itemsType == limitType)
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     /// <summary>
@@ -59,7 +106,7 @@ public partial class UIViewItemContainer : BaseUIView
     /// 设置容器道具
     /// </summary>
     /// <param name="uiView"></param>
-    public void SetViewItem(UIViewItem uiView)
+    public bool SetViewItem(UIViewItem uiView)
     {
         this.currentViewItem = uiView;
         this.currentViewItem.originalParent = this;
@@ -68,6 +115,7 @@ public partial class UIViewItemContainer : BaseUIView
         itemsData.itemId = uiView.itemId;
         itemsData.number = uiView.itemNumber;
         itemsData.meta = uiView.meta;
+        return true;
     }
 
     /// <summary>

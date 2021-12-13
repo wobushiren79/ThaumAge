@@ -191,18 +191,33 @@ public partial class UIViewItem : BaseUIView, IBeginDragHandler, IDragHandler, I
         if (objTarget != null)
         {
             UIViewItemContainer viewItemContainer = objTarget.GetComponent<UIViewItemContainer>();
+            //是否能放置当前物品
+            bool canSetItem = true;
+
             //如果检测到容器 说明只有容器 里面没有道具
             if (viewItemContainer != null)
             {
+                //检测容器是否能放置当前物品
+                canSetItem = viewItemContainer.CheckCanSetItem(itemsInfo.GetItemsType());
+
                 UIViewItem tempViewItem = viewItemContainer.GetViewItem();
                 if (tempViewItem == null)
                 {
-                    //如果容器里没有道具 则直接设置容器的道具为当前道具
-                    //首先清空原容器里的数据
-                    originalParent.ClearViewItem();
-                    //设置新的容器
-                    viewItemContainer.SetViewItem(this);
-                    AnimForPositionChange(timeForMove, null);
+                    //如果能放置
+                    if (canSetItem)
+                    {
+                        //如果容器里没有道具 则直接设置容器的道具为当前道具
+                        //首先清空原容器里的数据
+                        originalParent.ClearViewItem();
+                        //设置新的容器
+                        viewItemContainer.SetViewItem(this);
+                        AnimForPositionChange(timeForMove, null);
+                    }
+                    else
+                    {        
+                        //如果没有设置成功（不能放置该类型），则返回原容器
+                        HandleForBackOriginalContainer();
+                    }
                     return;
                 }
                 else
@@ -216,8 +231,8 @@ public partial class UIViewItem : BaseUIView, IBeginDragHandler, IDragHandler, I
             //如果检测到道具 说明容器里有道具
             if (viewItem != null)
             {
-                //如果目标是同一类物品
-                if (viewItem.itemsInfo.type_id == itemsInfo.type_id)
+                //如果目标是同一物品
+                if (viewItem.itemsInfo.id == itemsInfo.id)
                 {
                     //如果目标是无限物品 则删除现有物品
                     if (viewItem.itemNumber == int.MaxValue)
@@ -273,40 +288,51 @@ public partial class UIViewItem : BaseUIView, IBeginDragHandler, IDragHandler, I
                     //如果是目标不是无限物品，则交换物品位置
                     else
                     {
-                        //交换位置
-                        UIViewItemContainer dargContainer = this.originalParent;
-                        UIViewItemContainer targetContainer = viewItem.originalParent;
-                        //交换父级
-                        if(dargContainer.GetViewItem()!=null && dargContainer.GetViewItem().itemNumber == int.MaxValue)
-                        {                         
-                            //如果原父级有东西 则把目标容器里的物品丢出来
-                            viewItem.DropItem();
+                        if (canSetItem)
+                        {
+                            //交换位置
+                            UIViewItemContainer dargContainer = this.originalParent;
+                            UIViewItemContainer targetContainer = viewItem.originalParent;
+                            //交换父级
+                            if (dargContainer.GetViewItem() != null && dargContainer.GetViewItem().itemNumber == int.MaxValue)
+                            {
+                                //如果原父级有东西 则把目标容器里的物品丢出来
+                                viewItem.DropItem();
+                            }
+                            else
+                            {
+                                //如果原父级没有东西 则交换父级
+                                dargContainer.SetViewItem(viewItem);
+                                //设置位置
+                                viewItem.rectTransform.anchoredPosition = Vector2.zero;
+                                viewItem.transform.localScale = Vector3.one;
+                            }
+                            targetContainer.SetViewItem(this);
+                            //设置位置
+                            transform.localScale = Vector3.one;
+                            AnimForPositionChange(timeForMove, () => { });
+                            return;
                         }
                         else
                         {
-                            //如果原父级没有东西 则交换父级
-                            dargContainer.SetViewItem(viewItem);
-                            //设置位置
-                            viewItem.rectTransform.anchoredPosition = Vector2.zero;
-                            viewItem.transform.localScale = Vector3.one;
+                            //如果不能设置该物品（容器不能装该类型） 则返回
+                            HandleForBackOriginalContainer();
+                            return;
                         }
-                        targetContainer.SetViewItem(this);
-                        //设置位置
-                        transform.localScale = Vector3.one;
-                        AnimForPositionChange(timeForMove, () => { });
-                        return;
                     }
                 }
             }
             else
             {
                 HandleForBackOriginalContainer();
+                return;
             }
         }
         else
         {
             //如果什么都没有检测到，说明是把物体丢到场景中
             DropItem();
+            return;
         }
     }
 

@@ -58,20 +58,20 @@ public class BiomeMapData
 
 
         //Y轴是否有方块 
-        yHasBlock = new bool[maxHeight + 2];
-        for (int i = 0; i < yHasBlock.Length; i++)
-        {       
-            float caveNoise = fastNoise.GetPerlinFractal(wPos.x * 5f, i * 10f, wPos.z * 5f);
-            float caveMask = fastNoise.GetSimplex(wPos.x * .3f, wPos.z * .3f) + .6f;
+        yHasBlock = new bool[0];
+        //for (int i = 0; i < yHasBlock.Length; i++)
+        //{       
+        //    float caveNoise = fastNoise.GetPerlinFractal(wPos.x * 5f, i * 10f, wPos.z * 5f);
+        //    float caveMask = fastNoise.GetSimplex(wPos.x * .3f, wPos.z * .3f) + .6f;
 
-            if (caveNoise > Mathf.Max(caveMask, .2f))
-            {
-                yHasBlock[i] = false;
-            }
-            else
-            {
-                yHasBlock[i] = true;
-            }
-        }
+        //    if (caveNoise > Mathf.Max(caveMask, .2f))
+        //    {
+        //        yHasBlock[i] = false;
+        //    }
+        //    else
+        //    {
+        //        yHasBlock[i] = true;
+        //    }
+        //}
     }
 }

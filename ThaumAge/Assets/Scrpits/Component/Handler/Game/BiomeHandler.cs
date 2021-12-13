@@ -145,9 +145,6 @@ public class BiomeHandler : BaseHandler<BiomeHandler, BiomeManager>
 
         ////在采样结果上，叠加上baseHeight，限制随机生成的高度下限
         return Mathf.FloorToInt(noise0 + noise1 + noise2 + minHeight);
-
-        //float noise0 = Mathf.PerlinNoise(x0, z0) * amplitude;
-        //return Mathf.FloorToInt(noise0 + minHeight);
     }
 
     /// <summary>
