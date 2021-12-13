@@ -56,6 +56,8 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 34daaf0223462eb499ca801194f1c1cf, type: 3}
   - {fileID: 21300000, guid: 91f28222d63869f43bdd60bc005bce84, type: 3}
   - {fileID: 21300000, guid: dd882182ed9807849a0f9361dd7e32fd, type: 3}
+  - {fileID: 21300000, guid: c8347fc265edbdf43b5fc8fa138d5563, type: 3}
+  - {fileID: 21300000, guid: 36e092a321baea1448d890d017217eac, type: 3}
   - {fileID: 21300000, guid: 68b4dfa3189dae74298a1ab031e6cee0, type: 3}
   - {fileID: 21300000, guid: 693413c3d6d220349b07ae10bd1c6000, type: 3}
   - {fileID: 21300000, guid: 9d676a642bcdee848a0a0e1898f2a852, type: 3}
@@ -100,6 +102,8 @@ SpriteAtlas:
   - icon_stone_moss
   - icon_item_2100001
   - icon_tree_world
+  - icon_item_106001
+  - icon_item_10100001
   - icon_flower_sunflower
   - icon_stone_volcanic
   - icon_tree_silver

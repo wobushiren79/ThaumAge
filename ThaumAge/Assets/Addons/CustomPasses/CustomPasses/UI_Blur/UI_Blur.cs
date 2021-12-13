@@ -18,7 +18,7 @@ class ScreenSpaceCameraUIBlurEditor : CustomPassDrawer
 
 class ScreenSpaceCameraUIBlur : CustomPass
 {
-    public float        blurRadius = 10;
+    public float        blurRadius = 0;
     public LayerMask    uiLayer = 1 << 5;
 
     RTHandle            downSampleBuffer;
@@ -30,7 +30,7 @@ class ScreenSpaceCameraUIBlur : CustomPass
 
         // Allocate the buffers used for the blur in half resolution to save some memory
         downSampleBuffer = RTHandles.Alloc(
-            Vector2.one * 0.5f, TextureXR.slices, dimension: TextureXR.dimension,
+            Vector2.one, TextureXR.slices, dimension: TextureXR.dimension,
             colorFormat: GraphicsFormat.B10G11R11_UFloatPack32, // We don't need alpha in the blur
             useDynamicScale: true, name: "DownSampleBuffer"
         );
@@ -47,10 +47,10 @@ class ScreenSpaceCameraUIBlur : CustomPass
         if (ctx.hdCamera.camera.cameraType == CameraType.SceneView)
             return;
         
-        //CustomPassUtils.GaussianBlur(ctx, ctx.cameraColorBuffer, ctx.cameraColorBuffer, downSampleBuffer, radius: blurRadius);
+        CustomPassUtils.GaussianBlur(ctx, ctx.cameraColorBuffer, ctx.cameraColorBuffer, downSampleBuffer, radius: blurRadius);
 
         CoreUtils.SetRenderTarget(ctx.cmd, ctx.cameraColorBuffer, ctx.customDepthBuffer.Value, ClearFlag.DepthStencil, Color.clear);
-        CustomPassUtils.DrawRenderers(ctx, uiLayer, RenderQueueType.Transparent, sorting: SortingCriteria.CommonTransparent);
+        CustomPassUtils.DrawRenderers(ctx, uiLayer, RenderQueueType.Transparent, sorting: SortingCriteria.CommonOpaque);
     }
 
     protected override void Cleanup()

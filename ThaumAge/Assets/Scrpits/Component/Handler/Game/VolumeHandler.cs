@@ -25,7 +25,7 @@ public class VolumeHandler : BaseHandler<VolumeHandler, VolumeManager>
         }
         else
         {
-            manager.SetDepthOfField(2, 8, 60, 80);
+            manager.SetDepthOfField(1f, 4f, 60, 80);
         }
     }
 }

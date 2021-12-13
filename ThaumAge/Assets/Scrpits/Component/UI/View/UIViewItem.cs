@@ -214,7 +214,7 @@ public partial class UIViewItem : BaseUIView, IBeginDragHandler, IDragHandler, I
                         AnimForPositionChange(timeForMove, null);
                     }
                     else
-                    {        
+                    {
                         //如果没有设置成功（不能放置该类型），则返回原容器
                         HandleForBackOriginalContainer();
                     }
@@ -345,7 +345,7 @@ public partial class UIViewItem : BaseUIView, IBeginDragHandler, IDragHandler, I
         Player player = GameHandler.Instance.manager.player;
         ItemsHandler.Instance.CreateItemCptDrop(itemId, itemNumber, player.transform.position + Vector3.up, ItemDropStateEnum.DropNoPick, player.transform.forward);
         DestroyImmediate(gameObject);
-        if (originalParent!=null)
+        if (originalParent != null)
         {
             //如果原容器的是本道具
             if (originalParent.GetViewItem() == this)

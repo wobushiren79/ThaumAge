@@ -383,7 +383,7 @@ MonoBehaviour:
     m_Value: 2
   nearFocusEnd:
     m_OverrideState: 1
-    m_Value: 8
+    m_Value: 4
   farFocusStart:
     m_OverrideState: 1
     m_Value: 60
