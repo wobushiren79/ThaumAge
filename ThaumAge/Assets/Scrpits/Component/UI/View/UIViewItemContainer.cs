@@ -51,6 +51,10 @@ public partial class UIViewItemContainer : BaseUIView
     {
         this.listLimitTypes = listLimitTypes;
     }
+    public void SetLimitType(ItemsTypeEnum limitType)
+    {
+        SetLimitTypes(new List<ItemsTypeEnum>() { limitType });
+    }
 
     /// <summary>
     /// 检测是否能放置该道具

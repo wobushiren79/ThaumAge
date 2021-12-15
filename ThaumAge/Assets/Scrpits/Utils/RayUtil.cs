@@ -18,7 +18,7 @@ public class RayUtil
     }
     public static void RayAllToScreenPointForScreenCenter(float maxDistance, int layerMask, out RaycastHit[] arrayHit, Camera camera = null)
     {
-        RayAllToScreenPoint(new Vector3(Screen.width / 2, Screen.height / 2, 0), maxDistance, layerMask,  out arrayHit);
+        RayAllToScreenPoint(new Vector3(Screen.width / 2, Screen.height / 2, 0), maxDistance, layerMask, out arrayHit);
     }
 
     /// <summary>
@@ -47,7 +47,7 @@ public class RayUtil
     /// <param name="isCollider"></param>
     /// <param name="hit"></param>
     /// <param name="camera"></param>
-    public static void RayToScreenPoint(Vector3 screenPoint, float maxDistance, int layerMask, out bool isCollider, out RaycastHit hit,Camera camera = null)
+    public static void RayToScreenPoint(Vector3 screenPoint, float maxDistance, int layerMask, out bool isCollider, out RaycastHit hit, Camera camera = null)
     {
         if (camera == null) camera = Camera.main;
         Ray ray = camera.ScreenPointToRay(screenPoint);
@@ -57,7 +57,7 @@ public class RayUtil
     {
         if (camera == null) camera = Camera.main;
         Ray ray = camera.ScreenPointToRay(screenPoint);
-        arrayHit = Physics.RaycastAll(ray,  maxDistance, layerMask);
+        arrayHit = Physics.RaycastAll(ray, maxDistance, layerMask);
     }
 
 
@@ -73,6 +73,18 @@ public class RayUtil
         return Physics.OverlapSphere(centerPosition, radius, layer);
     }
 
+    /// <summary>
+    /// 射线-方块
+    /// </summary>
+    /// <param name="centerPosition"></param>
+    /// <param name="halfEx"></param>
+    /// <param name="quaternion"></param>
+    /// <param name="layer"></param>
+    /// <returns></returns>
+    public static Collider[] RayToBox(Vector3 centerPosition, Vector3 halfEx, Quaternion quaternion, int layer)
+    {
+        return Physics.OverlapBox(centerPosition, halfEx, quaternion, layer);
+    }
 
     /// <summary>
     /// 射线
