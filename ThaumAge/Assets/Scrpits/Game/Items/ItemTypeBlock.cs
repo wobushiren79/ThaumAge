@@ -3,10 +3,9 @@ using UnityEngine;
 
 public class ItemTypeBlock : Item
 {
-    public override void Use()
+    protected override void UseForPlayer(Player player)
     {
-        base.Use();
-        Player player = GameHandler.Instance.manager.player;
+        base.UseForPlayer(player);
 
         //检测玩家前方是否有方块
         if (player.playerRay.RayToChunkBlock(out RaycastHit hit, out Vector3Int targetBlockPosition))

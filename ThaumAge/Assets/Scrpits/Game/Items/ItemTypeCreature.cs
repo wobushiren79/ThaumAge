@@ -3,12 +3,9 @@ using UnityEngine;
 
 public class ItemTypeCreature : Item
 {
-    public override void Use()
+    protected override void UseForPlayer(Player player)
     {
-        base.Use();
-
-        Player player = GameHandler.Instance.manager.player;
-
+        base.UseForPlayer(player);
         //检测玩家前方是否有方块
         if (player.playerRay.RayToChunkBlock(out RaycastHit hit, out Vector3Int targetBlockPosition))
         {
@@ -29,7 +26,7 @@ public class ItemTypeCreature : Item
                 //如果上方有方块 则无法放置
                 if (upBlock != null && upBlock.blockType != BlockTypeEnum.None)
                     return;
-                
+
                 CreatureHandler.Instance.CreateCreature(itemsInfo.type_id, targetPosition + Vector3Int.up);
             }
         }

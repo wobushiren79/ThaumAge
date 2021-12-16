@@ -9,7 +9,7 @@ public class ItemsHandler : BaseHandler<ItemsHandler, ItemsManager>
     /// 使用物品
     /// </summary>
     /// <param name="itemsData"></param>
-    public void UseItem(ItemsBean itemsData)
+    public void UseItem(GameObject user, ItemsBean itemsData)
     {
         Item item;
         if (itemsData == null || itemsData.itemId == 0)
@@ -27,7 +27,7 @@ public class ItemsHandler : BaseHandler<ItemsHandler, ItemsManager>
             //设置物品数据
             item.SetItemData(itemsData);
         }
-        item.Use();
+        item.Use(user);
     }
 
     /// <summary>

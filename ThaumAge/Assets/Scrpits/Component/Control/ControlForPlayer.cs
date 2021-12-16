@@ -159,7 +159,8 @@ public class ControlForPlayer : ControlForBase
         //获取道具栏上的物品
         UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();
         ItemsBean itemsData = userData.GetItemsFromShortcut();
-        ItemsHandler.Instance.UseItem(itemsData);
+        Player player = GameHandler.Instance.manager.player;
+        ItemsHandler.Instance.UseItem(player.gameObject, itemsData);
         //播放使用动画
         character.characterAnim.aiCreatureAnim.PlayUse(true);
     }

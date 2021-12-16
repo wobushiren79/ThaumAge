@@ -29,7 +29,25 @@ public class Item
     /// <summary>
     /// 使用
     /// </summary>
-    public virtual void Use()
+    public virtual void Use(GameObject user)
+    {
+        Player player = user.GetComponent<Player>();
+        if (player)
+        {
+            UseForPlayer(player);
+        }
+        else
+        {
+            UseForOther(user);
+        }
+    }
+
+    protected virtual void UseForPlayer(Player player)
+    {
+
+    }
+
+    protected virtual void UseForOther(GameObject user)
     {
 
     }
