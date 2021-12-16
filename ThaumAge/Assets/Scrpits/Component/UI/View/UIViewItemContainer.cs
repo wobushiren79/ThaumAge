@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -14,10 +15,21 @@ public partial class UIViewItemContainer : BaseUIView
     protected UIViewItem currentViewItem;
     //容器指向的数据
     protected ItemsBean itemsData;
+
+    //放置新道具回调
+    protected Action<UIViewItemContainer, long> callBackForSetViewItem;
+
     public override void Awake()
     {
         base.Awake();
+        ui_Hint.ShowObj(false);
         ui_ViewItemModel.ShowObj(false);
+    }
+
+    public override void OnDestroy()
+    {
+        base.OnDestroy();
+        callBackForSetViewItem = null;
     }
 
     /// <summary>
@@ -25,7 +37,7 @@ public partial class UIViewItemContainer : BaseUIView
     /// </summary>
     /// <param name="itemsData"></param>
     /// <param name="viewIndex"></param>
-    public void SetData(ItemsBean itemsData, int viewIndex)
+    public void SetData(ItemsBean itemsData, int viewIndex = 0)
     {
         this.itemsData = itemsData;
         this.viewIndex = viewIndex;
@@ -36,12 +48,22 @@ public partial class UIViewItemContainer : BaseUIView
     }
 
     /// <summary>
+    /// 设置新道具回调
+    /// </summary>
+    /// <param name="callBackForSetViewItem"></param>
+    public void SetCallBackForSetViewItem(Action<UIViewItemContainer, long> callBackForSetViewItem)
+    {
+        this.callBackForSetViewItem += callBackForSetViewItem;
+    }
+
+    /// <summary>
     /// 设置提示文本
     /// </summary>
     /// <param name="hintText"></param>
     public void SetHintText(string hintText)
     {
-
+        ui_Hint.ShowObj(true);
+        ui_Hint.text = hintText;
     }
 
     /// <summary>
@@ -54,6 +76,11 @@ public partial class UIViewItemContainer : BaseUIView
     public void SetLimitType(ItemsTypeEnum limitType)
     {
         SetLimitTypes(new List<ItemsTypeEnum>() { limitType });
+    }
+    public void SetLimitType(EquipTypeEnum equipType)
+    {
+        ItemsTypeEnum itemsType = UserEquipBean.EquipTypeEnumToItemsType(equipType);
+        SetLimitType(itemsType);
     }
 
     /// <summary>
@@ -119,11 +146,13 @@ public partial class UIViewItemContainer : BaseUIView
         itemsData.itemId = uiView.itemId;
         itemsData.number = uiView.itemNumber;
         itemsData.meta = uiView.meta;
+
+        callBackForSetViewItem?.Invoke(this, itemsData.itemId);
         return true;
     }
 
     /// <summary>
-    /// 设置容器道具
+    /// 设置容器道具 用于初始化
     /// </summary>
     /// <param name="itemsData"></param>
     public void SetViewItem(ItemsBean itemsData)
@@ -150,6 +179,8 @@ public partial class UIViewItemContainer : BaseUIView
             currentViewItem.transform.rotation = ui_ViewItemModel.transform.rotation;
         }
         currentViewItem.SetData(itemsData.itemId, itemsData.number, itemsData.meta);
+
+        callBackForSetViewItem?.Invoke(this, itemsData.itemId);
     }
 
 

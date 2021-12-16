@@ -17,6 +17,9 @@ public class UserDataBean
     //数据序号
     public int dataIndex;
 
+    //玩家装备数据
+    public UserEquipBean userEquip = new UserEquipBean();
+
     //游戏时间
     public TimeBean timeForGame = new TimeBean();
     //游玩时间

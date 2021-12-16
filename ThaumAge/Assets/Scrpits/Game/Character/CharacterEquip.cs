@@ -28,6 +28,35 @@ public class CharacterEquip : CharacterBase
     }
 
     /// <summary>
+    /// 改变装备
+    /// </summary>
+    /// <param name="equipType"></param>
+    /// <param name="clothesId"></param>
+    public void ChangeEquip(EquipTypeEnum equipType, long clothesId)
+    {
+        switch (equipType)
+        {
+            case EquipTypeEnum.Hats:
+                return;//帽子
+            case EquipTypeEnum.Clothes:
+                ChangeClothes(clothesId);
+                return;//衣服
+            case EquipTypeEnum.Gloves:
+                return;//手套
+            case EquipTypeEnum.Shoes:
+                return;//鞋子
+            case EquipTypeEnum.Headwear:
+                return;//头饰
+            case EquipTypeEnum.LeftRing:
+                return;//戒指
+            case EquipTypeEnum.RightRing:
+                return;//戒指
+            case EquipTypeEnum.Cape:
+                return;//披风
+        }
+    }
+
+    /// <summary>
     /// 改变衣服
     /// </summary>
     /// <param name="clothesId"></param>

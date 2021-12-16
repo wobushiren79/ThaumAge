@@ -10,21 +10,21 @@ public partial class UIViewCharacterEquip
 
     public Button ui_RotateRight;
 
-    public UIViewItemContainer ui_Equip_Head;
+    public UIViewItemContainer ui_Equip_Hats;
 
-    public UIViewItemContainer ui_Equip_Hand;
+    public UIViewItemContainer ui_Equip_Gloves;
 
-    public UIViewItemContainer ui_Equip_Body;
+    public UIViewItemContainer ui_Equip_Clothes;
 
-    public UIViewItemContainer ui_Equip_Foot;
+    public UIViewItemContainer ui_Equip_Shoes;
 
-    public UIViewItemContainer ui_Equip_AccHead;
+    public UIViewItemContainer ui_Equip_Headwear;
 
-    public UIViewItemContainer ui_Equip_AccLeftHead;
+    public UIViewItemContainer ui_Equip_LeftRing;
 
-    public UIViewItemContainer ui_Equip_AccRightHead;
+    public UIViewItemContainer ui_Equip_RightRing;
 
-    public UIViewItemContainer ui_Equip_AccCape;
+    public UIViewItemContainer ui_Equip_Cape;
 
 
 }

@@ -367,14 +367,14 @@ MonoBehaviour:
   ui_CharacterBase: {fileID: 445708444388993055}
   ui_RotateLeft: {fileID: 4875841685296560228}
   ui_RotateRight: {fileID: 2105303880768679128}
-  ui_Equip_Head: {fileID: 5142198433547115838}
-  ui_Equip_Hand: {fileID: 4945904097846105461}
-  ui_Equip_Body: {fileID: 24544931079919785}
-  ui_Equip_Foot: {fileID: 1433264695110737734}
-  ui_Equip_AccHead: {fileID: 673041086826675590}
-  ui_Equip_AccLeftHead: {fileID: 3984715000804029240}
-  ui_Equip_AccRightHead: {fileID: 6700100600289902903}
-  ui_Equip_AccCape: {fileID: 1954841166592865564}
+  ui_Equip_Hats: {fileID: 5142198433547115838}
+  ui_Equip_Gloves: {fileID: 4945904097846105461}
+  ui_Equip_Clothes: {fileID: 24544931079919785}
+  ui_Equip_Shoes: {fileID: 1433264695110737734}
+  ui_Equip_Headwear: {fileID: 673041086826675590}
+  ui_Equip_LeftRing: {fileID: 3984715000804029240}
+  ui_Equip_RightRing: {fileID: 6700100600289902903}
+  ui_Equip_Cape: {fileID: 1954841166592865564}
 --- !u!1 &8238282687196675684
 GameObject:
   m_ObjectHideFlags: 0
@@ -854,7 +854,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2677102780424032982, guid: b1fdb84f8db90d248903c3725d56f926, type: 3}
       propertyPath: m_Name
-      value: Equip_AccLeftHead
+      value: Equip_LeftRing
       objectReference: {fileID: 0}
     - target: {fileID: 3248147030210079950, guid: b1fdb84f8db90d248903c3725d56f926, type: 3}
       propertyPath: m_Pivot.x
@@ -967,7 +967,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2677102780424032982, guid: b1fdb84f8db90d248903c3725d56f926, type: 3}
       propertyPath: m_Name
-      value: Equip_Foot
+      value: Equip_Shoes
       objectReference: {fileID: 0}
     - target: {fileID: 3248147030210079950, guid: b1fdb84f8db90d248903c3725d56f926, type: 3}
       propertyPath: m_Pivot.x
@@ -1080,7 +1080,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2677102780424032982, guid: b1fdb84f8db90d248903c3725d56f926, type: 3}
       propertyPath: m_Name
-      value: Equip_AccCape
+      value: Equip_Cape
       objectReference: {fileID: 0}
     - target: {fileID: 3248147030210079950, guid: b1fdb84f8db90d248903c3725d56f926, type: 3}
       propertyPath: m_Pivot.x
@@ -1193,7 +1193,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2677102780424032982, guid: b1fdb84f8db90d248903c3725d56f926, type: 3}
       propertyPath: m_Name
-      value: Equip_Body
+      value: Equip_Clothes
       objectReference: {fileID: 0}
     - target: {fileID: 3248147030210079950, guid: b1fdb84f8db90d248903c3725d56f926, type: 3}
       propertyPath: m_Pivot.x
@@ -1306,7 +1306,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2677102780424032982, guid: b1fdb84f8db90d248903c3725d56f926, type: 3}
       propertyPath: m_Name
-      value: Equip_AccHead
+      value: Equip_Headwear
       objectReference: {fileID: 0}
     - target: {fileID: 3248147030210079950, guid: b1fdb84f8db90d248903c3725d56f926, type: 3}
       propertyPath: m_Pivot.x
@@ -1564,7 +1564,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2677102780424032982, guid: b1fdb84f8db90d248903c3725d56f926, type: 3}
       propertyPath: m_Name
-      value: Equip_AccRightHead
+      value: Equip_RightRing
       objectReference: {fileID: 0}
     - target: {fileID: 3248147030210079950, guid: b1fdb84f8db90d248903c3725d56f926, type: 3}
       propertyPath: m_Pivot.x
@@ -1677,7 +1677,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2677102780424032982, guid: b1fdb84f8db90d248903c3725d56f926, type: 3}
       propertyPath: m_Name
-      value: Equip_Hand
+      value: Equip_Gloves
       objectReference: {fileID: 0}
     - target: {fileID: 3248147030210079950, guid: b1fdb84f8db90d248903c3725d56f926, type: 3}
       propertyPath: m_Pivot.x
@@ -1790,7 +1790,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2677102780424032982, guid: b1fdb84f8db90d248903c3725d56f926, type: 3}
       propertyPath: m_Name
-      value: Equip_Head
+      value: Equip_Hats
       objectReference: {fileID: 0}
     - target: {fileID: 3248147030210079950, guid: b1fdb84f8db90d248903c3725d56f926, type: 3}
       propertyPath: m_Pivot.x

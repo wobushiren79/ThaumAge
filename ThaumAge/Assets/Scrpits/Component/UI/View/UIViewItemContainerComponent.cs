@@ -10,5 +10,7 @@ public partial class UIViewItemContainer
 
     public UIPopupItemInfoButton ui_ViewItemContainer;
 
+    public Text ui_Hint;
+
 
 }
