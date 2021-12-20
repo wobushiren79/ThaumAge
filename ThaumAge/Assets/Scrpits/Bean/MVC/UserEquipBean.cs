@@ -31,26 +31,36 @@ public class UserEquipBean
     /// <returns></returns>
     public ItemsBean GetEquipByType(EquipTypeEnum equipType)
     {
+        ItemsBean targetItem = null;
         switch (equipType)
         {
             case EquipTypeEnum.Hats:
-                return hats;
+                targetItem = hats;
+                break;
             case EquipTypeEnum.Gloves:
-                return gloves;
+                targetItem = gloves;
+                break;
             case EquipTypeEnum.Clothes:
-                return clothes;
+                targetItem = clothes;
+                break;
             case EquipTypeEnum.Shoes:
-                return shoes;
+                targetItem = shoes;
+                break;
             case EquipTypeEnum.Headwear:
-                return headwear;
+                targetItem = headwear;
+                break;
             case EquipTypeEnum.LeftRing:
-                return leftRing;
+                targetItem = leftRing;
+                break;
             case EquipTypeEnum.RightRing:
-                return rightRing;
+                targetItem = rightRing;
+                break;
             case EquipTypeEnum.Cape:
-                return cape;
+                break;
         }
-        return null;
+        if (targetItem == null)
+            targetItem = new ItemsBean();
+        return targetItem;
     }
 
     public static ItemsTypeEnum EquipTypeEnumToItemsType(EquipTypeEnum equipType)

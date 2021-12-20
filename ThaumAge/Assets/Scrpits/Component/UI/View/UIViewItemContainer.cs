@@ -42,9 +42,6 @@ public partial class UIViewItemContainer : BaseUIView
         this.itemsData = itemsData;
         this.viewIndex = viewIndex;
         SetViewItem(itemsData);
-
-        //设置暂时信息
-        ui_ViewItemContainer.SetItemId(itemsData.itemId);
     }
 
     /// <summary>
@@ -122,6 +119,9 @@ public partial class UIViewItemContainer : BaseUIView
         itemsData.itemId = 0;
         itemsData.number = 0;
         itemsData.meta = null;
+
+        //设置展示信息
+        ui_ViewItemContainer.SetItemId(itemsData.itemId);
     }
 
     /// <summary>
@@ -138,7 +138,7 @@ public partial class UIViewItemContainer : BaseUIView
     /// </summary>
     /// <param name="uiView"></param>
     public bool SetViewItem(UIViewItem uiView)
-    {
+    {        
         this.currentViewItem = uiView;
         this.currentViewItem.originalParent = this;
         this.currentViewItem.transform.SetParent(rectTransform);
@@ -148,6 +148,10 @@ public partial class UIViewItemContainer : BaseUIView
         itemsData.meta = uiView.meta;
 
         callBackForSetViewItem?.Invoke(this, itemsData.itemId);
+
+        //设置展示信息
+        ui_ViewItemContainer.SetItemId(itemsData.itemId);
+
         return true;
     }
 
@@ -156,7 +160,10 @@ public partial class UIViewItemContainer : BaseUIView
     /// </summary>
     /// <param name="itemsData"></param>
     public void SetViewItem(ItemsBean itemsData)
-    {
+    {        
+        //设置展示信息
+        ui_ViewItemContainer.SetItemId(itemsData.itemId);
+
         //如果没有东西，则删除原来存在的
         if (itemsData == null || itemsData.itemId == 0)
         {
