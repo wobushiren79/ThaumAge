@@ -88,25 +88,34 @@ public class UserEquipBean
 
     public static string GetEquipName(EquipTypeEnum equipType)
     {
+        long textId = 0;
         switch (equipType)
         {
             case EquipTypeEnum.Hats:
-                return "帽子";
+                textId = 401;
+                break;
             case EquipTypeEnum.Gloves:
-                return "手套";
+                textId = 402;
+                break;
             case EquipTypeEnum.Clothes:
-                return "衣服";
+                textId = 403;
+                break;
             case EquipTypeEnum.Shoes:
-                return "鞋子";
+                textId = 404;
+                break;
             case EquipTypeEnum.Headwear:
-                return "头饰";
+                textId = 405;
+                break;
             case EquipTypeEnum.LeftRing:
-                return "戒指";
+                textId = 406;
+                break;
             case EquipTypeEnum.RightRing:
-                return "戒指";
+                textId = 407;
+                break;
             case EquipTypeEnum.Cape:
-                return "披风";
+                textId = 408;
+                break;
         }
-        return "???";
+        return TextHandler.Instance.GetTextById(textId);
     }
 }
