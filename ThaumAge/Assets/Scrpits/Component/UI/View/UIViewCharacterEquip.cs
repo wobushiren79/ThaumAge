@@ -5,10 +5,9 @@ using UnityEngine;
 public partial class UIViewCharacterEquip : BaseUIView
 {
     public Dictionary<EquipTypeEnum, UIViewItemContainer> dicEquip = new Dictionary<EquipTypeEnum, UIViewItemContainer>();
-    public override void Awake()
-    {
-        base.Awake();
 
+    public void Start()
+    {
         UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();
         dicEquip.Clear();
         dicEquip.Add(EquipTypeEnum.Hats, ui_Equip_Hats);
