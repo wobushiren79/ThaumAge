@@ -6,7 +6,7 @@ public class CharacterEquip : CharacterBase
     //衣服容器
     public GameObject objClothesContainer;
 
-    public CharacterEquip(Character character) : base(character)
+    public CharacterEquip(CreatureCptCharacter character) : base(character)
     {
         if (character.characterHead == null)
         {

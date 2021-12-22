@@ -20,7 +20,7 @@ public class SceneMainHandler : SceneBaseHandler<SceneMainHandler, SceneMainMana
                 GameObject objCharacter = manager.ShowCharacterObjByIndex(userData.dataIndex, true);
                 if (objCharacter == null)
                     continue;
-                Character character = objCharacter.GetComponent<Character>();
+                CreatureCptCharacter character = objCharacter.GetComponent<CreatureCptCharacter>();
                 character.SetCharacterData(userData.characterData);
             }
         });

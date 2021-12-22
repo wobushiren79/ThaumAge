@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 public partial class UIViewCharacterEquip
 {
-    public Character ui_CharacterBase;
+    public CreatureCptCharacter ui_CharacterBase;
 
     public Button ui_RotateLeft;
 

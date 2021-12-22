@@ -47,7 +47,7 @@ public partial class UIViewCharacterEquip : BaseUIView
             {
                 //更换装备
                 Player player = GameHandler.Instance.manager.player;
-                Character character = player.GetCharacter();
+                CreatureCptCharacter character = player.GetCharacter();
                 character.characterEquip.ChangeEquip(itemContainer.Key, itemId);
             }
         }

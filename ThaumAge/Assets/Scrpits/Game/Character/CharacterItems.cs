@@ -8,7 +8,7 @@ public class CharacterItems : CharacterBase
 
     public ItemCptHold itemHoldRight;
 
-    public CharacterItems(Character character) : base(character)
+    public CharacterItems(CreatureCptCharacter character) : base(character)
     {
         objRightHand = character.characterRightHand;
         itemHoldRight = objRightHand.GetComponentInChildren<ItemCptHold>();

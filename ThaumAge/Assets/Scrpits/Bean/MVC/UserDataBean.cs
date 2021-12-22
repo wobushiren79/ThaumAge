@@ -137,7 +137,7 @@ public class UserDataBean
         Player player = GameHandler.Instance.manager.player;
         if (player != null)
         {
-            Character character = player.GetCharacter();
+            CreatureCptCharacter character = player.GetCharacter();
             ItemsBean itemsData = GetItemsFromShortcut();
             character.CharacterItems.ChangeRightHandItem(itemsData.itemId);
         }

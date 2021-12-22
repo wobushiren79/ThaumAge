@@ -7,7 +7,7 @@ public class Player : BaseMonoBehaviour
     public PlayerPickUp playerPickUp;
     public PlayerRay playerRay;
 
-    protected Character character;
+    protected CreatureCptCharacter character;
 
     public GameObject objFirstLook;
     public GameObject objThirdLook;
@@ -15,7 +15,7 @@ public class Player : BaseMonoBehaviour
 
     public void Awake()
     {
-        character = GetComponentInChildren<Character>();
+        character = GetComponentInChildren<CreatureCptCharacter>();
 
         playerPickUp = new PlayerPickUp(this);
         playerRay = new PlayerRay(this);
@@ -75,7 +75,7 @@ public class Player : BaseMonoBehaviour
     /// 获取角色
     /// </summary>
     /// <returns></returns>
-    public Character GetCharacter()
+    public CreatureCptCharacter GetCharacter()
     {
         return character;
     }

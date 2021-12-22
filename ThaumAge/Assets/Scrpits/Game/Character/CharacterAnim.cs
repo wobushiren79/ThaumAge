@@ -3,12 +3,10 @@ using UnityEngine;
 
 public class CharacterAnim : CharacterBase
 {
-
     public AnimForCreature aiCreatureAnim;
 
-    public CharacterAnim(Character character) : base(character)
+    public CharacterAnim(CreatureCptCharacter character) : base(character)
     {
-        Animator  animatorCharacter = character.GetComponentInChildren<Animator>();
-        aiCreatureAnim =new AnimForCreature(animatorCharacter);
+        aiCreatureAnim = character.animForCreature;
     }
 }

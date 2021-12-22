@@ -10,7 +10,6 @@ public class AICreatureIntentIdle : AIBaseIntent
         aiEntity.WaitExecuteSeconds(1, () =>
         {
             aiCreatureEntity.aiNavigation.SetMovePosition(new Vector3(Random.Range(-10f, 10f), aiEntity.transform.position.y, Random.Range(-10f, 10f)));
-            aiCreatureEntity.isInit = true;
         });
     }
 
@@ -20,12 +19,9 @@ public class AICreatureIntentIdle : AIBaseIntent
 
         AICreatureEntity aiCreatureEntity = aiEntity as AICreatureEntity;
 
-        if (aiCreatureEntity.isInit)
+        if (!aiCreatureEntity.aiNavigation.IsMove())
         {
-            if (!aiCreatureEntity.aiNavigation.IsMove())
-            {
-                aiCreatureEntity.aiNavigation.SetMovePosition(new Vector3(Random.Range(-10f, 10f), aiEntity.transform.position.y, Random.Range(-10f, 10f)));
-            }
+            aiCreatureEntity.aiNavigation.SetMovePosition(new Vector3(Random.Range(-10f, 10f), aiEntity.transform.position.y, Random.Range(-10f, 10f)));
         }
 
     }

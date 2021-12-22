@@ -170,7 +170,7 @@ public partial class UIMainCreate : BaseUIComponent,
     /// </summary>
     public void HandleForStartGame()
     {
-        Character character = GetChanracter();
+        CreatureCptCharacter character = GetCharacter();
         string characterName = ui_NameInput.text;
         string userId = $"UserId_{SystemUtil.GetUUID(SystemUtil.UUIDTypeEnum.N)}";
         if (characterName.IsNull())
@@ -241,7 +241,7 @@ public partial class UIMainCreate : BaseUIComponent,
     /// <param name="position"></param>
     public void ChangeSelectPosition(SelectView selectView, int position)
     {
-        Character character = GetChanracter();
+        CreatureCptCharacter character = GetCharacter();
         if (character == null)
         {
             LogUtil.LogError("没有找到Character组件");
@@ -278,7 +278,7 @@ public partial class UIMainCreate : BaseUIComponent,
     /// <param name="b"></param>
     public void SelectColorChange(SelectColorView colorView, float r, float g, float b)
     {
-        Character character = GetChanracter();
+        CreatureCptCharacter character = GetCharacter();
         if (character == null)
         {
             LogUtil.LogError("没有找到Character组件");
@@ -300,7 +300,7 @@ public partial class UIMainCreate : BaseUIComponent,
     /// <param name="sexType"></param>
     public void ChangeSex(SexTypeEnum sexType)
     {
-        Character character = GetChanracter();
+        CreatureCptCharacter character = GetCharacter();
         character.characterSkin.ChangeSex(sexType);
 
         ui_Man.interactable = true;
@@ -322,10 +322,10 @@ public partial class UIMainCreate : BaseUIComponent,
     /// 获取角色
     /// </summary>
     /// <returns></returns>
-    protected Character GetChanracter()
+    protected CreatureCptCharacter GetCharacter()
     {
         GameObject objCharacter = SceneMainHandler.Instance.manager.GetCharacterObjByIndex(userDataIndex);
-        Character character = objCharacter.GetComponent<Character>();
+        CreatureCptCharacter character = objCharacter.GetComponent<CreatureCptCharacter>();
         return character;
     }
 }

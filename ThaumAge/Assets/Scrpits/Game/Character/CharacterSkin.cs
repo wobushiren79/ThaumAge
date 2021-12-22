@@ -31,7 +31,7 @@ public class CharacterSkin : CharacterBase
         }
     }
 
-    public CharacterSkin(Character character) : base(character)
+    public CharacterSkin(CreatureCptCharacter character) : base(character)
     {
         if (character.characterHead == null)
         {

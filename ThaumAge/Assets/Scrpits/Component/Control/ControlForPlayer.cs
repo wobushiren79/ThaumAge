@@ -7,7 +7,7 @@ using static UnityEngine.InputSystem.InputAction;
 public class ControlForPlayer : ControlForBase
 {
     private CharacterController characterController;
-    private Character character;
+    private CreatureCptCharacter character;
 
     private float gravityValue = 10f;
     private Vector3 playerVelocity;
@@ -31,7 +31,7 @@ public class ControlForPlayer : ControlForBase
     private void Awake()
     {
         characterController = GetComponent<CharacterController>();
-        character = GetComponentInChildren<Character>();
+        character = GetComponentInChildren<CreatureCptCharacter>();
 
         inputActionJump = InputHandler.Instance.manager.GetInputPlayerData("Jump");
         inputActionJump.started += HandleForJumpStart;
