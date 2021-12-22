@@ -5,49 +5,38 @@ using UnityEngine;
 
 public class Item
 {
-    public ItemsBean itemsData;
-    public ItemsInfoBean _itemsInfo;
-
-    public ItemsInfoBean itemsInfo
+    /// <summary>
+    /// /获取道具信息
+    /// </summary>
+    /// <param name="itemId"></param>
+    /// <returns></returns>
+    public ItemsInfoBean GetItemsInfo(long itemId)
     {
-        get
-        {
-            if (_itemsInfo == null)
-            {
-                _itemsInfo = ItemsHandler.Instance.manager.GetItemsInfoById(itemsData.itemId);
-            }
-            return _itemsInfo;
-        }
-    }
-
-
-    public void SetItemData(ItemsBean itemsData)
-    {
-        this.itemsData = itemsData;
+       return ItemsHandler.Instance.manager.GetItemsInfoById(itemId);
     }
 
     /// <summary>
     /// 使用
     /// </summary>
-    public virtual void Use(GameObject user)
+    public virtual void Use(GameObject user, ItemsBean itemsData)
     {
         Player player = user.GetComponent<Player>();
         if (player)
         {
-            UseForPlayer(player);
+            UseForPlayer(player, itemsData);
         }
         else
         {
-            UseForOther(user);
+            UseForOther(user, itemsData);
         }
     }
 
-    protected virtual void UseForPlayer(Player player)
+    protected virtual void UseForPlayer(Player player, ItemsBean itemsData)
     {
 
     }
 
-    protected virtual void UseForOther(GameObject user)
+    protected virtual void UseForOther(GameObject user, ItemsBean itemsData)
     {
 
     }
@@ -55,7 +44,7 @@ public class Item
     /// <summary>
     /// 使用目标
     /// </summary>
-    public virtual void UseTarget()
+    public virtual void UseTarget(ItemsBean itemsData)
     {
         Player player = GameHandler.Instance.manager.player;
         if (player.playerRay.RayToChunkBlock(out RaycastHit hit, out Vector3Int targetBlockPosition))

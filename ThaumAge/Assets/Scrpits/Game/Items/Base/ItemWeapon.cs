@@ -3,9 +3,11 @@ using UnityEngine;
 
 public class ItemWeapon : Item
 {
-    public override void Use(GameObject user)
+    public override void Use(GameObject user,ItemsBean itemsData)
     {
-        base.Use(user);
+        base.Use(user, itemsData);
+        //获取打中的目标
+        Collider[] targetArray = TargetCheck();
     }
 
     /// <summary>

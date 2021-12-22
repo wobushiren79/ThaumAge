@@ -3,9 +3,9 @@ using UnityEngine;
 
 public class ItemTypeHoe : Item
 {
-    protected override void UseForPlayer(Player player)
+    protected override void UseForPlayer(Player player, ItemsBean itemData)
     {
-        base.UseForPlayer(player);
+        base.UseForPlayer(player, itemData);
         //检测玩家前方是否有方块
         if (player.playerRay.RayToChunkBlock(out RaycastHit hit, out Vector3Int targetBlockPosition))
         {

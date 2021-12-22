@@ -4,9 +4,9 @@ using UnityEngine;
 public class ItemTypeSeed : Item
 {
 
-    protected override void UseForPlayer(Player player)
+    protected override void UseForPlayer(Player player, ItemsBean itemData)
     {
-        base.UseForPlayer(player);
+        base.UseForPlayer(player, itemData);
 
         //检测玩家前方是否有方块
         if (player.playerRay.RayToChunkBlock(out RaycastHit hit, out Vector3Int targetBlockPosition))
@@ -35,6 +35,7 @@ public class ItemTypeSeed : Item
                     return;
 
                 //种植的方块
+                ItemsInfoBean itemsInfo = GetItemsInfo(itemData.itemId);
                 BlockTypeEnum plantBlockType = (BlockTypeEnum)itemsInfo.type_id;
                 //初始化meta数据
                 string metaData = BlockPlantExtension.ToMetaData(0, false);

@@ -20,6 +20,7 @@ public class ItemsInfoBean : BaseBean
     public string model_name;//模型名字
     public string tex_name;//贴图名字
     public int life;//耐久度
+    public float cd_use;//使用间隔
 
     public ItemsTypeEnum GetItemsType()
     {

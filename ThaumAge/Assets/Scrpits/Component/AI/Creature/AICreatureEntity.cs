@@ -4,7 +4,7 @@ using UnityEngine;
 public class AICreatureEntity : AIBaseEntity
 {
     public AINavigation aiNavigation;
-    public AICreatureAnim aiCreatureAnim;
+    public AnimForCreature aiCreatureAnim;
 
     public bool isInit=false;
     public override void Awake()
@@ -14,7 +14,7 @@ public class AICreatureEntity : AIBaseEntity
         aiNavigation = new AINavigation(this);
 
         Animator aiAnimator = GetComponentInChildren<Animator>();
-        aiCreatureAnim = new AICreatureAnim(aiAnimator);
+        aiCreatureAnim = new AnimForCreature(aiAnimator);
     }
 
     public override void Start()

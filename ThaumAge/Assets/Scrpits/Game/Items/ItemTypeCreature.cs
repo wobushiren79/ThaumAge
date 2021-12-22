@@ -3,9 +3,9 @@ using UnityEngine;
 
 public class ItemTypeCreature : Item
 {
-    protected override void UseForPlayer(Player player)
+    protected override void UseForPlayer(Player player, ItemsBean itemData)
     {
-        base.UseForPlayer(player);
+        base.UseForPlayer(player, itemData);
         //检测玩家前方是否有方块
         if (player.playerRay.RayToChunkBlock(out RaycastHit hit, out Vector3Int targetBlockPosition))
         {
@@ -27,6 +27,7 @@ public class ItemTypeCreature : Item
                 if (upBlock != null && upBlock.blockType != BlockTypeEnum.None)
                     return;
 
+                ItemsInfoBean itemsInfo = GetItemsInfo(itemData.itemId);
                 CreatureHandler.Instance.CreateCreature(itemsInfo.type_id, targetPosition + Vector3Int.up);
             }
         }

@@ -1,12 +1,12 @@
 ﻿using UnityEditor;
 using UnityEngine;
 
-public class AICreatureAnim 
+public class AnimForCreature
 {
     //角色动画控制器
     public Animator animator;
 
-    public AICreatureAnim(Animator animator)
+    public AnimForCreature(Animator animator)
     {
         this.animator = animator;
     }

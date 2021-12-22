@@ -16,7 +16,6 @@ public class ItemsHandler : BaseHandler<ItemsHandler, ItemsManager>
         {
             //如果手上没有东西
             item = manager.GetRegisterItem(ItemsTypeEnum.Block);
-            item.SetItemData(itemsData);
         }
         else
         {
@@ -24,10 +23,8 @@ public class ItemsHandler : BaseHandler<ItemsHandler, ItemsManager>
             ItemsInfoBean itemsInfo = manager.GetItemsInfoById(itemsData.itemId);
             //获取对应得处理类
             item = manager.GetRegisterItem((ItemsTypeEnum)itemsInfo.items_type);
-            //设置物品数据
-            item.SetItemData(itemsData);
         }
-        item.Use(user);
+        item.Use(user, itemsData);
     }
 
     /// <summary>
@@ -40,7 +37,6 @@ public class ItemsHandler : BaseHandler<ItemsHandler, ItemsManager>
         {
             //如果手上没有东西
             item = manager.GetRegisterItem(ItemsTypeEnum.Block);
-            item.SetItemData(itemsData);
         }
         else
         {
@@ -48,10 +44,8 @@ public class ItemsHandler : BaseHandler<ItemsHandler, ItemsManager>
             ItemsInfoBean itemsInfo = manager.GetItemsInfoById(itemsData.itemId);
             //获取对应得处理类
             item = manager.GetRegisterItem((ItemsTypeEnum)itemsInfo.items_type);
-            //设置物品数据
-            item.SetItemData(itemsData);
         }
-        item.UseTarget();
+        item.UseTarget(itemsData);
     }
 
     /// <summary>
