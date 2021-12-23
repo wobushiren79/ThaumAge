@@ -239,7 +239,10 @@ public class ExcelEditorWindow : EditorWindow
         //遍历sheet首行每个字段描述的值
         for (int i = 1; i <= sheet.Dimension.End.Column; i++)
         {
-            if (sheet.Cells[1, i].Text.Equals("id"))
+            string cellName = sheet.Cells[1, i].Text;
+            if (cellName.Equals("id")
+                || cellName.Equals("name_cn")
+                || cellName.Equals("name_en"))
                 continue;
             sb.AppendLine("\t\t/// <summary>");
             sb.AppendLine($"\t\t///{sheet.Cells[3, i].Text}");

@@ -3,7 +3,6 @@ using UnityEngine;
 
 public class CreatureHandler : BaseHandler<CreatureHandler, CreatureManager>
 {
-
     /// <summary>
     /// 创建生物
     /// </summary>
@@ -14,8 +13,14 @@ public class CreatureHandler : BaseHandler<CreatureHandler, CreatureManager>
             return;
         manager.GetCreatureModel(creatureInfo.model_name, (data) =>
         {
-             GameObject objCreature = Instantiate(gameObject, data);
-             objCreature.transform.position = position;
+            //创建生物
+            GameObject objCreature = Instantiate(gameObject, data);
+            //设置生物位置
+            objCreature.transform.position = position;
+            //获取生物组件
+            CreatureCptBase creatureCpt = objCreature.GetComponent<CreatureCptBase>();
+            //设置生物信息
+            creatureCpt.SetData(creatureInfo);
         });
     }
 

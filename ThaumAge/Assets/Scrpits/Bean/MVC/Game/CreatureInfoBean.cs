@@ -11,11 +11,7 @@ using System;
 		/// </summary>
 		public string remark;
 		/// <summary>
-		///名字-中文
+		///基础生命值
 		/// </summary>
-		public string name_cn;
-		/// <summary>
-		///名字-英文
-		/// </summary>
-		public string name_en;
+		public int life;
 	}

@@ -3,11 +3,11 @@ using UnityEngine;
 
 public class CreatureCptSkeleton : CreatureCptBase
 {
-    public AICreatureEntity aiSkeleton;
+    protected AICreatureEntity aiSkeleton;
 
     public override void Awake()
     {
         base.Awake();
-        aiSkeleton = GetComponentInChildren<AICreatureEntity>();
+        aiSkeleton = gameObject.AddComponentEX<AICreatureEntity>();
     }
 }

@@ -3,7 +3,7 @@ using UnityEngine;
 using System;
 
 [Serializable]
-public class CharacterBean 
+public class CharacterBean : CreatureBean
 {
     //角色姓名
     public string characterName;
