@@ -94,10 +94,10 @@ public class UserEquipBean
             case EquipTypeEnum.Hats:
                 textId = 401;
                 break;
-            case EquipTypeEnum.Gloves:
+            case EquipTypeEnum.Clothes:
                 textId = 402;
                 break;
-            case EquipTypeEnum.Clothes:
+            case EquipTypeEnum.Gloves:
                 textId = 403;
                 break;
             case EquipTypeEnum.Shoes:

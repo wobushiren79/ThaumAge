@@ -4,7 +4,8 @@
     Dialog,
     Toast,
     Popup,
-    Overlay
+    Overlay,
+    Model3D,
 }
 
 /// <summary>

@@ -7,24 +7,60 @@ public class BaseUIManager : BaseManager
 {
     public GameObject objUIContainer;
 
-    public Transform containerUIBase;
-    public Transform containerDialog;
-    public Transform containerToast;
-    public Transform containerPopup;
-    public Transform containerOverlay;
+    public Dictionary<UITypeEnum, Transform> dicContainer = new Dictionary<UITypeEnum, Transform>();
 
     public virtual void Awake()
     {
+        InitUI();
+    }
+
+    /// <summary>
+    /// 初始化UI
+    /// </summary>
+    public void InitUI()
+    {
         GameObject uiContainerModel = LoadResourcesUtil.SyncLoadData<GameObject>("UI/Base/UIContainer");
+        //实例化UI容器
         objUIContainer = Instantiate(gameObject, uiContainerModel);
+        //初始化所有UI容器
+        InitUIType();
+        //修改一些摄像机
+        InitCanvasCamera(CameraHandler.Instance.manager.uiCamera);
+    }
 
-        containerUIBase = objUIContainer.FindChild<Transform>("UIBase");
-        containerDialog = objUIContainer.FindChild<Transform>("Dialog");
-        containerToast = objUIContainer.FindChild<Transform>("Toast");
-        containerPopup = objUIContainer.FindChild<Transform>("Popup");
-        containerOverlay = objUIContainer.FindChild<Transform>("Overlay");
+    /// <summary>
+    /// 初始化画布的摄像头
+    /// </summary>
+    /// <param name="camera"></param>
+    public void InitCanvasCamera(Camera camera)
+    {
+        foreach (var itemUIContainer in dicContainer)
+        {
+            UITypeEnum uiTypeEnum = itemUIContainer.Key;
+            switch (uiTypeEnum) 
+            {
+                case UITypeEnum.UIBase:
+                case UITypeEnum.Dialog:
+                case UITypeEnum.Toast:
+                case UITypeEnum.Popup:
+                    Canvas canvas = itemUIContainer.Value.GetComponent<Canvas>();
+                    canvas.worldCamera = camera;
+                    break;
+            }
+        }
+    }
 
-        ChangeCanvasCamera(CameraHandler.Instance.manager.uiCamera);
+    /// <summary>
+    /// 初始化所有UI容器
+    /// </summary>
+    public void InitUIType()
+    {
+        //初始化所有UIType容器
+        List<UITypeEnum> listUIType = EnumExtension.GetEnumValue<UITypeEnum>();
+        foreach (var itemData in listUIType)
+        {
+            GetUITypeContainer(itemData);
+        }
     }
 
     /// <summary>
@@ -33,37 +69,18 @@ public class BaseUIManager : BaseManager
     /// <param name="uiType"></param>
     public virtual Transform GetUITypeContainer(UITypeEnum uiType)
     {
-        switch (uiType)
+        if (dicContainer.TryGetValue(uiType, out Transform value))
         {
-            case UITypeEnum.UIBase:
-                return containerUIBase;
-            case UITypeEnum.Dialog:
-                return containerDialog;
-            case UITypeEnum.Toast:
-                return containerToast;
-            case UITypeEnum.Popup:
-                return containerPopup;
-            case UITypeEnum.Overlay:
-                return containerOverlay;
+            return value;
         }
-        return null;
+        Transform containerForType = objUIContainer.FindChild<Transform>(uiType.GetEnumName());
+        if (containerForType == null)
+        {
+            GameObject newContainer = new GameObject(uiType.GetEnumName());
+            newContainer.transform.SetParent(objUIContainer.transform);
+        }
+        dicContainer.Add(uiType, containerForType);
+        return containerForType;
     }
-
-    /// <summary>
-    /// 修改画布的摄像头
-    /// </summary>
-    /// <param name="camera"></param>
-    public void ChangeCanvasCamera(Camera camera)
-    {
-        Canvas uiBaseCanvas = containerUIBase.GetComponent<Canvas>();
-        uiBaseCanvas.worldCamera = camera;
-        Canvas uiDialogCanvas = containerDialog.GetComponent<Canvas>();
-        uiDialogCanvas.worldCamera = camera;
-        Canvas uiToastCanvas = containerToast.GetComponent<Canvas>();
-        uiToastCanvas.worldCamera = camera;
-        Canvas uiPopupCanvas = containerPopup.GetComponent<Canvas>();
-        uiPopupCanvas.worldCamera = camera;
-    }
-
 
 }

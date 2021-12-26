@@ -18,6 +18,10 @@ public enum ItemsTypeEnum
     Cape = 17,//披风
 
     Hoe = 21,//锄头
+    Pickaxe = 22,//镐子
+    Axe = 23,//斧头
+    Shovel = 24,//铲子
+
     Sword = 31,//剑
     Knife = 32,//刀
     Bow = 33, //弓

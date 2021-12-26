@@ -1,4 +1,5 @@
-﻿using UnityEditor;
+﻿using System;
+using UnityEditor;
 using UnityEngine;
 
 public class CharacterEquip : CharacterBase
@@ -32,14 +33,14 @@ public class CharacterEquip : CharacterBase
     /// </summary>
     /// <param name="equipType"></param>
     /// <param name="clothesId"></param>
-    public void ChangeEquip(EquipTypeEnum equipType, long clothesId)
+    public void ChangeEquip(EquipTypeEnum equipType, long clothesId, Action<GameObject> callBack = null)
     {
         switch (equipType)
         {
             case EquipTypeEnum.Hats:
                 return;//帽子
             case EquipTypeEnum.Clothes:
-                ChangeClothes(clothesId);
+                ChangeClothes(clothesId, callBack);
                 return;//衣服
             case EquipTypeEnum.Gloves:
                 return;//手套
@@ -60,7 +61,7 @@ public class CharacterEquip : CharacterBase
     /// 改变衣服
     /// </summary>
     /// <param name="clothesId"></param>
-    public void ChangeClothes(long clothesId)
+    public void ChangeClothes(long clothesId, Action<GameObject> callBack = null)
     {
         this.characterData.clothesId = clothesId;
         CptUtil.RemoveChild(objClothesContainer.transform);
@@ -84,18 +85,19 @@ public class CharacterEquip : CharacterBase
                  }
                  else
                  {
-                     GameObject objHair = ItemsHandler.Instance.Instantiate(objClothesContainer, itemsObj);
-                     objHair.transform.localPosition = Vector3.zero;
-                     objHair.transform.localEulerAngles = Vector3.zero;
+                     GameObject objModel = ItemsHandler.Instance.Instantiate(objClothesContainer, itemsObj);
+                     objModel.transform.localPosition = Vector3.zero;
+                     objModel.transform.localEulerAngles = Vector3.zero;
 
                      ItemsHandler.Instance.manager.GetItemsTexById(itemsInfo.id, (itemTex) =>
                      {
-                         if (objHair == null)
+                         if (objModel == null)
                              return;
-                         MeshRenderer hairMeshRebderer = objHair.GetComponent<MeshRenderer>();
-                         hairMeshRebderer.material.mainTexture = itemTex;
+                         MeshRenderer meshRebderer = objModel.GetComponent<MeshRenderer>();
+                         meshRebderer.material.mainTexture = itemTex;
                      });
 
+                     callBack?.Invoke(objModel);
                  }
              });
         }

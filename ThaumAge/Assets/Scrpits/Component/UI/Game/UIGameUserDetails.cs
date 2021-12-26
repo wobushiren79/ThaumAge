@@ -18,6 +18,19 @@ public partial class UIGameUserDetails : UIGameCommonNormal,IRadioGroupCallBack
         ui_Shortcuts.RefreshUI();
         SetText();
     }
+
+    public override void OnInputActionForStarted(InputActionUIEnum inputName)
+    {
+        base.OnInputActionForStarted(inputName);
+        switch (inputName)
+        {
+            case InputActionUIEnum.ESC:
+            case InputActionUIEnum.B:
+                HandleForBackMain();
+                break;
+        }
+    }
+
     public override void OnClickForButton(Button viewButton)
     {
         base.OnClickForButton(viewButton);

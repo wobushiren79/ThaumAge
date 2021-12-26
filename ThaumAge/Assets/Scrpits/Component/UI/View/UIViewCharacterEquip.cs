@@ -1,10 +1,45 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
 public partial class UIViewCharacterEquip : BaseUIView
 {
+    //装备类型
     public Dictionary<EquipTypeEnum, UIViewItemContainer> dicEquip = new Dictionary<EquipTypeEnum, UIViewItemContainer>();
+    //渲染对象
+    protected GameObject objRender;
+    //展示的角色
+    protected CreatureCptCharacter showCharacter;
+    public override void Awake()
+    {
+        base.Awake();
+        //获取渲染摄像头
+        GameObject objRenderModel = LoadResourcesUtil.SyncLoadData<GameObject>("UI/Render/RenderCharacterUI");
+        //实例化渲染
+        objRender = Instantiate(UIHandler.Instance.manager.GetUITypeContainer(UITypeEnum.Model3D).gameObject, objRenderModel);
+        //获取展示的角色
+        showCharacter = objRender.GetComponentInChildren<CreatureCptCharacter>();
+    }
+
+    public override void OnDestroy()
+    {
+        base.OnDestroy();
+        Destroy(objRender);
+        Resources.UnloadUnusedAssets();
+    }
+
+    public override void OnEnable()
+    {
+        base.OnEnable();
+        if (objRender != null)
+            objRender.ShowObj(true);
+    }
+    public void OnDisable()
+    {
+        if (objRender != null)
+            objRender.ShowObj(false);
+    }
 
     public void Start()
     {
@@ -49,6 +84,15 @@ public partial class UIViewCharacterEquip : BaseUIView
                 Player player = GameHandler.Instance.manager.player;
                 CreatureCptCharacter character = player.GetCharacter();
                 character.characterEquip.ChangeEquip(itemContainer.Key, itemId);
+
+                //设置渲染摄像头
+                Action<GameObject> callBack = (objModel) =>
+                {
+                    showCharacter.SetLayerAllChild(LayerInfo.RenderCamera);
+                };
+
+                //UI显示也修改
+                showCharacter.characterEquip.ChangeEquip(itemContainer.Key, itemId, callBack);
             }
         }
     }

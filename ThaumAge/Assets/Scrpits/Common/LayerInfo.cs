@@ -10,4 +10,6 @@ public class LayerInfo
     public static int ChunkCollider = LayerMask.NameToLayer("ChunkCollider");
     public static int ChunkCharacter = LayerMask.NameToLayer("Character");
     public static int Items = LayerMask.NameToLayer("Items");
+    public static int Creature = LayerMask.NameToLayer("Creature");
+    public static int RenderCamera = LayerMask.NameToLayer("RenderCamera");
 }

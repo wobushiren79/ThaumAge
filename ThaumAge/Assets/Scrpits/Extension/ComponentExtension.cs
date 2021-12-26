@@ -401,4 +401,28 @@ public static class ComponentExtension
         }
         return null;
     }
+
+    /// <summary>
+    /// 给所有子物体设置层级
+    /// </summary>
+    public static void SetLayerAllChild(this GameObject selfObj, int layer, bool hasSelf = true)
+    {
+        //遍历当前物体及其所有子物体
+        foreach (Transform childTF in selfObj.GetComponentsInChildren<Transform>(hasSelf))
+        {
+            childTF.gameObject.layer = layer;//更改物体的Layer层
+        }
+    }
+
+    /// <summary>
+    /// 给所有子物体设置层级
+    /// </summary>
+    public static void SetLayerAllChild<T>(this T selfComponent, int layer, bool hasSelf = true) where T : Component
+    {
+        //遍历当前物体及其所有子物体
+        foreach (Transform childTF in selfComponent.GetComponentsInChildren<Transform>(hasSelf))
+        {
+            childTF.gameObject.layer = layer;//更改物体的Layer层
+        }
+    }
 }

@@ -26,7 +26,7 @@ public class PopupShowView : BaseUIView
         InitPosition();
     }
 
-    protected override void OnEnable()
+    public override void OnEnable()
     {
         base.OnEnable();
         InitPosition();

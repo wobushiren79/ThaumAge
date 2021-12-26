@@ -25,6 +25,8 @@ public class ItemsInfoBean : BaseBean
 
     public int atk;//¹¥»÷Á¦
 
+    public string range_damage;//ÉËº¦·¶Î§ ³¤¿í¸ß
+
     public ItemsTypeEnum GetItemsType()
     {
         return (ItemsTypeEnum)items_type;
@@ -46,5 +48,33 @@ public class ItemsInfoBean : BaseBean
         }
 
         return listName;
+    }
+
+    
+    /// <summary>
+    /// »ñÈ¡ÉËº¦·¶Î§
+    /// </summary>
+    /// <param name="length"></param>
+    /// <param name="width"></param>
+    /// <param name="height"></param>
+    public void GetRangeDamage(out float length, out float width ,out float height)
+    {
+        length = 0;
+        width = 0;
+        height = 0;
+
+        float[] data = StringUtil.SplitBySubstringForArrayFloat(range_damage, ',') ;
+        if (data.Length >= 1)
+        {
+            length = data[0];
+        }
+        if (data.Length >= 2)
+        {
+            width = data[1];
+        }
+        if (data.Length >= 3)
+        {
+            height = data[2];
+        }
     }
 }

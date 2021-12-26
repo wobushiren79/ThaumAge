@@ -26,13 +26,12 @@ public class EffectBase : BaseMonoBehaviour
     /// </summary>
     public virtual void PlayEffect()
     {
-        if (!listPS.IsNull())
+        if (listPS.IsNull())
+            return;
+        for (int i = 0; i < listPS.Count; i++)
         {
-            for (int i = 0; i < listPS.Count; i++)
-            {
-                ParticleSystem itemPS = listPS[i];
-                itemPS.Play();
-            }
+            ParticleSystem itemPS = listPS[i];
+            itemPS.Play();
         }
     }
 }

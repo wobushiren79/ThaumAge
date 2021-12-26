@@ -26,6 +26,18 @@ public partial class UIGodMain : UIGameCommonNormal
         InitData();
     }
 
+    public override void OnInputActionForStarted(InputActionUIEnum inputType)
+    {
+        base.OnInputActionForStarted(inputType);
+        switch (inputType) 
+        {
+            case InputActionUIEnum.F12:
+            case InputActionUIEnum.ESC:
+                HandleForBackMain();
+                break;
+        }
+    }
+
     public override void OnClickForButton(Button viewButton)
     {
         base.OnClickForButton(viewButton);
@@ -44,15 +56,6 @@ public partial class UIGodMain : UIGameCommonNormal
         else if (viewButton == ui_Time_4)
         {
             HandleForTimeChange(18, 0);
-        }
-    }
-
-    public override void OnInputActionForStarted(InputActionUIEnum inputType)
-    {
-        base.OnInputActionForStarted(inputType);
-        if (inputType == InputActionUIEnum.ESC)
-        {
-            HandleForBackMain();
         }
     }
 

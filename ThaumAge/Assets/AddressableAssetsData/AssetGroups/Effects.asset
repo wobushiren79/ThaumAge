@@ -29,6 +29,10 @@ MonoBehaviour:
     m_Address: Assets/Prefabs/Effects/Effect_BlockBreak_1.prefab
     m_ReadOnly: 0
     m_SerializedLabels: []
+  - m_GUID: 05a18a082666182449abedb0981807c0
+    m_Address: Assets/Prefabs/Effects/Effect_DamageText_1.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: fd6114d87f1af534fbf270c47c0f10bf, type: 2}
   m_SchemaSet:

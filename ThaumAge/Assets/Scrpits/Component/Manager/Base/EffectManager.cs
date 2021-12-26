@@ -48,7 +48,6 @@ public class EffectManager : BaseManager
         EffectBean effectData = effect.effectData;
         if (dicIdleEffect.TryGetValue(effectData.effectName, out Queue<EffectBase> listIdleEffect))
         {
-            effect.ShowObj(false);
             listIdleEffect.Enqueue(effect);
         }
         else
@@ -57,5 +56,6 @@ public class EffectManager : BaseManager
             listEffect.Enqueue(effect);
             dicIdleEffect.Add(effectData.effectName, listEffect);
         }
+        effect.ShowObj(false);
     }
 }

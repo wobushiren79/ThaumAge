@@ -41,11 +41,13 @@ public class UIViewShortcuts : BaseUIView
 
     public override void OnInputActionForStarted(InputActionUIEnum inputType)
     {
+        base.OnInputActionForStarted(inputType);
+
         UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();
         int indexForShortcutsBefore = userData.indexForShortcuts;
         int indexForShortcuts;
         bool isRefreshUI = true;
-        base.OnInputActionForStarted(inputType);
+
         switch (inputType)
         {
             case InputActionUIEnum.N0:

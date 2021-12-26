@@ -31,17 +31,17 @@ public partial class UIGameMain : BaseUIComponent
     public override void OnInputActionForStarted(InputActionUIEnum inputName)
     {
         base.OnInputActionForStarted(inputName);
-        if (inputName == InputActionUIEnum.F12)
+        switch (inputName) 
         {
-            OpenGodMain();
-        }
-        else if (inputName == InputActionUIEnum.ESC)
-        {
-            OpenSettingUI();
-        }
-        else if (inputName == InputActionUIEnum.B)
-        {
-            OpenUserDetailsUI();
+            case InputActionUIEnum.F12:
+                OpenGodMain();
+                break;
+            case InputActionUIEnum.ESC:
+                OpenGodMain();
+                break;
+            case InputActionUIEnum.B:
+                OpenUserDetailsUI();
+                break;
         }
     }
 

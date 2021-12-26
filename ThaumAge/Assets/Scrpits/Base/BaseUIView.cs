@@ -15,7 +15,7 @@ public class BaseUIView : BaseUIInit
         uiSizeOriginal = rectTransform.sizeDelta;
     }
 
-    protected virtual void OnEnable()
+    public virtual void OnEnable()
     {
         RefreshUI();
     }
