@@ -33,7 +33,6 @@ public class CreatureCptBase : BaseMonoBehaviour
     /// <param name="damage"></param>
     public void UnderAttack(int damage)
     {
-        LogUtil.Log("UnderAttack:" + transform.name + " damage:" + damage);
         //展示伤害数值特效
         EffectBean effectData = new EffectBean();
         effectData.effectName = EffectInfo.DamageText_1;
