@@ -86,7 +86,7 @@ public class EffectDamageText : EffectBase
         //缩放动画
         animScaleStart = transform
             .DOScale(1, timeForStart)
-            .SetEase(Ease.OutBack);
+            .SetEase(Ease.OutElastic);
         //显示动画
         animAlphaStart = DOTween
             .ToAlpha(() => { return damageText.color; }, (data) =>
@@ -102,7 +102,7 @@ public class EffectDamageText : EffectBase
     {
         //缩放动画
         animScaleEnd = transform
-            .DOScale(1.1f, timeForEnd)
+            .DOScale(1.2f, timeForEnd)
             .SetEase(Ease.Linear);
         //隐藏动画
         animAlphaEnd = DOTween
