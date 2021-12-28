@@ -4,19 +4,26 @@ using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
-public class ItemsManager : BaseManager, IItemsInfoView
+public class ItemsManager : BaseManager,
+    IItemsInfoView, IItemsSynthesisView
 {
     protected ItemsInfoController controllerForItems;
-    protected Dictionary<long, ItemsInfoBean> dicItemsInfo = new Dictionary<long, ItemsInfoBean>();
-    protected List<ItemsInfoBean> listItemsInfo = new List<ItemsInfoBean>();
+    protected ItemsSynthesisController controllerForSynthesis;
+
+    //道具信息列表
+    protected Dictionary<long, ItemsInfoBean> dicItemsInfo = new();
+    //道具合成列表
+    protected Dictionary<long, ItemsSynthesisBean> dicItemsSynthesis = new();
+    //道具信息列表
+    protected List<ItemsInfoBean> listItemsInfo = new();
 
     //注册道具列表
     protected Item[] arrayItemRegister = new Item[EnumExtension.GetEnumMaxIndex<ItemsTypeEnum>() + 1];
 
     //道具模型列表
-    protected Dictionary<long, GameObject> dicItemsObj = new Dictionary<long, GameObject>();
+    protected Dictionary<long, GameObject> dicItemsObj = new();
     //道具模型贴图
-    protected Dictionary<long, Texture> dicItemsTex = new Dictionary<long, Texture>();
+    protected Dictionary<long, Texture> dicItemsTex = new();
 
     //路径-道具丢弃模型
     public static string pathForItemDrop = "Assets/Prefabs/Game/ItemDrop.prefab";
@@ -24,6 +31,10 @@ public class ItemsManager : BaseManager, IItemsInfoView
     {
         controllerForItems = new ItemsInfoController(this, this);
         controllerForItems.GetAllItemsInfoData(InitItemsInfo);
+
+        controllerForSynthesis = new ItemsSynthesisController(this, this);
+        controllerForSynthesis.GetAllItemsSynthesisData(InitItemsSynthesis);
+
         RegisterItem();
     }
 
@@ -45,8 +56,28 @@ public class ItemsManager : BaseManager, IItemsInfoView
                 return data.id;
             })
             .ToList();
-        dicItemsInfo = TypeConversionUtil.ListToMap(listItemsInfo);
+        InitData(dicItemsInfo, listItemsInfo);
     }
+
+    /// <summary>
+    /// 初始化道具合成数据
+    /// </summary>
+    /// <param name="listItemsSynthesis"></param>
+    public void InitItemsSynthesis(List<ItemsSynthesisBean> listItemsSynthesis)
+    {
+        InitData(dicItemsSynthesis, listItemsSynthesis);
+    }
+
+    /// <summary>
+    /// 获取道具合成数据
+    /// </summary>
+    /// <param name="synthesisId"></param>
+    /// <returns></returns>
+    public ItemsSynthesisBean GetItemsSynthesis(long synthesisId)
+    {
+        return GetDataById(synthesisId, dicItemsSynthesis);
+    }
+
 
     /// <summary>
     /// 获取所有物体信息
@@ -64,11 +95,7 @@ public class ItemsManager : BaseManager, IItemsInfoView
     /// <returns></returns>
     public ItemsInfoBean GetItemsInfoById(long id)
     {
-        if (dicItemsInfo.TryGetValue(id, out ItemsInfoBean itemsInfo))
-        {
-            return itemsInfo;
-        }
-        return null;
+        return GetDataById(id, dicItemsInfo);
     }
 
     /// <summary>
@@ -219,6 +246,16 @@ public class ItemsManager : BaseManager, IItemsInfoView
     }
 
     public void GetItemsInfoFail(string failMsg, Action action)
+    {
+
+    }
+
+    public void GetItemsSynthesisSuccess<T>(T data, Action<T> action)
+    {
+        action?.Invoke(data);
+    }
+
+    public void GetItemsSynthesisFail(string failMsg, Action action)
     {
 
     }

@@ -27,6 +27,7 @@ public class ItemsInfoBean : BaseBean
 
     public string range_damage;//伤害范围 长宽高
 
+    public string anim_use;//使用动画
     public ItemsTypeEnum GetItemsType()
     {
         return (ItemsTypeEnum)items_type;

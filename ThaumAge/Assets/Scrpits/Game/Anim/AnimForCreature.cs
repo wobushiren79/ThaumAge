@@ -37,4 +37,14 @@ public class AnimForCreature
     {
         animator.SetBool("use", isUse);
     }
+
+    /// <summary>
+    /// 播放指定动画
+    /// </summary>
+    /// <param name="animName"></param>
+    public void PlayAnim(string animName) 
+    {
+        animator.CrossFade(animName,0.1f);
+    }
+
 }

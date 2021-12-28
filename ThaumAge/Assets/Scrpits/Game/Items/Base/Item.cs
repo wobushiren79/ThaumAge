@@ -16,6 +16,22 @@ public class Item
     }
 
     /// <summary>
+    /// 播放使用动画
+    /// </summary>
+    public virtual void UseForAnim(GameObject user, ItemsBean itemsData)
+    {
+        //播放使用动画
+        ItemsInfoBean itemsInfo = GetItemsInfo(itemsData.itemId);
+        CreatureCptBase creature = user.GetComponent<CreatureCptBase>();
+        if (itemsInfo.anim_use.IsNull())
+            //如果没有动画 则播放默认的使用动画
+            creature.animForCreature.PlayUse(true);
+        else
+            //如果该道具指定播放指定动画
+            creature.animForCreature.PlayAnim(itemsInfo.anim_use);
+    }
+
+    /// <summary>
     /// 使用
     /// </summary>
     public virtual void Use(GameObject user, ItemsBean itemsData)

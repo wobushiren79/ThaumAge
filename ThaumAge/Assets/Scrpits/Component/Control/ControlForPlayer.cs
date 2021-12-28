@@ -161,8 +161,6 @@ public class ControlForPlayer : ControlForBase
         ItemsBean itemsData = userData.GetItemsFromShortcut();
         Player player = GameHandler.Instance.manager.player;
         ItemsHandler.Instance.UseItem(player.gameObject, itemsData);
-        //播放使用动画
-        character.characterAnim.aiCreatureAnim.PlayUse(true);
     }
 
 

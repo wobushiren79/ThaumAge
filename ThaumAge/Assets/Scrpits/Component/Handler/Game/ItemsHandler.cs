@@ -25,6 +25,7 @@ public class ItemsHandler : BaseHandler<ItemsHandler, ItemsManager>
             item = manager.GetRegisterItem((ItemsTypeEnum)itemsInfo.items_type);
         }
         item.Use(user, itemsData);
+        item.UseForAnim(user, itemsData);
     }
 
     /// <summary>
