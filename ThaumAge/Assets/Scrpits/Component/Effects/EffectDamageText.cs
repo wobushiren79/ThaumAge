@@ -2,26 +2,21 @@
 using UnityEngine;
 using DG.Tweening;
 using UnityEngine.UI;
+using TMPro;
 
 public class EffectDamageText : EffectBase
 {
     protected float timeForStart;
     protected float timeForEnd;
 
-    protected TextMesh damageText;
+    protected TextMeshPro damageText;
 
     public void Awake()
     {
         timeForStart = 0.2f;
-        timeForEnd = 0.2f;
+        timeForEnd = 0.5f;
 
-        damageText = GetComponent<TextMesh>();
-    }
-    public void Update()
-    {
-        //设置朝向
-        Camera mainCamera = CameraHandler.Instance.manager.mainCamera;
-        transform.LookAt(mainCamera.transform.position);
+        damageText = GetComponent<TextMeshPro>();
     }
 
     /// <summary>
@@ -58,7 +53,7 @@ public class EffectDamageText : EffectBase
         animScaleEnd?.Kill();
         animMoveShow?.Kill();
         //还原数值
-        damageText.color = damageText.color.SetColor(a: 0);
+        damageText.color = damageText.color.SetColor(a: 1);
         transform.localScale = Vector3.zero;
     }
 
@@ -69,15 +64,15 @@ public class EffectDamageText : EffectBase
     {
         //向上移动动画
         animMoveShow = transform
-            .DOLocalMoveY(transform.localPosition.y + 0.5f,effectData.timeForShow)
+            .DOLocalMoveY(transform.localPosition.y + 2f, effectData.timeForShow)
             .SetEase(Ease.Linear);
         //开始结束动画
-        this.WaitExecuteSeconds(effectData.timeForShow- timeForEnd,()=> 
+        this.WaitExecuteSeconds(effectData.timeForShow - timeForEnd, () =>
         {
             AnimForEnd();
-        });     
+        });
     }
-    
+
     /// <summary>
     /// 开始动画
     /// </summary>
@@ -86,13 +81,13 @@ public class EffectDamageText : EffectBase
         //缩放动画
         animScaleStart = transform
             .DOScale(1, timeForStart)
-            .SetEase(Ease.OutElastic);
+            .SetEase(Ease.OutBack);
         //显示动画
-        animAlphaStart = DOTween
-            .ToAlpha(() => { return damageText.color; }, (data) =>
-            {
-                damageText.color = data;
-            }, 1, timeForStart);
+        //animAlphaStart = DOTween
+        //    .ToAlpha(() => { return damageText.color; }, (data) =>
+        //    {
+        //        damageText.color = data;
+        //    }, 1, timeForStart);
     }
 
     /// <summary>

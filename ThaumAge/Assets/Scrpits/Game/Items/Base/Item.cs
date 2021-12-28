@@ -22,7 +22,7 @@ public class Item
     {
         //播放使用动画
         ItemsInfoBean itemsInfo = GetItemsInfo(itemsData.itemId);
-        CreatureCptBase creature = user.GetComponent<CreatureCptBase>();
+        CreatureCptBase creature = user.GetComponentInChildren<CreatureCptBase>();
         if (itemsInfo.anim_use.IsNull())
             //如果没有动画 则播放默认的使用动画
             creature.animForCreature.PlayUse(true);

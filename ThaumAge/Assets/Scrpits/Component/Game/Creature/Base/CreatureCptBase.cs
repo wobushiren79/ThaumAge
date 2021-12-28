@@ -37,7 +37,7 @@ public class CreatureCptBase : BaseMonoBehaviour
         EffectBean effectData = new EffectBean();
         effectData.effectName = EffectInfo.DamageText_1;
         effectData.effectType = EffectTypeEnum.Normal;
-        effectData.timeForShow = 0.5f;
+        effectData.timeForShow = 1f;
         effectData.effectPosition = transform.position + new Vector3(0, 1, 0);
         EffectHandler.Instance.ShowEffect(effectData, (effect) =>
         {
