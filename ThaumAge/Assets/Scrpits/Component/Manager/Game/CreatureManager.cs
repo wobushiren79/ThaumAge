@@ -12,7 +12,7 @@ public class CreatureManager : BaseManager,
     public readonly string pathSkin = "Assets/Texture/Character/Skin";
 
     public readonly string pathCreature = "Assets/Prefabs/Model/Creature";
-
+    public readonly string pathCreatureLifeProgress = "Assets/Prefabs/Model/Creature";
     //角色头发列表
     public Dictionary<string, GameObject> dicCharacterHairModel = new Dictionary<string, GameObject>();
     public Dictionary<long, CharacterInfoBean> dicCharacterHairInfo = new Dictionary<long, CharacterInfoBean>();
@@ -37,6 +37,9 @@ public class CreatureManager : BaseManager,
     protected CharacterInfoController controllerForCharacterInfo;
     //生物数据控制器
     protected CreatureInfoController controllerForCreatureInfo;
+
+    //生物血条模型
+    protected GameObject modelForLifeProgress;
 
     public void Awake()
     {
@@ -93,6 +96,19 @@ public class CreatureManager : BaseManager,
     public void InitCharacterInfoSkin(List<CharacterInfoBean> listData)
     {
         InitData(dicCharacterSkinInfo, listData);
+    }
+
+    /// <summary>
+    /// 获取生命条模型
+    /// </summary>
+    /// <returns></returns>
+    public GameObject GetCreatureLifeProgressModel()
+    {
+        if (modelForLifeProgress == null) 
+        {
+            modelForLifeProgress = LoadAddressablesUtil.LoadAssetSync<GameObject>(pathCreatureLifeProgress);
+        }
+        return modelForLifeProgress;
     }
 
     /// <summary>

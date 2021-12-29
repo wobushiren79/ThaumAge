@@ -9,6 +9,8 @@ public class CreatureCptBase : BaseMonoBehaviour
     public CreatureInfoBean creatureInfo;
     //生物数据
     public CreatureBean creatureData;
+    //生物生命条
+    protected CreatureCptLifeProgress lifeProgress;
 
     public virtual void Awake()
     {
@@ -44,5 +46,29 @@ public class CreatureCptBase : BaseMonoBehaviour
             EffectDamageText damageText = effect as EffectDamageText;
             damageText.SetData($"{damage}");
         });
+        //展示血条
+        ShowLifeProgress();
+    }
+
+    /// <summary>
+    /// 展示血条
+    /// </summary>
+    public void ShowLifeProgress()
+    {
+        if (lifeProgress == null)
+        {
+            Player player = GameHandler.Instance.manager.player;
+            if (player.GetCharacter() == this)
+            {
+                //如果是玩家自己 则不显示血条
+            }
+            else
+            {
+                //如果是其他生物 则显示血条
+                lifeProgress = CreatureHandler.Instance.CreateCreatureLifeProgress(gameObject);
+            }
+        }
+        if (lifeProgress != null)
+            lifeProgress.SetData(creatureData.maxLife, creatureData.currentLife);
     }
 }

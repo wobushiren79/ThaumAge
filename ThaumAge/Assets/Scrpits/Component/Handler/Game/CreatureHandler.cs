@@ -24,4 +24,20 @@ public class CreatureHandler : BaseHandler<CreatureHandler, CreatureManager>
         });
     }
 
+
+    /// <summary>
+    /// 创建生物血条
+    /// </summary>
+    public CreatureCptLifeProgress CreateCreatureLifeProgress(GameObject creatureObj)
+    {
+        //获取模型
+        GameObject objLifeProgressModel = manager.GetCreatureLifeProgressModel();
+        //实例化
+        GameObject objLifeProgress = Instantiate(creatureObj, objLifeProgressModel);
+        //获取控件
+        CreatureCptLifeProgress creatureCptLife = objLifeProgress.GetComponent<CreatureCptLifeProgress>();
+        //设置位置
+        objLifeProgress.transform.localPosition = new Vector3(0,2,0);
+        return creatureCptLife;
+    }
 }
