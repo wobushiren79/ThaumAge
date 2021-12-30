@@ -37,7 +37,6 @@ public class Biome
     {
         BiomeForCaveData caveData = new BiomeForCaveData
         {
-            addRate = 0.00001f,
             minDepth = 1,
             maxDepth = 4,
         };

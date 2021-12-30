@@ -527,6 +527,30 @@ public class Chunk : BaseMonoBehaviour
                 }
             }
         }
+        FastNoise fastNoise = BiomeHandler.Instance.fastNoise;
+        //生成洞穴 不放在每一个方块里去检测 提升效率
+        int caveNumber = WorldRandTools.Range(0, 5, chunkData.positionForWorld);
+        for (int i = 0; i < caveNumber; i++)
+        {
+            int positionX = WorldRandTools.Range(1, chunkData.chunkWidth);
+            int positionZ = WorldRandTools.Range(1, chunkData.chunkWidth);
+            BiomeMapData biomeMapData = mapData[positionX, positionZ];
+            int positionY = WorldRandTools.Range(1, biomeMapData.maxHeight);
+            Vector3Int startPosition = new Vector3Int(positionX, positionY, positionZ) + chunkData.positionForWorld;
+            //BiomeCreateTool.AddCave(startPosition, caveData);
+            for (int f = 0; f < 10; f++)
+            {
+                BlockTempBean blockTemp = new BlockTempBean(BlockTypeEnum.None, startPosition.x, startPosition.y, startPosition.z);
+                WorldCreateHandler.Instance.manager.AddUpdateBlock(blockTemp);
+
+                float offsetX = fastNoise.GetPerlin(0, startPosition.y, startPosition.z) * 10;
+                float offsetY = fastNoise.GetPerlin(startPosition.x, 0, startPosition.z) * 10;
+                float offsetZ = fastNoise.GetPerlin(startPosition.x, startPosition.y, 0) * 10;
+
+                startPosition += new Vector3Int((int)offsetX, (int)offsetY, (int)offsetZ);
+            }
+        }
+
     }
 
     /// <summary>
