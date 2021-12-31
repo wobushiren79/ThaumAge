@@ -1,4 +1,5 @@
-﻿using UnityEditor;
+﻿using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 public class CreatureCptBase : BaseMonoBehaviour
@@ -70,5 +71,19 @@ public class CreatureCptBase : BaseMonoBehaviour
         }
         if (lifeProgress != null)
             lifeProgress.SetData(creatureData.maxLife, creatureData.currentLife);
+    }
+
+    /// <summary>
+    /// 死亡
+    /// </summary>
+    public void Dead()
+    {
+        //获取所有的骨骼节点
+        List<Transform> listObjBone = CptUtil.GetAllCptInChildrenByContainName<Transform>(gameObject, "Bone");
+        for (int i = 0; i < listObjBone.Count; i++)
+        {
+            Transform itemBone = listObjBone[i];
+            Rigidbody boneRB = itemBone.AddComponentEX<Rigidbody>();
+        }
     }
 }
