@@ -459,7 +459,6 @@ public class Chunk : BaseMonoBehaviour
         SetBlockForLocal(blockLocalPosition, blockType, direction, meta, isRefreshMesh, isSaveData, isRefreshBlockRange);
     }
 
-
     public void SetBlockForLocal(Vector3Int localPosition, BlockTypeEnum blockType, DirectionEnum direction = DirectionEnum.UP, string meta = null, bool isRefreshMesh = true, bool isSaveData = true, bool isRefreshBlockRange = true)
     {
         //首先移除方块
@@ -527,50 +526,14 @@ public class Chunk : BaseMonoBehaviour
                 }
             }
         }
-        FastNoise fastNoise = BiomeHandler.Instance.fastNoise;
+
         //生成洞穴 不放在每一个方块里去检测 提升效率
-        int caveNumber = WorldRandTools.Range(0,10, chunkData.positionForWorld);
- 
-        for (int i = 8; i < caveNumber; i++)
-        {
-            int positionX = WorldRandTools.Range(1, chunkData.chunkWidth);
-            int positionZ = WorldRandTools.Range(1, chunkData.chunkWidth);
-            BiomeMapData biomeMapData = mapData[positionX, positionZ];
-            int positionY = WorldRandTools.Range(1, biomeMapData.maxHeight);
-            Vector3Int startPosition = new Vector3Int(positionX, positionY, positionZ) + chunkData.positionForWorld;
-            //BiomeCreateTool.AddCave(startPosition, caveData);
-            for (int f = 0; f < 50; f++)
-            {
-                int caveRange =  WorldRandTools.Range(3, 6);
-                for (int x = -caveRange; x <= caveRange; x++)
-                {
-                    for (int y = -caveRange; y <= caveRange; y++)
-                    {
-                        for (int z = -caveRange; z <= caveRange; z++)
-                        {
-                            float dis = Vector3.Distance(new Vector3(x, y, z), Vector3.zero);
-                            if (dis >= caveRange)
-                                continue;
-                            int tempX = startPosition.x + x;
-                            int tempY = startPosition.y + y;
-                            int tempZ = startPosition.z + z;
-                            if (tempY < 5)
-                            {
-                                continue;
-                            }
-                            BlockTempBean blockTemp = new BlockTempBean(BlockTypeEnum.None, tempX, tempY, tempZ);
-                            WorldCreateHandler.Instance.manager.AddUpdateBlock(blockTemp);
-                        }
-                    }
-                }
-                float offsetX = fastNoise.GetPerlin(0, startPosition.y, startPosition.z) * 9;
-                float offsetY = fastNoise.GetPerlin(startPosition.x, 0, startPosition.z) * 9;
-                float offsetZ = fastNoise.GetPerlin(startPosition.x, startPosition.y, 0) * 9;
-
-                startPosition += new Vector3Int((int)offsetX, (int)offsetY, (int)offsetZ);
-            }
-        }
-
+        BiomeCreateTool.BiomeForCaveData caveData = new BiomeCreateTool.BiomeForCaveData();
+        caveData.minDepth = 20;
+        caveData.maxDepth = 40;
+        caveData.minSize = 4;
+        caveData.maxSize = 6;
+        BiomeCreateTool.AddCave(this, mapData, caveData);
     }
 
     /// <summary>

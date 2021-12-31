@@ -22,25 +22,7 @@ public class Biome
     /// <returns></returns>
     public virtual BlockTypeEnum GetBlockType(Chunk chunk,BiomeInfoBean biomeInfo,int genHeight, Vector3Int localPos, Vector3Int wPos)
     {
-        if (wPos.y < genHeight - 1)
-        {
-            AddCave(wPos);
-        }
         return BlockTypeEnum.Stone;
-    }
-
-    /// <summary>
-    /// 增加洞穴
-    /// </summary>
-    /// <param name="startPosition"></param>
-    public void AddCave(Vector3Int startPosition)
-    {
-        BiomeForCaveData caveData = new BiomeForCaveData
-        {
-            minDepth = 1,
-            maxDepth = 4,
-        };
-        BiomeCreateTool.AddCave(startPosition, caveData);
     }
 
     /// <summary>

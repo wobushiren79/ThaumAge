@@ -43,6 +43,8 @@ public class BiomeCreateTool
         public float addRate;
         public int minDepth;
         public int maxDepth;
+        public int minSize;
+        public int maxSize;
     }
 
     public struct BiomeForWaterPoolData
@@ -620,9 +622,50 @@ public class BiomeCreateTool
     /// </summary>
     /// <param name="startPosition"></param>
     /// <param name="caveData"></param>
-    public static void AddCave(Vector3Int startPosition, BiomeForCaveData caveData)
+    public static void AddCave(Chunk chunk, BiomeMapData[,] mapData ,BiomeForCaveData caveData)
     {
+        FastNoise fastNoise = BiomeHandler.Instance.fastNoise;
+        int caveNumber = WorldRandTools.Range(0, 10, chunk.chunkData.positionForWorld);
+        for (int i = 8; i < caveNumber; i++)
+        {
+            int positionX = WorldRandTools.Range(1, chunk.chunkData.chunkWidth);
+            int positionZ = WorldRandTools.Range(1, chunk.chunkData.chunkWidth);
+            BiomeMapData biomeMapData = mapData[positionX, positionZ];
+            int positionY = WorldRandTools.Range(1, biomeMapData.maxHeight);
+            Vector3Int startPosition = new Vector3Int(positionX, positionY, positionZ) + chunk.chunkData.positionForWorld;
 
+            int caveDepth = WorldRandTools.Range(caveData.minDepth, caveData.maxDepth);
+            for (int f = 0; f < caveDepth; f++)
+            {
+                int caveRange = WorldRandTools.Range(caveData.minSize, caveData.maxSize);
+                for (int x = -caveRange; x <= caveRange; x++)
+                {
+                    for (int y = -caveRange; y <= caveRange; y++)
+                    {
+                        for (int z = -caveRange; z <= caveRange; z++)
+                        {
+                            float dis = Vector3.Distance(new Vector3(x, y, z), Vector3.zero);
+                            if (dis >= caveRange)
+                                continue;
+                            int tempX = startPosition.x + x;
+                            int tempY = startPosition.y + y;
+                            int tempZ = startPosition.z + z;
+                            if (tempY < 5)
+                            {
+                                continue;
+                            }
+                            BlockTempBean blockTemp = new BlockTempBean(BlockTypeEnum.None, tempX, tempY, tempZ);
+                            WorldCreateHandler.Instance.manager.AddUpdateBlock(blockTemp);
+                        }
+                    }
+                }
+                float offsetX = fastNoise.GetPerlin(0, startPosition.y, startPosition.z) * 9;
+                float offsetY = fastNoise.GetPerlin(startPosition.x, 0, startPosition.z) * 9;
+                float offsetZ = fastNoise.GetPerlin(startPosition.x, startPosition.y, 0) * 9;
+
+                startPosition += new Vector3Int((int)offsetX, (int)offsetY, (int)offsetZ);
+            }
+        }
     }
 
     /// <summary>

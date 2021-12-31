@@ -23,7 +23,7 @@ public class CreatureCptLifeProgress : BaseMonoBehaviour
         this.currentLife = currentLife;
         this.lifePro = currentLife / (float)maxLife;
         //设置进度
-        srCurrentLife.size = new Vector2(lifePro, 1f);
+        srCurrentLife.material.SetFloat("_Progress", lifePro);
         //设置文字显示
         tvLife.text = $"{currentLife}/{maxLife}";
         //设置10s时间隐藏
