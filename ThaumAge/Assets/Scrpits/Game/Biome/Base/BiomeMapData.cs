@@ -13,8 +13,6 @@ public class BiomeMapData
     public float offsetDis;
     //生态
     public Biome biome;
-    //Y轴是否有方块
-    public bool[] yHasBlock;
 
     public void InitData(FastNoise fastNoise, Vector3Int wPos, Vector3Int[] listBiomeCenterPosition, Biome[] listBiome)
     {
@@ -55,23 +53,5 @@ public class BiomeMapData
         maxHeight = BiomeHandler.Instance.GetHeightData(wPos, biome.biomeInfo);
 
         offsetDis = secondMinBiomeDis - minBiomeDis;
-
-
-        //Y轴是否有方块 
-        yHasBlock = new bool[0];
-        //for (int i = 0; i < yHasBlock.Length; i++)
-        //{       
-        //    float caveNoise = fastNoise.GetPerlinFractal(wPos.x * 5f, i * 10f, wPos.z * 5f);
-        //    float caveMask = fastNoise.GetSimplex(wPos.x * .3f, wPos.z * .3f) + .6f;
-
-        //    if (caveNoise > Mathf.Max(caveMask, .2f))
-        //    {
-        //        yHasBlock[i] = false;
-        //    }
-        //    else
-        //    {
-        //        yHasBlock[i] = true;
-        //    }
-        //}
     }
 }

@@ -1,22 +1,32 @@
 ﻿using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using DG.Tweening;
 
 public class CreatureCptBase : BaseMonoBehaviour
 {
     //生物基础动画
-    public AnimForCreature animForCreature;
+    public CreatureAnim creatureAnim;
+    //生物基础战斗
+    public CreatureBattle creatureBattle;
+
     //生物信息
     public CreatureInfoBean creatureInfo;
     //生物数据
     public CreatureBean creatureData;
-    //生物生命条
-    protected CreatureCptLifeProgress lifeProgress;
+
+    //刚体-生物
+    protected Rigidbody rbCreature;
+    //动画-生物
+    protected Animator animCreature;
 
     public virtual void Awake()
     {
-        Animator aiAnimator = GetComponentInChildren<Animator>();
-        animForCreature = new AnimForCreature(aiAnimator);
+        animCreature = GetComponentInChildren<Animator>();
+        rbCreature = GetComponentInChildren<Rigidbody>();
+
+        creatureAnim = new CreatureAnim(this, animCreature);
+        creatureBattle = new CreatureBattle(this, rbCreature);
     }
 
     /// <summary>
@@ -30,48 +40,7 @@ public class CreatureCptBase : BaseMonoBehaviour
         creatureData.currentLife = creatureInfo.life;
     }
 
-    /// <summary>
-    /// 遭到攻击
-    /// </summary>
-    /// <param name="damage"></param>
-    public void UnderAttack(int damage)
-    {
-        //展示伤害数值特效
-        EffectBean effectData = new EffectBean();
-        effectData.effectName = EffectInfo.DamageText_1;
-        effectData.effectType = EffectTypeEnum.Normal;
-        effectData.timeForShow = 1f;
-        effectData.effectPosition = transform.position + new Vector3(0, 1, 0);
-        EffectHandler.Instance.ShowEffect(effectData, (effect) =>
-        {
-            EffectDamageText damageText = effect as EffectDamageText;
-            damageText.SetData($"{damage}");
-        });
-        //展示血条
-        ShowLifeProgress();
-    }
 
-    /// <summary>
-    /// 展示血条
-    /// </summary>
-    public void ShowLifeProgress()
-    {
-        if (lifeProgress == null)
-        {
-            Player player = GameHandler.Instance.manager.player;
-            if (player.GetCharacter() == this)
-            {
-                //如果是玩家自己 则不显示血条
-            }
-            else
-            {
-                //如果是其他生物 则显示血条
-                lifeProgress = CreatureHandler.Instance.CreateCreatureLifeProgress(gameObject);
-            }
-        }
-        if (lifeProgress != null)
-            lifeProgress.SetData(creatureData.maxLife, creatureData.currentLife);
-    }
 
     /// <summary>
     /// 死亡

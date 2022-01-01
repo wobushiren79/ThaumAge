@@ -132,14 +132,15 @@ public partial class UIViewItem : BaseUIView,
     public void OnPointerClick(PointerEventData eventData)
     {
         LogUtil.Log($"OnPointerClick dragging:{eventData.dragging} pointerDrag:{eventData.pointerDrag.name} eligibleForClick:{eventData.eligibleForClick}");
+
     }
     public void OnPointerUp(PointerEventData eventData)
     {
-        LogUtil.Log($"OnPointerUp dragging:{eventData.dragging} pointerDrag:{eventData.pointerDrag.name} eligibleForClick:{eventData.eligibleForClick}");
+        //LogUtil.Log($"OnPointerUp dragging:{eventData.dragging} pointerDrag:{eventData.pointerDrag.name} eligibleForClick:{eventData.eligibleForClick}");
     }
     public void OnPointerDown(PointerEventData eventData)
     {
-        LogUtil.Log($"OnPointerDown dragging:{eventData.dragging} pointerDrag:{eventData.pointerDrag.name} eligibleForClick:{eventData.eligibleForClick}");
+        //LogUtil.Log($"OnPointerDown dragging:{eventData.dragging} pointerDrag:{eventData.pointerDrag.name} eligibleForClick:{eventData.eligibleForClick}");
     }
 
     /// <summary>

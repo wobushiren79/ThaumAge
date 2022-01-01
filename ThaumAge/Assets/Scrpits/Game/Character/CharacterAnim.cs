@@ -3,10 +3,10 @@ using UnityEngine;
 
 public class CharacterAnim : CharacterBase
 {
-    public AnimForCreature aiCreatureAnim;
+    public CreatureAnim creatureAnim;
 
     public CharacterAnim(CreatureCptCharacter character) : base(character)
     {
-        aiCreatureAnim = character.animForCreature;
+        creatureAnim = character.creatureAnim;
     }
 }

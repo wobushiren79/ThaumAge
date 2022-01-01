@@ -117,7 +117,7 @@ public class ControlForPlayer : ControlForBase
         }
         characterController.Move(playerVelocity);
         //播放跳跃动画
-        character.characterAnim.aiCreatureAnim.PlayJump(isJump);
+        character.characterAnim.creatureAnim.PlayJump(isJump);
     }
 
     /// <summary>
@@ -188,7 +188,7 @@ public class ControlForPlayer : ControlForBase
     public void HandleForUseCanel(CallbackContext callback)
     {
         isUseItem = false;
-        character.characterAnim.aiCreatureAnim.PlayUse(false);
+        character.characterAnim.creatureAnim.PlayUse(false);
     }
 
     /// <summary>
@@ -218,11 +218,11 @@ public class ControlForPlayer : ControlForBase
 
         if (moveOffset.x == 0 && moveOffset.y == 0)
         {
-            character.characterAnim.aiCreatureAnim.PlayBaseAnim(CharacterAnimBaseState.Idle);
+            character.characterAnim.creatureAnim.PlayBaseAnim(CharacterAnimBaseState.Idle);
         }
         else
         {
-            character.characterAnim.aiCreatureAnim.PlayBaseAnim(CharacterAnimBaseState.Walk);
+            character.characterAnim.creatureAnim.PlayBaseAnim(CharacterAnimBaseState.Walk);
         }
     }
 

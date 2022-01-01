@@ -509,10 +509,6 @@ public class Chunk : BaseMonoBehaviour
                 BiomeMapData biomeMapData = mapData[x, z];
                 for (int y = 0; y < chunkData.chunkHeight; y++)
                 {
-                    //如果是镂空的 则不生成
-                    if (y < biomeMapData.yHasBlock.Length && !biomeMapData.yHasBlock[y])
-                        continue;
-
                     Vector3Int position = new Vector3Int(x, y, z);
 
                     //获取方块类型
@@ -531,8 +527,8 @@ public class Chunk : BaseMonoBehaviour
         BiomeCreateTool.BiomeForCaveData caveData = new BiomeCreateTool.BiomeForCaveData();
         caveData.minDepth = 20;
         caveData.maxDepth = 40;
-        caveData.minSize = 4;
-        caveData.maxSize = 6;
+        caveData.minSize = 3;
+        caveData.maxSize = 5;
         BiomeCreateTool.AddCave(this, mapData, caveData);
     }
 

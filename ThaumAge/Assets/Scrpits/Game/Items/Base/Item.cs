@@ -25,10 +25,10 @@ public class Item
         CreatureCptBase creature = user.GetComponentInChildren<CreatureCptBase>();
         if (itemsInfo.anim_use.IsNull())
             //如果没有动画 则播放默认的使用动画
-            creature.animForCreature.PlayUse(true);
+            creature.creatureAnim.PlayUse(true);
         else
             //如果该道具指定播放指定动画
-            creature.animForCreature.PlayAnim(itemsInfo.anim_use);
+            creature.creatureAnim.PlayAnim(itemsInfo.anim_use);
     }
 
     /// <summary>

@@ -1,12 +1,12 @@
 ﻿using UnityEditor;
 using UnityEngine;
 
-public class AnimForCreature
+public class CreatureAnim : CreatureBase
 {
     //角色动画控制器
     public Animator animator;
 
-    public AnimForCreature(Animator animator)
+    public CreatureAnim(CreatureCptBase creature, Animator animator) : base(creature)
     {
         this.animator = animator;
     }

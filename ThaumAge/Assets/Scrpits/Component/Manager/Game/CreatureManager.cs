@@ -12,7 +12,7 @@ public class CreatureManager : BaseManager,
     public readonly string pathSkin = "Assets/Texture/Character/Skin";
 
     public readonly string pathCreature = "Assets/Prefabs/Model/Creature";
-    public readonly string pathCreatureLifeProgress = "Assets/Prefabs/Model/Creature";
+    public readonly string pathCreatureLifeProgress = "Assets/Prefabs/Game/LifeProgress.prefab";
     //角色头发列表
     public Dictionary<string, GameObject> dicCharacterHairModel = new Dictionary<string, GameObject>();
     public Dictionary<long, CharacterInfoBean> dicCharacterHairInfo = new Dictionary<long, CharacterInfoBean>();
