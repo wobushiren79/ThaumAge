@@ -38,15 +38,15 @@ public class CharacterItems : CharacterBase
 
             case ItemsTypeEnum.Sword:
             case ItemsTypeEnum.Knife:
-                itemHoldRight.transform.localPosition = new Vector3(0, 0, 0.25f);
-                itemHoldRight.transform.localEulerAngles = new Vector3(90f, -30f, 0f);
+                itemHoldRight.transform.localPosition = new Vector3(0, 0, 0.3f);
+                itemHoldRight.transform.localEulerAngles = new Vector3(90f, -40f, 0f);
                 break;
             case ItemsTypeEnum.Bow:
                 itemHoldRight.transform.localPosition = new Vector3(0, 0, 0);
                 itemHoldRight.transform.localEulerAngles = new Vector3(90f, 180f, 0f);
                 break;
             default:
-                itemHoldRight.transform.localPosition = new Vector3(0, 0, 0.25f);
+                itemHoldRight.transform.localPosition = new Vector3(0, 0, 0.3f);
                 itemHoldRight.transform.localEulerAngles = new Vector3(90f, 0f, 0f);
                 break;
         }

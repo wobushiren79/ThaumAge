@@ -9,10 +9,14 @@ public class CreatureBattle : CreatureBase
     //生物生命条
     protected CreatureCptLifeProgress lifeProgress;
 
+    //被击飞的冷却时间
+    protected float timeCDForHitFly = 1;
+    protected bool isHitFly = false;
     public CreatureBattle(CreatureCptBase creature, Rigidbody rbCreature) : base(creature)
     {
         this.rbCreature = rbCreature;
     }
+
 
     /// <summary>
     /// 遭到攻击
@@ -20,6 +24,11 @@ public class CreatureBattle : CreatureBase
     /// <param name="damage"></param>
     public void UnderAttack(GameObject atkObj, int damage)
     {
+        if (CheckIsDead())
+            return;
+         
+        //扣除伤害
+        creature.creatureData.AddLife(-damage);
         //展示伤害数值特效
         EffectBean effectData = new();
         effectData.effectName = EffectInfo.DamageText_1;
@@ -41,7 +50,30 @@ public class CreatureBattle : CreatureBase
             HitFly(atkObj);
             //颤抖
             ShakeBody();
+            //飙血
+            ShowBlood();
         }
+
+        //检测是否死亡
+        if (CheckIsDead())
+        {
+            //隐藏生命条
+            lifeProgress.ShowObj(false);
+            //死亡
+            creature.Dead();
+        }
+    }
+
+    /// <summary>
+    /// 检测是否死亡
+    /// </summary>
+    public bool CheckIsDead()
+    {
+        if (creature.creatureData.currentLife <= 0)
+        {
+            return true;
+        }
+        return false;
     }
 
     /// <summary>
@@ -49,6 +81,15 @@ public class CreatureBattle : CreatureBase
     /// </summary>
     public void HitFly(GameObject atkObj)
     {
+        //如果进入了击飞的CD则无法被击飞
+        if (isHitFly)
+            return;
+        isHitFly = true;
+        creature.WaitExecuteSeconds(timeCDForHitFly,()=> 
+        {
+            isHitFly = false;
+        });
+        //如果有攻击的物体
         if (atkObj == null)
         {
             //击退
@@ -90,5 +131,21 @@ public class CreatureBattle : CreatureBase
         }
         if (lifeProgress != null)
             lifeProgress.SetData(creature.creatureData.maxLife, creature.creatureData.currentLife);
+    }
+
+    /// <summary>
+    /// 飙血
+    /// </summary>
+    public void ShowBlood()
+    {
+        EffectBean effectData = new EffectBean();
+        effectData.effectType = EffectTypeEnum.Visual;
+        effectData.effectName = EffectInfo.Effect_Blood_1;
+        effectData.effectPosition = creature.transform.position + Vector3.up;
+        effectData.timeForShow = 0.5f;
+        EffectHandler.Instance.ShowEffect(effectData,(effect)=> 
+        {
+            effect.PlayEffect();
+        });
     }
 }

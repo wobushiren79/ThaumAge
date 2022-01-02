@@ -48,11 +48,19 @@ public class CreatureCptBase : BaseMonoBehaviour
     public void Dead()
     {
         //获取所有的骨骼节点
-        List<Transform> listObjBone = CptUtil.GetAllCptInChildrenByContainName<Transform>(gameObject, "Bone");
-        for (int i = 0; i < listObjBone.Count; i++)
-        {
-            Transform itemBone = listObjBone[i];
-            Rigidbody boneRB = itemBone.AddComponentEX<Rigidbody>();
-        }
+        //List<Transform> listObjBone = CptUtil.GetAllCptInChildrenByContainName<Transform>(gameObject, "Bone");
+        //for (int i = 0; i < listObjBone.Count; i++)
+        //{
+        //    Transform itemBone = listObjBone[i];
+        //    Rigidbody boneRB = itemBone.AddComponentEX<Rigidbody>();
+        //}
+
+        //消失烟雾
+        EffectBean effectData = new EffectBean();
+        effectData.effectName = EffectInfo.Effect_Dead_1;
+        effectData.effectType = EffectTypeEnum.Visual;
+        effectData.timeForShow = 5;
+        effectData.effectPosition = transform.position;
+        EffectHandler.Instance.ShowEffect(effectData,(effect)=> { effect.PlayEffect(); });
     }
 }

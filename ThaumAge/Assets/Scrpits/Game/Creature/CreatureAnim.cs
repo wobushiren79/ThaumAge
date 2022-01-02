@@ -33,8 +33,9 @@ public class CreatureAnim : CreatureBase
     /// 播放使用动画
     /// </summary>
     /// <param name="isUse"></param>
-    public void PlayUse(bool isUse)
+    public void PlayUse(bool isUse,int useType = 0)
     {
+        animator.SetInteger("use_type", useType);
         animator.SetBool("use", isUse);
     }
 

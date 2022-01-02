@@ -1,10 +1,12 @@
 ﻿using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.VFX;
 
 public class EffectBase : BaseMonoBehaviour
 {
     public List<ParticleSystem> listPS = new List<ParticleSystem>();
+    public List<VisualEffect> listVE = new List<VisualEffect>();
 
     [HideInInspector]
     public EffectBean effectData;
@@ -26,12 +28,21 @@ public class EffectBase : BaseMonoBehaviour
     /// </summary>
     public virtual void PlayEffect()
     {
-        if (listPS.IsNull())
-            return;
-        for (int i = 0; i < listPS.Count; i++)
+        if (!listPS.IsNull()) 
         {
-            ParticleSystem itemPS = listPS[i];
-            itemPS.Play();
+            for (int i = 0; i < listPS.Count; i++)
+            {
+                ParticleSystem itemPS = listPS[i];
+                itemPS.Play();
+            }
+        }
+        if (!listVE.IsNull())
+        {
+            for (int i = 0; i < listVE.Count; i++)
+            {
+                VisualEffect itemVE = listVE[i];
+                itemVE.SendEvent("OnPlay");
+            }
         }
     }
 }

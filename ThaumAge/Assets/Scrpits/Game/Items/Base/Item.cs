@@ -27,8 +27,18 @@ public class Item
             //如果没有动画 则播放默认的使用动画
             creature.creatureAnim.PlayUse(true);
         else
-            //如果该道具指定播放指定动画
-            creature.creatureAnim.PlayAnim(itemsInfo.anim_use);
+        {
+            //如果可以转换成int 说明是use的另外一种类型
+            if (int.TryParse(itemsInfo.anim_use,out int reslut))
+            {         
+                creature.creatureAnim.PlayUse(true, reslut);
+            }
+            else
+            {
+                //如果该道具指定播放指定动画
+                creature.creatureAnim.PlayAnim(itemsInfo.anim_use);
+            }
+        }
     }
 
     /// <summary>
