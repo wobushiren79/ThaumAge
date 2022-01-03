@@ -58,7 +58,7 @@ public partial class UIViewCharacterEquip : BaseUIView
         {
             ItemsBean itemData = userData.userEquip.GetEquipByType(itemContainer.Key);
             itemContainer.Value.SetLimitType(itemContainer.Key);
-            itemContainer.Value.SetData(itemData);
+            itemContainer.Value.SetData(UIViewItemContainer.ContainerType.Equip, itemData);
             itemContainer.Value.SetHintText(UserEquipBean.GetEquipName(itemContainer.Key));
             itemContainer.Value.SetCallBackForSetViewItem(CallBackForSetEquip);
         }

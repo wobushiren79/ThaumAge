@@ -33,6 +33,16 @@ public class ScrollGridVertical : MonoBehaviour
     {
         this.onCellUpdateList.Remove(call);
     }
+
+    /// <summary>
+    /// 获取所有子控件
+    /// </summary>
+    /// <returns></returns>
+    public List<GameObject> GetAllCellObj()
+    {
+        return cellList;
+    }
+
     /// <summary>
     /// 设置ScrollGrid要显示的数据数量。
     /// </summary>

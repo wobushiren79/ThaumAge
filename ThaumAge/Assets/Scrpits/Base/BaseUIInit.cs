@@ -77,6 +77,8 @@ public class BaseUIInit : BaseMonoBehaviour
     /// <param name="callback"></param>
     protected virtual void CallBackForInputActionStarted(CallbackContext callback)
     {
+        if (callback.action.name.IsNull())
+            return;
         if (gameObject.activeInHierarchy)
         {
             this.WaitExecuteEndOfFrame(1, () =>
@@ -87,6 +89,7 @@ public class BaseUIInit : BaseMonoBehaviour
         }
     }
 
+
     /// <summary>
     /// 按钮点击
     /// </summary>
@@ -95,12 +98,10 @@ public class BaseUIInit : BaseMonoBehaviour
 
     }
 
-    /// <summary>
-    /// 数据事件点击
-    /// </summary>
-    /// <param name="inputName"></param>
+
     public virtual void OnInputActionForStarted(InputActionUIEnum inputType)
     {
 
     }
+
 }

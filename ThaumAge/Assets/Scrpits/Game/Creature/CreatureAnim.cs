@@ -12,6 +12,15 @@ public class CreatureAnim : CreatureBase
     }
 
     /// <summary>
+    /// 开关动画
+    /// </summary>
+    /// <param name="enabled"></param>
+    public void EnabledAnim(bool enabled)
+    {
+        animator.enabled = enabled;
+    }
+
+    /// <summary>
     /// 修改角色的基础动画
     /// </summary>
     /// <param name="animType"></param>

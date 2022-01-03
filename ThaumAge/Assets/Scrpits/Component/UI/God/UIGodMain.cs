@@ -87,7 +87,7 @@ public partial class UIGodMain : UIGameCommonNormal
         ItemsBean itemsData = new ItemsBean();
         itemsData.itemId = itemsInfo.id;
         itemsData.number = int.MaxValue;
-        viewItemContainer.SetData(itemsData, itemCell.index);
+        viewItemContainer.SetData(UIViewItemContainer.ContainerType.God, itemsData, itemCell.index);
     }
 
     /// <summary>

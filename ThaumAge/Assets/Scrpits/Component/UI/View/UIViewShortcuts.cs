@@ -15,7 +15,7 @@ public class UIViewShortcuts : BaseUIView
     public UIViewItemContainer ui_ShortcutItem_9;
     public UIViewItemContainer ui_ShortcutItem_10;
 
-    protected List<UIViewItemContainer> listShortcut;
+    public List<UIViewItemContainer> listShortcut;
 
     public override void Awake()
     {
@@ -119,7 +119,7 @@ public class UIViewShortcuts : BaseUIView
 
         for (int i = 0; i < listShortcut.Count; i++)
         {
-            listShortcut[i].SetData(userData.GetItemsFromShortcut(i), i);
+            listShortcut[i].SetData(UIViewItemContainer.ContainerType.Shortcuts, userData.GetItemsFromShortcut(i), i);
         }
 
         for (int i = 0; i < listShortcut.Count; i++)

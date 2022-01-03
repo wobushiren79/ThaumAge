@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using DG.Tweening;
 using System;
 using UnityEngine.InputSystem;
+using System.Collections.Generic;
 
 public partial class UIViewItem : BaseUIView,
     IBeginDragHandler, IDragHandler, IEndDragHandler, ICanvasRaycastFilter,
@@ -14,9 +15,9 @@ public partial class UIViewItem : BaseUIView,
     public Text ui_TVNumber;
 
     //返回原始位置的时间
-    public float timeForBackOriginal = 0.2f;
+    protected float timeForBackOriginal = 0.5f;
     //移动到指定位置的时间
-    public float timeForMove = 0.1f;
+    protected float timeForMove = 0.5f;
 
     public long itemId;
     public int itemNumber;
@@ -29,15 +30,21 @@ public partial class UIViewItem : BaseUIView,
 
     protected bool isRaycastLocationValid = true;
 
+    //是否正在播放返回动画
     protected static bool isAnim = false;
+    //是否开始拖拽
     protected static bool isBeginDrag = false;
+
     protected InputAction inputActionClick;
+    protected InputAction inputActionShiftClick;
 
     public override void Awake()
     {
         base.Awake();
         inputActionClick = InputHandler.Instance.manager.GetInputUIData(InputActionUIEnum.Click);
+        inputActionShiftClick = InputHandler.Instance.manager.GetInputUIData(InputActionUIEnum.Shift);
     }
+
     /// <summary>
     /// 设置数据
     /// </summary>
@@ -50,6 +57,9 @@ public partial class UIViewItem : BaseUIView,
         RefreshUI();
     }
 
+    /// <summary>
+    /// 刷新UI
+    /// </summary>
     public override void RefreshUI()
     {
         base.RefreshUI();
@@ -131,9 +141,62 @@ public partial class UIViewItem : BaseUIView,
     /// <param name="eventData"></param>
     public void OnPointerClick(PointerEventData eventData)
     {
-        LogUtil.Log($"OnPointerClick dragging:{eventData.dragging} pointerDrag:{eventData.pointerDrag.name} eligibleForClick:{eventData.eligibleForClick}");
-
+        float isFastClick = inputActionShiftClick.ReadValue<float>();
+        //LogUtil.Log($"OnPointerClick dragging:{eventData.dragging} pointerDrag:{eventData.pointerDrag.name} eligibleForClick:{eventData.eligibleForClick} isFastClick:{isFastClick}");
+        //如果是快速选择
+        if (isFastClick == 1)
+        {
+            BaseUIComponent currentUI = UIHandler.Instance.GetOpenUI();
+            switch (originalParent.containerType)
+            {
+                //如果是快捷栏
+                case UIViewItemContainer.ContainerType.Shortcuts:
+                    UIViewBackpackList backpackUI = currentUI.GetComponentInChildren<UIViewBackpackList>();
+                    if (backpackUI != null)
+                    {
+                        List<GameObject> listCellObj = backpackUI.ui_ItemList.GetAllCellObj();
+                        for (int i = 0; i < listCellObj.Count; i++)
+                        {
+                            GameObject itemObj = listCellObj[i];
+                            UIViewItemContainer itemContainer = itemObj.GetComponent<UIViewItemContainer>();
+                            //如果有容器VIEW 并且里面没有东西
+                            if (itemContainer != null && itemContainer.GetViewItem() == null)
+                            {
+                                ExchangeItemForContainer(itemContainer);
+                                return;
+                            }
+                        }
+                        return;
+                    }
+                    break;
+                //如果是背包或者上帝模式
+                case UIViewItemContainer.ContainerType.Backpack:
+                case UIViewItemContainer.ContainerType.God:
+                    //获取快捷栏
+                    UIViewShortcuts shortcutsUI = currentUI.GetComponentInChildren<UIViewShortcuts>();
+                    if (shortcutsUI != null)
+                    {
+                        for (int i = 0; i < shortcutsUI.listShortcut.Count; i++)
+                        {
+                            UIViewItemContainer itemContainer = shortcutsUI.listShortcut[i];
+                            //如果有容器VIEW 并且里面没有东西
+                            if (itemContainer != null && itemContainer.GetViewItem() == null)
+                            {
+                                //如果是上帝模式则需要在原位置复制一个
+                                if(originalParent.containerType == UIViewItemContainer.ContainerType.God)
+                                {
+                                    CopyItemInOriginal();
+                                }
+                                ExchangeItemForContainer(itemContainer);
+                                return;
+                            }
+                        }
+                    }
+                    break;
+            }
+        }
     }
+
     public void OnPointerUp(PointerEventData eventData)
     {
         //LogUtil.Log($"OnPointerUp dragging:{eventData.dragging} pointerDrag:{eventData.pointerDrag.name} eligibleForClick:{eventData.eligibleForClick}");
@@ -159,13 +222,7 @@ public partial class UIViewItem : BaseUIView,
         //如果是无限物品格 则在原位置实例化一个新的
         if (itemNumber == int.MaxValue)
         {
-            GameObject objOriginal = Instantiate(originalParent.gameObject, gameObject);
-            objOriginal.name = "ViewItem";
-            UIViewItem viewItem = objOriginal.GetComponent<UIViewItem>();
-            objOriginal.transform.position = gameObject.transform.position;
-            originalParent.SetViewItem(viewItem);
-            //设置拿出的物体数量为该物体的最大数量
-            itemNumber = itemsInfo.max_number;
+            CopyItemInOriginal();
         }
         else
         {
@@ -296,15 +353,38 @@ public partial class UIViewItem : BaseUIView,
     protected void AnimForPositionChange(float changeTime, Action callBack)
     {
         isAnim = true;
+        rectTransform.DOKill();
         rectTransform
             .DOAnchorPos(Vector2.zero, changeTime)
-            .SetEase(Ease.OutBack)
+            .SetEase(Ease.OutCubic)
+            .OnStart(()=> 
+            {
+                ui_IVIcon.maskable = false;//设置最层级显示
+            })
             .OnComplete(() =>
             {
+                ui_IVIcon.maskable = true;//设置最层级显示
                 isRaycastLocationValid = true;//设置为不能穿透
                 callBack?.Invoke();
                 isAnim = false;
             });
+    }
+
+    /// <summary>
+    /// 在原位置复制一个道具 并且数量为该道具的最大
+    /// </summary>
+    protected void CopyItemInOriginal()
+    {
+        GameObject objOriginal = Instantiate(originalParent.gameObject, gameObject);
+        objOriginal.name = "ViewItem";
+        UIViewItem viewItem = objOriginal.GetComponent<UIViewItem>();
+        objOriginal.transform.position = gameObject.transform.position;
+        originalParent.SetViewItem(viewItem);
+        //设置拿出的物体数量为该物体的最大数量
+        itemNumber = itemsInfo.max_number;
+
+        //刷新一下UI
+        RefreshUI();
     }
 
     /// <summary>
@@ -315,7 +395,7 @@ public partial class UIViewItem : BaseUIView,
     {
         UIViewItem tempViewItem = viewItemContainer.GetViewItem();
         if (tempViewItem == null)
-        {       
+        {
             //检测容器是否能放置当前物品
             bool canSetItem = viewItemContainer.CheckCanSetItem(itemsInfo.GetItemsType());
             //如果能放置
@@ -344,8 +424,7 @@ public partial class UIViewItem : BaseUIView,
     }
 
     protected bool ExchangeItemForItem(UIViewItem viewItem)
-    {       
-
+    {
         //如果目标是同一物品
         if (viewItem.itemsInfo.id == itemsInfo.id)
         {
@@ -402,7 +481,7 @@ public partial class UIViewItem : BaseUIView,
             }
             //如果是目标不是无限物品，则交换物品位置
             else
-            {                
+            {
                 //检测容器是否能放置当前物品
                 bool canSetItem = viewItem.originalParent.CheckCanSetItem(itemsInfo.GetItemsType());
                 if (canSetItem)

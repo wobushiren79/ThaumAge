@@ -7,8 +7,22 @@ using UnityEngine.UI;
 
 public partial class UIViewItemContainer : BaseUIView
 {
+    //容器类型
+    public enum ContainerType
+    {
+        None,
+        Shortcuts,//快捷栏
+        Equip,//装备
+        Backpack,//背包
+        Box,//箱子
+        God,//列表 GOD模式
+    }
+
     [Header("限制的物品类型")]
     public List<ItemsTypeEnum> listLimitTypes;
+
+    //容器类型
+    public ContainerType containerType;
     //位置
     public int viewIndex;
     //道具
@@ -37,8 +51,9 @@ public partial class UIViewItemContainer : BaseUIView
     /// </summary>
     /// <param name="itemsData"></param>
     /// <param name="viewIndex"></param>
-    public void SetData(ItemsBean itemsData, int viewIndex = 0)
+    public void SetData(ContainerType containerType, ItemsBean itemsData, int viewIndex = 0)
     {
+        this.containerType = containerType;
         this.itemsData = itemsData;
         this.viewIndex = viewIndex;
         SetViewItem(itemsData);
@@ -138,7 +153,7 @@ public partial class UIViewItemContainer : BaseUIView
     /// </summary>
     /// <param name="uiView"></param>
     public bool SetViewItem(UIViewItem uiView)
-    {        
+    {
         this.currentViewItem = uiView;
         this.currentViewItem.originalParent = this;
         this.currentViewItem.transform.SetParent(rectTransform);
@@ -160,7 +175,7 @@ public partial class UIViewItemContainer : BaseUIView
     /// </summary>
     /// <param name="itemsData"></param>
     public void SetViewItem(ItemsBean itemsData)
-    {        
+    {
         //设置展示信息
         ui_ViewItemContainer.SetItemId(itemsData.itemId);
 
