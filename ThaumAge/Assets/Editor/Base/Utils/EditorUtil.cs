@@ -192,4 +192,23 @@ public static class EditorUtil
     }
 
 
+    /// <summary>
+    /// 刷新资源
+    /// </summary>
+    public static void RefreshAsset()
+    {
+        AssetDatabase.SaveAssets();
+        AssetDatabase.Refresh();
+    }
+
+    /// <summary>
+    /// 刷新单个资源
+    /// </summary>
+    /// <param name="objSelect"></param>
+    public static void RefreshAsset(GameObject objSelect)
+    {
+        Undo.RecordObject(objSelect, objSelect.gameObject.name);
+        EditorUtility.SetDirty(objSelect);
+        RefreshAsset();
+    }
 }

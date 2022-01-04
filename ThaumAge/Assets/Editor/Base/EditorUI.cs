@@ -10,6 +10,39 @@ public class EditorUI
 {
 
     /// <summary>
+    /// 弹窗
+    /// </summary>
+    /// <param name="title"></param>
+    /// <param name="content"></param>
+    /// <param name="yesStr"></param>
+    /// <param name="noStr"></param>
+    /// <returns></returns>
+    public static bool GUIDialog(string title, string content, string yesStr = "是", string noStr = "否")
+    {
+        return EditorUtility.DisplayDialog(title, content, yesStr, noStr);
+    }
+
+    /// <summary>
+    /// 展示进度条
+    /// </summary>
+    /// <param name="title"></param>
+    /// <param name="info"></param>
+    /// <param name="progress"></param>
+    public static void GUIShowProgressBar(string title, string info, float progress)
+    {
+         EditorUtility.DisplayProgressBar(title, info, progress);
+    }
+    
+    /// <summary>
+    /// 关闭进度条
+    /// </summary>
+    public static void GUIHideProgressBar()
+    {
+        EditorUtility.ClearProgressBar();
+    }
+
+
+    /// <summary>
     /// 打开文件夹
     /// </summary>
     /// <param name="path"></param>

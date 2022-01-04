@@ -10,20 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
-  m_Name: Default Local Group
+  m_Name: Default
   m_EditorClassIdentifier: 
-  m_GroupName: Default Local Group
+  m_GroupName: Default
   m_Data:
     m_SerializedData: []
-  m_GUID: 4420c044d9bdfcd47952c28d7c8003a4
-  m_SerializeEntries:
-  - m_GUID: 044ee504a931c2340b052440ca980c61
-    m_Address: Assets/Prefabs/Game/LifeProgress.prefab
-    m_ReadOnly: 0
-    m_SerializedLabels: []
+  m_GUID: 1261beb35e7b46c4fbf9458f1cd39db6
+  m_SerializeEntries: []
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: fd6114d87f1af534fbf270c47c0f10bf, type: 2}
   m_SchemaSet:
     m_Schemas:
-    - {fileID: 11400000, guid: 81442b600df45df4e85ead8e87f03189, type: 2}
-    - {fileID: 11400000, guid: 2b1133557473a4545a5bc7454fd6dcc4, type: 2}
+    - {fileID: 11400000, guid: 3ad65bfea47065c48bf4ab59e8a441ad, type: 2}
+    - {fileID: 11400000, guid: c13b1fa8840e3d04ba587eb25c03a4ee, type: 2}

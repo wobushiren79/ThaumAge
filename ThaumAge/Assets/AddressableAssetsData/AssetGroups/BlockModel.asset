@@ -21,12 +21,12 @@ MonoBehaviour:
     m_Address: Assets/Prefabs/Block/BlockMushroomLuminous.prefab
     m_ReadOnly: 0
     m_SerializedLabels: []
-  - m_GUID: 2cbf5d4ced2b25c409c1b8ab06976e8f
-    m_Address: Assets/Prefabs/Block/BlockMagma.prefab
-    m_ReadOnly: 0
-    m_SerializedLabels: []
   - m_GUID: 4c988ebef8231e14b85e8ac4eb1097d1
     m_Address: Assets/Prefabs/Block/BlockBonfire.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 2cbf5d4ced2b25c409c1b8ab06976e8f
+    m_Address: Assets/Prefabs/Block/BlockMagma.prefab
     m_ReadOnly: 0
     m_SerializedLabels: []
   m_ReadOnly: 0

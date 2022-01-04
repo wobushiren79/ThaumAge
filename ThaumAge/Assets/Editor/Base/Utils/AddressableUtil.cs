@@ -1,8 +1,11 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEditor;
 using UnityEditor.AddressableAssets;
 using UnityEditor.AddressableAssets.Settings;
 using UnityEngine;
+using static UnityEditor.AddressableAssets.Settings.AddressableAssetSettings;
 
 public class AddressableUtil
 {
@@ -18,8 +21,36 @@ public class AddressableUtil
         AddressableAssetGroup group = Settings.FindGroup(groupName);
         if (group == null)
             group = Settings.CreateGroup(groupName, false, false, false, null);
-        Settings.AddLabel(groupName, false);
+        //Settings.AddLabel(groupName, false);
         return group;
+    }
+
+    /// <summary>
+    /// 查找所有的group
+    /// </summary>
+    /// <returns></returns>
+    public static List<AddressableAssetGroup> FindAllGrop()
+    {
+        AddressableAssetSettings Settings = AddressableAssetSettingsDefaultObject.Settings;
+        return Settings.groups;
+    }
+
+    public static List<AddressableAssetEntry> FindAllAsset(bool includeSubObjects = false)
+    {
+        AddressableAssetSettings Settings = AddressableAssetSettingsDefaultObject.Settings;
+        List<AddressableAssetEntry> listData = new List<AddressableAssetEntry>();
+        Settings.GetAllAssets(listData, includeSubObjects);
+        return listData;
+    }
+
+    /// <summary>
+    /// 增加修改回调
+    /// </summary>
+    /// <param name="callBack"></param>
+    public static void AddCallBackForAssetChange(Action<AddressableAssetSettings, ModificationEvent, object> callBack)
+    {
+        AddressableAssetSettings Settings = AddressableAssetSettingsDefaultObject.Settings;
+        Settings.OnModification += callBack;
     }
 
     /// <summary>
@@ -42,5 +73,52 @@ public class AddressableUtil
         entry.address = address;
         entry.SetLabel(group.Name, true, false, false);
         return entry;
+    }
+
+
+    /// <summary>
+    /// 移动资源
+    /// </summary>
+    public static void MoveAssetEntry(AddressableAssetEntry entry, AddressableAssetGroup targetParent, bool readOnly = false, bool postEvent = true)
+    {
+        AddressableAssetSettings Settings = AddressableAssetSettingsDefaultObject.Settings;
+        Settings.MoveEntry(entry, targetParent, readOnly, postEvent);
+    }
+
+    /// <summary>
+    /// 移动资源
+    /// </summary>
+    public static void MoveAssetEntry(AddressableAssetEntry entry, string groupName, bool readOnly = false, bool postEvent = true)
+    {
+        AddressableAssetGroup group = FindOrCreateGroup(groupName);
+        MoveAssetEntry(entry, group, readOnly, postEvent);
+    }
+
+    /// <summary>
+    /// 关闭所有label
+    /// </summary>
+    /// <param name="entry"></param>
+    public static void ClearAllLabel(AddressableAssetEntry entry)
+    {
+        AddressableAssetSettings Settings = AddressableAssetSettingsDefaultObject.Settings;
+        List<string> listLabel = Settings.GetLabels();
+
+        for (int i = 0; i < listLabel.Count; i++)
+        {
+            entry.SetLabel(listLabel[i], false);
+        }
+    }
+
+    /// <summary>
+    /// 设置label
+    /// </summary>
+    /// <param name="entry"></param>
+    /// <param name="listLabel"></param>
+    public static void SetLabel(AddressableAssetEntry entry, List<string> listLabel)
+    {
+        for (int i = 0; i < listLabel.Count; i++)
+        {
+            entry.SetLabel(listLabel[i], true);
+        }
     }
 }
