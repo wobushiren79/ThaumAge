@@ -35,6 +35,11 @@ public class AddressableUtil
         return Settings.groups;
     }
 
+    /// <summary>
+    /// 获取所有资源
+    /// </summary>
+    /// <param name="includeSubObjects"></param>
+    /// <returns></returns>
     public static List<AddressableAssetEntry> FindAllAsset(bool includeSubObjects = false)
     {
         AddressableAssetSettings Settings = AddressableAssetSettingsDefaultObject.Settings;
