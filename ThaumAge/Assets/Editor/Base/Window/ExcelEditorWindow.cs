@@ -234,7 +234,7 @@ public class ExcelEditorWindow : EditorWindow
 
         sb.AppendLine($"using System;");
         sb.AppendLine($"\t[Serializable]");
-        sb.AppendLine($"\tpublic class {sheet.Name}Bean : BaseBean");
+        sb.AppendLine($"\tpublic partial class {sheet.Name}Bean : BaseBean");
         sb.AppendLine("\t{");
         //遍历sheet首行每个字段描述的值
         for (int i = 1; i <= sheet.Dimension.End.Column; i++)

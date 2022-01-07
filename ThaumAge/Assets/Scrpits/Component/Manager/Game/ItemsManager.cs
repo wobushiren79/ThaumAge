@@ -77,6 +77,29 @@ public class ItemsManager : BaseManager,
     {
         return GetDataById(synthesisId, dicItemsSynthesis);
     }
+    
+    /// <summary>
+    /// 通过类型获取道具合成数据
+    /// </summary>
+    /// <param name="type"></param>
+    /// <returns></returns>
+    public List<ItemsSynthesisBean> GetItemsSynthesisByType(int[] types)
+    {
+        List<ItemsSynthesisBean> listData = new List<ItemsSynthesisBean>();
+        foreach (var itemData in dicItemsSynthesis)
+        {
+            ItemsSynthesisBean itemValue = itemData.Value;
+            if (itemValue.CheckSynthesisType(types))
+            {
+                listData.Add(itemValue);
+            }
+        }
+        return listData;
+    }
+    public List<ItemsSynthesisBean> GetItemsSynthesisByType(int type)
+    {
+        return GetItemsSynthesisByType(new int[] { type });
+    }
 
 
     /// <summary>

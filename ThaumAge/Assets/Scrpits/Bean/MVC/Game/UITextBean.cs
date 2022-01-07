@@ -1,6 +1,6 @@
 using System;
 	[Serializable]
-	public class UITextBean : BaseBean
+	public partial class UITextBean : BaseBean
 	{
 		/// <summary>
 		///内容

@@ -1,6 +1,6 @@
 using System;
 	[Serializable]
-	public class Sheet1Bean : BaseBean
+	public partial class Sheet1Bean : BaseBean
 	{
 		/// <summary>
 		///名字

@@ -1,6 +1,6 @@
 using System;
 	[Serializable]
-	public class BaseInfoBean : BaseBean
+	public partial class BaseInfoBean : BaseBean
 	{
 		/// <summary>
 		///内容

@@ -1,6 +1,6 @@
 using System;
 	[Serializable]
-	public class CreatureInfoBean : BaseBean
+	public partial class CreatureInfoBean : BaseBean
 	{
 		/// <summary>
 		///模型资源名字
