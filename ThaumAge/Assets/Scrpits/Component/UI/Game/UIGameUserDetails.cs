@@ -6,10 +6,17 @@ public partial class UIGameUserDetails : UIGameCommonNormal,IRadioGroupCallBack
 {
     public int labelIndex = 0;
 
+    public override void Awake()
+    {
+        base.Awake();
+        ui_Labels.SetCallBack(this);
+    }
+
     public override void OpenUI()
     {
         base.OpenUI();
-        ui_ViewBackPack.InitData();
+        ui_ViewBackPack.Show();
+        ui_Labels.SetPosition(0,true);
     }
 
     public override void RefreshUI()
@@ -53,11 +60,13 @@ public partial class UIGameUserDetails : UIGameCommonNormal,IRadioGroupCallBack
         this.labelIndex = position;
         if (rbview == ui_ViewLabel_Equip)
         {
-
+            ui_ViewCharacterEquip.Show();
+            ui_ViewSynthesis.Hide();
         }
         else if (rbview == ui_ViewLabel_Synthesis)
         {
-
+            ui_ViewCharacterEquip.Hide();
+            ui_ViewSynthesis.Show();
         }
     }
 

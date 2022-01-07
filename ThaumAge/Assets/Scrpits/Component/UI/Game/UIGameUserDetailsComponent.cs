@@ -18,5 +18,9 @@ public partial class UIGameUserDetails
 
     public UIViewBackpackList ui_ViewBackPack;
 
+    public UIViewSynthesis ui_ViewSynthesis;
+
+    public UIViewCharacterEquip ui_ViewCharacterEquip;
+
 
 }

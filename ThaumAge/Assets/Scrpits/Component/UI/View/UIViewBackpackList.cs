@@ -4,9 +4,16 @@ using UnityEngine;
 public partial class UIViewBackpackList : BaseUIView
 {
      protected ItemsBean[] listBackpack;
-     /// <summary>
-     /// 初始化数据
-     /// </summary>
+
+    public override void Show()
+    {
+        base.Show();
+        InitData();
+    }
+
+    /// <summary>
+    /// 初始化数据
+    /// </summary>
     public void InitData()
     {
         UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();
