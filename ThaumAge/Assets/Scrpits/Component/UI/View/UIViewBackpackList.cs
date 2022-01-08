@@ -14,6 +14,7 @@ public partial class UIViewBackpackList : BaseUIView
 
     public bool AddItems(ItemsBean itemData)
     {
+        return false;
 
     }
 
