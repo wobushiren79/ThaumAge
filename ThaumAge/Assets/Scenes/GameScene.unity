@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.025181219, g: 0.043548003, b: 0.072224826, a: 1}
+  m_IndirectSpecularColor: {r: 0.025159072, g: 0.043619283, b: 0.072609276, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -198,6 +198,330 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &514864737
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 514864740}
+  - component: {fileID: 514864739}
+  - component: {fileID: 514864738}
+  m_Layer: 0
+  m_Name: GameDataHandler
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &514864738
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 514864737}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 52591462112a84a4eae4a6475d7b9879, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameConfig:
+    window: 0
+    screenResolution: 1920x1080
+    language: cn
+    soundVolume: 0.5
+    musicVolume: 0.5
+    environmentVolume: 0.5
+    autoSaveTime: 30
+    uiSize: 1
+    stateForFrames: 1
+    frames: 120
+    framesShow: 0
+    shadowDis: 200
+    shadowResolutionLevel: 1
+    antialiasingMode: 0
+    antialiasingQualityLevel: 0
+    speedForPlayerCameraMoveX: 2
+    speedForPlayerCameraMoveY: 0.02
+  userData:
+    userId: 
+    dataIndex: 0
+    userEquip:
+      hats:
+        itemId: 0
+        number: 0
+        meta: 
+      gloves:
+        itemId: 0
+        number: 0
+        meta: 
+      clothes:
+        itemId: 0
+        number: 0
+        meta: 
+      shoes:
+        itemId: 0
+        number: 0
+        meta: 
+      headwear:
+        itemId: 0
+        number: 0
+        meta: 
+      leftRing:
+        itemId: 0
+        number: 0
+        meta: 
+      rightRing:
+        itemId: 0
+        number: 0
+        meta: 
+      cape:
+        itemId: 0
+        number: 0
+        meta: 
+    timeForGame:
+      year: 0
+      month: 0
+      day: 0
+      hour: 0
+      minute: 0
+      second: 0
+    timeForPlay:
+      year: 0
+      month: 0
+      day: 0
+      hour: 0
+      minute: 0
+      second: 0
+    characterData:
+      maxLife: 0
+      currentLife: 0
+      characterName: 
+      characterSex: 0
+      clothesId: 0
+      hairId: 0
+      eyeId: 0
+      mouthId: 0
+      colorHair:
+        r: 1
+        g: 1
+        b: 1
+        a: 1
+      colorSkin:
+        r: 1
+        g: 1
+        b: 1
+        a: 1
+    indexForShortcuts: 0
+    listShortcutsItems:
+    - itemId: 0
+      number: 0
+      meta: 
+    - itemId: 0
+      number: 0
+      meta: 
+    - itemId: 0
+      number: 0
+      meta: 
+    - itemId: 0
+      number: 0
+      meta: 
+    - itemId: 0
+      number: 0
+      meta: 
+    - itemId: 0
+      number: 0
+      meta: 
+    - itemId: 0
+      number: 0
+      meta: 
+    - itemId: 0
+      number: 0
+      meta: 
+    - itemId: 0
+      number: 0
+      meta: 
+    - itemId: 0
+      number: 0
+      meta: 
+    listBackpack:
+    - itemId: 0
+      number: 0
+      meta: 
+    - itemId: 0
+      number: 0
+      meta: 
+    - itemId: 0
+      number: 0
+      meta: 
+    - itemId: 0
+      number: 0
+      meta: 
+    - itemId: 0
+      number: 0
+      meta: 
+    - itemId: 0
+      number: 0
+      meta: 
+    - itemId: 0
+      number: 0
+      meta: 
+    - itemId: 0
+      number: 0
+      meta: 
+    - itemId: 0
+      number: 0
+      meta: 
+    - itemId: 0
+      number: 0
+      meta: 
+    - itemId: 0
+      number: 0
+      meta: 
+    - itemId: 0
+      number: 0
+      meta: 
+    - itemId: 0
+      number: 0
+      meta: 
+    - itemId: 0
+      number: 0
+      meta: 
+    - itemId: 0
+      number: 0
+      meta: 
+    - itemId: 0
+      number: 0
+      meta: 
+    - itemId: 0
+      number: 0
+      meta: 
+    - itemId: 0
+      number: 0
+      meta: 
+    - itemId: 0
+      number: 0
+      meta: 
+    - itemId: 0
+      number: 0
+      meta: 
+    - itemId: 0
+      number: 0
+      meta: 
+    - itemId: 0
+      number: 0
+      meta: 
+    - itemId: 0
+      number: 0
+      meta: 
+    - itemId: 0
+      number: 0
+      meta: 
+    - itemId: 0
+      number: 0
+      meta: 
+    - itemId: 0
+      number: 0
+      meta: 
+    - itemId: 0
+      number: 0
+      meta: 
+    - itemId: 0
+      number: 0
+      meta: 
+    - itemId: 0
+      number: 0
+      meta: 
+    - itemId: 0
+      number: 0
+      meta: 
+    - itemId: 0
+      number: 0
+      meta: 
+    - itemId: 0
+      number: 0
+      meta: 
+    - itemId: 0
+      number: 0
+      meta: 
+    - itemId: 0
+      number: 0
+      meta: 
+    - itemId: 0
+      number: 0
+      meta: 
+    - itemId: 0
+      number: 0
+      meta: 
+    - itemId: 0
+      number: 0
+      meta: 
+    - itemId: 0
+      number: 0
+      meta: 
+    - itemId: 0
+      number: 0
+      meta: 
+    - itemId: 0
+      number: 0
+      meta: 
+    - itemId: 0
+      number: 0
+      meta: 
+    - itemId: 0
+      number: 0
+      meta: 
+    - itemId: 0
+      number: 0
+      meta: 
+    - itemId: 0
+      number: 0
+      meta: 
+    - itemId: 0
+      number: 0
+      meta: 
+    - itemId: 0
+      number: 0
+      meta: 
+    - itemId: 0
+      number: 0
+      meta: 
+    - itemId: 0
+      number: 0
+      meta: 
+    - itemId: 0
+      number: 0
+      meta: 
+--- !u!114 &514864739
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 514864737}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eae6204fce513594c99b6119a8878f71, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &514864740
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 514864737}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &954999852
 GameObject:
@@ -590,15 +914,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 86783665778207764, guid: 5c61e63afb4d67740855fd8526300679, type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0.0498137
+      value: -0.049813703
       objectReference: {fileID: 0}
     - target: {fileID: 86783665778207764, guid: 5c61e63afb4d67740855fd8526300679, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.0000000021481275
+      value: 0.000000002148128
       objectReference: {fileID: 0}
     - target: {fileID: 86783665778207764, guid: 5c61e63afb4d67740855fd8526300679, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -1.0713917e-10
+      value: 1.07139214e-10
       objectReference: {fileID: 0}
     - target: {fileID: 657478345584511981, guid: 5c61e63afb4d67740855fd8526300679, type: 3}
       propertyPath: m_LocalPosition.y

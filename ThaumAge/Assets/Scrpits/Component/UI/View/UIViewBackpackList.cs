@@ -1,14 +1,55 @@
-﻿using UnityEditor;
+﻿using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 public partial class UIViewBackpackList : BaseUIView
 {
-     protected ItemsBean[] listBackpack;
+    protected ItemsBean[] listBackpack;
 
     public override void Show()
     {
         base.Show();
         InitData();
+    }
+
+    public bool AddItems(ItemsBean itemData)
+    {
+
+    }
+
+    /// <summary>
+    /// 增加道具
+    /// </summary>
+    /// <param name="uiViewItem"></param>
+    public bool AddItems(UIViewItem uiViewItem)
+    {
+        //首先直接在显示的list中搜索空位
+        List<GameObject> listCellObj = ui_ItemList.GetAllCellObj();
+        for (int i = 0; i < listCellObj.Count; i++)
+        {
+            GameObject itemObj = listCellObj[i];
+            UIViewItemContainer itemContainer = itemObj.GetComponent<UIViewItemContainer>();
+            //如果有容器VIEW 并且里面没有东西
+            if (itemContainer != null && itemContainer.GetViewItem() == null)
+            {
+                uiViewItem.ExchangeItemForContainer(itemContainer);
+                return true;
+            }
+        }
+        //如果不成功则直接查询整个listBackpack
+        for (int i = 0; i < listBackpack.Length; i++)
+        {
+            ItemsBean itemData = listBackpack[i];
+            if (itemData == null || itemData.itemId == 0)
+            {
+                itemData.itemId = uiViewItem.itemId;
+                itemData.number = uiViewItem.itemNumber;
+                itemData.meta = uiViewItem.meta;
+                Destroy(uiViewItem.gameObject);
+                return true;
+            }
+        }
+        return false;
     }
 
     /// <summary>

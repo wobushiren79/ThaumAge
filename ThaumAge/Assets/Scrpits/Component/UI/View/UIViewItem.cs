@@ -154,18 +154,7 @@ public partial class UIViewItem : BaseUIView,
                     UIViewBackpackList backpackUI = currentUI.GetComponentInChildren<UIViewBackpackList>();
                     if (backpackUI != null)
                     {
-                        List<GameObject> listCellObj = backpackUI.ui_ItemList.GetAllCellObj();
-                        for (int i = 0; i < listCellObj.Count; i++)
-                        {
-                            GameObject itemObj = listCellObj[i];
-                            UIViewItemContainer itemContainer = itemObj.GetComponent<UIViewItemContainer>();
-                            //如果有容器VIEW 并且里面没有东西
-                            if (itemContainer != null && itemContainer.GetViewItem() == null)
-                            {
-                                ExchangeItemForContainer(itemContainer);
-                                return;
-                            }
-                        }
+                        backpackUI.AddItems(this);
                         return;
                     }
                     break;
@@ -391,7 +380,7 @@ public partial class UIViewItem : BaseUIView,
     /// 交换道具-容器
     /// </summary>
     /// <param name="viewItemContainer"></param>
-    protected bool ExchangeItemForContainer(UIViewItemContainer viewItemContainer)
+    public bool ExchangeItemForContainer(UIViewItemContainer viewItemContainer)
     {
         UIViewItem tempViewItem = viewItemContainer.GetViewItem();
         if (tempViewItem == null)

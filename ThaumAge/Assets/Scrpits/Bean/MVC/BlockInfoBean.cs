@@ -81,12 +81,12 @@ public class BlockInfoBean : BaseBean
         {
             if (uv_position.IsNull())
                 return arrayUVData;
-            string[] uvArrary = StringUtil.SplitBySubstringForArrayStr(uv_position, '|');
+            string[] uvArrary = uv_position.SplitForArrayStr('|');
             arrayUVData = new Vector2Int[uvArrary.Length];
             for (int i = 0; i < uvArrary.Length; i++)
             {
                 string uvItemStr = uvArrary[i];
-                int[] uvPositionArray = StringUtil.SplitBySubstringForArrayInt(uvItemStr, ',');
+                int[] uvPositionArray = uvItemStr.SplitForArrayInt(',');
                 arrayUVData[i] = new Vector2Int(uvPositionArray[0], uvPositionArray[1]);
             }
         }
@@ -103,7 +103,7 @@ public class BlockInfoBean : BaseBean
     {
         if (offsetBorder.IsNull())
         {
-            offsetBorder = StringUtil.SplitBySubstringForArrayFloat(offset_border, '|');
+            offsetBorder = offset_border.SplitForArrayFloat('|');
         }
         return offsetBorder;
     }

@@ -100,7 +100,7 @@ public class ItemCptDrop : BaseMonoBehaviour
         itemsInfo = ItemsHandler.Instance.manager.GetItemsInfoById(itemData.itemId);
         transform.position = position;
         //设置头像
-        SetIcon(itemsInfo.icon_key);
+        SetIcon(itemData.itemId);
         //增加一个跳动的力
         //随机方向
         if(dropdirection == Vector3.zero)
@@ -113,8 +113,6 @@ public class ItemCptDrop : BaseMonoBehaviour
         {
             rbItem.AddForce(dropdirection.x * 100, dropdirection.y * 100, dropdirection.z * 100);
         }
-
-
         //初始化数据
         SOGameInitBean gameInitData = GameHandler.Instance.manager.gameInitData;
         timeForItemsDestory = gameInitData.timeForItemsDestory;
@@ -129,51 +127,7 @@ public class ItemCptDrop : BaseMonoBehaviour
     /// <param name="itemId"></param>
     public void SetIcon(long itemId)
     {
-        ItemsHandler.Instance.manager.GetItemsIconById(itemId, (spIcon) =>
-        {
-            if (spIcon == null)
-            {
-                IconHandler.Instance.GetUnKnowSprite((spIcon) =>
-                {
-                    SetIcon(spIcon);
-                });
-            }
-            else
-            {
-                SetIcon(spIcon);
-            }
-        });
-    }
-
-    /// <summary>
-    /// 设置图标
-    /// </summary>
-    /// <param name="iconKey"></param>
-    public void SetIcon(string iconKey)
-    {
-        IconHandler.Instance.manager.GetItemsSpriteByName(iconKey, (spIcon) =>
-        {
-            if (spIcon == null)
-            {
-                IconHandler.Instance.GetUnKnowSprite((spIcon) =>
-                {
-                    SetIcon(spIcon);
-                });
-            }
-            else
-            {
-                SetIcon(spIcon);
-            }
-        });
-    }
-
-    /// <summary>
-    /// 设置图标
-    /// </summary>
-    /// <param name="sprite"></param>
-    public void SetIcon(Sprite sprite)
-    {
-        srIcon.sprite = sprite;
+        ItemsHandler.Instance.SetItemsIconById(srIcon, itemId);
     }
 
     /// <summary>

@@ -64,7 +64,7 @@ public class BiomeEditorWindow : EditorWindow
         GUILayout.BeginHorizontal();
         if (EditorUI.GUIButton("Id 查询生态", 150))
         {
-            long[] ids = StringUtil.SplitBySubstringForArrayLong(queryBiomeIds, ',');
+            long[] ids = queryBiomeIds.SplitForArrayLong(',');
             listQueryData = serviceForBiomeInfo.QueryDataByIds(ids);
         }
         queryBiomeIds = EditorUI.GUIEditorText(queryBiomeIds, 150);

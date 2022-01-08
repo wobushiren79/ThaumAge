@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ItemsManager : BaseManager,
     IItemsInfoView, IItemsSynthesisView
@@ -77,7 +78,7 @@ public class ItemsManager : BaseManager,
     {
         return GetDataById(synthesisId, dicItemsSynthesis);
     }
-    
+
     /// <summary>
     /// 通过类型获取道具合成数据
     /// </summary>

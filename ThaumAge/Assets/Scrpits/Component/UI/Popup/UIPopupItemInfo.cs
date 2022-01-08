@@ -12,11 +12,8 @@ public partial class UIPopupItemInfo : PopupShowView
 
         this.itemId = itemId;
         ItemsInfo = ItemsHandler.Instance.manager.GetItemsInfoById(itemId);
-        
-        ItemsHandler.Instance.manager.GetItemsIconById(itemId,(itemIcon) => 
-        {
-            SetItemIcon(itemIcon);
-        });
+
+        SetItemIcon(itemId);
         SetItemName(ItemsInfo.name);
         SetItemDetails("");
     }
@@ -25,19 +22,9 @@ public partial class UIPopupItemInfo : PopupShowView
     /// 设置头像
     /// </summary>
     /// <param name="iconSp"></param>
-    public void SetItemIcon(Sprite iconSp)
+    public void SetItemIcon(long itemsId)
     {
-        if (iconSp == null)
-        {
-            IconHandler.Instance.GetUnKnowSprite((iconSp) => 
-            {
-                ui_ItemIcon.sprite = iconSp;
-            });
-        }
-        else
-        {
-            ui_ItemIcon.sprite = iconSp;
-        }
+        ItemsHandler.Instance.SetItemsIconById(ui_ItemIcon, itemsId);
     }
 
     /// <summary>

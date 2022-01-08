@@ -11,12 +11,12 @@ public class DataTools
     public static List<T> GetListData<T,E>(string data) where T : DataBean<E>,new()
     {
         List<T> listData = new List<T>();
-        List<string> listDataStr = StringUtil.SplitBySubstringForListStr(data, '|');
+        List<string> listDataStr = data.SplitForListStr('|');
         foreach (string itemData in listDataStr)
         {
             if (itemData.IsNull())
                 continue;
-            List<string> itemListData = StringUtil.SplitBySubstringForListStr(itemData, ':');
+            List<string> itemListData = itemData.SplitForListStr(':');
             E dataType = EnumExtension.GetEnum<E>(itemListData[0]);
             string dataValue = itemListData[1];
 

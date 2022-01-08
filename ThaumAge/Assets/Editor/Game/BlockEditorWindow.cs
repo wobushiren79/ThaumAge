@@ -93,7 +93,7 @@ public class BlockEditorWindow : EditorWindow
         GUILayout.BeginHorizontal();
         if (EditorUI.GUIButton("Id 查询方块", 150))
         {
-            long[] ids = StringUtil.SplitBySubstringForArrayLong(queryBlockIds, ',');
+            long[] ids = queryBlockIds.SplitForArrayLong(',');
             listQueryData = serviceForBlockInfo.QueryDataByIds(ids);
         }
         queryBlockIds = EditorUI.GUIEditorText(queryBlockIds, 150);
@@ -198,7 +198,7 @@ public class BlockEditorWindow : EditorWindow
         blockInfo.rotate_state = EditorUI.GUIEditorText(blockInfo.rotate_state);
         EditorUI.GUIText("图片", 50);
         blockInfo.uv_position = EditorUI.GUIEditorText(blockInfo.uv_position);
-        string[] uvStr = StringUtil.SplitBySubstringForArrayStr(blockInfo.uv_position, '|');
+        string[] uvStr = blockInfo.uv_position.SplitForArrayStr('|');
         for (int i = 0; i < uvStr.Length; i++)
         {
             string itemUV = uvStr[i];
@@ -264,7 +264,7 @@ public class BlockEditorWindow : EditorWindow
             }
             //根据名字获取每个图片所在的位置
             Texture2D itemTex = AssetDatabase.LoadAssetAtPath<Texture2D>(fileName);
-            string[] itemDataArray = StringUtil.SplitBySubstringForArrayStr(itemTex.name, '_');
+            string[] itemDataArray = itemTex.name.SplitForArrayStr( '_');
 
             //设置方块位置
             int width = itemTex.width;

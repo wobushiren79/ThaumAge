@@ -1,7 +1,7 @@
 ﻿using UnityEditor;
 using UnityEngine;
 
-public class UIViewSynthesisMaterial : BaseUIView
+public partial class UIViewSynthesisMaterial : BaseUIView
 {
 
 }

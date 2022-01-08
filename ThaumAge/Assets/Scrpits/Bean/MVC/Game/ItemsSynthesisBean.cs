@@ -3,9 +3,13 @@ using System;
 	public partial class ItemsSynthesisBean : BaseBean
 	{
 		/// <summary>
+		///合成结果
+		/// </summary>
+		public string results;
+		/// <summary>
 		///资源id和数量 用|分割
 		/// </summary>
-		public string items;
+		public string materials;
 		/// <summary>
 		///合成类型(用,分割) 0自身  1基础合成台
 		/// </summary>

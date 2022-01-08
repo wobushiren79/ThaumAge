@@ -33,7 +33,7 @@ public class GameDataHandler : BaseHandler<GameDataHandler, GameDataManager>
     public List<long> GetBaseInfoListLong(long baseInfoId)
     {
         string dataStr = GetBaseInfoStr(baseInfoId);
-        long[] arrayData = StringUtil.SplitBySubstringForArrayLong(dataStr, ',');
+        long[] arrayData = dataStr.SplitForArrayLong(',');
         return arrayData.ToList();
     }
 

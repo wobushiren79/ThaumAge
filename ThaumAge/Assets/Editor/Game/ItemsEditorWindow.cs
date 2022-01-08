@@ -149,7 +149,7 @@ public class ItemsEditorWindow : EditorWindow
         GUILayout.BeginHorizontal();
         if (EditorUI.GUIButton("Id 查询道具", 150))
         {
-            long[] ids = StringUtil.SplitBySubstringForArrayLong(queryItemsIds, ',');
+            long[] ids = queryItemsIds.SplitForArrayLong(',');
             listQueryData = serviceForItemsInfo.QueryDataByIds(ids);
         }
         queryItemsIds = EditorUI.GUIEditorText(queryItemsIds, 150);

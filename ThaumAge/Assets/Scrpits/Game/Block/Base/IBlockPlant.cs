@@ -31,7 +31,7 @@ public static class BlockPlantExtension
 
     public static void FromMetaData(string data, out int growPro, out bool isStartGrow)
     {
-        string[] dataList = StringUtil.SplitBySubstringForArrayStr(data, ':');
+        string[] dataList = data.SplitForArrayStr(':');
         growPro = int.Parse(dataList[0]);
         isStartGrow = bool.Parse(dataList[1]);
     }
@@ -53,7 +53,7 @@ public static class BlockPlantExtension
         if (growPro >= uvPosition.Length - 1)
         {
             //已经成熟
-            long[] harvetsIds = StringUtil.SplitBySubstringForArrayLong(blockInfo.plant_harvest, '|');
+            long[] harvetsIds = blockInfo.plant_harvest.SplitForArrayLong('|');
             for (int i = 0; i < harvetsIds.Length; i++)
             {
                 listData.Add(new ItemsBean(harvetsIds[i], 1));

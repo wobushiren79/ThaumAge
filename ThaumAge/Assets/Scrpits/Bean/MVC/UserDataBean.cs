@@ -8,6 +8,7 @@ using UnityEngine;
 using UnityEditor;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 [Serializable]
 public class UserDataBean
@@ -41,9 +42,9 @@ public class UserDataBean
     {
         //首先查询背包和快捷栏里是否有同样的道具
         //依次增加相应道具的数量 直到该道具的上限
-        itemNumber = AddOldItems(listShortcutsItems,  itemId,  itemNumber);
+        itemNumber = AddOldItems(listShortcutsItems, itemId, itemNumber);
         if (itemNumber <= 0) return itemNumber;
-        itemNumber = AddOldItems(listBackpack,  itemId,  itemNumber);
+        itemNumber = AddOldItems(listBackpack, itemId, itemNumber);
         if (itemNumber <= 0) return itemNumber;
 
         //如果还没有叠加完道具 曾创建新的用以增加
@@ -103,7 +104,7 @@ public class UserDataBean
         for (int i = 0; i < arrayContainer.Length; i++)
         {
             ItemsBean itemData = arrayContainer[i];
-            if (itemData == null||itemData.itemId == 0)
+            if (itemData == null || itemData.itemId == 0)
             {
                 ItemsBean newItemData = new ItemsBean(itemId);
                 listShortcutsItems[i] = newItemData;
@@ -190,4 +191,37 @@ public class UserDataBean
     {
         return GetItemsFromBackpack((x - 1) + (y - 1) * 7);
     }
+
+
+    /// <summary>
+    /// 是否有足够数量的指定道具
+    /// </summary>
+    /// <param name="itemsId"></param>
+    /// <param name="itemsNum"></param>
+    /// <returns></returns>
+    public bool HasEnoughItem(long itemsId, long itemsNum)
+    {
+        ItemsBean[] allItems = listShortcutsItems
+            .Concat(listBackpack)
+            .ToArray();
+        int totalNumber = 0;
+        for (int i = 0; i < allItems.Length; i++)
+        {
+            ItemsBean itemData = allItems[i];
+            if (itemData == null || itemData.itemId == 0)
+                continue;
+            if (itemData.itemId == itemsId)
+                totalNumber += itemData.number;
+        }
+        if (totalNumber >= itemsNum)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+
 }

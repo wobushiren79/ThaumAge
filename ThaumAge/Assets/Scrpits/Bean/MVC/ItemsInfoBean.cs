@@ -64,7 +64,7 @@ public class ItemsInfoBean : BaseBean
         width = 0;
         height = 0;
 
-        float[] data = StringUtil.SplitBySubstringForArrayFloat(range_damage, ',') ;
+        float[] data = range_damage.SplitForArrayFloat(',') ;
         if (data.Length >= 1)
         {
             length = data[0];

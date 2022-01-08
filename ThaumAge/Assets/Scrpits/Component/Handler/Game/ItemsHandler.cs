@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ItemsHandler : BaseHandler<ItemsHandler, ItemsManager>
 {
@@ -100,6 +102,51 @@ public class ItemsHandler : BaseHandler<ItemsHandler, ItemsManager>
             ItemCptDrop ItemCptDrop = objCommon.GetComponent<ItemCptDrop>();
             ItemCptDrop.SetData(itemData, position, dropDirection);
             ItemCptDrop.SetItemDropState(ItemCptDropState);
+        });
+    }
+
+    /// <summary>
+    /// 通过ID设置道具图标
+    /// </summary>
+    /// <param name="image"></param>
+    /// <param name="id"></param>
+    public void SetItemsIconById(Image image, long id, Action<Sprite> complete = null)
+    {
+        manager.GetItemsIconById(id, (spIcon) =>
+        {
+            if (spIcon == null)
+            {
+                IconHandler.Instance.GetUnKnowSprite((spIcon) =>
+                {
+                    image.sprite = spIcon;
+                    complete?.Invoke(spIcon);
+                });
+            }
+            else
+            {
+                image.sprite = spIcon;
+                complete?.Invoke(spIcon);
+            }
+        });
+    }
+
+    public void SetItemsIconById(SpriteRenderer image, long id, Action<Sprite> complete = null)
+    {
+        manager.GetItemsIconById(id, (spIcon) =>
+        {
+            if (spIcon == null)
+            {
+                IconHandler.Instance.GetUnKnowSprite((spIcon) =>
+                {
+                    image.sprite = spIcon;
+                    complete?.Invoke(spIcon);
+                });
+            }
+            else
+            {
+                image.sprite = spIcon;
+                complete?.Invoke(spIcon);
+            }
         });
     }
 }

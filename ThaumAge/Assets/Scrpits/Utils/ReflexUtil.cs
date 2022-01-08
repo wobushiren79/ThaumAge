@@ -43,10 +43,10 @@ public class ReflexUtil
         for (int i = 0; i < fields.Length; i++)
         {
             var field = fields[i];
-            if (!field.Name.Contains(markStr))
-            {
+            if (field.GetValue(obj) != null)
                 continue;
-            }
+            if (!field.Name.Contains(markStr))
+                continue;
             Component tmpCom = obj.GetComponentInChildren(field.Name.Replace(markStr, ""), field.FieldType, true);
             if (tmpCom == null)
             {
@@ -64,10 +64,10 @@ public class ReflexUtil
         for (int i = 0; i < fields.Length; i++)
         {
             var field = fields[i];
-            if (!field.Name.Contains(markStr))
-            {
+            if (field.GetValue(obj) != null)
                 continue;
-            }
+            if (!field.Name.Contains(markStr))
+                continue;
             Component tmpCom = obj.Find(field.Name.Replace(markStr, ""), field.FieldType);
             if (tmpCom == null)
             {

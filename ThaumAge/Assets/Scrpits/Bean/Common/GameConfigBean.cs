@@ -94,7 +94,7 @@ public class GameConfigBean
         }
         else
         {
-            int[] data = StringUtil.SplitBySubstringForArrayInt(screenResolution, 'x');
+            int[] data = screenResolution.SplitForArrayInt('x');
             w = data[0];
             h = data[0];
         }

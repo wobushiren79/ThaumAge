@@ -53,7 +53,7 @@ public class BlockManager : BaseManager, IBlockInfoView
             {
                 //按照名字中的下标 确认每个材质球的顺序
                 Material itemMat = listMat[i];
-                string[] nameList = StringUtil.SplitBySubstringForArrayStr(itemMat.name, '_');
+                string[] nameList = itemMat.name.SplitForArrayStr('_');
                 int indexMat = int.Parse(nameList[1]);
                 arrayBlockMat[indexMat] = itemMat;
             }
