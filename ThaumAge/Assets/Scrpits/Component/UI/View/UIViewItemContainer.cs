@@ -38,6 +38,7 @@ public partial class UIViewItemContainer : BaseUIView
         base.Awake();
         ui_Hint.ShowObj(false);
         ui_ViewItemModel.ShowObj(false);
+        SetSelectState(false);
     }
 
     public override void OnDestroy()
@@ -212,15 +213,15 @@ public partial class UIViewItemContainer : BaseUIView
     /// <param name="isSelect"></param>
     public void SetSelectState(bool isSelect)
     {
-        if (ui_IVBackground == null)
+        if (ui_Select == null)
             return;
         if (isSelect)
         {
-            ui_IVBackground.color = Color.green;
+            ui_Select.ShowObj(true);
         }
         else
         {
-            ui_IVBackground.color = Color.white;
+            ui_Select.ShowObj(false);
         }
     }
 }

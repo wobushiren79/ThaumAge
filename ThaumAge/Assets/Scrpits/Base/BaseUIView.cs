@@ -19,14 +19,4 @@ public class BaseUIView : BaseUIInit
     {
         RefreshUI();
     }
-
-    public virtual void Show()
-    {
-        gameObject.ShowObj(true);
-    }
-
-    public virtual void Hide()
-    {
-        gameObject.ShowObj(false);
-    }
 }

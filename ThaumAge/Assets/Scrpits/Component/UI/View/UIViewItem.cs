@@ -15,9 +15,9 @@ public partial class UIViewItem : BaseUIView,
     public Text ui_TVNumber;
 
     //返回原始位置的时间
-    protected float timeForBackOriginal = 0.5f;
+    protected float timeForBackOriginal = 0.25f;
     //移动到指定位置的时间
-    protected float timeForMove = 0.5f;
+    protected float timeForMove = 0.25f;
 
     public long itemId;
     public int itemNumber;

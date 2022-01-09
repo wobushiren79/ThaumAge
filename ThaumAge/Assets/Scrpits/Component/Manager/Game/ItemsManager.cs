@@ -84,7 +84,7 @@ public class ItemsManager : BaseManager,
     /// </summary>
     /// <param name="type"></param>
     /// <returns></returns>
-    public List<ItemsSynthesisBean> GetItemsSynthesisByType(int[] types)
+    public List<ItemsSynthesisBean> GetItemsSynthesisByType(ItemsSynthesisTypeEnum[] types)
     {
         List<ItemsSynthesisBean> listData = new List<ItemsSynthesisBean>();
         foreach (var itemData in dicItemsSynthesis)
@@ -97,9 +97,9 @@ public class ItemsManager : BaseManager,
         }
         return listData;
     }
-    public List<ItemsSynthesisBean> GetItemsSynthesisByType(int type)
+    public List<ItemsSynthesisBean> GetItemsSynthesisByType(ItemsSynthesisTypeEnum type)
     {
-        return GetItemsSynthesisByType(new int[] { type });
+        return GetItemsSynthesisByType(new ItemsSynthesisTypeEnum[] { type });
     }
 
 

@@ -24,23 +24,18 @@ public class BaseUIComponent : BaseUIInit
     /// <summary>
     /// 开启UI
     /// </summary>
-    public virtual void OpenUI()
+    public override void OpenUI()
     {
-        if (this.gameObject.activeSelf)
-            return;
-        this.gameObject.SetActive(true);
-        RefreshUI();
+        base.OpenUI();
     }
 
     /// <summary>
     /// 关闭UI
     /// </summary>
-    public virtual void CloseUI()
+    public override void CloseUI()
     {
+        base.CloseUI();
         StopAllCoroutines();
-        if (!this.gameObject.activeSelf)
-            return;
-        this.gameObject.SetActive(false);
     }
 
     /// <summary>

@@ -15,7 +15,7 @@ public partial class UIGameUserDetails : UIGameCommonNormal,IRadioGroupCallBack
     public override void OpenUI()
     {
         base.OpenUI();
-        ui_ViewBackPack.Show();
+        ui_ViewBackPack.OpenUI();
         ui_Labels.SetPosition(0,true);
     }
 
@@ -60,13 +60,13 @@ public partial class UIGameUserDetails : UIGameCommonNormal,IRadioGroupCallBack
         this.labelIndex = position;
         if (rbview == ui_ViewLabel_Equip)
         {
-            ui_ViewCharacterEquip.Show();
-            ui_ViewSynthesis.Hide();
+            ui_ViewCharacterEquip.OpenUI();
+            ui_ViewSynthesis.CloseUI();
         }
         else if (rbview == ui_ViewLabel_Synthesis)
         {
-            ui_ViewCharacterEquip.Hide();
-            ui_ViewSynthesis.Show();
+            ui_ViewCharacterEquip.CloseUI();
+            ui_ViewSynthesis.OpenUI();
         }
     }
 

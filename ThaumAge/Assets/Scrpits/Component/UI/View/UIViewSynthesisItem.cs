@@ -1,13 +1,25 @@
 ﻿using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.UI;
 
 public partial class UIViewSynthesisItem : BaseUIView
 {
     protected ItemsSynthesisBean itemsSynthesis;
+    protected int index = 0;
+    protected Button configBtn;
 
-    public void SetData(ItemsSynthesisBean itemsSynthesis,bool isSelect)
+    public override void Awake()
     {
+        gameObject.name = "ViewSynthesisItem";
+        base.Awake();
+        configBtn = this.GetComponent<Button>();
+        SetSelectState(false);
+    }
+
+    public void SetData(ItemsSynthesisBean itemsSynthesis, int index, bool isSelect)
+    {
+        this.index = index;
         this.itemsSynthesis = itemsSynthesis;
         itemsSynthesis.GetSynthesisResult(out long resultId, out long resultNum);
 
@@ -15,6 +27,26 @@ public partial class UIViewSynthesisItem : BaseUIView
         SetItemIcon(resultId);
         SetSynthesisState(canSynthesis);
         SetSelectState(isSelect);
+        SetPopupInfo(resultId);
+        SetNumber(resultNum, canSynthesis);
+    }
+
+    public override void OnClickForButton(Button viewButton)
+    {
+        base.OnClickForButton(viewButton);
+        if (viewButton == configBtn)
+        {
+            this.TriggerEvent(EventsInfo.UIViewSynthesis_SetSelect, index);
+        }
+    }
+
+    /// <summary>
+    /// 设置弹出信息
+    /// </summary>
+    /// <param name="itemsId"></param>
+    public void SetPopupInfo(long itemsId)
+    {
+        ui_ViewSynthesisItem.SetItemId(itemsId);
     }
 
     /// <summary>
@@ -33,11 +65,11 @@ public partial class UIViewSynthesisItem : BaseUIView
     {
         if (canSynthesis)
         {
-            ui_ItemIcon.material.SetFloat("_GreyLerp", 0);
+            ui_ItemIcon.material.SetFloat("_GreyLerp", 1);
         }
         else
         {
-            ui_ItemIcon.material.SetFloat("_GreyLerp", 1);
+            ui_ItemIcon.material.SetFloat("_GreyLerp", 0);
         }
     }
 
@@ -48,11 +80,27 @@ public partial class UIViewSynthesisItem : BaseUIView
     {
         if (isSelect)
         {
-
+            ui_Select.ShowObj(true);
         }
         else
         {
-
+            ui_Select.ShowObj(false);
         }
+    }
+
+    /// <summary>
+    /// 设置数量
+    /// </summary>
+    public void SetNumber(long number, bool canSynthesis)
+    {
+        if (canSynthesis)
+        {
+            ui_TVNumber.color = Color.green;
+        }
+        else
+        {
+            ui_TVNumber.color = Color.red;
+        }
+        ui_TVNumber.text = $"{number}";
     }
 }

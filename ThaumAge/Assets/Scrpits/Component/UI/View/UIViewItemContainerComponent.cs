@@ -12,5 +12,7 @@ public partial class UIViewItemContainer
 
     public Text ui_Hint;
 
+    public Image ui_Select;
+
 
 }

@@ -6,9 +6,9 @@ public partial class UIViewBackpackList : BaseUIView
 {
     protected ItemsBean[] listBackpack;
 
-    public override void Show()
+    public override void OpenUI()
     {
-        base.Show();
+        base.OpenUI();
         InitData();
     }
 

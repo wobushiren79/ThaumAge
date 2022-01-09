@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -7,6 +8,7 @@ using static UnityEngine.InputSystem.InputAction;
 
 public class BaseUIInit : BaseMonoBehaviour
 {
+    public List<string> listEvents = new List<string>();
 
     public virtual void Awake()
     {
@@ -18,6 +20,23 @@ public class BaseUIInit : BaseMonoBehaviour
     public virtual void OnDestroy()
     {
         UnRegisterInputAction();
+    }
+
+    public virtual void OpenUI()
+    {
+        gameObject.ShowObj(true);
+        RefreshUI();
+    }
+
+    public virtual void CloseUI()
+    {
+        gameObject.ShowObj(false);
+        //注销所有事件
+        for (int i = 0; i < listEvents.Count; i++)
+        {
+            string itemEvent = listEvents[i];
+            UnRegisterEvent(itemEvent);
+        }
     }
 
     /// <summary>
@@ -104,4 +123,34 @@ public class BaseUIInit : BaseMonoBehaviour
 
     }
 
+
+
+    #region 注册事件
+    public virtual void RegisterEvent(string eventName, Action action)
+    {
+        EventHandler.Instance.RegisterEvent(eventName, action);
+        listEvents.Add(eventName);
+    }
+
+    public virtual void RegisterEvent<A>(string eventName, Action<A> action)
+    {
+        EventHandler.Instance.RegisterEvent(eventName, action);
+        listEvents.Add(eventName);
+    }
+
+    public virtual void UnRegisterEvent(string eventName)
+    {
+        EventHandler.Instance.UnRegisterEvent(eventName);
+        listEvents.Remove(eventName);
+    }
+
+    public virtual void TriggerEvent(string eventName)
+    {
+        EventHandler.Instance.TriggerEvent(eventName);
+    }
+    public virtual void TriggerEvent<A>(string eventName,A data)
+    {
+        EventHandler.Instance.TriggerEvent(eventName, data);
+    }
+    #endregion
 }

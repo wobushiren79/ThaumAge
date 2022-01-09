@@ -41,14 +41,14 @@ public partial class ItemsSynthesisBean
     /// 检测合成类型 
     /// </summary>
     /// <param name="types"></param>
-    public bool CheckSynthesisType(int[] types)
+    public bool CheckSynthesisType(ItemsSynthesisTypeEnum[] types)
     {
         if (type_synthesis.IsNull())
             return true;
         int[] currentTypes = type_synthesis.SplitForArrayInt('|');
         for (int i = 0; i < types.Length; i++)
         {
-            int itemType = types[i];
+            int itemType = (int)types[i];
             for (int f = 0; f < currentTypes.Length; f++)
             {
                 if (itemType == currentTypes[f])
