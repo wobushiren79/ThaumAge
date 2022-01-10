@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 public class BaseUIView : BaseUIInit
 {
-    protected RectTransform rectTransform;
+    public RectTransform rectTransform;
     //原始UI大小
     protected Vector2 uiSizeOriginal;
 

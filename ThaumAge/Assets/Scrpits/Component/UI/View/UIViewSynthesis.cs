@@ -13,12 +13,14 @@ public partial class UIViewSynthesis : BaseUIView
     {
         base.Awake();
         ui_SynthesisList.AddCellListener(OnCellForItemSynthesis);
+        ui_ViewSynthesisMaterial.ShowObj(false);
     }
 
     public override void OpenUI()
     {
         base.OpenUI();
         this.RegisterEvent<int>(EventsInfo.UIViewSynthesis_SetSelect, SetSelect);
+        SetSelect(indexSelect);
     }
 
     public override void RefreshUI()
@@ -70,5 +72,31 @@ public partial class UIViewSynthesis : BaseUIView
         //刷新结果
         ui_SynthesisResults.SetData(listSynthesisData[indexSelect], -1, false);
         //刷新素材
+        SetSynthesisMaterials();
+    }
+
+    /// <summary>
+    /// 设置素材
+    /// </summary>
+    public void SetSynthesisMaterials()
+    {
+        //先删除所有素材
+        ui_SynthesisMaterials.DestroyAllChild();
+        //获取当前选中合成道具
+        ItemsSynthesisBean itemsSynthesis = listSynthesisData[indexSelect];
+        List<ItemsSynthesisMaterialsBean> listMaterials = itemsSynthesis.GetSynthesisMaterials();
+        //获取其实点位置
+        Vector2[] listCirclePosition = VectorUtil.GetListCirclePosition(listMaterials.Count,0, Vector2.zero, 90);
+        //创建所有素材
+        int itemAngle = 360 / listMaterials.Count;
+        for (int i = 0; i < listMaterials.Count; i++)
+        {
+            GameObject objMaterial = Instantiate(ui_SynthesisMaterials.gameObject, ui_ViewSynthesisMaterial.gameObject);
+            UIViewSynthesisMaterial itemMaterial = objMaterial.GetComponent<UIViewSynthesisMaterial>();
+
+            ItemsSynthesisMaterialsBean itemData = listMaterials[i];
+            itemMaterial.SetData(itemData, itemAngle * i);
+            itemMaterial.rectTransform.anchoredPosition = listCirclePosition[i];
+        }
     }
 }

@@ -8,7 +8,7 @@ using static UnityEngine.InputSystem.InputAction;
 
 public class BaseUIInit : BaseMonoBehaviour
 {
-    public List<string> listEvents = new List<string>();
+    protected List<string> listEvents = new List<string>();
 
     public virtual void Awake()
     {

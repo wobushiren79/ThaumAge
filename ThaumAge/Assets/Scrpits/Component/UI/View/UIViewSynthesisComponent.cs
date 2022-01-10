@@ -8,5 +8,9 @@ public partial class UIViewSynthesis
 
     public UIViewSynthesisItem ui_SynthesisResults;
 
+    public RectTransform ui_SynthesisMaterials;
+
+    public UIViewSynthesisMaterial ui_ViewSynthesisMaterial;
+
 
 }

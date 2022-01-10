@@ -99,7 +99,7 @@ public partial class UIViewSynthesisItem : BaseUIView
         }
         else
         {
-            ui_TVNumber.color = Color.red;
+            ui_TVNumber.color = Color.white;
         }
         ui_TVNumber.text = $"{number}";
     }

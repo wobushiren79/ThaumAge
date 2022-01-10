@@ -40,21 +40,28 @@ public class VectorUtil
     /// 获取圆上几点
     /// </summary>
     /// <param name="number"></param>
-    /// <param name="startAngle"></param>
+    /// <param name="startAngle">0度为最右边</param>
     /// <param name="centerPosition"></param>
     /// <param name="r"></param>
+    /// <param name="isLoop">是否是循环，是的话会再加上1个起始点</param>
     /// <returns></returns>
-    public static Vector2[] GetListCirclePosition(int number, float startAngle, Vector2 centerPosition, float r)
+    public static Vector2[] GetListCirclePosition(int number, float startAngle, Vector2 centerPosition, float r, bool isLoop = false)
     {
-        Vector2[] listData = new Vector2[number];
+        int numberTotal = (isLoop ? number + 1 : number);
+        Vector2[] listData = new Vector2[numberTotal];
         float itemAngle = 360f / number;
         for (int i = 0; i < number; i++)
         {
             startAngle += itemAngle;
             listData[i] = GetCirclePosition(startAngle, centerPosition, r);
         }
+        if (isLoop)
+        {
+            listData[number] = listData[0];
+        }
         return listData;
     }
+
 
     /// <summary>
     /// 获取绕某点旋转之后的点

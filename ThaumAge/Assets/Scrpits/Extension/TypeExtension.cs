@@ -380,4 +380,20 @@ public static class TypeExtension
         }
         return listData;
     }
+
+    /// <summary>
+    /// 转换成V3
+    /// </summary>
+    /// <param name="self"></param>
+    /// <returns></returns>
+    public static Vector3[] ToVector3(this Vector2[] self)
+    {
+        Vector3[] listData = new Vector3[self.Length];
+        for (int i = 0; i < self.Length;i++)
+        {
+            Vector2 itemData = self[i];
+            listData[i] = new Vector3(itemData.x, itemData.y,0);
+        }
+        return listData;
+    }
 }
