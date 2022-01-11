@@ -22,22 +22,67 @@ public class VectorUtil
     }
 
     /// <summary>
-    /// 获取圆上一点坐标
+    /// 获取圆上一点 逆时针
+    /// </summary>
+    /// <param name="startPosition"></param>
+    /// <param name="centerPosition"></param>
+    /// <param name="angle"></param>
+    /// <returns></returns>
+    public static Vector2 GetCirclePosition(Vector2 startPosition, Vector2 centerPosition, float angle)
+    {
+        Vector2 circlePosition;
+        angle = (float)(angle / 180.0) * Mathf.PI;
+        float a = Mathf.Cos(angle);
+        float b = Mathf.Sin(angle);
+        circlePosition.x = (startPosition.x - centerPosition.x) * a + (startPosition.y - centerPosition.y) * b + centerPosition.x;
+        circlePosition.y = -(startPosition.x - centerPosition.x) * b + (startPosition.y - centerPosition.y) * a + centerPosition.y;
+        return circlePosition;
+    }
+
+    /// <summary>
+    /// 获取圆上一点坐标 顺时针
     /// </summary>
     /// <param name="angle"></param>
     /// <param name="centerPosition"></param>
     /// <param name="r"></param>
     /// <returns></returns>
-    public static Vector2 GetCirclePosition(float angle,Vector2 centerPosition,float r)
+    public static Vector2 GetCirclePosition(float angle, Vector2 centerPosition, float r)
     {
-        float x= centerPosition.x + r * Mathf.Cos(angle * 3.14f / 180f);
-        float y = centerPosition.y + r * Mathf.Sin(angle * 3.14f / 180f);
-        Vector2 circlePosition = new Vector2(x,y);
+        float x = centerPosition.x + r * Mathf.Cos(angle * Mathf.PI / 180f);
+        float y = centerPosition.y + r * Mathf.Sin(angle * Mathf.PI / 180f);
+        Vector2 circlePosition = new Vector2(x, y);
         return circlePosition;
     }
 
     /// <summary>
-    /// 获取圆上几点
+    /// 获取圆上几点 逆时针
+    /// </summary>
+    /// <param name="number"></param>
+    /// <param name="startPosition"></param>
+    /// <param name="centerPosition"></param>
+    /// <param name="angle"></param>
+    /// <param name="isLoop"></param>
+    /// <returns></returns>
+    public static Vector2[] GetListCirclePosition(int number, Vector2 startPosition, Vector2 centerPosition, float angle, bool isLoop = false)
+    {
+        int numberTotal = (isLoop ? number + 1 : number);
+        Vector2[] listData = new Vector2[numberTotal];
+        float itemAngle = 360f / number;
+        angle -= itemAngle;
+        for (int i = 0; i < number; i++)
+        {
+            angle += itemAngle;
+            listData[i] = GetCirclePosition(startPosition, centerPosition, angle);
+        }
+        if (isLoop)
+        {
+            listData[number] = listData[0];
+        }
+        return listData;
+    }
+
+    /// <summary>
+    /// 获取圆上几点 顺时针
     /// </summary>
     /// <param name="number"></param>
     /// <param name="startAngle">0度为最右边</param>
@@ -50,6 +95,7 @@ public class VectorUtil
         int numberTotal = (isLoop ? number + 1 : number);
         Vector2[] listData = new Vector2[numberTotal];
         float itemAngle = 360f / number;
+        startAngle -= itemAngle;
         for (int i = 0; i < number; i++)
         {
             startAngle += itemAngle;

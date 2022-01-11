@@ -85,8 +85,8 @@ public partial class UIViewSynthesis : BaseUIView
         //获取当前选中合成道具
         ItemsSynthesisBean itemsSynthesis = listSynthesisData[indexSelect];
         List<ItemsSynthesisMaterialsBean> listMaterials = itemsSynthesis.GetSynthesisMaterials();
-        //获取其实点位置
-        Vector2[] listCirclePosition = VectorUtil.GetListCirclePosition(listMaterials.Count,0, Vector2.zero, 90);
+        //获取起始点位置
+        Vector2[] listCirclePosition = VectorUtil.GetListCirclePosition(listMaterials.Count, 0, Vector2.zero, 95);
         //创建所有素材
         int itemAngle = 360 / listMaterials.Count;
         for (int i = 0; i < listMaterials.Count; i++)
