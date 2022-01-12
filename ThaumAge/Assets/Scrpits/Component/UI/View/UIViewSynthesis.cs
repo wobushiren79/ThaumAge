@@ -33,6 +33,10 @@ public partial class UIViewSynthesis : BaseUIView
     public override void OnClickForButton(Button viewButton)
     {
         base.OnClickForButton(viewButton);
+        if(viewButton== ui_BtnSynthesis)
+        {
+            OnClickForStartSynthesis();
+        }
     }
 
     /// <summary>
@@ -55,11 +59,19 @@ public partial class UIViewSynthesis : BaseUIView
     /// </summary>
     public void OnClickForStartSynthesis()
     {
+        //当前选中的合成道具
+        ItemsSynthesisBean itemsSynthesis = listSynthesisData[indexSelect];
+        //检测当前道具是否能合成
+        bool canSynthesis= itemsSynthesis.CheckSynthesis();
+
+        if (!canSynthesis)
+        {
+            UIHandler.Instance.ToastHint<ToastView>("素材不足，无法合成");
+        }
+
         BaseUIComponent currentUI = UIHandler.Instance.GetOpenUI();
         UIViewBackpackList backpackUI = currentUI.GetComponentInChildren<UIViewBackpackList>();
         UIViewShortcuts shortcutsUI = currentUI.GetComponentInChildren<UIViewShortcuts>();
-        //当前选中的合成道具
-        ItemsSynthesisBean itemsSynthesis = listSynthesisData[indexSelect];
     }
 
     /// <summary>

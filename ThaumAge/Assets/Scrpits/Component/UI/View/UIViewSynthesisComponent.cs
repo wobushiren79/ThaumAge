@@ -12,5 +12,7 @@ public partial class UIViewSynthesis
 
     public UIViewSynthesisMaterial ui_ViewSynthesisMaterial;
 
+    public Button ui_BtnSynthesis;
+
 
 }

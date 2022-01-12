@@ -451,6 +451,7 @@ MonoBehaviour:
   ui_SynthesisResults: {fileID: 3785796425151004251}
   ui_SynthesisMaterials: {fileID: 5658148817274492421}
   ui_ViewSynthesisMaterial: {fileID: 5319787814660743514}
+  ui_BtnSynthesis: {fileID: 3305670000183288985}
 --- !u!1 &7326292706391742089
 GameObject:
   m_ObjectHideFlags: 0
