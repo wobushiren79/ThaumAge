@@ -58,6 +58,8 @@ public partial class UIViewSynthesis : BaseUIView
         BaseUIComponent currentUI = UIHandler.Instance.GetOpenUI();
         UIViewBackpackList backpackUI = currentUI.GetComponentInChildren<UIViewBackpackList>();
         UIViewShortcuts shortcutsUI = currentUI.GetComponentInChildren<UIViewShortcuts>();
+        //当前选中的合成道具
+        ItemsSynthesisBean itemsSynthesis = listSynthesisData[indexSelect];
     }
 
     /// <summary>

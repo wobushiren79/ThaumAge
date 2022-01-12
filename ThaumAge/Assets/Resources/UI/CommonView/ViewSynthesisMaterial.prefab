@@ -93,6 +93,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 616f636d39d98b3419c38b7c9ff8910b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  rectTransform: {fileID: 0}
   ui_Icon: {fileID: 3906617919152714161}
   ui_TVNumber: {fileID: 8006402895827767078}
   ui_ViewSynthesisMaterial: {fileID: 8664330721369574312}
@@ -108,6 +109,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8a09756f2581383459f0098f62842545, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  rectTransform: {fileID: 0}
   btnTarget: {fileID: 2330603762682755163}
   popupType: 0
   itemId: 0
@@ -306,7 +308,7 @@ MonoBehaviour:
     m_BestFit: 0
     m_MinSize: 1
     m_MaxSize: 25
-    m_Alignment: 6
+    m_Alignment: 7
     m_AlignByGeometry: 0
     m_RichText: 1
     m_HorizontalOverflow: 0
