@@ -4,6 +4,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using DG.Tweening;
 
 public partial class UIViewItemContainer : BaseUIView
 {
@@ -33,6 +34,8 @@ public partial class UIViewItemContainer : BaseUIView
     //放置新道具回调
     protected Action<UIViewItemContainer, long> callBackForSetViewItem;
 
+    protected float timeForAddViewItem = 0.2f;
+    protected float timeForRemoveViewItem = 0.2f;
     public override void Awake()
     {
         base.Awake();
@@ -45,6 +48,43 @@ public partial class UIViewItemContainer : BaseUIView
     {
         base.OnDestroy();
         callBackForSetViewItem = null;
+    }
+
+    /// <summary>
+    /// 增加道具
+    /// </summary>
+    public bool AddViewItem(ItemsBean itemsData,Vector3 createPosition)
+    {
+        //如果已经有一个了 则不能添加
+        if (GetViewItem() != null)
+            return false;
+        SetData(containerType, itemsData, viewIndex);
+        currentViewItem.rectTransform
+            .DOAnchorPos(createPosition, timeForAddViewItem)
+            .From()
+            .SetEase(Ease.OutCubic);
+        return true;
+    }
+
+    /// <summary>
+    /// 移出道具
+    /// </summary>
+    /// <returns></returns>
+    public bool RemoveViewItem()
+    {
+        //如果已经有一个了 则不能删除
+        UIViewItem viewItem = GetViewItem();
+        if (viewItem == null)
+            return false;
+        GameObject objViewItem = viewItem.gameObject;
+        viewItem.transform
+            .DOScale(0, timeForRemoveViewItem)
+            .OnComplete(()=> 
+            {
+                DestroyImmediate(objViewItem);              
+            });
+        ClearViewItem();
+        return true;
     }
 
     /// <summary>

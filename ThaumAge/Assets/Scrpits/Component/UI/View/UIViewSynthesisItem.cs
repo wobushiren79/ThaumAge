@@ -21,7 +21,7 @@ public partial class UIViewSynthesisItem : BaseUIView
     {
         this.index = index;
         this.itemsSynthesis = itemsSynthesis;
-        itemsSynthesis.GetSynthesisResult(out long resultId, out long resultNum);
+        itemsSynthesis.GetSynthesisResult(out long resultId, out int resultNum);
 
         bool canSynthesis = itemsSynthesis.CheckSynthesis();
         SetItemIcon(resultId);

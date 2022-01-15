@@ -291,7 +291,8 @@ public partial class UIViewItem : BaseUIView,
     {
         //如果什么都没有检测到，说明是把物体丢到场景中
         Player player = GameHandler.Instance.manager.player;
-        ItemsHandler.Instance.CreateItemCptDrop(itemId, itemNumber, player.transform.position + Vector3.up, ItemDropStateEnum.DropNoPick, player.transform.forward);
+        Vector3 randomFroce = new Vector3(UnityEngine.Random.Range(-0.5f,0.5f), UnityEngine.Random.Range(0f, 0.5f), UnityEngine.Random.Range(-0.5f, 0.5f));
+        ItemsHandler.Instance.CreateItemCptDrop(itemId, itemNumber, player.transform.position + Vector3.up, ItemDropStateEnum.DropNoPick, player.transform.forward + randomFroce);
         DestroyImmediate(gameObject);
         if (originalParent != null)
         {
@@ -412,6 +413,11 @@ public partial class UIViewItem : BaseUIView,
         }
     }
 
+    /// <summary>
+    /// 道具和道具交换
+    /// </summary>
+    /// <param name="viewItem"></param>
+    /// <returns></returns>
     protected bool ExchangeItemForItem(UIViewItem viewItem)
     {
         //如果目标是同一物品

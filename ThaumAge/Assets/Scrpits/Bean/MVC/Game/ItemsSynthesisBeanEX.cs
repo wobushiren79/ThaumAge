@@ -80,7 +80,7 @@ public partial class ItemsSynthesisBean
                 }
                 else
                 {
-                    listMaterials.Add(new ItemsSynthesisMaterialsBean(itemData3, long.Parse(itemData2[1])));
+                    listMaterials.Add(new ItemsSynthesisMaterialsBean(itemData3, int.Parse(itemData2[1])));
                 }
             }
         }
@@ -90,7 +90,7 @@ public partial class ItemsSynthesisBean
     /// <summary>
     /// 获取合成结果
     /// </summary>
-    public void GetSynthesisResult(out long itemId, out long itemNumber)
+    public void GetSynthesisResult(out long itemId, out int itemNumber)
     {
         long[] itemData = results.SplitForArrayLong(':');
         if (itemData.Length == 1)
@@ -101,7 +101,7 @@ public partial class ItemsSynthesisBean
         else
         {
             itemId = itemData[0];
-            itemNumber = itemData[1];
+            itemNumber = (int)itemData[1];
         }
     }
 }
@@ -109,9 +109,9 @@ public partial class ItemsSynthesisBean
 public class ItemsSynthesisMaterialsBean
 {
     public long[] itemIds;
-    public long itemNumber;
+    public int itemNumber;
 
-    public ItemsSynthesisMaterialsBean(long[] itemIds, long itemNumber)
+    public ItemsSynthesisMaterialsBean(long[] itemIds, int itemNumber)
     {
         this.itemIds = itemIds;
         this.itemNumber = itemNumber;

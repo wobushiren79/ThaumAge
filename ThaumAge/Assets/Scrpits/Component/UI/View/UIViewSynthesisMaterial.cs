@@ -13,6 +13,14 @@ public partial class UIViewSynthesisMaterial : BaseUIView
         StopAllCoroutines();
     }
 
+    public override void RefreshUI()
+    {
+        base.RefreshUI();
+        if (materialsData == null)
+            return;
+        SetCanHasItems(materialsData.itemIds, materialsData.itemNumber);
+    }
+
     /// <summary>
     /// 设置数据
     /// </summary>
@@ -22,7 +30,7 @@ public partial class UIViewSynthesisMaterial : BaseUIView
         this.materialsData = materialsData;
         AnimForMove(startAngle);
         AnimForChangeMaterial(materialsData.itemIds, 0);
-        SetCanHasItems(materialsData.itemIds, materialsData.itemNumber);
+        RefreshUI();
     }
 
     /// <summary>

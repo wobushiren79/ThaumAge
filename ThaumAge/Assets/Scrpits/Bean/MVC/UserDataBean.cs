@@ -40,7 +40,7 @@ public class UserDataBean
     /// </summary>
     public int AddItems(long itemId, int itemNumber)
     {
-        //首先查询背包和快捷栏里是否有同样的道具
+        //首先查询背包和快捷栏里是否有同样的道具                     
         //依次增加相应道具的数量 直到该道具的上限
         itemNumber = AddOldItems(listShortcutsItems, itemId, itemNumber);
         if (itemNumber <= 0) return itemNumber;
@@ -61,7 +61,7 @@ public class UserDataBean
     /// <param name="itemId"></param>
     /// <param name="itemNumber"></param>
     /// <returns></returns>
-    public int AddOldItems(ItemsBean[] arrayContainer, long itemId, int itemNumber)
+    protected int AddOldItems(ItemsBean[] arrayContainer, long itemId, int itemNumber)
     {
         ItemsInfoBean itemsInfo = ItemsHandler.Instance.manager.GetItemsInfoById(itemId);
         for (int i = 0; i < arrayContainer.Length; i++)
@@ -98,7 +98,7 @@ public class UserDataBean
     /// <param name="itemId"></param>
     /// <param name="itemNumber"></param>
     /// <returns></returns>
-    public int AddNewItems(ItemsBean[] arrayContainer, long itemId, int itemNumber)
+    protected int AddNewItems(ItemsBean[] arrayContainer, long itemId, int itemNumber)
     {
         ItemsInfoBean itemsInfo = ItemsHandler.Instance.manager.GetItemsInfoById(itemId);
         for (int i = 0; i < arrayContainer.Length; i++)
@@ -107,7 +107,7 @@ public class UserDataBean
             if (itemData == null || itemData.itemId == 0)
             {
                 ItemsBean newItemData = new ItemsBean(itemId);
-                listShortcutsItems[i] = newItemData;
+                arrayContainer[i] = newItemData;
                 int subNumber = itemsInfo.max_number;
                 //如果增加的数量在该道具的上限之内
                 if (subNumber >= itemNumber)
@@ -192,6 +192,14 @@ public class UserDataBean
         return GetItemsFromBackpack((x - 1) + (y - 1) * 7);
     }
 
+    /// <summary>
+    /// 获取所有的道具 背包和快捷栏
+    /// </summary>
+    /// <returns></returns>
+    public ItemsBean[] GetAllItems()
+    {
+        return listShortcutsItems.Concat(listBackpack).ToArray();
+    }
 
     /// <summary>
     /// 是否有足够数量的指定道具
@@ -201,9 +209,7 @@ public class UserDataBean
     /// <returns></returns>
     public bool HasEnoughItem(long itemsId, long itemsNum)
     {
-        ItemsBean[] allItems = listShortcutsItems
-            .Concat(listBackpack)
-            .ToArray();
+        ItemsBean[] allItems = GetAllItems();
         int totalNumber = 0;
         for (int i = 0; i < allItems.Length; i++)
         {
@@ -223,5 +229,40 @@ public class UserDataBean
         }
     }
 
-
+    /// <summary>
+    /// 移除道具
+    /// </summary>
+    /// <param name="itemsId"></param>
+    /// <param name="itemsNum"></param>
+    public int RemoveItem(long itemsId, int itemsNum)
+    {
+        ItemsBean[] allItems = GetAllItems();
+        for (int i = 0; i < allItems.Length; i++)
+        {
+            ItemsBean itemData = allItems[i];
+            if (itemData == null || itemData.itemId == 0)
+                continue;
+            if (itemData.itemId == itemsId)
+            {
+                if (itemData.number > itemsNum)
+                {
+                    itemData.number -= itemsNum;
+                    itemsNum = 0;
+                }
+                else
+                {
+                    itemsNum -= itemData.number;
+                    itemData.number = 0;
+                    itemData.meta = null;
+                    itemData.itemId = 0;
+                }
+                if (itemsNum <= 0)
+                {
+                    //如果都扣除完了
+                    break;
+                }
+            }
+        }
+        return itemsNum;
+    }
 }

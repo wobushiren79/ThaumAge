@@ -171,6 +171,9 @@ public class ItemCptDrop : BaseMonoBehaviour
                     itemData.number = number;
                     SetItemDropState(ItemDropStateEnum.DropNoPick);
                     EnablePhysic(true);
+                    //随机散开
+                    System.Random random = new System.Random();
+                    rbItem.AddForce(random.Next(-100, 100), random.Next(-100, 100), random.Next(-100, 100));
                 }
                 UIHandler.Instance.RefreshAllUI();
             });
@@ -182,7 +185,7 @@ public class ItemCptDrop : BaseMonoBehaviour
     /// <param name="isEnable"></param>
     public void EnablePhysic(bool isEnable)
     {
-        rbItem.isKinematic = isEnable;
+        rbItem.isKinematic = !isEnable;
         colliderItem.isTrigger = !isEnable;
         colliderItem.enabled = isEnable;
     }

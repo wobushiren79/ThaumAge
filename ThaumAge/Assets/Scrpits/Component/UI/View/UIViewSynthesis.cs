@@ -7,7 +7,10 @@ public partial class UIViewSynthesis : BaseUIView
 {
     //合成数据
     protected List<ItemsSynthesisBean> listSynthesisData;
+    //当前选中项
     protected int indexSelect = 0;
+    //素材UI
+    protected List<UIViewSynthesisMaterial> listUIMaterial;
 
     public override void Awake()
     {
@@ -28,12 +31,13 @@ public partial class UIViewSynthesis : BaseUIView
         base.RefreshUI();
         listSynthesisData = ItemsHandler.Instance.manager.GetItemsSynthesisByType(ItemsSynthesisTypeEnum.Self);
         ui_SynthesisList.SetCellCount(listSynthesisData.Count);
+        RefreshMaterials();
     }
 
     public override void OnClickForButton(Button viewButton)
     {
         base.OnClickForButton(viewButton);
-        if(viewButton== ui_BtnSynthesis)
+        if (viewButton == ui_BtnSynthesis)
         {
             OnClickForStartSynthesis();
         }
@@ -62,16 +66,55 @@ public partial class UIViewSynthesis : BaseUIView
         //当前选中的合成道具
         ItemsSynthesisBean itemsSynthesis = listSynthesisData[indexSelect];
         //检测当前道具是否能合成
-        bool canSynthesis= itemsSynthesis.CheckSynthesis();
+        bool canSynthesis = itemsSynthesis.CheckSynthesis();
 
         if (!canSynthesis)
         {
-            UIHandler.Instance.ToastHint<ToastView>("素材不足，无法合成");
+            //素材不足 无法合成
+            UIHandler.Instance.ToastHint<ToastView>(TextHandler.Instance.GetTextById(30002));
+            return;
+        }
+        //首先消耗素材
+        BaseUIComponent currentUI = UIHandler.Instance.GetOpenUI();
+        //获取素材
+        List<ItemsSynthesisMaterialsBean> listMaterials = itemsSynthesis.GetSynthesisMaterials();
+
+        UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();
+
+        //扣除素材
+        for (int i = 0; i < listMaterials.Count; i++)
+        {
+            ItemsSynthesisMaterialsBean itemMaterials = listMaterials[i];
+            for (int f = 0; f < itemMaterials.itemIds.Length; f++)
+            {
+                //只要扣除其中一项素材就行
+                long itemMaterialId = itemMaterials.itemIds[f];
+                if (userData.HasEnoughItem(itemMaterialId, itemMaterials.itemNumber))
+                {
+                    userData.RemoveItem(itemMaterialId, itemMaterials.itemNumber);
+                    break;
+                }
+                else
+                {
+                    continue;
+                }
+            }
+        }
+        //添加道具
+        itemsSynthesis.GetSynthesisResult(out long itemsId, out int itemNum);
+        int moreNum = userData.AddItems(itemsId, itemNum);
+        //如果还有多余的道具 则丢出来
+        if (moreNum > 0)
+        {
+            Player player = GameHandler.Instance.manager.player;
+            ItemsHandler.Instance.CreateItemCptDrop(itemsId, moreNum, player.transform.position + Vector3.up, ItemDropStateEnum.DropNoPick);
         }
 
-        BaseUIComponent currentUI = UIHandler.Instance.GetOpenUI();
         UIViewBackpackList backpackUI = currentUI.GetComponentInChildren<UIViewBackpackList>();
+        backpackUI.RefreshUI();
         UIViewShortcuts shortcutsUI = currentUI.GetComponentInChildren<UIViewShortcuts>();
+        shortcutsUI.RefreshUI();
+        RefreshUI();
     }
 
     /// <summary>
@@ -94,6 +137,10 @@ public partial class UIViewSynthesis : BaseUIView
     /// </summary>
     public void SetSynthesisMaterials()
     {
+        if (listUIMaterial == null)
+            listUIMaterial = new List<UIViewSynthesisMaterial>();
+        listUIMaterial.Clear();
+
         //先删除所有素材
         ui_SynthesisMaterials.DestroyAllChild();
         //获取当前选中合成道具
@@ -103,6 +150,7 @@ public partial class UIViewSynthesis : BaseUIView
         Vector2[] listCirclePosition = VectorUtil.GetListCirclePosition(listMaterials.Count, 0, Vector2.zero, 95);
         //创建所有素材
         int itemAngle = 360 / listMaterials.Count;
+
         for (int i = 0; i < listMaterials.Count; i++)
         {
             GameObject objMaterial = Instantiate(ui_SynthesisMaterials.gameObject, ui_ViewSynthesisMaterial.gameObject);
@@ -111,6 +159,21 @@ public partial class UIViewSynthesis : BaseUIView
             ItemsSynthesisMaterialsBean itemData = listMaterials[i];
             itemMaterial.SetData(itemData, itemAngle * i);
             itemMaterial.rectTransform.anchoredPosition = listCirclePosition[i];
+            listUIMaterial.Add(itemMaterial);
+        }
+    }
+
+    /// <summary>
+    /// 刷新素材显示
+    /// </summary>
+    public void RefreshMaterials()
+    {
+        if (listUIMaterial == null)
+            listUIMaterial = new List<UIViewSynthesisMaterial>();
+        for (int i = 0; i < listUIMaterial.Count; i++)
+        {
+            UIViewSynthesisMaterial itemUIMaterial = listUIMaterial[i];
+            itemUIMaterial.RefreshUI();
         }
     }
 }

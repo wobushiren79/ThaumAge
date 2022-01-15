@@ -12,10 +12,10 @@ public partial class UIViewBackpackList : BaseUIView
         InitData();
     }
 
-    public bool AddItems(ItemsBean itemData)
+    public override void RefreshUI()
     {
-        return false;
-
+        base.RefreshUI();
+        ui_ItemList.RefreshAllCells();
     }
 
     /// <summary>
