@@ -178,9 +178,6 @@ public partial class UIMainCreate : BaseUIComponent,
             UIHandler.Instance.ToastHint<ToastView>(TextHandler.Instance.GetTextById(30001));
             return;
         }
-        DialogBean dialogData = new DialogBean();
-        dialogData.content = TextHandler.Instance.GetTextById(20002);
-        dialogData.dialogType = DialogEnum.DialogNormal;
         Action<DialogView, DialogBean> actionSubmit = (view, data) =>
         {
             UserDataBean userData = new UserDataBean();
@@ -188,6 +185,7 @@ public partial class UIMainCreate : BaseUIComponent,
             userData.userId = userId;
             userData.characterData = character.GetCharacterData();
             userData.characterData.characterName = characterName;
+            userData.seed = UnityEngine.Random.Range(0, int.MaxValue);
             //保存数据
             GameDataHandler.Instance.manager.SaveUserData(userData);
             //使用数据
@@ -195,7 +193,12 @@ public partial class UIMainCreate : BaseUIComponent,
             //改变场景
             SceneMainHandler.Instance.ChangeScene(ScenesEnum.GameScene);
         };
-        UIHandler.Instance.ShowDialog<DialogView>(dialogData);
+        DialogBean dialogData = new DialogBean();
+        dialogData.content = TextHandler.Instance.GetTextById(20002);
+        dialogData.dialogType = DialogEnum.Normal;
+        dialogData.actionSubmit = actionSubmit;
+
+        UIHandler.Instance.ShowDialog<UIDialogNormal>(dialogData);
     }
 
     /// <summary>

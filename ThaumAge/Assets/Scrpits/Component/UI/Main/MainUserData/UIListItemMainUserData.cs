@@ -142,7 +142,7 @@ public partial class UIListItemMainUserData : BaseUIView
              SceneMainHandler.Instance.manager.ShowCharacterObjByIndex(userDataIndex, false);
          };
         DialogBean dialogData = new DialogBean();
-        dialogData.dialogType = DialogEnum.DialogNormal;
+        dialogData.dialogType = DialogEnum.Normal;
         dialogData.content = TextHandler.Instance.GetTextById(20001);
         dialogData.actionSubmit = actionSubmit;
         UIDialogNormal dialog = UIHandler.Instance.ShowDialog<UIDialogNormal>(dialogData);

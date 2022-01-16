@@ -323,7 +323,7 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
     /// <summary>
     /// 处理-世界刷新
     /// </summary>
-    public void HandleForWorldUpdate()
+    public void HandleForWorldUpdate(bool isCheckDis = true)
     {
         if (GameHandler.Instance.manager.GetGameState() == GameStateEnum.Gaming)
         {
@@ -334,16 +334,22 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
             //计算两点距离
             float dis = Vector3.Distance(playPosition, positionForWorldUpdate);
             //获取刷新距离
-            SOGameInitBean gameInitData = GameHandler.Instance.manager.gameInitData;
+            GameConfigBean gameConfig = GameDataHandler.Instance.manager.GetGameConfig();
+            //如果不需要检测距离 就直接刷新
+            if (!isCheckDis)
+            {
+                dis = float.MaxValue;
+            }
             //对比距离 大于刷新距离则刷新
-            if (dis > gameInitData.disForWorldUpdate)
+            if (dis > manager.widthChunk)
             {
                 positionForWorldUpdate = playPosition;
-                CreateChunkRangeForWorldPostion(playPosition, manager.worldRefreshRange, null);
-                DestroyChunkRangeForWorldPosition(playPosition, manager.worldRefreshRange + gameInitData.rangeForWorldUpdateDestory, null);
+                CreateChunkRangeForWorldPostion(playPosition, gameConfig.worldRefreshRange, null);
+                DestroyChunkRangeForWorldPosition(playPosition, gameConfig.worldRefreshRange + gameConfig.worldDestoryRange, null);
             }
         }
     }
+
     /// <summary>
     /// 处理 更新方块
     /// </summary>

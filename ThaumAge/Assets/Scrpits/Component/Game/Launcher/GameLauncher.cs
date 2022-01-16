@@ -5,10 +5,6 @@ using UnityEngine;
 
 public class GameLauncher : BaseLauncher
 {
-    public int refreshRange = 5;
-
-    public int seed = 132349;
-
     public WorldTypeEnum worldType = WorldTypeEnum.Test;
 
     public override void Launch()
@@ -16,18 +12,14 @@ public class GameLauncher : BaseLauncher
         base.Launch();
         //打开主UI
         UIHandler.Instance.OpenUIAndCloseOther<UILoading>(UIEnum.Loading);
-
         //加载资源
         GameHandler.Instance.LoadGameResources(()=> 
         {
             UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();
-            userData.userId = "Test";
-
-
             //设置游戏状态
             GameHandler.Instance.manager.SetGameState(GameStateEnum.Init);
             //设置种子
-            WorldCreateHandler.Instance.manager.SetWorldSeed(seed);
+            WorldCreateHandler.Instance.manager.SetWorldSeed(userData.seed);
             //开关角色控制
             GameControlHandler.Instance.SetPlayerControlEnabled(false);
             //设置世界类型
@@ -35,7 +27,8 @@ public class GameLauncher : BaseLauncher
             //设置远景模糊
             VolumeHandler.Instance.SetDepthOfField(worldType);
             //刷新周围区块
-            WorldCreateHandler.Instance.CreateChunkRangeForCenterPosition(Vector3Int.zero, refreshRange, CompleteForUpdateChunk);
+            GameConfigBean gameConfig = GameDataHandler.Instance.manager.GetGameConfig();
+            WorldCreateHandler.Instance.CreateChunkRangeForCenterPosition(Vector3Int.zero, gameConfig.worldRefreshRange, CompleteForUpdateChunk);
             //修改游戏状态
             GameHandler.Instance.manager.SetGameState(GameStateEnum.Gaming);
         });

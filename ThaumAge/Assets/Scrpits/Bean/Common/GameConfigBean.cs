@@ -43,6 +43,10 @@ public class GameConfigBean
     //角色Y轴镜头移动速度
     public float speedForPlayerCameraMoveY = 0.02f;
 
+    //世界刷新范围
+    public int worldRefreshRange = 5;
+    //世界删除范围
+    public int worldDestoryRange = 5;
 
     /// <summary>
     /// 获取抗锯齿模式

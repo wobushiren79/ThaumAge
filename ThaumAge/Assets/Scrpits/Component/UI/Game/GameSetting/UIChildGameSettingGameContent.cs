@@ -6,9 +6,15 @@ public class UIChildGameSettingGameContent : UIChildGameSettingBaseContent
 {
     //”Ô—‘—°‘Ò
     protected UIListItemGameSettingSelect settingSelectLanguage;
+    //º”‘ÿ∑∂Œß
+    protected UIListItemGameSettingRange worldRefreshRange;
+    //–∂‘ÿ∑∂Œß
+    protected UIListItemGameSettingRange worldDestoryRange;
 
     public List<string> listLanguageData;
 
+    private bool isInitWorldRefreshRange = false;
+    private bool isInitWorldDestoryRange = false;
     public UIChildGameSettingGameContent(GameObject objListContainer) : base(objListContainer)
     {
         listLanguageData = new List<string>()
@@ -25,6 +31,19 @@ public class UIChildGameSettingGameContent : UIChildGameSettingBaseContent
         //”Ô—‘—°‘Ò
         settingSelectLanguage = CreateItemForSelect(TextHandler.Instance.GetTextById(101), listLanguageData, HandleForSelectLanguage);
         settingSelectLanguage.SetIndex((int)gameConfig.GetLanguage());
+
+        //º”‘ÿ∑∂Œß°§
+        worldRefreshRange = CreateItemForRange(TextHandler.Instance.GetTextById(116), HandleForWorldRefreshRange);
+        worldRefreshRange.SetMinMax(3, 32); 
+        isInitWorldRefreshRange = true;
+        worldRefreshRange.SetPro(gameConfig.worldRefreshRange);
+
+        //–∂‘ÿ∑∂Œß
+        worldDestoryRange = CreateItemForRange(TextHandler.Instance.GetTextById(117), HandleForWorldDestoryRange);
+        worldDestoryRange.SetMinMax(3, 10); 
+        isInitWorldDestoryRange = true;
+        worldDestoryRange.SetPro(gameConfig.worldDestoryRange);
+
     }
 
     public override void RefreshUI()
@@ -33,6 +52,29 @@ public class UIChildGameSettingGameContent : UIChildGameSettingBaseContent
         settingSelectLanguage.SetTitle(TextHandler.Instance.GetTextById(101));
     }
 
+    /// <summary>
+    /// ¥¶¿Ì-À¢–¬∑∂Œß
+    /// </summary>
+    public void HandleForWorldRefreshRange(float value)
+    {
+        if (!isInitWorldRefreshRange)
+            return;
+        gameConfig.worldRefreshRange = (int)value;
+        worldRefreshRange.SetContent($"{gameConfig.worldRefreshRange}");
+        WorldCreateHandler.Instance.HandleForWorldUpdate(false);
+    }
+
+    /// <summary>
+    /// ¥¶¿Ì-À¢–¬∑∂Œß
+    /// </summary>
+    public void HandleForWorldDestoryRange(float value)
+    {
+        if (!isInitWorldDestoryRange)
+            return;
+        gameConfig.worldDestoryRange = (int)value;
+        worldDestoryRange.SetContent($"{gameConfig.worldDestoryRange}");
+        WorldCreateHandler.Instance.HandleForWorldUpdate(false);
+    }
 
     /// <summary>
     /// ¥¶¿Ì-”Ô—‘—°‘Ò

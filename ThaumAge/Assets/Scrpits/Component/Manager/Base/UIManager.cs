@@ -97,8 +97,8 @@ public class UIManager : BaseUIManager
             LogUtil.LogError("没有找到指定Dialog：" + dialogName);
             return null;
         }
-
-        GameObject objDialog = Instantiate(gameObject, objDialogModel);
+        Transform tfContainer = GetUITypeContainer(UITypeEnum.Dialog);
+        GameObject objDialog = Instantiate(tfContainer.gameObject, objDialogModel);
         if (objDialog)
         {
             DialogView dialogView = objDialog.GetComponent<DialogView>();

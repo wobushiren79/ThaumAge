@@ -356,7 +356,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1425785836975731977}
   - component: {fileID: 6779894780101250073}
-  - component: {fileID: 3960938794254785907}
   - component: {fileID: 8231111218116354123}
   m_Layer: 5
   m_Name: ViewCharacterEquip
@@ -395,36 +394,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7885293333294623051}
   m_CullTransparentMesh: 1
---- !u!114 &3960938794254785907
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7885293333294623051}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 2689ef332eb900447911ac7ca21a7b82, type: 3}
-  m_Type: 1
-  m_PreserveAspect: 0
-  m_FillCenter: 1
-  m_FillMethod: 4
-  m_FillAmount: 1
-  m_FillClockwise: 1
-  m_FillOrigin: 0
-  m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
 --- !u!114 &8231111218116354123
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -437,6 +406,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc44bd99f48d02748a280c209bccebb6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  rectTransform: {fileID: 0}
   ui_CharacterBase: {fileID: 445708444388993055}
   ui_RotateLeft: {fileID: 4875841685296560228}
   ui_RotateRight: {fileID: 2105303880768679128}
@@ -878,8 +848,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -140.00002, y: 120}
-  m_SizeDelta: {x: 280, y: 330}
+  m_AnchoredPosition: {x: -142.50002, y: 120}
+  m_SizeDelta: {x: 285, y: 330}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4432247459626788283
 CanvasRenderer:
@@ -909,7 +879,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 65108b77dbf2b534db4d64c1d2850ace, type: 3}
+  m_Sprite: {fileID: 21300000, guid: e1aa9fd2afce2574a928ee63b39850d7, type: 3}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1

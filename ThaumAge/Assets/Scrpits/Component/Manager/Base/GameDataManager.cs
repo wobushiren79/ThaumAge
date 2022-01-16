@@ -44,8 +44,11 @@ public class GameDataManager : BaseManager,
     {
         if (userData == null)
         {
+            //如果没有数据 则使用测试数据
             userData = new UserDataBean();
             userData.timeForGame.hour = 6;
+            userData.userId = "Test";
+            userData.seed = 132349;
         }  
         return userData;
     }
