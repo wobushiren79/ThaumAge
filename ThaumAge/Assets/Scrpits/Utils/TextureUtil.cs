@@ -21,22 +21,26 @@ public class TextureUtil
     /// <returns></returns>
     public static Texture2D SpriteToTexture2D(Sprite sprite)
     {
-        Texture2D texture = new Texture2D
-        (
-            (int)sprite.textureRect.width,
-            (int)sprite.textureRect.height
-        );
-
-        Color[] pixels = sprite.texture.GetPixels(
-            (int)sprite.textureRect.x,
-            (int)sprite.textureRect.y,
-            (int)sprite.textureRect.width,
-            (int)sprite.textureRect.height
-        );
-
-        texture.SetPixels(pixels);
-        texture.filterMode = FilterMode.Point;
-        texture.Apply();
-        return texture;
+        try
+        {
+            if (sprite.rect.width != sprite.texture.width)
+            {
+                Texture2D newText = new Texture2D((int)sprite.rect.width, (int)sprite.rect.height);
+                Color[] newColors = sprite.texture.GetPixels((int)(sprite.textureRect.x),
+                                                             (int)(sprite.textureRect.y),
+                                                             (int)(sprite.textureRect.width),
+                                                             (int)(sprite.textureRect.height));
+                newText.SetPixels(newColors);
+                newText.filterMode = FilterMode.Point;
+                newText.Apply();
+                return newText;
+            }
+            else
+                return sprite.texture;
+        }
+        catch
+        {
+            return sprite.texture;
+        }
     }
 }
