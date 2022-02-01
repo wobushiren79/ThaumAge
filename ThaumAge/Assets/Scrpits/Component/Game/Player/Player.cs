@@ -45,7 +45,16 @@ public class Player : BaseMonoBehaviour
     public void InitPosition()
     {
         int maxHeight = WorldCreateHandler.Instance.manager.GetMaxHeightForWorldPosition(Mathf.RoundToInt(transform.position.x), Mathf.RoundToInt(transform.position.z));
-        transform.position = new Vector3(transform.position.x, maxHeight + 10, transform.position.z);
+        SetPosition(new Vector3(transform.position.x, maxHeight + 2, transform.position.z));
+    }
+
+    public void SetPosition(Vector3 position)
+    {
+        //开关角色控制
+        GameControlHandler.Instance.SetPlayerControlEnabled(false);
+        transform.position = position;
+        //开关角色控制
+        GameControlHandler.Instance.SetPlayerControlEnabled(true);
     }
 
     /// <summary>
@@ -78,5 +87,14 @@ public class Player : BaseMonoBehaviour
     public CreatureCptCharacter GetCharacter()
     {
         return character;
+    }
+
+    /// <summary>
+    /// 刷新角色
+    /// </summary>
+    public void RefreshCharacter()
+    {
+        UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();
+        character.SetCharacterData(userData.characterData);
     }
 }

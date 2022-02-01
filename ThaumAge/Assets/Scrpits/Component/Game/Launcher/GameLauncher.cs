@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class GameLauncher : BaseLauncher
 {
-    public WorldTypeEnum worldType = WorldTypeEnum.Test;
+    public WorldTypeEnum testWorldType = WorldTypeEnum.Test;
 
     public override void Launch()
     {
@@ -16,6 +16,13 @@ public class GameLauncher : BaseLauncher
         GameHandler.Instance.LoadGameResources(()=> 
         {
             UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();
+            userData.userPosition.GetWorldPosition(out WorldTypeEnum worldType, out Vector3 worldPosition);
+            //如果是测试数据
+            if (userData.userId.Equals("Test"))
+            {
+                worldType = testWorldType;
+            }
+            testWorldType = worldType;
             //设置游戏状态
             GameHandler.Instance.manager.SetGameState(GameStateEnum.Init);
             //设置种子
@@ -48,6 +55,10 @@ public class GameLauncher : BaseLauncher
         GameControlHandler.Instance.SetPlayerControlEnabled(true);
         //初始化位置
         GameHandler.Instance.manager.player.InitPosition();
+        //初始化游戏角色
+        UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();
+        userData.userPosition.GetWorldPosition(out WorldTypeEnum worldType, out Vector3 worldPosition);
+        GameHandler.Instance.InitCharacter(worldPosition);
     }
 
 }

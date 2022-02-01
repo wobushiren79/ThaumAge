@@ -1,6 +1,4 @@
 ﻿using System.Collections.Generic;
-using UnityEditor;
-using UnityEditor.Sprites;
 using UnityEngine;
 
 public class MeshUtil : ScriptableObject

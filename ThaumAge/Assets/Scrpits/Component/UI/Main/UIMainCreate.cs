@@ -186,6 +186,12 @@ public partial class UIMainCreate : BaseUIComponent,
             userData.characterData = character.GetCharacterData();
             userData.characterData.characterName = characterName;
             userData.seed = UnityEngine.Random.Range(0, int.MaxValue);
+            //设置位置
+            userData.userPosition.SetPosition(Vector3.zero);
+            userData.userPosition.SetWorldType(WorldTypeEnum.Main);
+            //设置时间
+            userData.timeForGame.hour = 6;
+
             //保存数据
             GameDataHandler.Instance.manager.SaveUserData(userData);
             //使用数据

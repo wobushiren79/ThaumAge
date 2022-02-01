@@ -7,7 +7,7 @@ public class UserPositionBean
 {
     public int worldType;
 
-    public Vector3Bean position;
+    public Vector3Bean position = new Vector3Bean(Vector3.zero);
 
     public void SetWorldType(WorldTypeEnum worldType)
     {

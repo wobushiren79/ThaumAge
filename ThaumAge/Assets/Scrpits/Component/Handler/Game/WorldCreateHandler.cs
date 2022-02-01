@@ -26,6 +26,7 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
     public void SetWorldType(WorldTypeEnum worldType)
     {
         manager.worldType = worldType;
+        BiomeHandler.Instance.InitWorldBiomeData();
     }
 
     /// <summary>

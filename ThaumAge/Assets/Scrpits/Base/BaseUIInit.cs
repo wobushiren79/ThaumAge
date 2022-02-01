@@ -14,7 +14,6 @@ public class BaseUIInit : BaseMonoBehaviour
     {
         AutoLinkUI();
         RegisterButtons();
-        RegisterInputAction();
     }
 
     public virtual void OnDestroy()
@@ -24,12 +23,14 @@ public class BaseUIInit : BaseMonoBehaviour
 
     public virtual void OpenUI()
     {
+        RegisterInputAction();
         gameObject.ShowObj(true);
         RefreshUI();
     }
 
     public virtual void CloseUI()
     {
+        UnRegisterInputAction();
         gameObject.ShowObj(false);
         //注销所有事件
         for (int i = 0; i < listEvents.Count; i++)

@@ -19,6 +19,11 @@ public class BiomeHandler : BaseHandler<BiomeHandler, BiomeManager>
         dicBiomeMapData = new Dictionary<Vector3Int, BiomeMapData[,]>(maxBiomeData);
     }
 
+    public void InitWorldBiomeData()
+    {
+        dicBiomeMapData.Clear();
+    }
+
     public void InitWorldBiomeSeed()
     {
         int seed = WorldCreateHandler.Instance.manager.GetWorldSeed();
