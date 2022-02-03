@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using static UnityEngine.InputSystem.InputAction;
@@ -21,16 +22,23 @@ public class BaseUIInit : BaseMonoBehaviour
         UnRegisterInputAction();
     }
 
+    public virtual void OnDisable()
+    {
+
+    }
+    public virtual void OnEnable()
+    {
+        
+    }
+
     public virtual void OpenUI()
     {
-        RegisterInputAction();
         gameObject.ShowObj(true);
         RefreshUI();
     }
 
     public virtual void CloseUI()
     {
-        UnRegisterInputAction();
         gameObject.ShowObj(false);
         //注销所有事件
         for (int i = 0; i < listEvents.Count; i++)

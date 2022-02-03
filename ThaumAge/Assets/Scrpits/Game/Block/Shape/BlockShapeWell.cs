@@ -18,11 +18,11 @@ public class BlockShapeWell : BlockShapeCross
         };
     }
 
-    public override void SetData(BlockTypeEnum blockType)
+    public override void InitData(Block block)
     {
-        base.SetData(blockType);
+        base.InitData(block);
 
-        float[] offsetBorder = blockInfo.GetOffsetBorder();
+        float[] offsetBorder = block.blockInfo.GetOffsetBorder();
 
         leftOffsetBorder = offsetBorder[0];
         rightOffsetBorder = offsetBorder[1];
@@ -52,9 +52,9 @@ public class BlockShapeWell : BlockShapeCross
             new Vector3(1,0,1).AddZ(backOffsetBorder)
         };
 
-        Vector2 uvStartPosition = GetUVStartPosition();
+        Vector2 uvStartPosition = GetUVStartPosition(block);
 
-        uvsAdd = new Vector2[]
+        block.uvsAdd = new Vector2[]
         {
             new Vector2(uvStartPosition.x,uvStartPosition.y),
             new Vector2(uvStartPosition.x,uvStartPosition.y + uvWidth),

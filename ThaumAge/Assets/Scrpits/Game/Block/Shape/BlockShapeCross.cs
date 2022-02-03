@@ -2,8 +2,9 @@
 using UnityEditor;
 using UnityEngine;
 
-public class BlockShapeCross : Block
+public class BlockShapeCross : BlockShape
 {
+
     public BlockShapeCross() : base()
     {
         vertsAdd = new Vector3[]
@@ -24,12 +25,11 @@ public class BlockShapeCross : Block
         };
     }
 
-    public override void SetData(BlockTypeEnum blockType)
+    public override void InitData(Block block)
     {
-        base.SetData(blockType);
-        Vector2 uvStartPosition = GetUVStartPosition();
+        Vector2 uvStartPosition = GetUVStartPosition(block);
 
-        uvsAdd = new Vector2[]
+        block.uvsAdd = new Vector2[]
         {
             new Vector2(uvStartPosition.x,uvStartPosition.y),
             new Vector2(uvStartPosition.x,uvStartPosition.y + uvWidth),
@@ -43,29 +43,29 @@ public class BlockShapeCross : Block
         };
     }
 
-    public override void BuildBlock(Chunk chunk, Vector3Int localPosition, DirectionEnum direction)
+    public override void BuildBlock(Block block, Chunk chunk, Vector3Int localPosition, DirectionEnum direction)
     {
-        base.BuildBlock(chunk, localPosition, direction);
-        if (blockType != BlockTypeEnum.None)
+        base.BuildBlock(block, chunk, localPosition, direction);
+        if (block.blockType != BlockTypeEnum.None)
         {
             int startVertsIndex = chunk.chunkMeshData.verts.Count;
-            int startTrisIndex = chunk.chunkMeshData.dicTris[blockInfo.material_type].Count;
+            int startTrisIndex = chunk.chunkMeshData.dicTris[block.blockInfo.material_type].Count;
 
             int startVertsColliderIndex = 0;
             int startTrisColliderIndex = 0;
 
-            if (blockInfo.collider_state == 1)
+            if (block.blockInfo.collider_state == 1)
             {
                 startVertsColliderIndex = chunk.chunkMeshData.vertsCollider.Count;
                 startTrisColliderIndex = chunk.chunkMeshData.trisCollider.Count;
             }
-            else if (blockInfo.trigger_state == 1)
+            else if (block.blockInfo.trigger_state == 1)
             {
                 startVertsColliderIndex = chunk.chunkMeshData.vertsTrigger.Count;
                 startTrisColliderIndex = chunk.chunkMeshData.trisTrigger.Count;
             }
 
-            BuildFace(chunk, localPosition, direction, vertsAdd);
+            BuildFace(block, chunk, localPosition, direction, vertsAdd);
 
             chunk.chunkMeshData.AddMeshIndexData(localPosition,
                      startVertsIndex, vertsAdd.Length, startTrisIndex, trisAdd.Length,
@@ -73,64 +73,49 @@ public class BlockShapeCross : Block
         }
     }
 
-    public override void RefreshBlock(Chunk chunk, Vector3Int localPosition, DirectionEnum direction)
-    {
-        //获取下方方块
-        Vector3Int downLocalPosition = localPosition + Vector3Int.down;
-        chunk.chunkData.GetBlockForLocal(downLocalPosition, out Block downBlock, out DirectionEnum downBlockDirection);
-        //如果下方方块为NONE或者为液体
-        if (downBlock == null || downBlock.blockType == BlockTypeEnum.None || downBlock.blockInfo.GetBlockShape() == BlockShapeEnum.Liquid)
-        {
-            //移除方块
-            chunk.RemoveBlockForLocal(localPosition);
-            //创建道具
-            ItemsInfoBean itemsInfo = ItemsHandler.Instance.manager.GetItemsInfoByBlockType(blockType);
-            ItemsHandler.Instance.CreateItemCptDrop(itemsInfo.id, 1, chunk.chunkData.positionForWorld + localPosition, ItemDropStateEnum.DropPick);
-        }
-    }
 
-    public override void BaseAddTris(Chunk chunk, Vector3Int localPosition, DirectionEnum direction)
+    public override void BaseAddTris(Block block, Chunk chunk, Vector3Int localPosition, DirectionEnum direction)
     {
-        base.BaseAddTris(chunk, localPosition, direction);
+        base.BaseAddTris(block, chunk, localPosition, direction);
 
         int index = chunk.chunkMeshData.verts.Count;
 
-        List<int> trisData = chunk.chunkMeshData.dicTris[blockInfo.material_type];
+        List<int> trisData = chunk.chunkMeshData.dicTris[block.blockInfo.material_type];
         List<int> trisCollider = chunk.chunkMeshData.trisCollider;
         List<int> trisTrigger = chunk.chunkMeshData.trisTrigger;
 
         AddTris(index, trisData, trisAdd);
-        if (blockInfo.collider_state == 1)
+        if (block.blockInfo.collider_state == 1)
         {
             int colliderIndex = chunk.chunkMeshData.vertsCollider.Count;
             AddTris(colliderIndex, trisCollider, trisColliderAdd);
         }
-        if (blockInfo.trigger_state == 1)
+        if (block.blockInfo.trigger_state == 1)
         {
             int triggerIndex = chunk.chunkMeshData.vertsTrigger.Count;
             AddTris(triggerIndex, trisTrigger, trisColliderAdd);
         }
     }
 
-    public override void BaseAddUVs(Chunk chunk, Vector3Int localPosition, DirectionEnum direction)
+    public override void BaseAddUVs(Block block, Chunk chunk, Vector3Int localPosition, DirectionEnum direction)
     {
-        base.BaseAddUVs(chunk, localPosition, direction);
-        AddUVs(chunk.chunkMeshData.uvs, uvsAdd);
+        base.BaseAddUVs(block, chunk, localPosition, direction);
+        AddUVs(chunk.chunkMeshData.uvs, block.uvsAdd);
     }
 
-    public override void BaseAddVerts(Chunk chunk, Vector3Int localPosition, DirectionEnum direction, Vector3[] vertsAdd)
+    public override void BaseAddVerts(Block block, Chunk chunk, Vector3Int localPosition, DirectionEnum direction, Vector3[] vertsAdd)
     {
-        base.BaseAddVerts(chunk, localPosition, direction, vertsAdd);
-        AddVerts(localPosition, direction, chunk.chunkMeshData.verts, vertsAdd);
-        if (blockInfo.collider_state == 1)
-            AddVerts(localPosition, direction, chunk.chunkMeshData.vertsCollider, vertsColliderAdd);
-        if (blockInfo.trigger_state == 1)
-            AddVerts(localPosition, direction, chunk.chunkMeshData.vertsTrigger, vertsColliderAdd);
+        base.BaseAddVerts(block, chunk, localPosition, direction, vertsAdd);
+        AddVerts(block, localPosition, direction, chunk.chunkMeshData.verts, vertsAdd);
+        if (block.blockInfo.collider_state == 1)
+            AddVerts(block, localPosition, direction, chunk.chunkMeshData.vertsCollider, vertsColliderAdd);
+        if (block.blockInfo.trigger_state == 1)
+            AddVerts(block, localPosition, direction, chunk.chunkMeshData.vertsTrigger, vertsColliderAdd);
     }
 
-    public virtual Vector2 GetUVStartPosition()
+    public virtual Vector2 GetUVStartPosition(Block block)
     {
-        Vector2Int[] arrayUVData = blockInfo.GetUVPosition();
+        Vector2Int[] arrayUVData = block.blockInfo.GetUVPosition();
         Vector2 uvStartPosition;
         if (arrayUVData.IsNull())
         {

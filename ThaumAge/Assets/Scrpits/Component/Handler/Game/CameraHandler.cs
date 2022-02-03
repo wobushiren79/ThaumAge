@@ -17,7 +17,6 @@ public class CameraHandler : BaseHandler<CameraHandler, CameraManager>
 
     public float timeScale = 1;
 
-
     /// <summary>
     /// 修改摄像头抗锯齿
     /// </summary>

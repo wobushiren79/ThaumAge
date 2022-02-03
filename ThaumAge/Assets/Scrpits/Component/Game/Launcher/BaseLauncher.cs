@@ -15,5 +15,8 @@ public class BaseLauncher : BaseMonoBehaviour
         SystemUtil.GCCollect();        
         //游戏设置初始化
         GameDataHandler.Instance.InitData();
+        //场景启动
+        GameHandler.Instance.launcher = this;
+        GameHandler.Instance.actionForLauncher?.Invoke();
     }
 }

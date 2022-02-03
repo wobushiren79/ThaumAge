@@ -4,11 +4,9 @@ using UnityEngine.UI;
 
 public partial class UIViewCharacterEquip
 {
-    public CreatureCptCharacter ui_CharacterBase;
+    public ButtonExtendView ui_RotateLeft;
 
-    public Button ui_RotateLeft;
-
-    public Button ui_RotateRight;
+    public ButtonExtendView ui_RotateRight;
 
     public UIViewItemContainer ui_Equip_Hats;
 

@@ -4,10 +4,9 @@ using UnityEngine;
 
 public class BlockShapeLiquid : BlockShapeCube
 {
-
-    public BlockShapeLiquid() : base()
+    public override void InitData(Block block)
     {
-        uvsAdd = new Vector2[]
+        block.uvsAdd = new Vector2[]
         {
             new Vector2(0,0),
             new Vector2(0,1),
@@ -17,15 +16,16 @@ public class BlockShapeLiquid : BlockShapeCube
     }
 
 
+
     /// <summary>
     /// 检测是否需要构建面
     /// </summary>
     /// <param name="position"></param>
     /// <returns></returns>
-    public override bool CheckNeedBuildFace(Chunk chunk, Vector3Int localPosition, DirectionEnum direction, DirectionEnum closeDirection)
+    public override bool CheckNeedBuildFace(Block block, Chunk chunk, Vector3Int localPosition, DirectionEnum direction, DirectionEnum closeDirection)
     {
         if (localPosition.y == 0) return false;
-        GetCloseRotateBlockByDirection(chunk, localPosition, direction, closeDirection, out Block closeBlock, out Chunk closeBlockChunk);
+        GetCloseRotateBlockByDirection(block, chunk, localPosition, direction, closeDirection, out Block closeBlock, out Chunk closeBlockChunk);
         if (closeBlock == null || closeBlock.blockType == BlockTypeEnum.None)
         {
             if (closeBlockChunk)
@@ -45,7 +45,7 @@ public class BlockShapeLiquid : BlockShapeCube
             case BlockShapeEnum.Cube:
                 return false;
             case BlockShapeEnum.Liquid:
-                if (closeBlock.blockType == blockType)
+                if (closeBlock.blockType == block.blockType)
                 {
                     return false;
                 }

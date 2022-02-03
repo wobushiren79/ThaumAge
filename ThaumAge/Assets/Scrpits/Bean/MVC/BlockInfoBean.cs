@@ -40,7 +40,7 @@ public class BlockInfoBean : BaseBean
 
     public int plant_state;//种植状态 0不能种植 1能种植
 
-    public string plant_harvest;//种植收获
+    public string items_drop;//掉落
 
     /// <summary>
     /// 获取方块类型
@@ -59,7 +59,7 @@ public class BlockInfoBean : BaseBean
     {
         return (BlockShapeEnum)shape;
     }
-   
+
     /// <summary>
     /// 获取材质类型
     /// </summary>
@@ -116,5 +116,42 @@ public class BlockInfoBean : BaseBean
         BlockTypeEnum blockType = GetBlockType();
         TextAsset textAsset = LoadAddressablesUtil.LoadAssetSync<TextAsset>($"Assets/Prefabs/BlockMesh/Block{blockType.GetEnumName()}.txt");
         return JsonUtil.FromJson<MeshData>(textAsset.text);
+    }
+
+    /// <summary>
+    /// 获取道具掉落
+    /// </summary>
+    /// <returns></returns>
+    public List<ItemsBean> GetItemsDrop()
+    {
+        List<ItemsBean> itemsData = new List<ItemsBean>();
+        string[] itemListStr = items_drop.SplitForArrayStr('|');
+        for (int i = 0; i < itemListStr.Length; i++)
+        {
+            string[] itemDetailsListStr = itemListStr[i].SplitForArrayStr(',');
+            long itemsId = long.Parse(itemDetailsListStr[0]);
+            int itemsNumber = 1;
+            float getRandomRate = 1;
+            if (itemDetailsListStr.Length == 1)
+            {
+
+            }
+            else if (itemDetailsListStr.Length == 2)
+            {
+                itemsNumber = int.Parse(itemDetailsListStr[1]);
+            }
+            else if (itemDetailsListStr.Length == 3)
+            {
+                itemsNumber = int.Parse(itemDetailsListStr[1]);
+                getRandomRate = float.Parse(itemDetailsListStr[2]);
+                if (UnityEngine.Random.Range(0f, 1f) > getRandomRate) 
+                {
+                    //这里设置0，而不是直接不返回 是因为如果返回的list没有数据的话，会生成本体的掉落。设置成0则直接不掉落物品
+                    itemsId = 0;
+                }
+            }
+            itemsData.Add(new ItemsBean(itemsId, itemsNumber));
+        }
+        return itemsData;
     }
 }

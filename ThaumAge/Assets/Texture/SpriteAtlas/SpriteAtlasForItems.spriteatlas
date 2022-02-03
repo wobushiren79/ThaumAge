@@ -60,6 +60,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 36e092a321baea1448d890d017217eac, type: 3}
   - {fileID: 21300000, guid: 68b4dfa3189dae74298a1ab031e6cee0, type: 3}
   - {fileID: 21300000, guid: 693413c3d6d220349b07ae10bd1c6000, type: 3}
+  - {fileID: 21300000, guid: a2564be338794b74892f714b834b2ed3, type: 3}
   - {fileID: 21300000, guid: 9d676a642bcdee848a0a0e1898f2a852, type: 3}
   - {fileID: 21300000, guid: 5b7e9e350d06bfc47ad64ed7e6850833, type: 3}
   - {fileID: 21300000, guid: 46958cc5b78164741ba8f3e7f296cecf, type: 3}
@@ -91,7 +92,9 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 3f18219ca88c6454fba5a49d5ca324d4, type: 3}
   - {fileID: 21300000, guid: b0d748acc4b51684ca302bc03196f25a, type: 3}
   - {fileID: 21300000, guid: 93b95ecc0335d3949b0ee0e01a7b7266, type: 3}
+  - {fileID: 21300000, guid: 752380fcfd094234ca454310d0f7a7b6, type: 3}
   - {fileID: 21300000, guid: 5cfdb0fc27d2c424e96b92e974ca3b15, type: 3}
+  - {fileID: 21300000, guid: 854d161d372cfac4a93922b649966ee9, type: 3}
   - {fileID: 21300000, guid: 0761178d69f59134b969d8c55ec45be7, type: 3}
   - {fileID: 21300000, guid: 5466a31ec854ee3429fe6949bc4c4737, type: 3}
   - {fileID: 21300000, guid: d0c1a91ed33b55a4292833e482611494, type: 3}
@@ -99,9 +102,11 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 0d47033e1d8c72f439fcb421bab5013e, type: 3}
   - {fileID: 21300000, guid: 3986f84e20d8a0143833e60968e2307a, type: 3}
   - {fileID: 21300000, guid: 6c85ccde3337d784b88d46781c858b7b, type: 3}
+  - {fileID: 21300000, guid: b03c110f33be45e44afe9b5e18d043b1, type: 3}
   - {fileID: 21300000, guid: 9fb7765f63c19f043a167bf941dcd02a, type: 3}
   - {fileID: 21300000, guid: 31eccf8fe76d0f742b3ae195aa302fc4, type: 3}
   - {fileID: 21300000, guid: 2ee93b9f138965343a3ccb2c1b60c872, type: 3}
+  - {fileID: 21300000, guid: 8f6ec9cfee809fc48a3e349875465a5e, type: 3}
   m_PackedSpriteNamesToIndex:
   - icon_flower_fireflower
   - icon_cactus
@@ -112,6 +117,7 @@ SpriteAtlas:
   - icon_item_10100001
   - icon_flower_sunflower
   - icon_stone_volcanic
+  - icon_item_103101
   - icon_tree_silver
   - icon_flower_rose
   - icon_dirt
@@ -143,7 +149,9 @@ SpriteAtlas:
   - icon_base
   - icon_grass_wild
   - icon_ore_gold
+  - icon_item_106101
   - icon_ore_silver
+  - icon_item_1000002
   - icon_leaves_world
   - icon_tree_mushroom
   - icon_weed_2
@@ -151,9 +159,11 @@ SpriteAtlas:
   - icon_item_3300001
   - icon_item_1200001
   - icon_unknow
+  - icon_item_1000001
   - icon_grass_magic
   - icon_grass
   - icon_item_1200002
+  - icon_item_900001
   m_RenderDataMap: {}
   m_Tag: SpriteAtlasForItems
   m_IsVariant: 0

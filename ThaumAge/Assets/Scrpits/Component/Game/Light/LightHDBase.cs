@@ -5,7 +5,6 @@ using UnityEngine.Rendering.HighDefinition;
 public class LightHDBase : BaseMonoBehaviour
 {
     protected HDAdditionalLightData hdAdditionalLightData;
-
     protected void Awake()
     {
         hdAdditionalLightData = GetComponent<HDAdditionalLightData>();
@@ -17,9 +16,7 @@ public class LightHDBase : BaseMonoBehaviour
             //添加数据
             LightHandler.Instance.manager.AddHDLightData(hdAdditionalLightData);
         }
-     
     }
-
     public void OnDestroy()
     {
         if (hdAdditionalLightData != null)

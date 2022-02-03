@@ -23,8 +23,9 @@ public abstract class PopupButtonView<T> : BaseUIView,
             btnTarget.onClick.AddListener(ButtonClick);
     }
 
-    public void OnDisable()
+    public override void OnDisable()
     {
+        base.OnDisable();
         CleanData();
     }
 

@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.021608777, g: 0.031441063, b: 0.03544426, a: 1}
+  m_IndirectSpecularColor: {r: 0.021621607, g: 0.031611443, b: 0.03594438, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -190,7 +190,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 1.7387388, y: 1}
+    m_SensorSize: {x: 2.026362, y: 1}
     Iso: 200
     ShutterSpeed: 0.005
     Aperture: 16
@@ -829,7 +829,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 1.7387388, y: 1}
+    m_SensorSize: {x: 2.026362, y: 1}
     Iso: 200
     ShutterSpeed: 0.005
     Aperture: 16
@@ -918,13 +918,25 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1727070490}
     m_Modifications:
+    - target: {fileID: 31195091455918137, guid: 6a62578424d8e144fb09cb18809e2ca4, type: 3}
+      propertyPath: m_UpdateShadowOnLightMovement
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 627416022062228979, guid: 6a62578424d8e144fb09cb18809e2ca4, type: 3}
       propertyPath: m_ShadowResolution.m_Level
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 627416022062228979, guid: 6a62578424d8e144fb09cb18809e2ca4, type: 3}
+      propertyPath: m_UpdateShadowOnLightMovement
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 966542176384893961, guid: 6a62578424d8e144fb09cb18809e2ca4, type: 3}
       propertyPath: m_Intensity
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 966542176384893961, guid: 6a62578424d8e144fb09cb18809e2ca4, type: 3}
+      propertyPath: m_Shadows.m_Type
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3760048309614448550, guid: 6a62578424d8e144fb09cb18809e2ca4, type: 3}
       propertyPath: m_RootOrder
@@ -976,6 +988,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3760048309614448551, guid: 6a62578424d8e144fb09cb18809e2ca4, type: 3}
       propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7087971561722807505, guid: 6a62578424d8e144fb09cb18809e2ca4, type: 3}
+      propertyPath: m_Shadows.m_Type
       value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -1151,7 +1167,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 1.7387388, y: 1}
+    m_SensorSize: {x: 2.026362, y: 1}
     Iso: 200
     ShutterSpeed: 0.005
     Aperture: 16
@@ -1425,7 +1441,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 1.7387388, y: 1}
+    m_SensorSize: {x: 2.026362, y: 1}
     Iso: 200
     ShutterSpeed: 0.005
     Aperture: 16

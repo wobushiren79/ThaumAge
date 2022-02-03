@@ -9,12 +9,18 @@ public partial class UIViewSynthesisItem : BaseUIView
     protected int index = 0;
     protected Button configBtn;
 
+    protected Material matIcon;
+
     public override void Awake()
     {
         gameObject.name = "ViewSynthesisItem";
         base.Awake();
         configBtn = this.GetComponent<Button>();
         SetSelectState(false);
+
+        //重新实例化一份材质球
+        matIcon = new Material(ui_ItemIcon.material);
+        ui_ItemIcon.material = matIcon;
     }
 
     public void SetData(ItemsSynthesisBean itemsSynthesis, int index, bool isSelect)

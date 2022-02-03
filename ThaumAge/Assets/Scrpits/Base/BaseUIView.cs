@@ -15,8 +15,16 @@ public class BaseUIView : BaseUIInit
         uiSizeOriginal = rectTransform.sizeDelta;
     }
 
-    public virtual void OnEnable()
+    public override void OnEnable()
     {
+        base.OnEnable();
         RefreshUI();
+        RegisterInputAction();
+    }
+
+    public override void OnDisable()
+    {
+        base.OnDisable();
+        UnRegisterInputAction();
     }
 }

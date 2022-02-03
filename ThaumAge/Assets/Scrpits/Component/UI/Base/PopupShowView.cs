@@ -32,8 +32,9 @@ public class PopupShowView : BaseUIView
         InitPosition();
     }
 
-    public void OnDisable()
+    public override void OnDisable()
     {
+        base.OnDisable();
         if (rtfContent != null)
         {
             rtfContent.anchoredPosition = new Vector2(0, 0);

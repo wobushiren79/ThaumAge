@@ -5,6 +5,18 @@ using UnityEngine.Rendering;
 
 public class GameHandler : BaseHandler<GameHandler, GameManager>
 {
+    //当前的启动器
+    public BaseLauncher launcher;
+
+    //场景启动
+    public Action actionForLauncher;
+
+
+
+    /// <summary>
+    /// 加载游戏资源
+    /// </summary>
+    /// <param name="callBack"></param>
     public void LoadGameResources(Action callBack)
     {
         //禁用SRP 启用gpu实例化

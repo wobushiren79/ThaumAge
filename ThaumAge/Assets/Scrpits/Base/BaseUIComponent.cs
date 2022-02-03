@@ -27,6 +27,7 @@ public class BaseUIComponent : BaseUIInit
     public override void OpenUI()
     {
         base.OpenUI();
+        RegisterInputAction();
     }
 
     /// <summary>
@@ -36,6 +37,7 @@ public class BaseUIComponent : BaseUIInit
     {
         base.CloseUI();
         StopAllCoroutines();
+        UnRegisterInputAction();
     }
 
     /// <summary>

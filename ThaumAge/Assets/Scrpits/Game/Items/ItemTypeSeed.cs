@@ -38,7 +38,7 @@ public class ItemTypeSeed : Item
                 ItemsInfoBean itemsInfo = GetItemsInfo(itemData.itemId);
                 BlockTypeEnum plantBlockType = (BlockTypeEnum)itemsInfo.type_id;
                 //初始化meta数据
-                string metaData = BlockPlantExtension.ToMetaData(0, false);
+                string metaData = BlockBasePlant.ToMetaData(0, false);
                 //替换为种植
                 chunkForHit.SetBlockForLocal(upLocalPosition, plantBlockType, DirectionEnum.UP, metaData);
             }

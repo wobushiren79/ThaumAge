@@ -1,8 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System;
 
 public class Test : BaseMonoBehaviour
 {
@@ -17,12 +13,17 @@ public class Test : BaseMonoBehaviour
 
     public void TestM()
     {
-       Vector2[] arrayData= VectorUtil.GetListCirclePosition(36,new Vector2(10,0),Vector2.zero,0);
-        foreach (var itemData in arrayData)
+        int cout = 100;
+        for (int x = 0; x < cout; x++)
         {
-            GameObject obj = GameObject.CreatePrimitive(PrimitiveType.Capsule);
-            obj.transform.position = itemData;
+            for (int y = 0; y < cout; y++)
+            {
+                GameObject gameObject = new GameObject();
+                gameObject.transform.position = new Vector3(x, 0, y);
+                Light light = gameObject.AddComponent<Light>();
+                light.type = LightType.Point;
+                light.color = new Color(Random.Range(0f, 1f), Random.Range(0f, 1f), Random.Range(0f, 1f));
+            }
         }
-
     }
 }

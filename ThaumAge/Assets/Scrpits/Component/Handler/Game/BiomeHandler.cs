@@ -13,7 +13,7 @@ public class BiomeHandler : BaseHandler<BiomeHandler, BiomeManager>
     public Vector3 offset1;
     public Vector3 offset2;
     public float offsetBiome;
-    protected override void Awake()
+    public override void Awake()
     {
         base.Awake();
         dicBiomeMapData = new Dictionary<Vector3Int, BiomeMapData[,]>(maxBiomeData);

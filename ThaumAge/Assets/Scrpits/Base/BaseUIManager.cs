@@ -12,6 +12,7 @@ public class BaseUIManager : BaseManager
     public virtual void Awake()
     {
         InitUI();
+        GameHandler.Instance.actionForLauncher += InitCanvasCamera;
     }
 
     /// <summary>
@@ -25,14 +26,14 @@ public class BaseUIManager : BaseManager
         //初始化所有UI容器
         InitUIType();
         //修改一些摄像机
-        InitCanvasCamera(CameraHandler.Instance.manager.uiCamera);
+        InitCanvasCamera();
     }
 
     /// <summary>
     /// 初始化画布的摄像头
     /// </summary>
     /// <param name="camera"></param>
-    public void InitCanvasCamera(Camera camera)
+    public void InitCanvasCamera()
     {
         foreach (var itemUIContainer in dicContainer)
         {
@@ -44,7 +45,7 @@ public class BaseUIManager : BaseManager
                 case UITypeEnum.Toast:
                 case UITypeEnum.Popup:
                     Canvas canvas = itemUIContainer.Value.GetComponent<Canvas>();
-                    canvas.worldCamera = camera;
+                    canvas.worldCamera = CameraHandler.Instance.manager.uiCamera;
                     break;
             }
         }

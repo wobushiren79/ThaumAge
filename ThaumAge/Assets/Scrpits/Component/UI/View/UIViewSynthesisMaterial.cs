@@ -6,6 +6,15 @@ public partial class UIViewSynthesisMaterial : BaseUIView
 {
     public ItemsSynthesisMaterialsBean materialsData;
 
+    protected Material matIcon;
+    public override void Awake()
+    {
+        base.Awake();
+        //重新实例化一份材质球
+        matIcon = new Material(ui_Icon.material);
+        ui_Icon.material = matIcon;
+    }
+
     public override void OnDestroy()
     {
         base.OnDestroy();
@@ -90,10 +99,12 @@ public partial class UIViewSynthesisMaterial : BaseUIView
         if (hasEnoughItem)
         {
             ui_TVNumber.color = Color.green;
+            ui_Icon.material.SetFloat("_GreyLerp", 1);
         }
         else
         {
             ui_TVNumber.color = Color.white;
+            ui_Icon.material.SetFloat("_GreyLerp", 0);
         }
     }
     /// <summary>

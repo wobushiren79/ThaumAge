@@ -59,7 +59,6 @@ public class Item
 
     protected virtual void UseForPlayer(Player player, ItemsBean itemsData)
     {
-
     }
 
     protected virtual void UseForOther(GameObject user, ItemsBean itemsData)
@@ -113,16 +112,26 @@ public class Item
                         //首先判断生长周期
                         BlockBean blockData = targetChunk.GetBlockData(targetPosition - targetChunk.chunkData.positionForWorld);
                         //获取种植收货
-                        List<ItemsBean> listHarvest = BlockPlantExtension.GetPlantHarvest(blockData, oldBlock.blockInfo);
+                        List<ItemsBean> listHarvest = oldBlock.GetDropItems(blockData);
                         //创建掉落物
                         ItemsHandler.Instance.CreateItemCptDropList(listHarvest, targetPosition + Vector3.one * 0.5f, ItemDropStateEnum.DropPick);
                     }
                     else
                     {
-                        //创建掉落物
-                        ItemsHandler.Instance.CreateItemCptDrop(oldBlock.blockType, 1, targetPosition + Vector3.one * 0.5f, ItemDropStateEnum.DropPick);
+                        //获取掉落道具
+                        List<ItemsBean> listDrop =  oldBlock.GetDropItems(null);
+                        //如果没有掉落物，则默认掉落本体一个
+                        if (listDrop.IsNull())
+                        {
+                            //创建掉落物
+                            ItemsHandler.Instance.CreateItemCptDrop(oldBlock.blockType, 1, targetPosition + Vector3.one * 0.5f, ItemDropStateEnum.DropPick);
+                        }
+                        else
+                        {
+                            //创建掉落物
+                            ItemsHandler.Instance.CreateItemCptDropList(listDrop, targetPosition + Vector3.one * 0.5f, ItemDropStateEnum.DropPick);
+                        }
                     }
-
                     //移除该方块
                     targetChunk.RemoveBlockForWorld(targetPosition);
                 }

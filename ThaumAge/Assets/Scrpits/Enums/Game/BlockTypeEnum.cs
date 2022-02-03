@@ -35,6 +35,8 @@ public enum BlockTypeEnum
     FlowerRose = 3012,    //玫瑰花
     FlowerChrysanthemum = 3013,    //菊花
 
+    WoodDead = 3101,//枯木
+
     FlowerGold = 3021,//金耀花
     FlowerWood = 3022,//木植花
     FlowerWater = 3023,//水悦花
@@ -48,7 +50,7 @@ public enum BlockTypeEnum
     PlantPotato = 5001,//种植 土豆
 
     StairsWood = 6001,//木楼梯
-
+    CraftingTableSimple = 6101,//简易制作台
     Water = 9001,//水
     Magma = 9002,//岩浆
 }

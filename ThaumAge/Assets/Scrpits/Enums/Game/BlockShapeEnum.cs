@@ -8,6 +8,8 @@ public enum BlockShapeEnum
     CubeTransparent = 2,//透明方块
     CubeCuboid = 3,//长方体方块
     CubeLeaves = 4,//树叶方块
+
+
     Cross = 101,// 正交叉
     CrossOblique = 102,//斜交叉
     Well = 111,//＃字型
@@ -18,5 +20,6 @@ public enum BlockShapeEnum
     PlantCrossOblique = 302,//种植，斜交叉
     PlantWell = 303,//种植，＃字型
 
+    Plough = 401,//耕地
     Custom = 99999,//自定义
 }

@@ -41,6 +41,29 @@ public class UserDataBean
     /// <summary>
     /// 增加道具
     /// </summary>
+    /// <param name="itemData"></param>
+    /// <param name="itemNumber"></param>
+    public int AddItems(ItemsBean itemData ,int itemNumber)
+    {
+        itemData.number += itemNumber;
+        ItemsInfoBean itemsInfo = ItemsHandler.Instance.manager.GetItemsInfoById(itemData.itemId);
+        if (itemData.number <= 0)
+        {
+            itemData.itemId = 0;
+            itemData.number = 0;
+        }
+        else if (itemData.number > itemsInfo.max_number)
+        {
+            int moreNumber = itemData.number - itemsInfo.max_number;
+            itemData.number = itemsInfo.max_number;
+            return AddItems(itemData.itemId, moreNumber);
+        }
+        return 0;
+    }
+
+    /// <summary>
+    /// 增加道具
+    /// </summary>
     public int AddItems(long itemId, int itemNumber)
     {
         //首先查询背包和快捷栏里是否有同样的道具                     

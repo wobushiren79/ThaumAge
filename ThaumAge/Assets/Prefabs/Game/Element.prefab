@@ -55,6 +55,10 @@ PrefabInstance:
       propertyPath: m_Intensity
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 3765206931009233996, guid: 20a28b8028ebe77478739e9c9e4cc089, type: 3}
+      propertyPath: m_ShadowUpdateMode
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4127470963355377788, guid: 20a28b8028ebe77478739e9c9e4cc089, type: 3}
       propertyPath: m_Color.b
       value: 0.6226415
@@ -94,6 +98,10 @@ PrefabInstance:
     - target: {fileID: 4127470963355377788, guid: 20a28b8028ebe77478739e9c9e4cc089, type: 3}
       propertyPath: m_UseColorTemperature
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4367198098640585094, guid: 20a28b8028ebe77478739e9c9e4cc089, type: 3}
+      propertyPath: m_ShadowUpdateMode
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6229578418684289134, guid: 20a28b8028ebe77478739e9c9e4cc089, type: 3}
       propertyPath: m_RootOrder

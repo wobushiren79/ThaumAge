@@ -145,21 +145,27 @@ public class BlockCptBreak : BaseMonoBehaviour
         EffectHandler.Instance.ShowEffect(effectData, (effect) =>
         {
             //设置粒子颜色
-            Material matNomral = BlockHandler.Instance.manager.GetBlockMaterial(BlockMaterialEnum.Normal);
+            Material matNomral = BlockHandler.Instance.manager.GetBlockMaterial(block.blockInfo.GetBlockMaterialType());
             Texture2D texBlock = matNomral.mainTexture as Texture2D;
 
             Vector2Int[] arrayUVData = block.blockInfo.GetUVPosition();
             int randomUV = Random.Range(0, arrayUVData.Length);
-            Vector2 uvStartPosition = new Vector2(texBlock.width * (arrayUVData[randomUV].y * Block.uvWidth), texBlock.width * (arrayUVData[randomUV].x * Block.uvWidth));
+            Vector2 uvStartPosition = new Vector2(texBlock.width * (arrayUVData[randomUV].y * BlockShape.uvWidth), texBlock.width * (arrayUVData[randomUV].x * BlockShape.uvWidth));
+            Color colorStart;
+            Color colorEnd;
+            do
+            {
+                int randomXStart = Random.Range((int)uvStartPosition.x, (int)(uvStartPosition.x + (texBlock.width * BlockShape.uvWidth)));
+                int randomYStart = Random.Range((int)uvStartPosition.y, (int)(uvStartPosition.y + (texBlock.height * BlockShape.uvWidth)));
 
-            int randomXStart = Random.Range((int)uvStartPosition.x, (int)(uvStartPosition.x + (texBlock.width * Block.uvWidth)));
-            int randomYStart = Random.Range((int)uvStartPosition.y, (int)(uvStartPosition.y + (texBlock.height * Block.uvWidth)));
+                int randomXEnd = Random.Range((int)uvStartPosition.x, (int)(uvStartPosition.x + (texBlock.width * BlockShape.uvWidth)));
+                int randomYEnd = Random.Range((int)uvStartPosition.y, (int)(uvStartPosition.y + (texBlock.height * BlockShape.uvWidth)));
 
-            int randomXEnd = Random.Range((int)uvStartPosition.x, (int)(uvStartPosition.x + (texBlock.width * Block.uvWidth)));
-            int randomYEnd = Random.Range((int)uvStartPosition.y, (int)(uvStartPosition.y + (texBlock.height * Block.uvWidth)));
+                colorStart = TextureUtil.GetPixel(texBlock, new Vector2Int(randomXStart, randomYStart));
+                colorEnd = TextureUtil.GetPixel(texBlock, new Vector2Int(randomXEnd, randomYEnd));
+            }
+            while (colorStart.a == 0 || colorEnd.a == 0);
 
-            Color colorStart = TextureUtil.GetPixel(texBlock, new Vector2Int(randomXStart, randomYStart));
-            Color colorEnd = TextureUtil.GetPixel(texBlock, new Vector2Int(randomXEnd, randomYEnd));
             EffectBlockBreak effectBlockCptBreak = (EffectBlockBreak)effect;
 
             effectBlockCptBreak.SetEffectColor(colorStart, colorEnd);

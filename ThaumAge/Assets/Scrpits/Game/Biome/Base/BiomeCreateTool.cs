@@ -655,53 +655,23 @@ public class BiomeCreateTool
     }
 
     /// <summary>
-    /// 增加枯木
+    /// 生成枯木
     /// </summary>
     /// <param name="randomData"></param>
     /// <param name="startPosition"></param>
-    /// <param name="treeData"></param>
-    public static void AddDeadwood(uint randomData, Vector3Int startPosition, BiomeForTreeData treeData)
+    public static void AddDeadwood(uint randomData,float addRate, Vector3Int startPosition)
     {
         //生成概率
-        float addRate = WorldRandTools.GetValue(startPosition, randomData);
-
-        if (addRate < treeData.addRate)
+        float addRateRandom = WorldRandTools.GetValue(startPosition, randomData);
+        if (addRateRandom < addRate)
         {
             //高度
-            int treeHeight = WorldRandTools.Range(treeData.minHeight, treeData.maxHeight);
+            int treeHeight = WorldRandTools.Range(1, 4);
 
             Vector3Int treeDataPosition = startPosition;
             for (int i = 0; i < treeHeight; i++)
             {
-                int x;
-                int y;
-                int z;
-
-                if (i <= 1)
-                {
-                    x = 0;
-                    y = 1;
-                    z = 0;
-                }
-                else
-                {
-                    x = WorldRandTools.Range(-1, 2, treeDataPosition, 111);
-                    y = WorldRandTools.Range(-1, 2, treeDataPosition, 222);
-                    z = WorldRandTools.Range(-1, 2, treeDataPosition, 333);
-                }
-
-                treeDataPosition += new Vector3Int(x, y, z);
-
-                DirectionEnum direction = DirectionEnum.UP;
-                if (x != 0)
-                {
-                    direction = DirectionEnum.Left;
-                }
-                else if (z != 0)
-                {
-                    direction = DirectionEnum.Forward;
-                }
-                BlockTempBean blockData = new(treeData.treeTrunk, direction, treeDataPosition.x, treeDataPosition.y, treeDataPosition.z);
+                BlockTempBean blockData = new(BlockTypeEnum.WoodDead, DirectionEnum.UP, treeDataPosition.x, treeDataPosition.y + i + 1, treeDataPosition.z);
                 WorldCreateHandler.Instance.manager.AddUpdateBlock(blockData);
             }
         }

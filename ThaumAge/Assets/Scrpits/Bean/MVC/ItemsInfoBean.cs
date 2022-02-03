@@ -28,6 +28,8 @@ public class ItemsInfoBean : BaseBean
     public string range_damage;//伤害范围 长宽高
 
     public string anim_use;//使用动画
+
+    public string hold_data;//拿 数据
     public ItemsTypeEnum GetItemsType()
     {
         return (ItemsTypeEnum)items_type;
@@ -51,20 +53,20 @@ public class ItemsInfoBean : BaseBean
         return listName;
     }
 
-    
+
     /// <summary>
     /// 获取伤害范围
     /// </summary>
     /// <param name="length"></param>
     /// <param name="width"></param>
     /// <param name="height"></param>
-    public void GetRangeDamage(out float length, out float width ,out float height)
+    public void GetRangeDamage(out float length, out float width, out float height)
     {
         length = 0;
         width = 0;
         height = 0;
 
-        float[] data = range_damage.SplitForArrayFloat(',') ;
+        float[] data = range_damage.SplitForArrayFloat(',');
         if (data.Length >= 1)
         {
             length = data[0];
@@ -77,5 +79,21 @@ public class ItemsInfoBean : BaseBean
         {
             height = data[2];
         }
+    }
+
+    /// <summary>
+    /// 获取握住数据
+    /// </summary>
+    /// <param name="rotate"></param>
+    public bool GetHoldData(out Vector3 rotate)
+    {
+        if (hold_data.IsNull())
+        {
+            rotate = Vector3.zero;
+            return false;
+        }
+        float[] rotateData = hold_data.SplitForArrayFloat(',');
+        rotate = new Vector3(rotateData[0], rotateData[1], rotateData[2]);
+        return true;
     }
 }

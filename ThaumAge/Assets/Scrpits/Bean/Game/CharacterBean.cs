@@ -35,6 +35,8 @@ public class CharacterBean : CreatureBean
     /// <returns></returns>
     public Color GetColorHair()
     {
+        if (colorHair == null)
+            colorHair = new ColorBean(1, 1, 1, 1);
         return colorHair.GetColor();
     }
 
@@ -53,6 +55,8 @@ public class CharacterBean : CreatureBean
     /// <returns></returns>
     public Color GetColorSkin()
     {
+        if (colorSkin == null)
+            colorSkin = new ColorBean(1,1,1,1);
         return colorSkin.GetColor();
     }
 

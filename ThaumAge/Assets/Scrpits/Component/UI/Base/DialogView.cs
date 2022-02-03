@@ -32,8 +32,9 @@ public class DialogView : BaseUIView
         InitData();
     }
 
-    public virtual void OnDestroy()
+    public override void OnDestroy()
     {
+        base.OnDestroy();
         UIHandler.Instance.manager.RemoveDialog(this);
     }
 

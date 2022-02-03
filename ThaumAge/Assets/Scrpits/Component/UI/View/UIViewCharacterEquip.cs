@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.UI;
 
 public partial class UIViewCharacterEquip : BaseUIView
 {
@@ -20,6 +21,9 @@ public partial class UIViewCharacterEquip : BaseUIView
         objRender = Instantiate(UIHandler.Instance.manager.GetUITypeContainer(UITypeEnum.Model3D).gameObject, objRenderModel);
         //获取展示的角色
         showCharacter = objRender.GetComponentInChildren<CreatureCptCharacter>();
+
+        ui_RotateLeft.AddLongClickListener(OnLongClickForRoateR);
+        ui_RotateRight.AddLongClickListener(OnLongClickForRoateL);
     }
 
     public override void OnDestroy()
@@ -34,9 +38,14 @@ public partial class UIViewCharacterEquip : BaseUIView
         base.OnEnable();
         if (objRender != null)
             objRender.ShowObj(true);
+        //设置角色数据
+        UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();
+        showCharacter.SetCharacterData(userData.characterData);
     }
-    public void OnDisable()
+
+    public override void OnDisable()
     {
+        base.OnDisable();
         if (objRender != null)
             objRender.ShowObj(false);
     }
@@ -97,4 +106,31 @@ public partial class UIViewCharacterEquip : BaseUIView
         }
     }
 
+    /// <summary>
+    /// 处理-角色旋转
+    /// </summary>
+    /// <param name="direction"></param>
+    public void HandleForCharacterRotate(DirectionEnum direction)
+    {
+        if (direction == DirectionEnum.Left)
+        {
+            showCharacter.transform.localEulerAngles += new Vector3(0, -100 * Time.deltaTime, 0);
+        }
+        else
+        {
+            showCharacter.transform.localEulerAngles += new Vector3(0, 100* Time.deltaTime, 0);
+        }
+    }
+
+    #region 左右长按旋转
+    public void OnLongClickForRoateR()
+    {
+        HandleForCharacterRotate(DirectionEnum.Right);
+    }
+
+    public void OnLongClickForRoateL()
+    {
+        HandleForCharacterRotate(DirectionEnum.Left);
+    }
+    #endregion
 }

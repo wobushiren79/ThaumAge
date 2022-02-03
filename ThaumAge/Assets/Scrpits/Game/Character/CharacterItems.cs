@@ -27,29 +27,38 @@ public class CharacterItems : CharacterBase
         }
 
         itemHoldRight?.SetItem(itemsInfo);
-        ItemsTypeEnum itemsType = itemsInfo.GetItemsType();
 
-        switch (itemsType)
+        if (itemsInfo.GetHoldData(out Vector3 holdRotate))
         {
-            case ItemsTypeEnum.Hoe:
-            case ItemsTypeEnum.Pickaxe:
-            case ItemsTypeEnum.Axe:
-            case ItemsTypeEnum.Shovel:
-
-            case ItemsTypeEnum.Sword:
-            case ItemsTypeEnum.Knife:
-                itemHoldRight.transform.localPosition = new Vector3(0, 0, 0.3f);
-                itemHoldRight.transform.localEulerAngles = new Vector3(90f, -40f, 0f);
-                break;
-            case ItemsTypeEnum.Bow:
-                itemHoldRight.transform.localPosition = new Vector3(0, 0, 0);
-                itemHoldRight.transform.localEulerAngles = new Vector3(90f, 180f, 0f);
-                break;
-            default:
-                itemHoldRight.transform.localPosition = new Vector3(0, 0, 0.3f);
-                itemHoldRight.transform.localEulerAngles = new Vector3(90f, 0f, 0f);
-                break;
+            itemHoldRight.transform.localEulerAngles = holdRotate;
+            itemHoldRight.transform.localPosition = new Vector3(0, 0, 0.25f);
         }
+        else
+        {
+            ItemsTypeEnum itemsType = itemsInfo.GetItemsType();
+            switch (itemsType)
+            {
+                case ItemsTypeEnum.Hoe:
+                case ItemsTypeEnum.Pickaxe:
+                case ItemsTypeEnum.Axe:
+                case ItemsTypeEnum.Shovel:
+
+                case ItemsTypeEnum.Sword:
+                case ItemsTypeEnum.Knife:
+                    itemHoldRight.transform.localPosition = new Vector3(0, 0, 0.25f);
+                    itemHoldRight.transform.localEulerAngles = new Vector3(90f, -40f, 0f);
+                    break;
+                case ItemsTypeEnum.Bow:
+                    itemHoldRight.transform.localPosition = new Vector3(0, 0, 0);
+                    itemHoldRight.transform.localEulerAngles = new Vector3(90f, 180f, 0f);
+                    break;
+                default:
+                    itemHoldRight.transform.localPosition = new Vector3(0, 0, 0.25f);
+                    itemHoldRight.transform.localEulerAngles = new Vector3(90f, 0f, 0f);
+                    break;
+            }
+        }
+
         itemHoldRight.ShowObj(true);
     }
 }

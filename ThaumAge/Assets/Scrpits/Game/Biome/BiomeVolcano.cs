@@ -43,12 +43,7 @@ public class BiomeVolcano : Biome
     /// <param name="startPosition"></param>
     public void AddDeadwood(Vector3Int startPosition)
     {
-        BiomeForTreeData treeData = new BiomeForTreeData();
-        treeData.addRate = 0.005f;
-        treeData.minHeight = 1;
-        treeData.maxHeight = 8;
-        treeData.treeTrunk = BlockTypeEnum.TreeOak;
-        BiomeCreateTool.AddDeadwood(101, startPosition, treeData);
+        BiomeCreateTool.AddDeadwood(101, 0.005f, startPosition);
     }
 
     /// <summary>

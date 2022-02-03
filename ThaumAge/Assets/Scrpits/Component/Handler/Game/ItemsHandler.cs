@@ -96,6 +96,8 @@ public class ItemsHandler : BaseHandler<ItemsHandler, ItemsManager>
     /// </summary>
     public void CreateItemCptDrop(ItemsBean itemData, Vector3 position, ItemDropStateEnum ItemCptDropState, Vector3 dropDirection)
     {
+        if (itemData.itemId == 0)
+            return;
         manager.GetItemsObjById(-1, (objModel) =>
         {
             GameObject objCommon = Instantiate(gameObject, objModel);

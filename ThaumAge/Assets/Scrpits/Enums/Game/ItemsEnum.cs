@@ -7,6 +7,10 @@ public enum ItemsTypeEnum
     Block = 1,//方块
     Seed = 2,//种子
     Food = 3,//食物
+
+    Material = 9,//素材（合成素材）
+    Sundry = 10,//杂项
+
     //装备类
     Hats = 11,//帽子
     Clothes = 12,//衣服

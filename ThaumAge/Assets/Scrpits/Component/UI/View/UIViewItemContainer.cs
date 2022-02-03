@@ -178,6 +178,8 @@ public partial class UIViewItemContainer : BaseUIView
 
         //设置展示信息
         ui_ViewItemContainer.SetItemId(itemsData.itemId);
+        //设置回调
+        callBackForSetViewItem?.Invoke(this, itemsData.itemId);
     }
 
     /// <summary>

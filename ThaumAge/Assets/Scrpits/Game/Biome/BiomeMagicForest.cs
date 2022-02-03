@@ -23,6 +23,7 @@ public class BiomeMagicForest : Biome
             AddMushroomTree(wPos);
             AddStoneMoss(wPos);
             AddFlower(wPos);
+            AddDeadwood(wPos);
             // 地表，使用草
             return BlockTypeEnum.GrassMagic;
         }
@@ -118,5 +119,14 @@ public class BiomeMagicForest : Biome
     {
         Vector3Int startPosition = wPos + Vector3Int.up;
         BiomeCreateTool.AddBuilding(0.005f, 801, startPosition, BuildingTypeEnum.StoneMoss);
+    }
+
+    /// <summary>
+    /// 增加枯木
+    /// </summary>
+    /// <param name="startPosition"></param>
+    public void AddDeadwood(Vector3Int startPosition)
+    {
+        BiomeCreateTool.AddDeadwood(101, 0.001f, startPosition);
     }
 }

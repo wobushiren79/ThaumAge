@@ -23,6 +23,8 @@ public class ControlForPlayer : ControlForBase
     private InputAction inputActionUse;
     private InputAction inputActionJump;
     private InputAction inputActionMove;
+    private InputAction inputActionCancel;
+    private InputAction inputActionuserDetailsData;
 
     //是否正在使用道具
     private bool isUseItem = false;
@@ -38,11 +40,10 @@ public class ControlForPlayer : ControlForBase
         inputActionUse = InputHandler.Instance.manager.GetInputPlayerData("Use");
         inputActionUse.started += HandleForUse;
         inputActionUse.canceled += HandleForUseCanel;
-
-        InputAction cancelAction = InputHandler.Instance.manager.GetInputPlayerData("Cancel");
-        cancelAction.started += HandleForCancel;
-        InputAction userDetailsData = InputHandler.Instance.manager.GetInputPlayerData("UserDetails");
-        userDetailsData.started += HandleForUserDetails;
+        inputActionCancel = InputHandler.Instance.manager.GetInputPlayerData("Cancel");
+        inputActionCancel.started += HandleForCancel;
+        inputActionuserDetailsData = InputHandler.Instance.manager.GetInputPlayerData("UserDetails");
+        inputActionuserDetailsData.started += HandleForUserDetails;
         inputActionMove = InputHandler.Instance.manager.GetInputPlayerData("Move");
 
         InvokeRepeating("HandlerForUseItemTarget", 0.1f, 0.1f);
@@ -60,6 +61,11 @@ public class ControlForPlayer : ControlForBase
     public void OnDestroy()
     {
         CancelInvoke("HandlerForUseItemTarget");
+        inputActionJump.started -= HandleForJumpStart;
+        inputActionUse.started -= HandleForUse;
+        inputActionUse.canceled -= HandleForUseCanel;
+        inputActionCancel.started -= HandleForCancel;
+        inputActionuserDetailsData.started -= HandleForUserDetails;
     }
 
     /// <summary>

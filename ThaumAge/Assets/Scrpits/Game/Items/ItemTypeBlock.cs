@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class ItemTypeBlock : Item
 {
-    protected override void UseForPlayer(Player player,ItemsBean itemData)
+    protected override void UseForPlayer(Player player, ItemsBean itemData)
     {
         base.UseForPlayer(player, itemData);
 
@@ -46,6 +46,11 @@ public class ItemTypeBlock : Item
                         {
                             addChunk.SetBlockForWorld(closePosition, changeBlockType, direction);
                         }
+                        //扣除道具
+                        UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();
+                        userData.AddItems(itemData, -1);
+                        //刷新UI
+                        UIHandler.Instance.RefreshUI();
                     }
                 }
             }

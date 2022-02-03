@@ -11,11 +11,11 @@ public class BlockShapeCubeCuboid : BlockShapeCube
     protected float forwardOffsetBorder;
     protected float backOffsetBorder;
 
-    public override void SetData(BlockTypeEnum blockType)
+    public override void InitData(Block block)
     {
-        base.SetData(blockType);
+        base.InitData(block);
 
-        float[] offsetBorder = blockInfo.GetOffsetBorder();
+        float[] offsetBorder = block.blockInfo.GetOffsetBorder();
 
         leftOffsetBorder = offsetBorder[0];
         rightOffsetBorder = offsetBorder[1];
@@ -59,22 +59,22 @@ public class BlockShapeCubeCuboid : BlockShapeCube
     /// <param name="verts"></param>
     /// <param name="uvs"></param>
     /// <param name="tris"></param>
-    public override void BuildBlock(Chunk chunk, Vector3Int localPosition, DirectionEnum direction)
+    public override void BuildBlock(Block block, Chunk chunk, Vector3Int localPosition, DirectionEnum direction)
     {
-        if (blockType != BlockTypeEnum.None)
+        if (block.blockType != BlockTypeEnum.None)
         {
             int startVertsIndex = chunk.chunkMeshData.verts.Count;
-            int startTrisIndex = chunk.chunkMeshData.dicTris[blockInfo.material_type].Count;
+            int startTrisIndex = chunk.chunkMeshData.dicTris[block.blockInfo.material_type].Count;
 
             int startVertsColliderIndex = 0;
             int startTrisColliderIndex = 0;
 
-            if (blockInfo.collider_state == 1)
+            if (block.blockInfo.collider_state == 1)
             {
                 startVertsColliderIndex = chunk.chunkMeshData.vertsCollider.Count;
                 startTrisColliderIndex = chunk.chunkMeshData.trisCollider.Count;
             }
-            else if (blockInfo.trigger_state == 1)
+            else if (block.blockInfo.trigger_state == 1)
             {
                 startVertsColliderIndex = chunk.chunkMeshData.vertsTrigger.Count;
                 startTrisColliderIndex = chunk.chunkMeshData.trisTrigger.Count;
@@ -83,39 +83,39 @@ public class BlockShapeCubeCuboid : BlockShapeCube
             int buildFaceCount = 0;
 
             //Left
-            if (leftOffsetBorder == 0 ? CheckNeedBuildFace(chunk, localPosition, direction, DirectionEnum.Left) : true)
+            if (leftOffsetBorder == 0 ? CheckNeedBuildFace(block, chunk, localPosition, direction, DirectionEnum.Left) : true)
             {
-                BuildFace(chunk, localPosition, direction, DirectionEnum.Left, vertsAddLeft, uvsAddLeft, false);
+                BuildFace(block, chunk, localPosition, direction, DirectionEnum.Left, vertsAddLeft, block.uvsAddLeft, false);
                 buildFaceCount++;
-            }     
+            }
             //Right
-            if (rightOffsetBorder == 0 ? CheckNeedBuildFace(chunk, localPosition, direction, DirectionEnum.Right) : true)
+            if (rightOffsetBorder == 0 ? CheckNeedBuildFace(block, chunk, localPosition, direction, DirectionEnum.Right) : true)
             {
-                BuildFace(chunk, localPosition, direction, DirectionEnum.Right, vertsAddRight, uvsAddRight, true);
+                BuildFace(block, chunk, localPosition, direction, DirectionEnum.Right, vertsAddRight, block.uvsAddRight, true);
                 buildFaceCount++;
             }
             //Bottom
-            if (downOffsetBorder == 0 ? CheckNeedBuildFace(chunk, localPosition, direction, DirectionEnum.Down) : true)
+            if (downOffsetBorder == 0 ? CheckNeedBuildFace(block, chunk, localPosition, direction, DirectionEnum.Down) : true)
             {
-                BuildFace(chunk, localPosition, direction, DirectionEnum.Down, vertsAddDown, uvsAddDown, false);
+                BuildFace(block, chunk, localPosition, direction, DirectionEnum.Down, vertsAddDown, block.uvsAddDown, false);
                 buildFaceCount++;
             }
             //Top
-            if (upOffsetBorder == 0 ? CheckNeedBuildFace(chunk, localPosition, direction, DirectionEnum.UP) : true)
+            if (upOffsetBorder == 0 ? CheckNeedBuildFace(block, chunk, localPosition, direction, DirectionEnum.UP) : true)
             {
-                BuildFace(chunk, localPosition, direction, DirectionEnum.UP, vertsAddUp, uvsAddUp, true);
+                BuildFace(block, chunk, localPosition, direction, DirectionEnum.UP, vertsAddUp, block.uvsAddUp, true);
                 buildFaceCount++;
             }
             //Front
-            if (forwardOffsetBorder == 0 ? CheckNeedBuildFace(chunk, localPosition, direction, DirectionEnum.Forward) : true)
+            if (forwardOffsetBorder == 0 ? CheckNeedBuildFace(block, chunk, localPosition, direction, DirectionEnum.Forward) : true)
             {
-                BuildFace(chunk, localPosition, direction, DirectionEnum.Forward, vertsAddForward, uvsAddForward, true);
+                BuildFace(block, chunk, localPosition, direction, DirectionEnum.Forward, vertsAddForward, block.uvsAddForward, true);
                 buildFaceCount++;
-            }     
+            }
             //Back
-            if (backOffsetBorder == 0 ? CheckNeedBuildFace(chunk, localPosition, direction, DirectionEnum.Back) : true)
+            if (backOffsetBorder == 0 ? CheckNeedBuildFace(block, chunk, localPosition, direction, DirectionEnum.Back) : true)
             {
-                BuildFace(chunk, localPosition, direction, DirectionEnum.Back, vertsAddBack, uvsAddBack, false);
+                BuildFace(block, chunk, localPosition, direction, DirectionEnum.Back, vertsAddBack, block.uvsAddBack, false);
                 buildFaceCount++;
             }
             int vertsCount = buildFaceCount * 4;
@@ -139,10 +139,10 @@ public class BlockShapeCubeCuboid : BlockShapeCube
     /// <param name="direction"></param>
     /// <param name="closeDirection"></param>
     /// <returns></returns>
-    public override bool CheckNeedBuildFace(Chunk chunk, Vector3Int localPosition, DirectionEnum direction, DirectionEnum closeDirection)
+    public override bool CheckNeedBuildFace(Block block, Chunk chunk, Vector3Int localPosition, DirectionEnum direction, DirectionEnum closeDirection)
     {
         if (localPosition.y == 0) return false;
-        GetCloseRotateBlockByDirection(chunk, localPosition, direction, closeDirection, out Block closeBlock, out Chunk closeBlockChunk);
+        GetCloseRotateBlockByDirection(block, chunk, localPosition, direction, closeDirection, out Block closeBlock, out Chunk closeBlockChunk);
         if (closeBlock == null || closeBlock.blockType == BlockTypeEnum.None)
         {
             if (closeBlockChunk)

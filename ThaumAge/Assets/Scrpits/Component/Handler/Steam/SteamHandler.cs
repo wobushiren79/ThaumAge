@@ -10,13 +10,13 @@ public class SteamHandler : BaseHandler<SteamHandler, BaseManager>
     public SteamWebImpl steamWeb;
 
     public SteamManager steamManager;
-    protected override void Awake()
+    public override void Awake()
     {
         base.Awake();
         steamManager = gameObject.AddComponent<SteamManager>();
     }
 
-    private void Start()
+    public void Start()
     {
         SteamUserStatsImpl.InitUserStats();
     }

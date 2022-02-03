@@ -6,7 +6,7 @@ using UnityEngine.U2D;
 
 public class IconHandler : BaseHandler<IconHandler,IconManager>
 {
-    protected override void Awake()
+    public override void Awake()
     {
         base.Awake();
     }

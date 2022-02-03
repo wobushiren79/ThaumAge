@@ -229,8 +229,10 @@ public class BlockEditorWindow : EditorWindow
     {
         string nameBothFaceSwingUniform = BlockMaterialEnum.BothFaceSwingUniform.GetEnumName();
         string nameBothFaceSwing = BlockMaterialEnum.BothFaceSwing.GetEnumName();
+        string nameBothFace = BlockMaterialEnum.BothFace.GetEnumName();
 
         EditorUI.GUIPic($"{Path_Block_Png}/Block.png", 2048, 2048);
+        EditorUI.GUIPic($"{Path_Block_Png}/Block{nameBothFace}.png", 2048, 2048);
         EditorUI.GUIPic($"{Path_Block_Png}/Block{nameBothFaceSwing}.png", 2048, 2048);
         EditorUI.GUIPic($"{Path_Block_Png}/Block{nameBothFaceSwingUniform}.png", 2048, 2048);
     }
@@ -244,12 +246,19 @@ public class BlockEditorWindow : EditorWindow
         string[] filesName = Directory.GetFiles(Path_Block_Textures);
         //生成图片tex
         Texture2D outTexture = new Texture2D(size, size, TextureFormat.RGBA32, true);
+        Texture2D outTextureBothFace= new Texture2D(size, size, TextureFormat.RGBA32, true);
         Texture2D outTextureBothFaceSwing = new Texture2D(size, size, TextureFormat.RGBA32, true);
         Texture2D outTextureBothFaceSwingUniform = new Texture2D(size, size, TextureFormat.RGBA32, true);
+
+        outTexture.SetPixels(new Color[size* size]);
+        outTextureBothFace.SetPixels(new Color[size * size]);
+        outTextureBothFaceSwing.SetPixels(new Color[size * size]);
+        outTextureBothFaceSwingUniform.SetPixels(new Color[size * size]);
 
         //设置每一个方块所占的区域大小
         int itemSize = size / 128;
 
+        string nameBothFace = BlockMaterialEnum.BothFace.GetEnumName();
         string nameBothFaceSwing = BlockMaterialEnum.BothFaceSwing.GetEnumName();
         string nameBothFaceSwingUniform = BlockMaterialEnum.BothFaceSwingUniform.GetEnumName();
 
@@ -259,11 +268,11 @@ public class BlockEditorWindow : EditorWindow
             string fileName = filesName[i];
 
             if (fileName.Contains(".meta"))
-            {
                 continue;
-            }
             //根据名字获取每个图片所在的位置
             Texture2D itemTex = AssetDatabase.LoadAssetAtPath<Texture2D>(fileName);
+            if (itemTex == null)
+                continue;
             string[] itemDataArray = itemTex.name.SplitForArrayStr( '_');
 
             //设置方块位置
@@ -282,6 +291,12 @@ public class BlockEditorWindow : EditorWindow
                 int positionStartY = int.Parse(itemDataArray[1]) * itemSize;
                 outTextureBothFaceSwing.SetPixels(positionStartX, positionStartY, width, height, itemTex.GetPixels());
             }
+            else if (fileName.Contains(nameBothFace))
+            {
+                int positionStartX = int.Parse(itemDataArray[2]) * itemSize;
+                int positionStartY = int.Parse(itemDataArray[1]) * itemSize;
+                outTextureBothFace.SetPixels(positionStartX, positionStartY, width, height, itemTex.GetPixels());
+            }
             else
             {
                 int positionStartX = int.Parse(itemDataArray[1]) * itemSize;
@@ -291,6 +306,7 @@ public class BlockEditorWindow : EditorWindow
         }
         //保存图片
         File.WriteAllBytes($"{Path_Block_Png}/Block.png", outTexture.EncodeToPNG());
+        File.WriteAllBytes($"{Path_Block_Png}/Block{nameBothFace}.png", outTextureBothFace.EncodeToPNG());
         File.WriteAllBytes($"{Path_Block_Png}/Block{nameBothFaceSwing}.png", outTextureBothFaceSwing.EncodeToPNG());
         File.WriteAllBytes($"{Path_Block_Png}/Block{nameBothFaceSwingUniform}.png", outTextureBothFaceSwingUniform.EncodeToPNG());
         AssetDatabase.Refresh();

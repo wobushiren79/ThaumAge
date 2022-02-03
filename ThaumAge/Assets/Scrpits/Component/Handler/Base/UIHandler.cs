@@ -8,7 +8,7 @@ using UnityEngine.UI;
 
 public class UIHandler : BaseUIHandler<UIHandler, UIManager>
 {
-    protected override void Awake()
+    public override void Awake()
     {
         base.Awake();
         GameConfigBean gameConfig = GameDataHandler.Instance.manager.GetGameConfig();
@@ -310,6 +310,15 @@ public class UIHandler : BaseUIHandler<UIHandler, UIManager>
                 itemUI.RefreshUI();
             }
         }
+    }
+
+    /// <summary>
+    /// 刷新打开的UI
+    /// </summary>
+    public void RefreshUI()
+    {
+        BaseUIComponent itemUI = GetOpenUI();
+        itemUI.RefreshUI();
     }
 
     /// <summary>

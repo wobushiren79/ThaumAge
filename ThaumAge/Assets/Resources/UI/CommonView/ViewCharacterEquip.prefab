@@ -87,7 +87,7 @@ GameObject:
   - component: {fileID: 2508932130838207415}
   - component: {fileID: 5412732899424118346}
   - component: {fileID: 2935046503348425853}
-  - component: {fileID: 4875841685296560228}
+  - component: {fileID: 2237462376718332171}
   m_Layer: 5
   m_Name: RotateLeft
   m_TagString: Untagged
@@ -153,7 +153,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &4875841685296560228
+--- !u!114 &2237462376718332171
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -162,7 +162,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 5922852779213891725}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Script: {fileID: 11500000, guid: 2db7391385bd2a34b93e9bab3792c767, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
@@ -408,8 +408,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rectTransform: {fileID: 0}
   ui_CharacterBase: {fileID: 445708444388993055}
-  ui_RotateLeft: {fileID: 4875841685296560228}
-  ui_RotateRight: {fileID: 2105303880768679128}
+  ui_RotateLeft: {fileID: 0}
+  ui_RotateRight: {fileID: 0}
   ui_Equip_Hats: {fileID: 5142198433547115838}
   ui_Equip_Gloves: {fileID: 4945904097846105461}
   ui_Equip_Clothes: {fileID: 24544931079919785}
@@ -698,7 +698,7 @@ GameObject:
   - component: {fileID: 115723919987759201}
   - component: {fileID: 3603338520555573064}
   - component: {fileID: 3691483347170237917}
-  - component: {fileID: 2105303880768679128}
+  - component: {fileID: 9079292901745470317}
   m_Layer: 5
   m_Name: RotateRight
   m_TagString: Untagged
@@ -764,7 +764,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &2105303880768679128
+--- !u!114 &9079292901745470317
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -773,7 +773,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 8357830269859526691}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Script: {fileID: 11500000, guid: 2db7391385bd2a34b93e9bab3792c767, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
