@@ -11,10 +11,10 @@ public class BlockShapeCubeLeaves : BlockShapeCube
     /// <param name="direction"></param>
     /// <param name="closeDirection"></param>
     /// <returns></returns>
-    public override bool CheckNeedBuildFace(Block block, Chunk chunk, Vector3Int localPosition, DirectionEnum direction, DirectionEnum closeDirection)
+    public override bool CheckNeedBuildFace(Chunk chunk, Vector3Int localPosition, DirectionEnum direction, DirectionEnum closeDirection)
     {
         if (localPosition.y == 0) return false;
-        GetCloseRotateBlockByDirection(block, chunk, localPosition, direction, closeDirection, out Block closeBlock, out Chunk closeBlockChunk);
+        GetCloseRotateBlockByDirection(chunk, localPosition, direction, closeDirection, out Block closeBlock, out Chunk closeBlockChunk);
         if (closeBlock == null || closeBlock.blockType == BlockTypeEnum.None)
         {
             if (closeBlockChunk)

@@ -12,9 +12,6 @@ public class BlockManager : BaseManager, IBlockInfoView
     protected BlockInfoBean[] arrayBlockInfo = new BlockInfoBean[EnumExtension.GetEnumMaxIndex<BlockTypeEnum>() + 1];
     //注册方块列表
     protected Block[] arrayBlockRegister = new Block[EnumExtension.GetEnumMaxIndex<BlockTypeEnum>() + 1];
-    //方块形状数据
-    protected Dictionary<BlockShapeEnum, BlockShape> dicBlockShape = new Dictionary<BlockShapeEnum, BlockShape>();
-
     //方块模型列表
     protected GameObject[] arrayBlockModel = new GameObject[EnumExtension.GetEnumMaxIndex<BlockTypeEnum>() + 1];
     //存储着所有的材质
@@ -39,7 +36,6 @@ public class BlockManager : BaseManager, IBlockInfoView
     {
         controllerForBlock = new BlockInfoController(this, this);
         controllerForBlock.GetAllBlockInfoData(InitBlockInfo);
-        RegisterBlockShape();
         RegisterBlock();
     }
 
@@ -123,8 +119,11 @@ public class BlockManager : BaseManager, IBlockInfoView
     /// <returns></returns>
     public BlockShape GetRegisterBlockShape(BlockShapeEnum blockShapeEnum)
     {
-        dicBlockShape.TryGetValue(blockShapeEnum,out BlockShape blockShape);
-        if (blockShape == null) blockShape = new BlockShape();
+        string blockShapeName = blockShapeEnum.GetEnumName();
+        //通过反射获取类
+        BlockShape blockShape = ReflexUtil.CreateInstance<BlockShape>($"BlockShape{blockShapeName}");
+        if (blockShape == null)
+            blockShape = new BlockShape();
         return blockShape;
     }
 
@@ -148,24 +147,6 @@ public class BlockManager : BaseManager, IBlockInfoView
             arrayBlockRegister[(int)blockType] = block;
         }
     }
-
-    /// <summary>
-    /// 注册所有方块形状
-    /// </summary>
-    public void RegisterBlockShape()
-    {
-        dicBlockShape.Clear();
-        List<BlockShapeEnum> listBlockShape = EnumExtension.GetEnumValue<BlockShapeEnum>();
-        for (int i = 0; i < listBlockShape.Count; i++)
-        {
-            BlockShapeEnum blockShapeEnum = listBlockShape[i];
-            string blockShapeName = blockShapeEnum.GetEnumName();
-            //通过反射获取类
-            BlockShape blockShape = ReflexUtil.CreateInstance<BlockShape>($"BlockShape{blockShapeName}");
-            dicBlockShape.Add(blockShapeEnum,blockShape);
-        }
-    }
-
     /// <summary>
     /// 初始化方块信息
     /// </summary>

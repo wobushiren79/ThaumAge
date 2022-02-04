@@ -6,7 +6,7 @@ public class BlockShapeLiquid : BlockShapeCube
 {
     public override void InitData(Block block)
     {
-        block.uvsAdd = new Vector2[]
+        uvsAdd = new Vector2[]
         {
             new Vector2(0,0),
             new Vector2(0,1),
@@ -22,10 +22,10 @@ public class BlockShapeLiquid : BlockShapeCube
     /// </summary>
     /// <param name="position"></param>
     /// <returns></returns>
-    public override bool CheckNeedBuildFace(Block block, Chunk chunk, Vector3Int localPosition, DirectionEnum direction, DirectionEnum closeDirection)
+    public override bool CheckNeedBuildFace(Chunk chunk, Vector3Int localPosition, DirectionEnum direction, DirectionEnum closeDirection)
     {
         if (localPosition.y == 0) return false;
-        GetCloseRotateBlockByDirection(block, chunk, localPosition, direction, closeDirection, out Block closeBlock, out Chunk closeBlockChunk);
+        GetCloseRotateBlockByDirection(chunk, localPosition, direction, closeDirection, out Block closeBlock, out Chunk closeBlockChunk);
         if (closeBlock == null || closeBlock.blockType == BlockTypeEnum.None)
         {
             if (closeBlockChunk)

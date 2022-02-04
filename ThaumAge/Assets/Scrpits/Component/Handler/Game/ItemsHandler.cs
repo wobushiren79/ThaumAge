@@ -10,8 +10,10 @@ public class ItemsHandler : BaseHandler<ItemsHandler, ItemsManager>
     /// <summary>
     /// 使用物品
     /// </summary>
+    /// <param name="user"></param>
     /// <param name="itemsData"></param>
-    public void UseItem(GameObject user, ItemsBean itemsData)
+    /// <param name="type"></param>
+    public void UseItem(GameObject user, ItemsBean itemsData,int type)
     {
         Item item;
         if (itemsData == null || itemsData.itemId == 0)
@@ -26,9 +28,10 @@ public class ItemsHandler : BaseHandler<ItemsHandler, ItemsManager>
             //获取对应得处理类
             item = manager.GetRegisterItem((ItemsTypeEnum)itemsInfo.items_type);
         }
-        item.Use(user, itemsData);
+        item.Use(user, itemsData, type);
         item.UseForAnim(user, itemsData);
     }
+
 
     /// <summary>
     /// 使用物品目标

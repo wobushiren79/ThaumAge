@@ -3,9 +3,9 @@ using UnityEngine;
 
 public class ItemWeapon : Item
 {
-    public override void Use(GameObject user, ItemsBean itemsData)
+    public override void Use(GameObject user, ItemsBean itemsData,int type)
     {
-        base.Use(user, itemsData);
+        base.Use(user, itemsData, type);
         //获取打中的目标
         Collider[] targetArray = TargetCheck(user, itemsData);
         //伤害打中的目标

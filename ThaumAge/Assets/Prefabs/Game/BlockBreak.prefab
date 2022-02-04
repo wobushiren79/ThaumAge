@@ -129,6 +129,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mrBlockBreak: {fileID: 7449960917816759502}
+  mfBlockBreak: {fileID: 7449960917816759503}
+  block:
+    blockType: 0
   position: {x: 0, y: 0, z: 0}
   blockLife: 0
   isNeedDestory: 0

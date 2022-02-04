@@ -27,9 +27,9 @@ public enum BlockTypeEnum
     LeavesWorld = 2003,//世界树叶子
     LeavesMushroom = 2101,//磨菇树叶子
 
-    Weed_Long = 3001,    //杂草长
-    Weed_Normal = 3002,    //杂草中等
-    Weed_Short = 3003,    //杂草短
+    WeedLong = 3001,    //杂草长
+    WeedNormal = 3002,    //杂草中等
+    WeedShort = 3003,    //杂草短
 
     FlowerSun = 3011,    //向日葵
     FlowerRose = 3012,    //玫瑰花

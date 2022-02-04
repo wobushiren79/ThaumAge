@@ -20,10 +20,11 @@ public class ControlForPlayer : ControlForBase
     public float moveSpeed = 1;
     private float speedCharacterRotate = 10;
 
-    private InputAction inputActionUse;
+    private InputAction inputActionUseL;
+    private InputAction inputActionUseR;
+
     private InputAction inputActionJump;
     private InputAction inputActionMove;
-    private InputAction inputActionCancel;
     private InputAction inputActionuserDetailsData;
 
     //是否正在使用道具
@@ -37,11 +38,15 @@ public class ControlForPlayer : ControlForBase
 
         inputActionJump = InputHandler.Instance.manager.GetInputPlayerData("Jump");
         inputActionJump.started += HandleForJumpStart;
-        inputActionUse = InputHandler.Instance.manager.GetInputPlayerData("Use");
-        inputActionUse.started += HandleForUse;
-        inputActionUse.canceled += HandleForUseCanel;
-        inputActionCancel = InputHandler.Instance.manager.GetInputPlayerData("Cancel");
-        inputActionCancel.started += HandleForCancel;
+
+        inputActionUseL = InputHandler.Instance.manager.GetInputPlayerData("UseL");
+        inputActionUseL.started += HandleForUseL;
+        inputActionUseL.canceled += HandleForUseEnd;
+
+        inputActionUseR = InputHandler.Instance.manager.GetInputPlayerData("UseR");
+        inputActionUseR.started += HandleForUseR;
+        inputActionUseR.canceled += HandleForUseEnd;
+
         inputActionuserDetailsData = InputHandler.Instance.manager.GetInputPlayerData("UserDetails");
         inputActionuserDetailsData.started += HandleForUserDetails;
         inputActionMove = InputHandler.Instance.manager.GetInputPlayerData("Move");
@@ -62,9 +67,10 @@ public class ControlForPlayer : ControlForBase
     {
         CancelInvoke("HandlerForUseItemTarget");
         inputActionJump.started -= HandleForJumpStart;
-        inputActionUse.started -= HandleForUse;
-        inputActionUse.canceled -= HandleForUseCanel;
-        inputActionCancel.started -= HandleForCancel;
+        inputActionUseL.started -= HandleForUseL;
+        inputActionUseL.canceled -= HandleForUseEnd;
+        inputActionUseR.started -= HandleForUseR;
+        inputActionUseR.canceled -= HandleForUseEnd;
         inputActionuserDetailsData.started -= HandleForUserDetails;
     }
 
@@ -150,27 +156,6 @@ public class ControlForPlayer : ControlForBase
     }
 
     /// <summary>
-    /// 处理-使用道具
-    /// </summary>
-    /// <param name="callback"></param>
-    public void HandleForUse(CallbackContext callback)
-    {
-        if (!isActiveAndEnabled)
-            return;
-        if (UGUIUtil.IsPointerUI())
-            return;
-
-        isUseItem = true;
-        timeForUseItem = 0;
-        //获取道具栏上的物品
-        UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();
-        ItemsBean itemsData = userData.GetItemsFromShortcut();
-        Player player = GameHandler.Instance.manager.player;
-        ItemsHandler.Instance.UseItem(player.gameObject, itemsData);
-    }
-
-
-    /// <summary>
     /// 处理-持续使用道具
     /// </summary>
     public void HandleForUseUpdate()
@@ -180,32 +165,57 @@ public class ControlForPlayer : ControlForBase
             timeForUseItem += Time.deltaTime;
             if (timeForUseItem > 0.5f)
             {
-                HandleForUse(new CallbackContext());
+                HandleForUseL(new CallbackContext());
             }
             //转动方向
             RotateCharacter(Vector2.up, speedCharacterRotate);
-        }        
+        }
+    }
+
+    /// <summary>
+    /// 处理-使用道具
+    /// </summary>
+    /// <param name="callback"></param>
+    public void HandleForUseL(CallbackContext callback)
+    {
+        HandleForUse(callback, 0);
+    }
+
+
+    /// <summary>
+    /// 取消处理
+    /// </summary>
+    /// <param name="callback"></param>
+    public void HandleForUseR(CallbackContext callback)
+    {
+        HandleForUse(callback, 1);
+    }
+
+    public void HandleForUse(CallbackContext callback, int type)
+    {
+        if (!isActiveAndEnabled)
+            return;
+        if (UGUIUtil.IsPointerUI())
+            return;
+        isUseItem = true;
+        timeForUseItem = 0;
+        //获取道具栏上的物品
+        UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();
+        ItemsBean itemsData = userData.GetItemsFromShortcut();
+        Player player = GameHandler.Instance.manager.player;
+        ItemsHandler.Instance.UseItem(player.gameObject, itemsData, type);
     }
 
     /// <summary>
     /// 处理-停止使用道具
     /// </summary>
     /// <param name="callback"></param>
-    public void HandleForUseCanel(CallbackContext callback)
+    public void HandleForUseEnd(CallbackContext callback)
     {
         isUseItem = false;
         character.characterAnim.creatureAnim.PlayUse(false);
     }
 
-    /// <summary>
-    /// 取消处理
-    /// </summary>
-    /// <param name="callback"></param>
-    public void HandleForCancel(CallbackContext callback)
-    {
-        if (!isActiveAndEnabled)
-            return;
-    }
 
     /// <summary>
     /// 角色移动

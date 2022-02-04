@@ -42,6 +42,7 @@ public class BlockInfoBean : BaseBean
 
     public string items_drop;//掉落
 
+    public string break_type;//指定破坏类型
     /// <summary>
     /// 获取方块类型
     /// </summary>
@@ -153,5 +154,66 @@ public class BlockInfoBean : BaseBean
             itemsData.Add(new ItemsBean(itemsId, itemsNumber));
         }
         return itemsData;
+    }
+
+    /// <summary>
+    /// 获取破坏类型
+    /// </summary>
+    /// <returns></returns>
+    public List<BlockBreakTypeEnum> GetBreakType()
+    {
+        List<BlockBreakTypeEnum> listData = new List<BlockBreakTypeEnum>();
+        if (break_type.IsNull())
+        {
+            listData.Add(BlockBreakTypeEnum.Normal);
+        }
+        else
+        {
+            int[] typeArray = break_type.SplitForArrayInt(',');
+            for (int i = 0; i < typeArray.Length; i++)
+            {
+                BlockBreakTypeEnum itemType = (BlockBreakTypeEnum)typeArray[i];
+                listData.Add(itemType);
+            }
+        }
+        return listData;
+    }
+
+    /// <summary>
+    /// 检测是否能被破坏
+    /// </summary>
+    /// <returns></returns>
+    public bool CheckCanBreak(long breakItemId)
+    {
+        List<BlockBreakTypeEnum> listBreakType = GetBreakType();
+        for (int i = 0; i < listBreakType.Count; i++)
+        {
+            BlockBreakTypeEnum blockBreakType = listBreakType[i];
+            if (blockBreakType == BlockBreakTypeEnum.NotBreak)
+            {
+                return false;
+            }
+            if (blockBreakType == BlockBreakTypeEnum.Normal)
+            {
+                return true;
+            }
+            else
+            {
+                //如果是空手
+                if (breakItemId == 0) 
+                {
+                  
+                }
+                else
+                {
+                    ItemsInfoBean useItemInfo = ItemsHandler.Instance.manager.GetItemsInfoById(breakItemId);
+                    if (useItemInfo.GetItemsType()== (ItemsTypeEnum)listBreakType[i])
+                    {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
     }
 }

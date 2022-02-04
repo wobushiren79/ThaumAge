@@ -9,23 +9,6 @@ public class Block
     protected BlockInfoBean _blockInfo;//方块信息
     protected BlockShape _blockShape;//方块的形状
 
-    public Vector3[] vertsAdd;
-    public Vector2[] uvsAdd;
-    public int[] trisAdd;
-
-    //自定义形状方块所有的数据
-    public MeshData blockMeshData;
-    public Vector3[] vertsColliderAddCustom;
-    public int[] trisColliderAddCustom;
-
-    //正方形的方块 所用数据
-    public Vector2[] uvsAddLeft;
-    public Vector2[] uvsAddRight;
-    public Vector2[] uvsAddDown;
-    public Vector2[] uvsAddUp;
-    public Vector2[] uvsAddForward;
-    public Vector2[] uvsAddBack;
-
     public BlockInfoBean blockInfo
     {
         get
@@ -124,12 +107,12 @@ public class Block
     /// <param name="tris"></param>
     public virtual void BuildBlock(Chunk chunk, Vector3Int localPosition, DirectionEnum direction)
     {
-        blockShape.BuildBlock(this, chunk, localPosition, direction);
+        blockShape.BuildBlock(chunk, localPosition, direction);
     }
 
     public virtual void BuildBlockNoCheck(Chunk chunk, Vector3Int localPosition, DirectionEnum direction)
     {
-        blockShape.BuildBlock(this, chunk, localPosition, direction);
+        blockShape.BuildBlock(chunk, localPosition, direction);
     }
 
     /// <summary>

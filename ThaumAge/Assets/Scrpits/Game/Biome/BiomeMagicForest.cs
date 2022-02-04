@@ -100,7 +100,7 @@ public class BiomeMagicForest : Biome
         BiomeForPlantData weedData = new BiomeForPlantData
         {
             addRate = 0.3f,
-            listPlantType = new List<BlockTypeEnum> { BlockTypeEnum.Weed_Long, BlockTypeEnum.Weed_Normal, BlockTypeEnum.Weed_Short }
+            listPlantType = new List<BlockTypeEnum> { BlockTypeEnum.WeedLong, BlockTypeEnum.WeedNormal, BlockTypeEnum.WeedShort }
         };
         BiomeCreateTool.AddPlant(601,wPos, weedData);
     }

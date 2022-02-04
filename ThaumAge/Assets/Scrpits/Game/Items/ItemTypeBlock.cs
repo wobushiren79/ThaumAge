@@ -3,10 +3,8 @@ using UnityEngine;
 
 public class ItemTypeBlock : Item
 {
-    protected override void UseForPlayer(Player player, ItemsBean itemData)
+    protected override void UseForPlayer(Player player, ItemsBean itemData,int type)
     {
-        base.UseForPlayer(player, itemData);
-
         //检测玩家前方是否有方块
         if (player.playerRay.RayToChunkBlock(out RaycastHit hit, out Vector3Int targetBlockPosition))
         {
@@ -15,10 +13,10 @@ public class ItemTypeBlock : Item
             {
                 //获取位置和方向
                 player.playerRay.GetHitPositionAndDirection(hit, out Vector3Int targetPosition, out Vector3Int closePosition, out DirectionEnum direction);
-                //如果上手没有物品 则挖掘
-                if (itemData == null || itemData.itemId == 0)
+                //如果上手没有物品 或者是左键点击 则挖掘
+                if (itemData == null || itemData.itemId == 0|| type == 0)
                 {
-                    BreakTarget(targetPosition);
+                    BreakTarget(itemData.itemId,targetPosition);
                 }
                 //如果手上有物品 则使用
                 else

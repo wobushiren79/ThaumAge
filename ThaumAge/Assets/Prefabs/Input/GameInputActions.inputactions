@@ -24,9 +24,18 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "Use",
+                    "name": "UseL",
                     "type": "Button",
                     "id": "ed5b48d1-62a2-40f2-9e96-602248041377",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "UseR",
+                    "type": "Button",
+                    "id": "e8b51414-8084-4b2f-aae8-3363280eae42",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -49,15 +58,6 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
-                },
-                {
-                    "name": "Cancel",
-                    "type": "Button",
-                    "id": "e8b51414-8084-4b2f-aae8-3363280eae42",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
                 },
                 {
                     "name": "UserDetails",
@@ -242,7 +242,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": ";Gamepad",
-                    "action": "Use",
+                    "action": "UseL",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -253,7 +253,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
-                    "action": "Use",
+                    "action": "UseL",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -264,7 +264,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard&Mouse",
-                    "action": "Use",
+                    "action": "UseL",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -314,28 +314,6 @@
                 },
                 {
                     "name": "",
-                    "id": "7ec3ef5b-dfda-461f-a566-19ebb4d6436b",
-                    "path": "<Gamepad>/buttonSouth",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Gamepad",
-                    "action": "Cancel",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "b7091500-7913-4425-ad40-e78cd78e7dc4",
-                    "path": "<Mouse>/rightButton",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Keyboard&Mouse",
-                    "action": "Cancel",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "6b1d9c76-abdc-4832-a90f-99cd8d5f16db",
                     "path": "<Gamepad>/start",
                     "interactions": "",
@@ -353,6 +331,28 @@
                     "processors": "",
                     "groups": "Keyboard&Mouse",
                     "action": "UserDetails",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "7ec3ef5b-dfda-461f-a566-19ebb4d6436b",
+                    "path": "<Gamepad>/buttonSouth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "UseR",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "b7091500-7913-4425-ad40-e78cd78e7dc4",
+                    "path": "<Mouse>/rightButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "UseR",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

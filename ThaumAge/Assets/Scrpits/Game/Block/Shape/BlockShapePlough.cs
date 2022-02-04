@@ -19,7 +19,7 @@ public class BlockShapePlough : BlockShapeCubeCuboid
         };
     }
 
-    public override void BaseAddUVs(Block block, Chunk chunk, Vector3Int localPosition, DirectionEnum direction, DirectionEnum face, Vector2[] uvsAdd)
+    public override void BaseAddUVs(Chunk chunk, Vector3Int localPosition, DirectionEnum direction, DirectionEnum face, Vector2[] uvsAdd)
     {
         BlockBean blockData = chunk.GetBlockData(localPosition);
         if (blockData != null && face == DirectionEnum.UP)
@@ -32,7 +32,7 @@ public class BlockShapePlough : BlockShapeCubeCuboid
                 return;
             }
         }
-        base.BaseAddUVs(block, chunk, localPosition, direction, face, uvsAdd);
+        base.BaseAddUVs(chunk, localPosition, direction, face, uvsAdd);
     }
 
 }

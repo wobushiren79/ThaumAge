@@ -5,6 +5,8 @@ using UnityEngine;
 public class BlockCptBreak : BaseMonoBehaviour
 {
     public MeshRenderer mrBlockBreak;
+    public MeshFilter mfBlockBreak;
+
     public Block block;
     public Vector3Int position;
 
@@ -113,19 +115,10 @@ public class BlockCptBreak : BaseMonoBehaviour
             index = listBreakTex.Count - 1;
         }
         //如果进度没有变，则不修改贴图
-        if (index == currentProIndex)
-        {
-
-        }
-        //修改贴图
-        else
-        {
-            Texture2D tex2D = listBreakTex[index];
-            mrBlockBreak.material.SetTexture("_BaseColorMap", tex2D);
-        }
+        Texture2D tex2D = listBreakTex[index];
+        mrBlockBreak.material.SetTexture("_BaseColorMap", tex2D);
         currentProIndex = index;
     }
-
 
     /// <summary>
     /// 播放粒子破碎特效
@@ -148,26 +141,38 @@ public class BlockCptBreak : BaseMonoBehaviour
             Material matNomral = BlockHandler.Instance.manager.GetBlockMaterial(block.blockInfo.GetBlockMaterialType());
             Texture2D texBlock = matNomral.mainTexture as Texture2D;
 
-            Vector2Int[] arrayUVData = block.blockInfo.GetUVPosition();
-            int randomUV = Random.Range(0, arrayUVData.Length);
-            Vector2 uvStartPosition = new Vector2(texBlock.width * (arrayUVData[randomUV].y * BlockShape.uvWidth), texBlock.width * (arrayUVData[randomUV].x * BlockShape.uvWidth));
             Color colorStart;
             Color colorEnd;
-            do
+
+            if (block.blockInfo.GetBlockShape()== BlockShapeEnum.Custom)
             {
-                int randomXStart = Random.Range((int)uvStartPosition.x, (int)(uvStartPosition.x + (texBlock.width * BlockShape.uvWidth)));
-                int randomYStart = Random.Range((int)uvStartPosition.y, (int)(uvStartPosition.y + (texBlock.height * BlockShape.uvWidth)));
-
-                int randomXEnd = Random.Range((int)uvStartPosition.x, (int)(uvStartPosition.x + (texBlock.width * BlockShape.uvWidth)));
-                int randomYEnd = Random.Range((int)uvStartPosition.y, (int)(uvStartPosition.y + (texBlock.height * BlockShape.uvWidth)));
-
-                colorStart = TextureUtil.GetPixel(texBlock, new Vector2Int(randomXStart, randomYStart));
-                colorEnd = TextureUtil.GetPixel(texBlock, new Vector2Int(randomXEnd, randomYEnd));
+                //如果是自定义模型的方块 则直接随机获取颜色
+                //colorStart = new Color(Random.Range(0f,1f), Random.Range(0f, 1f), Random.Range(0f, 1f));
+                //colorEnd = new Color(Random.Range(0f, 1f), Random.Range(0f, 1f), Random.Range(0f, 1f));
+                colorStart = Color.gray;
+                colorEnd = Color.gray;
             }
-            while (colorStart.a == 0 || colorEnd.a == 0);
+            else
+            {
+                Vector2Int[] arrayUVData = block.blockInfo.GetUVPosition();
+                int randomUV = Random.Range(0, arrayUVData.Length);
+                Vector2 uvStartPosition = new Vector2(texBlock.width * (arrayUVData[randomUV].y * BlockShape.uvWidth), texBlock.width * (arrayUVData[randomUV].x * BlockShape.uvWidth));
+
+                do
+                {
+                    int randomXStart = Random.Range((int)uvStartPosition.x, (int)(uvStartPosition.x + (texBlock.width * BlockShape.uvWidth)));
+                    int randomYStart = Random.Range((int)uvStartPosition.y, (int)(uvStartPosition.y + (texBlock.height * BlockShape.uvWidth)));
+
+                    int randomXEnd = Random.Range((int)uvStartPosition.x, (int)(uvStartPosition.x + (texBlock.width * BlockShape.uvWidth)));
+                    int randomYEnd = Random.Range((int)uvStartPosition.y, (int)(uvStartPosition.y + (texBlock.height * BlockShape.uvWidth)));
+
+                    colorStart = TextureUtil.GetPixel(texBlock, new Vector2Int(randomXStart, randomYStart));
+                    colorEnd = TextureUtil.GetPixel(texBlock, new Vector2Int(randomXEnd, randomYEnd));
+                }
+                while (colorStart.a == 0 || colorEnd.a == 0);
+            }
 
             EffectBlockBreak effectBlockCptBreak = (EffectBlockBreak)effect;
-
             effectBlockCptBreak.SetEffectColor(colorStart, colorEnd);
         });
     }

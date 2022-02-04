@@ -54,7 +54,7 @@ public class BlockShapeWell : BlockShapeCross
 
         Vector2 uvStartPosition = GetUVStartPosition(block);
 
-        block.uvsAdd = new Vector2[]
+        uvsAdd = new Vector2[]
         {
             new Vector2(uvStartPosition.x,uvStartPosition.y),
             new Vector2(uvStartPosition.x,uvStartPosition.y + uvWidth),

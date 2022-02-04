@@ -4,10 +4,8 @@ using UnityEngine;
 public class ItemTypeSeed : Item
 {
 
-    protected override void UseForPlayer(Player player, ItemsBean itemData)
+    protected override void UseForPlayer(Player player, ItemsBean itemData, int type)
     {
-        base.UseForPlayer(player, itemData);
-
         //检测玩家前方是否有方块
         if (player.playerRay.RayToChunkBlock(out RaycastHit hit, out Vector3Int targetBlockPosition))
         {
@@ -38,7 +36,7 @@ public class ItemTypeSeed : Item
                 ItemsInfoBean itemsInfo = GetItemsInfo(itemData.itemId);
                 BlockTypeEnum plantBlockType = (BlockTypeEnum)itemsInfo.type_id;
                 //初始化meta数据
-                string metaData = BlockBasePlant.ToMetaData(0, false);
+                string metaData = BlockBaseCrop.ToMetaData(0, false);
                 //替换为种植
                 chunkForHit.SetBlockForLocal(upLocalPosition, plantBlockType, DirectionEnum.UP, metaData);
             }
