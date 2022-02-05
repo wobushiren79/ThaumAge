@@ -42,6 +42,15 @@
                     "initialStateCheck": false
                 },
                 {
+                    "name": "UseF",
+                    "type": "Button",
+                    "id": "2198c02c-14be-4198-a9df-85a424fcbe3a",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "Jump",
                     "type": "Button",
                     "id": "b600098a-4e06-4d35-ae95-358442be91b0",
@@ -353,6 +362,17 @@
                     "processors": "",
                     "groups": "Keyboard&Mouse",
                     "action": "UseR",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "c0d2c283-632e-44fa-9072-d766913f8162",
+                    "path": "<Keyboard>/f",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "UseF",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

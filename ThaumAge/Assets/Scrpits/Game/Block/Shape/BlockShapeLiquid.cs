@@ -6,6 +6,7 @@ public class BlockShapeLiquid : BlockShapeCube
 {
     public override void InitData(Block block)
     {
+        base.InitData(block);
         uvsAdd = new Vector2[]
         {
             new Vector2(0,0),

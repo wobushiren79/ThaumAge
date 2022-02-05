@@ -46,12 +46,18 @@ public class Item
     /// </summary>
     /// <param name="user"></param>
     /// <param name="itemsData"></param>
-    /// <param name="type">0鼠标左键使用 1鼠标右键使用</param>
+    /// <param name="type">0鼠标左键使用 1鼠标右键使用 2F交互</param>
     public virtual void Use(GameObject user, ItemsBean itemsData, int type)
     {
         Player player = user.GetComponent<Player>();
         if (player)
         {
+            //如果是F键交互
+            if (type == 2)
+            {
+                UseForInteractive(player);
+                return;
+            }
             UseForPlayer(player, itemsData, type);
         }
         else
@@ -59,6 +65,32 @@ public class Item
             UseForOther(user, itemsData, type);
         }
     }
+
+    /// <summary>
+    /// 使用 交互
+    /// </summary>
+    protected virtual void UseForInteractive(Player player)
+    {
+        //检测玩家前方是否有方块
+        if (player.playerRay.RayToChunkBlock(out RaycastHit hit, out Vector3Int targetBlockPosition))
+        {
+            Chunk chunkForHit = hit.collider.GetComponentInParent<Chunk>();
+            if (chunkForHit)
+            {
+                //获取位置和方向
+                player.playerRay.GetHitPositionAndDirection(hit, out Vector3Int targetPosition, out Vector3Int closePosition, out DirectionEnum direction);
+
+                Vector3Int localPosition = targetPosition - chunkForHit.chunkData.positionForWorld;
+                //获取原位置方块
+                Block tagetBlock = chunkForHit.chunkData.GetBlockForLocal(localPosition);
+                if (tagetBlock.blockInfo.interactive_state == 1)
+                {
+                    tagetBlock.Interactive();
+                }
+            }
+        }
+    }
+
 
     protected virtual void UseForPlayer(Player player, ItemsBean itemsData, int type)
     {
@@ -71,7 +103,7 @@ public class Item
                 //获取位置和方向
                 player.playerRay.GetHitPositionAndDirection(hit, out Vector3Int targetPosition, out Vector3Int closePosition, out DirectionEnum direction);
                 //挖掘
-                BreakTarget(itemsData.itemId, targetPosition);
+                BreakTarget(itemsData, targetPosition);
             }
         }
     }
@@ -89,8 +121,17 @@ public class Item
         Player player = GameHandler.Instance.manager.player;
         if (player.playerRay.RayToChunkBlock(out RaycastHit hit, out Vector3Int targetBlockPosition))
         {
-            //展示目标位置
-            GameHandler.Instance.manager.playerTargetBlock.Show(targetBlockPosition);
+            Chunk chunkForHit = hit.collider.GetComponentInParent<Chunk>();
+            if (chunkForHit)
+            {
+                //获取位置和方向
+                player.playerRay.GetHitPositionAndDirection(hit, out Vector3Int targetPosition, out Vector3Int closePosition, out DirectionEnum direction);
+                Vector3Int localPosition = targetPosition - chunkForHit.chunkData.positionForWorld;
+                //获取原位置方块
+                Block tagetBlock = chunkForHit.chunkData.GetBlockForLocal(localPosition);
+                //展示目标位置
+                GameHandler.Instance.manager.playerTargetBlock.Show(targetBlockPosition, tagetBlock.blockInfo.interactive_state == 1);
+            }
         }
         else
         {
@@ -102,7 +143,7 @@ public class Item
     /// <summary>
     /// 破碎目标
     /// </summary>
-    public virtual void BreakTarget(long breakItemId, Vector3Int targetPosition)
+    public virtual void BreakTarget(ItemsBean itemsData, Vector3Int targetPosition)
     {
         //获取原位置方块
         WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(targetPosition, out Block oldBlock, out DirectionEnum oldBlockDirection, out Chunk targetChunk);
@@ -111,7 +152,25 @@ public class Item
         //如果原位置是空则不做处理
         if (oldBlock == null || oldBlock.blockType == BlockTypeEnum.None)
             return;
-        BlockCptBreak BlockCptBreak = BlockHandler.Instance.BreakBlock(targetPosition, oldBlock, GetBreakDamage(breakItemId, oldBlock));
+        //获取破坏值
+        int breakDamage = GetBreakDamage(itemsData, oldBlock);
+        //扣除道具耐久
+        if (breakDamage > 0 && this is ItemBaseTool itemTool)
+        {
+            ItemsDetailsToolBean itemsDetailsTool = itemsData.GetMetaData<ItemsDetailsToolBean>();
+            //如果已经没有耐久了 则不造成伤害
+            if (itemsDetailsTool.life <= 0)
+            {
+                breakDamage = 0;
+            }
+            itemsDetailsTool.AddLife(-1);
+            //保存数据
+            itemsData.SetMetaData(itemsDetailsTool);
+            //回调
+            EventHandler.Instance.TriggerEvent(EventsInfo.ItemsBean_MetaChange, itemsData);   
+        }
+
+        BlockCptBreak BlockCptBreak = BlockHandler.Instance.BreakBlock(targetPosition, oldBlock, breakDamage);
         if (BlockCptBreak.blockLife <= 0)
         {
             //移除破碎效果
@@ -155,13 +214,22 @@ public class Item
     /// <summary>
     /// 获取道具破坏的伤害
     /// </summary>
-    public virtual int GetBreakDamage(long breakItemId, Block breakBlock)
+    public virtual int GetBreakDamage(ItemsBean itemsData, Block breakBlock)
     {
         //检测是否能造成伤害
-        bool canBreak = breakBlock.blockInfo.CheckCanBreak(breakItemId);
+        bool canBreak = breakBlock.blockInfo.CheckCanBreak(itemsData.itemId);
         if (canBreak)
             return 1;
         else
             return 0;
+    }
+
+    /// <summary>
+    /// 获取道具详情数据
+    /// </summary>
+    /// <returns></returns>
+    public virtual ItemsDetailsBean GetItemsDetailsBean(long itemId)
+    {
+        return new ItemsDetailsBean();
     }
 }

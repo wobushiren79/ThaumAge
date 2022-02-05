@@ -12,6 +12,12 @@ public partial class UIGameUserDetails : UIGameCommonNormal,IRadioGroupCallBack
         ui_Labels.SetCallBack(this);
     }
 
+    protected void Start()
+    {
+        ui_Labels.SetCallBack(this);
+        ui_Labels.SetPosition(labelIndex, true);
+    }
+
     public override void OpenUI()
     {
         base.OpenUI();
@@ -38,15 +44,13 @@ public partial class UIGameUserDetails : UIGameCommonNormal,IRadioGroupCallBack
         }
     }
 
-    public override void OnClickForButton(Button viewButton)
+    /// <summary>
+    /// 设置选中的类型
+    /// </summary>
+    /// <param name="selectType"></param>
+    public void SetSelectType(int selectType)
     {
-        base.OnClickForButton(viewButton);
-
-    }
-    protected void Start()
-    {
-        ui_Labels.SetCallBack(this);
-        ui_Labels.SetPosition(labelIndex, true);
+        ui_Labels.SetPosition(selectType, true);
     }
 
     public void SetText()

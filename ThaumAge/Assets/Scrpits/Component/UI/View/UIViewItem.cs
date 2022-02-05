@@ -11,8 +11,6 @@ public partial class UIViewItem : BaseUIView,
     IBeginDragHandler, IDragHandler, IEndDragHandler, ICanvasRaycastFilter,
     IPointerClickHandler, IPointerUpHandler, IPointerDownHandler
 {
-    public Image ui_IVIcon;
-    public Text ui_TVNumber;
 
     //返回原始位置的时间
     protected float timeForBackOriginal = 0.25f;
@@ -67,6 +65,32 @@ public partial class UIViewItem : BaseUIView,
         {
             SetIcon(itemsInfo.icon_key);
             SetNumber(itemNumber, itemsInfo.max_number);
+            SetLife();
+        }
+    }
+
+    /// <summary>
+    /// 设置耐久
+    /// </summary>
+    public void SetLife()
+    {
+        if (itemsInfo.life == 0)
+        {
+            //如果没有生命值 则没有耐久
+            ui_Life.ShowObj(false);
+        }
+        else
+        {
+            if (!meta.IsNull())
+            {
+                ItemsDetailsToolBean itemsDetails = ItemsBean.GetMetaData<ItemsDetailsToolBean>(meta);
+                ui_Life.value = (float)itemsDetails.life / itemsInfo.life;
+                ui_Life.ShowObj(true);
+            }
+            else
+            {
+                ui_Life.ShowObj(false);
+            }          
         }
     }
 

@@ -36,6 +36,7 @@ public partial class UIViewItemContainer : BaseUIView
 
     protected float timeForAddViewItem = 0.2f;
     protected float timeForRemoveViewItem = 0.2f;
+
     public override void Awake()
     {
         base.Awake();
@@ -44,10 +45,34 @@ public partial class UIViewItemContainer : BaseUIView
         SetSelectState(false);
     }
 
+    public override void OnEnable()
+    {
+        base.OnEnable();
+        EventHandler.Instance.RegisterEvent<ItemsBean>(EventsInfo.ItemsBean_MetaChange, CallBackForItemsDataMetaChange);
+    }
+
+    public override void OnDisable()
+    {
+        base.OnDisable();
+        EventHandler.Instance.UnRegisterEvent<ItemsBean>(EventsInfo.ItemsBean_MetaChange, CallBackForItemsDataMetaChange);
+    }
+
     public override void OnDestroy()
     {
         base.OnDestroy();
         callBackForSetViewItem = null;
+    }
+
+    /// <summary>
+    /// 道具数据发生改变的回调
+    /// </summary>
+    public void CallBackForItemsDataMetaChange(ItemsBean itemsData)
+    {
+        if (itemsData != this.itemsData)
+            return;
+        if (currentViewItem == null)
+            return;
+        currentViewItem.SetData(itemsData.itemId, itemsData.number, itemsData.meta);
     }
 
     /// <summary>

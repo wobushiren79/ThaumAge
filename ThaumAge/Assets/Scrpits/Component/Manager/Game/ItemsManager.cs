@@ -99,7 +99,16 @@ public class ItemsManager : BaseManager,
     }
     public List<ItemsSynthesisBean> GetItemsSynthesisByType(ItemsSynthesisTypeEnum type)
     {
-        return GetItemsSynthesisByType(new ItemsSynthesisTypeEnum[] { type });
+        ItemsSynthesisTypeEnum[] listType;
+        if (type == ItemsSynthesisTypeEnum.Self)
+        {
+            listType = new ItemsSynthesisTypeEnum[] { type };
+        }
+        else
+        {
+            listType = new ItemsSynthesisTypeEnum[] { ItemsSynthesisTypeEnum.Self, type };
+        }
+        return GetItemsSynthesisByType(listType);
     }
 
 

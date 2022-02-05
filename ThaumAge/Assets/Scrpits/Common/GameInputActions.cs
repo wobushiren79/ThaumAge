@@ -64,6 +64,15 @@ public partial class @GameInputActions : IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
+                    ""name"": ""UseF"",
+                    ""type"": ""Button"",
+                    ""id"": ""2198c02c-14be-4198-a9df-85a424fcbe3a"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
                     ""name"": ""Jump"",
                     ""type"": ""Button"",
                     ""id"": ""b600098a-4e06-4d35-ae95-358442be91b0"",
@@ -375,6 +384,17 @@ public partial class @GameInputActions : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": ""Keyboard&Mouse"",
                     ""action"": ""UseR"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c0d2c283-632e-44fa-9072-d766913f8162"",
+                    ""path"": ""<Keyboard>/f"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""UseF"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -1330,6 +1350,7 @@ public partial class @GameInputActions : IInputActionCollection2, IDisposable
         m_Player_Look = m_Player.FindAction("Look", throwIfNotFound: true);
         m_Player_UseL = m_Player.FindAction("UseL", throwIfNotFound: true);
         m_Player_UseR = m_Player.FindAction("UseR", throwIfNotFound: true);
+        m_Player_UseF = m_Player.FindAction("UseF", throwIfNotFound: true);
         m_Player_Jump = m_Player.FindAction("Jump", throwIfNotFound: true);
         m_Player_CameraDistance = m_Player.FindAction("CameraDistance", throwIfNotFound: true);
         m_Player_UserDetails = m_Player.FindAction("UserDetails", throwIfNotFound: true);
@@ -1424,6 +1445,7 @@ public partial class @GameInputActions : IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Look;
     private readonly InputAction m_Player_UseL;
     private readonly InputAction m_Player_UseR;
+    private readonly InputAction m_Player_UseF;
     private readonly InputAction m_Player_Jump;
     private readonly InputAction m_Player_CameraDistance;
     private readonly InputAction m_Player_UserDetails;
@@ -1435,6 +1457,7 @@ public partial class @GameInputActions : IInputActionCollection2, IDisposable
         public InputAction @Look => m_Wrapper.m_Player_Look;
         public InputAction @UseL => m_Wrapper.m_Player_UseL;
         public InputAction @UseR => m_Wrapper.m_Player_UseR;
+        public InputAction @UseF => m_Wrapper.m_Player_UseF;
         public InputAction @Jump => m_Wrapper.m_Player_Jump;
         public InputAction @CameraDistance => m_Wrapper.m_Player_CameraDistance;
         public InputAction @UserDetails => m_Wrapper.m_Player_UserDetails;
@@ -1459,6 +1482,9 @@ public partial class @GameInputActions : IInputActionCollection2, IDisposable
                 @UseR.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnUseR;
                 @UseR.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnUseR;
                 @UseR.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnUseR;
+                @UseF.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnUseF;
+                @UseF.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnUseF;
+                @UseF.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnUseF;
                 @Jump.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnJump;
                 @Jump.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnJump;
                 @Jump.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnJump;
@@ -1484,6 +1510,9 @@ public partial class @GameInputActions : IInputActionCollection2, IDisposable
                 @UseR.started += instance.OnUseR;
                 @UseR.performed += instance.OnUseR;
                 @UseR.canceled += instance.OnUseR;
+                @UseF.started += instance.OnUseF;
+                @UseF.performed += instance.OnUseF;
+                @UseF.canceled += instance.OnUseF;
                 @Jump.started += instance.OnJump;
                 @Jump.performed += instance.OnJump;
                 @Jump.canceled += instance.OnJump;
@@ -1781,6 +1810,7 @@ public partial class @GameInputActions : IInputActionCollection2, IDisposable
         void OnLook(InputAction.CallbackContext context);
         void OnUseL(InputAction.CallbackContext context);
         void OnUseR(InputAction.CallbackContext context);
+        void OnUseF(InputAction.CallbackContext context);
         void OnJump(InputAction.CallbackContext context);
         void OnCameraDistance(InputAction.CallbackContext context);
         void OnUserDetails(InputAction.CallbackContext context);

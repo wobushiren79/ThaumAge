@@ -100,6 +100,14 @@ public class Block
     }
 
     /// <summary>
+    /// 互动
+    /// </summary>
+    public virtual void Interactive()
+    {
+
+    }
+
+    /// <summary>
     /// 构建方块
     /// </summary>
     /// <param name="verts"></param>

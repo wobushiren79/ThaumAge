@@ -22,6 +22,7 @@ public class ControlForPlayer : ControlForBase
 
     private InputAction inputActionUseL;
     private InputAction inputActionUseR;
+    private InputAction inputActionUseF;
 
     private InputAction inputActionJump;
     private InputAction inputActionMove;
@@ -47,6 +48,9 @@ public class ControlForPlayer : ControlForBase
         inputActionUseR.started += HandleForUseR;
         inputActionUseR.canceled += HandleForUseEnd;
 
+        inputActionUseF = InputHandler.Instance.manager.GetInputPlayerData("UseF");
+        inputActionUseF.started += HandleForUseF;
+
         inputActionuserDetailsData = InputHandler.Instance.manager.GetInputPlayerData("UserDetails");
         inputActionuserDetailsData.started += HandleForUserDetails;
         inputActionMove = InputHandler.Instance.manager.GetInputPlayerData("Move");
@@ -71,6 +75,7 @@ public class ControlForPlayer : ControlForBase
         inputActionUseL.canceled -= HandleForUseEnd;
         inputActionUseR.started -= HandleForUseR;
         inputActionUseR.canceled -= HandleForUseEnd;
+        inputActionUseF.started -= HandleForUseF;
         inputActionuserDetailsData.started -= HandleForUserDetails;
     }
 
@@ -92,7 +97,8 @@ public class ControlForPlayer : ControlForBase
     {
         if (!isActiveAndEnabled)
             return;
-        UIHandler.Instance.OpenUIAndCloseOther<UIGameUserDetails>(UIEnum.GameUserDetails);
+        UIGameUserDetails uiGameUserDetails = UIHandler.Instance.OpenUIAndCloseOther<UIGameUserDetails>(UIEnum.GameUserDetails);
+        uiGameUserDetails.ui_ViewSynthesis.SetDataType(ItemsSynthesisTypeEnum.Self);
     }
 
     /// <summary>
@@ -163,7 +169,7 @@ public class ControlForPlayer : ControlForBase
         if (isUseItem)
         {
             timeForUseItem += Time.deltaTime;
-            if (timeForUseItem > 0.5f)
+            if (timeForUseItem > 0.25f)
             {
                 HandleForUseL(new CallbackContext());
             }
@@ -191,13 +197,22 @@ public class ControlForPlayer : ControlForBase
         HandleForUse(callback, 1);
     }
 
-    public void HandleForUse(CallbackContext callback, int type)
+    /// <summary>
+    /// 互动处理
+    /// </summary>
+    /// <param name="callback"></param>
+    public void HandleForUseF(CallbackContext callback)
+    {
+        HandleForUse(callback, 2, false);
+    }
+
+    public void HandleForUse(CallbackContext callback, int type, bool isUserItem = true)
     {
         if (!isActiveAndEnabled)
             return;
         if (UGUIUtil.IsPointerUI())
             return;
-        isUseItem = true;
+        this.isUseItem = isUserItem;
         timeForUseItem = 0;
         //获取道具栏上的物品
         UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();

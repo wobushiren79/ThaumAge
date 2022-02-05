@@ -288,10 +288,10 @@
         "m_Expanded": true,
         "m_Position": {
             "serializedVersion": "2",
-            "x": -1279.0,
-            "y": 249.00003051757813,
-            "width": 134.0,
-            "height": 34.0
+            "x": -1582.9998779296875,
+            "y": 229.00001525878907,
+            "width": 134.0001220703125,
+            "height": 33.99998474121094
         }
     },
     "m_Slots": [
@@ -410,10 +410,10 @@
         "m_Expanded": true,
         "m_Position": {
             "serializedVersion": "2",
-            "x": -1091.0,
-            "y": -211.99998474121095,
-            "width": 208.00006103515626,
-            "height": 301.9999694824219
+            "x": -1066.0,
+            "y": -394.0,
+            "width": 207.99993896484376,
+            "height": 302.0
         }
     },
     "m_Slots": [
@@ -840,8 +840,8 @@
     "m_Type": "UnityEditor.Rendering.HighDefinition.ShaderGraph.SystemData",
     "m_ObjectId": "7175d4c160ce4e8d8e2c7869c8f8ed85",
     "m_MaterialNeedsUpdateHash": 1,
-    "m_SurfaceType": 0,
-    "m_RenderingPass": 1,
+    "m_SurfaceType": 1,
+    "m_RenderingPass": 4,
     "m_BlendMode": 0,
     "m_ZTest": 4,
     "m_ZWrite": false,
@@ -864,7 +864,7 @@
     "m_TessellationBackFaceCullEpsilon": -0.25,
     "m_TessellationMaxDisplacement": 0.009999999776482582,
     "m_Version": 1,
-    "inspectorFoldoutMask": 9
+    "inspectorFoldoutMask": 1
 }
 
 {
@@ -1314,8 +1314,8 @@
         "m_Expanded": true,
         "m_Position": {
             "serializedVersion": "2",
-            "x": -1402.0,
-            "y": -165.00001525878907,
+            "x": -1226.0,
+            "y": -472.0,
             "width": 135.0,
             "height": 34.0
         }
@@ -1399,10 +1399,10 @@
         "m_Expanded": true,
         "m_Position": {
             "serializedVersion": "2",
-            "x": -1066.0,
-            "y": 137.0,
-            "width": 208.00006103515626,
-            "height": 435.0
+            "x": -1298.999755859375,
+            "y": 181.00003051757813,
+            "width": 207.9998779296875,
+            "height": 434.9999084472656
         }
     },
     "m_Slots": [
@@ -1479,8 +1479,8 @@
         "m_Expanded": true,
         "m_Position": {
             "serializedVersion": "2",
-            "x": -539.0000610351563,
-            "y": -163.0000457763672,
+            "x": -509.0,
+            "y": -165.0,
             "width": 208.0,
             "height": 326.0
         }

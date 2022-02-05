@@ -27,6 +27,7 @@ public class BlockShapeCross : BlockShape
 
     public override void InitData(Block block)
     {
+        base.InitData(block);
         Vector2 uvStartPosition = GetUVStartPosition(block);
 
         uvsAdd = new Vector2[]

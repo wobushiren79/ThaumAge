@@ -1,7 +1,7 @@
 ﻿using UnityEditor;
 using UnityEngine;
 
-public class ItemTypeHoe : Item
+public class ItemTypeHoe : ItemBaseTool
 {
     protected override void UseForPlayer(Player player, ItemsBean itemData,int type)
     {
@@ -28,6 +28,21 @@ public class ItemTypeHoe : Item
                 //如果上方有方块 则无法使用锄头
                 if (upBlock != null && upBlock.blockType != BlockTypeEnum.None)
                     return;
+                //扣除道具耐久
+                if (this is ItemBaseTool itemTool)
+                {
+                    ItemsDetailsToolBean itemsDetailsTool = itemData.GetMetaData<ItemsDetailsToolBean>();
+                    //如果没有耐久 不能锄地
+                    if (itemsDetailsTool.life <=0)
+                    {
+                        return;
+                    }
+                    itemsDetailsTool.AddLife(-1);
+                    //保存数据
+                    itemData.SetMetaData(itemsDetailsTool);
+                    //回调
+                    EventHandler.Instance.TriggerEvent(EventsInfo.ItemsBean_MetaChange, itemData);
+                }
 
                 Vector3 face = Vector3.Normalize(player.transform.position - hit.point);
                 int rotate = Mathf.Abs(face.x) > Mathf.Abs(face.z) ? 0 : 1;
@@ -38,6 +53,8 @@ public class ItemTypeHoe : Item
 
                 //播放粒子特效
                 BlockCptBreak.PlayBlockCptBreakEffect(ploughBlockType, targetPosition + new Vector3(0.5f, 0.5f, 0.5f));
+
+
             }
         }
     }

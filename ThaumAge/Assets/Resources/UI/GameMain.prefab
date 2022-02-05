@@ -308,6 +308,8 @@ MonoBehaviour:
   ui_Shortcuts: {fileID: 4874338221623478696}
   ui_Details: {fileID: 5903972708633001886}
   ui_Setting: {fileID: 3773307084018002341}
+  ui_Interactive: {fileID: 0}
+  ui_InteractiveText: {fileID: 0}
 --- !u!1 &6651213862230659601
 GameObject:
   m_ObjectHideFlags: 0

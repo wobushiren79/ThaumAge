@@ -12,6 +12,7 @@ public partial class UIViewSynthesis : BaseUIView
     //素材UI
     protected List<UIViewSynthesisMaterial> listUIMaterial;
 
+    protected ItemsSynthesisTypeEnum itemsSynthesisType = ItemsSynthesisTypeEnum.Self;
     public override void Awake()
     {
         base.Awake();
@@ -23,15 +24,26 @@ public partial class UIViewSynthesis : BaseUIView
     {
         base.OpenUI();
         this.RegisterEvent<int>(EventsInfo.UIViewSynthesis_SetSelect, SetSelect);
-        SetSelect(indexSelect);
+        this.RegisterEvent<ItemsSynthesisTypeEnum>(EventsInfo.UIViewSynthesis_SetInitData, SetDataType);
+        indexSelect = 0;
     }
 
     public override void RefreshUI()
     {
         base.RefreshUI();
-        listSynthesisData = ItemsHandler.Instance.manager.GetItemsSynthesisByType(ItemsSynthesisTypeEnum.Self);
+        listSynthesisData = ItemsHandler.Instance.manager.GetItemsSynthesisByType(itemsSynthesisType);
         ui_SynthesisList.SetCellCount(listSynthesisData.Count);
         RefreshMaterials();
+        SetSelect(indexSelect);
+    }
+    
+    /// <summary>
+    /// 设置数据类型
+    /// </summary>
+    /// <param name="itemsSynthesisType"></param>
+    public void SetDataType(ItemsSynthesisTypeEnum itemsSynthesisType)
+    {
+        this.itemsSynthesisType = itemsSynthesisType;
     }
 
     public override void OnClickForButton(Button viewButton)

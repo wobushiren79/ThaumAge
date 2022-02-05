@@ -39,6 +39,12 @@ public class ItemTypeSeed : Item
                 string metaData = BlockBaseCrop.ToMetaData(0, false);
                 //替换为种植
                 chunkForHit.SetBlockForLocal(upLocalPosition, plantBlockType, DirectionEnum.UP, metaData);
+
+                //扣除道具
+                UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();
+                userData.AddItems(itemData, -1);
+                //刷新UI
+                UIHandler.Instance.RefreshUI();
             }
         }
     }

@@ -12,8 +12,8 @@ public class ItemsHandler : BaseHandler<ItemsHandler, ItemsManager>
     /// </summary>
     /// <param name="user"></param>
     /// <param name="itemsData"></param>
-    /// <param name="type"></param>
-    public void UseItem(GameObject user, ItemsBean itemsData,int type)
+    /// <param name="type">0 左键 1右键 2F建</param>
+    public void UseItem(GameObject user, ItemsBean itemsData, int type)
     {
         Item item;
         if (itemsData == null || itemsData.itemId == 0)
@@ -29,7 +29,14 @@ public class ItemsHandler : BaseHandler<ItemsHandler, ItemsManager>
             item = manager.GetRegisterItem((ItemsTypeEnum)itemsInfo.items_type);
         }
         item.Use(user, itemsData, type);
-        item.UseForAnim(user, itemsData);
+        if (type == 2)
+        {
+            //如果是交互 则不播放动画
+        }
+        else
+        {
+            item.UseForAnim(user, itemsData);
+        }
     }
 
 
@@ -121,6 +128,8 @@ public class ItemsHandler : BaseHandler<ItemsHandler, ItemsManager>
         {
             if (spIcon == null)
             {
+                if (image == null)
+                    return;
                 IconHandler.Instance.GetUnKnowSprite((spIcon) =>
                 {
                     image.sprite = spIcon;
@@ -129,6 +138,8 @@ public class ItemsHandler : BaseHandler<ItemsHandler, ItemsManager>
             }
             else
             {
+                if (image == null)
+                    return;
                 image.sprite = spIcon;
                 complete?.Invoke(spIcon);
             }
@@ -141,6 +152,8 @@ public class ItemsHandler : BaseHandler<ItemsHandler, ItemsManager>
         {
             if (spIcon == null)
             {
+                if (image == null)
+                    return;
                 IconHandler.Instance.GetUnKnowSprite((spIcon) =>
                 {
                     image.sprite = spIcon;
@@ -149,6 +162,8 @@ public class ItemsHandler : BaseHandler<ItemsHandler, ItemsManager>
             }
             else
             {
+                if (image == null)
+                    return;
                 image.sprite = spIcon;
                 complete?.Invoke(spIcon);
             }

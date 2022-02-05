@@ -28,7 +28,7 @@ public class BaseUIInit : BaseMonoBehaviour
     }
     public virtual void OnEnable()
     {
-        
+
     }
 
     public virtual void OpenUI()
@@ -157,7 +157,7 @@ public class BaseUIInit : BaseMonoBehaviour
     {
         EventHandler.Instance.TriggerEvent(eventName);
     }
-    public virtual void TriggerEvent<A>(string eventName,A data)
+    public virtual void TriggerEvent<A>(string eventName, A data)
     {
         EventHandler.Instance.TriggerEvent(eventName, data);
     }

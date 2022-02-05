@@ -129,7 +129,7 @@ public class UIHandler : BaseUIHandler<UIHandler, UIManager>
     /// 通过UI的名字开启UI
     /// </summary>
     /// <param name="uiName"></param>
-    public T OpenUI<T>(string uiName, int layer = -1) where T : BaseUIComponent
+    public T OpenUI<T>(string uiName,Action<T> actionBeforeOpen = null, int layer = -1) where T : BaseUIComponent
     {
         if (uiName.IsNull())
             return null;
@@ -143,6 +143,7 @@ public class UIHandler : BaseUIHandler<UIHandler, UIManager>
                 {
                     itemUI.transform.SetSiblingIndex(layer);
                 }
+                actionBeforeOpen?.Invoke(itemUI as T);
                 itemUI.OpenUI();
                 return itemUI as T;
             }
@@ -150,6 +151,7 @@ public class UIHandler : BaseUIHandler<UIHandler, UIManager>
         T uiComponent = manager.CreateUI<T>(uiName, layer);
         if (uiComponent)
         {
+            actionBeforeOpen?.Invoke(uiComponent as T);
             uiComponent.OpenUI();
             return uiComponent;
         }
@@ -216,7 +218,7 @@ public class UIHandler : BaseUIHandler<UIHandler, UIManager>
     /// 通过UI的名字开启UI并关闭其他UI
     /// </summary>
     /// <param name="uiName"></param>
-    public T OpenUIAndCloseOther<T>(string uiName, int layer = -1) where T : BaseUIComponent
+    public T OpenUIAndCloseOther<T>(string uiName, Action<T> actionBeforeOpen = null, int layer = -1) where T : BaseUIComponent
     {
         if (manager.uiList == null || uiName.IsNull())
             return null;
@@ -230,7 +232,7 @@ public class UIHandler : BaseUIHandler<UIHandler, UIManager>
                     itemUI.CloseUI();
             }
         }
-        return OpenUI<T>(uiName, layer);
+        return OpenUI<T>(uiName, actionBeforeOpen, layer);
     }
 
     /// <summary>
@@ -239,16 +241,16 @@ public class UIHandler : BaseUIHandler<UIHandler, UIManager>
     /// <typeparam name="T"></typeparam>
     /// <param name="ui"></param>
     /// <returns></returns>
-    public T OpenUIAndCloseOther<T>(UIEnum uiEnum, int layer = -1) where T : BaseUIComponent
+    public T OpenUIAndCloseOther<T>(UIEnum uiEnum, Action<T> actionBeforeOpen = null, int layer = -1) where T : BaseUIComponent
     {
-        return OpenUIAndCloseOther<T>(uiEnum.GetEnumName(), layer);
+        return OpenUIAndCloseOther<T>(uiEnum.GetEnumName(), actionBeforeOpen, layer);
     }
 
     /// <summary>
     /// 通过UI开启UI并关闭其他UI
     /// </summary>
     /// <param name="uiName"></param>
-    public void OpenUIAndCloseOther(BaseUIComponent uiComponent, int layer = -1)
+    public void OpenUIAndCloseOther(BaseUIComponent uiComponent, Action<BaseUIComponent> actionBeforeOpen = null, int layer = -1)
     {
         if (manager.uiList == null || uiComponent == null)
             return;
@@ -270,6 +272,7 @@ public class UIHandler : BaseUIHandler<UIHandler, UIManager>
                 {
                     itemUI.transform.SetSiblingIndex(layer);
                 }
+                actionBeforeOpen?.Invoke(itemUI);
                 itemUI.OpenUI();
             }
         }

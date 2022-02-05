@@ -18,7 +18,6 @@ public class BaseUIView : BaseUIInit
     public override void OnEnable()
     {
         base.OnEnable();
-        RefreshUI();
         RegisterInputAction();
     }
 
