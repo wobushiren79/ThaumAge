@@ -126,6 +126,8 @@ public class BiomeHandler : BaseHandler<BiomeHandler, BiomeManager>
     /// <returns></returns>
     public int GetHeightData(Vector3Int wPos, BiomeInfoBean biomeInfo)
     {
+        if (biomeInfo == null)
+            return 10;
         return GetHeightData(wPos, biomeInfo.frequency, biomeInfo.amplitude, biomeInfo.minHeight);
     }
 

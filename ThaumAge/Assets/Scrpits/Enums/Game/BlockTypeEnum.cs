@@ -55,7 +55,8 @@ public enum BlockTypeEnum
 
     Cactus = 4001,    //仙人掌
 
-    PlantPotato = 5001,//种植 土豆
+    CropPotato = 5001,//种植 土豆
+    CropCorn = 5002,//种植 玉米
 
     StairsWood = 6001,//木楼梯
     CraftingTableSimple = 6101,//简易制作台

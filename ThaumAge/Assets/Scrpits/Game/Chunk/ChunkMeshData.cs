@@ -44,6 +44,10 @@ public class ChunkMeshData
         dicIndexData = new Dictionary<Vector3, ChunkMeshIndexData>();
 
         refreshNumber = 0;
+
+        //默认构建一个触发collider 防止Chunk没有触发时的报错
+        vertsTrigger.AddRange(new List<Vector3> { new Vector3(0, -9999,0), new Vector3(1, -9999, 0), new Vector3(0, -9999, 1) });
+        trisTrigger.AddRange(new List<int> { 0,1,2 });
     }
 
     /// <summary>

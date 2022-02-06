@@ -4,16 +4,46 @@ using UnityEngine;
 
 public class BlockBaseCrop : BlockBasePlant
 {
+    protected List<Vector2Int[]> listGrowUV;
+
     public override void InitBlock(Chunk chunk, Vector3Int localPosition)
     {
         base.InitBlock(chunk, localPosition);
-        this.InitPlantData(chunk, localPosition);
+        this.InitCropData(chunk, localPosition);
     }
 
     public override void EventBlockUpdateForMin(Chunk chunk, Vector3Int localPosition)
     {
         base.EventBlockUpdateForMin(chunk, localPosition);
-        this.RefreshPlant(chunk, localPosition, blockInfo);
+        this.RefreshCrop(chunk, localPosition, blockInfo);
+    }
+
+    /// <summary>
+    /// 获取生长UV
+    /// </summary>
+    /// <returns></returns>
+    public virtual List<Vector2Int[]> GetListGrowUV()
+    {
+        if (listGrowUV == null)
+        {
+            listGrowUV = new List<Vector2Int[]>();
+            string uvs = blockInfo.uv_position;
+            string[] arrayUV = uvs.SplitForArrayStr('|');
+            for (int i = 0; i < arrayUV.Length; i++)
+            {
+                string itemUVData = arrayUV[i];
+                string[] arrayUVDetails = itemUVData.SplitForArrayStr('&');
+                Vector2Int[] uvData = new Vector2Int[arrayUVDetails.Length];
+                for (int f = 0; f < arrayUVDetails.Length; f++)
+                {
+                    string itemUVDetails = arrayUVDetails[f];
+                    int[] uvPosition = itemUVDetails.SplitForArrayInt(',');
+                    uvData[f] = new Vector2Int(uvPosition[0], uvPosition[1]);
+                }
+                listGrowUV.Add(uvData);
+            }
+        }
+        return listGrowUV;
     }
 
     /// <summary>
@@ -28,9 +58,9 @@ public class BlockBaseCrop : BlockBasePlant
             listData.Add(new ItemsBean(itemsInfo.id, 1));
             return listData;
         }
-        FromMetaData(blockData.meta, out int growPro, out bool isStartGrow);
+        BlockCropBean blockCrop = FromMetaData<BlockCropBean>(blockData.meta);
         Vector2Int[] uvPosition = blockInfo.GetUVPosition();
-        if (growPro >= uvPosition.Length - 1)
+        if (blockCrop.growPro >= uvPosition.Length - 1)
         {
             //已经成熟
             listData = base.GetDropItems(blockData);
@@ -48,7 +78,7 @@ public class BlockBaseCrop : BlockBasePlant
     /// 初始化植物数据
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public void InitPlantData(Chunk chunk, Vector3Int localPosition)
+    public void InitCropData(Chunk chunk, Vector3Int localPosition)
     {
         chunk.RegisterEventUpdate(localPosition, TimeUpdateEventTypeEnum.Min);
     }
@@ -57,51 +87,65 @@ public class BlockBaseCrop : BlockBasePlant
     /// 刷新植物
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public void RefreshPlant(Chunk chunk, Vector3Int localPosition, BlockInfoBean blockInfo)
+    public virtual void RefreshCrop(Chunk chunk, Vector3Int localPosition, BlockInfoBean blockInfo)
     {
         chunk.chunkData.GetBlockForLocal(localPosition, out Block block, out DirectionEnum direction);
 
         BlockBean blockData = chunk.GetBlockData(localPosition);
+        BlockCropBean blockCrop;
         if (blockData == null)
         {
-            string meta = ToMetaData(0, false);
+            blockCrop = new BlockCropBean();
+            blockCrop.growPro = 0;
+            blockCrop.isStartGrow = false;
+
+            string meta = ToMetaData(blockCrop);
             blockData = new BlockBean(localPosition, blockInfo.GetBlockType(), direction, meta);
             chunk.SetBlockData(blockData, false);
         }
         //获取成长周期
-        FromMetaData(blockData.meta, out int growPro, out bool isStartGrow);
+        blockCrop = FromMetaData<BlockCropBean>(blockData.meta);
         //成长周期+1
-        if (isStartGrow)
+        if (blockCrop.isStartGrow)
         {
             //是否开始生长
-            growPro++;
+            blockCrop.growPro++;
         }
         else
         {
-            isStartGrow = true;
+            blockCrop.isStartGrow = true;
         }
 
         //设置新数据
-        string newMeta = ToMetaData(growPro, isStartGrow);
+        string newMeta = ToMetaData(blockCrop);
         blockData.meta = newMeta;
         chunk.SetBlockData(blockData);
         //刷新
         WorldCreateHandler.Instance.HandleForUpdateChunk(chunk, localPosition, block, block, direction);
 
         //判断是否已经是最大生长周期
-        Vector2Int[] arrayUVData = blockInfo.GetUVPosition();
-        if (growPro >= arrayUVData.Length - 1)
+        int lifeCycle = GetCropLifeCycle();
+        if (blockCrop.growPro >= lifeCycle - 1)
         {
             chunk.UnRegisterEventUpdate(localPosition, TimeUpdateEventTypeEnum.Min);
         }
     }
 
+    /// <summary>
+    /// 获取作物的生长周期
+    /// </summary>
+    /// <returns></returns>
+    public virtual int GetCropLifeCycle()
+    {
+        List<Vector2Int[]> listGrowUV = GetListGrowUV();
+        return listGrowUV.Count;
+    }
 
     /// <summary>
     /// 初始化植物定点
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public static void InitPlantVert(Vector3[] vertsAdd)
+    public static void InitCropVert(Vector3[] vertsAdd)
     {
         //往下偏移的位置
         float offsetY = -1f / 16f;
@@ -115,15 +159,13 @@ public class BlockBaseCrop : BlockBasePlant
     /// 获取meta数据
     /// </summary>
     /// <returns></returns>
-    public static string ToMetaData(int growPro, bool isStartGrow)
+    public static string ToMetaData<T>(T blockCrop) where T : BlockCropBean
     {
-        return $"{growPro}:{isStartGrow}";
+        return JsonUtil.ToJson(blockCrop);
     }
 
-    public static void FromMetaData(string data, out int growPro, out bool isStartGrow)
+    public static T FromMetaData<T>(string data) where T : BlockCropBean
     {
-        string[] dataList = data.SplitForArrayStr(':');
-        growPro = int.Parse(dataList[0]);
-        isStartGrow = bool.Parse(dataList[1]);
+        return JsonUtil.FromJson<T>(data);
     }
 }

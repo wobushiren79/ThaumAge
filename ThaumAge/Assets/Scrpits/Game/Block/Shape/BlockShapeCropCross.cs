@@ -6,24 +6,24 @@ public class BlockShapeCropCross : BlockShapeCross
 {
     public BlockShapeCropCross() : base()
     {
-        BlockBaseCrop.InitPlantVert(vertsAdd);
+        BlockBaseCrop.InitCropVert(vertsAdd);
     }
 
     public override void BaseAddUVs(Chunk chunk, Vector3Int localPosition, DirectionEnum direction)
     {
-        Vector2[] uvsAdd = this.GetUVsAddForPlant(chunk, localPosition, block.blockInfo);
+        Vector2[] uvsAdd = this.GetUVsAddForCrop(chunk, localPosition, block.blockInfo);
         AddUVs(chunk.chunkMeshData.uvs, uvsAdd);
     }
 
     /// <summary>
     /// 获取UVAdd
     /// </summary>
-    public virtual Vector2[] GetUVsAddForPlant(Chunk chunk, Vector3Int localPosition, BlockInfoBean blockInfo)
+    public virtual Vector2[] GetUVsAddForCrop(Chunk chunk, Vector3Int localPosition, BlockInfoBean blockInfo)
     {
         BlockBean blockData = chunk.GetBlockData(localPosition);
-        BlockBaseCrop.FromMetaData(blockData.meta, out int growPro, out bool isStartGrow);
+        BlockCropBean blockCropData = BlockBaseCrop.FromMetaData<BlockCropBean>(blockData.meta);
 
-        Vector2 uvStartPosition = GetUVStartPosition(blockInfo, BlockShape.uvWidth, growPro);
+        Vector2 uvStartPosition = GetUVStartPosition(blockInfo, blockCropData);
         Vector2[] uvsAdd = new Vector2[]
         {
             new Vector2(uvStartPosition.x,uvStartPosition.y),
@@ -32,7 +32,7 @@ public class BlockShapeCropCross : BlockShapeCross
             new Vector2(uvStartPosition.x + uvWidth,uvStartPosition.y),
 
             new Vector2(uvStartPosition.x,uvStartPosition.y),
-            new Vector2(uvStartPosition.x,uvStartPosition.y + BlockShape.uvWidth),
+            new Vector2(uvStartPosition.x,uvStartPosition.y + uvWidth),
             new Vector2(uvStartPosition.x + uvWidth,uvStartPosition.y + uvWidth),
             new Vector2(uvStartPosition.x + uvWidth,uvStartPosition.y)
         };
@@ -42,23 +42,26 @@ public class BlockShapeCropCross : BlockShapeCross
     /// <summary>
     /// 获取生长UV
     /// </summary>
-    public virtual Vector2 GetUVStartPosition(BlockInfoBean blockInfo, float uvWidth, int growth)
+    public virtual Vector2 GetUVStartPosition(BlockInfoBean blockInfo, BlockCropBean blockCropData)
     {
-        Vector2Int[] arrayUVData = blockInfo.GetUVPosition();
+        BlockBaseCrop blockCrop = BlockHandler.Instance.manager.GetRegisterBlock(blockInfo.id) as BlockBaseCrop;
+        List<Vector2Int[]> listUVData = blockCrop.GetListGrowUV();
         Vector2 uvStartPosition;
-        if (arrayUVData.IsNull())
+        if (listUVData.IsNull())
         {
             uvStartPosition = Vector2.zero;
         }
-        else if (growth >= arrayUVData.Length)
+        else if (blockCropData.growPro >= blockCrop.GetCropLifeCycle())
         {
             //如果生长周期大于UV长度 则取最后一个
-            uvStartPosition = new Vector2(uvWidth * arrayUVData[arrayUVData.Length - 1].y, uvWidth * arrayUVData[arrayUVData.Length - 1].x);
+            Vector2Int[] itemUVData = listUVData[listUVData.Count - 1];
+            uvStartPosition = new Vector2(uvWidth * itemUVData[blockCropData.uvIndex].y, uvWidth * itemUVData[blockCropData.uvIndex].x);
         }
         else
         {
+            Vector2Int[] itemUVData = listUVData[blockCropData.growPro];
             //按生长周期取UV
-            uvStartPosition = new Vector2(uvWidth * arrayUVData[growth].y, uvWidth * arrayUVData[growth].x);
+            uvStartPosition = new Vector2(uvWidth * itemUVData[blockCropData.uvIndex].y, uvWidth * itemUVData[blockCropData.uvIndex].x);
         }
         return uvStartPosition;
     }
