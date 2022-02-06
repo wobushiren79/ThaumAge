@@ -39,7 +39,6 @@ public class GameLauncher : BaseLauncher
             //ĞŞ¸ÄÓÎÏ·×´Ì¬
             GameHandler.Instance.manager.SetGameState(GameStateEnum.Gaming);
         });
-
     }
 
     /// <summary>

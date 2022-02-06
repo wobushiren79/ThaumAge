@@ -659,7 +659,7 @@ public class BiomeCreateTool
     /// </summary>
     /// <param name="randomData"></param>
     /// <param name="startPosition"></param>
-    public static void AddDeadwood(uint randomData,float addRate, Vector3Int startPosition)
+    public static void AddDeadwood(uint randomData, float addRate, Vector3Int startPosition)
     {
         //生成概率
         float addRateRandom = WorldRandTools.GetValue(startPosition, randomData);
@@ -676,6 +676,56 @@ public class BiomeCreateTool
             }
         }
     }
+
+    /// <summary>
+    /// 增加矿石
+    /// </summary>
+    /// <param name="randomData"></param>
+    /// <param name="addRate"></param>
+    /// <param name="blockType"></param>
+    /// <param name="startPosition"></param>
+    public static void AddOre(uint randomData, float addRate, Vector3Int startPosition)
+    {
+        //生成概率
+        float addRateRandom = WorldRandTools.GetValue(startPosition, randomData);
+
+        if (addRateRandom < addRate)
+        {
+            //高度
+            int range = 2;
+            //不能直接用 startPosition 因为addRateRandom 的概率已经决定了他的值
+            int randomOre = WorldRandTools.Range(0, arrayBlockOre.Length, new Vector3(startPosition.x, 0, 0));
+            for (int x = -range; x < range; x++)
+            {
+                for (int y = -range; y < range; y++)
+                {
+                    for (int z = -range; z < range; z++)
+                    {
+                        Vector3Int blockPosition = new Vector3Int(startPosition.x + x, startPosition.y + y, startPosition.z + z);
+                        float disTemp = Vector3Int.Distance(blockPosition, startPosition);
+                        if (blockPosition.y <= 3 || disTemp >= range - 0.5f)
+                        {
+                            continue;
+                        }
+                        BlockTempBean blockTemp = new BlockTempBean(arrayBlockOre[randomOre], blockPosition.x, blockPosition.y, blockPosition.z);
+                        WorldCreateHandler.Instance.manager.AddUpdateBlock(blockTemp);
+                    }
+                }
+            }
+        }
+    }
+
+    public static BlockTypeEnum[] arrayBlockOre = new BlockTypeEnum[]
+    {   
+        //煤矿
+        BlockTypeEnum.OreCoal , BlockTypeEnum.OreCoal , BlockTypeEnum.OreCoal,
+        BlockTypeEnum.OreCopper,//铜矿
+        BlockTypeEnum.OreIron,//铁矿
+        BlockTypeEnum.OreSilver,//银矿
+        BlockTypeEnum.OreGold,//金矿
+        BlockTypeEnum.OreTin,//锡矿
+        BlockTypeEnum. OreAluminum,//铝矿
+    };
 
     /// <summary>
     /// 增加建筑
@@ -854,12 +904,12 @@ public class BiomeCreateTool
                     for (int c = -caveRange; c <= caveRange; c++)
                     {
                         Vector3Int blockPosition = new Vector3Int(startPosition.x + a, startPosition.y + b, startPosition.z + c);
-                        BlockTempBean blockTemp = new BlockTempBean(BlockTypeEnum.None, blockPosition.x, blockPosition.y, blockPosition.z);
                         float disTemp = Vector3Int.Distance(blockPosition, startPosition);
-                        if (blockTemp.worldY <= 3 || disTemp >= caveRange - 0.5f)
+                        if (blockPosition.y <= 3 || disTemp >= caveRange - 0.5f)
                         {
                             continue;
                         }
+                        BlockTempBean blockTemp = new BlockTempBean(BlockTypeEnum.None, blockPosition.x, blockPosition.y, blockPosition.z);
                         WorldCreateHandler.Instance.manager.AddUpdateBlock(blockTemp);
                     }
                 }

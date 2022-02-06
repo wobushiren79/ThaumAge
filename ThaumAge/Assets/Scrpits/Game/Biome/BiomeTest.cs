@@ -21,10 +21,16 @@ public class BiomeTest : Biome
             //基础
             return BlockTypeEnum.Foundation;
         }
-        else
+        else if (wPos.y < genHeight&& wPos.y >= genHeight-5)
         {
             //其他土
             return BlockTypeEnum.Dirt;
+        }
+        else
+        {
+            BiomeCreateTool.AddOre(900, 0.00001f, wPos);
+            //其他土
+            return BlockTypeEnum.Stone;
         }
     }
 }

@@ -17,6 +17,14 @@ public enum BlockTypeEnum
     PloughMagic = 202,//ÔÌÄ§¸ûµØ
     PloughWild = 203,//»Ä¸ûµØ
 
+    OreCoal = 900, //Ãº¿ó
+    OreCopper = 901,//Í­¿ó
+    OreIron = 902,//Ìú¿ó
+    OreSilver = 903,//Òø¿ó
+    OreGold = 904,//½ğ¿ó
+    OreTin = 905,//Îı¿ó
+    OreAluminum = 906,//ÂÁ¿ó
+
     TreeOak = 1001,//ÏğÄ¾
     TreeSilver = 1002,//ÒøÊ÷
     TreeWorld = 1003,//ÊÀ½çÊ÷
