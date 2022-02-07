@@ -272,12 +272,6 @@ public class BlockShapeCube : BlockShape
         base.BaseAddTris(chunk, localPosition, direction);
 
         int index = chunk.chunkMeshData.verts.Count;
-        int indexCollider = 0;
-
-        if (block.blockInfo.collider_state == 1)
-            indexCollider = chunk.chunkMeshData.vertsCollider.Count;
-        if (block.blockInfo.trigger_state == 1)
-            indexCollider = chunk.chunkMeshData.trisCollider.Count;
 
         List<int> trisNormal = chunk.chunkMeshData.dicTris[block.blockInfo.material_type];
         List<int> trisCollider = chunk.chunkMeshData.trisCollider;
@@ -286,17 +280,29 @@ public class BlockShapeCube : BlockShape
         {
             AddTris(index, trisNormal, trisAdd);
             if (block.blockInfo.collider_state == 1)
-                AddTris(indexCollider, trisCollider, trisAdd);
+            {
+                int colliderIndex = chunk.chunkMeshData.vertsCollider.Count;
+                AddTris(colliderIndex, trisCollider, trisAdd);
+            }
             if (block.blockInfo.trigger_state == 1)
-                AddTris(indexCollider, trisTrigger, trisAdd);
+            {
+                int triggerIndex = chunk.chunkMeshData.vertsTrigger.Count;
+                AddTris(triggerIndex, trisTrigger, trisAdd);
+            }
         }
         else
         {
             AddTris(index, trisNormal, trisAddReversed);
             if (block.blockInfo.collider_state == 1)
-                AddTris(indexCollider, trisCollider, trisAddReversed);
+            {
+                int colliderIndex = chunk.chunkMeshData.vertsCollider.Count;
+                AddTris(colliderIndex, trisCollider, trisAddReversed);
+            }
             if (block.blockInfo.trigger_state == 1)
-                AddTris(indexCollider, trisTrigger, trisAddReversed);
+            {
+                int triggerIndex = chunk.chunkMeshData.vertsTrigger.Count;
+                AddTris(triggerIndex, trisTrigger, trisAddReversed);
+            }
         }
     }
 
