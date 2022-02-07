@@ -27,6 +27,11 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels:
     - BlockMesh
+  - m_GUID: 5afc99e1c65f3454da0fb38a46ace311
+    m_Address: Assets/Prefabs/BlockMesh/BlockWatermelon.txt
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - BlockMesh
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: fd6114d87f1af534fbf270c47c0f10bf, type: 2}
   m_SchemaSet:

@@ -98,6 +98,15 @@ public partial class @GameInputActions : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Drop"",
+                    ""type"": ""Button"",
+                    ""id"": ""4792ad03-ce54-4ac9-83e6-c70b7a67f58f"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -395,6 +404,17 @@ public partial class @GameInputActions : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": ""Keyboard&Mouse"",
                     ""action"": ""UseF"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""e272c363-c272-4860-87e1-aa56e934d1e7"",
+                    ""path"": ""<Keyboard>/q"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Drop"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -1354,6 +1374,7 @@ public partial class @GameInputActions : IInputActionCollection2, IDisposable
         m_Player_Jump = m_Player.FindAction("Jump", throwIfNotFound: true);
         m_Player_CameraDistance = m_Player.FindAction("CameraDistance", throwIfNotFound: true);
         m_Player_UserDetails = m_Player.FindAction("UserDetails", throwIfNotFound: true);
+        m_Player_Drop = m_Player.FindAction("Drop", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -1449,6 +1470,7 @@ public partial class @GameInputActions : IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Jump;
     private readonly InputAction m_Player_CameraDistance;
     private readonly InputAction m_Player_UserDetails;
+    private readonly InputAction m_Player_Drop;
     public struct PlayerActions
     {
         private @GameInputActions m_Wrapper;
@@ -1461,6 +1483,7 @@ public partial class @GameInputActions : IInputActionCollection2, IDisposable
         public InputAction @Jump => m_Wrapper.m_Player_Jump;
         public InputAction @CameraDistance => m_Wrapper.m_Player_CameraDistance;
         public InputAction @UserDetails => m_Wrapper.m_Player_UserDetails;
+        public InputAction @Drop => m_Wrapper.m_Player_Drop;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1494,6 +1517,9 @@ public partial class @GameInputActions : IInputActionCollection2, IDisposable
                 @UserDetails.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnUserDetails;
                 @UserDetails.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnUserDetails;
                 @UserDetails.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnUserDetails;
+                @Drop.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnDrop;
+                @Drop.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnDrop;
+                @Drop.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnDrop;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -1522,6 +1548,9 @@ public partial class @GameInputActions : IInputActionCollection2, IDisposable
                 @UserDetails.started += instance.OnUserDetails;
                 @UserDetails.performed += instance.OnUserDetails;
                 @UserDetails.canceled += instance.OnUserDetails;
+                @Drop.started += instance.OnDrop;
+                @Drop.performed += instance.OnDrop;
+                @Drop.canceled += instance.OnDrop;
             }
         }
     }
@@ -1814,6 +1843,7 @@ public partial class @GameInputActions : IInputActionCollection2, IDisposable
         void OnJump(InputAction.CallbackContext context);
         void OnCameraDistance(InputAction.CallbackContext context);
         void OnUserDetails(InputAction.CallbackContext context);
+        void OnDrop(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {

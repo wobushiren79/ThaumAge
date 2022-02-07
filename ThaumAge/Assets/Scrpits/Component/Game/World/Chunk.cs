@@ -441,13 +441,13 @@ public class Chunk : BaseMonoBehaviour
     /// 移除方块
     /// </summary>
     /// <param name="position"></param>
-    public void RemoveBlockForWorld(Vector3Int worldPosition)
+    public void RemoveBlockForWorld(Vector3Int worldPosition,bool isSaveData = true)
     {
-        SetBlockForWorld(worldPosition, BlockTypeEnum.None);
+        SetBlockForWorld(worldPosition, BlockTypeEnum.None, isSaveData : isSaveData);
     }
-    public void RemoveBlockForLocal(Vector3Int localPosition)
+    public void RemoveBlockForLocal(Vector3Int localPosition,bool isSaveData = true)
     {
-        SetBlockForLocal(localPosition, BlockTypeEnum.None);
+        SetBlockForLocal(localPosition, BlockTypeEnum.None, isSaveData : isSaveData);
     }
 
     /// <summary>

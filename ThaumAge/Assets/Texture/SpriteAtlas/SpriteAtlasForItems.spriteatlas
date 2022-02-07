@@ -53,7 +53,9 @@ SpriteAtlas:
   m_PackedSprites:
   - {fileID: 21300000, guid: a5a18ff04ce150042bf6e238f46a67c3, type: 3}
   - {fileID: 21300000, guid: b31d648132a133c43850570ce05c59e6, type: 3}
+  - {fileID: 21300000, guid: a30845916df1c3b48bcb03e1462b1647, type: 3}
   - {fileID: 21300000, guid: c84110b19e6b18b4a9404d8c68d49363, type: 3}
+  - {fileID: 21300000, guid: 228c13d127d8e9c4187ab5ceefb7ef30, type: 3}
   - {fileID: 21300000, guid: 34daaf0223462eb499ca801194f1c1cf, type: 3}
   - {fileID: 21300000, guid: 91f28222d63869f43bdd60bc005bce84, type: 3}
   - {fileID: 21300000, guid: 42317f323eb51b34595d9052fb3a0fcc, type: 3}
@@ -78,9 +80,12 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 1af0d977e218412479e9582f0dc910eb, type: 3}
   - {fileID: 21300000, guid: 8c5d23f70b0a1e74596173a200236533, type: 3}
   - {fileID: 21300000, guid: 9c744638940d4924d8c473bc32a2706b, type: 3}
+  - {fileID: 21300000, guid: 52b5c3f8d86861d4982614c5f765f2d3, type: 3}
   - {fileID: 21300000, guid: 9c328a09006f8254e971b017de2ca10c, type: 3}
   - {fileID: 21300000, guid: 4298ef0924cd8ab49bd4590cfcb024e0, type: 3}
+  - {fileID: 21300000, guid: 536b711902ce4e841b322372c7c5391f, type: 3}
   - {fileID: 21300000, guid: db10d429b190c0746a9288b04bd3ecd7, type: 3}
+  - {fileID: 21300000, guid: 7614d539723d86a48a6e600c90f8adec, type: 3}
   - {fileID: 21300000, guid: 9a7b064922356dd44aa34cc2593a0449, type: 3}
   - {fileID: 21300000, guid: 40ad9c494f89aaa4aac3e9c8d7d6e598, type: 3}
   - {fileID: 21300000, guid: 79cad7694990d644eb47782960c1b702, type: 3}
@@ -105,6 +110,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 5cfdb0fc27d2c424e96b92e974ca3b15, type: 3}
   - {fileID: 21300000, guid: 854d161d372cfac4a93922b649966ee9, type: 3}
   - {fileID: 21300000, guid: 0761178d69f59134b969d8c55ec45be7, type: 3}
+  - {fileID: 21300000, guid: 5762c79d20475e14ea7cbb2ffff3dfba, type: 3}
   - {fileID: 21300000, guid: 5466a31ec854ee3429fe6949bc4c4737, type: 3}
   - {fileID: 21300000, guid: d0c1a91ed33b55a4292833e482611494, type: 3}
   - {fileID: 21300000, guid: 16d4bd1e6c6d5344ab09325e246c4d9b, type: 3}
@@ -112,16 +118,20 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 3986f84e20d8a0143833e60968e2307a, type: 3}
   - {fileID: 21300000, guid: fbe0688ea28b3c349b054c6bf2bc903c, type: 3}
   - {fileID: 21300000, guid: 6c85ccde3337d784b88d46781c858b7b, type: 3}
+  - {fileID: 21300000, guid: f85076eeae06cf1419219ed101469d8e, type: 3}
   - {fileID: 21300000, guid: b03c110f33be45e44afe9b5e18d043b1, type: 3}
   - {fileID: 21300000, guid: 9fb7765f63c19f043a167bf941dcd02a, type: 3}
   - {fileID: 21300000, guid: 31eccf8fe76d0f742b3ae195aa302fc4, type: 3}
   - {fileID: 21300000, guid: 2ee93b9f138965343a3ccb2c1b60c872, type: 3}
   - {fileID: 21300000, guid: 8f6ec9cfee809fc48a3e349875465a5e, type: 3}
+  - {fileID: 21300000, guid: 3fea91ff766c6bd439dfa4e16e209897, type: 3}
   - {fileID: 21300000, guid: a307b5ff1350cbf46b28f6d5ec571df7, type: 3}
   m_PackedSpriteNamesToIndex:
   - icon_item_100900
   - icon_flower_fireflower
+  - icon_item_310022
   - icon_cactus
+  - icon_item_310021
   - icon_stone_moss
   - icon_item_2100001
   - icon_item_100904
@@ -146,9 +156,12 @@ SpriteAtlas:
   - icon_item_3100001
   - icon_item_2200001
   - icon_magma
+  - icon_item_310012
   - icon_item_300003
   - icon_weed_1
+  - icon_item_310032
   - icon_ore_copper
+  - icon_item_310031
   - icon_ore_diamond
   - icon_mushroom_luminous
   - icon_item_2300001
@@ -173,6 +186,7 @@ SpriteAtlas:
   - icon_ore_silver
   - icon_item_1000002
   - icon_leaves_world
+  - icon_item_310001
   - icon_tree_mushroom
   - icon_weed_2
   - icon_item_200001
@@ -180,11 +194,13 @@ SpriteAtlas:
   - icon_item_1200001
   - icon_item_100906
   - icon_unknow
+  - icon_item_310002
   - icon_item_1000001
   - icon_grass_magic
   - icon_grass
   - icon_item_1200002
   - icon_item_900001
+  - icon_item_310011
   - icon_item_200002
   m_RenderDataMap: {}
   m_Tag: SpriteAtlasForItems

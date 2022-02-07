@@ -129,6 +129,8 @@ public class Item
                 Vector3Int localPosition = targetPosition - chunkForHit.chunkData.positionForWorld;
                 //获取原位置方块
                 Block tagetBlock = chunkForHit.chunkData.GetBlockForLocal(localPosition);
+                if (tagetBlock == null)
+                    return;
                 //展示目标位置
                 GameHandler.Instance.manager.playerTargetBlock.Show(targetBlockPosition, tagetBlock.blockInfo.interactive_state == 1);
             }

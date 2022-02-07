@@ -158,6 +158,7 @@ public class BlockCptBreak : BaseMonoBehaviour
                 int randomUV = Random.Range(0, arrayUVData.Length);
                 Vector2 uvStartPosition = new Vector2(texBlock.width * (arrayUVData[randomUV].y * BlockShape.uvWidth), texBlock.width * (arrayUVData[randomUV].x * BlockShape.uvWidth));
 
+                int randomNumber = 0;
                 do
                 {
                     int randomXStart = Random.Range((int)uvStartPosition.x, (int)(uvStartPosition.x + (texBlock.width * BlockShape.uvWidth)));
@@ -168,8 +169,10 @@ public class BlockCptBreak : BaseMonoBehaviour
 
                     colorStart = TextureUtil.GetPixel(texBlock, new Vector2Int(randomXStart, randomYStart));
                     colorEnd = TextureUtil.GetPixel(texBlock, new Vector2Int(randomXEnd, randomYEnd));
+                    randomNumber++;
                 }
-                while (colorStart.a == 0 || colorEnd.a == 0);
+                while ((colorStart.a == 0 || colorEnd.a == 0)&& randomNumber < 10);
+
             }
 
             EffectBlockBreak effectBlockCptBreak = (EffectBlockBreak)effect;

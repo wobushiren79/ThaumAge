@@ -206,7 +206,7 @@ public class Block
     public virtual void RefreshBlockClose(Vector3Int closeWorldPosition)
     {
         WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(closeWorldPosition, out Block closeBlock, out DirectionEnum direction, out Chunk closeChunk);
-        if (closeChunk != null)
+        if (closeChunk != null && closeBlock != null && closeBlock.blockType != BlockTypeEnum.None)
         {
             closeBlock?.RefreshBlock(closeChunk, closeWorldPosition - closeChunk.chunkData.positionForWorld, direction);
         }

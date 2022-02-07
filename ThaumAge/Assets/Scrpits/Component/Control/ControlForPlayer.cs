@@ -27,6 +27,7 @@ public class ControlForPlayer : ControlForBase
     private InputAction inputActionJump;
     private InputAction inputActionMove;
     private InputAction inputActionuserDetailsData;
+    private InputAction inputActionUseDrop; 
 
     //是否正在使用道具
     private bool isUseItem = false;
@@ -50,6 +51,9 @@ public class ControlForPlayer : ControlForBase
 
         inputActionUseF = InputHandler.Instance.manager.GetInputPlayerData("UseF");
         inputActionUseF.started += HandleForUseF;
+
+        inputActionUseDrop = InputHandler.Instance.manager.GetInputPlayerData("Drop");
+        inputActionUseDrop.started += HandleForDrop;
 
         inputActionuserDetailsData = InputHandler.Instance.manager.GetInputPlayerData("UserDetails");
         inputActionuserDetailsData.started += HandleForUserDetails;
@@ -77,6 +81,7 @@ public class ControlForPlayer : ControlForBase
         inputActionUseR.canceled -= HandleForUseEnd;
         inputActionUseF.started -= HandleForUseF;
         inputActionuserDetailsData.started -= HandleForUserDetails;
+        inputActionUseDrop.started -= HandleForDrop;
     }
 
     /// <summary>
@@ -204,6 +209,27 @@ public class ControlForPlayer : ControlForBase
     public void HandleForUseF(CallbackContext callback)
     {
         HandleForUse(callback, 2, false);
+    }
+
+    /// <summary>
+    /// 丢弃处理
+    /// </summary>
+    /// <param name="callback"></param>
+    public void HandleForDrop(CallbackContext callback)
+    {
+        //获取道具栏上的物品
+        UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();
+        ItemsBean itemData = userData.GetItemsFromShortcut();
+
+        //丢出道具
+        Player player = GameHandler.Instance.manager.player;
+        Vector3 randomFroce = new Vector3(UnityEngine.Random.Range(-0.5f, 0.5f), UnityEngine.Random.Range(0f, 0.5f), UnityEngine.Random.Range(-0.5f, 0.5f));
+        ItemsHandler.Instance.CreateItemCptDrop(itemData.itemId, 1, player.transform.position + Vector3.up, ItemDropStateEnum.DropNoPick, player.transform.forward + randomFroce);
+
+        //扣除道具
+        userData.AddItems(itemData, -1);
+        //刷新UI
+        UIHandler.Instance.RefreshUI();      
     }
 
     public void HandleForUse(CallbackContext callback, int type, bool isUserItem = true)

@@ -17,7 +17,6 @@ public class GameDataManager : BaseManager,
     public BaseDataController controllerForBase;
 
     protected static object lockForSaveData = new object();
-
     protected void Awake()
     {
         controllerForGameConfig = new GameConfigController(this, this);
