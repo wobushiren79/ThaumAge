@@ -293,7 +293,7 @@ public class Chunk : BaseMonoBehaviour
                                     continue;
                                 Vector3Int localPosition = new Vector3Int(x, y, z);
                                 block.BuildBlock(this, localPosition, direction);
-                                block.InitBlock(this, localPosition);
+                                block.InitBlock(this, localPosition,0);
                             }
                         }
                     }
@@ -471,7 +471,7 @@ public class Chunk : BaseMonoBehaviour
         Block newBlock = BlockHandler.Instance.manager.GetRegisterBlock(blockType);
         chunkData.SetBlockForLocal(localPosition, newBlock, direction);
 
-        newBlock.InitBlock(this, localPosition);
+        newBlock.InitBlock(this, localPosition,1);
 
         //保存数据
         if (isSaveData)
@@ -674,12 +674,12 @@ public class Chunk : BaseMonoBehaviour
     {
         if (updateTimeType == TimeUpdateEventTypeEnum.Sec)
         {
-            if (!listEventUpdateForSec.Contains(position))
+            if (listEventUpdateForSec.Contains(position))
                 listEventUpdateForSec.Remove(position);
         }
         else if (updateTimeType == TimeUpdateEventTypeEnum.Min)
         {
-            if (!listEventUpdateForMin.Contains(position))
+            if (listEventUpdateForMin.Contains(position))
                 listEventUpdateForMin.Remove(position);
         }
     }

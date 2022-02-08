@@ -118,6 +118,44 @@ public class ItemsHandler : BaseHandler<ItemsHandler, ItemsManager>
     }
 
     /// <summary>
+    /// 创建道具掉落
+    /// </summary>
+    /// <param name="oldBlock"></param>
+    /// <param name="targetChunk"></param>
+    /// <param name="targetPosition"></param>
+    public void CreateItemCptDrop(Block targetBlock,Chunk targetChunk,Vector3Int targetPosition)
+    {
+        //如果是种植类物品
+        if (targetBlock.blockInfo.GetBlockShape() == BlockShapeEnum.CropCross
+            || targetBlock.blockInfo.GetBlockShape() == BlockShapeEnum.CropCrossOblique
+            || targetBlock.blockInfo.GetBlockShape() == BlockShapeEnum.CropWell)
+        {
+            //首先判断生长周期
+            BlockBean blockData = targetChunk.GetBlockData(targetPosition - targetChunk.chunkData.positionForWorld);
+            //获取种植收货
+            List<ItemsBean> listHarvest = targetBlock.GetDropItems(blockData);
+            //创建掉落物
+            CreateItemCptDropList(listHarvest, targetPosition + Vector3.one * 0.5f, ItemDropStateEnum.DropPick);
+        }
+        else
+        {
+            //获取掉落道具
+            List<ItemsBean> listDrop = targetBlock.GetDropItems(null);
+            //如果没有掉落物，则默认掉落本体一个
+            if (listDrop.IsNull())
+            {
+                //创建掉落物
+                CreateItemCptDrop(targetBlock.blockType, 1, targetPosition + Vector3.one * 0.5f, ItemDropStateEnum.DropPick);
+            }
+            else
+            {
+                //创建掉落物
+                CreateItemCptDropList(listDrop, targetPosition + Vector3.one * 0.5f, ItemDropStateEnum.DropPick);
+            }
+        }
+    }
+
+    /// <summary>
     /// 通过ID设置道具图标
     /// </summary>
     /// <param name="image"></param>

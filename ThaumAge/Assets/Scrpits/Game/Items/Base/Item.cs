@@ -177,37 +177,8 @@ public class Item
         {
             //移除破碎效果
             BlockHandler.Instance.DestroyBreakBlock(targetPosition);
-
-            BlockShapeEnum oldBlockShape = oldBlock.blockInfo.GetBlockShape();
-
-            //如果是种植类物品
-            if (oldBlockShape == BlockShapeEnum.CropCross
-                || oldBlockShape == BlockShapeEnum.CropCrossOblique
-                || oldBlockShape == BlockShapeEnum.CropWell)
-            {
-                //首先判断生长周期
-                BlockBean blockData = targetChunk.GetBlockData(targetPosition - targetChunk.chunkData.positionForWorld);
-                //获取种植收货
-                List<ItemsBean> listHarvest = oldBlock.GetDropItems(blockData);
-                //创建掉落物
-                ItemsHandler.Instance.CreateItemCptDropList(listHarvest, targetPosition + Vector3.one * 0.5f, ItemDropStateEnum.DropPick);
-            }
-            else
-            {
-                //获取掉落道具
-                List<ItemsBean> listDrop = oldBlock.GetDropItems(null);
-                //如果没有掉落物，则默认掉落本体一个
-                if (listDrop.IsNull())
-                {
-                    //创建掉落物
-                    ItemsHandler.Instance.CreateItemCptDrop(oldBlock.blockType, 1, targetPosition + Vector3.one * 0.5f, ItemDropStateEnum.DropPick);
-                }
-                else
-                {
-                    //创建掉落物
-                    ItemsHandler.Instance.CreateItemCptDropList(listDrop, targetPosition + Vector3.one * 0.5f, ItemDropStateEnum.DropPick);
-                }
-            }
+            //创建掉落
+            ItemsHandler.Instance.CreateItemCptDrop(oldBlock, targetChunk, targetPosition);
             //移除该方块
             targetChunk.RemoveBlockForWorld(targetPosition);
         }

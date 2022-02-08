@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class BlockTypeMagma : BlockTypeWater
 {
-    public override void InitBlock(Chunk chunk, Vector3Int localPosition)
+    public override void InitBlock(Chunk chunk, Vector3Int localPosition,int state)
     {
         if (chunk == null)
             return;

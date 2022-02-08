@@ -123,10 +123,14 @@ public class Block
         blockShape.BuildBlock(chunk, localPosition, direction);
     }
 
+
     /// <summary>
     /// 初始化方块
     /// </summary>
-    public virtual void InitBlock(Chunk chunk, Vector3Int localPosition)
+    /// <param name="chunk"></param>
+    /// <param name="localPosition"></param>
+    /// <param name="state">0:创建地形 1：手动设置方块</param>
+    public virtual void InitBlock(Chunk chunk, Vector3Int localPosition,int state)
     {
         CreateBlockModel(chunk, localPosition);
     }

@@ -6,9 +6,9 @@ public class BlockBaseCrop : BlockBasePlant
 {
     protected List<Vector2Int[]> listGrowUV;
 
-    public override void InitBlock(Chunk chunk, Vector3Int localPosition)
+    public override void InitBlock(Chunk chunk, Vector3Int localPosition,int state)
     {
-        base.InitBlock(chunk, localPosition);
+        base.InitBlock(chunk, localPosition, state);
         this.InitCropData(chunk, localPosition);
     }
 
