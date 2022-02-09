@@ -17,15 +17,26 @@ public class BiomeMagicForest : Biome
         base.GetBlockType(chunk, biomeInfo, genHeight, localPos, wPos);
         if (wPos.y == genHeight)
         {
-            AddWeed(wPos);
-            AddBigTree(wPos);
-            AddWorldTree(wPos);
-            AddMushroomTree(wPos);
-            AddStoneMoss(wPos);
-            AddFlower(wPos);
-            AddDeadwood(wPos);
-            // 地表，使用草
-            return BlockTypeEnum.GrassMagic;
+            if (wPos.y >= biomeInfo.GetWaterPlaneHeight())
+            {
+                AddWeed(wPos);
+                AddBigTree(wPos);
+                AddWorldTree(wPos);
+                AddMushroomTree(wPos);
+                AddStoneMoss(wPos);
+                AddFlower(wPos);
+                AddDeadwood(wPos);
+            }
+            if (wPos.y == biomeInfo.GetWaterPlaneHeight()|| wPos.y == biomeInfo.GetWaterPlaneHeight()+1)
+            {
+                // 地表，使用草
+                return BlockTypeEnum.Sand;
+            }
+            else
+            {
+                // 地表，使用草
+                return BlockTypeEnum.GrassMagic;
+            }
         }
         if (wPos.y < genHeight && wPos.y > genHeight - 10)
         {

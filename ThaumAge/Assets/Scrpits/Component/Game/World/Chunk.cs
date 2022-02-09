@@ -153,7 +153,15 @@ public class Chunk : BaseMonoBehaviour
         BlockBean blockData = chunkSaveData.GetBlockData(x, y, z);
         return blockData;
     }
-
+    /// <summary>
+    /// 获取存储的方块数据
+    /// </summary>
+    /// <param name="localPosition"></param>
+    /// <returns></returns>
+    public BlockBean GetBlockData(Vector3Int localPosition)
+    {
+        return GetBlockData(localPosition.x, localPosition.y, localPosition.z);
+    }
     /// <summary>
     /// 设置存储方块数据
     /// </summary>
@@ -168,13 +176,20 @@ public class Chunk : BaseMonoBehaviour
     }
 
     /// <summary>
-    /// 获取存储的方块数据
+    /// 清除数据
     /// </summary>
-    /// <param name="localPosition"></param>
-    /// <returns></returns>
-    public BlockBean GetBlockData(Vector3Int localPosition)
+    public void ClearBlockData(int x, int y, int z)
     {
-        return GetBlockData(localPosition.x, localPosition.y, localPosition.z);
+        if (chunkSaveData == null)
+            return ;
+        chunkSaveData.ClearBlockData(x,y,z);
+    }
+    /// <summary>
+    /// 清除数据
+    /// </summary>
+    public void ClearBlockData(Vector3Int localPosition)
+    {
+        ClearBlockData(localPosition.x, localPosition.y, localPosition.z);
     }
 
     /// <summary>
@@ -466,6 +481,8 @@ public class Chunk : BaseMonoBehaviour
         if (oldBlock != null && oldBlock.blockType != BlockTypeEnum.None)
         {
             oldBlock.DestoryBlock(this, localPosition);
+            //删除老数据
+            ClearBlockData(localPosition);
         }
         //设置新方块
         Block newBlock = BlockHandler.Instance.manager.GetRegisterBlock(blockType);
@@ -479,7 +496,7 @@ public class Chunk : BaseMonoBehaviour
             BlockBean blockData = new BlockBean(localPosition, blockType, direction, meta);
             SetBlockData(blockData);
         }
-        //刷新BLOKCmesh
+        //刷新blockMesh
         if (isRefreshMesh)
         {
             WorldCreateHandler.Instance.HandleForUpdateChunk(this, localPosition, oldBlock, newBlock, direction);

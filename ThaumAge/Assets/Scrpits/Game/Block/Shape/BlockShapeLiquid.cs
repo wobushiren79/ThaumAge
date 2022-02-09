@@ -71,16 +71,9 @@ public class BlockShapeLiquid : BlockShapeCube
                     vertsAddNew[i] = vertsAdd[i];
                 }
             }
-            block.GetCloseBlockByDirection(chunk, localPosition, DirectionEnum.Forward, out Block forwardBlock, out Chunk forwardChunk);
-            block.GetCloseBlockByDirection(chunk, localPosition, DirectionEnum.Back, out Block backBlock, out Chunk backChunk);
-            if (forwardBlock != null && forwardBlock.blockType == block.blockType)
-            {
-                vertsAddNew[1] = vertsAdd[1];
-            }
-            if (backBlock != null && backBlock.blockType == block.blockType)
-            {
-                vertsAddNew[2] = vertsAdd[2];
-            }
+
+            GetVertsAddNewForRange(chunk, DirectionEnum.Forward, localPosition, vertsAddNew, vertsAdd, 1);
+            GetVertsAddNewForRange(chunk, DirectionEnum.Back, localPosition, vertsAddNew, vertsAdd, 2);
             return vertsAddNew;
         }
         else if (face == DirectionEnum.Forward || face == DirectionEnum.Back)
@@ -97,16 +90,9 @@ public class BlockShapeLiquid : BlockShapeCube
                     vertsAddNew[i] = vertsAdd[i];
                 }
             }
-            block.GetCloseBlockByDirection(chunk, localPosition, DirectionEnum.Left, out Block leftBlock, out Chunk leftChunk);
-            block.GetCloseBlockByDirection(chunk, localPosition, DirectionEnum.Right, out Block rightBlock, out Chunk rightChunk);
-            if (leftBlock != null && leftBlock.blockType == block.blockType)
-            {
-                vertsAddNew[1] = vertsAdd[1];
-            }
-            if (rightBlock != null && rightBlock.blockType == block.blockType)
-            {
-                vertsAddNew[2] = vertsAdd[2];
-            }
+
+            GetVertsAddNewForRange(chunk, DirectionEnum.Left, localPosition, vertsAddNew, vertsAdd,1);
+            GetVertsAddNewForRange(chunk, DirectionEnum.Right, localPosition, vertsAddNew, vertsAdd,2);
             return vertsAddNew;
         }
         else if (face == DirectionEnum.UP)
@@ -116,39 +102,65 @@ public class BlockShapeLiquid : BlockShapeCube
             {
                 vertsAddNew[i] = vertsAdd[i] - new Vector3(0, 1f, 0);
             }
-            block.GetCloseBlockByDirection(chunk, localPosition, DirectionEnum.Left, out Block leftBlock, out Chunk leftChunk);
-            block.GetCloseBlockByDirection(chunk, localPosition, DirectionEnum.Right, out Block rightBlock, out Chunk rightChunk);
-            block.GetCloseBlockByDirection(chunk, localPosition, DirectionEnum.Forward, out Block forwardBlock, out Chunk forwardChunk);
-            block.GetCloseBlockByDirection(chunk, localPosition, DirectionEnum.Back, out Block backBlock, out Chunk backChunk);
-            if (leftBlock != null && leftBlock.blockType == block.blockType)
-            {
-                vertsAddNew[0] = vertsAdd[0];
-                vertsAddNew[1] = vertsAdd[1];
-            }
 
-            if (rightBlock != null && rightBlock.blockType == block.blockType)
-            {
-                vertsAddNew[2] = vertsAdd[2];
-                vertsAddNew[3] = vertsAdd[3];
-            }
-
-            if (forwardBlock != null && forwardBlock.blockType == block.blockType)
-            {
-                vertsAddNew[0] = vertsAdd[0];
-                vertsAddNew[3] = vertsAdd[3];
-            }
-
-            if (backBlock != null && backBlock.blockType == block.blockType)
-            {
-                vertsAddNew[1] = vertsAdd[1];
-                vertsAddNew[2] = vertsAdd[2];
-            }
-
+            GetVertsAddNewForUpDown(chunk, DirectionEnum.Left, localPosition, vertsAddNew, vertsAdd, 0, 1);
+            GetVertsAddNewForUpDown(chunk, DirectionEnum.Right, localPosition, vertsAddNew, vertsAdd, 2, 3);
+            GetVertsAddNewForUpDown(chunk, DirectionEnum.Forward, localPosition, vertsAddNew, vertsAdd, 0, 3);
+            GetVertsAddNewForUpDown(chunk, DirectionEnum.Back, localPosition, vertsAddNew, vertsAdd, 1, 2);
             return vertsAddNew;
         }
         else
         {
             return vertsAdd;
+        }
+    }
+
+    protected void GetVertsAddNewForUpDown(Chunk chunk, DirectionEnum direction, Vector3Int localPosition, Vector3[] vertsAddNew, Vector3[] vertsAdd,int index1,int index2)
+    {
+        block.GetCloseBlockByDirection(chunk, localPosition, direction, out Block closeBlock, out Chunk closeChunk);
+        if (closeBlock != null && closeBlock.blockType == block.blockType)
+        {
+            Vector3Int tempPosition = block.GetClosePositionByDirection(direction, localPosition);
+            Vector3Int localPositionClose = tempPosition + chunk.chunkData.positionForWorld - closeChunk.chunkData.positionForWorld;
+            BlockBean closeBlockData = closeChunk.GetBlockData(localPositionClose);
+            if (closeBlockData == null)
+            {
+                vertsAddNew[index1] = vertsAdd[index1];
+                vertsAddNew[index2] = vertsAdd[index2];
+            }
+            else
+            {
+                BlockLiquidBean closeLiquid = BlockBaseLiquid.FromMetaData<BlockLiquidBean>(closeBlockData.meta);
+                if (closeLiquid == null || closeLiquid.level == 0)
+                {
+                    vertsAddNew[index1] = vertsAdd[index1];
+                    vertsAddNew[index2] = vertsAdd[index2];
+                }
+            }
+        }
+    }
+
+    protected void GetVertsAddNewForRange(Chunk chunk, DirectionEnum direction,Vector3Int localPosition,Vector3[] vertsAddNew, Vector3[] vertsAdd,int indexPosition)
+    {
+        block.GetCloseBlockByDirection(chunk, localPosition, direction, out Block closeBlock, out Chunk closeChunk);
+
+        if (closeBlock != null && closeBlock.blockType == block.blockType)
+        {
+            Vector3Int tempPosition = block.GetClosePositionByDirection(direction, localPosition);
+            Vector3Int localPositionClose= tempPosition + chunk.chunkData.positionForWorld - closeChunk.chunkData.positionForWorld;
+            BlockBean closeBlockData = closeChunk.GetBlockData(localPositionClose);
+            if (closeBlockData == null)
+            {
+                vertsAddNew[indexPosition] = vertsAdd[indexPosition];
+            }
+            else
+            {
+                BlockLiquidBean closeLiquid = BlockBaseLiquid.FromMetaData<BlockLiquidBean>(closeBlockData.meta);
+                if (closeLiquid == null || closeLiquid.level == 0)
+                {
+                    vertsAddNew[indexPosition] = vertsAdd[indexPosition];
+                }
+            }
         }
     }
 

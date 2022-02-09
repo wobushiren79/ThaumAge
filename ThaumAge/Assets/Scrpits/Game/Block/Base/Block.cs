@@ -141,6 +141,9 @@ public class Block
     public virtual void DestoryBlock(Chunk chunk, Vector3Int localPosition)
     {
         DestoryBlockModel(chunk, localPosition);
+        //取消注册
+        chunk.UnRegisterEventUpdate(localPosition, TimeUpdateEventTypeEnum.Sec);
+        chunk.UnRegisterEventUpdate(localPosition, TimeUpdateEventTypeEnum.Min);
     }
 
     /// <summary>
@@ -234,6 +237,26 @@ public class Block
     }
 
 
+    public Vector3Int GetClosePositionByDirection(DirectionEnum getDirection, Vector3Int localPosition)
+    {
+        switch (getDirection)
+        {
+            case DirectionEnum.UP:
+                return localPosition.AddY(1);
+            case DirectionEnum.Down:
+                return localPosition.AddY(-1);
+            case DirectionEnum.Left:
+                return localPosition.AddX(-1);
+            case DirectionEnum.Right:
+                return localPosition.AddX(1);
+            case DirectionEnum.Forward:
+                return localPosition.AddZ(-1);
+            case DirectionEnum.Back:
+                return localPosition.AddZ(1);
+            default:
+                return localPosition;
+        }
+    }
     /// <summary>
     /// 获取不同方向的方块
     /// </summary>
@@ -245,35 +268,12 @@ public class Block
     {
         //获取目标的本地坐标
         block = null;
-        int targetX = localPosition.x;
-        int targetY = localPosition.y;
-        int targetZ = localPosition.z;
-        switch (getDirection)
-        {
-            case DirectionEnum.UP:
-                targetY++;
-                break;
-            case DirectionEnum.Down:
-                targetY--;
-                break;
-            case DirectionEnum.Left:
-                targetX--;
-                break;
-            case DirectionEnum.Right:
-                targetX++;
-                break;
-            case DirectionEnum.Forward:
-                targetZ--;
-                break;
-            case DirectionEnum.Back:
-                targetZ++;
-                break;
-            default:
-                break;
-        }
+
+        localPosition = GetClosePositionByDirection(getDirection, localPosition);
+
         int maxWidth = chunk.chunkData.chunkWidth - 1;
         int maxHeight = chunk.chunkData.chunkHeight - 1;
-        if (targetX < 0)
+        if (localPosition.x < 0)
         {
             blockChunk = chunk.chunkData.chunkLeft;
             if (blockChunk != null)
@@ -283,7 +283,7 @@ public class Block
             }
             return;
         }
-        else if (targetX > maxWidth)
+        else if (localPosition.x > maxWidth)
         {
             blockChunk = chunk.chunkData.chunkRight;
             if (blockChunk != null)
@@ -293,7 +293,7 @@ public class Block
             }
             return;
         }
-        else if (targetZ < 0)
+        else if (localPosition.z < 0)
         {
             blockChunk = chunk.chunkData.chunkForward;
             if (blockChunk != null)
@@ -303,7 +303,7 @@ public class Block
             }
             return;
         }
-        else if (targetZ > maxWidth)
+        else if (localPosition.z > maxWidth)
         {
             blockChunk = chunk.chunkData.chunkBack;
             if (blockChunk != null)
@@ -313,7 +313,7 @@ public class Block
             }
             return;
         }
-        else if (targetY > maxHeight)
+        else if (localPosition.y > maxHeight)
         {
             blockChunk = chunk;
             return;
@@ -321,7 +321,7 @@ public class Block
         else
         {
             //如果在同一个chunk内
-            block = chunk.chunkData.GetBlockForLocal(targetX, targetY, targetZ);
+            block = chunk.chunkData.GetBlockForLocal(localPosition);
             blockChunk = chunk;
         }
     }

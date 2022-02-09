@@ -25,4 +25,13 @@ public class BiomeInfoBean : BaseBean
     {
         return (BiomeTypeEnum)id;
     }
+    
+    /// <summary>
+    /// 获取水平面高度
+    /// </summary>
+    /// <returns></returns>
+    public int GetWaterPlaneHeight()
+    {
+        return 64;
+    }
 }

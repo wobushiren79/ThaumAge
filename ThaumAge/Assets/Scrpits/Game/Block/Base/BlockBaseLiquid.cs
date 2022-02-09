@@ -25,10 +25,8 @@ public class BlockBaseLiquid : Block
     public override void RefreshBlock(Chunk chunk, Vector3Int localPosition, DirectionEnum direction)
     {
         base.RefreshBlock(chunk, localPosition, direction);
-        chunk.WaitExecuteEndOfFrame(1, () =>
-        {
-            chunk.RegisterEventUpdate(localPosition, TimeUpdateEventTypeEnum.Sec);
-        });
+        EventBlockUpdateForSec(chunk, localPosition);
+        //chunk.RegisterEventUpdate(localPosition, TimeUpdateEventTypeEnum.Sec);
     }
 
     /// <summary>
@@ -39,11 +37,11 @@ public class BlockBaseLiquid : Block
     public override void EventBlockUpdateForSec(Chunk chunk, Vector3Int localPosition)
     {
         base.EventBlockUpdateForSec(chunk, localPosition);
+        //取消注册
+        chunk.UnRegisterEventUpdate(localPosition, TimeUpdateEventTypeEnum.Sec);
         Vector3Int worldPosition = localPosition + chunk.chunkData.positionForWorld;
         //设置周围方块
         SetCloseBlock(chunk, worldPosition);
-        //取消注册
-        chunk.UnRegisterEventUpdate(localPosition, TimeUpdateEventTypeEnum.Sec);
     }
 
     /// <summary>
@@ -72,11 +70,19 @@ public class BlockBaseLiquid : Block
                 downChunk.SetBlockForWorld(downWorldPosition, blockType);
                 //创建掉落
                 ItemsHandler.Instance.CreateItemCptDrop(downBlock, downChunk, downWorldPosition);
-                return;
             }
             else if (downBlock.blockType == blockType)
             {
-                //下方有水方块 则不做处理
+                //下方有水方块并且还不是基础方块 则设置成基础水方块
+                BlockBean downBlockData = downChunk.GetBlockData(downWorldPosition - downChunk.chunkData.positionForWorld);
+                if (downBlockData != null)
+                {
+                    BlockLiquidBean downBlockLiquid = FromMetaData<BlockLiquidBean>(downBlockData.meta);
+                    if (downBlockLiquid != null && downBlockLiquid.level == 1)
+                    {
+                        downChunk.SetBlockForWorld(downWorldPosition, blockType);
+                    }
+                }
             }
             else
             {
@@ -90,6 +96,23 @@ public class BlockBaseLiquid : Block
                         //如果是1子级 则不再向外扩散
                         if (blockLiquid.level == 1)
                         {
+
+                            //检测四周的基础水方块
+                            int number = 0;
+                            number = CheckRangeBlockWater(chunk, worldPosition + Vector3Int.left, number);
+                            number = CheckRangeBlockWater(chunk, worldPosition + Vector3Int.right, number);
+                            number = CheckRangeBlockWater(chunk, worldPosition + Vector3Int.forward, number);
+                            number = CheckRangeBlockWater(chunk, worldPosition + Vector3Int.back, number);
+                            //如果有2块以上的基础水方块 则自身变为一个基础水方块
+                            if (number >= 2)
+                            {
+                                chunk.SetBlockForWorld(worldPosition, blockType, DirectionEnum.UP);
+                            }
+                            //如果一个基础水方块都没有 则设置为空气
+                            if (number == 0)
+                            {
+                                chunk.SetBlockForWorld(worldPosition, BlockTypeEnum.None, DirectionEnum.UP);
+                            }
                             return;
                         }
                     }
@@ -138,35 +161,32 @@ public class BlockBaseLiquid : Block
                     ItemsHandler.Instance.CreateItemCptDrop(closeBlock, closeChunk, worldPosition);
                     return;
                 }
-                //如果是等级为1的水方块 则叠加升级
-                //else if (closeBlock.blockType == blockType)
-                //{
-                //    BlockBean closeBlockData = closeChunk.GetBlockData(worldPosition - closeChunk.chunkData.positionForWorld);
-                //    if (closeBlockData != null && !closeBlockData.meta.IsNull())
-                //    {
-                //        BlockLiquidBean blockLiquid = FromMetaData<BlockLiquidBean>(closeBlockData.meta);
-                //        if (blockLiquid != null && blockLiquid.level == 1)
-                //        {
-                //            blockLiquid.level = 0;
-                //            closeChunk.SetBlockForWorld(worldPosition, blockType, DirectionEnum.UP, ToMetaData(blockLiquid));
-                //        }
-                //    }
-                //}
             }
         }
         return;
     }
 
-
     /// <summary>
-    /// 删除方块
+    /// 检测四周是否有基础水方块
     /// </summary>
-    /// <param name="chunk"></param>
-    public override void DestoryBlock(Chunk chunk, Vector3Int localPosition)
+    protected int CheckRangeBlockWater(Chunk chunk, Vector3Int worldPosition, int number)
     {
-        base.DestoryBlock(chunk, localPosition);
-        //取消注册
-        chunk.UnRegisterEventUpdate(localPosition, TimeUpdateEventTypeEnum.Sec);
+        WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(worldPosition, out Block closeBlock, out DirectionEnum closeBlockDirection, out Chunk closeChunk);
+        if (closeChunk == null || closeBlock == null || closeBlock.blockType != blockType)
+        {
+            return number;
+        }
+        BlockBean blockData = closeChunk.GetBlockData(worldPosition - closeChunk.chunkData.positionForWorld);
+        if (blockData == null)
+        {
+            return (number + 1);
+        }
+        BlockLiquidBean blockLiquid = FromMetaData<BlockLiquidBean>(blockData.meta);
+        if (blockLiquid == null || blockLiquid.level == 0)
+        {
+            return (number + 1);
+        }
+        return number;
     }
 
     /// <summary>

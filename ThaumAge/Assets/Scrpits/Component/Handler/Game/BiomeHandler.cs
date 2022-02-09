@@ -94,7 +94,14 @@ public class BiomeHandler : BaseHandler<BiomeHandler, BiomeManager>
         //当前方块位置高于随机生成的高度值时，当前方块类型为空
         if (blockLocalPosition.y > biomeMapData.maxHeight)
         {
-            return BlockTypeEnum.None;
+            if (blockLocalPosition.y <= biomeMapData.biome.biomeInfo.GetWaterPlaneHeight())
+            {
+                return BlockTypeEnum.Water;
+            }
+            else
+            {
+                return BlockTypeEnum.None;
+            }
         }
 
         int maxHeight = biomeMapData.maxHeight;
@@ -113,7 +120,6 @@ public class BiomeHandler : BaseHandler<BiomeHandler, BiomeManager>
         }
         Vector3Int wPos = blockLocalPosition + chunk.chunkData.positionForWorld;
         BlockTypeEnum blockType = biome.GetBlockType(chunk, biome.biomeInfo, maxHeight, blockLocalPosition, wPos);
-
         //获取方块
         return blockType;
     }

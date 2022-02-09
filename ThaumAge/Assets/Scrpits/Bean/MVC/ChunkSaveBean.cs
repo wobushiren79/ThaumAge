@@ -60,6 +60,15 @@ public class ChunkSaveBean : BaseBean
         return null;
     }
 
+    public void ClearBlockData(int x, int y, int z)
+    {
+        int widthChunk = WorldCreateHandler.Instance.manager.widthChunk;
+        int heightChunk = WorldCreateHandler.Instance.manager.heightChunk;
+        int index = MathUtil.GetSingleIndexForThree(x, y, z, widthChunk, heightChunk);
+        if(dicBlockData.ContainsKey(index))
+            dicBlockData.Remove(index);
+    }
+
     public WorldTypeEnum GetWorkType()
     {
         return (WorldTypeEnum)workdType;
