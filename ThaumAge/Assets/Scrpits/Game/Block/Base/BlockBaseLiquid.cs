@@ -22,7 +22,7 @@ public class BlockBaseLiquid : Block
     /// <param name="chunk"></param>
     /// <param name="localPosition"></param>
     /// <param name="direction"></param>
-    public override void RefreshBlock(Chunk chunk, Vector3Int localPosition, DirectionEnum direction)
+    public override void RefreshBlock(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction)
     {
         base.RefreshBlock(chunk, localPosition, direction);
         EventBlockUpdateForSec(chunk, localPosition);
@@ -53,7 +53,7 @@ public class BlockBaseLiquid : Block
     public void SetCloseBlock(Chunk chunk, Vector3Int worldPosition)
     {
         Vector3Int downWorldPosition = worldPosition + Vector3Int.down;
-        WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(downWorldPosition, out Block downBlock, out DirectionEnum downBlockDirection, out Chunk downChunk);
+        WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(downWorldPosition, out Block downBlock, out BlockDirectionEnum downBlockDirection, out Chunk downChunk);
         if (downBlock == null || downBlock.blockType == BlockTypeEnum.None)
         {
             //如果是空方块 替换成当前方块
@@ -63,7 +63,7 @@ public class BlockBaseLiquid : Block
         else
         {
             Vector3Int upWorldPosition = worldPosition + Vector3Int.up;
-            WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(upWorldPosition, out Block upBlock, out DirectionEnum upBlockDirection, out Chunk upChunk);
+            WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(upWorldPosition, out Block upBlock, out BlockDirectionEnum upBlockDirection, out Chunk upChunk);
             if (downBlock.blockInfo.weight == 1)
             {
                 //如果下方方块的重量是1 则冲掉下方方块
@@ -106,12 +106,12 @@ public class BlockBaseLiquid : Block
                             //如果有2块以上的基础水方块 则自身变为一个基础水方块
                             if (number >= 2)
                             {
-                                chunk.SetBlockForWorld(worldPosition, blockType, DirectionEnum.UP);
+                                chunk.SetBlockForWorld(worldPosition, blockType, BlockDirectionEnum.UpForward);
                             }
                             //如果一个基础水方块都没有 则设置为空气
                             if (number == 0)
                             {
-                                chunk.SetBlockForWorld(worldPosition, BlockTypeEnum.None, DirectionEnum.UP);
+                                chunk.SetBlockForWorld(worldPosition, BlockTypeEnum.None, BlockDirectionEnum.UpForward);
                             }
                             return;
                         }
@@ -132,7 +132,7 @@ public class BlockBaseLiquid : Block
     /// <returns></returns>
     protected void CheckRangeBlockLeak(Vector3Int worldPosition)
     {
-        WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(worldPosition, out Block closeBlock, out DirectionEnum closeBlockDirection, out Chunk closeChunk);
+        WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(worldPosition, out Block closeBlock, out BlockDirectionEnum closeBlockDirection, out Chunk closeChunk);
         if (closeChunk == null)
         {
             //如果没有区块 则不处理
@@ -145,7 +145,7 @@ public class BlockBaseLiquid : Block
                 BlockLiquidBean blockLiquid = new BlockLiquidBean();
                 blockLiquid.level = 1;
                 //如果没有方块 则漏水
-                closeChunk.SetBlockForWorld(worldPosition, blockType, DirectionEnum.UP, ToMetaData(blockLiquid));
+                closeChunk.SetBlockForWorld(worldPosition, blockType, BlockDirectionEnum.UpForward, ToMetaData(blockLiquid));
                 return;
             }
             else
@@ -156,7 +156,7 @@ public class BlockBaseLiquid : Block
                     BlockLiquidBean blockLiquid = new BlockLiquidBean();
                     blockLiquid.level = 1;
 
-                    closeChunk.SetBlockForWorld(worldPosition, blockType, DirectionEnum.UP, ToMetaData(blockLiquid));
+                    closeChunk.SetBlockForWorld(worldPosition, blockType, BlockDirectionEnum.UpForward, ToMetaData(blockLiquid));
                     //创建掉落
                     ItemsHandler.Instance.CreateItemCptDrop(closeBlock, closeChunk, worldPosition);
                     return;
@@ -171,7 +171,7 @@ public class BlockBaseLiquid : Block
     /// </summary>
     protected int CheckRangeBlockWater(Chunk chunk, Vector3Int worldPosition, int number)
     {
-        WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(worldPosition, out Block closeBlock, out DirectionEnum closeBlockDirection, out Chunk closeChunk);
+        WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(worldPosition, out Block closeBlock, out BlockDirectionEnum closeBlockDirection, out Chunk closeChunk);
         if (closeChunk == null || closeBlock == null || closeBlock.blockType != blockType)
         {
             return number;

@@ -14,7 +14,7 @@ public class BlockTypeMagma : BlockTypeWater
     }
 
 
-    public override void RefreshBlock(Chunk chunk, Vector3Int localPosition,DirectionEnum direction)
+    public override void RefreshBlock(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction)
     {
         base.RefreshBlock(chunk, localPosition, direction);
         InitSmoke(chunk, localPosition);

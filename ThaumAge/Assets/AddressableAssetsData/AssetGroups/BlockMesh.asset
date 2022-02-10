@@ -32,6 +32,16 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels:
     - BlockMesh
+  - m_GUID: aae6ef907660cbd4b9233ad6bb51b51f
+    m_Address: Assets/Prefabs/BlockMesh/BlockBox.txt
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - BlockMesh
+  - m_GUID: a0c35ab674a3e8046a75d80b5ace1a50
+    m_Address: Assets/Prefabs/BlockMesh/BlockDoor.txt
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - BlockMesh
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: fd6114d87f1af534fbf270c47c0f10bf, type: 2}
   m_SchemaSet:

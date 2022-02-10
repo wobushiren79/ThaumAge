@@ -54,7 +54,7 @@ public class PlayerRay : PlayerBase
                 }
             }
         }
-        GetHitPositionAndDirection(hit, out targetPosition, out Vector3Int closePosition, out DirectionEnum direction);
+        GetHitPositionAndDirection(hit, out targetPosition, out Vector3Int closePosition, out BlockDirectionEnum direction);
         return hasHitData;
     }
 
@@ -66,46 +66,73 @@ public class PlayerRay : PlayerBase
     /// <param name="targetPosition"></param>
     /// <param name="closePosition"></param>
     /// <param name="direction"></param>
-    public void GetHitPositionAndDirection(RaycastHit hit, out Vector3Int targetPosition, out Vector3Int closePosition, out DirectionEnum direction)
+    public void GetHitPositionAndDirection(RaycastHit hit, out Vector3Int targetPosition, out Vector3Int closePosition, out BlockDirectionEnum direction)
     {
         targetPosition = Vector3Int.zero;
         closePosition = Vector3Int.zero;
-        direction = DirectionEnum.UP;
+        direction = BlockDirectionEnum.UpForward;
+
+        Vector3 face = Vector3.Normalize(player.transform.position - hit.point);
+        int rotate = Mathf.Abs(face.x) > Mathf.Abs(face.z) ? 0 : 1;
+        int rotateDirection;
+        if (rotate == 0)
+        {
+            if (face.x >= 0)
+            {
+                rotateDirection = 1;
+            }
+            else
+            {
+                rotateDirection = 2;
+            }
+        }
+        else
+        {
+            if (face.z >= 0)
+            {
+                rotateDirection = 4;
+            }
+            else
+            {
+                rotateDirection = 3;
+            }
+        }
         if (hit.normal.y > 0)
         {
             targetPosition = new Vector3Int(Mathf.FloorToInt(hit.point.x), Mathf.FloorToInt(hit.point.y - 0.01f), Mathf.FloorToInt(hit.point.z));
             closePosition = targetPosition + Vector3Int.up;
-            direction = DirectionEnum.UP;
+
+            direction = (BlockDirectionEnum)(rotateDirection + 10);
         }
         else if (hit.normal.y < 0)
         {
             targetPosition = new Vector3Int(Mathf.FloorToInt(hit.point.x), Mathf.FloorToInt(hit.point.y + 0.01f), Mathf.FloorToInt(hit.point.z));
             closePosition = targetPosition + Vector3Int.down;
-            direction = DirectionEnum.Down;
+            direction = (BlockDirectionEnum)(rotateDirection + 20);
         }
         else if (hit.normal.x > 0)
         {
             targetPosition = new Vector3Int(Mathf.FloorToInt(hit.point.x - 0.01f), Mathf.FloorToInt(hit.point.y), Mathf.FloorToInt(hit.point.z));
             closePosition = targetPosition + Vector3Int.right;
-            direction = DirectionEnum.Right;
+            direction = (BlockDirectionEnum)(rotateDirection + 40);
         }
         else if (hit.normal.x < 0)
         {
             targetPosition = new Vector3Int(Mathf.FloorToInt(hit.point.x + 0.01f), Mathf.FloorToInt(hit.point.y), Mathf.FloorToInt(hit.point.z));
             closePosition = targetPosition + Vector3Int.left;
-            direction = DirectionEnum.Left;
+            direction = (BlockDirectionEnum)(rotateDirection + 30);
         }
         else if (hit.normal.z > 0)
         {
             targetPosition = new Vector3Int(Mathf.FloorToInt(hit.point.x), Mathf.FloorToInt(hit.point.y), Mathf.FloorToInt(hit.point.z - 0.01f));
             closePosition = targetPosition + Vector3Int.forward;
-            direction = DirectionEnum.Forward;
+            direction = (BlockDirectionEnum)(rotateDirection + 50);
         }
         else if (hit.normal.z < 0)
         {
             targetPosition = new Vector3Int(Mathf.FloorToInt(hit.point.x), Mathf.FloorToInt(hit.point.y), Mathf.FloorToInt(hit.point.z + 0.01f));
             closePosition = targetPosition + Vector3Int.back;
-            direction = DirectionEnum.Back;
+            direction = (BlockDirectionEnum)(rotateDirection + 60);
         }
     }
 }

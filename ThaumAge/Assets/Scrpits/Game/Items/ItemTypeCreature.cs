@@ -12,7 +12,7 @@ public class ItemTypeCreature : Item
             if (chunkForHit)
             {
                 //获取位置和方向
-                player.playerRay.GetHitPositionAndDirection(hit, out Vector3Int targetPosition, out Vector3Int closePosition, out DirectionEnum direction);
+                player.playerRay.GetHitPositionAndDirection(hit, out Vector3Int targetPosition, out Vector3Int closePosition, out BlockDirectionEnum direction);
 
                 Vector3Int localPosition = targetPosition - chunkForHit.chunkData.positionForWorld;
 

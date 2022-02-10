@@ -266,7 +266,7 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
     /// <param name="block"></param>
     /// <param name="direction"></param>
     /// <param name="isRefreshRange">是否刷新周围方块</param>
-    public void HandleForUpdateChunk(Chunk chunk, Vector3Int localPosition, Block oldBlock, Block newBlock, DirectionEnum direction = DirectionEnum.UP, bool isRefreshRange = true)
+    public void HandleForUpdateChunk(Chunk chunk, Vector3Int localPosition, Block oldBlock, Block newBlock, BlockDirectionEnum direction = BlockDirectionEnum.UpForward, bool isRefreshRange = true)
     {
         //如果正在构建方块 则先不更新mesh
         if (chunk.isBuildChunk)
@@ -313,7 +313,7 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
 
     protected void HandleForUpdateChunkClose(Chunk chunk, Vector3Int localPosition)
     {
-        chunk.GetBlockForLocal(localPosition, out Block closeBlock, out DirectionEnum closeBlockDirection, out Chunk closeChunk);
+        chunk.GetBlockForLocal(localPosition, out Block closeBlock, out BlockDirectionEnum closeBlockDirection, out Chunk closeChunk);
         if (closeChunk != null && closeBlock != null && closeBlock.blockType != BlockTypeEnum.None)
         {
             HandleForUpdateChunk(closeChunk, localPosition + chunk.chunkData.positionForWorld - closeChunk.chunkData.positionForWorld, closeBlock, closeBlock, closeBlockDirection, false);

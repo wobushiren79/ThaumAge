@@ -10,11 +10,11 @@ public class BlockBasePlant : Block
     /// <param name="chunk"></param>
     /// <param name="localPosition"></param>
     /// <param name="direction"></param>
-    public override void RefreshBlock(Chunk chunk, Vector3Int localPosition, DirectionEnum direction)
+    public override void RefreshBlock(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction)
     {
         //获取下方方块
         Vector3Int downLocalPosition = localPosition + Vector3Int.down;
-        chunk.chunkData.GetBlockForLocal(downLocalPosition, out Block downBlock, out DirectionEnum downBlockDirection);
+        chunk.chunkData.GetBlockForLocal(downLocalPosition, out Block downBlock, out BlockDirectionEnum downBlockDirection);
         //如果下方方块为NONE或者为液体
         if (downBlock == null || downBlock.blockType == BlockTypeEnum.None || downBlock.blockInfo.GetBlockShape() == BlockShapeEnum.Liquid)
         {

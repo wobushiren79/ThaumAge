@@ -62,6 +62,9 @@ public enum BlockTypeEnum
 
     StairsWood = 6001,//木楼梯
     CraftingTableSimple = 6101,//简易制作台
+    Door = 6010,//门
+    Box = 6201,//箱子
+
     Water = 9001,//水
     Magma = 9002,//岩浆
 }

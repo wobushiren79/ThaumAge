@@ -56,6 +56,8 @@ public class ChunkData
     public Block[] arrayBlock;
     //所有方块的方向集合
     public byte[] arrayBlockDirection;
+    //所有方块的朝向
+    public byte[] arrayBlockFace;
 
     //世界坐标
     public Vector3Int positionForWorld;
@@ -83,7 +85,7 @@ public class ChunkData
         arrayBlockDirection[index] = direction;
     }
 
-    public void SetBlockForLocal(int x, int y, int z, Block block, DirectionEnum direction)
+    public void SetBlockForLocal(int x, int y, int z, Block block, BlockDirectionEnum direction)
     {
         SetBlockForLocal(x, y, z, block, (byte)direction);
     }
@@ -91,7 +93,8 @@ public class ChunkData
     {
         SetBlockForLocal(blockPosition.x, blockPosition.y, blockPosition.z, block, direction);
     }
-    public void SetBlockForLocal(Vector3Int blockPosition, Block block, DirectionEnum direction)
+
+    public void SetBlockForLocal(Vector3Int blockPosition, Block block, BlockDirectionEnum direction)
     {
         SetBlockForLocal(blockPosition.x, blockPosition.y, blockPosition.z, block, (byte)direction);
     }
@@ -99,10 +102,10 @@ public class ChunkData
     public void SetBlockForWorld(Vector3Int worldPosition, Block block)
     {
         Vector3Int blockLocalPosition = worldPosition - this.positionForWorld;
-        SetBlockForLocal(blockLocalPosition, block, DirectionEnum.UP);
+        SetBlockForLocal(blockLocalPosition, block, BlockDirectionEnum.UpForward);
     }
 
-    public void SetBlockForWorld(Vector3Int worldPosition, Block block, DirectionEnum direction)
+    public void SetBlockForWorld(Vector3Int worldPosition, Block block, BlockDirectionEnum direction)
     {
         Vector3Int blockLocalPosition = worldPosition - this.positionForWorld;
         SetBlockForLocal(blockLocalPosition, block, direction);
@@ -111,14 +114,14 @@ public class ChunkData
     /// <summary>
     /// 获取方块
     /// </summary>
-    public void GetBlockForLocal(int x, int y, int z, out Block block, out DirectionEnum direction)
+    public void GetBlockForLocal(int x, int y, int z, out Block block, out BlockDirectionEnum direction)
     {
         int index = GetIndexByPosition(x, y, z);
         block = arrayBlock[index];
-        direction = (DirectionEnum)arrayBlockDirection[index];
+        direction = (BlockDirectionEnum)arrayBlockDirection[index];
     }
 
-    public void GetBlockForLocal(Vector3Int blockPosition, out Block block, out DirectionEnum direction)
+    public void GetBlockForLocal(Vector3Int blockPosition, out Block block, out BlockDirectionEnum direction)
     {
         GetBlockForLocal(blockPosition.x, blockPosition.y, blockPosition.z, out block, out direction);
     }

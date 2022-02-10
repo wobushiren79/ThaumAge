@@ -82,6 +82,17 @@ public class BlockHandler : BaseHandler<BlockHandler, BlockManager>
     }
 
     /// <summary>
+    /// 获取方块实例模型
+    /// </summary>
+    /// <param name="worldPosition"></param>
+    /// <returns></returns>
+    public GameObject GetBlockObj(Vector3Int worldPosition)
+    {
+        Chunk chunk = WorldCreateHandler.Instance.manager.GetChunkForWorldPosition(worldPosition);
+        return chunk.GetBlockObjForLocal(worldPosition - chunk.chunkData.positionForWorld);
+    }
+
+    /// <summary>
     /// 创建方块
     /// </summary>
     /// <param name="chunk"></param>

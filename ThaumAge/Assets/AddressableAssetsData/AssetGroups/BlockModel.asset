@@ -29,6 +29,14 @@ MonoBehaviour:
     m_Address: Assets/Prefabs/Block/BlockMagma.prefab
     m_ReadOnly: 0
     m_SerializedLabels: []
+  - m_GUID: ae576cb42165b1d419296421e30798fa
+    m_Address: Assets/Prefabs/Block/BlockBox.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: fd1b97a4579076b40a501ab9393fe245
+    m_Address: Assets/Prefabs/Block/BlockDoor.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: fd6114d87f1af534fbf270c47c0f10bf, type: 2}
   m_SchemaSet:

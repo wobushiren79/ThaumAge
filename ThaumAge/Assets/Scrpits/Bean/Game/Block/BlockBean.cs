@@ -19,7 +19,7 @@ public class BlockBean
 
     }
 
-    public BlockBean(Vector3Int localposition, BlockTypeEnum blockType = BlockTypeEnum.None, DirectionEnum direction = DirectionEnum.UP, string meta = null)
+    public BlockBean(Vector3Int localposition, BlockTypeEnum blockType = BlockTypeEnum.None, BlockDirectionEnum direction = BlockDirectionEnum.UpForward, string meta = null)
     {
         SetData(localposition, blockType, direction, meta);
     }
@@ -30,7 +30,7 @@ public class BlockBean
     /// <param name="blockType"></param>
     /// <param name="localposition"></param>
     /// <param name="worldPosition"></param>
-    public void SetData(Vector3Int localPosition, BlockTypeEnum blockType = BlockTypeEnum.None, DirectionEnum direction = DirectionEnum.UP, string meta = null)
+    public void SetData(Vector3Int localPosition, BlockTypeEnum blockType = BlockTypeEnum.None, BlockDirectionEnum direction = BlockDirectionEnum.UpForward, string meta = null)
     {
         this.localPosition = localPosition;
 
@@ -137,10 +137,10 @@ public struct BlockTempBean
         return (BlockTypeEnum)blockId;
     }
 
-    public DirectionEnum GetDirection()
+    public BlockDirectionEnum GetDirection()
     {
         if (direction == 0)
-            return DirectionEnum.UP;
-        return (DirectionEnum)direction;
+            return BlockDirectionEnum.UpForward;
+        return (BlockDirectionEnum)direction;
     }
 }

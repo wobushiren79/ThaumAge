@@ -42,7 +42,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "UseF",
+                    "name": "UseE",
                     "type": "Button",
                     "id": "2198c02c-14be-4198-a9df-85a424fcbe3a",
                     "expectedControlType": "Button",
@@ -277,17 +277,6 @@
                 },
                 {
                     "name": "",
-                    "id": "1ce6fe27-1643-43b4-aa72-ee32236962c3",
-                    "path": "<Keyboard>/e",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Keyboard&Mouse",
-                    "action": "UseL",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "22482140-6b74-43a1-bdc1-507bb8062554",
                     "path": "<Keyboard>/space",
                     "interactions": "",
@@ -376,23 +365,23 @@
                 },
                 {
                     "name": "",
-                    "id": "c0d2c283-632e-44fa-9072-d766913f8162",
-                    "path": "<Keyboard>/f",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Keyboard&Mouse",
-                    "action": "UseF",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "e272c363-c272-4860-87e1-aa56e934d1e7",
                     "path": "<Keyboard>/q",
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard&Mouse",
                     "action": "Drop",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "6e22ead2-3e80-4ad3-bdb3-0602756b53cc",
+                    "path": "<Keyboard>/e",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "UseE",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

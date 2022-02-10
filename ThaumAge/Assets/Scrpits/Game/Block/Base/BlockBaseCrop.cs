@@ -89,7 +89,7 @@ public class BlockBaseCrop : BlockBasePlant
     /// <typeparam name="T"></typeparam>
     public virtual void RefreshCrop(Chunk chunk, Vector3Int localPosition, BlockInfoBean blockInfo)
     {
-        chunk.chunkData.GetBlockForLocal(localPosition, out Block block, out DirectionEnum direction);
+        chunk.chunkData.GetBlockForLocal(localPosition, out Block block, out BlockDirectionEnum direction);
 
         BlockBean blockData = chunk.GetBlockData(localPosition);
         BlockCropBean blockCrop;

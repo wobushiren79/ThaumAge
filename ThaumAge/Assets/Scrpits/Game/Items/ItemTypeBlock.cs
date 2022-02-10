@@ -12,7 +12,7 @@ public class ItemTypeBlock : Item
             if (chunkForHit)
             {
                 //获取位置和方向
-                player.playerRay.GetHitPositionAndDirection(hit, out Vector3Int targetPosition, out Vector3Int closePosition, out DirectionEnum direction);
+                player.playerRay.GetHitPositionAndDirection(hit, out Vector3Int targetPosition, out Vector3Int closePosition, out BlockDirectionEnum direction);
                 //如果上手没有物品 或者是左键点击 则挖掘
                 if (itemData == null || itemData.itemId == 0 || type == 0)
                 {
@@ -22,7 +22,7 @@ public class ItemTypeBlock : Item
                 else
                 {
                     //获取目标方块
-                    WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(targetPosition, out Block targetBlock, out DirectionEnum targetBlockDirection, out Chunk taragetChunk);
+                    WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(targetPosition, out Block targetBlock, out BlockDirectionEnum targetBlockDirection, out Chunk taragetChunk);
                     ////如果是液体 则直接替换
                     //if (taragetChunk!=null && targetBlock != null&&targetBlock.blockInfo.GetBlockShape() == BlockShapeEnum.Liquid)
                     //{                       
@@ -48,7 +48,7 @@ public class ItemTypeBlock : Item
                     //    return;
                     //}
                     //首先获取靠近方块
-                    WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(closePosition, out Block closeBlock, out DirectionEnum closeBlockDirection, out Chunk closeChunk);
+                    WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(closePosition, out Block closeBlock, out BlockDirectionEnum closeBlockDirection, out Chunk closeChunk);
                     //如果靠近得方块有区块
                     if (closeChunk)
                     {
@@ -65,10 +65,19 @@ public class ItemTypeBlock : Item
                         //更新方块并 添加更新区块
                         if (blockInfo.rotate_state == 0)
                         {
-                            closeChunk.SetBlockForWorld(closePosition, changeBlockType, DirectionEnum.UP);
+                            closeChunk.SetBlockForWorld(closePosition, changeBlockType, BlockDirectionEnum.UpForward);
                         }
-                        else
+                        else if (blockInfo.rotate_state == 1)
                         {
+                            closeChunk.SetBlockForWorld(closePosition, changeBlockType, direction);
+                        }
+                        else if (blockInfo.rotate_state == 2)
+                        {
+                            //只能朝上
+                            if((int)direction > 20)
+                            {
+                                direction = (BlockDirectionEnum)((int)direction%10 + 10);
+                            }
                             closeChunk.SetBlockForWorld(closePosition, changeBlockType, direction);
                         }
                         //扣除道具

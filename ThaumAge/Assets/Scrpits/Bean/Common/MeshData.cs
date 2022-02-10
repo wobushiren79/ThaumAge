@@ -29,6 +29,23 @@ public class MeshData
         verticesCollider = meshCollider.vertices;
         trianglesCollider = meshCollider.triangles;
     }
+    public MeshData(Collider collider, float size, Vector3 offset)
+    {
+        vertices = new Vector3[0];
+        uv = new Vector2[0];
+        triangles = new int[0];
+
+        for (int i = 0; i < vertices.Length; i++)
+        {
+            Vector3 itemVer = vertices[i];
+            Vector3 newVer = itemVer * size + offset;
+            vertices[i] = newVer;
+        }
+
+        Mesh meshCollider = GetColliderMesh(collider);
+        verticesCollider = meshCollider.vertices;
+        trianglesCollider = meshCollider.triangles;
+    }
 
     public Mesh GetColliderMesh(Collider collider)
     {

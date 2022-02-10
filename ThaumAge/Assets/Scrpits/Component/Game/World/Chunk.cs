@@ -153,6 +153,7 @@ public class Chunk : BaseMonoBehaviour
         BlockBean blockData = chunkSaveData.GetBlockData(x, y, z);
         return blockData;
     }
+
     /// <summary>
     /// 获取存储的方块数据
     /// </summary>
@@ -162,6 +163,22 @@ public class Chunk : BaseMonoBehaviour
     {
         return GetBlockData(localPosition.x, localPosition.y, localPosition.z);
     }
+
+    /// <summary>
+    /// 获取方块模型
+    /// </summary>
+    /// <param name="localPosition"></param>
+    /// <returns></returns>
+    public GameObject GetBlockObjForLocal(Vector3Int localPosition)
+    {
+        int blockIndex = Block.GetIndex(localPosition, chunkData.chunkWidth, chunkData.chunkHeight);
+        if (dicBlockModel.TryGetValue(blockIndex, out GameObject obj))
+        {
+            return obj;
+        }
+        return null;
+    }
+
     /// <summary>
     /// 设置存储方块数据
     /// </summary>
@@ -303,7 +320,7 @@ public class Chunk : BaseMonoBehaviour
                         {
                             for (int z = 0; z < chunkData.chunkWidth; z++)
                             {
-                                chunkData.GetBlockForLocal(x, y, z, out Block block, out DirectionEnum direction);
+                                chunkData.GetBlockForLocal(x, y, z, out Block block, out BlockDirectionEnum direction);
                                 if (block == null || block.blockType == BlockTypeEnum.None)
                                     continue;
                                 Vector3Int localPosition = new Vector3Int(x, y, z);
@@ -418,7 +435,7 @@ public class Chunk : BaseMonoBehaviour
 
     }
 
-    public void GetBlockForWorld(Vector3Int blockWorldPosition, out Block block, out DirectionEnum direction, out Chunk chunk)
+    public void GetBlockForWorld(Vector3Int blockWorldPosition, out Block block, out BlockDirectionEnum direction, out Chunk chunk)
     {
         GetBlockForLocal(blockWorldPosition - chunkData.positionForWorld, out block, out direction, out chunk);
     }
@@ -428,12 +445,12 @@ public class Chunk : BaseMonoBehaviour
         block = chunkData.GetBlockForLocal(blockWorldPosition - chunkData.positionForWorld);
     }
 
-    public void GetBlockForLocal(Vector3Int localPosition, out Block block, out DirectionEnum direction, out Chunk chunk)
+    public void GetBlockForLocal(Vector3Int localPosition, out Block block, out BlockDirectionEnum direction, out Chunk chunk)
     {
         if (localPosition.y < 0 || localPosition.y > chunkData.chunkHeight - 1)
         {
             block = BlockHandler.Instance.manager.GetRegisterBlock(BlockTypeEnum.None);
-            direction = DirectionEnum.UP;
+            direction = BlockDirectionEnum.UpForward;
             chunk = null;
             return;
         }
@@ -468,13 +485,13 @@ public class Chunk : BaseMonoBehaviour
     /// <summary>
     /// 设置方块
     /// </summary>
-    public void SetBlockForWorld(Vector3Int worldPosition, BlockTypeEnum blockType, DirectionEnum direction = DirectionEnum.UP, string meta = null, bool isRefreshMesh = true, bool isSaveData = true, bool isRefreshBlockRange = true)
+    public void SetBlockForWorld(Vector3Int worldPosition, BlockTypeEnum blockType, BlockDirectionEnum direction = BlockDirectionEnum.UpForward, string meta = null, bool isRefreshMesh = true, bool isSaveData = true, bool isRefreshBlockRange = true)
     {
         Vector3Int blockLocalPosition = worldPosition - chunkData.positionForWorld;
         SetBlockForLocal(blockLocalPosition, blockType, direction, meta, isRefreshMesh, isSaveData, isRefreshBlockRange);
     }
 
-    public void SetBlockForLocal(Vector3Int localPosition, BlockTypeEnum blockType, DirectionEnum direction = DirectionEnum.UP, string meta = null, bool isRefreshMesh = true, bool isSaveData = true, bool isRefreshBlockRange = true)
+    public void SetBlockForLocal(Vector3Int localPosition, BlockTypeEnum blockType, BlockDirectionEnum direction = BlockDirectionEnum.UpForward, string meta = null, bool isRefreshMesh = true, bool isSaveData = true, bool isRefreshBlockRange = true)
     {
         //首先移除方块
         Block oldBlock = chunkData.GetBlockForLocal(localPosition);
@@ -535,7 +552,7 @@ public class Chunk : BaseMonoBehaviour
                         continue;
                     Block block = BlockHandler.Instance.manager.GetRegisterBlock(blockType);
                     //添加方块
-                    chunkData.SetBlockForLocal(x, y, z, block, DirectionEnum.UP);
+                    chunkData.SetBlockForLocal(x, y, z, block, BlockDirectionEnum.UpForward);
                 }
             }
         }
@@ -626,7 +643,7 @@ public class Chunk : BaseMonoBehaviour
             return;
         }
 
-        Block block = chunkData.GetBlockForLocal(localPosition);
+        chunkData.GetBlockForLocal(localPosition, out Block block, out BlockDirectionEnum direction);
 
         if (block == null || block.blockType == BlockTypeEnum.None)
             return;
@@ -640,6 +657,9 @@ public class Chunk : BaseMonoBehaviour
         objBlockModel.transform.localPosition = localPosition + new Vector3(0.5f, 0, 0.5f);
         //添加数据记录
         dicBlockModel.Add(blockIndex, objBlockModel);
+        //设置方向
+        Vector3 rotateAngles = BlockShape.GetRotateAngles(direction);
+        objBlockModel.transform.localEulerAngles = rotateAngles;
     }
 
     /// <summary>

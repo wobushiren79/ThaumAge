@@ -76,11 +76,11 @@ public class BlockShape
     /// <param name="chunk"></param>
     /// <param name="localPosition"></param>
     /// <param name="direction"></param>
-    public virtual void BuildBlock(Chunk chunk, Vector3Int localPosition, DirectionEnum direction)
+    public virtual void BuildBlock(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction)
     {
 
     }
-    public virtual void BuildBlockNoCheck(Chunk chunk, Vector3Int localPosition, DirectionEnum direction)
+    public virtual void BuildBlockNoCheck(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction)
     {
 
     }
@@ -96,7 +96,7 @@ public class BlockShape
     /// <param name="verts"></param>
     /// <param name="uvs"></param>
     /// <param name="tris"></param>
-    public virtual void BuildFace(Chunk chunk, Vector3Int localPosition, DirectionEnum direction, Vector3[] vertsAdd)
+    public virtual void BuildFace(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction, Vector3[] vertsAdd)
     {
         BaseAddTris(chunk, localPosition, direction);
         BaseAddVerts(chunk, localPosition, direction, vertsAdd);
@@ -110,7 +110,7 @@ public class BlockShape
     /// <param name="up"></param>
     /// <param name="right"></param>
     /// <param name="verts"></param>
-    public virtual void BaseAddVerts(Chunk chunk, Vector3Int localPosition, DirectionEnum direction, Vector3[] vertsAdd)
+    public virtual void BaseAddVerts(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction, Vector3[] vertsAdd)
     {
 
     }
@@ -120,7 +120,7 @@ public class BlockShape
     /// </summary>
     /// <param name="blockData"></param>
     /// <param name="uvs"></param>
-    public virtual void BaseAddUVs(Chunk chunk, Vector3Int localPosition, DirectionEnum direction)
+    public virtual void BaseAddUVs(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction)
     {
 
     }
@@ -132,7 +132,7 @@ public class BlockShape
     /// <param name="tris"></param>
     /// <param name="indexCollider"></param>
     /// <param name="trisCollider"></param>
-    public virtual void BaseAddTris(Chunk chunk, Vector3Int localPosition, DirectionEnum direction)
+    public virtual void BaseAddTris(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction)
     {
 
     }
@@ -145,7 +145,7 @@ public class BlockShape
     /// <param name="direction"></param>
     /// <param name="closeDirection"></param>
     /// <returns></returns>
-    public virtual bool CheckNeedBuildFace(Chunk chunk, Vector3Int localPosition, DirectionEnum direction, DirectionEnum closeDirection)
+    public virtual bool CheckNeedBuildFace(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction, DirectionEnum closeDirection)
     {
         if (localPosition.y == 0) return false;
         GetCloseRotateBlockByDirection(chunk, localPosition, direction, closeDirection, out Block closeBlock, out Chunk closeBlockChunk);
@@ -181,7 +181,7 @@ public class BlockShape
     /// <param name="getDirection"></param>
     /// <param name="closeBlock"></param>
     /// <param name="blockChunk"></param>
-    public virtual void GetCloseRotateBlockByDirection(Chunk chunk, Vector3Int localPosition, DirectionEnum direction, DirectionEnum getDirection, out Block closeBlock, out Chunk blockChunk)
+    public virtual void GetCloseRotateBlockByDirection(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction, DirectionEnum getDirection, out Block closeBlock, out Chunk blockChunk)
     {
         if (block.blockInfo.rotate_state == 0)
         {
@@ -192,6 +192,16 @@ public class BlockShape
         {
             //旋转
             DirectionEnum rotateDirection = GetRotateDirection(direction, getDirection);
+            block.GetCloseBlockByDirection(chunk, localPosition, rotateDirection, out closeBlock, out blockChunk);
+        }
+        else if (block.blockInfo.rotate_state == 2)
+        {
+            //旋转
+            DirectionEnum rotateDirection = GetRotateDirection(direction, getDirection);
+            if (rotateDirection == DirectionEnum.Down)
+            {
+                rotateDirection = DirectionEnum.UP;
+            }
             block.GetCloseBlockByDirection(chunk, localPosition, rotateDirection, out closeBlock, out blockChunk);
         }
         else
@@ -207,15 +217,21 @@ public class BlockShape
     /// <param name="direction"></param>
     /// <param name="getDirection"></param>
     /// <returns></returns>
-    public DirectionEnum GetRotateDirection(DirectionEnum direction, DirectionEnum getDirection)
+    public DirectionEnum GetRotateDirection(BlockDirectionEnum direction, DirectionEnum getDirection)
     {
         DirectionEnum targetDirection = DirectionEnum.UP;
         switch (direction)
         {
-            case DirectionEnum.UP:
+            case BlockDirectionEnum.UpForward:
+            case BlockDirectionEnum.UpLeft:
+            case BlockDirectionEnum.UpRight:
+            case BlockDirectionEnum.UpBack:
                 targetDirection = getDirection;
                 break;
-            case DirectionEnum.Down:
+            case BlockDirectionEnum.DownForward:
+            case BlockDirectionEnum.DownLeft:
+            case BlockDirectionEnum.DownRight:
+            case BlockDirectionEnum.DownBack:
                 switch (getDirection)
                 {
                     case DirectionEnum.UP:
@@ -238,7 +254,10 @@ public class BlockShape
                         break;
                 }
                 break;
-            case DirectionEnum.Left:
+            case BlockDirectionEnum.LeftForward:
+            case BlockDirectionEnum.LeftLeft:
+            case BlockDirectionEnum.LeftRight:
+            case BlockDirectionEnum.LeftBack:
                 switch (getDirection)
                 {
                     case DirectionEnum.UP:
@@ -261,7 +280,10 @@ public class BlockShape
                         break;
                 }
                 break;
-            case DirectionEnum.Right:
+            case BlockDirectionEnum.RightForward:
+            case BlockDirectionEnum.RightLeft:
+            case BlockDirectionEnum.RightRight:
+            case BlockDirectionEnum.RightBack:
                 switch (getDirection)
                 {
                     case DirectionEnum.UP:
@@ -284,7 +306,10 @@ public class BlockShape
                         break;
                 }
                 break;
-            case DirectionEnum.Forward:
+            case BlockDirectionEnum.ForwardForward:
+            case BlockDirectionEnum.ForwardLeft:
+            case BlockDirectionEnum.ForwardRight:
+            case BlockDirectionEnum.ForwardBack:
                 switch (getDirection)
                 {
                     case DirectionEnum.UP:
@@ -307,7 +332,10 @@ public class BlockShape
                         break;
                 }
                 break;
-            case DirectionEnum.Back:
+            case BlockDirectionEnum.BackForward:
+            case BlockDirectionEnum.BackLeft:
+            case BlockDirectionEnum.BackRight:
+            case BlockDirectionEnum.BackBack:
                 switch (getDirection)
                 {
                     case DirectionEnum.UP:
@@ -334,12 +362,102 @@ public class BlockShape
         return targetDirection;
     }
 
+    public static Vector3 GetRotateAngles(BlockDirectionEnum direction)
+    {
+        Vector3 angles;
+        switch (direction)
+        {
+            case BlockDirectionEnum.UpForward:
+                angles = new Vector3(0, 0, 0);
+                break;
+            case BlockDirectionEnum.UpLeft:
+                angles = new Vector3(0, -90, 0);
+                break;
+            case BlockDirectionEnum.UpRight:
+                angles = new Vector3(0, 90, 0);
+                break;
+            case BlockDirectionEnum.UpBack:
+                angles = new Vector3(0, 180, 0);
+                break;
+
+            case BlockDirectionEnum.DownForward:
+                angles = new Vector3(0, 0, 180);
+                break;
+            case BlockDirectionEnum.DownLeft:
+                angles = new Vector3(0, -90, 180);
+                break;
+            case BlockDirectionEnum.DownRight:
+                angles = new Vector3(0, 90, 180);
+                break;
+            case BlockDirectionEnum.DownBack:
+                angles = new Vector3(0, 180, 180);
+                break;
+
+            case BlockDirectionEnum.LeftForward:
+                angles = new Vector3(0, 0, 90);
+                break;
+            case BlockDirectionEnum.LeftLeft:
+                angles = new Vector3(0, -90, 90);
+                break;
+            case BlockDirectionEnum.LeftRight:
+                angles = new Vector3(0, 90, 90);
+                break;
+            case BlockDirectionEnum.LeftBack:
+                angles = new Vector3(0, 180, 0);
+                break;
+
+            case BlockDirectionEnum.RightForward:
+                angles = new Vector3(0, 0, -90);
+                break;
+            case BlockDirectionEnum.RightLeft:
+                angles = new Vector3(0, -90, -90);
+                break;
+            case BlockDirectionEnum.RightRight:
+                angles = new Vector3(0, 90, -90);
+                break;
+            case BlockDirectionEnum.RightBack:
+                angles = new Vector3(0, 180, -90);
+                break;
+
+            case BlockDirectionEnum.ForwardForward:
+                angles = new Vector3(-90, 0, 0);
+                break;
+            case BlockDirectionEnum.ForwardLeft:
+                angles = new Vector3(-90, -90, 0);
+                break;
+            case BlockDirectionEnum.ForwardRight:
+                angles = new Vector3(-90, 90, 0);
+                break;
+            case BlockDirectionEnum.ForwardBack:
+                angles = new Vector3(-90, 180, 0);
+                break;
+
+            case BlockDirectionEnum.BackForward:
+                angles = new Vector3(90, 0, 0);
+                break;
+            case BlockDirectionEnum.BackLeft:
+                angles = new Vector3(90, -90, 0);
+                break;
+            case BlockDirectionEnum.BackRight:
+                angles = new Vector3(90, 90, 0);
+                break;
+            case BlockDirectionEnum.BackBack:
+                angles = new Vector3(90, 180, 0);
+                break;
+
+            default:
+                angles = new Vector3(0, 0, 0);
+                break;
+        }
+        return angles;
+    }
+
     /// <summary>
     /// 旋转点位
     /// </summary>
     /// <param name="vert"></param>
     /// <returns></returns>
-    public virtual Vector3 RotatePosition(DirectionEnum direction, Vector3 position, Vector3 centerPosition)
+    public virtual Vector3 RotatePosition(BlockDirectionEnum direction, Vector3 position, Vector3 centerPosition)
     {
         if (block.blockInfo.rotate_state == 0)
         {
@@ -349,26 +467,28 @@ public class BlockShape
         else if (block.blockInfo.rotate_state == 1)
         {
             //已中心点旋转
+            Vector3 angles = GetRotateAngles(direction);
+            //旋转6面
+            Vector3 rotatePosition = VectorUtil.GetRotatedPosition(centerPosition, position, angles);
+            return rotatePosition;
+        }
+        else if (block.blockInfo.rotate_state == 2)
+        {
+            //已中心点旋转
             Vector3 angles;
             switch (direction)
             {
-                case DirectionEnum.UP:
+                case BlockDirectionEnum.UpForward:
                     angles = new Vector3(0, 0, 0);
                     break;
-                case DirectionEnum.Down:
-                    angles = new Vector3(0, 0, 180);
+                case BlockDirectionEnum.UpLeft:
+                    angles = new Vector3(0, 90, 0);
                     break;
-                case DirectionEnum.Left:
-                    angles = new Vector3(0, 0, 90);
+                case BlockDirectionEnum.UpRight:
+                    angles = new Vector3(0, -90, 0);
                     break;
-                case DirectionEnum.Right:
-                    angles = new Vector3(0, 0, -90);
-                    break;
-                case DirectionEnum.Forward:
-                    angles = new Vector3(-90, 0, 0);
-                    break;
-                case DirectionEnum.Back:
-                    angles = new Vector3(90, 0, 0);
+                case BlockDirectionEnum.UpBack:
+                    angles = new Vector3(0, 180, 0);
                     break;
                 default:
                     angles = new Vector3(0, 0, 0);
@@ -388,17 +508,17 @@ public class BlockShape
     /// <param name="direction"></param>
     /// <param name="listVerts"></param>
     /// <param name="vert"></param>
-    public virtual void AddVert(Vector3Int localPosition, DirectionEnum direction, List<Vector3> listVerts, Vector3 vert)
+    public virtual void AddVert(Vector3Int localPosition, BlockDirectionEnum direction, List<Vector3> listVerts, Vector3 vert)
     {
         listVerts.Add(RotatePosition(direction, vert, GetCenterPosition(localPosition)));
     }
 
-    public virtual void AddVert(Vector3Int localPosition, DirectionEnum direction, Vector3[] arrayVerts, int indexVerts, Vector3 vert)
+    public virtual void AddVert(Vector3Int localPosition, BlockDirectionEnum direction, Vector3[] arrayVerts, int indexVerts, Vector3 vert)
     {
         arrayVerts[indexVerts] = RotatePosition(direction, vert, GetCenterPosition(localPosition));
     }
 
-    public virtual void AddVerts(Vector3Int localPosition, DirectionEnum direction, List<Vector3> listVerts, Vector3[] vertsAdd)
+    public virtual void AddVerts(Vector3Int localPosition, BlockDirectionEnum direction, List<Vector3> listVerts, Vector3[] vertsAdd)
     {
         for (int i = 0; i < vertsAdd.Length; i++)
         {

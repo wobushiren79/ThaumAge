@@ -22,7 +22,7 @@ public class ControlForPlayer : ControlForBase
 
     private InputAction inputActionUseL;
     private InputAction inputActionUseR;
-    private InputAction inputActionUseF;
+    private InputAction inputActionUseFace;
 
     private InputAction inputActionJump;
     private InputAction inputActionMove;
@@ -49,8 +49,8 @@ public class ControlForPlayer : ControlForBase
         inputActionUseR.started += HandleForUseR;
         inputActionUseR.canceled += HandleForUseEnd;
 
-        inputActionUseF = InputHandler.Instance.manager.GetInputPlayerData("UseF");
-        inputActionUseF.started += HandleForUseF;
+        inputActionUseFace = InputHandler.Instance.manager.GetInputPlayerData("UseE");
+        inputActionUseFace.started += HandleForUseF;
 
         inputActionUseDrop = InputHandler.Instance.manager.GetInputPlayerData("Drop");
         inputActionUseDrop.started += HandleForDrop;
@@ -79,7 +79,7 @@ public class ControlForPlayer : ControlForBase
         inputActionUseL.canceled -= HandleForUseEnd;
         inputActionUseR.started -= HandleForUseR;
         inputActionUseR.canceled -= HandleForUseEnd;
-        inputActionUseF.started -= HandleForUseF;
+        inputActionUseFace.started -= HandleForUseF;
         inputActionuserDetailsData.started -= HandleForUserDetails;
         inputActionUseDrop.started -= HandleForDrop;
     }

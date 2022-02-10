@@ -138,7 +138,7 @@ public class BlockShapeCube : BlockShape
     /// <param name="verts"></param>
     /// <param name="uvs"></param>
     /// <param name="tris"></param>
-    public override void BuildBlock(Chunk chunk, Vector3Int localPosition, DirectionEnum direction)
+    public override void BuildBlock(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction)
     {
         base.BuildBlock(chunk, localPosition, direction);
 
@@ -216,7 +216,7 @@ public class BlockShapeCube : BlockShape
         }
     }
 
-    public override void BuildBlockNoCheck(Chunk chunk, Vector3Int localPosition, DirectionEnum direction)
+    public override void BuildBlockNoCheck(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction)
     {
         base.BuildBlockNoCheck(chunk, localPosition, direction);
         if (block.blockType != BlockTypeEnum.None)
@@ -242,14 +242,14 @@ public class BlockShapeCube : BlockShape
     /// <param name="right"></param>
     /// <param name="reversed"></param>
     /// <param name="chunkData"></param>
-    public virtual void BuildFace(Block block, Chunk chunk, Vector3Int localPosition, DirectionEnum direction, DirectionEnum face, Vector3[] vertsAddFace, Vector2[] uvsAdd, bool reversed)
+    public virtual void BuildFace(Block block, Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction, DirectionEnum face, Vector3[] vertsAddFace, Vector2[] uvsAdd, bool reversed)
     {
         BaseAddTris(chunk, localPosition, direction, face, reversed);
         BaseAddVerts(chunk, localPosition, direction, face, vertsAddFace);
         BaseAddUVs(chunk, localPosition, direction, face, uvsAdd);
     }
 
-    public virtual void BaseAddVerts(Chunk chunk, Vector3Int localPosition, DirectionEnum direction, DirectionEnum face, Vector3[] vertsAdd)
+    public virtual void BaseAddVerts(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction, DirectionEnum face, Vector3[] vertsAdd)
     {
         AddVerts(localPosition, direction, chunk.chunkMeshData.verts, vertsAdd);
         if (block.blockInfo.collider_state == 1)
@@ -258,13 +258,13 @@ public class BlockShapeCube : BlockShape
             AddVerts(localPosition, direction, chunk.chunkMeshData.vertsTrigger, vertsAdd);
     }
 
-    public virtual void BaseAddUVs(Chunk chunk, Vector3Int localPosition, DirectionEnum direction, DirectionEnum face, Vector2[] uvsAdd)
+    public virtual void BaseAddUVs(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction, DirectionEnum face, Vector2[] uvsAdd)
     {
         AddUVs(chunk.chunkMeshData.uvs, uvsAdd);
     }
 
 
-    public virtual void BaseAddTris(Chunk chunk, Vector3Int localPosition, DirectionEnum direction, DirectionEnum face, bool reversed)
+    public virtual void BaseAddTris(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction, DirectionEnum face, bool reversed)
     {
         base.BaseAddTris(chunk, localPosition, direction);
 

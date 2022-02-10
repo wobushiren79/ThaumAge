@@ -65,7 +65,7 @@ public class Block
     /// <summary>
     /// 删除方块mesh
     /// </summary>
-    public virtual void RemoveBlockMesh(Chunk chunk, Vector3Int localPosition, DirectionEnum direction, ChunkMeshIndexData meshIndexData)
+    public virtual void RemoveBlockMesh(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction, ChunkMeshIndexData meshIndexData)
     {
         //删除该条下标信息
         chunk.chunkMeshData.dicIndexData.Remove(localPosition);
@@ -102,7 +102,7 @@ public class Block
     /// <summary>
     /// 互动
     /// </summary>
-    public virtual void Interactive()
+    public virtual void Interactive(Vector3Int worldPosition)
     {
 
     }
@@ -113,12 +113,12 @@ public class Block
     /// <param name="verts"></param>
     /// <param name="uvs"></param>
     /// <param name="tris"></param>
-    public virtual void BuildBlock(Chunk chunk, Vector3Int localPosition, DirectionEnum direction)
+    public virtual void BuildBlock(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction)
     {
         blockShape.BuildBlock(chunk, localPosition, direction);
     }
 
-    public virtual void BuildBlockNoCheck(Chunk chunk, Vector3Int localPosition, DirectionEnum direction)
+    public virtual void BuildBlockNoCheck(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction)
     {
         blockShape.BuildBlock(chunk, localPosition, direction);
     }
@@ -130,7 +130,7 @@ public class Block
     /// <param name="chunk"></param>
     /// <param name="localPosition"></param>
     /// <param name="state">0:创建地形 1：手动设置方块</param>
-    public virtual void InitBlock(Chunk chunk, Vector3Int localPosition,int state)
+    public virtual void InitBlock(Chunk chunk, Vector3Int localPosition, int state)
     {
         CreateBlockModel(chunk, localPosition);
     }
@@ -185,7 +185,7 @@ public class Block
     /// <summary>
     /// 刷新方块
     /// </summary>
-    public virtual void RefreshBlock(Chunk chunk, Vector3Int localPosition, DirectionEnum direction)
+    public virtual void RefreshBlock(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction)
     {
         //更新方块
         WorldCreateHandler.Instance.HandleForUpdateChunk(chunk, localPosition, this, this, direction, false);
@@ -194,7 +194,7 @@ public class Block
     /// <summary>
     /// 刷新周围方块
     /// </summary>
-    public virtual void RefreshBlockRange(Chunk chunk, Vector3Int localPosition, DirectionEnum direction)
+    public virtual void RefreshBlockRange(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction)
     {
         Vector3Int worldPosition = localPosition + chunk.chunkData.positionForWorld;
 
@@ -212,7 +212,7 @@ public class Block
     /// <param name="closeWorldPosition"></param>
     public virtual void RefreshBlockClose(Vector3Int closeWorldPosition)
     {
-        WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(closeWorldPosition, out Block closeBlock, out DirectionEnum direction, out Chunk closeChunk);
+        WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(closeWorldPosition, out Block closeBlock, out BlockDirectionEnum direction, out Chunk closeChunk);
         if (closeChunk != null && closeBlock != null && closeBlock.blockType != BlockTypeEnum.None)
         {
             closeBlock?.RefreshBlock(closeChunk, closeWorldPosition - closeChunk.chunkData.positionForWorld, direction);

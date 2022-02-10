@@ -38,7 +38,7 @@ public class BlockTypeCropCorn : BlockBaseCrop
             {
                 blockCropDataUp.uvIndex = 1;
             }
-            chunk.SetBlockForLocal(localPosition + Vector3Int.up, BlockTypeEnum.CropCorn, DirectionEnum.UP, ToMetaData(blockCropDataUp), false);
+            chunk.SetBlockForLocal(localPosition + Vector3Int.up, BlockTypeEnum.CropCorn, BlockDirectionEnum.UpForward, ToMetaData(blockCropDataUp), false);
 
             //继续往上
             if (chunkUpUp != null && blockUpUp != null && blockUpUp.blockType != BlockTypeEnum.None)
@@ -46,7 +46,7 @@ public class BlockTypeCropCorn : BlockBaseCrop
                 return;
             }
             blockCropDataUp.uvIndex = 2;
-            chunk.SetBlockForLocal(localPosition + Vector3Int.up * 2, BlockTypeEnum.CropCorn, DirectionEnum.UP, ToMetaData(blockCropDataUp), false);
+            chunk.SetBlockForLocal(localPosition + Vector3Int.up * 2, BlockTypeEnum.CropCorn, BlockDirectionEnum.UpForward, ToMetaData(blockCropDataUp), false);
         }
     }
 }

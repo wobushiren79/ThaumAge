@@ -194,8 +194,7 @@ public class BlockEditorWindow : EditorWindow
         blockInfo.shape = (int)EditorUI.GUIEnum<BlockShapeEnum>("方块形状：", blockInfo.shape);
         EditorUI.GUIText("重量", 50);
         blockInfo.weight = EditorUI.GUIEditorText(blockInfo.weight);
-        EditorUI.GUIText("旋转状态（0不能旋转 1可以旋转）", 200);
-        blockInfo.rotate_state = EditorUI.GUIEditorText(blockInfo.rotate_state);
+        EditorUI.GUIText("旋转状态（0不能旋转 1可以旋转 2只能正面朝上旋转）", 200);
         EditorUI.GUIText("图片", 50);
         blockInfo.uv_position = EditorUI.GUIEditorText(blockInfo.uv_position);
         string[] uvStr = blockInfo.uv_position.SplitForArrayStr('|');
@@ -336,7 +335,16 @@ public class BlockEditorWindow : EditorWindow
             GameObject obj = EditorUtil.GetAssetByPath<GameObject>($"{Path_Block_Mesh}/{itemFile.Name}");
             MeshFilter meshFilter = obj.GetComponentInChildren<MeshFilter>();
             Collider collider = obj.GetComponentInChildren<Collider>();
-            MeshData meshData = new MeshData(collider,meshFilter.sharedMesh,0.625f,new Vector3(0.5f,0f,0.5f));
+
+            MeshData meshData;
+            if (meshFilter != null)
+            {
+                meshData = new MeshData(collider, meshFilter.sharedMesh, 0.625f, new Vector3(0.5f, 0f, 0.5f));
+            }
+            else
+            {
+                meshData = new MeshData(collider, 0.625f, new Vector3(0.5f, 0f, 0.5f));
+            }
             string jsonData = JsonUtil.ToJson(meshData);
             string saveFileName = $"{itemFile.Name.Replace(".prefab", "").Replace(".obj","")}";
             //创建文件

@@ -74,7 +74,7 @@ public class BlockShapeCubeCuboid : BlockShapeCube
     /// <param name="verts"></param>
     /// <param name="uvs"></param>
     /// <param name="tris"></param>
-    public override void BuildBlock(Chunk chunk, Vector3Int localPosition, DirectionEnum direction)
+    public override void BuildBlock(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction)
     {
         if (block.blockType != BlockTypeEnum.None)
         {
@@ -154,7 +154,7 @@ public class BlockShapeCubeCuboid : BlockShapeCube
     /// <param name="direction"></param>
     /// <param name="closeDirection"></param>
     /// <returns></returns>
-    public override bool CheckNeedBuildFace(Chunk chunk, Vector3Int localPosition, DirectionEnum direction, DirectionEnum closeDirection)
+    public override bool CheckNeedBuildFace(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction, DirectionEnum closeDirection)
     {
         if (localPosition.y == 0) return false;
         GetCloseRotateBlockByDirection(chunk, localPosition, direction, closeDirection, out Block closeBlock, out Chunk closeBlockChunk);

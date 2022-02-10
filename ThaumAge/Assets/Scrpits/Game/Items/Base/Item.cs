@@ -78,14 +78,14 @@ public class Item
             if (chunkForHit)
             {
                 //获取位置和方向
-                player.playerRay.GetHitPositionAndDirection(hit, out Vector3Int targetPosition, out Vector3Int closePosition, out DirectionEnum direction);
+                player.playerRay.GetHitPositionAndDirection(hit, out Vector3Int targetPosition, out Vector3Int closePosition, out BlockDirectionEnum direction);
 
                 Vector3Int localPosition = targetPosition - chunkForHit.chunkData.positionForWorld;
                 //获取原位置方块
                 Block tagetBlock = chunkForHit.chunkData.GetBlockForLocal(localPosition);
                 if (tagetBlock.blockInfo.interactive_state == 1)
                 {
-                    tagetBlock.Interactive();
+                    tagetBlock.Interactive(targetPosition);
                 }
             }
         }
@@ -101,7 +101,7 @@ public class Item
             if (chunkForHit)
             {
                 //获取位置和方向
-                player.playerRay.GetHitPositionAndDirection(hit, out Vector3Int targetPosition, out Vector3Int closePosition, out DirectionEnum direction);
+                player.playerRay.GetHitPositionAndDirection(hit, out Vector3Int targetPosition, out Vector3Int closePosition, out BlockDirectionEnum direction);
                 //挖掘
                 BreakTarget(itemsData, targetPosition);
             }
@@ -125,7 +125,7 @@ public class Item
             if (chunkForHit)
             {
                 //获取位置和方向
-                player.playerRay.GetHitPositionAndDirection(hit, out Vector3Int targetPosition, out Vector3Int closePosition, out DirectionEnum direction);
+                player.playerRay.GetHitPositionAndDirection(hit, out Vector3Int targetPosition, out Vector3Int closePosition, out BlockDirectionEnum direction);
                 Vector3Int localPosition = targetPosition - chunkForHit.chunkData.positionForWorld;
                 //获取原位置方块
                 Block tagetBlock = chunkForHit.chunkData.GetBlockForLocal(localPosition);
@@ -148,7 +148,7 @@ public class Item
     public virtual void BreakTarget(ItemsBean itemsData, Vector3Int targetPosition)
     {
         //获取原位置方块
-        WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(targetPosition, out Block oldBlock, out DirectionEnum oldBlockDirection, out Chunk targetChunk);
+        WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(targetPosition, out Block oldBlock, out BlockDirectionEnum oldBlockDirection, out Chunk targetChunk);
         if (targetChunk == null)
             return;
         //如果原位置是空则不做处理

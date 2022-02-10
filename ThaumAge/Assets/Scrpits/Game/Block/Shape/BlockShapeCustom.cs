@@ -23,7 +23,7 @@ public class BlockShapeCustom : BlockShape
             trisColliderAddCustom = blockMeshData.trianglesCollider;
     }
 
-    public override void BuildBlock(Chunk chunk, Vector3Int localPosition, DirectionEnum direction)
+    public override void BuildBlock(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction)
     {
         base.BuildBlock(chunk, localPosition, direction);
         if (block.blockType != BlockTypeEnum.None)
@@ -53,7 +53,7 @@ public class BlockShapeCustom : BlockShape
         }
     }
 
-    public override void BaseAddTris(Chunk chunk, Vector3Int localPosition, DirectionEnum direction)
+    public override void BaseAddTris(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction)
     {
         base.BaseAddTris(chunk, localPosition, direction);
 
@@ -76,13 +76,13 @@ public class BlockShapeCustom : BlockShape
         }
     }
 
-    public override void BaseAddUVs(Chunk chunk, Vector3Int localPosition, DirectionEnum direction)
+    public override void BaseAddUVs(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction)
     {
         base.BaseAddUVs(chunk, localPosition, direction);
         AddUVs(chunk.chunkMeshData.uvs, uvsAdd);
     }
 
-    public override void BaseAddVerts(Chunk chunk, Vector3Int localPosition, DirectionEnum direction, Vector3[] vertsAdd)
+    public override void BaseAddVerts(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction, Vector3[] vertsAdd)
     {
         base.BaseAddVerts(chunk, localPosition, direction, vertsAdd);
         AddVerts(localPosition, direction, chunk.chunkMeshData.verts, vertsAdd);

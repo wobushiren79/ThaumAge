@@ -12,7 +12,7 @@ public class ItemTypeHoe : ItemBaseTool
             if (chunkForHit)
             {
                 //获取位置和方向
-                player.playerRay.GetHitPositionAndDirection(hit, out Vector3Int targetPosition, out Vector3Int closePosition, out DirectionEnum direction);
+                player.playerRay.GetHitPositionAndDirection(hit, out Vector3Int targetPosition, out Vector3Int closePosition, out BlockDirectionEnum direction);
 
                 Vector3Int localPosition = targetPosition - chunkForHit.chunkData.positionForWorld;
                 //获取原位置方块
@@ -44,12 +44,9 @@ public class ItemTypeHoe : ItemBaseTool
                     EventHandler.Instance.TriggerEvent(EventsInfo.ItemsBean_MetaChange, itemData);
                 }
 
-                Vector3 face = Vector3.Normalize(player.transform.position - hit.point);
-                int rotate = Mathf.Abs(face.x) > Mathf.Abs(face.z) ? 0 : 1;
-
                 BlockTypeEnum ploughBlockType = (BlockTypeEnum)tagetBlock.blockInfo.plough_change;
                 //替换为耕地方块
-                chunkForHit.SetBlockForLocal(localPosition, ploughBlockType, direction, BlockBasePlough.ToMetaData(rotate));
+                chunkForHit.SetBlockForLocal(localPosition, ploughBlockType, direction);
 
                 //播放粒子特效
                 BlockCptBreak.PlayBlockCptBreakEffect(ploughBlockType, targetPosition + new Vector3(0.5f, 0.5f, 0.5f));

@@ -13,7 +13,7 @@ public class ItemTypeSeed : Item
             if (chunkForHit)
             {
                 //获取位置和方向
-                player.playerRay.GetHitPositionAndDirection(hit, out Vector3Int targetPosition, out Vector3Int closePosition, out DirectionEnum direction);
+                player.playerRay.GetHitPositionAndDirection(hit, out Vector3Int targetPosition, out Vector3Int closePosition, out BlockDirectionEnum direction);
 
                 Vector3Int localPosition = targetPosition - chunkForHit.chunkData.positionForWorld;
                 //获取原位置方块
@@ -41,7 +41,7 @@ public class ItemTypeSeed : Item
                 blockCropData.growPro = 0;
                 string metaData = BlockBaseCrop.ToMetaData(blockCropData);
                 //替换为种植
-                chunkForHit.SetBlockForLocal(upLocalPosition, plantBlockType, DirectionEnum.UP, metaData);
+                chunkForHit.SetBlockForLocal(upLocalPosition, plantBlockType, BlockDirectionEnum.UpForward, metaData);
 
                 //扣除道具
                 UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();
