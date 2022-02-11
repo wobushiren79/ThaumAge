@@ -123,7 +123,7 @@ public class ItemsHandler : BaseHandler<ItemsHandler, ItemsManager>
     /// <param name="oldBlock"></param>
     /// <param name="targetChunk"></param>
     /// <param name="targetPosition"></param>
-    public void CreateItemCptDrop(Block targetBlock,Chunk targetChunk,Vector3Int targetPosition)
+    public void CreateItemCptDrop(Block targetBlock, Chunk targetChunk, Vector3Int targetWorldPosition)
     {
         //如果是种植类物品
         if (targetBlock.blockInfo.GetBlockShape() == BlockShapeEnum.CropCross
@@ -131,11 +131,11 @@ public class ItemsHandler : BaseHandler<ItemsHandler, ItemsManager>
             || targetBlock.blockInfo.GetBlockShape() == BlockShapeEnum.CropWell)
         {
             //首先判断生长周期
-            BlockBean blockData = targetChunk.GetBlockData(targetPosition - targetChunk.chunkData.positionForWorld);
+            BlockBean blockData = targetChunk.GetBlockData(targetWorldPosition - targetChunk.chunkData.positionForWorld);
             //获取种植收货
             List<ItemsBean> listHarvest = targetBlock.GetDropItems(blockData);
             //创建掉落物
-            CreateItemCptDropList(listHarvest, targetPosition + Vector3.one * 0.5f, ItemDropStateEnum.DropPick);
+            CreateItemCptDropList(listHarvest, targetWorldPosition + Vector3.one * 0.5f, ItemDropStateEnum.DropPick);
         }
         else
         {
@@ -145,12 +145,12 @@ public class ItemsHandler : BaseHandler<ItemsHandler, ItemsManager>
             if (listDrop.IsNull())
             {
                 //创建掉落物
-                CreateItemCptDrop(targetBlock.blockType, 1, targetPosition + Vector3.one * 0.5f, ItemDropStateEnum.DropPick);
+                CreateItemCptDrop(targetBlock.blockType, 1, targetWorldPosition + Vector3.one * 0.5f, ItemDropStateEnum.DropPick);
             }
             else
             {
                 //创建掉落物
-                CreateItemCptDropList(listDrop, targetPosition + Vector3.one * 0.5f, ItemDropStateEnum.DropPick);
+                CreateItemCptDropList(listDrop, targetWorldPosition + Vector3.one * 0.5f, ItemDropStateEnum.DropPick);
             }
         }
     }

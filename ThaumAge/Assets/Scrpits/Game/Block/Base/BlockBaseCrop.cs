@@ -6,9 +6,9 @@ public class BlockBaseCrop : BlockBasePlant
 {
     protected List<Vector2Int[]> listGrowUV;
 
-    public override void InitBlock(Chunk chunk, Vector3Int localPosition,int state)
+    public override void InitBlock(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum blockDirection, int state)
     {
-        base.InitBlock(chunk, localPosition, state);
+        base.InitBlock(chunk, localPosition, blockDirection, state);
         this.InitCropData(chunk, localPosition);
     }
 
@@ -153,19 +153,5 @@ public class BlockBaseCrop : BlockBasePlant
         {
             vertsAdd[i] = vertsAdd[i].AddY(offsetY);
         }
-    }
-
-    /// <summary>
-    /// 获取meta数据
-    /// </summary>
-    /// <returns></returns>
-    public static string ToMetaData<T>(T blockCrop) where T : BlockCropBean
-    {
-        return JsonUtil.ToJson(blockCrop);
-    }
-
-    public static T FromMetaData<T>(string data) where T : BlockCropBean
-    {
-        return JsonUtil.FromJson<T>(data);
     }
 }

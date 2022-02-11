@@ -130,17 +130,17 @@ public class Block
     /// <param name="chunk"></param>
     /// <param name="localPosition"></param>
     /// <param name="state">0:创建地形 1：手动设置方块</param>
-    public virtual void InitBlock(Chunk chunk, Vector3Int localPosition, int state)
+    public virtual void InitBlock(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum blockDirection, int state)
     {
-        CreateBlockModel(chunk, localPosition);
+        CreateBlockModel(chunk, localPosition, blockDirection);
     }
 
     /// <summary>
-    /// 摧毁方块
+    /// 摧毁方块-设置新方块之前
     /// </summary>
-    public virtual void DestoryBlock(Chunk chunk, Vector3Int localPosition)
+    public virtual void DestoryBlock(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction)
     {
-        DestoryBlockModel(chunk, localPosition);
+        DestoryBlockModel(chunk, localPosition, direction);
         //取消注册
         chunk.UnRegisterEventUpdate(localPosition, TimeUpdateEventTypeEnum.Sec);
         chunk.UnRegisterEventUpdate(localPosition, TimeUpdateEventTypeEnum.Min);
@@ -164,7 +164,7 @@ public class Block
     /// <summary>
     /// 创建方块的模型
     /// </summary>
-    public virtual void CreateBlockModel(Chunk chunk, Vector3Int localPosition)
+    public virtual void CreateBlockModel(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum blockDirection)
     {
         //如果有模型。则创建模型
         if (!blockInfo.model_name.IsNull())
@@ -176,7 +176,7 @@ public class Block
     /// <summary>
     /// 删除方块的模型
     /// </summary>
-    public virtual void DestoryBlockModel(Chunk chunk, Vector3Int localPosition)
+    public virtual void DestoryBlockModel(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction)
     {
         //摧毁模型
         chunk.listBlockModelDestroy.Enqueue(localPosition);
@@ -324,5 +324,103 @@ public class Block
             block = chunk.chunkData.GetBlockForLocal(localPosition);
             blockChunk = chunk;
         }
+    }
+
+    /// <summary>
+    /// 创建链接的方块
+    /// </summary>
+    public virtual void CreateLinkBlock(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction, List<Vector3Int> listLink)
+    {
+        //获取数据
+        BlockBean blockData = chunk.GetBlockData(localPosition);
+        if (blockData != null)
+        {
+            BlockDoorBean blockDoorData = FromMetaData<BlockDoorBean>(blockData.meta);
+            if (blockDoorData != null)
+            {
+                //如果是子级 则不生成
+                if (blockDoorData.level > 0)
+                    return;
+            }
+        }
+        //判断是否在指定的link坐标上有其他方块，如果有则生成道具
+        bool hasBlock = false;
+        for (int i = 0; i < listLink.Count; i++)
+        {
+            Vector3Int linkPosition = listLink[i];
+            Vector3Int closeWorldPosition = localPosition + chunk.chunkData.positionForWorld + linkPosition;
+            chunk.GetBlockForWorld(closeWorldPosition, out Block closeBlock, out BlockDirectionEnum closeDirection, out Chunk closeChunk);
+            if (closeBlock != null && closeBlock.blockType != BlockTypeEnum.None)
+            {
+                hasBlock = true;
+                break;
+            }
+        }
+        if (hasBlock)
+        {
+            //创建道具
+            chunk.SetBlockForLocal(localPosition, BlockTypeEnum.None);
+            ItemsHandler.Instance.CreateItemCptDrop(this, chunk, localPosition + chunk.chunkData.positionForWorld);
+        }
+        else
+        {
+            //创建link方块
+            for (int i = 0; i < listLink.Count; i++)
+            {
+                Vector3Int linkPosition = listLink[i];
+                Vector3Int closeWorldPosition = localPosition + chunk.chunkData.positionForWorld + linkPosition;
+                BlockDoorBean blockDoor = new BlockDoorBean();
+                blockDoor.level = 1;
+                blockDoor.linkBasePosition = new Vector3IntBean(localPosition + chunk.chunkData.positionForWorld);
+                chunk.SetBlockForWorld(closeWorldPosition, blockType, direction, ToMetaData(blockDoor));
+            }
+        }
+    }
+
+    public void DestoryLinkBlock(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction, List<Vector3Int> listLink)
+    {
+        Vector3Int baseWorldPosition = localPosition + chunk.chunkData.positionForWorld;
+        //获取数据
+        BlockBean blockData = chunk.GetBlockData(localPosition);
+        //延迟一帧执行 等当前方块已经删除了
+        chunk.WaitExecuteEndOfFrame(1, () =>
+        {
+            if (blockData != null)
+            {
+                BlockDoorBean blockDoorData = FromMetaData<BlockDoorBean>(blockData.meta);
+                if (blockDoorData != null)
+                {
+                    //如果是子级 则不生成
+                    if (blockDoorData.level > 0)
+                    {
+                        baseWorldPosition = blockDoorData.linkBasePosition.GetVector3Int();
+                        //删除基础方块
+                        chunk.SetBlockForWorld(baseWorldPosition, BlockTypeEnum.None);
+                    }
+                }
+            }
+
+            //如果不是子级 则说明是基础方块 从这里开始删除方块
+            for (int i = 0; i < listLink.Count; i++)
+            {
+                Vector3Int linkPosition = listLink[i];
+                Vector3Int closeWorldPosition = baseWorldPosition + linkPosition;
+                chunk.SetBlockForWorld(closeWorldPosition, BlockTypeEnum.None);
+            }
+        });
+    }
+
+    /// <summary>
+    /// 获取meta数据
+    /// </summary>
+    /// <returns></returns>
+    public static string ToMetaData<T>(T blockData)
+    {
+        return JsonUtil.ToJson(blockData);
+    }
+
+    public static T FromMetaData<T>(string data)
+    {
+        return JsonUtil.FromJson<T>(data);
     }
 }

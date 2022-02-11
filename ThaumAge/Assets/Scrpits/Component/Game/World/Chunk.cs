@@ -198,8 +198,8 @@ public class Chunk : BaseMonoBehaviour
     public void ClearBlockData(int x, int y, int z)
     {
         if (chunkSaveData == null)
-            return ;
-        chunkSaveData.ClearBlockData(x,y,z);
+            return;
+        chunkSaveData.ClearBlockData(x, y, z);
     }
     /// <summary>
     /// 清除数据
@@ -325,7 +325,7 @@ public class Chunk : BaseMonoBehaviour
                                     continue;
                                 Vector3Int localPosition = new Vector3Int(x, y, z);
                                 block.BuildBlock(this, localPosition, direction);
-                                block.InitBlock(this, localPosition,0);
+                                block.InitBlock(this, localPosition, direction, 0);
                             }
                         }
                     }
@@ -473,13 +473,13 @@ public class Chunk : BaseMonoBehaviour
     /// 移除方块
     /// </summary>
     /// <param name="position"></param>
-    public void RemoveBlockForWorld(Vector3Int worldPosition,bool isSaveData = true)
+    public void RemoveBlockForWorld(Vector3Int worldPosition, bool isSaveData = true)
     {
-        SetBlockForWorld(worldPosition, BlockTypeEnum.None, isSaveData : isSaveData);
+        SetBlockForWorld(worldPosition, BlockTypeEnum.None, isSaveData: isSaveData);
     }
-    public void RemoveBlockForLocal(Vector3Int localPosition,bool isSaveData = true)
+    public void RemoveBlockForLocal(Vector3Int localPosition, bool isSaveData = true)
     {
-        SetBlockForLocal(localPosition, BlockTypeEnum.None, isSaveData : isSaveData);
+        SetBlockForLocal(localPosition, BlockTypeEnum.None, isSaveData: isSaveData);
     }
 
     /// <summary>
@@ -490,22 +490,22 @@ public class Chunk : BaseMonoBehaviour
         Vector3Int blockLocalPosition = worldPosition - chunkData.positionForWorld;
         SetBlockForLocal(blockLocalPosition, blockType, direction, meta, isRefreshMesh, isSaveData, isRefreshBlockRange);
     }
-
     public void SetBlockForLocal(Vector3Int localPosition, BlockTypeEnum blockType, BlockDirectionEnum direction = BlockDirectionEnum.UpForward, string meta = null, bool isRefreshMesh = true, bool isSaveData = true, bool isRefreshBlockRange = true)
     {
+        if (localPosition.y > chunkData.chunkHeight)
+            return;
         //首先移除方块
         Block oldBlock = chunkData.GetBlockForLocal(localPosition);
         if (oldBlock != null && oldBlock.blockType != BlockTypeEnum.None)
         {
-            oldBlock.DestoryBlock(this, localPosition);
+            //先删除方块 再删除老数据 因为再删除方块时会用到老数据
+            oldBlock.DestoryBlock(this, localPosition, direction);
             //删除老数据
             ClearBlockData(localPosition);
         }
         //设置新方块
         Block newBlock = BlockHandler.Instance.manager.GetRegisterBlock(blockType);
         chunkData.SetBlockForLocal(localPosition, newBlock, direction);
-
-        newBlock.InitBlock(this, localPosition,1);
 
         //保存数据
         if (isSaveData)
@@ -518,6 +518,8 @@ public class Chunk : BaseMonoBehaviour
         {
             WorldCreateHandler.Instance.HandleForUpdateChunk(this, localPosition, oldBlock, newBlock, direction);
         }
+        //初始化方块(放再这里是等处理完数据和mesh之后再初始化)
+        newBlock.InitBlock(this, localPosition, direction, 1);
         //刷新六个方向的方块
         if (isRefreshBlockRange)
         {

@@ -3,9 +3,9 @@ using UnityEngine;
 
 public class BlockBaseLiquid : Block
 {
-    public override void InitBlock(Chunk chunk, Vector3Int localPosition, int state)
+    public override void InitBlock(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum blockDirection, int state)
     {
-        base.InitBlock(chunk, localPosition, state);
+        base.InitBlock(chunk, localPosition, blockDirection, state);
         if (state == 1)
         {
             //刷新的时候注册事件 
@@ -189,17 +189,4 @@ public class BlockBaseLiquid : Block
         return number;
     }
 
-    /// <summary>
-    /// 获取meta数据
-    /// </summary>
-    /// <returns></returns>
-    public static string ToMetaData<T>(T blockData) where T : BlockLiquidBean
-    {
-        return JsonUtil.ToJson(blockData);
-    }
-
-    public static T FromMetaData<T>(string data) where T : BlockLiquidBean
-    {
-        return JsonUtil.FromJson<T>(data);
-    }
 }
