@@ -102,7 +102,7 @@ public class Block
     /// <summary>
     /// 互动
     /// </summary>
-    public virtual void Interactive(Vector3Int worldPosition)
+    public virtual void Interactive(GameObject user, Vector3Int worldPosition)
     {
 
     }
@@ -377,6 +377,13 @@ public class Block
         }
     }
 
+    /// <summary>
+    /// 删除链接方块
+    /// </summary>
+    /// <param name="chunk"></param>
+    /// <param name="localPosition"></param>
+    /// <param name="direction"></param>
+    /// <param name="listLink"></param>
     public void DestoryLinkBlock(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction, List<Vector3Int> listLink)
     {
         Vector3Int baseWorldPosition = localPosition + chunk.chunkData.positionForWorld;
@@ -408,6 +415,37 @@ public class Block
                 chunk.SetBlockForWorld(closeWorldPosition, BlockTypeEnum.None);
             }
         });
+    }
+
+    /// <summary>
+    /// 保存链接数据
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="chunk"></param>
+    /// <param name="baseWorldPosition"></param>
+    /// <param name="listLinkPosition"></param>
+    /// <param name="data"></param>
+    public void SaveLinkBlockData<T>(Vector3Int baseWorldPosition, List<Vector3Int> listLinkPosition, T data) where T : BlockBaseLinkBean
+    {
+        for (int i = 0; i < listLinkPosition.Count; i++)
+        {
+            Vector3Int linkOffsetPosition = listLinkPosition[i];
+            Vector3Int linkWorldPosition = linkOffsetPosition + baseWorldPosition;
+            WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(linkWorldPosition, out Block itemBlock, out Chunk itemChunk);
+
+            if (linkOffsetPosition == Vector3Int.zero)
+            {
+                data.level = 0;
+            }
+            else
+            {
+                data.level = 1;
+            }
+
+            BlockBean itemBlockData = itemChunk.GetBlockData(linkWorldPosition - itemChunk.chunkData.positionForWorld);
+            itemBlockData.meta = ToMetaData(data);
+            itemChunk.SetBlockData(itemBlockData);
+        }
     }
 
     /// <summary>

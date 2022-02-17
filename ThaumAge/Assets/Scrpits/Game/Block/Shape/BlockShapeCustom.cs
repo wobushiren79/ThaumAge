@@ -25,7 +25,6 @@ public class BlockShapeCustom : BlockShape
 
     public override void BuildBlock(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction)
     {
-        base.BuildBlock(chunk, localPosition, direction);
         if (block.blockType != BlockTypeEnum.None)
         {
             int startVertsIndex = chunk.chunkMeshData.verts.Count;
@@ -53,6 +52,14 @@ public class BlockShapeCustom : BlockShape
         }
     }
 
+
+    public override void BaseAddUVs(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction)
+    {
+        base.BaseAddUVs(chunk, localPosition, direction);
+        AddUVs(chunk.chunkMeshData.uvs, uvsAdd);
+    }
+
+    #region 增加三角
     public override void BaseAddTris(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction)
     {
         base.BaseAddTris(chunk, localPosition, direction);
@@ -69,26 +76,23 @@ public class BlockShapeCustom : BlockShape
             int colliderIndex = chunk.chunkMeshData.vertsCollider.Count;
             AddTris(colliderIndex, trisCollider, trisColliderAddCustom);
         }
-        if (block.blockInfo.trigger_state == 1)
+        else if (block.blockInfo.trigger_state == 1)
         {
             int triggerIndex = chunk.chunkMeshData.vertsTrigger.Count;
             AddTris(triggerIndex, trisTrigger, trisColliderAddCustom);
         }
     }
+    #endregion
 
-    public override void BaseAddUVs(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction)
-    {
-        base.BaseAddUVs(chunk, localPosition, direction);
-        AddUVs(chunk.chunkMeshData.uvs, uvsAdd);
-    }
-
+    #region 增加顶点
     public override void BaseAddVerts(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction, Vector3[] vertsAdd)
     {
         base.BaseAddVerts(chunk, localPosition, direction, vertsAdd);
         AddVerts(localPosition, direction, chunk.chunkMeshData.verts, vertsAdd);
         if (block.blockInfo.collider_state == 1)
             AddVerts(localPosition, direction, chunk.chunkMeshData.vertsCollider, vertsColliderAddCustom);
-        if (block.blockInfo.trigger_state == 1)
+        else if (block.blockInfo.trigger_state == 1)
             AddVerts(localPosition, direction, chunk.chunkMeshData.vertsTrigger, vertsColliderAddCustom);
     }
+    #endregion
 }

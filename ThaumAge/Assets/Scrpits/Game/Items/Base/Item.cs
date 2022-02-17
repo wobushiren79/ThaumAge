@@ -85,7 +85,7 @@ public class Item
                 Block tagetBlock = chunkForHit.chunkData.GetBlockForLocal(localPosition);
                 if (tagetBlock.blockInfo.interactive_state == 1)
                 {
-                    tagetBlock.Interactive(targetPosition);
+                    tagetBlock.Interactive(player.gameObject, targetPosition);
                 }
             }
         }
@@ -122,7 +122,7 @@ public class Item
         if (player.playerRay.RayToChunkBlock(out RaycastHit hit, out Vector3Int targetBlockPosition))
         {
             Chunk chunkForHit = hit.collider.GetComponentInParent<Chunk>();
-            if (chunkForHit)
+            if (chunkForHit && chunkForHit.isInit)
             {
                 //获取位置和方向
                 player.playerRay.GetHitPositionAndDirection(hit, out Vector3Int targetPosition, out Vector3Int closePosition, out BlockDirectionEnum direction);
@@ -169,7 +169,7 @@ public class Item
             //保存数据
             itemsData.SetMetaData(itemsDetailsTool);
             //回调
-            EventHandler.Instance.TriggerEvent(EventsInfo.ItemsBean_MetaChange, itemsData);   
+            EventHandler.Instance.TriggerEvent(EventsInfo.ItemsBean_MetaChange, itemsData);
         }
 
         BlockCptBreak BlockCptBreak = BlockHandler.Instance.BreakBlock(targetPosition, oldBlock, breakDamage);

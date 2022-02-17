@@ -3,9 +3,9 @@ using UnityEngine;
 
 public class BlockBaseBox : Block
 {
-    public override void Interactive(Vector3Int worldPosition)
+    public override void Interactive(GameObject user, Vector3Int worldPosition)
     {
-        base.Interactive(worldPosition);
+        base.Interactive(user, worldPosition);
         //打开箱子UI
         UIGameBox uiGameBox = UIHandler.Instance.OpenUIAndCloseOther<UIGameBox>(UIEnum.GameBox);
         uiGameBox.SetData(worldPosition);
