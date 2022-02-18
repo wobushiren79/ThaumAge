@@ -135,4 +135,6 @@ public class PlayerRay : PlayerBase
             direction = (BlockDirectionEnum)(rotateDirection + 60);
         }
     }
+
+
 }

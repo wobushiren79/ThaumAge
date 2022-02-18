@@ -108,6 +108,15 @@ public class Block
     }
 
     /// <summary>
+    /// Åö×²
+    /// </summary>
+    /// <param name="user"></param>
+    public virtual void OnCollision(DirectionEnum direction, GameObject user)
+    {
+
+    }
+
+    /// <summary>
     /// ¹¹½¨·½¿é
     /// </summary>
     /// <param name="verts"></param>

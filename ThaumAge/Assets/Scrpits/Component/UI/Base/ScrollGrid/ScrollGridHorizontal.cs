@@ -6,6 +6,8 @@ public class ScrollGridHorizontal : MonoBehaviour
 {
     public GameObject tempCell;
     public Scrollbar horizontalScrollbar;
+    public ScrollRect.MovementType movementType;
+
     private int cellCount;
     private float cellWidth;
     private float cellHeight;
@@ -64,7 +66,7 @@ public class ScrollGridHorizontal : MonoBehaviour
         this.scrollRect.vertical = false;
         this.scrollRect.horizontal = true;
         this.scrollRect.verticalScrollbar = horizontalScrollbar;
-
+        this.scrollRect.movementType = movementType;
         this.scrollRect.scrollSensitivity = 30;
         viewport = new GameObject("viewport", typeof(RectTransform));
         viewport.transform.SetParent(transform);

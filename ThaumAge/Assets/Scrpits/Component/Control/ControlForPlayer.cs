@@ -9,15 +9,22 @@ public class ControlForPlayer : ControlForBase
     private CharacterController characterController;
     private CreatureCptCharacter character;
 
-    private float gravityValue = 10f;
+    //移动速度
+    public float moveSpeed = 1f;
+    //重力
+    public float gravityValue = 10f;
+
     private Vector3 playerVelocity;
+    //是否正在跳跃
     private bool isJump = false;
+    //攀爬剩余时间
+    private float timeClimbEnd = 0;
 
     private float timeJump = 0.2f;
     private float timeJumpTemp = 0;
 
     private float speedJump = 5;
-    public float moveSpeed = 1;
+
     private float speedCharacterRotate = 10;
 
     private InputAction inputActionUseL;
@@ -27,7 +34,7 @@ public class ControlForPlayer : ControlForBase
     private InputAction inputActionJump;
     private InputAction inputActionMove;
     private InputAction inputActionuserDetailsData;
-    private InputAction inputActionUseDrop; 
+    private InputAction inputActionUseDrop;
 
     //是否正在使用道具
     private bool isUseItem = false;
@@ -116,6 +123,15 @@ public class ControlForPlayer : ControlForBase
         RotateCharacter(moveData, speedCharacterRotate);
         //移动角色
         MoveCharacter(moveData, moveSpeed);
+        //攀爬处理
+        if (timeClimbEnd > 0)
+        {
+            float climbSpeed = Mathf.Abs(playerVelocity.x) > Mathf.Abs(playerVelocity.z) ? Mathf.Abs(playerVelocity.x) : Mathf.Abs(playerVelocity.z);
+            playerVelocity.y = climbSpeed;
+            characterController.Move(playerVelocity);
+            timeClimbEnd -= Time.deltaTime;
+            return;
+        }        
         //跳跃处理
         if (isJump)
         {
@@ -143,6 +159,14 @@ public class ControlForPlayer : ControlForBase
         character.characterAnim.creatureAnim.PlayJump(isJump);
     }
 
+    /// <summary>
+    /// 处理攀爬
+    /// </summary>
+    public void HanldeForClimb()
+    {
+        timeClimbEnd = 0.25f;
+    }
+        
     /// <summary>
     /// 开始跳跃处理
     /// </summary>
@@ -224,12 +248,12 @@ public class ControlForPlayer : ControlForBase
         //丢出道具
         Player player = GameHandler.Instance.manager.player;
         Vector3 randomFroce = new Vector3(UnityEngine.Random.Range(-0.5f, 0.5f), UnityEngine.Random.Range(0f, 0.5f), UnityEngine.Random.Range(-0.5f, 0.5f));
-        ItemsHandler.Instance.CreateItemCptDrop(itemData.itemId, 1, player.transform.position + Vector3.up, ItemDropStateEnum.DropNoPick, player.transform.forward + randomFroce);
+        ItemsHandler.Instance.CreateItemCptDrop(itemData.itemId, 1, itemData.meta, player.transform.position + Vector3.up, ItemDropStateEnum.DropNoPick, player.transform.forward + randomFroce);
 
         //扣除道具
         userData.AddItems(itemData, -1);
         //刷新UI
-        UIHandler.Instance.RefreshUI();      
+        UIHandler.Instance.RefreshUI();
     }
 
     public void HandleForUse(CallbackContext callback, int type, bool isUserItem = true)

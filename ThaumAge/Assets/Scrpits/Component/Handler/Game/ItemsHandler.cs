@@ -79,26 +79,26 @@ public class ItemsHandler : BaseHandler<ItemsHandler, ItemsManager>
     /// <summary>
     ///  创建掉落道具实例
     /// </summary>
-    public void CreateItemCptDrop(long itemId, int itemsNumber, Vector3 position, ItemDropStateEnum ItemCptDropState, Vector3 dropDirection)
+    public void CreateItemCptDrop(long itemId, int itemsNumber, string meta, Vector3 position, ItemDropStateEnum ItemCptDropState, Vector3 dropDirection)
     {
-        CreateItemCptDrop(new ItemsBean(itemId, itemsNumber), position, ItemCptDropState, dropDirection);
+        CreateItemCptDrop(new ItemsBean(itemId, itemsNumber, meta), position, ItemCptDropState, dropDirection);
     }
-    public void CreateItemCptDrop(long itemId, int itemsNumber, Vector3 position, ItemDropStateEnum ItemCptDropState)
+    public void CreateItemCptDrop(long itemId, int itemsNumber, string meta, Vector3 position, ItemDropStateEnum ItemCptDropState)
     {
-        CreateItemCptDrop(new ItemsBean(itemId, itemsNumber), position, ItemCptDropState, Vector3.zero);
+        CreateItemCptDrop(new ItemsBean(itemId, itemsNumber, meta), position, ItemCptDropState, Vector3.zero);
     }
 
     /// <summary>
     ///  创建掉落道具实例
     /// </summary>
-    public void CreateItemCptDrop(BlockTypeEnum blockType, int itemsNumber, Vector3 position, ItemDropStateEnum ItemCptDropState, Vector3 dropDirection)
+    public void CreateItemCptDrop(BlockTypeEnum blockType, int itemsNumber, string meta, Vector3 position, ItemDropStateEnum ItemCptDropState, Vector3 dropDirection)
     {
         ItemsInfoBean itemsInfo = manager.GetItemsInfoByBlockType(blockType);
-        CreateItemCptDrop(itemsInfo.id, itemsNumber, position, ItemCptDropState, dropDirection);
+        CreateItemCptDrop(itemsInfo.id, itemsNumber, meta, position, ItemCptDropState, dropDirection);
     }
-    public void CreateItemCptDrop(BlockTypeEnum blockType, int itemsNumber, Vector3 position, ItemDropStateEnum ItemCptDropState)
+    public void CreateItemCptDrop(BlockTypeEnum blockType, int itemsNumber, string meta, Vector3 position, ItemDropStateEnum ItemCptDropState)
     {
-        CreateItemCptDrop(blockType, itemsNumber, position, ItemCptDropState, Vector3.zero);
+        CreateItemCptDrop(blockType, itemsNumber, meta, position, ItemCptDropState, Vector3.zero);
     }
 
     /// <summary>
@@ -125,13 +125,14 @@ public class ItemsHandler : BaseHandler<ItemsHandler, ItemsManager>
     /// <param name="targetPosition"></param>
     public void CreateItemCptDrop(Block targetBlock, Chunk targetChunk, Vector3Int targetWorldPosition)
     {
+        BlockBean blockData = targetChunk.GetBlockData(targetWorldPosition - targetChunk.chunkData.positionForWorld);
         //如果是种植类物品
         if (targetBlock.blockInfo.GetBlockShape() == BlockShapeEnum.CropCross
             || targetBlock.blockInfo.GetBlockShape() == BlockShapeEnum.CropCrossOblique
             || targetBlock.blockInfo.GetBlockShape() == BlockShapeEnum.CropWell)
         {
             //首先判断生长周期
-            BlockBean blockData = targetChunk.GetBlockData(targetWorldPosition - targetChunk.chunkData.positionForWorld);
+
             //获取种植收货
             List<ItemsBean> listHarvest = targetBlock.GetDropItems(blockData);
             //创建掉落物
@@ -140,12 +141,12 @@ public class ItemsHandler : BaseHandler<ItemsHandler, ItemsManager>
         else
         {
             //获取掉落道具
-            List<ItemsBean> listDrop = targetBlock.GetDropItems(null);
+            List<ItemsBean> listDrop = targetBlock.GetDropItems(blockData);
             //如果没有掉落物，则默认掉落本体一个
             if (listDrop.IsNull())
             {
                 //创建掉落物
-                CreateItemCptDrop(targetBlock.blockType, 1, targetWorldPosition + Vector3.one * 0.5f, ItemDropStateEnum.DropPick);
+                CreateItemCptDrop(targetBlock.blockType, 1, blockData.meta, targetWorldPosition + Vector3.one * 0.5f, ItemDropStateEnum.DropPick);
             }
             else
             {

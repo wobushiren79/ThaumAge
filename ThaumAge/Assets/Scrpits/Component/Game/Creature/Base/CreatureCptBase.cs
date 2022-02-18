@@ -9,6 +9,8 @@ public class CreatureCptBase : BaseMonoBehaviour
     public CreatureAnim creatureAnim;
     //生物基础战斗
     public CreatureBattle creatureBattle;
+    //生物碰撞和触发
+    public CreatureCollisionAndTrigger creatureCollisionAndTrigger;
 
     //生物信息
     public CreatureInfoBean creatureInfo;
@@ -21,6 +23,8 @@ public class CreatureCptBase : BaseMonoBehaviour
     protected Animator animCreature;
     //检测-生物
     protected Collider colliderCreature;
+
+    public float timeUpdate = 0;
     public virtual void Awake()
     {
         animCreature = GetComponentInChildren<Animator>();
@@ -29,6 +33,17 @@ public class CreatureCptBase : BaseMonoBehaviour
 
         creatureAnim = new CreatureAnim(this, animCreature);
         creatureBattle = new CreatureBattle(this, rbCreature);
+        creatureCollisionAndTrigger = new CreatureCollisionAndTrigger(this);
+    }
+
+    public virtual void Update()
+    {
+        timeUpdate += Time.deltaTime;
+        if (timeUpdate > 0.2f)
+        {
+            creatureCollisionAndTrigger.UpdateCollisionAndTrigger();
+            timeUpdate = 0;
+        }
     }
 
     /// <summary>
@@ -41,8 +56,6 @@ public class CreatureCptBase : BaseMonoBehaviour
         creatureData.maxLife = creatureInfo.life;
         creatureData.currentLife = creatureInfo.life;
     }
-
-
 
     /// <summary>
     /// 死亡

@@ -36,7 +36,7 @@ public partial class UIViewSynthesis : BaseUIView
         RefreshMaterials();
         SetSelect(indexSelect);
     }
-    
+
     /// <summary>
     /// 设置数据类型
     /// </summary>
@@ -114,12 +114,12 @@ public partial class UIViewSynthesis : BaseUIView
         }
         //添加道具
         itemsSynthesis.GetSynthesisResult(out long itemsId, out int itemNum);
-        int moreNum = userData.AddItems(itemsId, itemNum);
+        int moreNum = userData.AddItems(itemsId, itemNum, null);
         //如果还有多余的道具 则丢出来
         if (moreNum > 0)
         {
             Player player = GameHandler.Instance.manager.player;
-            ItemsHandler.Instance.CreateItemCptDrop(itemsId, moreNum, player.transform.position + Vector3.up, ItemDropStateEnum.DropNoPick);
+            ItemsHandler.Instance.CreateItemCptDrop(itemsId, moreNum, null, player.transform.position + Vector3.up, ItemDropStateEnum.DropNoPick);
         }
 
         UIViewBackpackList backpackUI = currentUI.GetComponentInChildren<UIViewBackpackList>();

@@ -7,6 +7,7 @@ public class ScrollGridVertical : MonoBehaviour
 {
     public GameObject tempCell;//模板cell，以此为目标，克隆出每个cell。
     public Scrollbar verticalScrollbar;
+    public ScrollRect.MovementType movementType = ScrollRect.MovementType.Elastic;
 
     private int cellCount;//要显示数据的总数。
     private float cellWidth;
@@ -83,6 +84,7 @@ public class ScrollGridVertical : MonoBehaviour
         this.scrollRect.horizontal = false;
         this.scrollRect.verticalScrollbar = verticalScrollbar;
         this.scrollRect.scrollSensitivity = 30;
+        this.scrollRect.movementType = movementType;
         viewport = new GameObject("viewport", typeof(RectTransform));
         viewport.transform.SetParent(transform);
         this.scrollRect.viewport = viewport.GetComponent<RectTransform>();

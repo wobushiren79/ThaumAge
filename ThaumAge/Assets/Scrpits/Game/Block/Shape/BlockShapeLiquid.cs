@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class BlockShapeLiquid : BlockShapeCube
 {
+
     public override void InitData(Block block)
     {
         base.InitData(block);
@@ -18,33 +19,41 @@ public class BlockShapeLiquid : BlockShapeCube
 
     public override void BaseAddVerts(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction, DirectionEnum face, Vector3[] vertsAdd)
     {
-        BlockBean blockData = chunk.GetBlockData(localPosition);
-        if (blockData == null)
+        //检测上方 如果上方
+        chunk.GetBlockForLocal(localPosition + Vector3Int.up, out Block upBlock, out BlockDirectionEnum upDirection, out Chunk upChunk);
+        if (upBlock == null || upBlock.blockType == BlockTypeEnum.None)
         {
-            base.BaseAddVerts(chunk, localPosition, direction, face, vertsAdd);
+            Vector3[] vertsAddLiquid = new Vector3[vertsAdd.Length];
+            for (int i = 0; i < vertsAdd.Length; i++)
+            {
+                vertsAddLiquid[i] = new Vector3(vertsAdd[i].x, vertsAdd[i].y * (7f / 8f), vertsAdd[i].z);
+            }
+            BaseAddVertsDetails(chunk, localPosition, direction, face, vertsAddLiquid);
         }
         else
         {
-            //如果有数据 需要判断是几级水流
-            BlockLiquidBean blockLiquid = BlockBaseLiquid.FromMetaData<BlockLiquidBean>(blockData.meta);
-            if (blockLiquid == null)
-            {
-                base.BaseAddVerts(chunk, localPosition, direction, face, vertsAdd);
-            }
-            else
+            BaseAddVertsDetails(chunk, localPosition, direction, face, vertsAdd);
+        }
+    }
+
+    protected virtual void BaseAddVertsDetails(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction, DirectionEnum face, Vector3[] vertsAdd)
+    {
+        BlockBean blockData = chunk.GetBlockData(localPosition);
+        if (blockData != null)
+        {
+            BlockLiquidBean blockLiquid = Block.FromMetaData<BlockLiquidBean>(blockData.meta);
+            if (blockLiquid != null)
             {
                 if (blockLiquid.level == 1)
                 {
                     Vector3[] vertsAddNew = GetAddVertsNew(chunk, localPosition, face, vertsAdd);
                     //获取四周的方块
                     base.BaseAddVerts(chunk, localPosition, direction, face, vertsAddNew);
-                }
-                else
-                {
-                    base.BaseAddVerts(chunk, localPosition, direction, face, vertsAdd);
+                    return;
                 }
             }
         }
+        base.BaseAddVerts(chunk, localPosition, direction, face, vertsAdd);
     }
 
     /// <summary>
@@ -91,8 +100,8 @@ public class BlockShapeLiquid : BlockShapeCube
                 }
             }
 
-            GetVertsAddNewForRange(chunk, DirectionEnum.Left, localPosition, vertsAddNew, vertsAdd,1);
-            GetVertsAddNewForRange(chunk, DirectionEnum.Right, localPosition, vertsAddNew, vertsAdd,2);
+            GetVertsAddNewForRange(chunk, DirectionEnum.Left, localPosition, vertsAddNew, vertsAdd, 1);
+            GetVertsAddNewForRange(chunk, DirectionEnum.Right, localPosition, vertsAddNew, vertsAdd, 2);
             return vertsAddNew;
         }
         else if (face == DirectionEnum.UP)
@@ -115,7 +124,7 @@ public class BlockShapeLiquid : BlockShapeCube
         }
     }
 
-    protected void GetVertsAddNewForUpDown(Chunk chunk, DirectionEnum direction, Vector3Int localPosition, Vector3[] vertsAddNew, Vector3[] vertsAdd,int index1,int index2)
+    protected void GetVertsAddNewForUpDown(Chunk chunk, DirectionEnum direction, Vector3Int localPosition, Vector3[] vertsAddNew, Vector3[] vertsAdd, int index1, int index2)
     {
         block.GetCloseBlockByDirection(chunk, localPosition, direction, out Block closeBlock, out Chunk closeChunk);
         if (closeBlock != null && closeBlock.blockType == block.blockType)
@@ -130,7 +139,7 @@ public class BlockShapeLiquid : BlockShapeCube
             }
             else
             {
-                BlockLiquidBean closeLiquid = BlockBaseLiquid.FromMetaData<BlockLiquidBean>(closeBlockData.meta);
+                BlockLiquidBean closeLiquid = Block.FromMetaData<BlockLiquidBean>(closeBlockData.meta);
                 if (closeLiquid == null || closeLiquid.level == 0)
                 {
                     vertsAddNew[index1] = vertsAdd[index1];
@@ -140,14 +149,14 @@ public class BlockShapeLiquid : BlockShapeCube
         }
     }
 
-    protected void GetVertsAddNewForRange(Chunk chunk, DirectionEnum direction,Vector3Int localPosition,Vector3[] vertsAddNew, Vector3[] vertsAdd,int indexPosition)
+    protected void GetVertsAddNewForRange(Chunk chunk, DirectionEnum direction, Vector3Int localPosition, Vector3[] vertsAddNew, Vector3[] vertsAdd, int indexPosition)
     {
         block.GetCloseBlockByDirection(chunk, localPosition, direction, out Block closeBlock, out Chunk closeChunk);
 
         if (closeBlock != null && closeBlock.blockType == block.blockType)
         {
             Vector3Int tempPosition = block.GetClosePositionByDirection(direction, localPosition);
-            Vector3Int localPositionClose= tempPosition + chunk.chunkData.positionForWorld - closeChunk.chunkData.positionForWorld;
+            Vector3Int localPositionClose = tempPosition + chunk.chunkData.positionForWorld - closeChunk.chunkData.positionForWorld;
             BlockBean closeBlockData = closeChunk.GetBlockData(localPositionClose);
             if (closeBlockData == null)
             {
@@ -155,7 +164,7 @@ public class BlockShapeLiquid : BlockShapeCube
             }
             else
             {
-                BlockLiquidBean closeLiquid = BlockBaseLiquid.FromMetaData<BlockLiquidBean>(closeBlockData.meta);
+                BlockLiquidBean closeLiquid = Block.FromMetaData<BlockLiquidBean>(closeBlockData.meta);
                 if (closeLiquid == null || closeLiquid.level == 0)
                 {
                     vertsAddNew[indexPosition] = vertsAdd[indexPosition];

@@ -34,7 +34,7 @@ public class UIChildGameSettingGameContent : UIChildGameSettingBaseContent
 
         //º”‘ÿ∑∂Œß°§
         worldRefreshRange = CreateItemForRange(TextHandler.Instance.GetTextById(116), HandleForWorldRefreshRange);
-        worldRefreshRange.SetMinMax(3, 32); 
+        worldRefreshRange.SetMinMax(3, 16); 
         isInitWorldRefreshRange = true;
         worldRefreshRange.SetPro(gameConfig.worldRefreshRange);
 

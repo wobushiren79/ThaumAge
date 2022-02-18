@@ -159,7 +159,7 @@ public class ItemCptDrop : BaseMonoBehaviour
             .OnComplete(() =>
             {
                 UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();
-                int number = userData.AddItems(itemData.itemId, itemData.number);
+                int number = userData.AddItems(itemData.itemId, itemData.number, itemData.meta);
                 if (number == 0)
                 {
                     //如果都加完了 则删除

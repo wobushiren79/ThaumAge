@@ -146,7 +146,11 @@ public class BaseUIInit : BaseMonoBehaviour
         EventHandler.Instance.RegisterEvent(eventName, action);
         listEvents.Add(eventName);
     }
-
+    public virtual void RegisterEvent<A, B>(string eventName, Action<A, B> action)
+    {
+        EventHandler.Instance.RegisterEvent(eventName, action);
+        listEvents.Add(eventName);
+    }
     public virtual void UnRegisterEvent(string eventName)
     {
         EventHandler.Instance.UnRegisterEvent(eventName);
@@ -160,6 +164,10 @@ public class BaseUIInit : BaseMonoBehaviour
     public virtual void TriggerEvent<A>(string eventName, A data)
     {
         EventHandler.Instance.TriggerEvent(eventName, data);
+    }
+    public virtual void TriggerEvent<A, B>(string eventName, A dataA, B dataB)
+    {
+        EventHandler.Instance.TriggerEvent(eventName, dataA, dataB);
     }
     #endregion
 }

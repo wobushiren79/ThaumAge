@@ -90,7 +90,7 @@ public partial class UIViewItem : BaseUIView,
             else
             {
                 ui_Life.ShowObj(false);
-            }          
+            }
         }
     }
 
@@ -171,22 +171,36 @@ public partial class UIViewItem : BaseUIView,
         if (isFastClick == 1)
         {
             BaseUIComponent currentUI = UIHandler.Instance.GetOpenUI();
+            UIViewBoxList boxList;
+            UIViewBackpackList backpackUI;
+            UIViewShortcuts shortcutsUI;
             switch (originalParent.containerType)
             {
                 //如果是快捷栏
                 case UIViewItemContainer.ContainerType.Shortcuts:
-                    UIViewBackpackList backpackUI = currentUI.GetComponentInChildren<UIViewBackpackList>();
+                    //首先检测是否有箱子 优先放进箱子
+                    boxList = currentUI.GetComponentInChildren<UIViewBoxList>();
+                    if (boxList != null)
+                    {
+                        if (boxList.AddItems(this)) return;
+                    }
+                    backpackUI = currentUI.GetComponentInChildren<UIViewBackpackList>();
                     if (backpackUI != null)
                     {
-                        backpackUI.AddItems(this);
-                        return;
+                        if (backpackUI.AddItems(this)) return;
                     }
                     break;
                 //如果是背包或者上帝模式
                 case UIViewItemContainer.ContainerType.Backpack:
                 case UIViewItemContainer.ContainerType.God:
+                    //首先检测是否有箱子 优先放进箱子
+                    boxList = currentUI.GetComponentInChildren<UIViewBoxList>();
+                    if (boxList != null)
+                    {
+                        if (boxList.AddItems(this)) return;
+                    }
                     //获取快捷栏
-                    UIViewShortcuts shortcutsUI = currentUI.GetComponentInChildren<UIViewShortcuts>();
+                    shortcutsUI = currentUI.GetComponentInChildren<UIViewShortcuts>();
                     if (shortcutsUI != null)
                     {
                         for (int i = 0; i < shortcutsUI.listShortcut.Count; i++)
@@ -196,7 +210,7 @@ public partial class UIViewItem : BaseUIView,
                             if (itemContainer != null && itemContainer.GetViewItem() == null)
                             {
                                 //如果是上帝模式则需要在原位置复制一个
-                                if(originalParent.containerType == UIViewItemContainer.ContainerType.God)
+                                if (originalParent.containerType == UIViewItemContainer.ContainerType.God)
                                 {
                                     CopyItemInOriginal();
                                 }
@@ -204,6 +218,30 @@ public partial class UIViewItem : BaseUIView,
                                 return;
                             }
                         }
+                    }
+                    break;
+                //如果是箱子里的东西
+                case UIViewItemContainer.ContainerType.Box:
+                    //首先放进快捷栏
+                    shortcutsUI = currentUI.GetComponentInChildren<UIViewShortcuts>();
+                    if (shortcutsUI != null)
+                    {
+                        for (int i = 0; i < shortcutsUI.listShortcut.Count; i++)
+                        {
+                            UIViewItemContainer itemContainer = shortcutsUI.listShortcut[i];
+                            //如果有容器VIEW 并且里面没有东西
+                            if (itemContainer != null && itemContainer.GetViewItem() == null)
+                            {
+                                ExchangeItemForContainer(itemContainer);
+                                return;
+                            }
+                        }
+                    }
+                    //如果没有成功再放进背包
+                    backpackUI = currentUI.GetComponentInChildren<UIViewBackpackList>();
+                    if (backpackUI != null)
+                    {
+                        if (backpackUI.AddItems(this)) return;
                     }
                     break;
             }
@@ -315,8 +353,8 @@ public partial class UIViewItem : BaseUIView,
     {
         //如果什么都没有检测到，说明是把物体丢到场景中
         Player player = GameHandler.Instance.manager.player;
-        Vector3 randomFroce = new Vector3(UnityEngine.Random.Range(-0.5f,0.5f), UnityEngine.Random.Range(0f, 0.5f), UnityEngine.Random.Range(-0.5f, 0.5f));
-        ItemsHandler.Instance.CreateItemCptDrop(itemId, itemNumber, player.transform.position + Vector3.up, ItemDropStateEnum.DropNoPick, player.transform.forward + randomFroce);
+        Vector3 randomFroce = new Vector3(UnityEngine.Random.Range(-0.5f, 0.5f), UnityEngine.Random.Range(0f, 0.5f), UnityEngine.Random.Range(-0.5f, 0.5f));
+        ItemsHandler.Instance.CreateItemCptDrop(itemId, itemNumber, meta, player.transform.position + Vector3.up, ItemDropStateEnum.DropNoPick, player.transform.forward + randomFroce);
         DestroyImmediate(gameObject);
         if (originalParent != null)
         {
@@ -371,7 +409,7 @@ public partial class UIViewItem : BaseUIView,
         rectTransform
             .DOAnchorPos(Vector2.zero, changeTime)
             .SetEase(Ease.OutCubic)
-            .OnStart(()=> 
+            .OnStart(() =>
             {
                 ui_IVIcon.maskable = false;//设置最层级显示
             })

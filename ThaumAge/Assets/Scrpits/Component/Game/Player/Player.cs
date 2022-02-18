@@ -36,7 +36,6 @@ public class Player : BaseMonoBehaviour
         playerPickUp.UpdatePick();
 
         HandleForBeyondBorder();
-        HandleForColliderTrigger();
     }
 
     /// <summary>
@@ -65,18 +64,6 @@ public class Player : BaseMonoBehaviour
         if (transform.position.y <= -1)
         {
             InitPosition();
-        }
-    }
-
-    /// <summary>
-    /// 处理碰撞触发
-    /// </summary>
-    public void HandleForColliderTrigger()
-    {
-        Collider[] colliderArray = RayUtil.RayToSphere(transform.position, 1, 1 << LayerInfo.Chunk | 1 << LayerInfo.ChunkTrigger);
-        if (!colliderArray.IsNull())
-        {
-
         }
     }
 

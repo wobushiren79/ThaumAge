@@ -131,7 +131,7 @@ public partial class UIViewItemContainer : BaseUIView
     /// <param name="callBackForSetViewItem"></param>
     public void SetCallBackForSetViewItem(Action<UIViewItemContainer, long> callBackForSetViewItem)
     {
-        this.callBackForSetViewItem += callBackForSetViewItem;
+        this.callBackForSetViewItem = callBackForSetViewItem;
     }
 
     /// <summary>
@@ -205,6 +205,7 @@ public partial class UIViewItemContainer : BaseUIView
         ui_ViewItemContainer.SetItemId(itemsData.itemId);
         //设置回调
         callBackForSetViewItem?.Invoke(this, itemsData.itemId);
+        this.TriggerEvent(EventsInfo.UIViewItemContainer_ItemChange, this, itemsData.itemId);
     }
 
     /// <summary>
@@ -231,7 +232,7 @@ public partial class UIViewItemContainer : BaseUIView
         itemsData.meta = uiView.meta;
 
         callBackForSetViewItem?.Invoke(this, itemsData.itemId);
-
+        this.TriggerEvent(EventsInfo.UIViewItemContainer_ItemChange, this, itemsData.itemId);
         //设置展示信息
         ui_ViewItemContainer.SetItemId(itemsData.itemId);
 
@@ -271,6 +272,7 @@ public partial class UIViewItemContainer : BaseUIView
         currentViewItem.SetData(itemsData.itemId, itemsData.number, itemsData.meta);
 
         callBackForSetViewItem?.Invoke(this, itemsData.itemId);
+        this.TriggerEvent(EventsInfo.UIViewItemContainer_ItemChange, this, itemsData.itemId);
     }
 
 

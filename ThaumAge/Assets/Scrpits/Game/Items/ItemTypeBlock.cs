@@ -65,11 +65,11 @@ public class ItemTypeBlock : Item
                         //更新方块并 添加更新区块
                         if (blockInfo.rotate_state == 0)
                         {
-                            closeChunk.SetBlockForWorld(closePosition, changeBlockType, BlockDirectionEnum.UpForward);
+                            closeChunk.SetBlockForWorld(closePosition, changeBlockType, BlockDirectionEnum.UpForward, itemData.meta);
                         }
                         else if (blockInfo.rotate_state == 1)
                         {
-                            closeChunk.SetBlockForWorld(closePosition, changeBlockType, direction);
+                            closeChunk.SetBlockForWorld(closePosition, changeBlockType, direction, itemData.meta);
                         }
                         else if (blockInfo.rotate_state == 2)
                         {
@@ -78,7 +78,7 @@ public class ItemTypeBlock : Item
                             {
                                 direction = (BlockDirectionEnum)((int)direction%10 + 10);
                             }
-                            closeChunk.SetBlockForWorld(closePosition, changeBlockType, direction);
+                            closeChunk.SetBlockForWorld(closePosition, changeBlockType, direction, itemData.meta);
                         }
                         //扣除道具
                         UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();
