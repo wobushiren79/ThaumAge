@@ -12,6 +12,8 @@ public class MeshData
     public Vector3[] verticesCollider;
     public int[] trianglesCollider;
 
+    public Vector3 colliderSize;
+
     public MeshData(Collider collider, Mesh mesh, float size, Vector3 offset)
     {
         vertices = mesh.vertices;
@@ -77,6 +79,7 @@ public class MeshData
                 0,1,5, 0,5,4,//前
                 3,6,2, 3,7,6 //后
             };
+            colliderSize = size;
         }
         return mesh;
     }

@@ -8,7 +8,7 @@ public class BlockCptBreak : BaseMonoBehaviour
     public MeshFilter mfBlockBreak;
 
     public Block block;
-    public Vector3Int position;
+    public Vector3Int worldPosition;
 
     public int blockLife = 0;
     //是否需要删除
@@ -46,14 +46,14 @@ public class BlockCptBreak : BaseMonoBehaviour
     /// 设置数据
     /// </summary>
     /// <param name="blockInfo"></param>
-    public void SetData(Block block, Vector3Int position)
+    public void SetData(Block block, Vector3Int worldPosition)
     {
         if (block == null)
             return;
-        this.position = position;
+        this.worldPosition = worldPosition;
         this.block = block;
         blockLife = block.blockInfo.life;
-        transform.position = position;
+        transform.position = worldPosition;
     }
 
     /// <summary>
@@ -84,8 +84,39 @@ public class BlockCptBreak : BaseMonoBehaviour
         //播放粒子特效
         if (isPlayEffect)
         {
-            PlayBlockCptBreakEffect(block, position);
+            PlayBlockCptBreakEffect(block, worldPosition);
         }
+        //设置破坏的形状
+        if (block.blockShape is BlockShapeCustom blockShapeCustom)
+        {
+            //获取碰撞形状，根据碰撞形状设置破碎样子
+            //WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(worldPosition, out Block targetBlock, out BlockDirectionEnum targetDirection, out Chunk targetChunk);
+            //GameObject objBlock = targetChunk.GetBlockObjForLocal(worldPosition - targetChunk.chunkData.positionForWorld);
+            //BoxCollider blockCollider = objBlock?.GetComponentInChildren<BoxCollider>();
+
+            //Vector3 colliderSize;
+            //if (blockCollider != null)
+            //{
+            //    colliderSize = blockCollider.size;
+            //}
+            //else
+            //{
+            //    colliderSize = blockShapeCustom.blockMeshData.colliderSize;
+            //}
+            
+            //int face = (int)targetDirection % 10;
+            //if (face == 1 || face == 2)
+            //{
+            //    mrBlockBreak.transform.localScale = new Vector3(colliderSize.z, colliderSize.y, colliderSize.x) * 1.001f;
+            //    return;
+            //}
+            //else
+            //{
+            //    mrBlockBreak.transform.localScale = colliderSize * 1.001f;
+            //    return;
+            //}
+        }
+        mrBlockBreak.transform.localScale = new Vector3(1.001f, 1.001f, 1.001f);
     }
 
     /// <summary>
@@ -99,7 +130,7 @@ public class BlockCptBreak : BaseMonoBehaviour
         //如果生命值回满了
         if (blockLife >= block.blockInfo.life)
         {
-            BlockHandler.Instance.DestroyBreakBlock(position);
+            BlockHandler.Instance.DestroyBreakBlock(worldPosition);
         }
     }
 
@@ -144,7 +175,7 @@ public class BlockCptBreak : BaseMonoBehaviour
             Color colorStart;
             Color colorEnd;
 
-            if (block.blockInfo.GetBlockShape()== BlockShapeEnum.Custom)
+            if (block.blockInfo.GetBlockShape() == BlockShapeEnum.Custom)
             {
                 //如果是自定义模型的方块 则直接随机获取颜色
                 //colorStart = new Color(Random.Range(0f,1f), Random.Range(0f, 1f), Random.Range(0f, 1f));
@@ -171,7 +202,7 @@ public class BlockCptBreak : BaseMonoBehaviour
                     colorEnd = TextureUtil.GetPixel(texBlock, new Vector2Int(randomXEnd, randomYEnd));
                     randomNumber++;
                 }
-                while ((colorStart.a == 0 || colorEnd.a == 0)&& randomNumber < 10);
+                while ((colorStart.a == 0 || colorEnd.a == 0) && randomNumber < 10);
 
             }
 

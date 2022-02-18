@@ -37,6 +37,10 @@ MonoBehaviour:
     m_Address: Assets/Prefabs/Block/BlockDoor.prefab
     m_ReadOnly: 0
     m_SerializedLabels: []
+  - m_GUID: 58f02310ae5fb86489d536bce37747ee
+    m_Address: Assets/Prefabs/Block/BlockStairsWood.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: fd6114d87f1af534fbf270c47c0f10bf, type: 2}
   m_SchemaSet:
