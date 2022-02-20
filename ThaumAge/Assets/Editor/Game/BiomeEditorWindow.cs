@@ -167,7 +167,7 @@ public class BiomeEditorWindow : EditorWindow
         EditorUI.GUIText("振幅", 50);
         biomeInfo.amplitude = EditorUI.GUIEditorText(biomeInfo.amplitude);
         EditorUI.GUIText("最小高度（默认50）", 150);
-        biomeInfo.minHeight = EditorUI.GUIEditorText(biomeInfo.minHeight);
+        biomeInfo.min_height = EditorUI.GUIEditorText(biomeInfo.min_height);
         EditorUI.GUIText("大小", 50);
         biomeInfo.scale = EditorUI.GUIEditorText(biomeInfo.scale);
         GUILayout.EndHorizontal();

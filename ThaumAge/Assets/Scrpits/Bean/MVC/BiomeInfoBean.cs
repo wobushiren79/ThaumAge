@@ -17,9 +17,11 @@ public class BiomeInfoBean : BaseBean
     //振幅
     public float amplitude;
     //最小高度
-    public int minHeight;
+    public int min_height;
     //大小
     public float scale;
+    //水平面高度
+    public int water_height;
 
     public BiomeTypeEnum GetBiomeType()
     {
@@ -32,6 +34,6 @@ public class BiomeInfoBean : BaseBean
     /// <returns></returns>
     public int GetWaterPlaneHeight()
     {
-        return 64;
+        return water_height;
     }
 }

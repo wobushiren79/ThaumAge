@@ -13,7 +13,7 @@ public class BiomeVolcano : Biome
     public override BlockTypeEnum GetBlockType(Chunk chunk, BiomeInfoBean biomeInfo, int genHeight, Vector3Int localPos, Vector3Int wPos)
     {
         base.GetBlockType(chunk,biomeInfo, genHeight, localPos, wPos);
-        float noise = (genHeight - biomeInfo.minHeight) / biomeInfo.amplitude;
+        float noise = (genHeight - biomeInfo.min_height) / biomeInfo.amplitude;
         if (noise >= 0.9f)
         {
             if (localPos.y >= genHeight - 3)

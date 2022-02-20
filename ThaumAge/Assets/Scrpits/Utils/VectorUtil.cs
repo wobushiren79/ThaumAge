@@ -119,7 +119,7 @@ public class VectorUtil
     public static Vector3 GetRotatedPosition(Vector3 centerPosition, Vector3 position, Vector3 angles)
     {
         Vector3 direction = position - centerPosition;
-        direction = Quaternion.Euler(angles) * direction;
-        return direction + centerPosition;
+        Vector3 rotatedDirection = Quaternion.Euler(angles) * direction;
+        return rotatedDirection + centerPosition;
     }
 }

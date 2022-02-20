@@ -337,6 +337,34 @@ public class BlockShapeCube : BlockShape
                     break;
             }
         }
+        else if (arrayUVData.Length == 6)
+        {
+            //6种面  上 中 下
+            switch (buildDirection)
+            {
+                case DirectionEnum.UP:
+                    uvStartPosition = new Vector2(uvWidth * arrayUVData[0].y, uvWidth * arrayUVData[0].x);
+                    break;
+                case DirectionEnum.Down:
+                    uvStartPosition = new Vector2(uvWidth * arrayUVData[1].y, uvWidth * arrayUVData[1].x);
+                    break;
+                case DirectionEnum.Left:
+                    uvStartPosition = new Vector2(uvWidth * arrayUVData[2].y, uvWidth * arrayUVData[2].x);
+                    break;
+                case DirectionEnum.Right:
+                    uvStartPosition = new Vector2(uvWidth * arrayUVData[3].y, uvWidth * arrayUVData[3].x);
+                    break;
+                case DirectionEnum.Forward:
+                    uvStartPosition = new Vector2(uvWidth * arrayUVData[4].y, uvWidth * arrayUVData[4].x);
+                    break;
+                case DirectionEnum.Back:
+                    uvStartPosition = new Vector2(uvWidth * arrayUVData[5].y, uvWidth * arrayUVData[5].x);
+                    break;
+                default:
+                    uvStartPosition = new Vector2(uvWidth * arrayUVData[0].y, uvWidth * arrayUVData[0].x);
+                    break;
+            }
+        }
         else
         {
             uvStartPosition = Vector2.zero;

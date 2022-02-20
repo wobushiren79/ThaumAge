@@ -2,7 +2,7 @@ public enum BlockTypeEnum
 {
     None = 0,    //空
     Foundation = 1,    //地基
-
+    TestBlock = 2,//测试方块
     Sand = 3,    //沙子
     Dirt = 4,    //泥土
     Stone = 5,    //石头

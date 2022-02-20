@@ -77,9 +77,11 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
         Action callBackForComplete = () =>
         {
             //更新待更新方块
-            StartCoroutine(CoroutineForDelayUpdateBlock(callBackForUpdateChunk));
+            HandleForUpdateBlock(callBackForUpdateChunk);
         };
-        StartCoroutine(CoroutineForDelayBuildChunkBlockData(chunk, callBackForComplete));
+
+        //生成方块数据
+        chunk.BuildChunkBlockDataForAsync(callBackForComplete);
     }
 
 
@@ -205,20 +207,19 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
         if (manager.listUpdateDrawChunkEditor.Count > 0)
         {
             //按照顺序依次渲染 编辑的区块 
-            Chunk updateDrawChunk = manager.listUpdateDrawChunkEditor.Peek();
+            Chunk updateDrawChunk = manager.listUpdateDrawChunkEditor.Dequeue();
             if (updateDrawChunk != null && updateDrawChunk.isInit)
             {
                 if (!updateDrawChunk.isBuildChunk)
                 {
-                    updateDrawChunk = manager.listUpdateDrawChunkEditor.Dequeue();
                     //构建修改过的区块
                     updateDrawChunk.DrawMesh();
                 }
             }
-            else
-            {
-                manager.listUpdateDrawChunkEditor.Dequeue();
-            }
+        }
+        if (manager.listUpdateDrawChunkEditor.Count > 0 || manager.listUpdateDrawChunkInit.Count > 0)
+        {
+            HandleForDrawChunk();
         }
     }
 
@@ -409,43 +410,5 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
 
         });
         callBackForComplete?.Invoke();
-    }
-
-
-    /// <summary>
-    /// 携程延迟生成数据
-    /// </summary>
-    /// <param name="chunk"></param>
-    /// <param name="callBackForComplete"></param>
-    /// <returns></returns>
-    public IEnumerator CoroutineForDelayBuildChunkBlockData(Chunk chunk, Action callBackForComplete)
-    {
-        yield return new WaitForEndOfFrame();
-        //生成方块数据
-        chunk.BuildChunkBlockDataForAsync(callBackForComplete);
-    }
-
-    /// <summary>
-    /// 延迟刷新数据
-    /// </summary>
-    /// <param name="chunk"></param>
-    /// <param name="callBackForComplete"></param>
-    /// <returns></returns>
-    public IEnumerator CoroutineForDelayUpdateBlock(Action callBackForComplete)
-    {
-        yield return new WaitForEndOfFrame();
-        HandleForUpdateBlock(callBackForComplete);
-    }
-
-    /// <summary>
-    /// 携程处理区块更新
-    /// </summary>
-    /// <param name="updateChunk"></param>
-    /// <param name="callBackForComplete"></param>
-    /// <returns></returns>
-    public IEnumerator CoroutineForDelayUpdateBlock(Chunk updateChunk, Action callBackForComplete)
-    {
-        yield return new WaitForEndOfFrame();
-        updateChunk.BuildChunkForAsync(callBackForComplete);
     }
 }

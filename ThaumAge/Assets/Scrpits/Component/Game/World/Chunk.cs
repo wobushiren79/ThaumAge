@@ -55,8 +55,7 @@ public class Chunk : BaseMonoBehaviour
         //获取自身相关组件引用
         meshRenderer = GetComponent<MeshRenderer>();
         meshFilter = GetComponent<MeshFilter>();
-        meshRenderer.materials = BlockHandler.Instance.manager.GetAllBlockMaterial();
-
+       
         chunkMesh = new Mesh();
         chunkMeshCollider = new Mesh();
         chunkMeshTrigger = new Mesh();
@@ -349,6 +348,24 @@ public class Chunk : BaseMonoBehaviour
     }
 
     /// <summary>
+    /// 初始化mats
+    /// </summary>
+    protected void InitBlockMats()
+    {
+        Material[] allBlockMats = BlockHandler.Instance.manager.GetAllBlockMaterial();
+        List<Material> newBlockMtas = new List<Material>();
+        for (int i = 0; i < allBlockMats.Length; i++)
+        {
+            List<int> listTrisMat = chunkMeshData.dicTris[i];
+            if (!listTrisMat.IsNull())
+            {
+                newBlockMtas.Add(allBlockMats[i]);
+            }
+        }
+        meshRenderer.materials = newBlockMtas.ToArray();
+    }
+
+    /// <summary>
     /// 刷新网格
     /// </summary>
     public void DrawMesh()
@@ -357,6 +374,7 @@ public class Chunk : BaseMonoBehaviour
             return;
         try
         {
+            InitBlockMats();
             isDrawMesh = true;
 
             chunkMesh.subMeshCount = meshRenderer.materials.Length;
@@ -367,17 +385,21 @@ public class Chunk : BaseMonoBehaviour
                 return;
             }
             chunkMesh.Clear();
-            chunkMesh.subMeshCount = chunkMeshData.dicTris.Length;
+            chunkMesh.subMeshCount = meshRenderer.materials.Length;
             //设置顶点
             chunkMesh.SetVertices(chunkMeshData.verts);
             //设置UV
             chunkMesh.SetUVs(0, chunkMeshData.uvs);
 
             //设置三角（单面渲染，双面渲染,液体）
+            int indexMat = 0;
             for (int i = 0; i < chunkMeshData.dicTris.Length; i++)
             {
                 List<int> trisData = chunkMeshData.dicTris[i];
-                chunkMesh.SetTriangles(trisData, i);
+                if (trisData.IsNull())
+                    continue;
+                chunkMesh.SetTriangles(trisData, indexMat);
+                indexMat++;
             }
 
             //碰撞数据设置

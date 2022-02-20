@@ -110,7 +110,7 @@ public class BiomeHandler : BaseHandler<BiomeHandler, BiomeManager>
         if (blockLocalPosition.y > maxHeight// 在基础高度-4以上
             && biomeMapData.offsetDis <= 20) //在20范围以内
         {
-            maxHeight = Mathf.CeilToInt((biomeMapData.maxHeight - biome.biomeInfo.minHeight) / 20f) * Mathf.CeilToInt(biomeMapData.offsetDis) + maxHeight;
+            maxHeight = Mathf.CeilToInt((biomeMapData.maxHeight - biome.biomeInfo.min_height) / 20f) * Mathf.CeilToInt(biomeMapData.offsetDis) + maxHeight;
 
             //当前方块位置高于随机生成的高度值时，当前方块类型为空
             if (blockLocalPosition.y > maxHeight)
@@ -134,7 +134,7 @@ public class BiomeHandler : BaseHandler<BiomeHandler, BiomeManager>
     {
         if (biomeInfo == null)
             return 10;
-        return GetHeightData(wPos, biomeInfo.frequency, biomeInfo.amplitude, biomeInfo.minHeight);
+        return GetHeightData(wPos, biomeInfo.frequency, biomeInfo.amplitude, biomeInfo.min_height);
     }
 
     public int GetHeightData(Vector3Int wPos, float frequency, float amplitude, int minHeight)
