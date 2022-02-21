@@ -69,7 +69,6 @@ public class ItemTypeBlock : Item
                         }
                         else if (blockInfo.rotate_state == 1)
                         {
-                            Debug.LogError(""+ direction);
                             closeChunk.SetBlockForWorld(closePosition, changeBlockType, direction, itemData.meta);
                         }
                         else if (blockInfo.rotate_state == 2)
