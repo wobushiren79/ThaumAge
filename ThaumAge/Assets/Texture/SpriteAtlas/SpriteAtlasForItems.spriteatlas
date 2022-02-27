@@ -81,6 +81,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 1af0d977e218412479e9582f0dc910eb, type: 3}
   - {fileID: 21300000, guid: 8c5d23f70b0a1e74596173a200236533, type: 3}
   - {fileID: 21300000, guid: 9c744638940d4924d8c473bc32a2706b, type: 3}
+  - {fileID: 21300000, guid: 3b6bbc6884beed248b403c4b0aadd042, type: 3}
   - {fileID: 21300000, guid: 52b5c3f8d86861d4982614c5f765f2d3, type: 3}
   - {fileID: 21300000, guid: 9c328a09006f8254e971b017de2ca10c, type: 3}
   - {fileID: 21300000, guid: 4298ef0924cd8ab49bd4590cfcb024e0, type: 3}
@@ -159,6 +160,7 @@ SpriteAtlas:
   - icon_item_3100001
   - icon_item_2200001
   - icon_magma
+  - icon_item_106301
   - icon_item_310012
   - icon_item_300003
   - icon_weed_1

@@ -3,10 +3,10 @@ using UnityEngine;
 
 public class BlockTypeStairsWood : Block
 {
-    public override void OnCollision(DirectionEnum direction, GameObject user)
+    public override void OnCollision(GameObject user, Vector3Int worldPosition, DirectionEnum direction)
     {
-        base.OnCollision(direction, user);
-        if(direction == DirectionEnum.Forward)
+        base.OnCollision(user, worldPosition, direction);
+        if (direction == DirectionEnum.Forward)
         {
             ControlForPlayer controlForPlayer = user.transform.GetComponentInParent<ControlForPlayer>();
             if (controlForPlayer != null)

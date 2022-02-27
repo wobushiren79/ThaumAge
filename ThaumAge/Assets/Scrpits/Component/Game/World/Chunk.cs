@@ -678,7 +678,7 @@ public class Chunk : BaseMonoBehaviour
         if (objBlockModel == null)
             return;
         //设置位置
-        objBlockModel.transform.localPosition = localPosition + new Vector3(0.5f, 0, 0.5f);
+        objBlockModel.transform.localPosition = localPosition + new Vector3(0.5f, 0.5f, 0.5f);
         //添加数据记录
         dicBlockModel.Add(blockIndex, objBlockModel);
         //设置方向

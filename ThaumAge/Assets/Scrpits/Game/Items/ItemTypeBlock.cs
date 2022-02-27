@@ -23,30 +23,6 @@ public class ItemTypeBlock : Item
                 {
                     //获取目标方块
                     WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(targetPosition, out Block targetBlock, out BlockDirectionEnum targetBlockDirection, out Chunk taragetChunk);
-                    ////如果是液体 则直接替换
-                    //if (taragetChunk!=null && targetBlock != null&&targetBlock.blockInfo.GetBlockShape() == BlockShapeEnum.Liquid)
-                    //{                       
-                    //    //获取物品信息
-                    //    ItemsInfoBean itemsInfo = ItemsHandler.Instance.manager.GetItemsInfoById(itemData.itemId);
-                    //    //如果是可放置的方块
-                    //    BlockInfoBean blockInfo = BlockHandler.Instance.manager.GetBlockInfo(itemsInfo.type_id);
-                    //    BlockTypeEnum blockType = blockInfo.GetBlockType();
-                    //    //更新方块并 添加更新区块
-                    //    if (blockInfo.rotate_state == 0)
-                    //    {
-                    //        taragetChunk.SetBlockForWorld(targetPosition, blockType, DirectionEnum.UP);
-                    //    }
-                    //    else
-                    //    {
-                    //        taragetChunk.SetBlockForWorld(targetPosition, blockType, direction);
-                    //    }
-                    //    //扣除道具
-                    //    UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();
-                    //    userData.AddItems(itemData, -1);
-                    //    //刷新UI
-                    //    UIHandler.Instance.RefreshUI();
-                    //    return;
-                    //}
                     //首先获取靠近方块
                     WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(closePosition, out Block closeBlock, out BlockDirectionEnum closeBlockDirection, out Chunk closeChunk);
                     //如果靠近得方块有区块
@@ -54,6 +30,9 @@ public class ItemTypeBlock : Item
                     {
                         //如果不是空方块 则不放置(液体则覆盖放置)
                         if (closeBlock != null && closeBlock.blockType != BlockTypeEnum.None && closeBlock.blockInfo.GetBlockShape() != BlockShapeEnum.Liquid)
+                            return;
+                        //如果重量为1 说明是草之类太轻的物体 则也不能放置
+                        if (closeBlock.blockInfo.weight == 1) 
                             return;
                         //获取物品信息
                         ItemsInfoBean itemsInfo = ItemsHandler.Instance.manager.GetItemsInfoById(itemData.itemId);

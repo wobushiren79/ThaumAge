@@ -17,13 +17,18 @@ MonoBehaviour:
     m_SerializedData: []
   m_GUID: 4402f9f4a00ec714db35e5caa08d74f6
   m_SerializeEntries:
-  - m_GUID: 7dba8aa21ba23a34c8d9433694bdf350
-    m_Address: Assets/Prefabs/BlockMesh/BlockStairsWood.txt
+  - m_GUID: 701016fd885390a47a15b3d4ffa2ce87
+    m_Address: Assets/Prefabs/BlockMesh/BlockSwitchesWooden.txt
     m_ReadOnly: 0
     m_SerializedLabels:
     - BlockMesh
-  - m_GUID: f78a7992a8887de46be8bb1a3b1d2aec
-    m_Address: Assets/Prefabs/BlockMesh/BlockCraftingTableSimple.txt
+  - m_GUID: a0c35ab674a3e8046a75d80b5ace1a50
+    m_Address: Assets/Prefabs/BlockMesh/BlockDoor.txt
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - BlockMesh
+  - m_GUID: 7dba8aa21ba23a34c8d9433694bdf350
+    m_Address: Assets/Prefabs/BlockMesh/BlockStairsWood.txt
     m_ReadOnly: 0
     m_SerializedLabels:
     - BlockMesh
@@ -37,8 +42,8 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels:
     - BlockMesh
-  - m_GUID: a0c35ab674a3e8046a75d80b5ace1a50
-    m_Address: Assets/Prefabs/BlockMesh/BlockDoor.txt
+  - m_GUID: f78a7992a8887de46be8bb1a3b1d2aec
+    m_Address: Assets/Prefabs/BlockMesh/BlockCraftingTableSimple.txt
     m_ReadOnly: 0
     m_SerializedLabels:
     - BlockMesh

@@ -30,6 +30,15 @@ public class CreatureAnim : CreatureBase
     }
 
     /// <summary>
+    /// 设置速度
+    /// </summary>
+    /// <param name="speed"></param>
+    public void SetClimbSpeed(float speed)
+    {
+        animator.SetFloat("speed_climb", speed);
+    }
+
+    /// <summary>
     /// 播放跳跃动画
     /// </summary>
     /// <param name="isJump"></param>
@@ -42,7 +51,7 @@ public class CreatureAnim : CreatureBase
     /// 播放使用动画
     /// </summary>
     /// <param name="isUse"></param>
-    public void PlayUse(bool isUse,int useType = 0)
+    public void PlayUse(bool isUse, int useType = 0)
     {
         animator.SetInteger("use_type", useType);
         animator.SetBool("use", isUse);
@@ -52,9 +61,9 @@ public class CreatureAnim : CreatureBase
     /// 播放指定动画
     /// </summary>
     /// <param name="animName"></param>
-    public void PlayAnim(string animName) 
+    public void PlayAnim(string animName)
     {
-        animator.CrossFade(animName,0.1f);
+        animator.CrossFade(animName, 0.05f);
     }
 
 }

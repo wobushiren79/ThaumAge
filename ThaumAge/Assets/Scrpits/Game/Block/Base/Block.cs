@@ -63,6 +63,69 @@ public class Block
     }
 
     /// <summary>
+    /// 获取方块实例模型
+    /// </summary>
+    /// <param name="worldPosition"></param>
+    /// <returns></returns>
+    public GameObject GetBlockObj(Vector3Int worldPosition)
+    {
+        return BlockHandler.Instance.GetBlockObj(worldPosition); ;
+    }
+    
+    /// <summary>
+    /// 获取方块的方位
+    /// </summary>
+    /// <param name="blockDirection"></param>
+    /// <returns></returns>
+    public DirectionEnum GetDirection(BlockDirectionEnum blockDirection)
+    {
+        int direction = (((int)blockDirection) % 100) / 10;
+        switch (direction)
+        {
+            case 1:
+                return DirectionEnum.UP;
+            case 2:
+                return DirectionEnum.Down;
+            case 3:
+                return DirectionEnum.Left;
+            case 4:
+                return DirectionEnum.Right;
+            case 5:
+                return DirectionEnum.Forward;
+            case 6:
+                return DirectionEnum.Back;
+        }
+        return DirectionEnum.None;
+    }
+
+    /// <summary>
+    /// 获取周围的方块
+    /// </summary>
+    /// <param name="worldPosition"></param>
+    /// <param name="upBlock"></param>
+    /// <param name="downBlock"></param>
+    /// <param name="leftBlock"></param>
+    /// <param name="rightBlock"></param>
+    /// <param name="forwardBlock"></param>
+    /// <param name="backBlock"></param>
+    public void GetRoundBlock(Vector3Int worldPosition, out Block upBlock, out Block downBlock, out Block leftBlock, out Block rightBlock, out Block forwardBlock, out Block backBlock)
+    {
+        //获取周围的方块 并触发互动
+        Vector3Int upPosition = worldPosition + Vector3Int.up;
+        WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(upPosition, out upBlock, out Chunk upChunk);
+        Vector3Int downPosition = worldPosition + Vector3Int.down;
+        WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(downPosition, out downBlock, out Chunk downChunk);
+        Vector3Int leftPosition = worldPosition + Vector3Int.left;
+        WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(leftPosition, out leftBlock, out Chunk leftChunk);
+        Vector3Int rightPosition = worldPosition + Vector3Int.right;
+        WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(rightPosition, out rightBlock, out Chunk rightChunk);
+        Vector3Int forwardPosition = worldPosition + Vector3Int.forward;
+        WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(forwardPosition, out forwardBlock, out Chunk forwardChunk);
+        Vector3Int backPosition = worldPosition + Vector3Int.back;
+        WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(backPosition, out backBlock, out Chunk backChunk);
+    }
+
+    /// <summary>
     /// 删除方块mesh
     /// </summary>
     public virtual void RemoveBlockMesh(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction, ChunkMeshIndexData meshIndexData)
@@ -102,7 +165,7 @@ public class Block
     /// <summary>
     /// 互动
     /// </summary>
-    public virtual void Interactive(GameObject user, Vector3Int worldPosition)
+    public virtual void Interactive(GameObject user, Vector3Int worldPosition, BlockDirectionEnum direction)
     {
 
     }
@@ -111,7 +174,7 @@ public class Block
     /// 碰撞
     /// </summary>
     /// <param name="user"></param>
-    public virtual void OnCollision(DirectionEnum direction, GameObject user)
+    public virtual void OnCollision(GameObject user, Vector3Int worldPosition, DirectionEnum direction)
     {
 
     }

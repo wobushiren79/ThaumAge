@@ -125,7 +125,7 @@ public class BlockCptBreak : BaseMonoBehaviour
     /// <param name="pro"></param>
     public void Reply(float pro)
     {
-        int life = (int)(block.blockInfo.life * pro);
+        int life = Mathf.CeilToInt(block.blockInfo.life * pro);
         Break(-life, false);
         //如果生命值回满了
         if (blockLife >= block.blockInfo.life)

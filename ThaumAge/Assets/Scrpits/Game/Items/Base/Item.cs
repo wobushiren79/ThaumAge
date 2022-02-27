@@ -82,10 +82,10 @@ public class Item
 
                 Vector3Int localPosition = targetPosition - chunkForHit.chunkData.positionForWorld;
                 //获取原位置方块
-                Block tagetBlock = chunkForHit.chunkData.GetBlockForLocal(localPosition);
-                if (tagetBlock.blockInfo.interactive_state == 1)
+                chunkForHit.chunkData.GetBlockForLocal(localPosition, out Block tagetBlock, out BlockDirectionEnum targetDirection);
+                if (tagetBlock != null && tagetBlock.blockInfo.interactive_state == 1)
                 {
-                    tagetBlock.Interactive(player.gameObject, targetPosition);
+                    tagetBlock.Interactive(player.gameObject, targetPosition, targetDirection);
                 }
             }
         }
@@ -127,6 +127,10 @@ public class Item
                 //获取位置和方向
                 player.playerRay.GetHitPositionAndDirection(hit, out Vector3Int targetPosition, out Vector3Int closePosition, out BlockDirectionEnum direction);
                 Vector3Int localPosition = targetPosition - chunkForHit.chunkData.positionForWorld;
+                if (localPosition.x < 0 || localPosition.x > chunkForHit.chunkData.chunkWidth
+                    || localPosition.z < 0 || localPosition.z > chunkForHit.chunkData.chunkWidth
+                    || localPosition.y < 0 || localPosition.y > chunkForHit.chunkData.chunkHeight)
+                    return;
                 //获取原位置方块
                 Block tagetBlock = chunkForHit.chunkData.GetBlockForLocal(localPosition);
                 if (tagetBlock == null)

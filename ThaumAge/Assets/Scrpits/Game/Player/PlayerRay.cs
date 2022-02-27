@@ -54,7 +54,7 @@ public class PlayerRay : PlayerBase
                 }
             }
         }
-        GetHitPositionAndDirection(hit, out targetPosition, out Vector3Int closePosition, out BlockDirectionEnum direction);
+        GetHitPositionAndDirection(hit,  out targetPosition, out Vector3Int closePosition, out BlockDirectionEnum direction);
         return hasHitData;
     }
 

@@ -64,6 +64,7 @@ public enum BlockTypeEnum
     CraftingTableSimple = 6101,//简易制作台
     Door = 6010,//门
     Box = 6201,//箱子
+    SwitchesWooden = 6301,//木制开关
 
     Water = 9001,//水
     Magma = 9002,//岩浆

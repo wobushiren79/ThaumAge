@@ -126,12 +126,43 @@ public class ControlForPlayer : ControlForBase
         //攀爬处理
         if (timeClimbEnd > 0)
         {
+            isJump = false;
             float climbSpeed = Mathf.Abs(playerVelocity.x) > Mathf.Abs(playerVelocity.z) ? Mathf.Abs(playerVelocity.x) : Mathf.Abs(playerVelocity.z);
             playerVelocity.y = climbSpeed;
             characterController.Move(playerVelocity);
             timeClimbEnd -= Time.deltaTime;
+            if (timeClimbEnd > 0)
+            {
+                //播放攀爬动画
+                //播放动画
+                if (moveData.x == 0 && moveData.y == 0)
+                {
+                    character.characterAnim.creatureAnim.SetClimbSpeed(0);
+                }
+                else
+                {
+                    character.characterAnim.creatureAnim.SetClimbSpeed(1);
+                }
+                character.characterAnim.creatureAnim.PlayBaseAnim(CharacterAnimBaseState.Climb);
+                character.characterAnim.creatureAnim.PlayJump(isJump);
+            }
+            else
+            {
+                //时间到了就还原了
+                character.characterAnim.creatureAnim.SetClimbSpeed(0);
+                character.characterAnim.creatureAnim.PlayAnim("idle");
+            }       
             return;
-        }        
+        }
+        //播放动画
+        if (moveData.x == 0 && moveData.y == 0)
+        {
+            character.characterAnim.creatureAnim.PlayBaseAnim(CharacterAnimBaseState.Idle);
+        }
+        else
+        {
+            character.characterAnim.creatureAnim.PlayBaseAnim(CharacterAnimBaseState.Walk);
+        }
         //跳跃处理
         if (isJump)
         {
@@ -296,15 +327,6 @@ public class ControlForPlayer : ControlForBase
         right.y = 0;
         //朝摄像头方向移动
         playerVelocity = (Vector3.Normalize(forward) * moveOffset.y + Vector3.Normalize(right) * moveOffset.x) * Time.unscaledDeltaTime * moveSpeed * 5;
-
-        if (moveOffset.x == 0 && moveOffset.y == 0)
-        {
-            character.characterAnim.creatureAnim.PlayBaseAnim(CharacterAnimBaseState.Idle);
-        }
-        else
-        {
-            character.characterAnim.creatureAnim.PlayBaseAnim(CharacterAnimBaseState.Walk);
-        }
     }
 
     /// <summary>

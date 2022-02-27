@@ -65,9 +65,9 @@ public class BlockTypeDoor : Block
     /// 互动
     /// </summary>
     /// <param name="worldPosition"></param>
-    public override void Interactive(GameObject user, Vector3Int worldPosition)
+    public override void Interactive(GameObject user, Vector3Int worldPosition, BlockDirectionEnum blockDirection)
     {
-        base.Interactive(user, worldPosition);
+        base.Interactive(user, worldPosition, blockDirection);
         WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(worldPosition, out Block block, out BlockDirectionEnum direction, out Chunk chunk);
         //获取数据
         BlockBean blockData = chunk.GetBlockData(worldPosition - chunk.chunkData.positionForWorld);
@@ -92,59 +92,67 @@ public class BlockTypeDoor : Block
         GameObject objDoor = BlockHandler.Instance.GetBlockObj(baseWorldPosition);
         Transform tfDoor = objDoor.transform.Find("Door");
         if (blockDoorData.state == 0)
-        {               
+        {
             int directionFace = (int)direction % 10;
-            //如果是在X轴上
-            switch (directionFace)
+            if (user == null)
             {
-                case 1:
-                    if (user.transform.position.x > worldPosition.x)
-                    {
-                        tfDoor.DOLocalRotate(new Vector3(0, 90, 0), 0.2f);
-                        blockDoorData.state = 1;
-                    }
-                    else
-                    {
-                        tfDoor.DOLocalRotate(new Vector3(0, -90, 0), 0.2f);
-                        blockDoorData.state = 2;
-                    }
-                    break;
-                case 2:
-                    if (user.transform.position.x > worldPosition.x)
-                    {
-                        tfDoor.DOLocalRotate(new Vector3(0, -90, 0), 0.2f);
-                        blockDoorData.state = 2;
-                    }
-                    else
-                    {
-                        tfDoor.DOLocalRotate(new Vector3(0, 90, 0), 0.2f);
-                        blockDoorData.state = 1;
-                    }
-                    break;
-                case 3:
-                    if (user.transform.position.z > worldPosition.z)
-                    {
-                        tfDoor.DOLocalRotate(new Vector3(0, -90, 0), 0.2f);
-                        blockDoorData.state = 2;
-                    }
-                    else
-                    {
-                        tfDoor.DOLocalRotate(new Vector3(0, 90, 0), 0.2f);
-                        blockDoorData.state = 1;
-                    }
-                    break;
-                case 4:
-                    if (user.transform.position.z > worldPosition.z)
-                    {
-                        tfDoor.DOLocalRotate(new Vector3(0, 90, 0), 0.2f);
-                        blockDoorData.state = 1;
-                    }
-                    else
-                    {
-                        tfDoor.DOLocalRotate(new Vector3(0, -90, 0), 0.2f);
-                        blockDoorData.state = 2;
-                    }
-                    break;
+                tfDoor.DOLocalRotate(new Vector3(0, 90, 0), 0.2f);
+                blockDoorData.state = 1;
+            }
+            else
+            {
+                //如果是在X轴上
+                switch (directionFace)
+                {
+                    case 1:
+                        if (user.transform.position.x > worldPosition.x)
+                        {
+                            tfDoor.DOLocalRotate(new Vector3(0, 90, 0), 0.2f);
+                            blockDoorData.state = 1;
+                        }
+                        else
+                        {
+                            tfDoor.DOLocalRotate(new Vector3(0, -90, 0), 0.2f);
+                            blockDoorData.state = 2;
+                        }
+                        break;
+                    case 2:
+                        if (user.transform.position.x > worldPosition.x)
+                        {
+                            tfDoor.DOLocalRotate(new Vector3(0, -90, 0), 0.2f);
+                            blockDoorData.state = 2;
+                        }
+                        else
+                        {
+                            tfDoor.DOLocalRotate(new Vector3(0, 90, 0), 0.2f);
+                            blockDoorData.state = 1;
+                        }
+                        break;
+                    case 3:
+                        if (user.transform.position.z > worldPosition.z)
+                        {
+                            tfDoor.DOLocalRotate(new Vector3(0, -90, 0), 0.2f);
+                            blockDoorData.state = 2;
+                        }
+                        else
+                        {
+                            tfDoor.DOLocalRotate(new Vector3(0, 90, 0), 0.2f);
+                            blockDoorData.state = 1;
+                        }
+                        break;
+                    case 4:
+                        if (user.transform.position.z > worldPosition.z)
+                        {
+                            tfDoor.DOLocalRotate(new Vector3(0, 90, 0), 0.2f);
+                            blockDoorData.state = 1;
+                        }
+                        else
+                        {
+                            tfDoor.DOLocalRotate(new Vector3(0, -90, 0), 0.2f);
+                            blockDoorData.state = 2;
+                        }
+                        break;
+                }
             }
         }
         else if (blockDoorData.state == 1 || blockDoorData.state == 2)

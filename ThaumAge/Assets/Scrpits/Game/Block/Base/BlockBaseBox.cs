@@ -3,9 +3,12 @@ using UnityEngine;
 
 public class BlockBaseBox : Block
 {
-    public override void Interactive(GameObject user, Vector3Int worldPosition)
+    public override void Interactive(GameObject user, Vector3Int worldPosition,BlockDirectionEnum blockDirection)
     {
-        base.Interactive(user, worldPosition);
+        base.Interactive(user, worldPosition, blockDirection);
+        //只有player才能打开
+        if (user == null || user.GetComponent<Player>() == null)
+            return;
         //打开箱子UI
         UIGameBox uiGameBox = UIHandler.Instance.OpenUIAndCloseOther<UIGameBox>(UIEnum.GameBox);
         uiGameBox.SetData(worldPosition);
