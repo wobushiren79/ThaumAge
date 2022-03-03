@@ -55,7 +55,7 @@ public class Chunk : BaseMonoBehaviour
         //获取自身相关组件引用
         meshRenderer = GetComponent<MeshRenderer>();
         meshFilter = GetComponent<MeshFilter>();
-       
+
         chunkMesh = new Mesh();
         chunkMeshCollider = new Mesh();
         chunkMeshTrigger = new Mesh();
@@ -285,7 +285,6 @@ public class Chunk : BaseMonoBehaviour
         callBackForComplete?.Invoke();
     }
 
-
     /// <summary>
     /// 异步构建chunk
     /// </summary>
@@ -313,20 +312,17 @@ public class Chunk : BaseMonoBehaviour
 #endif
                     chunkMeshData = new ChunkMeshData();
 
-                    for (int x = 0; x < chunkData.chunkWidth; x++)
+                    chunkData.InitRoundChunk();
+
+                    for (int i = 0; i < chunkData.arrayBlock.Length; i++)
                     {
-                        for (int y = 0; y < chunkData.chunkHeight; y++)
-                        {
-                            for (int z = 0; z < chunkData.chunkWidth; z++)
-                            {
-                                chunkData.GetBlockForLocal(x, y, z, out Block block, out BlockDirectionEnum direction);
-                                if (block == null || block.blockType == BlockTypeEnum.None)
-                                    continue;
-                                Vector3Int localPosition = new Vector3Int(x, y, z);
-                                block.BuildBlock(this, localPosition, direction);
-                                block.InitBlock(this, localPosition, direction, 0);
-                            }
-                        }
+                        Block block = chunkData.arrayBlock[i];
+                        if (block == null || block.blockType == BlockTypeEnum.None)
+                            continue;
+                        BlockDirectionEnum blockDirection = (BlockDirectionEnum)chunkData.arrayBlockDirection[i];
+                        Vector3Int localPosition = chunkData.GetPositionByIndex(i);
+                        block.BuildBlock(this, localPosition, blockDirection);
+                        block.InitBlock(this, localPosition, blockDirection, 0);
                     }
 #if UNITY_EDITOR
                     TimeUtil.GetMethodTimeEnd("Time_BuildChunkForAsync:", stopwatch);
@@ -582,12 +578,12 @@ public class Chunk : BaseMonoBehaviour
         }
 
         //生成洞穴 不放在每一个方块里去检测 提升效率
-        BiomeCreateTool.BiomeForCaveData caveData = new BiomeCreateTool.BiomeForCaveData();
-        caveData.minDepth = 100;
-        caveData.maxDepth = 200;
-        caveData.minSize = 3;
-        caveData.maxSize = 5;
-        BiomeCreateTool.AddCave(this, mapData, caveData);
+        //BiomeCreateTool.BiomeForCaveData caveData = new BiomeCreateTool.BiomeForCaveData();
+        //caveData.minDepth = 100;
+        //caveData.maxDepth = 200;
+        //caveData.minSize = 3;
+        //caveData.maxSize = 5;
+        //BiomeCreateTool.AddCave(this, mapData, caveData);
     }
 
     /// <summary>

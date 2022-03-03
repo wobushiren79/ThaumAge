@@ -3,54 +3,10 @@ using UnityEngine;
 
 public class ChunkData
 {
-    public Chunk _chunkLeft;
-    public Chunk chunkLeft
-    {
-        get
-        {
-            if (_chunkLeft == null)
-            {
-                _chunkLeft = WorldCreateHandler.Instance.manager.GetChunk(positionForWorld + new Vector3Int(-chunkWidth, 0, 0));
-            }
-            return _chunkLeft;
-        }
-    }
-    public Chunk _chunkRight;
-    public Chunk chunkRight
-    {
-        get
-        {
-            if (_chunkRight == null)
-            {
-                _chunkRight = WorldCreateHandler.Instance.manager.GetChunk(positionForWorld + new Vector3Int(chunkWidth, 0, 0));
-            }
-            return _chunkRight;
-        }
-    }
-    public Chunk _chunkForward;
-    public Chunk chunkForward
-    {
-        get
-        {
-            if (_chunkForward == null)
-            {
-                _chunkForward = WorldCreateHandler.Instance.manager.GetChunk(positionForWorld + new Vector3Int(0, 0, -chunkWidth));
-            }
-            return _chunkForward;
-        }
-    }
-    public Chunk _chunkBack;
-    public Chunk chunkBack
-    {
-        get
-        {
-            if (_chunkBack == null)
-            {
-                _chunkBack = WorldCreateHandler.Instance.manager.GetChunk(positionForWorld + new Vector3Int(0, 0, chunkWidth));
-            }
-            return _chunkBack;
-        }
-    }
+    public Chunk chunkLeft;
+    public Chunk chunkRight;
+    public Chunk chunkForward;
+    public Chunk chunkBack;
 
     //所有的方块合集
     public Block[] arrayBlock;
@@ -73,6 +29,29 @@ public class ChunkData
 
         arrayBlock = new Block[chunkWidth * chunkHeight * chunkWidth];
         arrayBlockDirection = new byte[chunkWidth * chunkHeight * chunkWidth];
+    }
+
+    /// <summary>
+    /// 初始化四周方块
+    /// </summary>
+    public void InitRoundChunk()
+    {
+        if (chunkLeft == null)
+        {
+            chunkLeft = WorldCreateHandler.Instance.manager.GetChunk(positionForWorld + new Vector3Int(-chunkWidth, 0, 0));
+        }
+        if (chunkRight == null)
+        {
+            chunkRight = WorldCreateHandler.Instance.manager.GetChunk(positionForWorld + new Vector3Int(chunkWidth, 0, 0));
+        }
+        if (chunkForward == null)
+        {
+            chunkForward = WorldCreateHandler.Instance.manager.GetChunk(positionForWorld + new Vector3Int(0, 0, -chunkWidth));
+        }
+        if (chunkBack == null)
+        {
+            chunkBack = WorldCreateHandler.Instance.manager.GetChunk(positionForWorld + new Vector3Int(0, 0, chunkWidth));
+        } 
     }
 
     /// <summary>
@@ -137,6 +116,12 @@ public class ChunkData
         return GetBlockForLocal(blockPosition.x, blockPosition.y, blockPosition.z);
     }
 
+    public BlockDirectionEnum GetBlockDirection(int x, int y, int z)
+    {
+        int index = GetIndexByPosition(x, y, z);
+        return (BlockDirectionEnum)arrayBlockDirection[index];
+    }
+
     /// <summary>
     /// 获取下标
     /// </summary>
@@ -147,5 +132,10 @@ public class ChunkData
     public int GetIndexByPosition(int x, int y, int z)
     {
         return x * chunkWidth * chunkHeight + y * chunkWidth + z;
+    }
+
+    public Vector3Int GetPositionByIndex(int index)
+    {
+        return new Vector3Int((index % (chunkWidth * chunkWidth * chunkHeight))/(chunkWidth * chunkHeight), (index % (chunkWidth * chunkHeight))/ chunkWidth, index % chunkWidth);
     }
 }

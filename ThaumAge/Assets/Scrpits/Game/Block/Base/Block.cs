@@ -344,7 +344,7 @@ public class Block
         localPosition = GetClosePositionByDirection(getDirection, localPosition);
 
         int maxWidth = chunk.chunkData.chunkWidth - 1;
-        int maxHeight = chunk.chunkData.chunkHeight - 1;
+        //int maxHeight = chunk.chunkData.chunkHeight - 1;
         if (localPosition.x < 0)
         {
             blockChunk = chunk.chunkData.chunkLeft;
@@ -385,11 +385,11 @@ public class Block
             }
             return;
         }
-        else if (localPosition.y > maxHeight)
-        {
-            blockChunk = chunk;
-            return;
-        }
+        //else if (localPosition.y > maxHeight)
+        //{
+        //    blockChunk = chunk;
+        //    return;
+        //}
         else
         {
             //如果在同一个chunk内
