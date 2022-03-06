@@ -16,47 +16,7 @@ MonoBehaviour:
   m_Data:
     m_SerializedData: []
   m_GUID: 50e7f9fe31a89f94f8cf7c190fcb05b9
-  m_SerializeEntries:
-  - m_GUID: 2c6e93a0cf22bc94ea80a41bc3250075
-    m_Address: Assets/Texture/Character/Eye/character_eye_1.png
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-  - m_GUID: a45d2d4d3ae385c438da8e2217efd098
-    m_Address: Assets/Texture/Character/Eye/character_eye_2.png
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-  - m_GUID: 044b358334ddcfa4abcea7a6c55be4c0
-    m_Address: Assets/Texture/Character/Eye/character_eye_3.png
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-  - m_GUID: 07146bcc48f65b04ea05e109670787cd
-    m_Address: Assets/Texture/Character/Eye/character_eye_4.png
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-  - m_GUID: 00d0abb047566b447bb8ab21ac751614
-    m_Address: Assets/Texture/Character/Eye/character_eye_5.png
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-  - m_GUID: b9bc0a869a9b891459759ca97cf2260d
-    m_Address: Assets/Texture/Character/Eye/character_eye_6.png
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-  - m_GUID: 02ebfbbe8ebf9dc48a6180a5ebcdf55e
-    m_Address: Assets/Texture/Character/Eye/character_eye_7.png
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-  - m_GUID: cc9b6dc69fba1cf4cb5cf514f479e13b
-    m_Address: Assets/Texture/Character/Eye/character_eye_8.png
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-  - m_GUID: 58aa8e19f59cbd04ba0489515188c61a
-    m_Address: Assets/Texture/Character/Eye/character_eye_9.png
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-  - m_GUID: b36fed86b366c4d4e9731f2090f0c74b
-    m_Address: Assets/Texture/Character/Eye/character_eye_10.png
-    m_ReadOnly: 0
-    m_SerializedLabels: []
+  m_SerializeEntries: []
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: fd6114d87f1af534fbf270c47c0f10bf, type: 2}
   m_SchemaSet:

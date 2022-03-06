@@ -11,6 +11,16 @@ public static class EditorUtil
 {
 
     /// <summary>
+    /// 创建资源 
+    /// </summary>
+    /// <param name="asset"></param>
+    /// <param name="path">Assets/TexArray.asset</param>
+    public static void CreateAsset(UnityEngine.Object asset,string path)
+    {
+        AssetDatabase.CreateAsset(asset, path);
+    }
+
+    /// <summary>
     /// 通过资源文件的唯一ID获取选择文件的路径
     /// 注：仅适用于 选中Project 中的物体
     /// </summary>
