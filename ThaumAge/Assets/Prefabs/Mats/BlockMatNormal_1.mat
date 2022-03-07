@@ -59,7 +59,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _BlockTextureArray:
-        m_Texture: {fileID: 18700000, guid: 50fde77a0e638614196804697d8c91e8, type: 2}
+        m_Texture: {fileID: 18700000, guid: 7feb8173b944f7045938c3f6f34dde33, type: 2}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _CoatMaskMap:

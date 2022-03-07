@@ -272,19 +272,27 @@ public class BlockEditorWindow : EditorWindow
         {
             string nameOfMat = listBlockMat[m].GetEnumName();
 
-            Texture2DArray arrayNormal = new Texture2DArray(size, size, frameNumber, TextureFormat.DXT5, false);
-            //Texture2DArray arrayNormal = new Texture2DArray(size, size, frameNumber, GraphicsFormat.RGBA_DXT5_SRGB, TextureCreationFlags.None);
-            arrayNormal.filterMode = FilterMode.Point;
-            arrayNormal.wrapMode = TextureWrapMode.Repeat;
+            Texture2DArray arrayNormal = null;
 
             for (int i = 0; i < frameNumber; i++)
             {
                 //根据名字获取每个图片所在的位置
                 Texture2D itemTex = AssetDatabase.LoadAssetAtPath<Texture2D>($"{Path_Block_BlockMat}/Block{nameOfMat}_{i}.png");
 
-                arrayNormal.SetPixels32(itemTex.GetPixels32(), i);
+                if (arrayNormal == null)
+                {
+                    arrayNormal = new Texture2DArray(size, size, frameNumber, itemTex.graphicsFormat, TextureCreationFlags.None);
+                    arrayNormal.filterMode = FilterMode.Point;
+                    arrayNormal.wrapMode = TextureWrapMode.Repeat;
+                }
+                
+                Graphics.CopyTexture(itemTex, 0, arrayNormal, i);
+                //arrayNormal.SetPixels32(itemTex.GetPixels32(), i);
             }
-            EditorUtil.CreateAsset(arrayNormal, $"{Path_Block_TextureArray}/BlockTextureArrary_{nameOfMat}.asset");
+            string pathSave = $"{Path_Block_TextureArray}/BlockTextureArrary_{nameOfMat}.asset";
+            EditorUtil.CreateAsset(arrayNormal, pathSave);
+
+            AssetDatabase.ImportAsset(pathSave);
         }
 
         EditorUtil.RefreshAsset();
@@ -299,8 +307,7 @@ public class BlockEditorWindow : EditorWindow
         for (int m = 0; m < listBlockMat.Count; m++)
         {
             //生成图片tex
-            Texture2D outTexture = new Texture2D(size, size, GraphicsFormat.RGBA_DXT5_SRGB, TextureCreationFlags.None);
-            //Texture2D outTexture = new Texture2D(size, size, TextureFormat.DXT5, false);
+            Texture2D outTexture = new Texture2D(size, size, TextureFormat.RGBA32, false);
             outTexture.filterMode = FilterMode.Point;
             outTexture.SetPixels(new Color[size * size]);
 
@@ -352,11 +359,15 @@ public class BlockEditorWindow : EditorWindow
 
             EditorUtil.RefreshAsset();
 
-
             var itemImporter = AssetImporter.GetAtPath(pathBlock) as TextureImporter;
             itemImporter.textureType = TextureImporterType.Default;
             itemImporter.isReadable = true;
             itemImporter.textureCompression = TextureImporterCompression.CompressedHQ;
+
+            var settingPC = itemImporter.GetPlatformTextureSettings("Standalone");
+            settingPC.format = TextureImporterFormat.DXT5;
+            itemImporter.SetPlatformTextureSettings(settingPC);
+
             AssetDatabase.ImportAsset(pathBlock);
         }
         EditorUtil.RefreshAsset();
