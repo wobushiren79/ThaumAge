@@ -363,11 +363,12 @@ public class BlockEditorWindow : EditorWindow
             itemImporter.textureType = TextureImporterType.Default;
             itemImporter.isReadable = true;
             itemImporter.textureCompression = TextureImporterCompression.CompressedHQ;
-
+            itemImporter.mipmapEnabled = false;
+            itemImporter.filterMode = FilterMode.Point;
+        
             var settingPC = itemImporter.GetPlatformTextureSettings("Standalone");
             settingPC.format = TextureImporterFormat.DXT5;
             itemImporter.SetPlatformTextureSettings(settingPC);
-
             AssetDatabase.ImportAsset(pathBlock);
         }
         EditorUtil.RefreshAsset();

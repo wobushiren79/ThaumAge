@@ -44,7 +44,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _BlockTextureArray:
-        m_Texture: {fileID: 18700000, guid: c552fa6f578b04746b6900422465d62c, type: 2}
+        m_Texture: {fileID: 18700000, guid: 7088e08ed4853a947a2aa9ddbd62eeb7, type: 2}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _CoatMaskMap:
@@ -145,8 +145,8 @@ Material:
     - _AlphaToMask: 0
     - _AlphaToMaskInspectorValue: 0
     - _AmbientOcclusion: 1
-    - _AnimLength: 31
-    - _AnimSpeed: 0.2
+    - _AnimLength: 11
+    - _AnimSpeed: 1
     - _Anisotropy: 0
     - _BlendMode: 0
     - _CoatMask: 0

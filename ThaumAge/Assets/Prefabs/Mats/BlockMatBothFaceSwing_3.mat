@@ -72,7 +72,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _BlockTextureArray:
-        m_Texture: {fileID: 18700000, guid: 956cc82ee714ea947865f5b1a1dd39c9, type: 2}
+        m_Texture: {fileID: 18700000, guid: 094935094d869f24f9d86209e1db7ac5, type: 2}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _BumpMap:
@@ -162,8 +162,8 @@ Material:
     - _AlphaToMask: 0
     - _AlphaToMaskInspectorValue: 0
     - _Amplitude: 16
-    - _AnimLength: 31
-    - _AnimSpeed: 0.2
+    - _AnimLength: 11
+    - _AnimSpeed: 1
     - _Blend: 0
     - _BlendMode: 0
     - _BumpScale: 1
