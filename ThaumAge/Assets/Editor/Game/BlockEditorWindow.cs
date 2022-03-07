@@ -5,12 +5,22 @@ using System.Linq;
 using UnityEditor;
 using UnityEditor.AddressableAssets.Settings;
 using UnityEngine;
+using UnityEngine.Experimental.Rendering;
 
 public class BlockEditorWindow : EditorWindow
 {
-    protected readonly string Path_Block_Png = "Assets/Texture";
-    protected readonly string Path_Block_Textures = "Assets/Texture/Block";
-    protected readonly string Path_Block_Mesh = "Assets/Art/FBX/Block";
+    public static List<BlockMaterialEnum> listBlockMat = new List<BlockMaterialEnum>()
+    {
+        BlockMaterialEnum.Normal,
+        BlockMaterialEnum.BothFace,
+        BlockMaterialEnum.BothFaceSwing,
+        BlockMaterialEnum.BothFaceSwingUniform,
+    };
+
+    protected static readonly string Path_Block_BlockMat = "Assets/Texture/BlockMat";
+    protected static readonly string Path_Block_TextureArray = "Assets/Texture/BlockTextureArray";
+    protected static readonly string Path_Block_Textures = "Assets/Texture/Block";
+    protected static readonly string Path_Block_Mesh = "Assets/Art/FBX/Block";
 
     protected string queryBlockIds;
     protected string queryBlockName;
@@ -71,12 +81,12 @@ public class BlockEditorWindow : EditorWindow
         }
         if (EditorUI.GUIButton("刷新所有方块资源（贴图 mesh数据）", 300))
         {
-            CreateBlockTexture(2048);
+            CreateBlockTexture(2048, 0);
             CreateBlockMeshData();
         }
         if (EditorUI.GUIButton("生成方块图片", 150))
         {
-            CreateBlockTexture(2048);
+            CreateBlockTexture(2048, 0);
         }
         if (EditorUI.GUIButton("生成方块mesh数据", 150))
         {
@@ -230,91 +240,132 @@ public class BlockEditorWindow : EditorWindow
         string nameBothFaceSwing = BlockMaterialEnum.BothFaceSwing.GetEnumName();
         string nameBothFace = BlockMaterialEnum.BothFace.GetEnumName();
 
-        EditorUI.GUIPic($"{Path_Block_Png}/Block.png", 2048, 2048);
-        EditorUI.GUIPic($"{Path_Block_Png}/Block{nameBothFace}.png", 2048, 2048);
-        EditorUI.GUIPic($"{Path_Block_Png}/Block{nameBothFaceSwing}.png", 2048, 2048);
-        EditorUI.GUIPic($"{Path_Block_Png}/Block{nameBothFaceSwingUniform}.png", 2048, 2048);
+        EditorUI.GUIPic($"{Path_Block_BlockMat}/BlockNomral_0.png", 2048, 2048);
+        EditorUI.GUIPic($"{Path_Block_BlockMat}/Block{nameBothFace}_0.png", 2048, 2048);
+        EditorUI.GUIPic($"{Path_Block_BlockMat}/Block{nameBothFaceSwing}_0.png", 2048, 2048);
+        EditorUI.GUIPic($"{Path_Block_BlockMat}/Block{nameBothFaceSwingUniform}_0.png", 2048, 2048);
+    }
+
+
+    /// <summary>
+    /// 创建方块动画贴图列表
+    /// </summary>
+    /// <param name="size"></param>
+    /// <param name="frameNumber"></param>
+    public static void CreateBlockTextureArrayTexture(int size, int frameNumber)
+    {
+        for (int i = 0; i < frameNumber; i++)
+        {
+            CreateBlockTexture(size, i);
+        }
+        EditorUtil.RefreshAsset();
+    }
+
+    /// <summary>
+    /// 创建方块TextureArray
+    /// </summary>
+    /// <param name="size"></param>
+    /// <param name="frameNumber"></param>
+    public static void CreateBlockTextureArray(int size, int frameNumber)
+    {
+        for (int m = 0; m < listBlockMat.Count; m++)
+        {
+            string nameOfMat = listBlockMat[m].GetEnumName();
+
+            Texture2DArray arrayNormal = new Texture2DArray(size, size, frameNumber, TextureFormat.DXT5, false);
+            //Texture2DArray arrayNormal = new Texture2DArray(size, size, frameNumber, GraphicsFormat.RGBA_DXT5_SRGB, TextureCreationFlags.None);
+            arrayNormal.filterMode = FilterMode.Point;
+            arrayNormal.wrapMode = TextureWrapMode.Repeat;
+
+            for (int i = 0; i < frameNumber; i++)
+            {
+                //根据名字获取每个图片所在的位置
+                Texture2D itemTex = AssetDatabase.LoadAssetAtPath<Texture2D>($"{Path_Block_BlockMat}/Block{nameOfMat}_{i}.png");
+
+                arrayNormal.SetPixels32(itemTex.GetPixels32(), i);
+            }
+            EditorUtil.CreateAsset(arrayNormal, $"{Path_Block_TextureArray}/BlockTextureArrary_{nameOfMat}.asset");
+        }
+
+        EditorUtil.RefreshAsset();
     }
 
     /// <summary>
     /// 创建方块图片
     /// </summary>
     /// <param name="size"></param>
-    public void CreateBlockTexture(int size)
+    public static void CreateBlockTexture(int size, int frameIndex)
     {
-        string[] filesName = Directory.GetFiles(Path_Block_Textures);
-        //生成图片tex
-        Texture2D outTexture = new Texture2D(size, size, TextureFormat.RGBA32, true);
-        Texture2D outTextureBothFace= new Texture2D(size, size, TextureFormat.RGBA32, true);
-        Texture2D outTextureBothFaceSwing = new Texture2D(size, size, TextureFormat.RGBA32, true);
-        Texture2D outTextureBothFaceSwingUniform = new Texture2D(size, size, TextureFormat.RGBA32, true);
-
-        outTexture.SetPixels(new Color[size* size]);
-        outTextureBothFace.SetPixels(new Color[size * size]);
-        outTextureBothFaceSwing.SetPixels(new Color[size * size]);
-        outTextureBothFaceSwingUniform.SetPixels(new Color[size * size]);
-
-        //设置每一个方块所占的区域大小
-        int itemSize = size / 128;
-
-        string nameBothFace = BlockMaterialEnum.BothFace.GetEnumName();
-        string nameBothFaceSwing = BlockMaterialEnum.BothFaceSwing.GetEnumName();
-        string nameBothFaceSwingUniform = BlockMaterialEnum.BothFaceSwingUniform.GetEnumName();
-
-        for (int i = 0; i < filesName.Length; i++)
+        for (int m = 0; m < listBlockMat.Count; m++)
         {
-            //获取方块名字
-            string fileName = filesName[i];
+            //生成图片tex
+            Texture2D outTexture = new Texture2D(size, size, GraphicsFormat.RGBA_DXT5_SRGB, TextureCreationFlags.None);
+            //Texture2D outTexture = new Texture2D(size, size, TextureFormat.DXT5, false);
+            outTexture.filterMode = FilterMode.Point;
+            outTexture.SetPixels(new Color[size * size]);
 
-            if (fileName.Contains(".meta"))
-                continue;
-            //根据名字获取每个图片所在的位置
-            Texture2D itemTex = AssetDatabase.LoadAssetAtPath<Texture2D>(fileName);
-            if (itemTex == null)
-                continue;
-            string[] itemDataArray = itemTex.name.SplitForArrayStr( '_');
+            //设置每一个方块所占的区域大小
+            int itemSize = size / 128;
 
-            //设置方块位置
-            int width = itemTex.width;
-            int height = itemTex.height;
+            string nameOfMat = listBlockMat[m].GetEnumName();
+            string[] filesName = Directory.GetFiles($"{Path_Block_Textures}/{nameOfMat}");
 
-            if (fileName.Contains(nameBothFaceSwingUniform))
+            for (int i = 0; i < filesName.Length; i++)
             {
+                //获取方块名字
+                string fileName = filesName[i];
+
+                if (fileName.Contains(".meta"))
+                    continue;
+                //根据名字获取每个图片所在的位置
+                Texture2D itemTex = AssetDatabase.LoadAssetAtPath<Texture2D>(fileName);
+                if (itemTex == null)
+                    continue;
+                string[] itemDataArray = itemTex.name.SplitForArrayStr('_');
+
+                //设置方块位置
+                int width = itemTex.width;
+                int height = itemTex.height;
+                int sizeWH = width > height ? height : width;
+                //如果是有动画的贴图 则按照帧序号 设置对应的忒图
+
+                Texture2D useTex;
+                if (width > height || height > width)
+                {
+                    int numberTex = width > height ? width / height : height / width;
+                    int startIndex = frameIndex % numberTex;
+                    useTex = new Texture2D(sizeWH, sizeWH);
+                    Color[] pixelTemp = itemTex.GetPixels(startIndex * sizeWH, 0, sizeWH, sizeWH);
+                    useTex.SetPixels(pixelTemp);
+                }
+                else
+                {
+                    useTex = itemTex;
+                }
                 int positionStartX = int.Parse(itemDataArray[2]) * itemSize;
                 int positionStartY = int.Parse(itemDataArray[1]) * itemSize;
-                outTextureBothFaceSwingUniform.SetPixels(positionStartX, positionStartY, width, height, itemTex.GetPixels());
+                outTexture.SetPixels(positionStartX, positionStartY, sizeWH, sizeWH, useTex.GetPixels());
             }
-            else if (fileName.Contains(nameBothFaceSwing))
-            {
-                int positionStartX = int.Parse(itemDataArray[2]) * itemSize;
-                int positionStartY = int.Parse(itemDataArray[1]) * itemSize;
-                outTextureBothFaceSwing.SetPixels(positionStartX, positionStartY, width, height, itemTex.GetPixels());
-            }
-            else if (fileName.Contains(nameBothFace))
-            {
-                int positionStartX = int.Parse(itemDataArray[2]) * itemSize;
-                int positionStartY = int.Parse(itemDataArray[1]) * itemSize;
-                outTextureBothFace.SetPixels(positionStartX, positionStartY, width, height, itemTex.GetPixels());
-            }
-            else
-            {
-                int positionStartX = int.Parse(itemDataArray[1]) * itemSize;
-                int positionStartY = int.Parse(itemDataArray[0]) * itemSize;
-                outTexture.SetPixels(positionStartX, positionStartY, width, height, itemTex.GetPixels());
-            }
+            //保存图片
+            string pathBlock = $"{Path_Block_BlockMat}/Block{nameOfMat}_{frameIndex}.png";
+            File.WriteAllBytes(pathBlock, outTexture.EncodeToPNG());
+
+            EditorUtil.RefreshAsset();
+
+
+            var itemImporter = AssetImporter.GetAtPath(pathBlock) as TextureImporter;
+            itemImporter.textureType = TextureImporterType.Default;
+            itemImporter.isReadable = true;
+            itemImporter.textureCompression = TextureImporterCompression.CompressedHQ;
+            AssetDatabase.ImportAsset(pathBlock);
         }
-        //保存图片
-        File.WriteAllBytes($"{Path_Block_Png}/Block.png", outTexture.EncodeToPNG());
-        File.WriteAllBytes($"{Path_Block_Png}/Block{nameBothFace}.png", outTextureBothFace.EncodeToPNG());
-        File.WriteAllBytes($"{Path_Block_Png}/Block{nameBothFaceSwing}.png", outTextureBothFaceSwing.EncodeToPNG());
-        File.WriteAllBytes($"{Path_Block_Png}/Block{nameBothFaceSwingUniform}.png", outTextureBothFaceSwingUniform.EncodeToPNG());
-        AssetDatabase.Refresh();
+        EditorUtil.RefreshAsset();
     }
 
     /// <summary>
     /// 创建所有方块的mesh数据
     /// </summary>
-    public void CreateBlockMeshData()
+    public static void CreateBlockMeshData()
     {
         FileInfo[] files = FileUtil.GetFilesByPath($"{Path_Block_Mesh}");
         if (files.IsNull())
@@ -346,7 +397,7 @@ public class BlockEditorWindow : EditorWindow
                 meshData = new MeshData(collider, 0.625f, new Vector3(0.5f, 0f, 0.5f));
             }
             string jsonData = JsonUtil.ToJson(meshData);
-            string saveFileName = $"{itemFile.Name.Replace(".prefab", "").Replace(".obj","")}";
+            string saveFileName = $"{itemFile.Name.Replace(".prefab", "").Replace(".obj", "")}";
             //创建文件
             FileUtil.CreateTextFile($"{Application.dataPath}/Prefabs/BlockMesh", $"{saveFileName}.txt", jsonData);
             //添加到addressable中
@@ -354,6 +405,6 @@ public class BlockEditorWindow : EditorWindow
             AddressableUtil.AddAssetEntry(addressableAssetGroup, addressName, addressName);
         }
 
-        AssetDatabase.Refresh();
+        EditorUtil.RefreshAsset();
     }
 }

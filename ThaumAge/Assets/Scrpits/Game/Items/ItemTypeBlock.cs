@@ -32,7 +32,7 @@ public class ItemTypeBlock : Item
                         if (closeBlock != null && closeBlock.blockType != BlockTypeEnum.None && closeBlock.blockInfo.GetBlockShape() != BlockShapeEnum.Liquid)
                             return;
                         //如果重量为1 说明是草之类太轻的物体 则也不能放置
-                        if (closeBlock.blockInfo.weight == 1) 
+                        if (closeBlock != null && closeBlock.blockInfo.weight == 1) 
                             return;
                         //获取物品信息
                         ItemsInfoBean itemsInfo = ItemsHandler.Instance.manager.GetItemsInfoById(itemData.itemId);
