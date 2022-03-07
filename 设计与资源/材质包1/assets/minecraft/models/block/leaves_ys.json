@@ -1,0 +1,61 @@
+{
+	"credit": "Made with Blockbench",
+	"parent": "block/block",
+	"textures": {
+		"particle": "#all"
+	},
+	"elements": [
+		{
+			"from": [0, 0, 0],
+			"to": [16, 16, 16],
+			"faces": {
+				"north": {"uv": [0, 0, 16, 16], "texture": "#all", "cullface": "north", "tintindex": 0},
+				"east": {"uv": [0, 0, 16, 16], "texture": "#all", "cullface": "east", "tintindex": 0},
+				"south": {"uv": [0, 0, 16, 16], "texture": "#all", "cullface": "south", "tintindex": 0},
+				"west": {"uv": [0, 0, 16, 16], "texture": "#all", "cullface": "west", "tintindex": 0},
+				"up": {"uv": [0, 0, 16, 16], "texture": "#all", "cullface": "up", "tintindex": 0},
+				"down": {"uv": [0, 0, 16, 16], "texture": "#all", "cullface": "down", "tintindex": 0}
+			}
+		},
+		{
+			"from": [8, -5.5, -6.3],
+			"to": [8, 22.5, 21.7],
+			"shade": false,
+			"rotation": {"angle": -22.5, "axis": "y", "origin": [8, 5, 8], "rescale": true},
+			"faces": {
+				"east": {"uv": [0, 0, 16, 16], "texture": "#x", "tintindex": 0},
+				"west": {"uv": [0, 0, 16, 16], "texture": "#x", "tintindex": 0}
+			}
+		},
+		{
+			"from": [8, -5.5, -6.3],
+			"to": [8, 22.5, 21.7],
+			"shade": false,
+			"rotation": {"angle": 22.5, "axis": "y", "origin": [8, 5, 8], "rescale": true},
+			"faces": {
+				"east": {"uv": [0, 0, 16, 16], "texture": "#s", "tintindex": 0},
+				"west": {"uv": [0, 0, 16, 16], "texture": "#s", "tintindex": 0}
+			}
+		},
+		{
+			"from": [-5.7, -5.5, 8],
+			"to": [22.3, 22.5, 8],
+			"shade": false,
+			"rotation": {"angle": -22.5, "axis": "y", "origin": [8, 5, 8], "rescale": true},
+			"faces": {
+				"north": {"uv": [0, 0, 16, 16], "texture": "#x", "tintindex": 0},
+				"south": {"uv": [0, 0, 16, 16], "texture": "#x", "tintindex": 0}
+			}
+		},
+		{
+			"from": [-6.3, -5.5, 8],
+			"to": [21.7, 22.5, 8],
+			"shade": false,
+			"rotation": {"angle": 22.5, "axis": "y", "origin": [8, 5, 8], "rescale": true},
+			"faces": {
+				"north": {"uv": [0, 0, 16, 16], "texture": "#s", "tintindex": 0},
+				"south": {"uv": [0, 0, 16, 16], "texture": "#s", "tintindex": 0}
+			}
+		}
+	]
+}

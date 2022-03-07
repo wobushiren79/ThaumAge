@@ -1,0 +1,8 @@
+{
+	"parent": "minecraft:block/leaves_ys",
+	"textures": {
+		"all": "block/oak_leaves",
+		"s": "block/better_leaves_oak",
+		"x": "block/better_leaves_oak1"
+	}
+}

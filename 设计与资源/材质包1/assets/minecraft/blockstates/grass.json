@@ -1,0 +1,14 @@
+{
+  "variants": {
+    "": [
+          { "model": "block/grass", "weight": 50 },
+          { "model": "block/grass", "y": 90, "weight": 50 },
+          { "model": "block/grass", "y": 180, "weight": 50 },
+          { "model": "block/grass", "y": 270, "weight": 50 },
+          { "model": "block/grass3", "weight": 50 },
+          { "model": "block/grass3", "y": 90, "weight": 50 },
+          { "model": "block/grass3", "y": 180, "weig2ht": 50 },
+          { "model": "block/grass3", "y": 270, "weight": 50 }
+    ]
+  }
+}

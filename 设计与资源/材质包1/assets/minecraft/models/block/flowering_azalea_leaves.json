@@ -1,0 +1,9 @@
+{
+	"credit": "Made with Blockbench",
+	"parent": "minecraft:block/leaves_ws",
+	"textures": {
+		"all": "block/flowering_azalea_leaves",
+		"s": "block/better_flowering_azalea_leaves",
+		"x": "block/better_flowering_azalea_leaves1"
+	}
+}

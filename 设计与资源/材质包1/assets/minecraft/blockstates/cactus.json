@@ -1,0 +1,22 @@
+{
+  "variants": {
+    "": [
+          { "model": "block/cactus", "weight": 500 },
+          { "model": "block/cactus", "y": 90, "weight": 500 },
+          { "model": "block/cactus", "y": 180, "weight": 500 },
+          { "model": "block/cactus", "y": 270, "weight": 500 },
+          { "model": "block/cactus1", "weight": 30 },
+          { "model": "block/cactus1", "y": 90, "weight": 30 },
+          { "model": "block/cactus1", "y": 180, "weig2ht": 30 },
+          { "model": "block/cactus1", "y": 270, "weight": 30 },
+		  { "model": "block/cactus2", "weight": 300 },
+          { "model": "block/cactus2", "y": 90, "weight": 300 },
+          { "model": "block/cactus2", "y": 180, "weight": 300 },
+          { "model": "block/cactus2", "y": 270, "weight": 300 },
+		  { "model": "block/cactus3", "weight": 50 },
+          { "model": "block/cactus3", "y": 90, "weight": 50 },
+          { "model": "block/cactus3", "y": 180, "weight": 50 },
+          { "model": "block/cactus3", "y": 270, "weight": 50 }
+    ]
+  }
+}
