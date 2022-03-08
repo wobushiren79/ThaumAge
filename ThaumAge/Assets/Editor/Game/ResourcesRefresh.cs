@@ -77,4 +77,10 @@ public class ResourcesRefresh : Editor
         EditorUtil.RefreshAsset();
     }
 
+
+    [MenuItem("工具/资源/刷新方块模型")]
+    public static void RefreshBlockModelRes()
+    {
+        BlockEditorWindow.CreateBlockModel();
+    }
 }

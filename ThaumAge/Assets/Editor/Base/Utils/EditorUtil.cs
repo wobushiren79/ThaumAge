@@ -21,6 +21,16 @@ public static class EditorUtil
     }
 
     /// <summary>
+    /// 创建预置
+    /// </summary>
+    /// <param name="obj"></param>
+    /// <param name="path"></param>
+    public static void CreatePrefab(GameObject obj, string path)
+    {
+        PrefabUtility.SaveAsPrefabAsset(obj, path);
+    }
+
+    /// <summary>
     /// 通过资源文件的唯一ID获取选择文件的路径
     /// 注：仅适用于 选中Project 中的物体
     /// </summary>

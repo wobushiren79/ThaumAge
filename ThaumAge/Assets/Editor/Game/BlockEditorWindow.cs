@@ -22,6 +22,10 @@ public class BlockEditorWindow : EditorWindow
     protected static readonly string Path_Block_Textures = "Assets/Texture/Block";
     protected static readonly string Path_Block_Mesh = "Assets/Art/FBX/Block";
 
+    protected static readonly string Path_Block_Model = "Assets/Art/FBX/BlockModel";
+    protected static readonly string Path_Block_Model_Mat = "Assets/Mats/BlockCustom.mat";
+    protected static readonly string Path_Block_Model_Save = "Assets/Prefabs/BlockModel";
+
     protected string queryBlockIds;
     protected string queryBlockName;
     protected BlockInfoBean blockInfoCreate = new BlockInfoBean();
@@ -285,7 +289,7 @@ public class BlockEditorWindow : EditorWindow
                     arrayNormal.filterMode = FilterMode.Point;
                     arrayNormal.wrapMode = TextureWrapMode.Repeat;
                 }
-                
+
                 Graphics.CopyTexture(itemTex, 0, arrayNormal, i);
                 //arrayNormal.SetPixels32(itemTex.GetPixels32(), i);
             }
@@ -365,7 +369,7 @@ public class BlockEditorWindow : EditorWindow
             itemImporter.textureCompression = TextureImporterCompression.CompressedHQ;
             itemImporter.mipmapEnabled = false;
             itemImporter.filterMode = FilterMode.Point;
-        
+
             var settingPC = itemImporter.GetPlatformTextureSettings("Standalone");
             settingPC.format = TextureImporterFormat.DXT5;
             itemImporter.SetPlatformTextureSettings(settingPC);
@@ -386,7 +390,6 @@ public class BlockEditorWindow : EditorWindow
             return;
         }
         AddressableAssetGroup addressableAssetGroup = AddressableUtil.FindOrCreateGroup("BlockMesh");
-
         for (int i = 0; i < files.Length; i++)
         {
             FileInfo itemFile = files[i];
@@ -416,7 +419,59 @@ public class BlockEditorWindow : EditorWindow
             string addressName = $"Assets/Prefabs/BlockMesh/{saveFileName}.txt";
             AddressableUtil.AddAssetEntry(addressableAssetGroup, addressName, addressName);
         }
-
         EditorUtil.RefreshAsset();
+    }
+
+    /// <summary>
+    /// 创建方块模型
+    /// </summary>
+    public static void CreateBlockModel()
+    {
+        try
+        {
+            FileInfo[] files = FileUtil.GetFilesByPath($"{Path_Block_Model}");
+            if (files.IsNull())
+            {
+                LogUtil.Log("CreateBlockModel Fail No Block");
+                return;
+            }
+            FileUtil.DeleteAllFile($"{Path_Block_Model_Save}");
+            for (int i = 0; i < files.Length; i++)
+            {
+                EditorUI.GUIShowProgressBar("资源刷新", $"刷新方块模型中（{i}/{files.Length}）", (float)i / files.Length);
+                FileInfo itemFile = files[i];
+                if (itemFile.Name.Contains(".meta"))
+                    continue;
+                if (itemFile.Name.Contains(".obj"))
+                {
+                    //获取老方块
+                    GameObject obj = EditorUtil.GetAssetByPath<GameObject>($"{Path_Block_Model}/{itemFile.Name}");
+                    MeshFilter objMeshFilter = obj.GetComponentInChildren<MeshFilter>();
+
+                    //生成新的方块
+                    string nameNew = $"{itemFile.Name.Replace(".obj", "")}";
+                    GameObject objNew = new GameObject(nameNew);
+                    MeshRenderer objNewMeshRenderer = objNew.AddComponent<MeshRenderer>();
+                    MeshFilter objNewMeshFilter = objNew.AddComponent<MeshFilter>();
+                    //设置mesh
+                    objNewMeshFilter.sharedMesh = objMeshFilter.sharedMesh;
+                    //设置材质
+                    objNewMeshRenderer.sharedMaterial = EditorUtil.GetAssetByPath<Material>(Path_Block_Model_Mat);
+
+                    EditorUtil.CreatePrefab(objNew, $"{Path_Block_Model_Save}/{nameNew}.prefab");
+                    EditorUtil.RefreshAsset(objNew);
+                    DestroyImmediate(objNew);
+                }
+                else if (itemFile.Name.Contains(".png"))
+                {
+
+                }
+            }
+        }
+        finally
+        {
+            EditorUI.GUIHideProgressBar();
+        }
+
     }
 }
