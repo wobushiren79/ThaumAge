@@ -81,6 +81,6 @@ public class ResourcesRefresh : Editor
     [MenuItem("工具/资源/刷新方块模型")]
     public static void RefreshBlockModelRes()
     {
-        BlockEditorWindow.CreateBlockModel();
+        BlockEditorWindow.CreateBlockModel(8192);
     }
 }

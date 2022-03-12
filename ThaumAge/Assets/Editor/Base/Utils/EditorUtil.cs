@@ -231,4 +231,24 @@ public static class EditorUtil
         EditorUtility.SetDirty(objSelect);
         RefreshAsset();
     }
+
+    /// <summary>
+    /// 设置贴图数据
+    /// </summary>
+    public static void SetTextureData(string texturePath, bool isReadable = true, bool mipmapEnabled = false, TextureWrapMode wrapMode = TextureWrapMode.Repeat, FilterMode filterMode = FilterMode.Point, string platform = "Standalone")
+    {
+        TextureImporter textureImporter = AssetImporter.GetAtPath(texturePath) as TextureImporter;
+        textureImporter.isReadable = isReadable;
+        textureImporter.mipmapEnabled = mipmapEnabled;
+        textureImporter.wrapMode = wrapMode;
+        textureImporter.filterMode = filterMode;
+        textureImporter.crunchedCompression = true;
+        textureImporter.compressionQuality = 100;
+        var settingPlatform = textureImporter.GetPlatformTextureSettings(platform);
+        settingPlatform.format = TextureImporterFormat.DXT5Crunched;
+        textureImporter.SetPlatformTextureSettings(settingPlatform);
+
+        AssetDatabase.ImportAsset(texturePath);
+        RefreshAsset();
+    }
 }

@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?><COLLADA xmlns="http://www.collada.org/2005/11/COLLADASchema" version="1.4.1">
+<asset>
+<contributor>
+<author>VoxelShop User</author>
+<authoring_tool>VoxelShop V1.8.22
+</authoring_tool>
+</contributor>
+<created>2022-03-10T21:42:30</created>
+<modified>2022-03-10T21:42:30</modified>
+<unit meter="1" name="meter"/>
+<up_axis>Y_UP</up_axis>
+</asset>
+<library_images>
+<image id="BlockCropWatermelon_texture0-image" name="BlockCropWatermelon_texture0-image">
+<init_from>file://BlockCropWatermelon_texture0.png</init_from>
+</image>
+</library_images>
+<library_effects>
+<effect id="lambert0-fx">
+<profile_COMMON>
+<newparam sid="BlockCropWatermelon_texture0-surface">
+<surface type="2D">
+<init_from>BlockCropWatermelon_texture0-image</init_from>
+</surface>
+</newparam>
+<newparam sid="BlockCropWatermelon_texture0-sampler">
+<sampler2D>
+<source>BlockCropWatermelon_texture0-surface</source>
+<wrap_s>WRAP</wrap_s>
+<wrap_t>WRAP</wrap_t>
+<minfilter>NEAREST</minfilter>
+<magfilter>NEAREST</magfilter>
+</sampler2D>
+</newparam>
+<technique sid="common">
+<lambert>
+<emission>
+<color>0 0 0 1</color>
+</emission>
+<ambient>
+<color>0 0 0 1</color>
+</ambient>
+<diffuse>
+<texture texcoord="TEX0" texture="BlockCropWatermelon_texture0-sampler"/>
+</diffuse>
+</lambert>
+</technique>
+</profile_COMMON>
+</effect>
+</library_effects>
+<library_materials>
+<material id="lambert0-material" name="lambert0">
+<instance_effect url="#lambert0-fx"/>
+</material>
+</library_materials>
+<library_geometries>
+<geometry id="Plane-tex-mesh-0" name="Plane-tex">
+<mesh>
+<source id="Plane-tex-mesh-0-positions">
+<float_array count="135" id="Plane-tex-mesh-0-positions-array">0 10 2 0 8 0 0 8 2 0 10 0 -2 16 2 -2 14 -4 -2 14 2 -2 16 -4 -2 12 -6 -2 12 -4 -2 14 -6 -2 14 4 -2 12 2 -2 12 4 -2 10 0 -2 10 2 -2 12 0 -2 8 -2 -2 8 0 -2 10 -2 -12 8 12 -12 -16 -12 -12 -16 12 -12 8 -12 0 16 2 0 14 -4 0 14 2 0 16 -4 0 12 -6 0 12 -4 0 14 -6 0 14 4 0 12 2 0 12 4 0 12 0 0 8 -2 0 10 -2 2 10 2 2 8 0 2 8 2 2 10 0 12 8 12 12 -16 -12 12 -16 12 12 8 -12</float_array>
+<technique_common>
+<accessor count="45" source="#Plane-tex-mesh-0-positions-array" stride="3">
+<param name="X" type="float"/>
+<param name="Y" type="float"/>
+<param name="Z" type="float"/>
+</accessor>
+</technique_common>
+</source>
+<source id="Plane-tex-mesh-0-uvs">
+<float_array count="54" id="Plane-tex-mesh-0-uvs-array">0.6875221 0.8749779 0.71870583 0.8749779 0.6875221 0.84379417 0.03127795 0.54690295 0.062486026 0.7343191 0.062486026 0.54690295 0.031263974 0.5469309 0.031263974 0.73434705 0.06247205 0.73434705 0.4375442 0.5312721 0.8124779 0.90620583 0.8124779 0.5312721 0.37502813 0.9687344 0.74997187 0.9687344 0.5625 0.81253123 0.1563012 0.5625493 0.3124744 0.71873206 0.3124744 0.74996865 0.1562655 0.7500271 0.12502714 0.7812655 0.31245735 0.9374574 0.1874744 0.90623206 0.0313012 0.7500493 0.1874744 0.93746865 0.46871874 0.75 0.31251562 0.56252813 0.31251562 0.93747187</float_array>
+<technique_common>
+<accessor count="27" source="#Plane-tex-mesh-0-uvs-array" stride="2">
+<param name="S" type="float"/>
+<param name="T" type="float"/>
+</accessor>
+</technique_common>
+</source>
+<source id="Plane-tex-mesh-0-normals">
+<float_array count="18" id="Plane-tex-mesh-0-normals-array">-1 0 0 1 0 0 0 -1 0 0 1 0 0 0 1 0 0 -1 </float_array>
+<technique_common>
+<accessor count="6" source="#Plane-tex-mesh-0-normals-array" stride="3">
+<param name="X" type="float"/>
+<param name="Y" type="float"/>
+<param name="Z" type="float"/>
+</accessor>
+</technique_common>
+</source>
+<vertices id="Plane-tex-mesh-0-vertices">
+<input semantic="POSITION" source="#Plane-tex-mesh-0-positions"/>
+</vertices>
+<triangles count="90" material="Plane-tex-mesh-0-lambert0-material">
+<input offset="0" semantic="VERTEX" source="#Plane-tex-mesh-0-vertices"/>
+<input offset="1" semantic="TEXCOORD" set="0" source="#Plane-tex-mesh-0-uvs"/>
+<input offset="2" semantic="NORMAL" source="#Plane-tex-mesh-0-normals"/>
+<p>0 0 0 1 1 0 2 2 0 0 0 0 3 1 0 1 2 0 4 0 0 5 1 0 6 2 0 4 0 0 7 1 0 5 2 0 5 0 0 8 1 0 9 2 0 5 0 0 10 1 0 8 2 0 11 0 0 12 1 0 13 2 0 11 0 0 6 1 0 12 2 0 12 0 0 14 1 0 15 2 0 12 0 0 16 1 0 14 2 0 14 0 0 17 1 0 18 2 0 14 0 0 19 1 0 17 2 0 20 3 0 21 4 0 22 5 0 20 6 0 23 7 0 21 8 0 25 1 1 24 0 1 26 2 1 27 1 1 24 0 1 25 2 1 28 1 1 25 0 1 29 2 1 30 1 1 25 0 1 28 2 1 32 1 1 31 0 1 33 2 1 26 1 1 31 0 1 32 2 1 3 1 1 32 0 1 0 2 1 34 1 1 32 0 1 3 2 1 35 1 1 3 0 1 1 2 1 36 1 1 3 0 1 35 2 1 38 1 1 37 0 1 39 2 1 40 1 1 37 0 1 38 2 1 42 4 1 41 3 1 43 5 1 44 7 1 41 6 1 42 8 1 21 10 2 43 9 2 22 11 2 42 11 2 43 10 2 21 9 2 14 1 2 0 0 2 15 2 2 3 1 2 0 0 2 14 2 2 12 1 2 33 0 2 13 2 2 32 1 2 33 0 2 12 2 2 8 1 2 29 0 2 9 2 2 28 1 2 29 0 2 8 2 2 5 1 2 26 0 2 6 2 2 25 1 2 26 0 2 5 2 2 20 12 3 41 13 3 2 14 3 41 15 3 39 16 3 2 17 3 2 18 3 18 19 3 20 20 3 39 21 3 41 22 3 38 23 3 18 24 3 23 25 3 20 26 3 2 0 3 1 1 3 18 2 3 41 25 3 44 26 3 38 24 3 18 23 3 17 21 3 23 22 3 38 19 3 44 20 3 35 18 3 17 16 3 35 17 3 23 15 3 35 14 3 44 12 3 23 13 3 38 0 3 35 1 3 1 2 3 37 0 3 3 1 3 0 2 3 37 0 3 40 1 3 3 2 3 3 0 3 19 1 3 14 2 3 3 0 3 36 1 3 19 2 3 32 0 3 16 1 3 12 2 3 32 0 3 34 1 3 16 2 3 31 0 3 6 1 3 11 2 3 31 0 3 26 1 3 6 2 3 25 0 3 10 1 3 5 2 3 25 0 3 30 1 3 10 2 3 24 0 3 7 1 3 4 2 3 24 0 3 27 1 3 7 2 3 39 0 4 0 1 4 2 2 4 39 0 4 37 1 4 0 2 4 26 0 4 4 1 4 6 2 4 26 0 4 24 1 4 4 2 4 0 0 4 12 1 4 15 2 4 0 0 4 32 1 4 12 2 4 1 0 4 14 1 4 18 2 4 1 0 4 3 1 4 14 2 4 33 0 4 11 1 4 13 2 4 33 0 4 31 1 4 11 2 4 29 0 4 5 1 4 9 2 4 29 0 4 25 1 4 5 2 4 43 4 4 20 3 4 22 5 4 43 8 4 41 7 4 20 6 4 3 1 5 38 0 5 1 2 5 40 1 5 38 0 5 3 2 5 16 1 5 3 0 5 14 2 5 34 1 5 3 0 5 16 2 5 19 1 5 35 0 5 17 2 5 36 1 5 35 0 5 19 2 5 7 1 5 25 0 5 5 2 5 27 1 5 25 0 5 7 2 5 6 1 5 32 0 5 12 2 5 26 1 5 32 0 5 6 2 5 10 1 5 28 0 5 8 2 5 30 1 5 28 0 5 10 2 5 23 3 5 42 4 5 21 5 5 44 7 5 42 8 5 23 6 5</p>
+</triangles>
+</mesh>
+</geometry>
+</library_geometries>
+<library_visual_scenes>
+<visual_scene id="Scene" name="Scene">
+<node id="blockcropwatermelon.merged" name="BlockCropWatermelon.Merged" type="NODE">
+<translate sid="location">1.0 15.0 -1.0</translate>
+<rotate sid="rotationZ">0 0 1 0</rotate>
+<rotate sid="rotationY">0 1 0 0</rotate>
+<rotate sid="rotationX">1 0 0 0</rotate>
+<scale sid="scale">1.0 1.0 1.0</scale>
+<instance_geometry name="Merged" sid="blockcropwatermelon.merged" url="#Plane-tex-mesh-0">
+<bind_material>
+<technique_common>
+<instance_material symbol="lambert0-material" target="#lambert0-material">
+<bind_vertex_input input_semantic="TEXCOORD" input_set="0" semantic="TEX0"/>
+</instance_material>
+</technique_common>
+</bind_material>
+</instance_geometry>
+</node>
+</visual_scene>
+</library_visual_scenes>
+<scene>
+<instance_visual_scene url="#Scene"/>
+</scene>
+</COLLADA>
