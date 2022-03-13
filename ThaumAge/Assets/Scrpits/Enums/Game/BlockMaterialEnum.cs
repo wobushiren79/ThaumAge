@@ -3,7 +3,7 @@ using UnityEngine;
 
 public enum BlockMaterialEnum
 {
-    Common = 0,//通用
+    Custom = 0,//自定义
     Normal = 1,//单面
     BothFace = 2,//双面
     BothFaceSwing = 3,//双面 单数底部不动 双数顶部不动 摇曳

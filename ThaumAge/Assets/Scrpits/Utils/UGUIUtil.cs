@@ -23,7 +23,8 @@ public class UGUIUtil
     /// <returns></returns>
     public static bool IsPointerUI()
     {
-        if (EventSystem.current.IsPointerOverGameObject() || GUIUtility.hotControl != 0)
+        //只有在电脑上有用 手机没用
+        if (EventSystem.current.IsPointerOverGameObject())
         {
             //点击到了UI
             return true;

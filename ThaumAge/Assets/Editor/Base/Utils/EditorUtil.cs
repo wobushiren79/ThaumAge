@@ -225,9 +225,9 @@ public static class EditorUtil
     /// 刷新单个资源
     /// </summary>
     /// <param name="objSelect"></param>
-    public static void RefreshAsset(GameObject objSelect)
+    public static void RefreshAsset(UnityEngine.Object objSelect)
     {
-        Undo.RecordObject(objSelect, objSelect.gameObject.name);
+        Undo.RecordObject(objSelect, objSelect.name);
         EditorUtility.SetDirty(objSelect);
         RefreshAsset();
     }
@@ -235,7 +235,13 @@ public static class EditorUtil
     /// <summary>
     /// 设置贴图数据
     /// </summary>
-    public static void SetTextureData(string texturePath, bool isReadable = true, bool mipmapEnabled = false, TextureWrapMode wrapMode = TextureWrapMode.Repeat, FilterMode filterMode = FilterMode.Point, string platform = "Standalone")
+    public static void SetTextureData(string texturePath,
+        bool isReadable = true,//是否可读
+        bool mipmapEnabled = false,//是否开启mipmap
+        TextureWrapMode wrapMode = TextureWrapMode.Repeat,//循环模式
+        FilterMode filterMode = FilterMode.Point,//像素模式
+        TextureImporterFormat format = TextureImporterFormat.RGBA32,//颜色
+        string platform = "Standalone")
     {
         TextureImporter textureImporter = AssetImporter.GetAtPath(texturePath) as TextureImporter;
         textureImporter.isReadable = isReadable;
@@ -244,11 +250,13 @@ public static class EditorUtil
         textureImporter.filterMode = filterMode;
         textureImporter.crunchedCompression = true;
         textureImporter.compressionQuality = 100;
+        textureImporter.textureCompression = TextureImporterCompression.CompressedHQ;
         var settingPlatform = textureImporter.GetPlatformTextureSettings(platform);
-        settingPlatform.format = TextureImporterFormat.DXT5Crunched;
+        settingPlatform.format = format;
+        settingPlatform.textureCompression = TextureImporterCompression.CompressedHQ;
         textureImporter.SetPlatformTextureSettings(settingPlatform);
 
         AssetDatabase.ImportAsset(texturePath);
-        RefreshAsset();
+        AssetDatabase.Refresh();
     }
 }

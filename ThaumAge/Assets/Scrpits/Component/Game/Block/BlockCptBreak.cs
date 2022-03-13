@@ -6,6 +6,7 @@ public class BlockCptBreak : BaseMonoBehaviour
 {
     public MeshRenderer mrBlockBreak;
     public MeshFilter mfBlockBreak;
+    public Transform tfCenter;
 
     public Block block;
     public Vector3Int worldPosition;
@@ -23,6 +24,14 @@ public class BlockCptBreak : BaseMonoBehaviour
     protected float timeForUpdate;
     //闲置删除时间
     protected float timeForIdleDestory = 2;
+
+    protected Vector2[] uvList = new Vector2[]
+    {
+        new Vector2(0,0),
+        new Vector2(0,1),
+        new Vector2(1,1),
+        new Vector2(1,0)
+    };
 
     public void Update()
     {
@@ -86,37 +95,35 @@ public class BlockCptBreak : BaseMonoBehaviour
         {
             PlayBlockCptBreakEffect(block, worldPosition);
         }
+        WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(worldPosition, out Block targetBlock, out BlockDirectionEnum targetDirection, out Chunk targetChunk);
         //设置破坏的形状
         if (block.blockShape is BlockShapeCustom blockShapeCustom)
         {
-            //获取碰撞形状，根据碰撞形状设置破碎样子
-            //WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(worldPosition, out Block targetBlock, out BlockDirectionEnum targetDirection, out Chunk targetChunk);
             //GameObject objBlock = targetChunk.GetBlockObjForLocal(worldPosition - targetChunk.chunkData.positionForWorld);
-            //BoxCollider blockCollider = objBlock?.GetComponentInChildren<BoxCollider>();
-
-            //Vector3 colliderSize;
-            //if (blockCollider != null)
-            //{
-            //    colliderSize = blockCollider.size;
-            //}
-            //else
-            //{
-            //    colliderSize = blockShapeCustom.blockMeshData.colliderSize;
-            //}
-            
-            //int face = (int)targetDirection % 10;
-            //if (face == 1 || face == 2)
-            //{
-            //    mrBlockBreak.transform.localScale = new Vector3(colliderSize.z, colliderSize.y, colliderSize.x) * 1.001f;
-            //    return;
-            //}
-            //else
-            //{
-            //    mrBlockBreak.transform.localScale = colliderSize * 1.001f;
-            //    return;
-            //}
+            mfBlockBreak.mesh = blockShapeCustom.blockMeshData.GetMesh();
+            Vector2[] newUVS = new Vector2[mfBlockBreak.mesh.uv.Length];
+            for (int i = 0; i < mfBlockBreak.mesh.uv.Length; i++)
+            {
+                int indexUV = i % 4;
+                newUVS[i] = uvList[indexUV];
+            }
+            mfBlockBreak.mesh.SetUVs(0, newUVS);
         }
-        mrBlockBreak.transform.localScale = new Vector3(1.001f, 1.001f, 1.001f);
+        else
+        {
+            mfBlockBreak.mesh = new Mesh();
+            Vector2[] newUVS = new Vector2[BlockShape.vertsColliderAdd.Length];
+            for (int i = 0; i < BlockShape.vertsColliderAdd.Length; i++)
+            {
+                int indexUV = i % 4;
+                newUVS[i] = uvList[indexUV];
+            }
+            mfBlockBreak.mesh.SetVertices(BlockShape.vertsColliderAdd);
+            mfBlockBreak.mesh.SetUVs(0, newUVS);
+            mfBlockBreak.mesh.SetTriangles(BlockShape.trisColliderAdd, 0);
+        }
+        tfCenter.eulerAngles = BlockShape.GetRotateAngles(targetDirection);
+        tfCenter.localScale = new Vector3(1.001f, 1.001f, 1.001f);
     }
 
     /// <summary>

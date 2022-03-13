@@ -874,25 +874,7 @@ public class BlockShape
         else if (block.blockInfo.rotate_state == 2)
         {
             //已中心点旋转
-            Vector3 angles;
-            switch (direction)
-            {
-                case BlockDirectionEnum.UpForward:
-                    angles = new Vector3(0, 0, 0);
-                    break;
-                case BlockDirectionEnum.UpLeft:
-                    angles = new Vector3(0, 90, 0);
-                    break;
-                case BlockDirectionEnum.UpRight:
-                    angles = new Vector3(0, -90, 0);
-                    break;
-                case BlockDirectionEnum.UpBack:
-                    angles = new Vector3(0, 180, 0);
-                    break;
-                default:
-                    angles = new Vector3(0, 0, 0);
-                    break;
-            }
+            Vector3 angles = GetRotateAngles(direction);
             //旋转6面
             Vector3 rotatePosition = VectorUtil.GetRotatedPosition(centerPosition, position, angles);
             return rotatePosition;

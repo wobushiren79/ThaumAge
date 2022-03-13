@@ -9,22 +9,21 @@ using UnityEngine.Experimental.Rendering;
 
 public class BlockEditorWindow : EditorWindow
 {
-    public static List<BlockMaterialEnum> listBlockMat = new List<BlockMaterialEnum>()
-    {
-        BlockMaterialEnum.Normal,
-        BlockMaterialEnum.BothFace,
-        BlockMaterialEnum.BothFaceSwing,
-        BlockMaterialEnum.BothFaceSwingUniform,
-    };
 
-    protected static readonly string Path_Block_BlockMat = "Assets/Texture/BlockMat";
-    protected static readonly string Path_Block_TextureArray = "Assets/Texture/BlockTextureArray";
-    protected static readonly string Path_Block_Textures = "Assets/Texture/Block";
-    protected static readonly string Path_Block_Mesh = "Assets/Art/FBX/Block";
+    public static readonly string Path_BlockTexturesMat = "Assets/Texture/BlockTexturesMat";
+    public static readonly string Path_BlockTextureArray = "Assets/Texture/BlockTextureArray";
+    public static readonly string Path_Block_Textures = "Assets/Texture/Block";
 
-    protected static readonly string Path_Block_Model = "Assets/Art/FBX/BlockModel";
-    protected static readonly string Path_Block_Model_Mat = "Assets/Mats/BlockCustom.mat";
-    protected static readonly string Path_Block_Model_Save = "Assets/Prefabs/BlockModel";
+    public static readonly string Path_Block_MeshModel = "Assets/Prefabs/BlockMeshModel";
+    public static readonly string Path_Prefabs_BlockMat = "Assets/Prefabs/Mats";
+
+    public static readonly string Path_FBX_BlockModelCommon = "Assets/Art/FBX/BlockModelCommon";
+    public static readonly string Path_FBX_BlockModelCustom = "Assets/Art/FBX/BlockModelCustom";
+
+    public static readonly string Path_BlockMatCommon = "Assets/Mats/BlockCommon.mat";
+    public static readonly string Path_BlockMatCustom = "Assets/Prefabs/Mats/BlockCustom_0.mat";
+
+    public static readonly string Path_Block_Model_Save = "Assets/Prefabs/BlockModel";
 
     protected string queryBlockIds;
     protected string queryBlockName;
@@ -82,19 +81,6 @@ public class BlockEditorWindow : EditorWindow
         if (EditorUI.GUIButton("刷新数据"))
         {
             RefreshData();
-        }
-        if (EditorUI.GUIButton("刷新所有方块资源（贴图 mesh数据）", 300))
-        {
-            CreateBlockTexture(2048, 0);
-            CreateBlockMeshData();
-        }
-        if (EditorUI.GUIButton("生成方块图片", 150))
-        {
-            CreateBlockTexture(2048, 0);
-        }
-        if (EditorUI.GUIButton("生成方块mesh数据", 150))
-        {
-            CreateBlockMeshData();
         }
         GUILayout.EndHorizontal();
     }
@@ -243,26 +229,12 @@ public class BlockEditorWindow : EditorWindow
         string nameBothFaceSwingUniform = BlockMaterialEnum.BothFaceSwingUniform.GetEnumName();
         string nameBothFaceSwing = BlockMaterialEnum.BothFaceSwing.GetEnumName();
         string nameBothFace = BlockMaterialEnum.BothFace.GetEnumName();
+        string nameNormal = BlockMaterialEnum.Normal.GetEnumName();
 
-        EditorUI.GUIPic($"{Path_Block_BlockMat}/BlockNomral_0.png", 2048, 2048);
-        EditorUI.GUIPic($"{Path_Block_BlockMat}/Block{nameBothFace}_0.png", 2048, 2048);
-        EditorUI.GUIPic($"{Path_Block_BlockMat}/Block{nameBothFaceSwing}_0.png", 2048, 2048);
-        EditorUI.GUIPic($"{Path_Block_BlockMat}/Block{nameBothFaceSwingUniform}_0.png", 2048, 2048);
-    }
-
-
-    /// <summary>
-    /// 创建方块动画贴图列表
-    /// </summary>
-    /// <param name="size"></param>
-    /// <param name="frameNumber"></param>
-    public static void CreateBlockTextureArrayTexture(int size, int frameNumber)
-    {
-        for (int i = 0; i < frameNumber; i++)
-        {
-            CreateBlockTexture(size, i);
-        }
-        EditorUtil.RefreshAsset();
+        EditorUI.GUIPic($"{Path_BlockTexturesMat}/Block{nameNormal}_0.png", 2048, 2048);
+        EditorUI.GUIPic($"{Path_BlockTexturesMat}/Block{nameBothFace}_0.png", 2048, 2048);
+        EditorUI.GUIPic($"{Path_BlockTexturesMat}/Block{nameBothFaceSwing}_0.png", 2048, 2048);
+        EditorUI.GUIPic($"{Path_BlockTexturesMat}/Block{nameBothFaceSwingUniform}_0.png", 2048, 2048);
     }
 
     /// <summary>
@@ -270,18 +242,18 @@ public class BlockEditorWindow : EditorWindow
     /// </summary>
     /// <param name="size"></param>
     /// <param name="frameNumber"></param>
-    public static void CreateBlockTextureArray(int size, int frameNumber)
+    public static void CreateBlockTextureArray(int size, int frameNumber, List<string> listBlockName)
     {
-        for (int m = 0; m < listBlockMat.Count; m++)
+        for (int m = 0; m < listBlockName.Count; m++)
         {
-            string nameOfMat = listBlockMat[m].GetEnumName();
+            string nameOfMat = listBlockName[m];
 
             Texture2DArray arrayNormal = null;
 
             for (int i = 0; i < frameNumber; i++)
             {
                 //根据名字获取每个图片所在的位置
-                Texture2D itemTex = AssetDatabase.LoadAssetAtPath<Texture2D>($"{Path_Block_BlockMat}/Block{nameOfMat}_{i}.png");
+                Texture2D itemTex = AssetDatabase.LoadAssetAtPath<Texture2D>($"{Path_BlockTexturesMat}/{nameOfMat}_{i}.png");
 
                 if (arrayNormal == null)
                 {
@@ -293,7 +265,7 @@ public class BlockEditorWindow : EditorWindow
                 Graphics.CopyTexture(itemTex, 0, arrayNormal, i);
                 //arrayNormal.SetPixels32(itemTex.GetPixels32(), i);
             }
-            string pathSave = $"{Path_Block_TextureArray}/BlockTextureArrary_{nameOfMat}.asset";
+            string pathSave = $"{Path_BlockTextureArray}/BlockTextureArrary_{nameOfMat}.asset";
             EditorUtil.CreateAsset(arrayNormal, pathSave);
 
             AssetDatabase.ImportAsset(pathSave);
@@ -303,12 +275,26 @@ public class BlockEditorWindow : EditorWindow
     }
 
     /// <summary>
+    /// 创建方块动画贴图列表
+    /// </summary>
+    /// <param name="size"></param>
+    /// <param name="frameNumber"></param>
+    public static void CreateBlockAnimTexture(int size, int frameNumber, string resPath, List<string> listBlockArrayName)
+    {
+        for (int i = 0; i < frameNumber; i++)
+        {
+            CreateBlockTexture(size, i, resPath, listBlockArrayName);
+        }
+        EditorUtil.RefreshAsset();
+    }
+
+    /// <summary>
     /// 创建方块图片
     /// </summary>
     /// <param name="size"></param>
-    public static void CreateBlockTexture(int size, int frameIndex)
+    public static void CreateBlockTexture(int size, int frameIndex, string pathRes, List<string> listBlockMatName)
     {
-        for (int m = 0; m < listBlockMat.Count; m++)
+        for (int m = 0; m < listBlockMatName.Count; m++)
         {
             //生成图片tex
             Texture2D outTexture = new Texture2D(size, size, TextureFormat.RGBA32, false);
@@ -318,8 +304,8 @@ public class BlockEditorWindow : EditorWindow
             //设置每一个方块所占的区域大小
             int itemSize = size / 128;
 
-            string nameOfMat = listBlockMat[m].GetEnumName();
-            string[] filesName = Directory.GetFiles($"{Path_Block_Textures}/{nameOfMat}");
+            string nameOfMat = listBlockMatName[m];
+            string[] filesName = Directory.GetFiles($"{pathRes}/{nameOfMat}");
 
             for (int i = 0; i < filesName.Length; i++)
             {
@@ -358,7 +344,7 @@ public class BlockEditorWindow : EditorWindow
                 outTexture.SetPixels(positionStartX, positionStartY, sizeWH, sizeWH, useTex.GetPixels());
             }
             //保存图片
-            string pathBlock = $"{Path_Block_BlockMat}/Block{nameOfMat}_{frameIndex}.png";
+            string pathBlock = $"{Path_BlockTexturesMat}/{nameOfMat}_{frameIndex}.png";
             File.WriteAllBytes(pathBlock, outTexture.EncodeToPNG());
 
             EditorUtil.RefreshAsset();
@@ -379,39 +365,43 @@ public class BlockEditorWindow : EditorWindow
     }
 
     /// <summary>
+    /// 创建方块贴图列表
+    /// </summary>
+    public static void CreateBlockAnimTexture(int blockTextureSize, int frameNumber, string savePath,string saveName, List<BlockModelCreateBean> listCreateData)
+    {
+        for (int i = 0; i < frameNumber; i++)
+        {
+            CreateBlockTexture(blockTextureSize, savePath, saveName, i, listCreateData);
+        }
+        EditorUtil.RefreshAsset();
+    }
+
+    /// <summary>
     /// 创建方块贴图
     /// </summary>
-    public static void CreateBlockTexture(int blockTextureSize, List<BlockModelCreateBean> listCreateData)
+    public static void CreateBlockTexture(int blockTextureSize, string savePath,string saveName, int frameIndex, List<BlockModelCreateBean> listCreateData)
     {
         //生成图片tex
         Texture2D outTexture = new Texture2D(blockTextureSize, blockTextureSize, TextureFormat.RGBA32, false);
-        outTexture.filterMode = FilterMode.Point;
         outTexture.SetPixels(new Color[blockTextureSize * blockTextureSize]);
 
         for (int i = 0; i < listCreateData.Count; i++)
         {
             BlockModelCreateBean itemCreateData = listCreateData[i];
-            outTexture.SetPixels(itemCreateData.startUV.x, itemCreateData.startUV.y, itemCreateData.texureBlock.width, itemCreateData.texureBlock.width, itemCreateData.texureBlock.GetPixels());
+            //Graphics.CopyTexture(itemCreateData.texureBlock, 0,0,0,0, itemCreateData.texureBlock.width, itemCreateData.texureBlock.width, outTexture,0, 0, itemCreateData.startPixel.x, itemCreateData.startPixel.y);
+            //获取当前帧的贴图
+            int numberTex = itemCreateData.listTexureBlock.Count;
+            int startIndex = frameIndex % numberTex;
+            Color32[] colorPixel = itemCreateData.listTexureBlock[startIndex].GetPixels32();
+            outTexture.SetPixels32(itemCreateData.startPixel.x, itemCreateData.startPixel.y, itemCreateData.texureSize, itemCreateData.texureSize, colorPixel);
         }
 
         //保存图片
-        string pathBlock = $"{Path_Block_Textures}/BlockCommon.png";
-        File.WriteAllBytes(pathBlock, outTexture.EncodeToPNG());
+        string saveCompletePath = $"{savePath}/{saveName}_{frameIndex}.png";
+        File.WriteAllBytes(saveCompletePath, outTexture.EncodeToPNG());
 
         EditorUtil.RefreshAsset();
-
-        var itemImporter = AssetImporter.GetAtPath(pathBlock) as TextureImporter;
-        itemImporter.textureType = TextureImporterType.Default;
-        itemImporter.isReadable = true;
-        itemImporter.textureCompression = TextureImporterCompression.CompressedHQ;
-        itemImporter.mipmapEnabled = false;
-        itemImporter.filterMode = FilterMode.Point;
-
-        var settingPC = itemImporter.GetPlatformTextureSettings("Standalone");
-        settingPC.format = TextureImporterFormat.DXT5Crunched;
-        itemImporter.SetPlatformTextureSettings(settingPC);
-        AssetDatabase.ImportAsset(pathBlock);
-        EditorUtil.RefreshAsset();
+        EditorUtil.SetTextureData(saveCompletePath, format: TextureImporterFormat.DXT5);
     }
 
     /// <summary>
@@ -419,7 +409,7 @@ public class BlockEditorWindow : EditorWindow
     /// </summary>
     public static void CreateBlockMeshData()
     {
-        FileInfo[] files = FileUtil.GetFilesByPath($"{Path_Block_Mesh}");
+        FileInfo[] files = FileUtil.GetFilesByPath($"{Path_Block_MeshModel}");
         if (files.IsNull())
         {
             LogUtil.Log("CreateBlockMeshData Fail No Block");
@@ -431,28 +421,26 @@ public class BlockEditorWindow : EditorWindow
             FileInfo itemFile = files[i];
             if (itemFile.Name.Contains(".meta"))
                 continue;
-            if (itemFile.Name.Contains("_Model"))
-                continue;
             LogUtil.Log($"CreateBlockMeshData:{itemFile.Name}");
-            GameObject obj = EditorUtil.GetAssetByPath<GameObject>($"{Path_Block_Mesh}/{itemFile.Name}");
+            GameObject obj = EditorUtil.GetAssetByPath<GameObject>($"{Path_Block_MeshModel}/{itemFile.Name}");
             MeshFilter meshFilter = obj.GetComponentInChildren<MeshFilter>();
             Collider collider = obj.GetComponentInChildren<Collider>();
 
             MeshData meshData;
             if (meshFilter != null)
             {
-                meshData = new MeshData(collider, meshFilter.sharedMesh, 0.625f, new Vector3(0.5f, 0f, 0.5f));
+                meshData = new MeshData(collider, meshFilter.sharedMesh, 0.03125f, new Vector3(0.5f, 0f, 0.5f));
             }
             else
             {
-                meshData = new MeshData(collider, 0.625f, new Vector3(0.5f, 0f, 0.5f));
+                meshData = new MeshData(collider, 0.03125f, new Vector3(0.5f, 0f, 0.5f));
             }
             string jsonData = JsonUtil.ToJson(meshData);
             string saveFileName = $"{itemFile.Name.Replace(".prefab", "").Replace(".obj", "")}";
             //创建文件
-            FileUtil.CreateTextFile($"{Application.dataPath}/Prefabs/BlockMesh", $"{saveFileName}.txt", jsonData);
+            FileUtil.CreateTextFile($"{Application.dataPath}/Prefabs/BlockMeshData", $"{saveFileName}.txt", jsonData);
             //添加到addressable中
-            string addressName = $"Assets/Prefabs/BlockMesh/{saveFileName}.txt";
+            string addressName = $"Assets/Prefabs/BlockMeshData/{saveFileName}.txt";
             AddressableUtil.AddAssetEntry(addressableAssetGroup, addressName, addressName);
         }
         EditorUtil.RefreshAsset();
@@ -461,17 +449,16 @@ public class BlockEditorWindow : EditorWindow
     /// <summary>
     /// 创建方块模型
     /// </summary>
-    public static void CreateBlockModel(int blockTextureSize)
+    public static void CreateBlockModel(int blockTextureSize, string pathRes, string pathSaveTexure,string saveName, string pathMatBlock, int textureArrayNumber = 1)
     {
         try
         {
-            FileInfo[] files = FileUtil.GetFilesByPath($"{Path_Block_Model}");
+            FileInfo[] files = FileUtil.GetFilesByPath($"{pathRes}");
             if (files.IsNull())
             {
                 LogUtil.Log("CreateBlockModel Fail No Block");
                 return;
             }
-            FileUtil.DeleteAllFile($"{Path_Block_Model_Save}");
             //所有的创建数据
             List<BlockModelCreateBean> listCreateData = new List<BlockModelCreateBean>();
             //所有像素的最后一个UV坐标位置
@@ -486,75 +473,125 @@ public class BlockEditorWindow : EditorWindow
                     continue;
                 if (itemFile.Name.Contains(".dae"))
                 {
-                    //获取老方块
-                    GameObject obj = EditorUtil.GetAssetByPath<GameObject>($"{Path_Block_Model}/{itemFile.Name}");
-                    MeshFilter objMeshFilter = obj.GetComponentInChildren<MeshFilter>();
-
                     //生成新的方块
                     string nameNew = $"{itemFile.Name.Replace(".dae", "")}";
-                    GameObject objNew = new GameObject(nameNew);
-                    MeshRenderer objNewMeshRenderer = objNew.AddComponent<MeshRenderer>();
-                    MeshFilter objNewMeshFilter = objNew.AddComponent<MeshFilter>();
-                    //设置mesh
-                    objNewMeshFilter.sharedMesh = objMeshFilter.sharedMesh;
-                    //设置材质
-                    objNewMeshRenderer.sharedMaterial = EditorUtil.GetAssetByPath<Material>(Path_Block_Model_Mat);
-
-                    EditorUtil.CreatePrefab(objNew, $"{Path_Block_Model_Save}/{nameNew}.prefab");
-                    EditorUtil.RefreshAsset(objNew);
-                    DestroyImmediate(objNew);
 
                     //获取对应的材质贴图
-                    string texPath = $"{Path_Block_Model}/{nameNew}_texture0.png";
-                    Texture2D texItem = EditorUtil.GetAssetByPath<Texture2D>(texPath);
-                    if (texItem == null)
+                    string texPath = $"{pathRes}/{nameNew}_texture";
+                    List<Texture2D> listTexItem = new List<Texture2D>();
+                    for (int t = 0; t < textureArrayNumber; t++)
                     {
-                        texPath = $"{Path_Block_Model}/{nameNew}.png";
-                        texItem = EditorUtil.GetAssetByPath<Texture2D>(texPath);
+                        Texture2D texItem = EditorUtil.GetAssetByPath<Texture2D>($"{texPath}{t}.png");
+                        if (texItem != null)
+                            listTexItem.Add(texItem);
                     }
 
                     //如果有贴图 则开始生成数据
-                    if (texItem != null)
+                    if (!listTexItem.IsNull())
                     {
                         //首先设置图片的一些属性
-                        EditorUtil.SetTextureData(texPath);
+                        for (int t = 0; t < listTexItem.Count; t++)
+                        {
+                            EditorUtil.SetTextureData($"{texPath}{t}.png");
+                        }
 
-
-                        int sizeTexture = texItem.width;
+                        int sizeTexture = listTexItem[0].width > listTexItem[0].height ? listTexItem[0].height : listTexItem[0].width;
                         BlockModelCreateBean blockModelCreateData = new BlockModelCreateBean();
                         blockModelCreateData.nameBlock = nameNew;
                         blockModelCreateData.uvScaleSize = blockTextureSize / sizeTexture;
-                        blockModelCreateData.texureBlock = texItem;
+                        blockModelCreateData.listTexureBlock = listTexItem;
+                        blockModelCreateData.texureSize = sizeTexture;
                         //获取该像素到达的位置
                         if (dicUVPosition.TryGetValue(sizeTexture, out Vector2Int uvPosition))
                         {
                             //首先检测是否到达最后一个
                             if (blockTextureSize - uvPosition.x >= sizeTexture)
                             {
-                                blockModelCreateData.startUV = new Vector2Int(uvPosition.x + sizeTexture, uvPosition.y);
                                 dicUVPosition[sizeTexture] = new Vector2Int(uvPosition.x + sizeTexture, uvPosition.y);
+                                blockModelCreateData.startPixel = new Vector2Int(uvPosition.x + sizeTexture, uvPosition.y);
                             }
                             else
                             {
                                 //如果已经是最后一个了 则下一排
                                 currentPixel += sizeTexture;
                                 dicUVPosition[sizeTexture] = new Vector2Int(0, currentPixel);
-                                blockModelCreateData.startUV = new Vector2Int(0, currentPixel);
+                                blockModelCreateData.startPixel = new Vector2Int(0, currentPixel);
                             }
                         }
                         else
                         {
                             //如果是第一次添加
-                            dicUVPosition.Add(texItem.width, new Vector2Int(0, currentPixel));
-                            blockModelCreateData.startUV = new Vector2Int(0, currentPixel);
+                            dicUVPosition.Add(sizeTexture, new Vector2Int(0, currentPixel));
+                            blockModelCreateData.startPixel = new Vector2Int(0, currentPixel);
                             currentPixel += sizeTexture;
                         }
                         listCreateData.Add(blockModelCreateData);
                     }
                 }
             }
+
+            //是否需要创建TextureArray
+            Material matUse = EditorUtil.GetAssetByPath<Material>(pathMatBlock); ;
             //创建方块贴图
-            CreateBlockTexture(blockTextureSize, listCreateData);
+
+            if (textureArrayNumber > 1)
+            {
+                CreateBlockAnimTexture(blockTextureSize, textureArrayNumber, pathSaveTexure, saveName,listCreateData);
+                CreateBlockTextureArray(blockTextureSize, textureArrayNumber, new List<string>() { saveName });
+                EditorUtil.RefreshAsset(matUse);
+            }
+            else
+            {
+                CreateBlockTexture(blockTextureSize, pathSaveTexure, saveName, 0, listCreateData);
+                Texture2D createTex = EditorUtil.GetAssetByPath<Texture2D>($"{pathSaveTexure}/{saveName}_0.png");
+                //设置材质球
+                matUse.mainTexture = createTex;
+                EditorUtil.RefreshAsset(matUse);
+            }
+
+            //生成相关模型
+            for (int i = 0; i < listCreateData.Count; i++)
+            {
+                BlockModelCreateBean itemCreateData = listCreateData[i];
+                //获取老方块
+                GameObject obj = EditorUtil.GetAssetByPath<GameObject>($"{pathRes}/{itemCreateData.nameBlock}.dae");
+                MeshFilter objOldMeshFilter = obj.GetComponentInChildren<MeshFilter>();
+
+                GameObject objNew = new GameObject(itemCreateData.nameBlock);
+                objNew.transform.localScale = Vector3.one * 0.03125f;
+                objNew.transform.localPosition = new Vector3(0, -0.5f, 0);
+                MeshRenderer objNewMeshRenderer = objNew.AddComponent<MeshRenderer>();
+                MeshFilter objNewMeshFilter = objNew.AddComponent<MeshFilter>();
+
+                //设置UV
+                Vector2[] oldUVList = objOldMeshFilter.sharedMesh.uv;
+                Vector2[] newUVList = new Vector2[oldUVList.Length];
+                for (int f = 0; f < oldUVList.Length; f++)
+                {
+                    newUVList[f] = oldUVList[f] * (1f / itemCreateData.uvScaleSize);
+                    newUVList[f] += itemCreateData.GetStartUV(blockTextureSize);
+                }
+                //创建新的mesh
+                Mesh newMesh = new Mesh();
+                newMesh.name = $"{itemCreateData.nameBlock}_Mesh";
+                newMesh.SetVertices(objOldMeshFilter.sharedMesh.vertices);
+                newMesh.SetTriangles(objOldMeshFilter.sharedMesh.triangles, 0);
+                newMesh.SetUVs(0, newUVList);
+                newMesh.RecalculateBounds();
+                newMesh.RecalculateNormals();
+                //保存mesh
+                string pathMesh = $"{Path_Block_Model_Save}/{newMesh.name}.asset";
+                EditorUtil.CreateAsset(newMesh, pathMesh);
+                //设置mesh
+                objNewMeshFilter.sharedMesh = newMesh;
+
+                //设置材质
+                objNewMeshRenderer.material = matUse;
+
+                EditorUtil.CreatePrefab(objNew, $"{Path_Block_Model_Save}/{itemCreateData.nameBlock}.prefab");
+                //EditorUtil.RefreshAsset(objNew);
+                DestroyImmediate(objNew);
+            }
         }
         finally
         {

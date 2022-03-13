@@ -27,28 +27,28 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels:
     - BlockMats
-  - m_GUID: c1fec38cff622ba4887434db18cb76fb
-    m_Address: Assets/Prefabs/Mats/BlockMatBothFaceSwingUniform_4.mat
+  - m_GUID: 8d068167d5d02e24bafe921fa7108554
+    m_Address: Assets/Prefabs/Mats/BlockBothFace_2.mat
     m_ReadOnly: 0
     m_SerializedLabels:
     - BlockMats
   - m_GUID: 7b948cee94643be41968d099a3719c21
-    m_Address: Assets/Prefabs/Mats/BlockMatBothFaceSwing_3.mat
+    m_Address: Assets/Prefabs/Mats/BlockBothFaceSwing_3.mat
     m_ReadOnly: 0
     m_SerializedLabels:
     - BlockMats
-  - m_GUID: 8d068167d5d02e24bafe921fa7108554
-    m_Address: Assets/Prefabs/Mats/BlockMatBothFace_2.mat
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - BlockMats
-  - m_GUID: ac5859fddb68169459d01db1a38c0b51
-    m_Address: Assets/Prefabs/Mats/BlockMatNormal_1.mat
+  - m_GUID: c1fec38cff622ba4887434db18cb76fb
+    m_Address: Assets/Prefabs/Mats/BlockBothFaceSwingUniform_4.mat
     m_ReadOnly: 0
     m_SerializedLabels:
     - BlockMats
   - m_GUID: 322b0d973c0671a42b0ece0bb2a7d89e
-    m_Address: Assets/Prefabs/Mats/BlockCommon_0.mat
+    m_Address: Assets/Prefabs/Mats/BlockCustom_0.mat
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - BlockMats
+  - m_GUID: ac5859fddb68169459d01db1a38c0b51
+    m_Address: Assets/Prefabs/Mats/BlockNormal_1.mat
     m_ReadOnly: 0
     m_SerializedLabels:
     - BlockMats

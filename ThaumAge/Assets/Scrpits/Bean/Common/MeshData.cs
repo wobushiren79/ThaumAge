@@ -49,6 +49,26 @@ public class MeshData
         trianglesCollider = meshCollider.triangles;
     }
 
+    /// <summary>
+    /// 获取mesh
+    /// </summary>
+    /// <returns></returns>
+    public Mesh GetMesh()
+    {
+        Mesh mesh = new Mesh();
+        mesh.SetVertices(vertices);
+        mesh.SetUVs(0,uv);
+        mesh.SetTriangles(triangles,0);
+        mesh.RecalculateBounds();
+        mesh.RecalculateNormals();
+        return mesh;
+    }
+
+    /// <summary>
+    /// 获取碰撞的mesh
+    /// </summary>
+    /// <param name="collider"></param>
+    /// <returns></returns>
     public Mesh GetColliderMesh(Collider collider)
     {
         Mesh mesh = new Mesh();

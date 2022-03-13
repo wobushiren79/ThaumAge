@@ -17,35 +17,41 @@ MonoBehaviour:
     m_SerializedData: []
   m_GUID: 4402f9f4a00ec714db35e5caa08d74f6
   m_SerializeEntries:
-  - m_GUID: 701016fd885390a47a15b3d4ffa2ce87
-    m_Address: Assets/Prefabs/BlockMesh/BlockSwitchesWooden.txt
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - BlockMesh
-  - m_GUID: a0c35ab674a3e8046a75d80b5ace1a50
-    m_Address: Assets/Prefabs/BlockMesh/BlockDoor.txt
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - BlockMesh
-  - m_GUID: 7dba8aa21ba23a34c8d9433694bdf350
-    m_Address: Assets/Prefabs/BlockMesh/BlockStairsWood.txt
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - BlockMesh
-  - m_GUID: 486f531502941f84da7d391da5ce0e4b
-    m_Address: Assets/Prefabs/BlockMesh/BlockCropWatermelon.txt
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - BlockMesh
   - m_GUID: aae6ef907660cbd4b9233ad6bb51b51f
-    m_Address: Assets/Prefabs/BlockMesh/BlockBox.txt
+    m_Address: Assets/Prefabs/BlockMeshData/BlockBox.txt
     m_ReadOnly: 0
     m_SerializedLabels:
+    - BlockMeshData
     - BlockMesh
   - m_GUID: f78a7992a8887de46be8bb1a3b1d2aec
-    m_Address: Assets/Prefabs/BlockMesh/BlockCraftingTableSimple.txt
+    m_Address: Assets/Prefabs/BlockMeshData/BlockCraftingTableSimple.txt
     m_ReadOnly: 0
     m_SerializedLabels:
+    - BlockMeshData
+    - BlockMesh
+  - m_GUID: 486f531502941f84da7d391da5ce0e4b
+    m_Address: Assets/Prefabs/BlockMeshData/BlockCropWatermelon.txt
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - BlockMeshData
+    - BlockMesh
+  - m_GUID: a0c35ab674a3e8046a75d80b5ace1a50
+    m_Address: Assets/Prefabs/BlockMeshData/BlockDoor.txt
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - BlockMeshData
+    - BlockMesh
+  - m_GUID: 7dba8aa21ba23a34c8d9433694bdf350
+    m_Address: Assets/Prefabs/BlockMeshData/BlockStairsWood.txt
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - BlockMeshData
+    - BlockMesh
+  - m_GUID: 701016fd885390a47a15b3d4ffa2ce87
+    m_Address: Assets/Prefabs/BlockMeshData/BlockSwitchesWooden.txt
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - BlockMeshData
     - BlockMesh
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: fd6114d87f1af534fbf270c47c0f10bf, type: 2}
