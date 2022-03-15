@@ -74,7 +74,7 @@ public class BlockShapeCubeCuboid : BlockShapeCube
     /// <param name="verts"></param>
     /// <param name="uvs"></param>
     /// <param name="tris"></param>
-    public override void BuildBlock(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction)
+    public override void BuildBlock(Chunk chunk, Vector3Int localPosition)
     {
         if (block.blockType != BlockTypeEnum.None)
         {
@@ -97,6 +97,12 @@ public class BlockShapeCubeCuboid : BlockShapeCube
 
             int buildFaceCount = 0;
 
+            //只有在能旋转的时候才去查询旋转方向
+            BlockDirectionEnum direction = BlockDirectionEnum.UpForward;
+            if (block.blockInfo.rotate_state != 0)
+            {
+                direction = chunk.chunkData.GetBlockDirection(localPosition.x, localPosition.y, localPosition.z);
+            }
             //Left
             if (leftOffsetBorder == 0 ? CheckNeedBuildFace(chunk, localPosition, direction, DirectionEnum.Left) : true)
             {

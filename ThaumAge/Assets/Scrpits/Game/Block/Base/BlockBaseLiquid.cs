@@ -3,9 +3,9 @@ using UnityEngine;
 
 public class BlockBaseLiquid : Block
 {
-    public override void InitBlock(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum blockDirection, int state)
+    public override void InitBlock(Chunk chunk, Vector3Int localPosition,  int state)
     {
-        base.InitBlock(chunk, localPosition, blockDirection, state);
+        base.InitBlock(chunk, localPosition, state);
         if (state == 1)
         {
             //刷新的时候注册事件 

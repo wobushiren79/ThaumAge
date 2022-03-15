@@ -138,9 +138,9 @@ public class BlockShapeCube : BlockShape
     /// <param name="verts"></param>
     /// <param name="uvs"></param>
     /// <param name="tris"></param>
-    public override void BuildBlock(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction)
+    public override void BuildBlock(Chunk chunk, Vector3Int localPosition)
     {
-        base.BuildBlock(chunk, localPosition, direction);
+        base.BuildBlock(chunk, localPosition);
 
         if (block.blockType != BlockTypeEnum.None)
         {
@@ -162,6 +162,12 @@ public class BlockShapeCube : BlockShape
             }
             int buildFaceCount = 0;
 
+            //只有在能旋转的时候才去查询旋转方向
+            BlockDirectionEnum direction = BlockDirectionEnum.UpForward;
+            if (block.blockInfo.rotate_state != 0)
+            {
+                direction = chunk.chunkData.GetBlockDirection(localPosition.x, localPosition.y, localPosition.z);
+            }
             //Left
             if (CheckNeedBuildFace(chunk, localPosition, direction, DirectionEnum.Left))
             {
@@ -216,11 +222,17 @@ public class BlockShapeCube : BlockShape
         }
     }
 
-    public override void BuildBlockNoCheck(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction)
+    public override void BuildBlockNoCheck(Chunk chunk, Vector3Int localPosition)
     {
-        base.BuildBlockNoCheck(chunk, localPosition, direction);
+        base.BuildBlockNoCheck(chunk, localPosition);
         if (block.blockType != BlockTypeEnum.None)
-        {
+        {            
+            //只有在能旋转的时候才去查询旋转方向
+            BlockDirectionEnum direction = BlockDirectionEnum.UpForward;
+            if (block.blockInfo.rotate_state != 0)
+            {
+                direction = chunk.chunkData.GetBlockDirection(localPosition.x, localPosition.y, localPosition.z);
+            }
             BuildFace(block, chunk, localPosition, direction, DirectionEnum.Left, vertsAddLeft, uvsAddLeft, false);
             BuildFace(block, chunk, localPosition, direction, DirectionEnum.Right, vertsAddRight, uvsAddRight, true);
             BuildFace(block, chunk, localPosition, direction, DirectionEnum.Down, vertsAddDown, uvsAddDown, false);
@@ -266,7 +278,7 @@ public class BlockShapeCube : BlockShape
 
     public virtual void BaseAddTris(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction, DirectionEnum face, bool reversed)
     {
-        base.BaseAddTris(chunk, localPosition, direction);
+        base.BaseAddTris(chunk, localPosition,direction);
 
         int index = chunk.chunkMeshData.verts.Count;
 

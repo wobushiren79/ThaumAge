@@ -624,7 +624,7 @@ PlayerSettings:
   webGLThreadsSupport: 0
   webGLDecompressionFallback: 0
   scriptingDefineSymbols:
-    Android: CT_TR
+    Android: CT_TR;CROSS_PLATFORM_INPUT
     CloudRendering: CT_TR
     GameCoreXboxOne: CT_TR
     Lumin: CT_TR
@@ -632,11 +632,11 @@ PlayerSettings:
     PS4: CT_TR
     PS5: CT_TR
     Stadia: CT_TR
-    Standalone: RHSD;CT_TR
-    WebGL: CT_TR
+    Standalone: RHSD;CT_TR;CROSS_PLATFORM_INPUT
+    WebGL: CT_TR;CROSS_PLATFORM_INPUT
     Windows Store Apps: CT_TR
     XboxOne: CT_TR
-    iPhone: CT_TR
+    iPhone: CT_TR;CROSS_PLATFORM_INPUT
     tvOS: CT_TR
   additionalCompilerArguments: {}
   platformArchitecture: {}

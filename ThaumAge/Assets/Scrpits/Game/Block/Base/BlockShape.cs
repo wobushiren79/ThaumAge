@@ -76,11 +76,11 @@ public class BlockShape
     /// <param name="chunk"></param>
     /// <param name="localPosition"></param>
     /// <param name="direction"></param>
-    public virtual void BuildBlock(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction)
+    public virtual void BuildBlock(Chunk chunk, Vector3Int localPosition)
     {
 
     }
-    public virtual void BuildBlockNoCheck(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction)
+    public virtual void BuildBlockNoCheck(Chunk chunk, Vector3Int localPosition)
     {
 
     }
@@ -96,8 +96,13 @@ public class BlockShape
     /// <param name="verts"></param>
     /// <param name="uvs"></param>
     /// <param name="tris"></param>
-    public virtual void BuildFace(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction, Vector3[] vertsAdd)
+    public virtual void BuildFace(Chunk chunk, Vector3Int localPosition,Vector3[] vertsAdd)
     {
+        BlockDirectionEnum direction = BlockDirectionEnum.UpForward;
+        if (block.blockInfo.rotate_state != 0)
+        {
+            direction = chunk.chunkData.GetBlockDirection(localPosition.x, localPosition.y, localPosition.z);
+        }
         BaseAddTris(chunk, localPosition, direction);
         BaseAddVerts(chunk, localPosition, direction, vertsAdd);
         BaseAddUVs(chunk, localPosition, direction);

@@ -44,9 +44,9 @@ public class BlockShapeCross : BlockShape
         };
     }
 
-    public override void BuildBlock(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction)
+    public override void BuildBlock(Chunk chunk, Vector3Int localPosition)
     {
-        base.BuildBlock(chunk, localPosition, direction);
+        base.BuildBlock(chunk, localPosition);
         if (block.blockType != BlockTypeEnum.None)
         {
             int startVertsIndex = chunk.chunkMeshData.verts.Count;
@@ -66,7 +66,7 @@ public class BlockShapeCross : BlockShape
                 startTrisColliderIndex = chunk.chunkMeshData.trisTrigger.Count;
             }
 
-            BuildFace(chunk, localPosition, direction, vertsAdd);
+            BuildFace(chunk, localPosition, vertsAdd);
 
             chunk.chunkMeshData.AddMeshIndexData(localPosition,
                      startVertsIndex, vertsAdd.Length, startTrisIndex, trisAdd.Length,
@@ -75,9 +75,9 @@ public class BlockShapeCross : BlockShape
     }
 
 
-    public override void BaseAddTris(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction)
+    public override void BaseAddTris(Chunk chunk, Vector3Int localPosition,BlockDirectionEnum blockDirection)
     {
-        base.BaseAddTris(chunk, localPosition, direction);
+        base.BaseAddTris(chunk, localPosition, blockDirection);
 
         int index = chunk.chunkMeshData.verts.Count;
 
@@ -98,20 +98,20 @@ public class BlockShapeCross : BlockShape
         }
     }
 
-    public override void BaseAddUVs(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction)
+    public override void BaseAddUVs(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum blockDirection)
     {
-        base.BaseAddUVs(chunk, localPosition, direction);
+        base.BaseAddUVs(chunk, localPosition, blockDirection);
         AddUVs(chunk.chunkMeshData.uvs, uvsAdd);
     }
 
-    public override void BaseAddVerts(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction, Vector3[] vertsAdd)
+    public override void BaseAddVerts(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum blockDirection, Vector3[] vertsAdd)
     {
-        base.BaseAddVerts(chunk, localPosition, direction, vertsAdd);
-        AddVerts(localPosition, direction, chunk.chunkMeshData.verts, vertsAdd);
+        base.BaseAddVerts(chunk, localPosition, blockDirection, vertsAdd);
+        AddVerts(localPosition, blockDirection, chunk.chunkMeshData.verts, vertsAdd);
         if (block.blockInfo.collider_state == 1)
-            AddVerts(localPosition, direction, chunk.chunkMeshData.vertsCollider, vertsColliderAdd);
+            AddVerts(localPosition, blockDirection, chunk.chunkMeshData.vertsCollider, vertsColliderAdd);
         if (block.blockInfo.trigger_state == 1)
-            AddVerts(localPosition, direction, chunk.chunkMeshData.vertsTrigger, vertsColliderAdd);
+            AddVerts(localPosition, blockDirection, chunk.chunkMeshData.vertsTrigger, vertsColliderAdd);
     }
 
     public virtual Vector2 GetUVStartPosition(Block block)

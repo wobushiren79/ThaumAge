@@ -23,7 +23,7 @@ public class BlockShapeCustom : BlockShape
             trisColliderAddCustom = blockMeshData.trianglesCollider;
     }
 
-    public override void BuildBlock(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction)
+    public override void BuildBlock(Chunk chunk, Vector3Int localPosition)
     {
         if (block.blockType != BlockTypeEnum.None)
         {
@@ -44,7 +44,7 @@ public class BlockShapeCustom : BlockShape
                 startTrisColliderIndex = chunk.chunkMeshData.trisTrigger.Count;
             }
 
-            BuildFace(chunk, localPosition, direction, vertsAdd);
+            BuildFace(chunk, localPosition, vertsAdd);
 
             chunk.chunkMeshData.AddMeshIndexData(localPosition,
                      startVertsIndex, vertsAdd.Length, startTrisIndex, trisAdd.Length,
@@ -53,16 +53,16 @@ public class BlockShapeCustom : BlockShape
     }
 
 
-    public override void BaseAddUVs(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction)
+    public override void BaseAddUVs(Chunk chunk, Vector3Int localPosition,BlockDirectionEnum blockDirection)
     {
-        base.BaseAddUVs(chunk, localPosition, direction);
+        base.BaseAddUVs(chunk, localPosition, blockDirection);
         AddUVs(chunk.chunkMeshData.uvs, uvsAdd);
     }
 
     #region 增加三角
-    public override void BaseAddTris(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction)
+    public override void BaseAddTris(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum blockDirection)
     {
-        base.BaseAddTris(chunk, localPosition, direction);
+        base.BaseAddTris(chunk, localPosition, blockDirection);
 
         int index = chunk.chunkMeshData.verts.Count;
 
@@ -88,6 +88,7 @@ public class BlockShapeCustom : BlockShape
     public override void BaseAddVerts(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction, Vector3[] vertsAdd)
     {
         base.BaseAddVerts(chunk, localPosition, direction, vertsAdd);
+
         AddVerts(localPosition, direction, chunk.chunkMeshData.verts, vertsAdd);
         if (block.blockInfo.collider_state == 1)
             AddVerts(localPosition, direction, chunk.chunkMeshData.vertsCollider, vertsColliderAddCustom);

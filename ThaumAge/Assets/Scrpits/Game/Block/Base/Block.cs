@@ -185,14 +185,14 @@ public class Block
     /// <param name="verts"></param>
     /// <param name="uvs"></param>
     /// <param name="tris"></param>
-    public virtual void BuildBlock(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction)
+    public virtual void BuildBlock(Chunk chunk, Vector3Int localPosition)
     {
-        blockShape.BuildBlock(chunk, localPosition, direction);
+        blockShape.BuildBlock(chunk, localPosition);
     }
 
-    public virtual void BuildBlockNoCheck(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction)
+    public virtual void BuildBlockNoCheck(Chunk chunk, Vector3Int localPosition)
     {
-        blockShape.BuildBlock(chunk, localPosition, direction);
+        blockShape.BuildBlock(chunk, localPosition);
     }
 
 
@@ -202,9 +202,9 @@ public class Block
     /// <param name="chunk"></param>
     /// <param name="localPosition"></param>
     /// <param name="state">0:创建地形 1：手动设置方块</param>
-    public virtual void InitBlock(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum blockDirection, int state)
+    public virtual void InitBlock(Chunk chunk, Vector3Int localPosition,int state)
     {
-        CreateBlockModel(chunk, localPosition, blockDirection);
+        CreateBlockModel(chunk, localPosition);
     }
 
     /// <summary>
@@ -212,7 +212,7 @@ public class Block
     /// </summary>
     public virtual void DestoryBlock(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction)
     {
-        DestoryBlockModel(chunk, localPosition, direction);
+        DestoryBlockModel(chunk, localPosition);
         //取消注册
         chunk.UnRegisterEventUpdate(localPosition, TimeUpdateEventTypeEnum.Sec);
         chunk.UnRegisterEventUpdate(localPosition, TimeUpdateEventTypeEnum.Min);
@@ -236,7 +236,7 @@ public class Block
     /// <summary>
     /// 创建方块的模型
     /// </summary>
-    public virtual void CreateBlockModel(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum blockDirection)
+    public virtual void CreateBlockModel(Chunk chunk, Vector3Int localPosition)
     {
         //如果有模型。则创建模型
         if (!blockInfo.model_name.IsNull())
@@ -248,7 +248,7 @@ public class Block
     /// <summary>
     /// 删除方块的模型
     /// </summary>
-    public virtual void DestoryBlockModel(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction)
+    public virtual void DestoryBlockModel(Chunk chunk, Vector3Int localPosition)
     {
         //摧毁模型
         chunk.listBlockModelDestroy.Enqueue(localPosition);
@@ -401,7 +401,7 @@ public class Block
     /// <summary>
     /// 创建链接的方块
     /// </summary>
-    public virtual void CreateLinkBlock(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction, List<Vector3Int> listLink)
+    public virtual void CreateLinkBlock(Chunk chunk, Vector3Int localPosition, List<Vector3Int> listLink)
     {
         //获取数据
         BlockBean blockData = chunk.GetBlockData(localPosition);
@@ -444,7 +444,8 @@ public class Block
                 BlockDoorBean blockDoor = new BlockDoorBean();
                 blockDoor.level = 1;
                 blockDoor.linkBasePosition = new Vector3IntBean(localPosition + chunk.chunkData.positionForWorld);
-                chunk.SetBlockForWorld(closeWorldPosition, blockType, direction, ToMetaData(blockDoor));
+                BlockDirectionEnum blockDirection = chunk.chunkData.GetBlockDirection(localPosition.x, localPosition.y, localPosition.z);
+                chunk.SetBlockForWorld(closeWorldPosition, blockType, blockDirection, ToMetaData(blockDoor));
             }
         }
     }

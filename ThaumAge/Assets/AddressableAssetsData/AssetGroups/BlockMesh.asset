@@ -53,6 +53,16 @@ MonoBehaviour:
     m_SerializedLabels:
     - BlockMeshData
     - BlockMesh
+  - m_GUID: bb703c0f11c556c478e98177d63b4d40
+    m_Address: Assets/Prefabs/BlockMeshData/BlockBed.txt
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - BlockMesh
+  - m_GUID: 38cfe02b93595694c9773426b1f8cb03
+    m_Address: Assets/Prefabs/BlockMeshData/BlockSign.txt
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - BlockMesh
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: fd6114d87f1af534fbf270c47c0f10bf, type: 2}
   m_SchemaSet:

@@ -72,7 +72,7 @@ public class AddressableUtil
         AddressableAssetEntry entry = group.entries.FirstOrDefault(e => e.guid == guid);
         if (entry == null)
         {
-            entry = Settings.CreateOrMoveEntry(guid, group, false, false);
+            entry = Settings.CreateOrMoveEntry(guid, group);
         }
 
         entry.address = address;

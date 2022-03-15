@@ -285,6 +285,7 @@ public class Chunk : BaseMonoBehaviour
         callBackForComplete?.Invoke();
     }
 
+
     /// <summary>
     /// 异步构建chunk
     /// </summary>
@@ -319,10 +320,9 @@ public class Chunk : BaseMonoBehaviour
                         Block block = chunkData.arrayBlock[i];
                         if (block == null || block.blockType == BlockTypeEnum.None)
                             continue;
-                        BlockDirectionEnum blockDirection = (BlockDirectionEnum)chunkData.arrayBlockDirection[i];
                         Vector3Int localPosition = chunkData.GetPositionByIndex(i);
-                        block.BuildBlock(this, localPosition, blockDirection);
-                        block.InitBlock(this, localPosition, blockDirection, 0);
+                        block.BuildBlock(this, localPosition);
+                        block.InitBlock(this, localPosition, 0);
                     }
 #if UNITY_EDITOR
                     TimeUtil.GetMethodTimeEnd("Time_BuildChunkForAsync:", stopwatch);
@@ -537,7 +537,7 @@ public class Chunk : BaseMonoBehaviour
             WorldCreateHandler.Instance.HandleForUpdateChunk(this, localPosition, oldBlock, newBlock, direction);
         }
         //初始化方块(放再这里是等处理完数据和mesh之后再初始化)
-        newBlock.InitBlock(this, localPosition, direction, 1);
+        newBlock.InitBlock(this, localPosition, 1);
         //刷新六个方向的方块
         if (isRefreshBlockRange)
         {

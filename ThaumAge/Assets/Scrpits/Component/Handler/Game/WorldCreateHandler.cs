@@ -2,9 +2,13 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
+using Unity.Collections;
+using Unity.Jobs;
+using Unity.Mathematics;
 using UnityEngine;
 
 public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateManager>
@@ -80,10 +84,8 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
             HandleForUpdateBlock(callBackForUpdateChunk);
         };
 
-        //生成方块数据
         chunk.BuildChunkBlockDataForAsync(callBackForComplete);
     }
-
 
 
     /// <summary>
@@ -308,7 +310,7 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
         {
 
         }
-        newBlock.BuildBlock(chunk, localPosition, direction);
+        newBlock.BuildBlock(chunk, localPosition);
         manager.AddUpdateDrawChunk(chunk, 1);
     }
 

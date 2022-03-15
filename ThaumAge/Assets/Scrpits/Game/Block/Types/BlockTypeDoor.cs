@@ -6,17 +6,17 @@ using DG.Tweening;
 public class BlockTypeDoor : Block
 {
 
-    public override void InitBlock(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum blockDirection, int state)
+    public override void InitBlock(Chunk chunk, Vector3Int localPosition, int state)
     {
-        base.InitBlock(chunk, localPosition, blockDirection, state);
+        base.InitBlock(chunk, localPosition, state);
         //如果是放置
         if (state == 1)
         {
-            CreateLinkBlock(chunk, localPosition, blockDirection, new List<Vector3Int>() { Vector3Int.up });
+            CreateLinkBlock(chunk, localPosition, new List<Vector3Int>() { Vector3Int.up });
         }
     }
 
-    public override void CreateBlockModel(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum blockDirection)
+    public override void CreateBlockModel(Chunk chunk, Vector3Int localPosition)
     {
         //如果有模型。则创建模型
         if (!blockInfo.model_name.IsNull())
@@ -42,7 +42,7 @@ public class BlockTypeDoor : Block
         DestoryLinkBlock(chunk, localPosition, direction, new List<Vector3Int>() { Vector3Int.up });
     }
 
-    public override void BuildBlock(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction)
+    public override void BuildBlock(Chunk chunk, Vector3Int localPosition)
     {
         BlockShapeCustom blockShapeCustom = blockShape as BlockShapeCustom;
         //获取数据
@@ -58,7 +58,7 @@ public class BlockTypeDoor : Block
             blockDoorData.state = 0;
             blockDoorData.linkBasePosition = new Vector3IntBean(localPosition + chunk.chunkData.positionForWorld);
         }
-        blockShapeCustom.BuildBlock(chunk, localPosition, direction);
+        blockShapeCustom.BuildBlock(chunk, localPosition);
     }
 
     /// <summary>

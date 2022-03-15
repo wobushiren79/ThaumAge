@@ -56,14 +56,16 @@ public enum BlockTypeEnum
 
     CropPotato = 5001,//种植 土豆
     CropCorn = 5002,//种植 玉米
-    CropWatermelonGrow = 5101,//种植 西瓜
+    CropWatermelonGrow = 5101,//种植生长中 西瓜
     CropWatermelon = 5102,//种植 西瓜
 
     StairsWood = 6001,//木楼梯
     CraftingTableSimple = 6101,//简易制作台
     Door = 6010,//门
+    Sign = 6101,//牌子
     Box = 6201,//箱子
     SwitchesWooden = 6301,//木制开关
+    Bed = 6901,//床
 
     Water = 9001,//水
     Magma = 9002,//岩浆
