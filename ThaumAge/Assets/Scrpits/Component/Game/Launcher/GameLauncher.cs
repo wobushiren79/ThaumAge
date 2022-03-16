@@ -1,15 +1,22 @@
 
 using System;
 using System.Collections;
+using System.Diagnostics;
 using UnityEngine;
 
 public class GameLauncher : BaseLauncher
 {
     public WorldTypeEnum testWorldType = WorldTypeEnum.Test;
 
+    protected Stopwatch timeInit;
+
     public override void Launch()
     {
         base.Launch();
+
+        timeInit = new Stopwatch();
+        timeInit.Start();
+
         //打开主UI
         UIHandler.Instance.OpenUIAndCloseOther<UILoading>(UIEnum.Loading);
         //加载资源
@@ -44,7 +51,7 @@ public class GameLauncher : BaseLauncher
     /// <summary>
     /// 刷新完成后
     /// </summary>
-    public void CompleteForUpdateChunk()
+    public void CompleteForUpdateChunk(Chunk completeChunk)
     {
         //打开主UI
         UIHandler.Instance.OpenUIAndCloseOther<UIGameMain>(UIEnum.GameMain);
@@ -58,6 +65,9 @@ public class GameLauncher : BaseLauncher
         UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();
         userData.userPosition.GetWorldPosition(out WorldTypeEnum worldType, out Vector3 worldPosition);
         GameHandler.Instance.InitCharacter(worldPosition);
+
+        timeInit.Stop();
+        LogUtil.Log("完成时间：" + timeInit.ElapsedTicks);
     }
 
 }

@@ -261,7 +261,8 @@ public class Chunk : BaseMonoBehaviour
             {
                 lock (lockForUpdateBlcok)
                 {
-#if UNITY_EDITOR
+#if UNITY_EDITOR          
+                    LogUtil.Log("Thrad:" + Thread.CurrentThread.ManagedThreadId);
                     Stopwatch stopwatch = TimeUtil.GetMethodTimeStart();
 #endif
                     //生成基础地形数据      
@@ -309,6 +310,7 @@ public class Chunk : BaseMonoBehaviour
                 lock (lockForUpdateBlcok)
                 {
 #if UNITY_EDITOR
+                    LogUtil.Log("Thrad:" + Thread.CurrentThread.ManagedThreadId);
                     Stopwatch stopwatch = TimeUtil.GetMethodTimeStart();
 #endif
                     chunkMeshData = new ChunkMeshData();

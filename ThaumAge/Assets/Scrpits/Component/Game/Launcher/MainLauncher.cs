@@ -1,4 +1,5 @@
-﻿using UnityEditor;
+﻿using System.Diagnostics;
+using UnityEditor;
 using UnityEngine;
 
 public class MainLauncher : BaseLauncher
@@ -13,7 +14,7 @@ public class MainLauncher : BaseLauncher
         base.Launch();
         UIHandler.Instance.OpenUIAndCloseOther<UILoading>(UIEnum.Loading);
 
-        GameHandler.Instance.LoadGameResources(() => 
+        GameHandler.Instance.LoadGameResources(() =>
         {
             //设置游戏状态
             GameHandler.Instance.manager.SetGameState(GameStateEnum.Main);
@@ -31,7 +32,7 @@ public class MainLauncher : BaseLauncher
     /// <summary>
     /// 刷新完成后
     /// </summary>
-    public void CompleteForUpdateChunk()
+    public void CompleteForUpdateChunk(Chunk completeChunk)
     {
         //显示人物
         SceneMainHandler.Instance.ShowCharacter();

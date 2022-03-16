@@ -52,7 +52,7 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
     /// <param name="width"></param>
     /// <param name="height"></param>
     /// <param name="minHeight"></param>
-    public void CreateChunk(Vector3Int position, Action callBackForCreate)
+    public void CreateChunk(Vector3Int position, Action<Chunk> callBackForCreate)
     {
         //检测当前位置是否有区块
         Chunk chunk = manager.GetChunk(position);
@@ -94,7 +94,7 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
     /// <param name="centerPosition"></param>
     /// <param name="range"></param>
     /// <param name="callback"></param>
-    public void CreateChunkRangeForCenterPosition(Vector3Int centerPosition, int range, Action callBackForComplete)
+    public void CreateChunkRangeForCenterPosition(Vector3Int centerPosition, int range, Action<Chunk> callBackForComplete)
     {
         manager.worldRefreshRange = range;
 
@@ -106,13 +106,13 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
         {
             for (int f = 0; f < range * 2; f++)
             {
-                CreateChunk(currentPosition, () =>
+                CreateChunk(currentPosition, (completeChunk) =>
                 {
                     totalNumber++;
                     if (totalNumber >= rangeNumber)
                     {
                         LogUtil.Log("区块加载完毕");
-                        callBackForComplete?.Invoke();
+                        callBackForComplete?.Invoke(completeChunk);
                     }
                 });
                 currentPosition += new Vector3Int(0, 0, manager.widthChunk);
@@ -159,7 +159,7 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
     /// <param name="range"></param>
     /// <param name="callBackForComplete"></param>
 
-    public void CreateChunkRangeForWorldPostion(Vector3 position, int range, Action callBackForComplete)
+    public void CreateChunkRangeForWorldPostion(Vector3 position, int range, Action<Chunk> callBackForComplete)
     {
         Vector3Int centerPosition = GetChunkPositionByWorldPosition(position);
         CreateChunkRangeForCenterPosition(centerPosition, range, callBackForComplete);
@@ -231,7 +231,7 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
     /// </summary>
     /// <param name="isOrderDraw">是否按顺序绘制</param>
     /// <param name="callBackForUpdateChunk"></param>
-    public void HandleForUpdateChunk(bool isOrderDraw, Action callBackForUpdateChunk)
+    public void HandleForUpdateChunk(bool isOrderDraw, Action<Chunk> callBackForUpdateChunk)
     {
         while (manager.listUpdateChunk.Count > 0)
         {
@@ -255,9 +255,9 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
                     //构建修改过的区块
                     manager.AddUpdateDrawChunk(updateChunk, 0);
                 }
+                callBackForUpdateChunk?.Invoke(updateChunk);
             });
         }
-        callBackForUpdateChunk?.Invoke();
     }
 
 
