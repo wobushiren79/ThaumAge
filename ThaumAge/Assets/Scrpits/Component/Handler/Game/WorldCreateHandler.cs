@@ -6,6 +6,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
+using Unity.Burst;
 using Unity.Collections;
 using Unity.Jobs;
 using Unity.Mathematics;
@@ -86,7 +87,6 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
 
         chunk.BuildChunkBlockDataForAsync(callBackForComplete);
     }
-
 
     /// <summary>
     /// 根据中心位置创建区域chunk
@@ -248,7 +248,7 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
                 manager.AddUpdateDrawChunk(updateChunk, 1);
             }
             //构建修改过的区块
-            updateChunk.BuildChunkForAsync(() =>
+            Action callBackForComplete = () =>
             {
                 if (!isOrderDraw)
                 {
@@ -256,7 +256,9 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
                     manager.AddUpdateDrawChunk(updateChunk, 0);
                 }
                 callBackForUpdateChunk?.Invoke(updateChunk);
-            });
+            };
+            callBackForComplete?.Invoke();
+            updateChunk.BuildChunkForAsync(callBackForComplete);
         }
     }
 

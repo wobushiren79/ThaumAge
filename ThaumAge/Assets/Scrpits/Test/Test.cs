@@ -9,52 +9,70 @@ public class Test : BaseMonoBehaviour
 {
     public int DataCount;
 
-    private NativeArray<float3> m_JobDatas;
-
-    private NativeArray<float> m_JobResults;
-
-    private Vector3[] m_NormalDatas;
-
-    private float[] m_NormalResults;
 
     private void OnGUI()
     {
 
-        if (GUILayout.Button("Job"))
+        if (GUILayout.Button("Test"))
         {
-            m_JobDatas = new NativeArray<float3>(DataCount, Allocator.TempJob);
-            m_JobResults = new NativeArray<float>(DataCount, Allocator.TempJob);
-
-            m_NormalDatas = new Vector3[DataCount];
-            m_NormalResults = new float[DataCount];
-
+            DataCount = 16 * 16 * 16;
+            string[] data = new string[DataCount];
             for (int i = 0; i < DataCount; i++)
             {
-                m_JobDatas[i] = new float3(1, 1, 1);
-                m_NormalDatas[i] = new Vector3(1, 1, 1);
+                data[i] = i + "";
             }
-
-            MyParallelJob jobData = new MyParallelJob();
-            jobData.data = m_JobDatas;
-            jobData.result = m_JobResults;
-            jobData.chunk = null;
-            JobHandle handle = jobData.Schedule(DataCount, 64);
 
             Stopwatch stopwatch= TimeUtil.GetMethodTimeStart();
-            handle.Complete();
-            TimeUtil.GetMethodTimeEnd("Test", stopwatch);
-
-            stopwatch.Restart();
-            //正常数据运算
-            for (var i = 0; i < DataCount; i++)
+            for (int x = 0; x < 16; x++)
             {
-                var item = m_NormalDatas[i];
-                m_NormalResults[i] = Mathf.Sqrt(item.x * item.x + item.y * item.y + item.z * item.z);
+                for (int y = 0; y < 16; y++)
+                {
+                    for (int z = 0; z < 16; z++)
+                    {
+                        string item = data[y << 8 | z << 4 | x];
+                    }
+                }
             }
-            TimeUtil.GetMethodTimeEnd("Test", stopwatch);
+            TimeUtil.GetMethodTimeEnd("1:",stopwatch);
+            stopwatch.Start();
+            for (int x = 0; x < 16; x++)
+            {
+                for (int y = 0; y < 16; y++)
+                {
+                    for (int z = 0; z < 16; z++)
+                    {
+                         data[x + y * 16 + z * 16 * 16]="x";
+                    }
+                }
+            }
+            TimeUtil.GetMethodTimeEnd("2:", stopwatch);
 
-            m_JobDatas.Dispose();
-            m_JobResults.Dispose();
+            stopwatch.Start();
+            for (int x = 0; x < 16; x++)
+            {
+                for (int y = 0; y < 16; y++)
+                {
+                    for (int z = 0; z < 16; z++)
+                    {
+                        string item = data[x + y * 16 + z * 16 * 16];
+                    }
+                }
+            }
+            TimeUtil.GetMethodTimeEnd("3:", stopwatch);
+
+
+            stopwatch.Start();
+            for (int x = 0; x < 16; x++)
+            {
+                for (int y = 0; y < 16; y++)
+                {
+                    for (int z = 0; z < 16; z++)
+                    {
+                        data[x + y * 16 + z * 16 * 16] = "x";
+                    }
+                }
+            }
+            TimeUtil.GetMethodTimeEnd("4:", stopwatch);
         }
 
     }
