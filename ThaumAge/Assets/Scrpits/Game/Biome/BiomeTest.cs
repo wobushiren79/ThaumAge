@@ -1,5 +1,7 @@
-﻿using UnityEditor;
+﻿using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
+using static BiomeCreateTool;
 
 public class BiomeTest : Biome
 {
@@ -28,7 +30,7 @@ public class BiomeTest : Biome
         }
         else
         {
-            BiomeCreateTool.AddOre(900, 0.00001f, wPos);
+            //BiomeCreateTool.AddOre(900, 0.00001f, wPos);
             //其他土
             return BlockTypeEnum.Stone;
         }

@@ -8,12 +8,7 @@ public class ChunkData
     public Chunk chunkForward;
     public Chunk chunkBack;
 
-    //所有的方块合集
-    public Block[] arrayBlock;
-    //所有方块的方向集合
-    public byte[] arrayBlockDirection;
-    //所有方块的朝向
-    public byte[] arrayBlockFace;
+    public ChunkSectionData[] chunkSectionDatas;
 
     //世界坐标
     public Vector3Int positionForWorld;
@@ -27,8 +22,13 @@ public class ChunkData
         this.chunkHeight = chunkHeight;
         this.positionForWorld = wPosition;
 
-        arrayBlock = new Block[chunkWidth * chunkHeight * chunkWidth];
-        arrayBlockDirection = new byte[chunkWidth * chunkHeight * chunkWidth];
+        int sectionSize = chunkWidth;
+        chunkSectionDatas = new ChunkSectionData[chunkHeight / chunkWidth];
+
+        for (int i = 0; i < chunkSectionDatas.Length; i++)
+        {
+            chunkSectionDatas[i] = new ChunkSectionData(sectionSize, sectionSize * i);
+        }
     }
 
     /// <summary>
@@ -51,7 +51,7 @@ public class ChunkData
         if (chunkBack == null)
         {
             chunkBack = WorldCreateHandler.Instance.manager.GetChunk(positionForWorld + new Vector3Int(0, 0, chunkWidth));
-        } 
+        }
     }
 
     /// <summary>
@@ -59,9 +59,9 @@ public class ChunkData
     /// </summary>
     public void SetBlockForLocal(int x, int y, int z, Block block, byte direction)
     {
-        int index = GetIndexByPosition(x, y, z);
-        arrayBlock[index] = block;
-        arrayBlockDirection[index] = direction;
+        int yIndex = y / chunkWidth;
+        ChunkSectionData chunkSection = chunkSectionDatas[yIndex];
+        chunkSection.SetBlock(x, y % chunkWidth, z, block, direction);
     }
 
     public void SetBlockForLocal(int x, int y, int z, Block block, BlockDirectionEnum direction)
@@ -95,9 +95,11 @@ public class ChunkData
     /// </summary>
     public void GetBlockForLocal(int x, int y, int z, out Block block, out BlockDirectionEnum direction)
     {
-        int index = GetIndexByPosition(x, y, z);
-        block = arrayBlock[index];
-        direction = (BlockDirectionEnum)arrayBlockDirection[index];
+        int yIndex = y / chunkWidth;
+        ChunkSectionData chunkSection = chunkSectionDatas[yIndex];
+        chunkSection.GetBlock(x, y % chunkWidth, z, out int blockType, out byte blockDirection);
+        block = BlockHandler.Instance.manager.GetRegisterBlock(blockType);
+        direction = (BlockDirectionEnum)blockDirection;
     }
 
     public void GetBlockForLocal(Vector3Int blockPosition, out Block block, out BlockDirectionEnum direction)
@@ -107,8 +109,10 @@ public class ChunkData
 
     public Block GetBlockForLocal(int x, int y, int z)
     {
-        int index = GetIndexByPosition(x, y, z);
-        return arrayBlock[index];
+        int yIndex = y / chunkWidth;
+        ChunkSectionData chunkSection = chunkSectionDatas[yIndex];
+        int blockType = chunkSection.GetBlock(x, y % chunkWidth, z);
+        return BlockHandler.Instance.manager.GetRegisterBlock(blockType);
     }
 
     public Block GetBlockForLocal(Vector3Int blockPosition)
@@ -118,8 +122,9 @@ public class ChunkData
 
     public BlockDirectionEnum GetBlockDirection(int x, int y, int z)
     {
-        int index = GetIndexByPosition(x, y, z);
-        return (BlockDirectionEnum)arrayBlockDirection[index];
+        int yIndex = y / chunkWidth;
+        ChunkSectionData chunkSection = chunkSectionDatas[yIndex];
+        return (BlockDirectionEnum)chunkSection.GetBlockDirection(x, y % chunkWidth, z);
     }
 
     /// <summary>
@@ -136,6 +141,6 @@ public class ChunkData
 
     public Vector3Int GetPositionByIndex(int index)
     {
-        return new Vector3Int((index % (chunkWidth * chunkWidth * chunkHeight))/(chunkWidth * chunkHeight), (index % (chunkWidth * chunkHeight))/ chunkWidth, index % chunkWidth);
+        return new Vector3Int((index % (chunkWidth * chunkWidth * chunkHeight)) / (chunkWidth * chunkHeight), (index % (chunkWidth * chunkHeight)) / chunkWidth, index % chunkWidth);
     }
 }

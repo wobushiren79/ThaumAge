@@ -25,7 +25,7 @@ public class MainLauncher : BaseLauncher
             //设置远景模糊
             VolumeHandler.Instance.SetDepthOfField(WorldTypeEnum.Launch);
             //刷新周围区块
-            WorldCreateHandler.Instance.CreateChunkRangeForCenterPosition(Vector3Int.zero, worldRange, CompleteForUpdateChunk);
+            WorldCreateHandler.Instance.CreateChunkRangeForCenterPosition(Vector3Int.zero, worldRange, true, CompleteForUpdateChunk);
         });
     }
 

@@ -92,14 +92,14 @@ public struct BlockTempBean
     public BlockTempBean(BlockTypeEnum blockType, int worldX, int worldY, int worldZ)
     {
         this.blockId = (int)blockType;
-        direction = 0;
+        direction = (byte)BlockDirectionEnum.UpForward;
         this.worldX = worldX;
         this.worldY = worldY;
         this.worldZ = worldZ;
         meta = null;
     }
 
-    public BlockTempBean(BlockTypeEnum blockType, DirectionEnum direction, int worldX, int worldY, int worldZ)
+    public BlockTempBean(BlockTypeEnum blockType, BlockDirectionEnum direction, int worldX, int worldY, int worldZ)
     {
         this.blockId = (int)blockType;
         this.direction = (byte)direction;

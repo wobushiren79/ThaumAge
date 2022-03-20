@@ -20,7 +20,7 @@ public class GameLauncher : BaseLauncher
         //打开主UI
         UIHandler.Instance.OpenUIAndCloseOther<UILoading>(UIEnum.Loading);
         //加载资源
-        GameHandler.Instance.LoadGameResources(()=> 
+        GameHandler.Instance.LoadGameResources(() =>
         {
             UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();
             userData.userPosition.GetWorldPosition(out WorldTypeEnum worldType, out Vector3 worldPosition);
@@ -42,9 +42,7 @@ public class GameLauncher : BaseLauncher
             VolumeHandler.Instance.SetDepthOfField(worldType);
             //刷新周围区块
             GameConfigBean gameConfig = GameDataHandler.Instance.manager.GetGameConfig();
-            WorldCreateHandler.Instance.CreateChunkRangeForCenterPosition(Vector3Int.zero, gameConfig.worldRefreshRange, CompleteForUpdateChunk);
-            //修改游戏状态
-            GameHandler.Instance.manager.SetGameState(GameStateEnum.Gaming);
+            WorldCreateHandler.Instance.CreateChunkRangeForCenterPosition(Vector3Int.zero, gameConfig.worldRefreshRange, true, CompleteForUpdateChunk);
         });
     }
 
@@ -53,6 +51,8 @@ public class GameLauncher : BaseLauncher
     /// </summary>
     public void CompleteForUpdateChunk(Chunk completeChunk)
     {
+        //修改游戏状态
+        GameHandler.Instance.manager.SetGameState(GameStateEnum.Gaming);
         //打开主UI
         UIHandler.Instance.OpenUIAndCloseOther<UIGameMain>(UIEnum.GameMain);
         //修改天气

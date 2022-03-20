@@ -17,7 +17,7 @@ public class CreatureCollisionAndTrigger : CreatureBase
         //检测当前所在方块是什么
         Vector3 creaturePoint = creature.transform.position;
         Vector3Int targetBlockPosition = new Vector3Int(Mathf.FloorToInt(creaturePoint.x), Mathf.FloorToInt(creaturePoint.y + 0.5f), Mathf.FloorToInt(creaturePoint.z));
-        if (targetBlockPosition.y < 0 || targetBlockPosition.y > WorldCreateHandler.Instance.manager.heightChunk)
+        if (targetBlockPosition.y < 0 || targetBlockPosition.y >= WorldCreateHandler.Instance.manager.heightChunk)
             return;
         WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(targetBlockPosition, out Block targetBlock, out Chunk targetChunk);
         if (targetBlock != null)

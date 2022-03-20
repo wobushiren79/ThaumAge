@@ -170,16 +170,16 @@ public class BiomeCreateTool
                 {
                     if (i == 0)
                     {
-                        BlockTempBean leftData_1 = new(treeData.treeTrunk, DirectionEnum.Left, treeTrunkPosition.x - 2, treeTrunkPosition.y, treeTrunkPosition.z);
+                        BlockTempBean leftData_1 = new(treeData.treeTrunk, BlockDirectionEnum.LeftForward, treeTrunkPosition.x - 2, treeTrunkPosition.y, treeTrunkPosition.z);
                         WorldCreateHandler.Instance.manager.AddUpdateBlock(leftData_1);
 
-                        BlockTempBean rightData_1 = new(treeData.treeTrunk, DirectionEnum.Right, treeTrunkPosition.x + 2, treeTrunkPosition.y, treeTrunkPosition.z);
+                        BlockTempBean rightData_1 = new(treeData.treeTrunk, BlockDirectionEnum.RightForward, treeTrunkPosition.x + 2, treeTrunkPosition.y, treeTrunkPosition.z);
                         WorldCreateHandler.Instance.manager.AddUpdateBlock(rightData_1);
 
-                        BlockTempBean forwardData_1 = new(treeData.treeTrunk, DirectionEnum.Forward, treeTrunkPosition.x - 2, treeTrunkPosition.y, treeTrunkPosition.z + 2);
+                        BlockTempBean forwardData_1 = new(treeData.treeTrunk, BlockDirectionEnum.ForwardForward, treeTrunkPosition.x - 2, treeTrunkPosition.y, treeTrunkPosition.z + 2);
                         WorldCreateHandler.Instance.manager.AddUpdateBlock(forwardData_1);
 
-                        BlockTempBean backData_1 = new(treeData.treeTrunk, DirectionEnum.Back, treeTrunkPosition.x - 2, treeTrunkPosition.y, treeTrunkPosition.z - 2);
+                        BlockTempBean backData_1 = new(treeData.treeTrunk, BlockDirectionEnum.BackForward, treeTrunkPosition.x - 2, treeTrunkPosition.y, treeTrunkPosition.z - 2);
                         WorldCreateHandler.Instance.manager.AddUpdateBlock(backData_1);
                     }
 
@@ -202,25 +202,25 @@ public class BiomeCreateTool
                     int isCreate = WorldRandTools.Range(0, 4);
                     if (isCreate == 1)
                     {
-                        BlockTempBean leftData_1 = new(treeData.treeTrunk, DirectionEnum.Left, treeTrunkPosition.x - 2, treeTrunkPosition.y, treeTrunkPosition.z);
+                        BlockTempBean leftData_1 = new(treeData.treeTrunk, BlockDirectionEnum.LeftForward, treeTrunkPosition.x - 2, treeTrunkPosition.y, treeTrunkPosition.z);
                         WorldCreateHandler.Instance.manager.AddUpdateBlock(leftData_1);
                     }
                     isCreate = WorldRandTools.Range(0, 4);
                     if (isCreate == 1)
                     {
-                        BlockTempBean rightData_1 = new(treeData.treeTrunk, DirectionEnum.Right, treeTrunkPosition.x + 2, treeTrunkPosition.y, treeTrunkPosition.z);
+                        BlockTempBean rightData_1 = new(treeData.treeTrunk, BlockDirectionEnum.RightForward, treeTrunkPosition.x + 2, treeTrunkPosition.y, treeTrunkPosition.z);
                         WorldCreateHandler.Instance.manager.AddUpdateBlock(rightData_1);
                     }
                     isCreate = WorldRandTools.Range(0, 4);
                     if (isCreate == 1)
                     {
-                        BlockTempBean forwardData_1 = new(treeData.treeTrunk, DirectionEnum.Forward, treeTrunkPosition.x, treeTrunkPosition.y, treeTrunkPosition.z + 2);
+                        BlockTempBean forwardData_1 = new(treeData.treeTrunk, BlockDirectionEnum.ForwardForward, treeTrunkPosition.x, treeTrunkPosition.y, treeTrunkPosition.z + 2);
                         WorldCreateHandler.Instance.manager.AddUpdateBlock(forwardData_1);
                     }
                     isCreate = WorldRandTools.Range(0, 4);
                     if (isCreate == 1)
                     {
-                        BlockTempBean backData_1 = new(treeData.treeTrunk, DirectionEnum.Back, treeTrunkPosition.x, treeTrunkPosition.y, treeTrunkPosition.z - 2);
+                        BlockTempBean backData_1 = new(treeData.treeTrunk, BlockDirectionEnum.BackForward, treeTrunkPosition.x, treeTrunkPosition.y, treeTrunkPosition.z - 2);
                         WorldCreateHandler.Instance.manager.AddUpdateBlock(backData_1);
                     }
                 }
@@ -309,12 +309,12 @@ public class BiomeCreateTool
                                 for (int b = 0; b < baseWith; b++)
                                 {
 
-                                    DirectionEnum baseDirection =
-                                        (x == -trunkRange ? DirectionEnum.Left
-                                        : x == trunkRange ? DirectionEnum.Right
-                                        : z == -trunkRange ? DirectionEnum.Forward
-                                        : z == trunkRange ? DirectionEnum.Back
-                                        : DirectionEnum.Left);
+                                    BlockDirectionEnum baseDirection =
+                                        (x == -trunkRange ? BlockDirectionEnum.LeftForward
+                                        : x == trunkRange ? BlockDirectionEnum.RightForward
+                                        : z == -trunkRange ? BlockDirectionEnum.ForwardForward
+                                        : z == trunkRange ? BlockDirectionEnum.BackForward
+                                        : BlockDirectionEnum.LeftForward);
 
                                     int branchDirectionX = WorldRandTools.Range(0, 2);
                                     int branchDirectionY = WorldRandTools.Range(0, 2);
@@ -369,7 +369,7 @@ public class BiomeCreateTool
                                     {
                                         addPositionX = 0;
                                         addPositionZ = 0;
-                                        baseDirection = DirectionEnum.UP;
+                                        baseDirection = BlockDirectionEnum.UpForward;
                                     }
 
                                     Vector3Int addPosition = new(addPositionX, addPositionY, addPositionZ);
@@ -396,12 +396,12 @@ public class BiomeCreateTool
 
                                     for (int b = 0; b < branchWith; b++)
                                     {
-                                        DirectionEnum branchDirection =
-                                            (x == -trunkRange ? DirectionEnum.Left
-                                            : x == trunkRange ? DirectionEnum.Right
-                                            : z == -trunkRange ? DirectionEnum.Forward
-                                            : z == trunkRange ? DirectionEnum.Back
-                                            : DirectionEnum.Left);
+                                        BlockDirectionEnum branchDirection =
+                                            (x == -trunkRange ? BlockDirectionEnum.LeftForward
+                                            : x == trunkRange ? BlockDirectionEnum.RightForward
+                                            : z == -trunkRange ? BlockDirectionEnum.ForwardForward
+                                            : z == trunkRange ? BlockDirectionEnum.BackForward
+                                            : BlockDirectionEnum.LeftForward);
 
                                         int branchDirectionX = WorldRandTools.Range(0, 2);
                                         int branchDirectionY = WorldRandTools.Range(0, 4);
@@ -671,7 +671,7 @@ public class BiomeCreateTool
             Vector3Int treeDataPosition = startPosition;
             for (int i = 0; i < treeHeight; i++)
             {
-                BlockTempBean blockData = new(BlockTypeEnum.WoodDead, DirectionEnum.UP, treeDataPosition.x, treeDataPosition.y + i + 1, treeDataPosition.z);
+                BlockTempBean blockData = new(BlockTypeEnum.WoodDead, BlockDirectionEnum.UpForward, treeDataPosition.x, treeDataPosition.y + i + 1, treeDataPosition.z);
                 WorldCreateHandler.Instance.manager.AddUpdateBlock(blockData);
             }
         }
@@ -766,7 +766,7 @@ public class BiomeCreateTool
                 if (buildingData.randomRate == 0 || createRate < buildingData.randomRate)
                 {
                     VectorUtil.GetRotatedPosition(startPosition, targetPosition, new Vector3(0, randomAngle, 0));
-                    BlockTempBean blockData = new((BlockTypeEnum)buildingData.blockId, (DirectionEnum)buildingData.direction, targetPosition.x, targetPosition.y, targetPosition.z);
+                    BlockTempBean blockData = new((BlockTypeEnum)buildingData.blockId, (BlockDirectionEnum)buildingData.direction, targetPosition.x, targetPosition.y, targetPosition.z);
                     WorldCreateHandler.Instance.manager.AddUpdateBlock(blockData);
                 }
             }

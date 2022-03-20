@@ -14,6 +14,7 @@ public class WorldCreateManager : BaseManager
 
     //所有待修改的方块
     public ConcurrentQueue<BlockTempBean> listUpdateBlock = new ConcurrentQueue<BlockTempBean>();
+
     //所有待修改的区块
     public ConcurrentQueue<Chunk> listUpdateChunk = new ConcurrentQueue<Chunk>();
 
@@ -234,7 +235,7 @@ public class WorldCreateManager : BaseManager
             block = BlockHandler.Instance.manager.GetRegisterBlock(BlockTypeEnum.None);
             return;
         }
-        chunk.GetBlockForWorld(pos, out block, out bool isInside);
+        chunk.GetBlockForWorld(pos, out block);
     }
 
     /// <summary>

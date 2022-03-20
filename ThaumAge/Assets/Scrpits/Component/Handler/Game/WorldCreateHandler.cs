@@ -48,17 +48,16 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
     /// <summary>
     /// 建造区块
     /// </summary>
-    /// <param name="worldSeed"></param>
     /// <param name="position"></param>
-    /// <param name="width"></param>
-    /// <param name="height"></param>
-    /// <param name="minHeight"></param>
-    public void CreateChunk(Vector3Int position, Action<Chunk> callBackForCreate)
+    /// <param name="isInit"></param>
+    /// <param name="callBackForCreate"></param>
+    public void CreateChunkData(Vector3Int position, Action<Chunk> callBackForCreateData)
     {
         //检测当前位置是否有区块
         Chunk chunk = manager.GetChunk(position);
         if (chunk != null)
         {
+            callBackForCreateData?.Invoke(chunk);
             return;
         }
         //生成区块
@@ -75,7 +74,7 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
         //成功更新方块后得回调
         Action callBackForUpdateChunk = () =>
         {
-            HandleForUpdateChunk(false, callBackForCreate);
+            callBackForCreateData?.Invoke(chunk);
         };
 
         //成功初始化回调
@@ -94,7 +93,7 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
     /// <param name="centerPosition"></param>
     /// <param name="range"></param>
     /// <param name="callback"></param>
-    public void CreateChunkRangeForCenterPosition(Vector3Int centerPosition, int range, Action<Chunk> callBackForComplete)
+    public void CreateChunkRangeForCenterPosition(Vector3Int centerPosition, int range, bool isInit, Action<Chunk> callBackForComplete)
     {
         manager.worldRefreshRange = range;
 
@@ -106,15 +105,39 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
         {
             for (int f = 0; f < range * 2; f++)
             {
-                CreateChunk(currentPosition, (completeChunk) =>
+                //如果是初始化创建
+                if (isInit)
                 {
-                    totalNumber++;
-                    if (totalNumber >= rangeNumber)
+                    Action<Chunk> callBackForCreateData = (successCreateChunkData) =>
                     {
-                        LogUtil.Log("区块加载完毕");
-                        callBackForComplete?.Invoke(completeChunk);
-                    }
-                });
+                        //创建所有初始化区块数据完成之后 再一次性更新所有区块
+                        totalNumber++;
+                        if (totalNumber >= rangeNumber)
+                        {
+                            totalNumber = 0;
+                            Action<Chunk> callBackForUpdateChunk = (successUpdateChunk) =>
+                            {
+                                totalNumber++;
+                                if (totalNumber >= rangeNumber)
+                                {
+                                    callBackForComplete?.Invoke(successUpdateChunk);
+                                }
+                            };
+                            HandleForUpdateChunk(false, callBackForUpdateChunk);
+                        }
+                    };
+                    CreateChunkData(currentPosition, callBackForCreateData);
+
+                }
+                //如果不是初始化创建
+                else
+                {
+                    Action<Chunk> callBackForCreateData = (successCreateChunkData) =>
+                    {
+                        HandleForUpdateChunk(false, callBackForComplete);
+                    };
+                    CreateChunkData(currentPosition, callBackForCreateData);
+                }
                 currentPosition += new Vector3Int(0, 0, manager.widthChunk);
             }
             currentPosition.z = startPosition.z;
@@ -162,7 +185,7 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
     public void CreateChunkRangeForWorldPostion(Vector3 position, int range, Action<Chunk> callBackForComplete)
     {
         Vector3Int centerPosition = GetChunkPositionByWorldPosition(position);
-        CreateChunkRangeForCenterPosition(centerPosition, range, callBackForComplete);
+        CreateChunkRangeForCenterPosition(centerPosition, range, false, callBackForComplete);
     }
 
     /// <summary>
@@ -225,7 +248,6 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
         }
     }
 
-
     /// <summary>
     ///  处理 待更新区块
     /// </summary>
@@ -257,7 +279,6 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
                 }
                 callBackForUpdateChunk?.Invoke(updateChunk);
             };
-            callBackForComplete?.Invoke();
             updateChunk.BuildChunkForAsync(callBackForComplete);
         }
     }

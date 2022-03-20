@@ -262,7 +262,6 @@ public class Chunk : BaseMonoBehaviour
                 lock (lockForUpdateBlcok)
                 {
 #if UNITY_EDITOR          
-                    LogUtil.Log("Thrad:" + Thread.CurrentThread.ManagedThreadId);
                     Stopwatch stopwatch = TimeUtil.GetMethodTimeStart();
 #endif
                     //生成基础地形数据      
@@ -292,7 +291,7 @@ public class Chunk : BaseMonoBehaviour
     public async void BuildChunkForAsync(Action callBackForComplete)
     {
         //只有初始化之后的chunk才能刷新
-        if (!isInit || chunkData.arrayBlock.Length <= 0)
+        if (!isInit)
         {
             isBuildChunk = false;
             callBackForComplete?.Invoke();
@@ -309,21 +308,34 @@ public class Chunk : BaseMonoBehaviour
                 lock (lockForUpdateBlcok)
                 {
 #if UNITY_EDITOR
-                    LogUtil.Log("Thrad:" + Thread.CurrentThread.ManagedThreadId);
                     Stopwatch stopwatch = TimeUtil.GetMethodTimeStart();
 #endif
                     chunkMeshData = new ChunkMeshData();
 
                     chunkData.InitRoundChunk();
 
-                    for (int i = 0; i < chunkData.arrayBlock.Length; i++)
+                    //遍历每一个子区块
+                    for (int i = 0; i < chunkData.chunkSectionDatas.Length; i++)
                     {
-                        Block block = chunkData.arrayBlock[i];
-                        if (block == null || block.blockType == BlockTypeEnum.None)
+                        ChunkSectionData chunkSection = chunkData.chunkSectionDatas[i];
+                        if (!chunkSection.IsRender())
                             continue;
-                        Vector3Int localPosition = chunkData.GetPositionByIndex(i);
-                        block.BuildBlock(this, localPosition);
-                        block.InitBlock(this, localPosition, 0);
+          
+                        for (int x = 0; x < chunkSection.sectionSize; x++)
+                        {
+                            for (int y = 0; y < chunkSection.sectionSize; y++)
+                            {
+                                for (int z = 0; z < chunkSection.sectionSize; z++)
+                                {
+                                    Block block = chunkData.GetBlockForLocal(x, y + chunkSection.yBase, z); ;
+                                    if (block == null || block.blockType == BlockTypeEnum.None)
+                                        continue;
+                                    Vector3Int localPosition = new Vector3Int(x, y + chunkSection.yBase, z);
+                                    block.BuildBlock(this, localPosition);
+                                    block.InitBlock(this, localPosition, 0);
+                                }
+                            }
+                        }
                     }
 #if UNITY_EDITOR
                     TimeUtil.GetMethodTimeEnd("Time_BuildChunkForAsync:", stopwatch);
@@ -458,9 +470,8 @@ public class Chunk : BaseMonoBehaviour
     {
         GetBlockForLocal(blockWorldPosition - chunkData.positionForWorld, out block, out direction, out chunk);
     }
-    public void GetBlockForWorld(Vector3Int blockWorldPosition, out Block block, out bool isInside)
+    public void GetBlockForWorld(Vector3Int blockWorldPosition, out Block block)
     {
-        isInside = true;
         block = chunkData.GetBlockForLocal(blockWorldPosition - chunkData.positionForWorld);
     }
 
@@ -565,7 +576,6 @@ public class Chunk : BaseMonoBehaviour
                 for (int y = 0; y < chunkData.chunkHeight; y++)
                 {
                     Vector3Int position = new Vector3Int(x, y, z);
-
                     //获取方块类型
                     BlockTypeEnum blockType = BiomeHandler.Instance.CreateBiomeBlockType(this, biomeMapData, position);
                     //如果是空 则跳过
@@ -574,7 +584,7 @@ public class Chunk : BaseMonoBehaviour
                     Block block = BlockHandler.Instance.manager.GetRegisterBlock(blockType);
                     //添加方块
                     chunkData.SetBlockForLocal(x, y, z, block, BlockDirectionEnum.UpForward);
-                }
+                }    
             }
         }
 
