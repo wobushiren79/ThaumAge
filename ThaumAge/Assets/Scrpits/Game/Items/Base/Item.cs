@@ -121,18 +121,18 @@ public class Item
         Player player = GameHandler.Instance.manager.player;
         if (player.playerRay.RayToChunkBlock(out RaycastHit hit, out Vector3Int targetBlockPosition))
         {
-            Chunk chunkForHit = hit.collider.GetComponentInParent<Chunk>();
-            if (chunkForHit != null && chunkForHit.isInit)
+            ChunkComponent chunkForHit = hit.collider.GetComponentInParent<ChunkComponent>();
+            if (chunkForHit != null && chunkForHit.chunk.isInit)
             {
                 //获取位置和方向
                 player.playerRay.GetHitPositionAndDirection(hit, out Vector3Int targetPosition, out Vector3Int closePosition, out BlockDirectionEnum direction);
-                Vector3Int localPosition = targetPosition - chunkForHit.chunkData.positionForWorld;
-                if (localPosition.x < 0 || localPosition.x > chunkForHit.chunkData.chunkWidth
-                    || localPosition.z < 0 || localPosition.z > chunkForHit.chunkData.chunkWidth
-                    || localPosition.y < 0 || localPosition.y > chunkForHit.chunkData.chunkHeight)
+                Vector3Int localPosition = targetPosition - chunkForHit.chunk.chunkData.positionForWorld;
+                if (localPosition.x < 0 || localPosition.x > chunkForHit.chunk.chunkData.chunkWidth
+                    || localPosition.z < 0 || localPosition.z > chunkForHit.chunk.chunkData.chunkWidth
+                    || localPosition.y < 0 || localPosition.y > chunkForHit.chunk.chunkData.chunkHeight)
                     return;
                 //获取原位置方块
-                Block tagetBlock = chunkForHit.chunkData.GetBlockForLocal(localPosition);
+                Block tagetBlock = chunkForHit.chunk.chunkData.GetBlockForLocal(localPosition);
                 if (tagetBlock == null)
                     return;
                 //展示目标位置

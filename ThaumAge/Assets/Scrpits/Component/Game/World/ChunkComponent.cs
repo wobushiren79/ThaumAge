@@ -17,7 +17,7 @@ public class ChunkComponent : BaseMonoBehaviour
     public Mesh chunkMeshCollider;
     public Mesh chunkMeshTrigger;
 
-    protected Chunk chunk;
+    public Chunk chunk;
 
     public void Awake()
     {

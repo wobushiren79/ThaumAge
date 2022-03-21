@@ -53,26 +53,21 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
     /// <param name="callBackForCreateData"></param>
     /// <param name="isCreateChunkComponent">是否创建区块组件</param>
     /// <param name="isCreateBlockData">是否创建方块数据</param>
-    public void CreateChunk(Vector3Int position, Action<Chunk> callBackForCreateData,
+    public Chunk CreateChunk(Vector3Int position, Action<Chunk> callBackForCreateData,
          bool isCreateChunkComponent = true , bool isCreateBlockData = true)
     {
-        Chunk chunk = null;
-        lock (lockWorldCreate)
+        //检测当前位置是否有区块
+        Chunk chunk = manager.GetChunk(position);
+        //创建区块
+        if (chunk == null)
         {
-            //检测当前位置是否有区块
-            chunk = manager.GetChunk(position);
-            //创建区块
-            if (chunk == null)
-            {
-                //生成区块
-                chunk = new Chunk();
-                //设置数据
-                chunk.SetData(position, manager.widthChunk, manager.heightChunk);
-                //添加区块
-                manager.AddChunk(position, chunk);
-            }
+            //生成区块
+            chunk = new Chunk();
+            //设置数据
+            chunk.SetData(position, manager.widthChunk, manager.heightChunk);
+            //添加区块
+            manager.AddChunk(position, chunk);
         }
-
         //创建区块组件
         if (isCreateChunkComponent)
         {
@@ -96,6 +91,7 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
         {
             callBackForCreateData?.Invoke(chunk);
         }
+        return chunk;
     }
 
     /// <summary>
@@ -181,7 +177,7 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
         for (int i = 0; i < listRemoveChunk.Count; i++)
         {
             Chunk chunk = listRemoveChunk[i];
-            manager.RemoveChunk(chunk.chunkData.positionForWorld, chunk);
+            manager.RemoveChunk(chunk);
         }
         callBackForComplete?.Invoke();
     }
@@ -195,7 +191,7 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
 
     public void CreateChunkRangeForWorldPostion(Vector3 position, int range, Action<Chunk> callBackForComplete)
     {
-        Vector3Int centerPosition = GetChunkPositionByWorldPosition(position);
+        Vector3Int centerPosition = GetChunkCenterPositionByWorldPosition(position);
         CreateChunkRangeForCenterPosition(centerPosition, range, false, callBackForComplete);
     }
 
@@ -207,7 +203,7 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
     /// <param name="callBackForComplete"></param>
     public void DestroyChunkRangeForWorldPosition(Vector3 position, int range, Action callBackForComplete)
     {
-        Vector3Int centerPosition = GetChunkPositionByWorldPosition(position);
+        Vector3Int centerPosition = GetChunkCenterPositionByWorldPosition(position);
         DestroyChunkRangeForCenterPosition(centerPosition, range, callBackForComplete);
     }
 
@@ -216,7 +212,7 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
     /// </summary>
     /// <param name="position"></param>
     /// <returns></returns>
-    public Vector3Int GetChunkPositionByWorldPosition(Vector3 position)
+    public Vector3Int GetChunkCenterPositionByWorldPosition(Vector3 position)
     {
         int positionX = (int)(position.x / manager.widthChunk) * manager.widthChunk;
         int positionZ = (int)(position.z / manager.widthChunk) * manager.widthChunk;
@@ -234,7 +230,7 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
             Chunk updateDrawChunk = manager.listUpdateDrawChunkInit.Dequeue();
             if (updateDrawChunk != null && updateDrawChunk.isInit)
             {
-                if (!updateDrawChunk.isBuildChunk && updateDrawChunk.chunkComponent != null)
+                if (!updateDrawChunk.isBuildChunk)
                 {
                     updateDrawChunk.chunkComponent.DrawMesh();
                 }
@@ -246,7 +242,7 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
             Chunk updateDrawChunk = manager.listUpdateDrawChunkEditor.Dequeue();
             if (updateDrawChunk != null && updateDrawChunk.isInit)
             {
-                if (!updateDrawChunk.isBuildChunk && updateDrawChunk.chunkComponent != null)
+                if (!updateDrawChunk.isBuildChunk)
                 {
                     //构建修改过的区块
                     updateDrawChunk.chunkComponent.DrawMesh();
@@ -386,65 +382,5 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
                 DestroyChunkRangeForWorldPosition(playPosition, gameConfig.worldRefreshRange + gameConfig.worldDestoryRange, null);
             }
         }
-    }
-
-    /// <summary>
-    /// 处理 更新方块
-    /// </summary>
-    public async void HandleForUpdateBlock(Action callBackForComplete)
-    {
-        if (manager.listUpdateBlock.Count <= 0)
-        {
-            callBackForComplete?.Invoke();
-            return;
-        }
-        await Task.Run(() =>
-        {
-            lock (lockWorldCreate)
-            {
-#if UNITY_EDITOR
-                Stopwatch stopwatch = TimeUtil.GetMethodTimeStart();
-#endif
-                List<BlockTempBean> listNoChunkBlock = new List<BlockTempBean>();
-                //添加修改的方块信息，用于树木或建筑群等用于多个区块的数据     
-                while (manager.listUpdateBlock.TryDequeue(out BlockTempBean itemBlock))
-                {
-                    Chunk chunk = manager.GetChunkForWorldPosition(itemBlock.worldX, itemBlock.worldZ);
-                    if (chunk != null && chunk.isInit)
-                    {
-                        //获取保存的数据
-                        ChunkSaveBean chunkSaveData = chunk.GetChunkSaveData();
-                        int localX = itemBlock.worldX - chunk.chunkData.positionForWorld.x;
-                        int localY = itemBlock.worldY;
-                        int localZ = itemBlock.worldZ - chunk.chunkData.positionForWorld.z;
-                        BlockBean blockData = chunk.GetBlockData(localX, localY, localZ);
-                        if (blockData != null)
-                        {
-                            //如果有存档方块 则不替换
-                        }
-                        else
-                        {
-                            //设置方块
-                            chunk.SetBlockForLocal(new Vector3Int(localX, localY, localZ), itemBlock.GetBlockType(), itemBlock.GetDirection(), null, false, false, false);
-                            //添加需要更新的chunk
-                            manager.AddUpdateChunk(chunk);
-                        }
-                    }
-                    else
-                    {
-                        listNoChunkBlock.Add(itemBlock);
-                    }
-                }
-                for (int i = 0; i < listNoChunkBlock.Count; i++)
-                {
-                    manager.AddUpdateBlock(listNoChunkBlock[i]);
-                }
-#if UNITY_EDITOR
-                TimeUtil.GetMethodTimeEnd("Time_HandleForUpdateBlock:", stopwatch);
-#endif
-            }
-
-        });
-        callBackForComplete?.Invoke();
     }
 }

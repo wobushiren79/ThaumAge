@@ -12,9 +12,6 @@ public class WorldCreateManager : BaseManager
     //存储着世界中所有的Chunk
     public Dictionary<long, Chunk> dicChunk = new Dictionary<long, Chunk>();
 
-    //所有待修改的方块
-    public ConcurrentQueue<BlockTempBean> listUpdateBlock = new ConcurrentQueue<BlockTempBean>();
-
     //所有待修改的区块
     public ConcurrentQueue<Chunk> listUpdateChunk = new ConcurrentQueue<Chunk>();
 
@@ -85,14 +82,11 @@ public class WorldCreateManager : BaseManager
     /// </summary>
     /// <param name="position"></param>
     /// <param name="chunk"></param>
-    public void RemoveChunk(Vector3Int position, Chunk chunk)
+    public void RemoveChunk(Chunk chunk)
     {
-        if (chunk.isInit)
-        {
-            int index = MathUtil.GetSingleIndexForTwo(position.x / widthChunk, position.z / widthChunk, worldSize);
-            dicChunk.Remove(index);
-            Destroy(chunk.chunkComponent.gameObject);
-        }
+        int index = MathUtil.GetSingleIndexForTwo(chunk.chunkData.positionForWorld.x / widthChunk, chunk.chunkData.positionForWorld.z / widthChunk, worldSize);
+        Destroy(chunk.chunkComponent.gameObject);
+        dicChunk.Remove(index);
     }
 
     /// <summary>
@@ -148,13 +142,12 @@ public class WorldCreateManager : BaseManager
     /// <param name="blockData"></param>
     public void AddUpdateBlock(BlockTempBean itemBlock)
     {
-        //listUpdateBlock.Enqueue(blockData);
         Chunk chunk = GetChunkForWorldPosition(itemBlock.worldX, itemBlock.worldZ);
         if (chunk == null)
         {
-            Vector3Int chunkPosition = WorldCreateHandler.Instance.GetChunkPositionByWorldPosition(new Vector3(itemBlock.worldX, itemBlock.worldY, itemBlock.worldZ));
+            GetChunkPositionForWorldPosition(itemBlock.worldX, itemBlock.worldZ,out int chunkX,out int chunkZ);
             //如果没有区块 先创建一个
-            WorldCreateHandler.Instance.CreateChunk(chunkPosition, null, false, false);
+            chunk = WorldCreateHandler.Instance.CreateChunk(new Vector3Int(chunkX,0, chunkZ), null, false, false);
         }
         int localX = itemBlock.worldX - chunk.chunkData.positionForWorld.x;
         int localY = itemBlock.worldY;
@@ -164,7 +157,7 @@ public class WorldCreateManager : BaseManager
         chunk.chunkData.SetBlockForLocal(localX, localY, localZ, blockUpdate, itemBlock.direction);
         //chunk.SetBlockForLocal(new Vector3Int(localX, localY, localZ), itemBlock.GetBlockType(), itemBlock.GetDirection(), null, false, false, false);
         //添加需要更新的chunk
-        AddUpdateChunk(chunk);
+        //AddUpdateChunk(chunk);
     }
 
 
