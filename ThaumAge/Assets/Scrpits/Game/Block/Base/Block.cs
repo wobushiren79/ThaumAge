@@ -463,7 +463,7 @@ public class Block
         //获取数据
         BlockBean blockData = chunk.GetBlockData(localPosition);
         //延迟一帧执行 等当前方块已经删除了
-        chunk.WaitExecuteEndOfFrame(1, () =>
+        chunk.chunkComponent.WaitExecuteEndOfFrame(1, () =>
         {
             if (blockData != null)
             {

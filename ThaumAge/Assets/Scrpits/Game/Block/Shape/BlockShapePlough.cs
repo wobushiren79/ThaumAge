@@ -49,7 +49,7 @@ public class BlockShapePlough : BlockShapeCubeCuboid
         GetCloseRotateBlockByDirection(chunk, localPosition, direction, closeDirection, out Block closeBlock, out Chunk closeBlockChunk);
         if (closeBlock == null || closeBlock.blockType == BlockTypeEnum.None)
         {
-            if (closeBlockChunk)
+            if (closeBlockChunk != null)
             {
                 //只是空气方块
                 return true;

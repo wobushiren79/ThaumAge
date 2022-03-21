@@ -16,7 +16,7 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
 {
     protected Vector3 positionForWorldUpdate = Vector3.zero;
 
-    protected static object lockForUpdateBlock = new object();
+    protected static object lockWorldCreate = new object();
 
     protected void Update()
     {
@@ -45,46 +45,57 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
         PathFindingHandler.Instance.manager.InitPathFinding();
     }
 
+
     /// <summary>
     /// 建造区块
     /// </summary>
     /// <param name="position"></param>
-    /// <param name="isInit"></param>
-    /// <param name="callBackForCreate"></param>
-    public void CreateChunkData(Vector3Int position, Action<Chunk> callBackForCreateData)
+    /// <param name="callBackForCreateData"></param>
+    /// <param name="isCreateChunkComponent">是否创建区块组件</param>
+    /// <param name="isCreateBlockData">是否创建方块数据</param>
+    public void CreateChunk(Vector3Int position, Action<Chunk> callBackForCreateData,
+         bool isCreateChunkComponent = true , bool isCreateBlockData = true)
     {
-        //检测当前位置是否有区块
-        Chunk chunk = manager.GetChunk(position);
-        if (chunk != null)
+        Chunk chunk = null;
+        lock (lockWorldCreate)
         {
-            callBackForCreateData?.Invoke(chunk);
-            return;
+            //检测当前位置是否有区块
+            chunk = manager.GetChunk(position);
+            //创建区块
+            if (chunk == null)
+            {
+                //生成区块
+                chunk = new Chunk();
+                //设置数据
+                chunk.SetData(position, manager.widthChunk, manager.heightChunk);
+                //添加区块
+                manager.AddChunk(position, chunk);
+            }
         }
-        //生成区块
-        GameObject objModel = manager.GetChunkModel();
-        GameObject objChunk = Instantiate(gameObject, objModel);
-        objChunk.transform.position = position;
-        chunk = objChunk.GetComponent<Chunk>();
-        chunk.name = $"Chunk_X:{position.x}_Y:{ position.y}_Z:{position.z}";
-        //设置数据
-        chunk.SetData(position, manager.widthChunk, manager.heightChunk);
-        //添加区块
-        manager.AddChunk(position, chunk);
 
-        //成功更新方块后得回调
-        Action callBackForUpdateChunk = () =>
+        //创建区块组件
+        if (isCreateChunkComponent)
+        {
+            //生成区块组件
+            GameObject objModel = manager.GetChunkModel();
+            GameObject objChunk = Instantiate(gameObject, objModel);
+            objChunk.transform.position = position;
+
+            ChunkComponent chunkComponent = objChunk.GetComponent<ChunkComponent>();
+            chunkComponent.name = $"Chunk_X:{position.x}_Y:{ position.y}_Z:{position.z}";
+            chunkComponent.SetData(chunk);
+            chunk.chunkComponent = chunkComponent;
+        }
+        //创建基础方块数据
+        if (isCreateBlockData)
+        {        
+            //开始异步创建方块数据
+            chunk.BuildChunkBlockDataForAsync(callBackForCreateData);
+        }
+        else
         {
             callBackForCreateData?.Invoke(chunk);
-        };
-
-        //成功初始化回调
-        Action callBackForComplete = () =>
-        {
-            //更新待更新方块
-            HandleForUpdateBlock(callBackForUpdateChunk);
-        };
-
-        chunk.BuildChunkBlockDataForAsync(callBackForComplete);
+        }
     }
 
     /// <summary>
@@ -126,7 +137,7 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
                             HandleForUpdateChunk(false, callBackForUpdateChunk);
                         }
                     };
-                    CreateChunkData(currentPosition, callBackForCreateData);
+                    CreateChunk(currentPosition, callBackForCreateData);
 
                 }
                 //如果不是初始化创建
@@ -136,7 +147,7 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
                     {
                         HandleForUpdateChunk(false, callBackForComplete);
                     };
-                    CreateChunkData(currentPosition, callBackForCreateData);
+                    CreateChunk(currentPosition, callBackForCreateData);
                 }
                 currentPosition += new Vector3Int(0, 0, manager.widthChunk);
             }
@@ -205,7 +216,7 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
     /// </summary>
     /// <param name="position"></param>
     /// <returns></returns>
-    private Vector3Int GetChunkPositionByWorldPosition(Vector3 position)
+    public Vector3Int GetChunkPositionByWorldPosition(Vector3 position)
     {
         int positionX = (int)(position.x / manager.widthChunk) * manager.widthChunk;
         int positionZ = (int)(position.z / manager.widthChunk) * manager.widthChunk;
@@ -223,9 +234,9 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
             Chunk updateDrawChunk = manager.listUpdateDrawChunkInit.Dequeue();
             if (updateDrawChunk != null && updateDrawChunk.isInit)
             {
-                if (!updateDrawChunk.isBuildChunk)
+                if (!updateDrawChunk.isBuildChunk && updateDrawChunk.chunkComponent != null)
                 {
-                    updateDrawChunk.DrawMesh();
+                    updateDrawChunk.chunkComponent.DrawMesh();
                 }
             }
         }
@@ -235,10 +246,10 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
             Chunk updateDrawChunk = manager.listUpdateDrawChunkEditor.Dequeue();
             if (updateDrawChunk != null && updateDrawChunk.isInit)
             {
-                if (!updateDrawChunk.isBuildChunk)
+                if (!updateDrawChunk.isBuildChunk && updateDrawChunk.chunkComponent != null)
                 {
                     //构建修改过的区块
-                    updateDrawChunk.DrawMesh();
+                    updateDrawChunk.chunkComponent.DrawMesh();
                 }
             }
         }
@@ -389,7 +400,7 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
         }
         await Task.Run(() =>
         {
-            lock (lockForUpdateBlock)
+            lock (lockWorldCreate)
             {
 #if UNITY_EDITOR
                 Stopwatch stopwatch = TimeUtil.GetMethodTimeStart();

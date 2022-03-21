@@ -8,14 +8,9 @@ public class GameLauncher : BaseLauncher
 {
     public WorldTypeEnum testWorldType = WorldTypeEnum.Test;
 
-    protected Stopwatch timeInit;
-
     public override void Launch()
     {
         base.Launch();
-
-        timeInit = new Stopwatch();
-        timeInit.Start();
 
         //打开主UI
         UIHandler.Instance.OpenUIAndCloseOther<UILoading>(UIEnum.Loading);
@@ -65,9 +60,6 @@ public class GameLauncher : BaseLauncher
         UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();
         userData.userPosition.GetWorldPosition(out WorldTypeEnum worldType, out Vector3 worldPosition);
         GameHandler.Instance.InitCharacter(worldPosition);
-
-        timeInit.Stop();
-        LogUtil.Log("完成时间：" + timeInit.ElapsedTicks);
     }
 
 }

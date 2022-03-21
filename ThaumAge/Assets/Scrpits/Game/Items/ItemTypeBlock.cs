@@ -9,7 +9,7 @@ public class ItemTypeBlock : Item
         if (player.playerRay.RayToChunkBlock(out RaycastHit hit, out Vector3Int targetBlockPosition))
         {
             Chunk chunkForHit = hit.collider.GetComponentInParent<Chunk>();
-            if (chunkForHit)
+            if (chunkForHit != null)
             {
                 //获取位置和方向
                 player.playerRay.GetHitPositionAndDirection(hit, out Vector3Int targetPosition, out Vector3Int closePosition, out BlockDirectionEnum direction);
@@ -26,7 +26,7 @@ public class ItemTypeBlock : Item
                     //首先获取靠近方块
                     WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(closePosition, out Block closeBlock, out BlockDirectionEnum closeBlockDirection, out Chunk closeChunk);
                     //如果靠近得方块有区块
-                    if (closeChunk)
+                    if (closeChunk != null)
                     {
                         //如果不是空方块 则不放置(液体则覆盖放置)
                         if (closeBlock != null && closeBlock.blockType != BlockTypeEnum.None && closeBlock.blockInfo.GetBlockShape() != BlockShapeEnum.Liquid)

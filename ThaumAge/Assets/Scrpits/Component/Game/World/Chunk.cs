@@ -9,8 +9,11 @@ using UnityEngine;
 using DG.Tweening;
 using System.Collections.Concurrent;
 
-public class Chunk : BaseMonoBehaviour
+public class Chunk
 {
+    //区块组件
+    public ChunkComponent chunkComponent;
+
     //需要更新事件的方块（频率每秒一次）
     public List<Vector3Int> listEventUpdateForSec = new List<Vector3Int>();
     //需要更新事件的方块（频率每秒一次）
@@ -22,12 +25,6 @@ public class Chunk : BaseMonoBehaviour
     public ConcurrentQueue<Vector3Int> listBlockModelDestroy = new ConcurrentQueue<Vector3Int>();
     //方块模型
     public Dictionary<int, GameObject> dicBlockModel = new Dictionary<int, GameObject>();
-
-    public MeshCollider meshCollider;
-    public MeshCollider meshTrigger;
-
-    public MeshRenderer meshRenderer;
-    public MeshFilter meshFilter;
 
     //是否初始化
     public bool isInit = false;
@@ -42,44 +39,11 @@ public class Chunk : BaseMonoBehaviour
     //存储数据
     protected ChunkSaveBean chunkSaveData;
 
-    public Mesh chunkMesh;
-    public Mesh chunkMeshCollider;
-    public Mesh chunkMeshTrigger;
-
     public GameObject objBlockContainer;
 
     protected static object lockForUpdateBlcok = new object();
 
-    public void Awake()
-    {
-        //获取自身相关组件引用
-        meshRenderer = GetComponent<MeshRenderer>();
-        meshFilter = GetComponent<MeshFilter>();
-
-        chunkMesh = new Mesh();
-        chunkMeshCollider = new Mesh();
-        chunkMeshTrigger = new Mesh();
-
-        //设置mesh的三角形上限
-        chunkMesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
-        chunkMeshCollider.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
-        chunkMeshTrigger.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
-
-        meshFilter.sharedMesh = chunkMesh;
-        meshCollider.sharedMesh = chunkMeshCollider;
-        meshTrigger.sharedMesh = chunkMeshTrigger;
-
-        //设置mesh的三角形上限
-        meshFilter.mesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
-        meshCollider.sharedMesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
-        meshTrigger.sharedMesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
-
-        //设置为动态变更，理论上可以提高效率
-        chunkMesh.MarkDynamic();
-        chunkMeshCollider.MarkDynamic();
-        chunkMeshTrigger.MarkDynamic();
-    }
-
+    //事件更新事件
     protected float eventUpdateTimeForSec = 0;
     protected float eventUpdateTimeForMin = 0;
 
@@ -248,7 +212,7 @@ public class Chunk : BaseMonoBehaviour
     /// </summary>
     /// <param name="chunk"></param>
     /// <param name="callBack"></param>
-    public async void BuildChunkBlockDataForAsync(Action callBackForComplete)
+    public async void BuildChunkBlockDataForAsync(Action<Chunk> callBackForComplete)
     {
         //初始化Map
         BiomeManager biomeManager = BiomeHandler.Instance.manager;
@@ -282,7 +246,7 @@ public class Chunk : BaseMonoBehaviour
                 LogUtil.Log("CreateChunkBlockDataForAsync:" + e.ToString());
             }
         });
-        callBackForComplete?.Invoke();
+        callBackForComplete?.Invoke(this);
     }
 
     /// <summary>
@@ -354,116 +318,6 @@ public class Chunk : BaseMonoBehaviour
         });
         isBuildChunk = false;
         callBackForComplete?.Invoke();
-    }
-
-    /// <summary>
-    /// 初始化mats
-    /// </summary>
-    protected void InitBlockMats()
-    {
-        Material[] allBlockMats = BlockHandler.Instance.manager.GetAllBlockMaterial();
-        List<Material> newBlockMtas = new List<Material>();
-        for (int i = 0; i < allBlockMats.Length; i++)
-        {
-            List<int> listTrisMat = chunkMeshData.dicTris[i];
-            if (!listTrisMat.IsNull())
-            {
-                newBlockMtas.Add(allBlockMats[i]);
-            }
-        }
-        meshRenderer.materials = newBlockMtas.ToArray();
-    }
-
-    /// <summary>
-    /// 刷新网格
-    /// </summary>
-    public void DrawMesh()
-    {
-        if (isBuildChunk)
-            return;
-        try
-        {
-            InitBlockMats();
-            isDrawMesh = true;
-
-            chunkMesh.subMeshCount = meshRenderer.materials.Length;
-            //定点数判断
-            if (chunkMeshData == null && chunkMeshData.verts.Count < 3)
-            {
-                isDrawMesh = false;
-                return;
-            }
-            chunkMesh.Clear();
-            chunkMesh.subMeshCount = meshRenderer.materials.Length;
-            //设置顶点
-            chunkMesh.SetVertices(chunkMeshData.verts);
-            //设置UV
-            chunkMesh.SetUVs(0, chunkMeshData.uvs);
-
-            //设置三角（单面渲染，双面渲染,液体）
-            int indexMat = 0;
-            for (int i = 0; i < chunkMeshData.dicTris.Length; i++)
-            {
-                List<int> trisData = chunkMeshData.dicTris[i];
-                if (trisData.IsNull())
-                    continue;
-                chunkMesh.SetTriangles(trisData, indexMat);
-                indexMat++;
-            }
-
-            //碰撞数据设置
-            if (chunkMeshData.vertsCollider.Count >= 3)
-            {
-                chunkMeshCollider.Clear();
-                chunkMeshCollider.SetVertices(chunkMeshData.vertsCollider);
-                chunkMeshCollider.SetTriangles(chunkMeshData.trisCollider, 0);
-            }
-            //触发数据设置
-            if (chunkMeshData.vertsTrigger.Count >= 3)
-            {
-                chunkMeshTrigger.Clear();
-                chunkMeshTrigger.SetVertices(chunkMeshData.vertsTrigger);
-                chunkMeshTrigger.SetTriangles(chunkMeshData.trisTrigger, 0);
-            }
-
-
-            //刷新
-            chunkMesh.RecalculateBounds();
-            chunkMesh.RecalculateNormals();
-            //刷新
-            //chunkMeshCollider.RecalculateBounds();
-            //chunkMeshCollider.RecalculateNormals();
-            //刷新
-            //chunkMeshTrigger.RecalculateBounds();
-            //chunkMeshTrigger.RecalculateNormals();
-
-            //meshFilter.mesh.Optimize();
-
-            if (chunkMesh.vertexCount >= 3) meshFilter.sharedMesh = chunkMesh;
-            meshCollider.sharedMesh = chunkMeshCollider;
-            meshTrigger.sharedMesh = chunkMeshTrigger;
-
-            //Physics.BakeMesh(chunkMeshCollider.GetInstanceID(), false);
-            //Physics.BakeMesh(chunkMeshTrigger.GetInstanceID(), false);
-
-            //初始化动画
-            //AnimForInit(() =>
-            //{
-
-            //});
-            //刷新寻路
-            PathFindingHandler.Instance.manager.RefreshPathFinding(this);
-        }
-        catch (Exception e)
-        {
-            LogUtil.Log("绘制出错_" + e.ToString());
-            isDrawMesh = false;
-        }
-        finally
-        {
-            isDrawMesh = false;
-        }
-
     }
 
     public void GetBlockForWorld(Vector3Int blockWorldPosition, out Block block, out BlockDirectionEnum direction, out Chunk chunk)
@@ -707,7 +561,7 @@ public class Chunk : BaseMonoBehaviour
             if (dicBlockModel.TryGetValue(blockIndex, out GameObject objBlockModel))
             {
                 dicBlockModel.Remove(blockIndex);
-                Destroy(objBlockModel);
+                GameObject.Destroy(objBlockModel);
             }
         }
     }

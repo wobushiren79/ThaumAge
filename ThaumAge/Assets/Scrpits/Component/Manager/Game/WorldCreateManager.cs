@@ -58,7 +58,7 @@ public class WorldCreateManager : BaseManager
     /// <returns></returns>
     public GameObject GetChunkModel()
     {
-        if (dicModel.TryGetValue(pathForChunk, out GameObject objChunkModel)) 
+        if (dicModel.TryGetValue(pathForChunk, out GameObject objChunkModel))
         {
             return objChunkModel;
         }
@@ -75,7 +75,7 @@ public class WorldCreateManager : BaseManager
     {
         foreach (var itemChunk in dicChunk)
         {
-            Destroy(itemChunk.Value.gameObject);
+            Destroy(itemChunk.Value.chunkComponent.gameObject);
         }
         dicChunk.Clear();
     }
@@ -91,7 +91,7 @@ public class WorldCreateManager : BaseManager
         {
             int index = MathUtil.GetSingleIndexForTwo(position.x / widthChunk, position.z / widthChunk, worldSize);
             dicChunk.Remove(index);
-            Destroy(chunk.gameObject);
+            Destroy(chunk.chunkComponent.gameObject);
         }
     }
 
@@ -143,12 +143,28 @@ public class WorldCreateManager : BaseManager
     }
 
     /// <summary>
-    /// 增加需要更新的方块
+    /// 增加需要更新的方块(暂时只能用于初始化的时候增加额外的方块，因为SetBlockForLocal 是直接设置的原数据)
     /// </summary>
     /// <param name="blockData"></param>
-    public void AddUpdateBlock(BlockTempBean blockData)
+    public void AddUpdateBlock(BlockTempBean itemBlock)
     {
-        listUpdateBlock.Enqueue(blockData);
+        //listUpdateBlock.Enqueue(blockData);
+        Chunk chunk = GetChunkForWorldPosition(itemBlock.worldX, itemBlock.worldZ);
+        if (chunk == null)
+        {
+            Vector3Int chunkPosition = WorldCreateHandler.Instance.GetChunkPositionByWorldPosition(new Vector3(itemBlock.worldX, itemBlock.worldY, itemBlock.worldZ));
+            //如果没有区块 先创建一个
+            WorldCreateHandler.Instance.CreateChunk(chunkPosition, null, false, false);
+        }
+        int localX = itemBlock.worldX - chunk.chunkData.positionForWorld.x;
+        int localY = itemBlock.worldY;
+        int localZ = itemBlock.worldZ - chunk.chunkData.positionForWorld.z;
+        //设置方块
+        Block blockUpdate = BlockHandler.Instance.manager.GetRegisterBlock(itemBlock.blockId);
+        chunk.chunkData.SetBlockForLocal(localX, localY, localZ, blockUpdate, itemBlock.direction);
+        //chunk.SetBlockForLocal(new Vector3Int(localX, localY, localZ), itemBlock.GetBlockType(), itemBlock.GetDirection(), null, false, false, false);
+        //添加需要更新的chunk
+        AddUpdateChunk(chunk);
     }
 
 

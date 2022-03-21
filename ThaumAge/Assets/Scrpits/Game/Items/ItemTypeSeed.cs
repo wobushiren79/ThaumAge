@@ -10,7 +10,7 @@ public class ItemTypeSeed : Item
         if (player.playerRay.RayToChunkBlock(out RaycastHit hit, out Vector3Int targetBlockPosition))
         {
             Chunk chunkForHit = hit.collider.GetComponentInParent<Chunk>();
-            if (chunkForHit)
+            if (chunkForHit != null)
             {
                 //获取位置和方向
                 player.playerRay.GetHitPositionAndDirection(hit, out Vector3Int targetPosition, out Vector3Int closePosition, out BlockDirectionEnum direction);

@@ -64,20 +64,20 @@ public class NavigationPathFinding : BaseMonoBehaviour
         if (navMeshSources.TryGetValue(chunk.chunkData.positionForWorld,out NavMeshBuildSource source))
         {
             source.size = new Vector3(chunk.chunkData.chunkWidth, chunk.chunkData.chunkHeight + 1, chunk.chunkData.chunkWidth);
-            source.sourceObject = chunk.chunkMeshCollider;
-            source.transform = chunk.transform.localToWorldMatrix;
+            source.sourceObject = chunk.chunkComponent.chunkMeshCollider;
+            source.transform = chunk.chunkComponent.transform.localToWorldMatrix;
         }
         else
         {
             NavMeshBuildSource sourceNew = new NavMeshBuildSource();
             sourceNew.shape = NavMeshBuildSourceShape.Mesh;
             sourceNew.size = new Vector3(chunk.chunkData.chunkWidth, chunk.chunkData.chunkHeight + 1, chunk.chunkData.chunkWidth);
-            sourceNew.sourceObject = chunk.chunkMeshCollider;
-            sourceNew.transform = chunk.transform.localToWorldMatrix;
+            sourceNew.sourceObject = chunk.chunkComponent.chunkMeshCollider;
+            sourceNew.transform = chunk.chunkComponent.transform.localToWorldMatrix;
             sourceNew.area = 0;
             navMeshSources.Add(chunk.chunkData.positionForWorld, sourceNew);
         }
-        worldBounds.Encapsulate(chunk.meshRenderer.bounds);
+        worldBounds.Encapsulate(chunk.chunkComponent.meshRenderer.bounds);
         worldBounds.Expand(0.1f);
         navMeshHasNewData = true;
     }

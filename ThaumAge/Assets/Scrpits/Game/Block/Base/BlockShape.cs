@@ -154,7 +154,7 @@ public class BlockShape
     {
         if (localPosition.y == 0) return false;
         GetCloseRotateBlockByDirection(chunk, localPosition, direction, closeDirection, out Block closeBlock, out Chunk closeBlockChunk);
-        if (closeBlockChunk)
+        if (closeBlockChunk != null)
         {
             if (closeBlock == null || closeBlock.blockType == BlockTypeEnum.None)
             {

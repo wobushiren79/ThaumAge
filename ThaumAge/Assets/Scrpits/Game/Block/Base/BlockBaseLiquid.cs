@@ -9,7 +9,7 @@ public class BlockBaseLiquid : Block
         if (state == 1)
         {
             //刷新的时候注册事件 
-            chunk.WaitExecuteEndOfFrame(1, () =>
+            chunk.chunkComponent.WaitExecuteEndOfFrame(1, () =>
             {
                 chunk.RegisterEventUpdate(localPosition, TimeUpdateEventTypeEnum.Sec);
             });

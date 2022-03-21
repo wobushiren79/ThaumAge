@@ -64,7 +64,7 @@ public class ChunkSectionData
             cubeBlockNumber--;
         }
 
-        arrayBlock[x << 8 | y << 4 | z] = (int)block.blockType;
+        arrayBlock[GetSectionIndex(x, y, z)] = (int)block.blockType;
         if (block == null || block.blockType == BlockTypeEnum.None)
         {
             airBlockNumber++;
@@ -75,14 +75,10 @@ public class ChunkSectionData
         }
     }
 
+
     /// <summary>
     /// 获取方块
     /// </summary>
-    /// <param name="x"></param>
-    /// <param name="y"></param>
-    /// <param name="z"></param>
-    /// <param name="block"></param>
-    /// <param name="direction"></param>
     public void GetBlock(int x, int y, int z, out int block, out byte direction)
     {
         int blockIndex = GetSectionIndex(x, y, z);
@@ -95,14 +91,7 @@ public class ChunkSectionData
     /// </summary>
     public int GetBlock(int x, int y, int z)
     {
-        try
-        {
-            return arrayBlock[GetSectionIndex(x, y, z)];
-        }
-        catch
-        {
-            return arrayBlock[1];
-        }
+        return arrayBlock[GetSectionIndex(x, y, z)];
     }
 
     /// <summary>
@@ -113,6 +102,10 @@ public class ChunkSectionData
         return arrayBlockDirection[GetSectionIndex( x,  y,  z)];
     }
 
+    /// <summary>
+    /// 获取下标
+    /// </summary>
+    /// <returns></returns>
     public int GetSectionIndex(int x, int y, int z)
     {
         return x * sectionSize * sectionSize + y * sectionSize + z;

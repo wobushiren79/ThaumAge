@@ -103,7 +103,7 @@ GameObject:
   - component: {fileID: 7675334834579374579}
   - component: {fileID: 7675334834579374576}
   - component: {fileID: 7675334834579374577}
-  - component: {fileID: 7675334834579374583}
+  - component: {fileID: 8437795067118843995}
   m_Layer: 6
   m_Name: Chunk
   m_TagString: Untagged
@@ -179,7 +179,7 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &7675334834579374583
+--- !u!114 &8437795067118843995
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -188,24 +188,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 7675334834579374580}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 69b06d9efcc6cf44d8c498189f2539c3, type: 3}
+  m_Script: {fileID: 11500000, guid: 968e318221430c84d9413f48d3d259f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  listEventUpdateForSec: []
-  listEventUpdateForMin: []
   meshCollider: {fileID: 594269507512757033}
   meshTrigger: {fileID: 5609496997631579717}
-  meshRenderer: {fileID: 0}
-  meshFilter: {fileID: 0}
-  isInit: 0
-  isBuildChunk: 0
-  isDrawMesh: 0
-  isFirstDraw: 1
+  meshRenderer: {fileID: 7675334834579374577}
+  meshFilter: {fileID: 7675334834579374576}
   chunkMesh: {fileID: 0}
   chunkMeshCollider: {fileID: 0}
   chunkMeshTrigger: {fileID: 0}
-  objBlockContainer: {fileID: 9127013678360213321}
-  isSaveData: 0
 --- !u!1 &9127013678360213321
 GameObject:
   m_ObjectHideFlags: 0
