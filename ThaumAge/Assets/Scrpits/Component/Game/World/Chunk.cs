@@ -41,13 +41,14 @@ public class Chunk
 
     public GameObject objBlockContainer;
 
-    protected static object lockForUpdateBlcok = new object();
+    protected object lockForUpdateBlcok = new object();
 
     //事件更新事件
     protected float eventUpdateTimeForSec = 0;
     protected float eventUpdateTimeForMin = 0;
 
     public bool isSaveData = false;
+
     public void Update()
     {
         if (!isInit)

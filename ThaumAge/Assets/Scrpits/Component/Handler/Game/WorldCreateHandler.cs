@@ -56,27 +56,40 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
     public Chunk CreateChunk(Vector3Int position, Action<Chunk> callBackForCreateData,
          bool isCreateChunkComponent = true , bool isCreateBlockData = true)
     {
-        //检测当前位置是否有区块
-        Chunk chunk = manager.GetChunk(position);
-        //创建区块
-        if (chunk == null)
-        {
-            //生成区块
-            chunk = new Chunk();
-            //设置数据
-            chunk.SetData(position, manager.widthChunk, manager.heightChunk);
-            //添加区块
-            manager.AddChunk(position, chunk);
+        Chunk chunk;
+
+        lock (lockWorldCreate)
+        {       
+            //检测当前位置是否有区块
+            chunk = manager.GetChunk(position);
+            //创建区块
+            if (chunk == null)
+            {   //生成区块
+                chunk = new Chunk();
+                //设置数据
+                chunk.SetData(position, manager.widthChunk, manager.heightChunk);
+                //添加区块
+                manager.AddChunk(position, chunk);
+
+            }
         }
         //创建区块组件
         if (isCreateChunkComponent)
         {
-            //生成区块组件
-            GameObject objModel = manager.GetChunkModel();
-            GameObject objChunk = Instantiate(gameObject, objModel);
-            objChunk.transform.position = position;
+            ChunkComponent chunkComponent;
+            if (manager.listChunkComponentPool.TryDequeue(out chunkComponent))
+            {
 
-            ChunkComponent chunkComponent = objChunk.GetComponent<ChunkComponent>();
+            }
+            else
+            {
+                //生成区块组件
+                GameObject objModel = manager.GetChunkModel();
+                GameObject objChunk = Instantiate(gameObject, objModel);
+                chunkComponent = objChunk.GetComponent<ChunkComponent>();
+            }
+            chunkComponent.transform.position = position;
+            chunkComponent.gameObject.SetActive(true);
             chunkComponent.name = $"Chunk_X:{position.x}_Y:{ position.y}_Z:{position.z}";
             chunkComponent.SetData(chunk);
             chunk.chunkComponent = chunkComponent;

@@ -36,6 +36,8 @@ public class WorldCreateManager : BaseManager
 
     public static string pathForChunk = "Assets/Prefabs/Game/Chunk.prefab";
 
+    //闲置的chunkComponent池
+    public ConcurrentQueue<ChunkComponent> listChunkComponentPool = new ConcurrentQueue<ChunkComponent>();
 
     /// <summary>
     /// 加载资源
@@ -85,8 +87,11 @@ public class WorldCreateManager : BaseManager
     public void RemoveChunk(Chunk chunk)
     {
         int index = MathUtil.GetSingleIndexForTwo(chunk.chunkData.positionForWorld.x / widthChunk, chunk.chunkData.positionForWorld.z / widthChunk, worldSize);
-        Destroy(chunk.chunkComponent.gameObject);
         dicChunk.Remove(index);
+
+        chunk.chunkComponent.ClearData();
+        chunk.chunkComponent.ShowObj(false);
+        listChunkComponentPool.Enqueue(chunk.chunkComponent);
     }
 
     /// <summary>

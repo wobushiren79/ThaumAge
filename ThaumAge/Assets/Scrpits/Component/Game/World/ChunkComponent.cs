@@ -166,4 +166,12 @@ public class ChunkComponent : BaseMonoBehaviour
             chunk.isDrawMesh = false;
         }
     }
+
+    /// <summary>
+    /// 清理数据
+    /// </summary>
+    public void ClearData()
+    {
+        transform.DestroyAllChild();
+    }
 }
