@@ -28,7 +28,7 @@ public class BlockHandler : BaseHandler<BlockHandler, BlockManager>
         GameObject objModel = manager.GetBlockModel(blockId, modelName);
         if (objModel == null)
             return null;
-        GameObject objBlock = Instantiate(chunk.objBlockContainer, objModel);
+        GameObject objBlock = Instantiate(chunk.chunkComponent.objBlockContainer, objModel);
         return objBlock;
     }
 

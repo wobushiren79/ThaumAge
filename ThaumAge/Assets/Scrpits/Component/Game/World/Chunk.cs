@@ -39,8 +39,6 @@ public class Chunk
     //存储数据
     protected ChunkSaveBean chunkSaveData;
 
-    public GameObject objBlockContainer;
-
     protected object lockForUpdateBlcok = new object();
 
     //事件更新事件
@@ -444,12 +442,12 @@ public class Chunk
         }
 
         //生成洞穴 不放在每一个方块里去检测 提升效率
-        //BiomeCreateTool.BiomeForCaveData caveData = new BiomeCreateTool.BiomeForCaveData();
-        //caveData.minDepth = 100;
-        //caveData.maxDepth = 200;
-        //caveData.minSize = 3;
-        //caveData.maxSize = 5;
-        //BiomeCreateTool.AddCave(this, mapData, caveData);
+        BiomeCreateTool.BiomeForCaveData caveData = new BiomeCreateTool.BiomeForCaveData();
+        caveData.minDepth = 100;
+        caveData.maxDepth = 200;
+        caveData.minSize = 3;
+        caveData.maxSize = 5;
+        BiomeCreateTool.AddCave(this, mapData, caveData);
     }
 
     /// <summary>

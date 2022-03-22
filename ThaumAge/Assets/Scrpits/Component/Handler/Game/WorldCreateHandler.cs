@@ -45,7 +45,6 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
         PathFindingHandler.Instance.manager.InitPathFinding();
     }
 
-
     /// <summary>
     /// 建造区块
     /// </summary>
@@ -70,11 +69,10 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
                 chunk.SetData(position, manager.widthChunk, manager.heightChunk);
                 //添加区块
                 manager.AddChunk(position, chunk);
-
             }
         }
-        //创建区块组件
-        if (isCreateChunkComponent)
+        //创建区块组件(没有创建过组件)
+        if (isCreateChunkComponent && chunk.chunkComponent == null)
         {
             ChunkComponent chunkComponent;
             if (manager.listChunkComponentPool.TryDequeue(out chunkComponent))
@@ -94,8 +92,8 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
             chunkComponent.SetData(chunk);
             chunk.chunkComponent = chunkComponent;
         }
-        //创建基础方块数据
-        if (isCreateBlockData)
+        //创建基础方块数据（没有创建过基础数据）
+        if (isCreateBlockData && !chunk.isInit)
         {        
             //开始异步创建方块数据
             chunk.BuildChunkBlockDataForAsync(callBackForCreateData);
@@ -128,7 +126,7 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
                 //如果是初始化创建
                 if (isInit)
                 {
-                    Action<Chunk> callBackForCreateData = (successCreateChunkData) =>
+                    Action<Chunk> callBackForCreateChunk = (successCreateChunk) =>
                     {
                         //创建所有初始化区块数据完成之后 再一次性更新所有区块
                         totalNumber++;
@@ -146,17 +144,17 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
                             HandleForUpdateChunk(false, callBackForUpdateChunk);
                         }
                     };
-                    CreateChunk(currentPosition, callBackForCreateData);
+                    CreateChunk(currentPosition, callBackForCreateChunk);
 
                 }
                 //如果不是初始化创建
                 else
                 {
-                    Action<Chunk> callBackForCreateData = (successCreateChunkData) =>
+                    Action<Chunk> callBackForCreateChunk = (successCreateChunk) =>
                     {
                         HandleForUpdateChunk(false, callBackForComplete);
                     };
-                    CreateChunk(currentPosition, callBackForCreateData);
+                    CreateChunk(currentPosition, callBackForCreateChunk);
                 }
                 currentPosition += new Vector3Int(0, 0, manager.widthChunk);
             }

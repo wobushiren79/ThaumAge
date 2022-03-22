@@ -162,7 +162,7 @@ public class WorldCreateManager : BaseManager
         chunk.chunkData.SetBlockForLocal(localX, localY, localZ, blockUpdate, itemBlock.direction);
         //chunk.SetBlockForLocal(new Vector3Int(localX, localY, localZ), itemBlock.GetBlockType(), itemBlock.GetDirection(), null, false, false, false);
         //添加需要更新的chunk
-        //AddUpdateChunk(chunk);
+        AddUpdateChunk(chunk);
     }
 
 

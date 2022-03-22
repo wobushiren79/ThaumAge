@@ -9,6 +9,8 @@ public class ChunkComponent : BaseMonoBehaviour
     public MeshCollider meshCollider;
     [Header("触发-需要手动赋值")]
     public MeshCollider meshTrigger;
+    [Header("方块实体容器-需要手动赋值")]
+    public GameObject objBlockContainer;
 
     public MeshRenderer meshRenderer;
     public MeshFilter meshFilter;
@@ -18,6 +20,7 @@ public class ChunkComponent : BaseMonoBehaviour
     public Mesh chunkMeshTrigger;
 
     public Chunk chunk;
+
 
     public void Awake()
     {
@@ -172,6 +175,6 @@ public class ChunkComponent : BaseMonoBehaviour
     /// </summary>
     public void ClearData()
     {
-        transform.DestroyAllChild();
+        objBlockContainer.transform.DestroyAllChild();
     }
 }

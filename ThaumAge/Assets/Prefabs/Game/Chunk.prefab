@@ -198,6 +198,7 @@ MonoBehaviour:
   chunkMesh: {fileID: 0}
   chunkMeshCollider: {fileID: 0}
   chunkMeshTrigger: {fileID: 0}
+  objBlockContainer: {fileID: 9127013678360213321}
 --- !u!1 &9127013678360213321
 GameObject:
   m_ObjectHideFlags: 0
