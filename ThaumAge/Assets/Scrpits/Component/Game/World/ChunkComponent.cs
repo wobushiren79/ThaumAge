@@ -158,6 +158,8 @@ public class ChunkComponent : BaseMonoBehaviour
             //});
             //刷新寻路
             PathFindingHandler.Instance.manager.RefreshPathFinding(chunk);
+            //显示
+            gameObject.SetActive(true);
         }
         catch (Exception e)
         {

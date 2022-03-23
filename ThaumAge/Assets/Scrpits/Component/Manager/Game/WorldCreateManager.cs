@@ -89,9 +89,12 @@ public class WorldCreateManager : BaseManager
         int index = MathUtil.GetSingleIndexForTwo(chunk.chunkData.positionForWorld.x / widthChunk, chunk.chunkData.positionForWorld.z / widthChunk, worldSize);
         dicChunk.Remove(index);
 
-        chunk.chunkComponent.ClearData();
-        chunk.chunkComponent.ShowObj(false);
-        listChunkComponentPool.Enqueue(chunk.chunkComponent);
+        if (chunk.chunkComponent != null)
+        {
+            chunk.chunkComponent.ClearData();
+            chunk.chunkComponent.ShowObj(false);
+            listChunkComponentPool.Enqueue(chunk.chunkComponent);
+        }
     }
 
     /// <summary>

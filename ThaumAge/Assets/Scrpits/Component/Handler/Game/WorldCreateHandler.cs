@@ -87,7 +87,6 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
                 chunkComponent = objChunk.GetComponent<ChunkComponent>();
             }
             chunkComponent.transform.position = position;
-            chunkComponent.gameObject.SetActive(true);
             chunkComponent.name = $"Chunk_X:{position.x}_Y:{ position.y}_Z:{position.z}";
             chunkComponent.SetData(chunk);
             chunk.chunkComponent = chunkComponent;
@@ -173,15 +172,35 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
     {
         Vector3Int maxPosition = manager.widthChunk * range * new Vector3Int(1, 0, 1) + centerPosition;
         Vector3Int minPosition = -manager.widthChunk * range * new Vector3Int(1, 0, 1) + centerPosition;
+
+        //没有初始化的删除范围
+        Vector3Int maxNoInitPosition = manager.widthChunk * (range+10) * new Vector3Int(1, 0, 1) + centerPosition;
+        Vector3Int minNoInitPosition = -manager.widthChunk * (range+10) * new Vector3Int(1, 0, 1) + centerPosition;
+
         List<Chunk> listRemoveChunk = new List<Chunk>();
         foreach (var chunk in manager.dicChunk.Values)
         {
-            if (chunk.chunkData.positionForWorld.x > maxPosition.x
-                || chunk.chunkData.positionForWorld.x < minPosition.x
-                || chunk.chunkData.positionForWorld.z > maxPosition.z
-                || chunk.chunkData.positionForWorld.z < minPosition.z)
+            //如果区块已经初始化了
+            if (chunk.isInit)
             {
-                listRemoveChunk.Add(chunk);
+                if (chunk.chunkData.positionForWorld.x > maxPosition.x
+                    || chunk.chunkData.positionForWorld.x < minPosition.x
+                    || chunk.chunkData.positionForWorld.z > maxPosition.z
+                    || chunk.chunkData.positionForWorld.z < minPosition.z)
+                {
+                    listRemoveChunk.Add(chunk);
+                }
+            }
+            //如果区块还没有初始化
+            else
+            {
+                if (chunk.chunkData.positionForWorld.x > maxNoInitPosition.x
+                         || chunk.chunkData.positionForWorld.x < minNoInitPosition.x
+                         || chunk.chunkData.positionForWorld.z > maxNoInitPosition.z
+                         || chunk.chunkData.positionForWorld.z < minNoInitPosition.z)
+                {
+                    listRemoveChunk.Add(chunk);
+                }
             }
         }
 
