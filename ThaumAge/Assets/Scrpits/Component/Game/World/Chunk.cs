@@ -39,7 +39,7 @@ public class Chunk
     //存储数据
     protected ChunkSaveBean chunkSaveData;
 
-    protected object lockForUpdateBlcok = new object();
+    protected object lockForBlcok = new object();
 
     //事件更新事件
     protected float eventUpdateTimeForSec = 0;
@@ -222,7 +222,7 @@ public class Chunk
         {
             try
             {
-                lock (lockForUpdateBlcok)
+                lock (lockForBlcok)
                 {
 #if UNITY_EDITOR          
                     Stopwatch stopwatch = TimeUtil.GetMethodTimeStart();
@@ -268,7 +268,7 @@ public class Chunk
             //遍历chunk, 生成其中的每一个Block
             try
             {
-                lock (lockForUpdateBlcok)
+                lock (lockForBlcok)
                 {
 #if UNITY_EDITOR
                     Stopwatch stopwatch = TimeUtil.GetMethodTimeStart();
