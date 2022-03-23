@@ -896,7 +896,6 @@ public class BiomeCreateTool
         }
         else
         {
-            //如果是90度转角
             for (int a = -caveRange; a <= caveRange; a++)
             {
                 for (int b = -caveRange; b <= caveRange; b++)

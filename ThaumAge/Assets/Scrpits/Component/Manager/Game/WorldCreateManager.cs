@@ -113,7 +113,7 @@ public class WorldCreateManager : BaseManager
     /// <param name="chunk"></param>
     public void AddUpdateChunk(Chunk chunk)
     {
-        if (chunk == null)
+        if (chunk == null || !chunk.isInit)
             return;
         if (!listUpdateChunk.Contains(chunk))
         {

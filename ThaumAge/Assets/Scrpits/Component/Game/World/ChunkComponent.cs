@@ -143,6 +143,8 @@ public class ChunkComponent : BaseMonoBehaviour
             //chunkMeshTrigger.RecalculateNormals();
 
             //meshFilter.mesh.Optimize();
+            //chunkMeshTrigger.Optimize();
+            //chunkMeshCollider.Optimize();
 
             if (chunkMesh.vertexCount >= 3) meshFilter.sharedMesh = chunkMesh;
             meshCollider.sharedMesh = chunkMeshCollider;

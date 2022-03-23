@@ -70,6 +70,10 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
                 //添加区块
                 manager.AddChunk(position, chunk);
             }
+            else
+            {
+                chunk.isInit = false;
+            }
         }
         //创建区块组件(没有创建过组件)
         if (isCreateChunkComponent && chunk.chunkComponent == null)

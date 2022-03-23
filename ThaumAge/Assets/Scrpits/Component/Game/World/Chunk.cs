@@ -39,7 +39,7 @@ public class Chunk
     //存储数据
     protected ChunkSaveBean chunkSaveData;
 
-    protected object lockForBlcok = new object();
+    protected  object lockForBlcok = new object();
 
     //事件更新事件
     protected float eventUpdateTimeForSec = 0;
@@ -231,10 +231,10 @@ public class Chunk
                     HandleForBaseBlock();
                     //处理存档方块 优先使用存档方块
                     HandleForLoadBlock();
-                    //设置数据
-                    AddUpdateChunkForRange();
                     //初始化完成
                     isInit = true;
+                    //设置数据
+                    AddUpdateChunkForRange();
 #if UNITY_EDITOR
                     TimeUtil.GetMethodTimeEnd("Time_BuildChunkBlockDataForAsync:", stopwatch);
 #endif
@@ -442,12 +442,12 @@ public class Chunk
         }
 
         //生成洞穴 不放在每一个方块里去检测 提升效率
-        BiomeCreateTool.BiomeForCaveData caveData = new BiomeCreateTool.BiomeForCaveData();
-        caveData.minDepth = 100;
-        caveData.maxDepth = 200;
-        caveData.minSize = 3;
-        caveData.maxSize = 5;
-        BiomeCreateTool.AddCave(this, mapData, caveData);
+        //BiomeCreateTool.BiomeForCaveData caveData = new BiomeCreateTool.BiomeForCaveData();
+        //caveData.minDepth = 100;
+        //caveData.maxDepth = 200;
+        //caveData.minSize = 3;
+        //caveData.maxSize = 5;
+        //BiomeCreateTool.AddCave(this, mapData, caveData);
     }
 
     /// <summary>
