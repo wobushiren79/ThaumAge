@@ -3,7 +3,7 @@ using UnityEngine;
 using System;
 
 [Serializable]
-public class MeshData
+public class MeshDataCustom
 {
     public Vector3[] vertices;
     public Vector2[] uv;
@@ -14,7 +14,7 @@ public class MeshData
 
     public Vector3 colliderSize;
 
-    public MeshData(Collider collider, Mesh mesh, float size, Vector3 offset)
+    public MeshDataCustom(Collider collider, Mesh mesh, float size, Vector3 offset)
     {
         vertices = mesh.vertices;
         uv = mesh.uv;
@@ -31,7 +31,7 @@ public class MeshData
         verticesCollider = meshCollider.vertices;
         trianglesCollider = meshCollider.triangles;
     }
-    public MeshData(Collider collider, float size, Vector3 offset)
+    public MeshDataCustom(Collider collider, float size, Vector3 offset)
     {
         vertices = new Vector3[0];
         uv = new Vector2[0];

@@ -148,7 +148,6 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
                         }
                     };
                     CreateChunk(currentPosition, callBackForCreateChunk);
-
                 }
                 //如果不是初始化创建
                 else

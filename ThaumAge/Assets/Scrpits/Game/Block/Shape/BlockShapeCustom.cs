@@ -5,7 +5,7 @@ using UnityEngine;
 public class BlockShapeCustom : BlockShape
 {
     //自定义形状方块所有的数据
-    public MeshData blockMeshData;
+    public MeshDataCustom blockMeshData;
     public Vector3[] vertsColliderAddCustom;
     public int[] trisColliderAddCustom;
     public override void InitData(Block block)

@@ -426,14 +426,14 @@ public class BlockEditorWindow : EditorWindow
             MeshFilter meshFilter = obj.GetComponentInChildren<MeshFilter>();
             Collider collider = obj.GetComponentInChildren<Collider>();
 
-            MeshData meshData;
+            MeshDataCustom meshData;
             if (meshFilter != null)
             {
-                meshData = new MeshData(collider, meshFilter.sharedMesh, 0.03125f, new Vector3(0.5f, 0f, 0.5f));
+                meshData = new MeshDataCustom(collider, meshFilter.sharedMesh, 0.03125f, new Vector3(0.5f, 0f, 0.5f));
             }
             else
             {
-                meshData = new MeshData(collider, 0.03125f, new Vector3(0.5f, 0f, 0.5f));
+                meshData = new MeshDataCustom(collider, 0.03125f, new Vector3(0.5f, 0f, 0.5f));
             }
             string jsonData = JsonUtil.ToJson(meshData);
             string saveFileName = $"{itemFile.Name.Replace(".prefab", "").Replace(".obj", "")}";

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 public class ChunkMeshData
 {
@@ -24,6 +25,7 @@ public class ChunkMeshData
 
     //刷新次数
     public int refreshNumber;
+
     public ChunkMeshData()
     {
         verts = new List<Vector3>();
@@ -70,6 +72,7 @@ public class ChunkMeshData
         dicIndexData.Add(position, chunkMeshIndex);
     }
 }
+
 
 public struct ChunkMeshIndexData
 {

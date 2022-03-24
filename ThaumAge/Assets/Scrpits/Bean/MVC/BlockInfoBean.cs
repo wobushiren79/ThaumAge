@@ -114,11 +114,11 @@ public class BlockInfoBean : BaseBean
     /// <summary>
     /// 获取方块网格数据
     /// </summary>
-    public MeshData GetBlockMeshData()
+    public MeshDataCustom GetBlockMeshData()
     {
         BlockTypeEnum blockType = GetBlockType();
         TextAsset textAsset = LoadAddressablesUtil.LoadAssetSync<TextAsset>($"Assets/Prefabs/BlockMeshData/Block{blockType.GetEnumName()}.txt");
-        return JsonUtil.FromJson<MeshData>(textAsset.text);
+        return JsonUtil.FromJson<MeshDataCustom>(textAsset.text);
     }
 
     /// <summary>
