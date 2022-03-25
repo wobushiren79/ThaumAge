@@ -200,12 +200,6 @@ public class ChunkComponent : BaseMonoBehaviour
         meshRenderer.renderingLayerMask = 0;
         meshFilter.sharedMesh.Clear();
     }
-    public struct Vertex
-    {
-        public Vector3 vertice;
-        public Vector3 normal;
-        public Vector2 uv;
-    }
 
     struct VertexStruct
     {
@@ -215,6 +209,60 @@ public class ChunkComponent : BaseMonoBehaviour
         public float2 uv0;
         public float2 uv1;
     }
+    private NativeArray<VertexStruct> mCacheInVertices;
+
+    public void CombineMesh(Mesh targetMesh, Mesh srcMesh)
+    {
+        Mesh.MeshDataArray inMeshDataArray = Mesh.AcquireReadOnlyMeshData(srcMesh);
+        Mesh.MeshData inMesh = inMeshDataArray[0];
+        mCacheInVertices = inMesh.GetVertexData<VertexStruct>();
+
+        int vertexCount = srcMesh.vertexCount;
+        int indexCount = srcMesh.triangles.Length;
+
+        Mesh.MeshDataArray outMeshDataArray = Mesh.AllocateWritableMeshData(1);
+        Mesh.MeshData outMesh = outMeshDataArray[0];
+        outMesh.SetVertexBufferParams(vertexCount,
+            new VertexAttributeDescriptor(VertexAttribute.Position),
+            new VertexAttributeDescriptor(VertexAttribute.Normal),
+            new VertexAttributeDescriptor(VertexAttribute.Tangent, VertexAttributeFormat.Float32, 4),
+            new VertexAttributeDescriptor(VertexAttribute.TexCoord0, VertexAttributeFormat.Float32, 2),
+            new VertexAttributeDescriptor(VertexAttribute.TexCoord1, VertexAttributeFormat.Float32, 2));
+
+        outMesh.SetIndexBufferParams(indexCount, IndexFormat.UInt16);
+
+        NativeArray<ushort> indices = outMesh.GetIndexData<ushort>();
+        for (int i = 0; i < srcMesh.triangles.Length; ++i)
+            indices[i] = (ushort)srcMesh.triangles[i];
+
+        NativeArray<VertexStruct> outVertices = outMesh.GetVertexData<VertexStruct>();
+        for (int i = 0; i < mCacheInVertices.Length; i++)
+        {
+            VertexStruct vert = mCacheInVertices[i];
+            vert.pos.x += math.sin(i + Time.time) * 0.03f;
+            outVertices[i] = vert;
+        }
+
+        outMesh.subMeshCount = 1;
+        SubMeshDescriptor subMeshDesc = new SubMeshDescriptor
+        {
+            indexStart = 0,
+            indexCount = indexCount,
+            topology = MeshTopology.Triangles
+            //firstVertex = 0,
+            //vertexCount = vertexCount,
+            //bounds = new Bounds(Vector3.zero, Vector3.one * 100f)
+        };
+        outMesh.SetSubMesh(0, subMeshDesc);
+
+        Mesh.ApplyAndDisposeWritableMeshData(outMeshDataArray, targetMesh);
+        targetMesh.RecalculateNormals();
+        targetMesh.RecalculateBounds();
+
+        mCacheInVertices.Dispose();
+        inMeshDataArray.Dispose();
+    }
+
     //private void Update()
     //{
     //    Mesh.MeshDataArray inMeshDataArray = Mesh.AcquireReadOnlyMeshData(srcMesh);
