@@ -4,6 +4,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 
 using Unity.Collections;
+using Unity.Jobs;
 using Unity.Mathematics;
 using UnityEditor;
 using UnityEngine;
@@ -58,6 +59,9 @@ public class ChunkComponent : BaseMonoBehaviour
         chunkMesh.MarkDynamic();
         chunkMeshCollider.MarkDynamic();
         chunkMeshTrigger.MarkDynamic();
+
+        //Physics.BakeMesh(chunkMeshCollider.GetInstanceID(), false);
+        //Physics.BakeMesh(chunkMeshTrigger.GetInstanceID(), false);
     }
 
     /// <summary>
@@ -106,66 +110,67 @@ public class ChunkComponent : BaseMonoBehaviour
                 chunk.isDrawMesh = false;
                 return;
             }
-            chunkMesh.Clear();
-            chunkMesh.subMeshCount = meshRenderer.materials.Length;
-            //设置顶点
-            chunkMesh.SetVertices(chunk.chunkMeshData.verts);
-            //设置UV
-            chunkMesh.SetUVs(0, chunk.chunkMeshData.uvs);
+            //chunkMesh.Clear();
+            //chunkMesh.subMeshCount = meshRenderer.materials.Length;
+            ////设置顶点
+            //chunkMesh.SetVertices(chunk.chunkMeshData.verts);
+            ////设置UV
+            //chunkMesh.SetUVs(0, chunk.chunkMeshData.uvs);
 
-            //设置三角（单面渲染，双面渲染,液体）
-            int indexMat = 0;
-            for (int i = 0; i < chunk.chunkMeshData.dicTris.Length; i++)
-            {
-                List<int> trisData = chunk.chunkMeshData.dicTris[i];
-                if (trisData.IsNull())
-                    continue;
-                chunkMesh.SetTriangles(trisData, indexMat);
-                indexMat++;
-            }
+            ////设置三角（单面渲染，双面渲染,液体）
+            //int indexMat = 0;
+            //for (int i = 0; i < chunk.chunkMeshData.dicTris.Length; i++)
+            //{
+            //    List<int> trisData = chunk.chunkMeshData.dicTris[i];
+            //    if (trisData.IsNull())
+            //        continue;
+            //    chunkMesh.SetTriangles(trisData, indexMat);
+            //    indexMat++;
+            //}
 
-            //碰撞数据设置
-            if (chunk.chunkMeshData.vertsCollider.Count >= 3)
-            {
-                chunkMeshCollider.Clear();
-                chunkMeshCollider.SetVertices(chunk.chunkMeshData.vertsCollider);
-                chunkMeshCollider.SetTriangles(chunk.chunkMeshData.trisCollider, 0);
-            }
-            //触发数据设置
-            if (chunk.chunkMeshData.vertsTrigger.Count >= 3)
-            {
-                chunkMeshTrigger.Clear();
-                chunkMeshTrigger.SetVertices(chunk.chunkMeshData.vertsTrigger);
-                chunkMeshTrigger.SetTriangles(chunk.chunkMeshData.trisTrigger, 0);
-            }
+            ////碰撞数据设置
+            //if (chunk.chunkMeshData.vertsCollider.Count >= 3)
+            //{
+            //    chunkMeshCollider.Clear();
+            //    chunkMeshCollider.SetVertices(chunk.chunkMeshData.vertsCollider);
+            //    chunkMeshCollider.SetTriangles(chunk.chunkMeshData.trisCollider, 0);
+            //}
+            ////触发数据设置
+            //if (chunk.chunkMeshData.vertsTrigger.Count >= 3)
+            //{
+            //    chunkMeshTrigger.Clear();
+            //    chunkMeshTrigger.SetVertices(chunk.chunkMeshData.vertsTrigger);
+            //    chunkMeshTrigger.SetTriangles(chunk.chunkMeshData.trisTrigger, 0);
+            //}
 
 
-            //刷新
-            chunkMesh.RecalculateBounds();
-            chunkMesh.RecalculateNormals();
-            //刷新
-            //chunkMeshCollider.RecalculateBounds();
-            //chunkMeshCollider.RecalculateNormals();
-            //刷新
-            //chunkMeshTrigger.RecalculateBounds();
-            //chunkMeshTrigger.RecalculateNormals();
+            ////刷新
+            //chunkMesh.RecalculateBounds();
+            //chunkMesh.RecalculateNormals();
+            ////刷新
+            ////chunkMeshCollider.RecalculateBounds();
+            ////chunkMeshCollider.RecalculateNormals();
+            ////刷新
+            ////chunkMeshTrigger.RecalculateBounds();
+            ////chunkMeshTrigger.RecalculateNormals();
 
             //meshFilter.mesh.Optimize();
             //chunkMeshTrigger.Optimize();
             //chunkMeshCollider.Optimize();
+
+            CombineMesh(chunk.chunkMeshData);
 
 
             if (chunkMesh.vertexCount >= 3) meshFilter.sharedMesh = chunkMesh;
             meshCollider.sharedMesh = chunkMeshCollider;
             meshTrigger.sharedMesh = chunkMeshTrigger;
 
+
             meshCollider.enabled = true;
             meshTrigger.enabled = true;
 
             if (meshRenderer.renderingLayerMask == 0)
                 meshRenderer.renderingLayerMask = 1;
-            //Physics.BakeMesh(chunkMeshCollider.GetInstanceID(), false);
-            //Physics.BakeMesh(chunkMeshTrigger.GetInstanceID(), false);
 
             //初始化动画
             //AnimForInit(() =>
@@ -201,121 +206,120 @@ public class ChunkComponent : BaseMonoBehaviour
         meshFilter.sharedMesh.Clear();
     }
 
-    struct VertexStruct
+    public struct VertexStruct
     {
-        public float3 pos;
-        public float3 normal;
-        public float4 tangent;
-        public float2 uv0;
-        public float2 uv1;
+        public Vector3 vertice;
+        public Vector3 normal;
+        public Vector2 uv;
     }
-    private NativeArray<VertexStruct> mCacheInVertices;
 
-    public void CombineMesh(Mesh targetMesh, Mesh srcMesh)
+    public void CombineMesh(ChunkMeshData chunkMeshData)
     {
-        Mesh.MeshDataArray inMeshDataArray = Mesh.AcquireReadOnlyMeshData(srcMesh);
-        Mesh.MeshData inMesh = inMeshDataArray[0];
-        mCacheInVertices = inMesh.GetVertexData<VertexStruct>();
-
-        int vertexCount = srcMesh.vertexCount;
-        int indexCount = srcMesh.triangles.Length;
-
+        //获取输出meshData
         Mesh.MeshDataArray outMeshDataArray = Mesh.AllocateWritableMeshData(1);
         Mesh.MeshData outMesh = outMeshDataArray[0];
-        outMesh.SetVertexBufferParams(vertexCount,
-            new VertexAttributeDescriptor(VertexAttribute.Position),
-            new VertexAttributeDescriptor(VertexAttribute.Normal),
-            new VertexAttributeDescriptor(VertexAttribute.Tangent, VertexAttributeFormat.Float32, 4),
-            new VertexAttributeDescriptor(VertexAttribute.TexCoord0, VertexAttributeFormat.Float32, 2),
-            new VertexAttributeDescriptor(VertexAttribute.TexCoord1, VertexAttributeFormat.Float32, 2));
 
-        outMesh.SetIndexBufferParams(indexCount, IndexFormat.UInt16);
+        Mesh.MeshDataArray outMeshDataArrayCollider = Mesh.AllocateWritableMeshData(1);
+        Mesh.MeshData outMeshCollider = outMeshDataArrayCollider[0];
 
-        NativeArray<ushort> indices = outMesh.GetIndexData<ushort>();
-        for (int i = 0; i < srcMesh.triangles.Length; ++i)
-            indices[i] = (ushort)srcMesh.triangles[i];
+        Mesh.MeshDataArray outMeshDataArrayTrigger = Mesh.AllocateWritableMeshData(1);
+        Mesh.MeshData outMeshTrigger = outMeshDataArrayTrigger[0];
 
-        NativeArray<VertexStruct> outVertices = outMesh.GetVertexData<VertexStruct>();
-        for (int i = 0; i < mCacheInVertices.Length; i++)
+        int subMeshCount = 0;
+        int subMeshIndexCount = 0;
+
+        List<int> trisDataAll = new List<int>();
+        List<SubMeshDescriptor> listSubMeshDescriptor = new List<SubMeshDescriptor>();
+        for (int i = 0; i < chunkMeshData.dicTris.Length; i++)
         {
-            VertexStruct vert = mCacheInVertices[i];
-            vert.pos.x += math.sin(i + Time.time) * 0.03f;
-            outVertices[i] = vert;
+            List<int> trisData = chunkMeshData.dicTris[i];
+            if (trisData.IsNull())
+                continue;
+            trisDataAll.AddRange(trisData);
+            SubMeshDescriptor subMeshDesc = new SubMeshDescriptor
+            {
+                indexStart = subMeshIndexCount,
+                indexCount = trisData.Count
+            };
+            listSubMeshDescriptor.Add(subMeshDesc);
+            subMeshCount++;
+            subMeshIndexCount += trisData.Count;
         }
 
-        outMesh.subMeshCount = 1;
-        SubMeshDescriptor subMeshDesc = new SubMeshDescriptor
+        VertexStruct[] listVertex = chunkMeshData.GetVertexStruct();
+        outMesh.SetVertexBufferParams(listVertex.Length, vertexAttributeDescriptors);
+
+        VertexStruct[] listVertexCollider = chunkMeshData.GetVertexStructCollider();
+        outMeshCollider.SetVertexBufferParams(listVertexCollider.Length, vertexAttributeDescriptors);
+
+        VertexStruct[] listVertexTrigger = chunkMeshData.GetVertexStructTrigger();
+        outMeshTrigger.SetVertexBufferParams(listVertexTrigger.Length, vertexAttributeDescriptors);
+
+        //获取点信息
+        NativeArray<VertexStruct> vertexData = outMesh.GetVertexData<VertexStruct>();
+        NativeArray<VertexStruct> vertexDataCollider = outMeshCollider.GetVertexData<VertexStruct>();
+        NativeArray<VertexStruct> vertexDataTrigger = outMeshTrigger.GetVertexData<VertexStruct>();
+        //设置点信息
+        NativeArray<VertexStruct>.Copy(listVertex, vertexData);
+        NativeArray<VertexStruct>.Copy(listVertexCollider, vertexDataCollider);
+        NativeArray<VertexStruct>.Copy(listVertexTrigger, vertexDataTrigger);
+
+        //设置三角数量
+        outMesh.SetIndexBufferParams(trisDataAll.Count, IndexFormat.UInt32);
+        outMeshCollider.SetIndexBufferParams(chunkMeshData.trisCollider.Count, IndexFormat.UInt32);
+        outMeshTrigger.SetIndexBufferParams(chunkMeshData.trisTrigger.Count, IndexFormat.UInt32);
+        //获取三角下标
+        NativeArray<int> triangelData = outMesh.GetIndexData<int>();
+        NativeArray<int> triangelDataCollider = outMeshCollider.GetIndexData<int>();
+        NativeArray<int> triangelDataTrigger = outMeshTrigger.GetIndexData<int>();
+
+        NativeArray<int>.Copy(trisDataAll.ToArray(), triangelData);
+        NativeArray<int>.Copy(chunkMeshData.trisCollider.ToArray(), triangelDataCollider);
+        NativeArray<int>.Copy(chunkMeshData.trisTrigger.ToArray(), triangelDataTrigger);
+
+        outMesh.subMeshCount = subMeshCount;
+        outMeshCollider.subMeshCount = 1;
+        outMeshTrigger.subMeshCount = 1;
+
+        for (int i = 0; i < listSubMeshDescriptor.Count; i++)
+        {
+            outMesh.SetSubMesh(i, listSubMeshDescriptor[i]);
+        }
+        outMeshCollider.SetSubMesh(0, new SubMeshDescriptor
         {
             indexStart = 0,
-            indexCount = indexCount,
-            topology = MeshTopology.Triangles
-            //firstVertex = 0,
-            //vertexCount = vertexCount,
-            //bounds = new Bounds(Vector3.zero, Vector3.one * 100f)
-        };
-        outMesh.SetSubMesh(0, subMeshDesc);
+            indexCount = chunkMeshData.trisCollider.Count
+        });
+        outMeshTrigger.SetSubMesh(0, new SubMeshDescriptor
+        {
+            indexStart = 0,
+            indexCount = chunkMeshData.trisTrigger.Count
+        });
 
-        Mesh.ApplyAndDisposeWritableMeshData(outMeshDataArray, targetMesh);
-        targetMesh.RecalculateNormals();
-        targetMesh.RecalculateBounds();
+        Mesh.ApplyAndDisposeWritableMeshData(outMeshDataArray, chunkMesh);
+        Mesh.ApplyAndDisposeWritableMeshData(outMeshDataArrayCollider, chunkMeshCollider);
+        Mesh.ApplyAndDisposeWritableMeshData(outMeshDataArrayTrigger, chunkMeshTrigger);
 
-        mCacheInVertices.Dispose();
-        inMeshDataArray.Dispose();
+        chunkMesh.RecalculateNormals();
+        chunkMesh.RecalculateBounds();
+
+        //chunkMeshCollider.RecalculateNormals();
+        //chunkMeshCollider.RecalculateBounds();
+
+        //chunkMeshTrigger.RecalculateNormals();
+        //chunkMeshTrigger.RecalculateBounds();
+
+        vertexData.Dispose();
+        triangelData.Dispose();
+
+        vertexDataCollider.Dispose();
+        triangelDataCollider.Dispose();
+
+        vertexDataTrigger.Dispose();
+        triangelDataTrigger.Dispose();
     }
 
-    //private void Update()
-    //{
-    //    Mesh.MeshDataArray inMeshDataArray = Mesh.AcquireReadOnlyMeshData(srcMesh);
-    //    Mesh.MeshData inMesh = inMeshDataArray[0];
-    //    mCacheInVertices = inMesh.GetVertexData<VertexStruct>();
-
-    //    int vertexCount = srcMesh.vertexCount;
-    //    int indexCount = srcMesh.triangles.Length;
-
-    //    Mesh.MeshDataArray outMeshDataArray = Mesh.AllocateWritableMeshData(1);
-    //    Mesh.MeshData outMesh = outMeshDataArray[0];
-    //    outMesh.SetVertexBufferParams(vertexCount,
-    //        new VertexAttributeDescriptor(VertexAttribute.Position),
-    //        new VertexAttributeDescriptor(VertexAttribute.Normal),
-    //        new VertexAttributeDescriptor(VertexAttribute.Tangent, VertexAttributeFormat.Float32, 4),
-    //        new VertexAttributeDescriptor(VertexAttribute.TexCoord0, VertexAttributeFormat.Float32, 2),
-    //        new VertexAttributeDescriptor(VertexAttribute.TexCoord1, VertexAttributeFormat.Float32, 2));
-
-    //    outMesh.SetIndexBufferParams(indexCount, IndexFormat.UInt16);
-
-    //    NativeArray<ushort> indices = outMesh.GetIndexData<ushort>();
-    //    for (int i = 0; i < srcMesh.triangles.Length; ++i)
-    //        indices[i] = (ushort)srcMesh.triangles[i];
-
-    //    NativeArray<VertexStruct> outVertices = outMesh.GetVertexData<VertexStruct>();
-    //    for (int i = 0; i < mCacheInVertices.Length; i++)
-    //    {
-    //        VertexStruct vert = mCacheInVertices[i];
-    //        vert.pos.x += math.sin(i + Time.time) * 0.03f;
-    //        outVertices[i] = vert;
-    //    }
-
-    //    outMesh.subMeshCount = 1;
-    //    SubMeshDescriptor subMeshDesc = new SubMeshDescriptor
-    //    {
-    //        indexStart = 0,
-    //        indexCount = indexCount,
-    //        topology = MeshTopology.Triangles,
-    //        firstVertex = 0,
-    //        vertexCount = vertexCount,
-    //        bounds = new Bounds(Vector3.zero, Vector3.one * 100f)
-    //    };
-    //    outMesh.SetSubMesh(0, subMeshDesc);
-
-    //    Mesh.ApplyAndDisposeWritableMeshData(outMeshDataArray, mCacheMesh);
-    //    mCacheMesh.RecalculateNormals();
-    //    mCacheMesh.RecalculateBounds();
-
-    //    mCacheInVertices.Dispose();
-    //    inMeshDataArray.Dispose();
-    //}
-
-    public static VertexAttributeDescriptor[] tempvd = new VertexAttributeDescriptor[] {
+    public static VertexAttributeDescriptor[] vertexAttributeDescriptors = new VertexAttributeDescriptor[] {
             new VertexAttributeDescriptor
                 (VertexAttribute.Position, VertexAttributeFormat.Float32, 3,0),
                  new VertexAttributeDescriptor
@@ -324,5 +328,18 @@ public class ChunkComponent : BaseMonoBehaviour
                 (VertexAttribute.TexCoord0, VertexAttributeFormat.Float32, 2,0)
         };
 
+    public struct BakeJob : IJobParallelFor
+    {
+        private NativeArray<int> meshIds;
 
+        public BakeJob(NativeArray<int> meshIds)
+        {
+            this.meshIds = meshIds;
+        }
+
+        public void Execute(int index)
+        {
+            Physics.BakeMesh(meshIds[index], false);
+        }
+    }
 }

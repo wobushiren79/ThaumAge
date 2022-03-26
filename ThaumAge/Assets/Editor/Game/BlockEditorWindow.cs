@@ -429,7 +429,13 @@ public class BlockEditorWindow : EditorWindow
             MeshDataCustom meshData;
             if (meshFilter != null)
             {
-                meshData = new MeshDataCustom(collider, meshFilter.sharedMesh, 0.03125f, new Vector3(0.5f, 0f, 0.5f));
+                Vector3 offsetPosition = new Vector3(0.5f, 0f, 0.5f);
+                Transform tfModel= obj.transform.Find("Model");
+                if (tfModel != null)
+                {
+                    offsetPosition += (tfModel.localPosition - new Vector3(0.5f,0.5f,0.5f));
+                }
+                meshData = new MeshDataCustom(collider, meshFilter.sharedMesh, 0.03125f, offsetPosition);
             }
             else
             {

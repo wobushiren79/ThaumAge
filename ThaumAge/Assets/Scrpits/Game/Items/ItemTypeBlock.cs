@@ -8,7 +8,7 @@ public class ItemTypeBlock : Item
         //检测玩家前方是否有方块
         if (player.playerRay.RayToChunkBlock(out RaycastHit hit, out Vector3Int targetBlockPosition))
         {
-            Chunk chunkForHit = hit.collider.GetComponentInParent<Chunk>();
+            ChunkComponent chunkForHit = hit.collider.GetComponentInParent<ChunkComponent>();
             if (chunkForHit != null)
             {
                 //获取位置和方向

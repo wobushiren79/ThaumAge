@@ -45,7 +45,7 @@ MeshCollider:
   serializedVersion: 4
   m_Convex: 0
   m_CookingOptions: 30
-  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+  m_Mesh: {fileID: 0}
 --- !u!1 &5580732925195435756
 GameObject:
   m_ObjectHideFlags: 0
@@ -91,7 +91,7 @@ MeshCollider:
   serializedVersion: 4
   m_Convex: 0
   m_CookingOptions: 30
-  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+  m_Mesh: {fileID: 0}
 --- !u!1 &7675334834579374580
 GameObject:
   m_ObjectHideFlags: 0
@@ -193,12 +193,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   meshCollider: {fileID: 594269507512757033}
   meshTrigger: {fileID: 5609496997631579717}
+  objBlockContainer: {fileID: 9127013678360213321}
   meshRenderer: {fileID: 7675334834579374577}
   meshFilter: {fileID: 7675334834579374576}
   chunkMesh: {fileID: 0}
   chunkMeshCollider: {fileID: 0}
   chunkMeshTrigger: {fileID: 0}
-  objBlockContainer: {fileID: 9127013678360213321}
 --- !u!1 &9127013678360213321
 GameObject:
   m_ObjectHideFlags: 0

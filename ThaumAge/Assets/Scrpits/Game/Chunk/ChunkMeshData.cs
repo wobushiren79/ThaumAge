@@ -1,7 +1,10 @@
 ﻿using System.Collections.Generic;
+using Unity.Collections;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Rendering;
+using UnityEngine.UIElements;
+using static ChunkComponent;
 
 public class ChunkMeshData
 {
@@ -50,6 +53,37 @@ public class ChunkMeshData
         //默认构建一个触发collider 防止Chunk没有触发时的报错
         vertsTrigger.AddRange(new List<Vector3> { new Vector3(0, -9999, 0), new Vector3(1, -9999, 0), new Vector3(0, -9999, 1) });
         trisTrigger.AddRange(new List<int> { 0, 1, 2 });
+    }
+
+    public VertexStruct[] GetVertexStruct()
+    {
+        VertexStruct[] arrayData = new VertexStruct[verts.Count];
+        for (int i = 0; i < verts.Count; i++)
+        {
+            arrayData[i].vertice = verts[i];
+            arrayData[i].uv = uvs[i];
+        }
+        return arrayData;
+    }
+
+    public VertexStruct[] GetVertexStructCollider()
+    {
+        VertexStruct[] arrayData = new VertexStruct[vertsCollider.Count];
+        for (int i = 0; i < vertsCollider.Count; i++)
+        {
+            arrayData[i].vertice = vertsCollider[i];
+        }
+        return arrayData;
+    }
+
+    public VertexStruct[] GetVertexStructTrigger()
+    {
+        VertexStruct[] arrayData = new VertexStruct[vertsTrigger.Count];
+        for (int i = 0; i < vertsTrigger.Count; i++)
+        {
+            arrayData[i].vertice = vertsTrigger[i];
+        }
+        return arrayData;
     }
 
     /// <summary>
