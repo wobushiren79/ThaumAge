@@ -59,9 +59,6 @@ public class ChunkComponent : BaseMonoBehaviour
         chunkMesh.MarkDynamic();
         chunkMeshCollider.MarkDynamic();
         chunkMeshTrigger.MarkDynamic();
-
-        //Physics.BakeMesh(chunkMeshCollider.GetInstanceID(), false);
-        //Physics.BakeMesh(chunkMeshTrigger.GetInstanceID(), false);
     }
 
     /// <summary>
@@ -160,6 +157,8 @@ public class ChunkComponent : BaseMonoBehaviour
 
             CombineMesh(chunk.chunkMeshData);
 
+            Physics.BakeMesh(chunkMeshCollider.GetInstanceID(), false);
+            Physics.BakeMesh(chunkMeshTrigger.GetInstanceID(), false);
 
             if (chunkMesh.vertexCount >= 3) meshFilter.sharedMesh = chunkMesh;
             meshCollider.sharedMesh = chunkMeshCollider;
