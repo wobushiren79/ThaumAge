@@ -646,6 +646,15 @@ public partial class @GameInputActions : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""T"",
+                    ""type"": ""Button"",
+                    ""id"": ""50025688-0fc4-4465-9b66-e2d7ae41e083"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -1286,6 +1295,17 @@ public partial class @GameInputActions : IInputActionCollection2, IDisposable
                     ""action"": ""Shift"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""5b5ee2d3-5a29-496c-96b4-8d37312a4a90"",
+                    ""path"": ""<Keyboard>/t"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""T"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -1392,6 +1412,7 @@ public partial class @GameInputActions : IInputActionCollection2, IDisposable
         m_UI_NAdd = m_UI.FindAction("NAdd", throwIfNotFound: true);
         m_UI_NSub = m_UI.FindAction("NSub", throwIfNotFound: true);
         m_UI_B = m_UI.FindAction("B", throwIfNotFound: true);
+        m_UI_T = m_UI.FindAction("T", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -1574,6 +1595,7 @@ public partial class @GameInputActions : IInputActionCollection2, IDisposable
     private readonly InputAction m_UI_NAdd;
     private readonly InputAction m_UI_NSub;
     private readonly InputAction m_UI_B;
+    private readonly InputAction m_UI_T;
     public struct UIActions
     {
         private @GameInputActions m_Wrapper;
@@ -1604,6 +1626,7 @@ public partial class @GameInputActions : IInputActionCollection2, IDisposable
         public InputAction @NAdd => m_Wrapper.m_UI_NAdd;
         public InputAction @NSub => m_Wrapper.m_UI_NSub;
         public InputAction @B => m_Wrapper.m_UI_B;
+        public InputAction @T => m_Wrapper.m_UI_T;
         public InputActionMap Get() { return m_Wrapper.m_UI; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1691,6 +1714,9 @@ public partial class @GameInputActions : IInputActionCollection2, IDisposable
                 @B.started -= m_Wrapper.m_UIActionsCallbackInterface.OnB;
                 @B.performed -= m_Wrapper.m_UIActionsCallbackInterface.OnB;
                 @B.canceled -= m_Wrapper.m_UIActionsCallbackInterface.OnB;
+                @T.started -= m_Wrapper.m_UIActionsCallbackInterface.OnT;
+                @T.performed -= m_Wrapper.m_UIActionsCallbackInterface.OnT;
+                @T.canceled -= m_Wrapper.m_UIActionsCallbackInterface.OnT;
             }
             m_Wrapper.m_UIActionsCallbackInterface = instance;
             if (instance != null)
@@ -1773,6 +1799,9 @@ public partial class @GameInputActions : IInputActionCollection2, IDisposable
                 @B.started += instance.OnB;
                 @B.performed += instance.OnB;
                 @B.canceled += instance.OnB;
+                @T.started += instance.OnT;
+                @T.performed += instance.OnT;
+                @T.canceled += instance.OnT;
             }
         }
     }
@@ -1862,5 +1891,6 @@ public partial class @GameInputActions : IInputActionCollection2, IDisposable
         void OnNAdd(InputAction.CallbackContext context);
         void OnNSub(InputAction.CallbackContext context);
         void OnB(InputAction.CallbackContext context);
+        void OnT(InputAction.CallbackContext context);
     }
 }

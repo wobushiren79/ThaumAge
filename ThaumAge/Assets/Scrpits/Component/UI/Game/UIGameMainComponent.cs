@@ -10,5 +10,7 @@ public partial class UIGameMain
 
     public Button ui_Setting;
 
+    public Button ui_Book;
+
 
 }

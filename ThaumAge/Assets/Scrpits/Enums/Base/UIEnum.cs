@@ -13,6 +13,7 @@ public enum UIEnum
 
     GameMain = 2001,//游戏-主界面
     GameUserDetails = 2002,//游戏-用户详情
+    GameBook = 2003,//游戏-书籍
     GameBox = 2101,//游戏-箱子
     GameSetting = 2999,//游戏-设置
 
