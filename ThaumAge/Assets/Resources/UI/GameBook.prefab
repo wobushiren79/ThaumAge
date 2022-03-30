@@ -88,6 +88,7 @@ GameObject:
   - component: {fileID: 3545933572159895520}
   - component: {fileID: 91391019537768532}
   - component: {fileID: 4446472918830926957}
+  - component: {fileID: 1178652973457902477}
   m_Layer: 5
   m_Name: Labels
   m_TagString: Untagged
@@ -150,6 +151,20 @@ MonoBehaviour:
   m_ChildScaleWidth: 1
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
+--- !u!114 &1178652973457902477
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1836816346757042241}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 50544a99bb5fa4d4e902c016dd920541, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isCancelSelect: 0
+  listButton: []
 --- !u!1 &3132563741657000296
 GameObject:
   m_ObjectHideFlags: 0
@@ -331,6 +346,7 @@ GameObject:
   - component: {fileID: 1289012509508270646}
   - component: {fileID: 6370429191399020592}
   - component: {fileID: 7592600406834448600}
+  - component: {fileID: 1133143439153934193}
   m_Layer: 5
   m_Name: LabelItem
   m_TagString: Untagged
@@ -441,6 +457,28 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &1133143439153934193
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5209658713283458800}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a03087edebbf6d408c51faf9ab6a71c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  spSelected: {fileID: 21300000, guid: 0017af9373834c741a11bac85afda070, type: 3}
+  colorIVSelected: {r: 1, g: 1, b: 1, a: 1}
+  colorTVSelected: {r: 1, g: 1, b: 1, a: 1}
+  spUnselected: {fileID: 21300000, guid: 0943e8d01dde5f643a9b0c4612e3c404, type: 3}
+  colorIVUnselected: {r: 1, g: 1, b: 1, a: 1}
+  colorTVUnselected: {r: 0.39215687, g: 0.39215687, b: 0.39215687, a: 1}
+  rbButton: {fileID: 7592600406834448600}
+  rbImage: {fileID: 6370429191399020592}
+  rbText: {fileID: 6035366193255814272}
+  isSelect: 1
 --- !u!1 &5373387804376973704
 GameObject:
   m_ObjectHideFlags: 0
@@ -476,8 +514,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -7.5}
-  m_SizeDelta: {x: -20, y: -35}
+  m_AnchoredPosition: {x: 7.5, y: -7.5}
+  m_SizeDelta: {x: -35, y: -35}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7635703310420224259
 CanvasRenderer:
@@ -584,6 +622,9 @@ MonoBehaviour:
   uiManager: {fileID: 0}
   remarkData: 
   ui_Exit: {fileID: 452167115202649237}
+  ui_Labels: {fileID: 1178652973457902477}
+  ui_LabelItem: {fileID: 5047206051945109035}
+  ui_ContentBG: {fileID: 6304915599414843104}
 --- !u!1 &6998075745651192989
 GameObject:
   m_ObjectHideFlags: 0
@@ -596,7 +637,7 @@ GameObject:
   - component: {fileID: 8962128162794535410}
   - component: {fileID: 6304915599414843104}
   m_Layer: 5
-  m_Name: Content
+  m_Name: ContentBG
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

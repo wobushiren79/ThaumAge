@@ -1,7 +1,7 @@
 ﻿using UnityEditor;
 using UnityEngine;
 
-public class GameInfoHandler : BaseManager
+public class GameInfoHandler : BaseHandler<GameInfoHandler, GameInfoManager>
 {
 
 }

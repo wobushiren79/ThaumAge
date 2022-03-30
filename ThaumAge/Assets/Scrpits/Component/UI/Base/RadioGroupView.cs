@@ -51,7 +51,7 @@ public class RadioGroupView : BaseMonoBehaviour, IRadioButtonCallBack
     /// <summary>
     /// 自动找到rb
     /// </summary>
-    public void AutoFindRadioButton()
+    public void InitRadioButton()
     {
         if (listButton == null)
             listButton = new List<RadioButtonView>();

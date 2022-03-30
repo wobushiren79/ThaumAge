@@ -7,6 +7,10 @@ using System;
 		/// </summary>
 		public string content;
 		/// <summary>
+		///背景
+		/// </summary>
+		public string background;
+		/// <summary>
 		///备注
 		/// </summary>
 		public string remark;

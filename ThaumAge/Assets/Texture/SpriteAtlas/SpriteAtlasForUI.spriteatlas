@@ -1,0 +1,124 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!687078895 &4343727234628468602
+SpriteAtlas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: SpriteAtlasForUI
+  serializedVersion: 2
+  m_EditorData:
+    serializedVersion: 2
+    textureSettings:
+      serializedVersion: 2
+      anisoLevel: 1
+      compressionQuality: 50
+      maxTextureSize: 2048
+      textureCompression: 0
+      filterMode: 0
+      generateMipMaps: 0
+      readable: 1
+      crunchedCompression: 0
+      sRGB: 1
+    platformSettings:
+    - serializedVersion: 3
+      m_BuildTarget: DefaultTexturePlatform
+      m_MaxTextureSize: 8192
+      m_ResizeAlgorithm: 0
+      m_TextureFormat: -1
+      m_TextureCompression: 0
+      m_CompressionQuality: 50
+      m_CrunchedCompression: 0
+      m_AllowsAlphaSplitting: 0
+      m_Overridden: 0
+      m_AndroidETC2FallbackOverride: 0
+      m_ForceMaximumCompressionQuality_BC6H_BC7: 0
+    packingSettings:
+      serializedVersion: 2
+      padding: 8
+      blockOffset: 1
+      allowAlphaSplitting: 0
+      enableRotation: 0
+      enableTightPacking: 0
+      enableAlphaDilation: 0
+    secondaryTextureSettings: {}
+    variantMultiplier: 1
+    packables:
+    - {fileID: 102900000, guid: 4717c088f89121244a38e0b415717d9f, type: 3}
+    bindAsDefault: 0
+    isAtlasV2: 0
+    cachedData: {fileID: 0}
+  m_MasterAtlas: {fileID: 0}
+  m_PackedSprites:
+  - {fileID: 21300000, guid: 0b870650ae9c5d647acde60169e842e7, type: 3}
+  - {fileID: 21300000, guid: 1e19b9c0f6eb4944b9320ccb689e7e2b, type: 3}
+  - {fileID: 21300000, guid: 0943e8d01dde5f643a9b0c4612e3c404, type: 3}
+  - {fileID: 21300000, guid: c5ae54f05c595ad45b9ce8dd58d38490, type: 3}
+  - {fileID: 21300000, guid: 952e32118bc1c3b42846645edf449e75, type: 3}
+  - {fileID: 21300000, guid: ccb10e71a87b54b40a840bf4feffbe99, type: 3}
+  - {fileID: 21300000, guid: 2f3c1cb23246d2544a705acb645da20e, type: 3}
+  - {fileID: 21300000, guid: e1aa9fd2afce2574a928ee63b39850d7, type: 3}
+  - {fileID: 21300000, guid: ac660ee231ab63a4c9f8bb920a2578bf, type: 3}
+  - {fileID: 21300000, guid: 2689ef332eb900447911ac7ca21a7b82, type: 3}
+  - {fileID: 21300000, guid: 0017af9373834c741a11bac85afda070, type: 3}
+  - {fileID: 21300000, guid: 282dd80634512af49b211b9dce239220, type: 3}
+  - {fileID: 21300000, guid: 379e7226725a6a644a1e78bd8ce7ff67, type: 3}
+  - {fileID: 21300000, guid: a5528e2635ad30d4299de3e53b223dff, type: 3}
+  - {fileID: 21300000, guid: e8c46b56192a0ed44bb4cccd21d8c680, type: 3}
+  - {fileID: 21300000, guid: 269b6667643cd624588744e879f95e2d, type: 3}
+  - {fileID: 21300000, guid: 65108b77dbf2b534db4d64c1d2850ace, type: 3}
+  - {fileID: 21300000, guid: 66b65bb707c320346b3cd4ad45b41711, type: 3}
+  - {fileID: 21300000, guid: 822a0ee7db27b734ea7df5e70249a3d5, type: 3}
+  - {fileID: 21300000, guid: 727b9df7572f3884ebc461b528e4139d, type: 3}
+  - {fileID: 21300000, guid: 78781808ff5f06544829740d1b143c75, type: 3}
+  - {fileID: 21300000, guid: 08b0c95873c853e41a859a09f85ff2f1, type: 3}
+  - {fileID: 21300000, guid: 6cb6186927ac68641ae947a51bf7c4eb, type: 3}
+  - {fileID: 21300000, guid: 25e4c99bc2a22ee479a1b3efcb5fbaa8, type: 3}
+  - {fileID: 21300000, guid: b833f46cf63978e4282b3816697417e6, type: 3}
+  - {fileID: 21300000, guid: d66ffc6c2ee949f48963fca4f8bdddc0, type: 3}
+  - {fileID: 21300000, guid: 95b0aacc382bdb04bb6df9dfe28309f5, type: 3}
+  - {fileID: 21300000, guid: 9867261d27f17154098f9062eb60d6a7, type: 3}
+  - {fileID: 21300000, guid: b96908cd8371a9643af457b91c98e7b7, type: 3}
+  - {fileID: 21300000, guid: caebe32e177c41746a65e73b97f4d8bc, type: 3}
+  - {fileID: 21300000, guid: 469fbe4e437b0554eb0ccac0f865788d, type: 3}
+  - {fileID: 21300000, guid: cc3c70afd9e974d46ab9cb1ac5f8cd89, type: 3}
+  - {fileID: 21300000, guid: 6ad3aaef769a62f4a879c2b6cd4b515f, type: 3}
+  m_PackedSpriteNamesToIndex:
+  - ui_rotate_1
+  - ui_slider_1
+  - ui_label_2
+  - ui_border_11
+  - ui_sky_3
+  - ui_cancel_3
+  - ui_backpack_1
+  - ui_border_9
+  - ui_border_14
+  - ui_border_1
+  - ui_label_1
+  - ui_man_1
+  - ui_border_8
+  - ui_border_6
+  - ui_next_1
+  - ui_border_12
+  - ui_border_2
+  - ui_border_7
+  - ui_error_1
+  - ui_woman_1
+  - ui_book_1
+  - ui_sky_2
+  - ui_border_13
+  - ui_setting_1
+  - ui_random_1
+  - ui_sky_1
+  - ui_cancel_2
+  - ui_border_4
+  - ui_slider_2
+  - ui_border_10
+  - ui_border_3
+  - ui_border_5
+  - ui_cancel_1
+  m_RenderDataMap: {}
+  m_Tag: SpriteAtlasForUI
+  m_IsVariant: 0
+  m_IsPlaceholder: 0

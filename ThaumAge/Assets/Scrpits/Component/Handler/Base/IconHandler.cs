@@ -27,7 +27,7 @@ public class IconHandler : BaseHandler<IconHandler,IconManager>
                     callback?.Invoke(spriteAtlas);
             }
         };
-        //LoadAddressablesUtil.LoadAssetAsync(manager.PathSpriteAtlasForUI, loadCallBack);
+        LoadAddressablesUtil.LoadAssetAsync(manager.PathSpriteAtlasForUI, loadCallBack);
         LoadAddressablesUtil.LoadAssetAsync(manager.PathSpriteAtlasForItems, loadCallBack);
     }
 
