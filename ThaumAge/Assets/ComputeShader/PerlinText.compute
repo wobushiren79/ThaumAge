@@ -1,0 +1,28 @@
+#pragma kernel CSMain
+
+struct PerlinBuffer 
+{
+    uint3 pos;
+    float height;
+};
+
+RWStructuredBuffer<PerlinBuffer> dataBuffer;
+
+[numthreads(16,16,1)]
+void CSMain (uint3 id : SV_DispatchThreadID)
+{
+     dataBuffer[id.xy].height = (1.0 + noise(dataBuffer[id.xy].pos)) * 0.5;
+}
+
+float dropOff(float x)
+{
+    float v = 1 - abs(x);
+    return 3 * v * v - 2 * v * v * v;
+}
+
+float noise(uint3 id)
+{
+    float2 g = normalize(float2(0.2, 0.1));
+    float2 v = float2(id.xy) / (res * 0.5) - float2(1.0, 1.0);
+    return dot(g, v) * dropOff(v.x) * dropOff(v.y);
+}

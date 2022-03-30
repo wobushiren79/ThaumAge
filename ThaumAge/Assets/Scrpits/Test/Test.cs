@@ -7,123 +7,83 @@ using UnityEngine;
 using Unity.Burst;
 public class Test : BaseMonoBehaviour
 {
+    public ComputeShader computeShader;
+    public int mainID;
+    protected int count = 32;
 
-    public int data1;
-    public int data2;
+    public struct TestBuffer
+    {
+        public Vector3Int pos;
+        public float height;
+    }
+
+    GameObject[,] objs;
+    private void Awake()
+    {
+        objs = new GameObject[count, count];
+        for (int x = 0; x < count; x++)
+        {
+            for (int z = 0; z < count; z++)
+            {
+                GameObject obj = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                obj.transform.position = new Vector3(x, 0, z);
+                objs[x, z] = obj;
+            }
+        }
+    }
+
     private void OnGUI()
     {
-        if (GUILayout.Button("Test3"))
+        if (GUILayout.Button("TTTTTTTTTTT1"))
         {
-            LogUtil.Log("Test:"+data1/data2);
-        }
-        if (GUILayout.Button("Test1"))
-        {
-            Test1();
-        }
-        if (GUILayout.Button("Test2"))
-        {
-            int count = 160 * 160 * 160;
-            Block[] data1 = new Block[count];
-            BlockManager blockManager =  BlockHandler.Instance.manager;
+            mainID = computeShader.FindKernel("CSMain");
+
             Stopwatch stopwatch = TimeUtil.GetMethodTimeStart();
-
-            for (int i = 0; i < count; i++)
+            TestBuffer[] data = new TestBuffer[count * count];
+            for (int x = 0; x < count; x++)
             {
-                Block itemBlock = blockManager.GetRegisterBlock(1);
-            }
-            TimeUtil.GetMethodTimeEnd("1", stopwatch);
-
-            stopwatch.Restart();
-            int[] data3 = new int[count];
-            for (int i = 0; i < count; i++)
-            {
-                data3[i] =1;
+                for (int z = 0; z < count; z++)
+                {
+                    data[x * count + z].pos = new Vector3Int(x,z,0);
+                }
             }
 
-            TimeUtil.GetMethodTimeEnd("2", stopwatch);
+            ComputeBuffer computeBuffer = new ComputeBuffer(data.Length, 16);
+            computeBuffer.SetData(data);
 
-            stopwatch.Restart();
+            computeShader.SetBuffer(mainID, "dataBuffer", computeBuffer);
+            computeShader.Dispatch(mainID, count/16, count / 16, 1);
 
-            for (int i = 0; i < count; i++)
+            computeBuffer.GetData(data);
+            computeBuffer.Dispose();
+            TimeUtil.GetMethodTimeEnd("1：", stopwatch);
+
+            for (int x = 0; x < count; x++)
             {
-                Block itemBlock = blockManager.GetRegisterBlock(data3[i]);
+                for (int z = 0; z < count; z++)
+                {
+                    GameObject obj = objs[x, z];
+                    obj.transform.position = new Vector3(x, data[x * count + z].height * 2, z);
+                }
             }
 
-            TimeUtil.GetMethodTimeEnd("3", stopwatch);
+        }
+        if (GUILayout.Button("TTTTTTTTTTT2"))
+        {
+            mainID = computeShader.FindKernel("CSMain");
 
-            stopwatch.Restart();
-
+            Stopwatch stopwatch = TimeUtil.GetMethodTimeStart();
+            TestBuffer[] data2 = new TestBuffer[count];
             for (int i = 0; i < count; i++)
             {
-                Block itemBlock = data1[i];
+
             }
-
-            TimeUtil.GetMethodTimeEnd("4", stopwatch);
-
+            TimeUtil.GetMethodTimeEnd("2：", stopwatch);
         }
     }
 
-    public void Test1()
-    {
-        int DataCount = 16 * 16 * 16;
-        string[] data = new string[DataCount];
-        for (int i = 0; i < DataCount; i++)
-        {
-            data[i] = i + "";
-        }
-
-        Stopwatch stopwatch = TimeUtil.GetMethodTimeStart();
-        for (int x = 0; x < 16; x++)
-        {
-            for (int y = 0; y < 16; y++)
-            {
-                for (int z = 0; z < 16; z++)
-                {
-                    string item = data[y << 8 | z << 4 | x];
-                }
-            }
-        }
-        TimeUtil.GetMethodTimeEnd("1:", stopwatch);
-        stopwatch.Restart();
-        for (int x = 0; x < 16; x++)
-        {
-            for (int y = 0; y < 16; y++)
-            {
-                for (int z = 0; z < 16; z++)
-                {
-                    data[y << 8 | z << 4 | x] = "x";
-                }
-            }
-        }
-        TimeUtil.GetMethodTimeEnd("2:", stopwatch);
-
-        stopwatch.Restart();
-        for (int x = 0; x < 16; x++)
-        {
-            for (int y = 0; y < 16; y++)
-            {
-                for (int z = 0; z < 16; z++)
-                {
-                    string item = data[x + y * 16 + z * 16 * 16];
-                }
-            }
-        }
-        TimeUtil.GetMethodTimeEnd("3:", stopwatch);
 
 
-        stopwatch.Restart();
-        for (int x = 0; x < 16; x++)
-        {
-            for (int y = 0; y < 16; y++)
-            {
-                for (int z = 0; z < 16; z++)
-                {
-                    data[x + y * 16 + z * 16 * 16] = "x";
-                }
-            }
-        }
-        TimeUtil.GetMethodTimeEnd("4:", stopwatch);
-    }
 }
 
 
