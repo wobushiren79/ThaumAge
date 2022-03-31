@@ -12,9 +12,9 @@ public class BlockShapeCustom : BlockShape
     {
         base.InitData(block);
         blockMeshData = block.blockInfo.GetBlockMeshData();
-        vertsAdd = blockMeshData.vertices;
-        trisAdd = blockMeshData.triangles;
-        uvsAdd = blockMeshData.uv;
+        vertsAdd = blockMeshData.mainMeshData.vertices;
+        trisAdd = blockMeshData.mainMeshData.triangles;
+        uvsAdd = blockMeshData.mainMeshData.uv;
 
         if (!blockMeshData.verticesCollider.IsNull())
             vertsColliderAddCustom = blockMeshData.verticesCollider;

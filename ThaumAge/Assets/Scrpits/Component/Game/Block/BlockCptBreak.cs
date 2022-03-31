@@ -100,7 +100,7 @@ public class BlockCptBreak : BaseMonoBehaviour
         if (block.blockShape is BlockShapeCustom blockShapeCustom)
         {
             //GameObject objBlock = targetChunk.GetBlockObjForLocal(worldPosition - targetChunk.chunkData.positionForWorld);
-            mfBlockBreak.mesh = blockShapeCustom.blockMeshData.GetMesh();
+            mfBlockBreak.mesh = blockShapeCustom.blockMeshData.GetMainMesh();
             Vector2[] newUVS = new Vector2[mfBlockBreak.mesh.uv.Length];
             for (int i = 0; i < mfBlockBreak.mesh.uv.Length; i++)
             {

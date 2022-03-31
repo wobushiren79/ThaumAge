@@ -1,13 +1,13 @@
 ﻿using UnityEditor;
 using UnityEngine;
 using System;
+using System.Collections.Generic;
 
 [Serializable]
 public class MeshDataCustom
 {
-    public Vector3[] vertices;
-    public Vector2[] uv;
-    public int[] triangles;
+    public MeshDataDetailsCustom mainMeshData;
+    public MeshDataDetailsCustom[] otherMeshData;
 
     public Vector3[] verticesCollider;
     public int[] trianglesCollider;
@@ -16,34 +16,41 @@ public class MeshDataCustom
 
     public MeshDataCustom(Collider collider, Mesh mesh, float size, Vector3 offset)
     {
-        vertices = mesh.vertices;
-        uv = mesh.uv;
-        triangles = mesh.triangles;
-
-        for (int i = 0; i < vertices.Length; i++)
-        {
-            Vector3 itemVer = vertices[i];
-            Vector3 newVer = itemVer * size + offset;
-            vertices[i] = newVer;
-        }
-
-        Mesh meshCollider = GetColliderMesh(collider);
-        verticesCollider = meshCollider.vertices;
-        trianglesCollider = meshCollider.triangles;
+        mainMeshData = new MeshDataDetailsCustom(mesh, size, offset);
+        InitMeshCollider(collider);
     }
+
     public MeshDataCustom(Collider collider, float size, Vector3 offset)
     {
-        vertices = new Vector3[0];
-        uv = new Vector2[0];
-        triangles = new int[0];
+        mainMeshData = new MeshDataDetailsCustom(size, offset);
+        InitMeshCollider(collider);
+    }
 
-        for (int i = 0; i < vertices.Length; i++)
+    /// <summary>
+    /// 设置其余的meshdata
+    /// </summary>
+    /// <param name="listMesh"></param>
+    /// <param name="listSize"></param>
+    /// <param name="listOffset"></param>
+    public void SetOtherMeshData(List<Mesh> listMesh, List<float> listSize, List<Vector3> listOffset)
+    {
+        otherMeshData = new MeshDataDetailsCustom[listMesh.Count];
+        for (int i = 0; i < listMesh.Count; i++)
         {
-            Vector3 itemVer = vertices[i];
-            Vector3 newVer = itemVer * size + offset;
-            vertices[i] = newVer;
+            Mesh itemMesh = listMesh[i];
+            float itemSize = listSize[i];
+            Vector3 itemOffset = listOffset[i];
+            MeshDataDetailsCustom itemMeshData = new MeshDataDetailsCustom(itemMesh, itemSize, itemOffset);
+            otherMeshData[i] = itemMeshData;
         }
+    }
 
+    /// <summary>
+    /// 初始化碰撞mesh
+    /// </summary>
+    /// <param name="collider"></param>
+    public void InitMeshCollider(Collider collider)
+    {
         Mesh meshCollider = GetColliderMesh(collider);
         verticesCollider = meshCollider.vertices;
         trianglesCollider = meshCollider.triangles;
@@ -53,15 +60,9 @@ public class MeshDataCustom
     /// 获取mesh
     /// </summary>
     /// <returns></returns>
-    public Mesh GetMesh()
+    public Mesh GetMainMesh()
     {
-        Mesh mesh = new Mesh();
-        mesh.SetVertices(vertices);
-        mesh.SetUVs(0,uv);
-        mesh.SetTriangles(triangles,0);
-        mesh.RecalculateBounds();
-        mesh.RecalculateNormals();
-        return mesh;
+        return mainMeshData.GetMesh();
     }
 
     /// <summary>
