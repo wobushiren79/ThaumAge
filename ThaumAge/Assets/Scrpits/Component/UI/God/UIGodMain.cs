@@ -26,10 +26,10 @@ public partial class UIGodMain : UIGameCommonNormal
         InitData();
     }
 
-    public override void OnInputActionForStarted(InputActionUIEnum inputType)
+    public override void OnInputActionForStarted(InputActionUIEnum inputType, UnityEngine.InputSystem.InputAction.CallbackContext callback)
     {
-        base.OnInputActionForStarted(inputType);
-        switch (inputType) 
+        base.OnInputActionForStarted(inputType, callback);
+        switch (inputType)
         {
             case InputActionUIEnum.F12:
             case InputActionUIEnum.ESC:

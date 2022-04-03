@@ -107,12 +107,12 @@ public class BaseUIInit : BaseMonoBehaviour
     {
         if (callback.action.name.IsNull())
             return;
-        if (gameObject.activeInHierarchy)
+        if (gameObject.activeInHierarchy && gameObject.activeSelf)
         {
             this.WaitExecuteEndOfFrame(1, () =>
             {
-                if (gameObject.activeInHierarchy)
-                    OnInputActionForStarted(callback.action.name.GetEnum<InputActionUIEnum>());
+                if (gameObject.activeInHierarchy && gameObject.activeSelf)
+                    OnInputActionForStarted(callback.action.name.GetEnum<InputActionUIEnum>(), callback);
             });
         }
     }
@@ -127,7 +127,7 @@ public class BaseUIInit : BaseMonoBehaviour
     }
 
 
-    public virtual void OnInputActionForStarted(InputActionUIEnum inputType)
+    public virtual void OnInputActionForStarted(InputActionUIEnum inputType, CallbackContext callback)
     {
 
     }

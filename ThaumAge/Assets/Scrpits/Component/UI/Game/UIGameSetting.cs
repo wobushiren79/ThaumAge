@@ -46,9 +46,9 @@ public partial class UIGameSetting : BaseUIComponent, IRadioGroupCallBack
         if (viewButton == ui_ViewClose) OnClickForClose();
     }
 
-    public override void OnInputActionForStarted(InputActionUIEnum inputType)
+    public override void OnInputActionForStarted(InputActionUIEnum inputType, UnityEngine.InputSystem.InputAction.CallbackContext callback)
     {
-        base.OnInputActionForStarted(inputType);
+        base.OnInputActionForStarted(inputType, callback);
         if (inputType == InputActionUIEnum.ESC) OnClickForClose();
     }
 
@@ -93,7 +93,7 @@ public partial class UIGameSetting : BaseUIComponent, IRadioGroupCallBack
         {
             settingGameContent.Open();
         }
-        else if(rbview == ui_ViewLabel_Display)
+        else if (rbview == ui_ViewLabel_Display)
         {
             settingDisplayContent.Open();
         }

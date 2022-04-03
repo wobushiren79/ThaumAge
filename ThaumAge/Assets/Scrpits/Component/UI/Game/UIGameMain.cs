@@ -32,9 +32,9 @@ public partial class UIGameMain : BaseUIComponent
         }
     }
 
-    public override void OnInputActionForStarted(InputActionUIEnum inputName)
+    public override void OnInputActionForStarted(InputActionUIEnum inputName,CallbackContext callback)
     {
-        base.OnInputActionForStarted(inputName);
+        base.OnInputActionForStarted(inputName, callback);
         switch (inputName)
         {
             case InputActionUIEnum.F12:

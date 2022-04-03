@@ -39,9 +39,9 @@ public class UIViewShortcuts : BaseUIView
         InitShortcuts();
     }
 
-    public override void OnInputActionForStarted(InputActionUIEnum inputType)
+    public override void OnInputActionForStarted(InputActionUIEnum inputType, UnityEngine.InputSystem.InputAction.CallbackContext callback)
     {
-        base.OnInputActionForStarted(inputType);
+        base.OnInputActionForStarted(inputType, callback);
 
         UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();
         int indexForShortcutsBefore = userData.indexForShortcuts;

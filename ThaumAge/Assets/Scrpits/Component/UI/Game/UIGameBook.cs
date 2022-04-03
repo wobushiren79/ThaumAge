@@ -56,10 +56,7 @@ public partial class UIGameBook : UIGameCommonNormal,IRadioGroupCallBack
     public void RadioButtonSelected(RadioGroupView rgView, int position, RadioButtonView rbview)
     {
         BookModelInfoBean bookModelInfo = listBookModel[position];
-        IconHandler.Instance.manager.GetUISpriteByName(bookModelInfo.background,(iconSprite)=> 
-        {
-            ui_ContentBG.sprite = iconSprite;
-        });
+        ui_ViewGameBookContentMap.SetData(bookModelInfo);
     }
 
     public void RadioButtonUnSelected(RadioGroupView rgView, int position, RadioButtonView rbview)

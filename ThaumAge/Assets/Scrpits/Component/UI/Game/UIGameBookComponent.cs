@@ -8,7 +8,7 @@ public partial class UIGameBook
 
     public RectTransform ui_LabelItem;
 
-    public Image ui_ContentBG;
+    public UIViewGameBookContentMap ui_ViewGameBookContentMap;
 
 
 }

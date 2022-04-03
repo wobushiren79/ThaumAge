@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public partial class UIGameUserDetails : UIGameCommonNormal,IRadioGroupCallBack
+public partial class UIGameUserDetails : UIGameCommonNormal, IRadioGroupCallBack
 {
     public int labelIndex = 0;
 
@@ -22,7 +22,7 @@ public partial class UIGameUserDetails : UIGameCommonNormal,IRadioGroupCallBack
     {
         base.OpenUI();
         ui_ViewBackPack.OpenUI();
-        ui_Labels.SetPosition(0,true);
+        ui_Labels.SetPosition(0, true);
     }
 
     public override void RefreshUI()
@@ -32,9 +32,9 @@ public partial class UIGameUserDetails : UIGameCommonNormal,IRadioGroupCallBack
         SetText();
     }
 
-    public override void OnInputActionForStarted(InputActionUIEnum inputName)
+    public override void OnInputActionForStarted(InputActionUIEnum inputName, UnityEngine.InputSystem.InputAction.CallbackContext callback)
     {
-        base.OnInputActionForStarted(inputName);
+        base.OnInputActionForStarted(inputName, callback);
         switch (inputName)
         {
             case InputActionUIEnum.ESC:
