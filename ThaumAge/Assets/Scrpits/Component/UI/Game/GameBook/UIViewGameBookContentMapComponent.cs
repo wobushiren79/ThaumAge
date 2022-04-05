@@ -8,5 +8,7 @@ public partial class UIViewGameBookContentMap
 
     public ScrollRect ui_ViewGameBookContentMap;
 
+    public UIViewGameBookMapItem ui_ViewGameBookMapItem;
+
 
 }

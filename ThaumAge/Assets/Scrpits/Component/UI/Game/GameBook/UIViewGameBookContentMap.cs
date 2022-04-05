@@ -1,17 +1,32 @@
-﻿using UnityEditor;
+﻿using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 public partial class UIViewGameBookContentMap : BaseUIView
 {
+    protected List<BookModelDetailsInfoBean> listBookModelInfoDetails;
     protected BookModelInfoBean bookModelInfo;
     protected float uiSize = 2;
+
+    public override void Awake()
+    {
+        base.Awake();
+        ui_ViewGameBookMapItem.gameObject.SetActive(false);
+    }
+
+    public override void OpenUI()
+    {
+        base.OpenUI();
+        RegisterEvent<BookModelDetailsInfoBean>(EventsInfo.UIGameBook_MapItemChange, CallBackForMapItemChange);
+    }
+
     public void SetData(BookModelInfoBean bookModelInfo)
     {
         this.bookModelInfo = bookModelInfo;
         SetContentBG();
         SetContentSizePosition();
+        InitMapData();
     }
-
 
     /// <summary>
     /// 按钮输入监听
@@ -27,6 +42,24 @@ public partial class UIViewGameBookContentMap : BaseUIView
                 Vector2 scrollSize = callback.ReadValue<Vector2>();
                 ScrollContentSize(scrollSize.normalized);
                 break;
+        }
+    }
+
+    /// <summary>
+    /// 初始化地图数据
+    /// </summary>
+    public void InitMapData()
+    {
+        if (bookModelInfo == null)
+            return;
+        listBookModelInfoDetails =  GameInfoHandler.Instance.manager.GetBookModelDetailsById(bookModelInfo.id);
+        ui_ContentBG.transform.DestroyAllChild(true,1);
+        for (int i = 0; i < listBookModelInfoDetails.Count; i++)
+        {
+            BookModelDetailsInfoBean itemData = listBookModelInfoDetails[i];
+            GameObject objItem =  Instantiate(ui_ContentBG.gameObject, ui_ViewGameBookMapItem.gameObject);
+            UIViewGameBookMapItem mapItem = objItem.GetComponent<UIViewGameBookMapItem>();
+            mapItem.SetData(itemData);
         }
     }
 
@@ -62,6 +95,16 @@ public partial class UIViewGameBookContentMap : BaseUIView
         if (uiSize > 4)
             uiSize = 4;
         ui_ContentBG.rectTransform.localScale = Vector3.one * uiSize;
+    }
+
+
+    /// <summary>
+    /// 地图item改变
+    /// </summary>
+    /// <param name="bookModelDetailsInfo"></param>
+    protected void CallBackForMapItemChange(BookModelDetailsInfoBean bookModelDetailsInfo)
+    {
+
     }
 }
 

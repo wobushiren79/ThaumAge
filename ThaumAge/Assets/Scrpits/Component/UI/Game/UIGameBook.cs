@@ -3,11 +3,12 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 
-public partial class UIGameBook : UIGameCommonNormal,IRadioGroupCallBack
+public partial class UIGameBook : UIGameCommonNormal, IRadioGroupCallBack
 {
 
     protected List<RadioButtonView> listLabels = new List<RadioButtonView>();
     protected List<BookModelInfoBean> listBookModel;
+
     public override void Awake()
     {
         base.Awake();
@@ -21,6 +22,12 @@ public partial class UIGameBook : UIGameCommonNormal,IRadioGroupCallBack
         InitData();
     }
 
+    public override void CloseUI()
+    {
+        base.CloseUI();
+
+    }
+
     public void InitData()
     {
         listBookModel = GameInfoHandler.Instance.manager.GetUnLockBookModelInfo();
@@ -32,7 +39,7 @@ public partial class UIGameBook : UIGameCommonNormal,IRadioGroupCallBack
     /// </summary>
     public void SetLabels(List<BookModelInfoBean> listBookModel)
     {
-        ui_Labels.DestroyAllChild(true);
+        ui_Labels.DestroyAllChild(true, 1);
         listLabels.Clear();
         for (int i = 0; i < listBookModel.Count; i++)
         {
@@ -46,7 +53,7 @@ public partial class UIGameBook : UIGameCommonNormal,IRadioGroupCallBack
             tvTitle.text = bookModel.name;
             //获取按钮
             RadioButtonView btLabel = objItemLabel.GetComponent<RadioButtonView>();
-            listLabels.Add(btLabel);         
+            listLabels.Add(btLabel);
         }
         ui_Labels.InitRadioButton();
         ui_Labels.SetPosition(0, true);

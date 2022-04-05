@@ -12,4 +12,6 @@ public static class EventsInfo
 
     public static readonly string ItemsBean_MetaChange = "ItemsBean_MetaChange";//道具数据发生改变
 
+    public static readonly string UIGameBook_MapItemChange = "UIGameBook_MapItemChange";//模块描述改变
+
 }

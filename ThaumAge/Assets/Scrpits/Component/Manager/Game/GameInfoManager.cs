@@ -5,11 +5,11 @@ using UnityEngine;
 public class GameInfoManager : BaseManager,
     IBookModelInfoView, IBookModelDetailsInfoView
 {
-
     protected BookModelInfoController controllerBookModel;
     protected BookModelDetailsInfoController controllerBookModelDetails;
 
     protected List<BookModelInfoBean> listBookModelInfo;
+    protected Dictionary<long, List<BookModelDetailsInfoBean>> dicBookModelDetailsInfo;
     protected void Awake()
     {
         controllerBookModel = new BookModelInfoController(this, this);
@@ -42,7 +42,36 @@ public class GameInfoManager : BaseManager,
     /// <param name="listData"></param>
     protected void InitBookModelDetailsInfo(List<BookModelDetailsInfoBean> listData)
     {
+        if (dicBookModelDetailsInfo == null)
+        {
+            dicBookModelDetailsInfo = new Dictionary<long, List<BookModelDetailsInfoBean>>();
+        }
+        dicBookModelDetailsInfo.Clear();
+        for (int i = 0; i < listData.Count; i++)
+        {
+            BookModelDetailsInfoBean itemData = listData[i];
+            if (dicBookModelDetailsInfo.TryGetValue(itemData.model_id, out List<BookModelDetailsInfoBean> listItemData))
+            {
+                listItemData.Add(itemData);
+            }
+            else
+            {
+                dicBookModelDetailsInfo.Add(itemData.model_id, new List<BookModelDetailsInfoBean>() { itemData });
+            }
+        }
+    }
 
+    /// <summary>
+    /// 通过模块ID获取数据
+    /// </summary>
+    /// <param name="modelId"></param>
+    public List<BookModelDetailsInfoBean> GetBookModelDetailsById(long modelId)
+    {
+        if (dicBookModelDetailsInfo.TryGetValue(modelId, out List<BookModelDetailsInfoBean> listData))
+        {
+            return listData;
+        }
+        return null;
     }
 
     #region 数据回调

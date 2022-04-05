@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityEngine.U2D;
 
-public class IconHandler : BaseHandler<IconHandler,IconManager>
+public class IconHandler : BaseHandler<IconHandler, IconManager>
 {
     public override void Awake()
     {
@@ -38,5 +38,34 @@ public class IconHandler : BaseHandler<IconHandler,IconManager>
     public void GetUnKnowSprite(Action<Sprite> callBack)
     {
         manager.GetItemsSpriteByName("icon_unknow", callBack);
+    }
+
+    /// <summary>
+    /// 获取图标sprite
+    /// </summary>
+    /// <param name="spriteData">前图集 后名字 用,分割</param>
+    public void GetIconSprite(string spriteData, Action<Sprite> callBack)
+    {
+        string[] spriteArrayData = spriteData.SplitForArrayStr(',');
+
+        Action<Sprite> callBackForComplete = (sprite) =>
+        {
+            if (sprite == null)
+            {
+                GetUnKnowSprite(callBack);
+            }
+            else
+            {
+                callBack?.Invoke(sprite);
+            }
+        };
+        if (spriteArrayData[0].Equals("SpriteAtlasForUI"))
+        {
+            manager.GetUISpriteByName(spriteArrayData[1], callBackForComplete);
+        }
+        else if (spriteArrayData[0].Equals("SpriteAtlasForItems"))
+        {
+            manager.GetItemsSpriteByName(spriteArrayData[1], callBackForComplete);
+        }
     }
 }
