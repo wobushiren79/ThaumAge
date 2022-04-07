@@ -275,6 +275,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tempCell: {fileID: 8103618689929127680}
   verticalScrollbar: {fileID: 0}
+  movementType: 1
 --- !u!1 &6679462464927300316
 GameObject:
   m_ObjectHideFlags: 0

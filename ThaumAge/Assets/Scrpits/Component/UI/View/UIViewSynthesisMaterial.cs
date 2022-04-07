@@ -99,12 +99,12 @@ public partial class UIViewSynthesisMaterial : BaseUIView
         if (hasEnoughItem)
         {
             ui_TVNumber.color = Color.green;
-            ui_Icon.material.SetFloat("_GreyLerp", 1);
+            ui_Icon.material.SetFloat("_EffectAmount", 0);
         }
         else
         {
             ui_TVNumber.color = Color.white;
-            ui_Icon.material.SetFloat("_GreyLerp", 0);
+            ui_Icon.material.SetFloat("_EffectAmount", 1);
         }
     }
     /// <summary>
