@@ -1,0 +1,15 @@
+#pragma kernel CSMain
+
+Texture2D Input;
+RWTexture2D<float4> Result;
+
+[numthreads(8,32,1)]
+void CSMain (uint3 id : SV_DispatchThreadID)
+{
+    float R = Input[id.xy].r;
+    float G = Input[id.xy].g;
+    float B = Input[id.xy].b;
+    float A = Input[id.xy].a;
+    float End= R*0.299 + G*0.587 + B*0.114;
+    Result[id.xy]=float4(End,End,End,A);
+}
