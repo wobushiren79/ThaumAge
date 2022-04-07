@@ -74,7 +74,9 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 78781808ff5f06544829740d1b143c75, type: 3}
   - {fileID: 21300000, guid: 08b0c95873c853e41a859a09f85ff2f1, type: 3}
   - {fileID: 21300000, guid: 6cb6186927ac68641ae947a51bf7c4eb, type: 3}
+  - {fileID: 21300000, guid: 3ccd635bcb8b26741876406b7932b6c6, type: 3}
   - {fileID: 21300000, guid: 25e4c99bc2a22ee479a1b3efcb5fbaa8, type: 3}
+  - {fileID: 21300000, guid: c466b22ce62920743bffbc733b3b0e32, type: 3}
   - {fileID: 21300000, guid: b833f46cf63978e4282b3816697417e6, type: 3}
   - {fileID: 21300000, guid: d66ffc6c2ee949f48963fca4f8bdddc0, type: 3}
   - {fileID: 21300000, guid: 95b0aacc382bdb04bb6df9dfe28309f5, type: 3}
@@ -108,7 +110,9 @@ SpriteAtlas:
   - ui_book_1
   - ui_sky_2
   - ui_border_13
+  - ui_title_2
   - ui_setting_1
+  - ui_title_1
   - ui_random_1
   - ui_sky_1
   - ui_cancel_2
