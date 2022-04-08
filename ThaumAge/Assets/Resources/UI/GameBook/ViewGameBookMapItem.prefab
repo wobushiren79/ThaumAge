@@ -351,5 +351,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rectTransform: {fileID: 0}
-  ui_BG: {fileID: 0}
-  ui_Icon: {fileID: 0}
+  ui_BG: {fileID: 2656824001673813933}
+  ui_Icon: {fileID: 9074902266969541624}

@@ -71,11 +71,11 @@ public partial class UIViewSynthesisItem : BaseUIView
     {
         if (canSynthesis)
         {
-            ui_ItemIcon.material.SetFloat("_GreyLerp", 1);
+            ui_ItemIcon.material.SetFloat("_EffectAmount", 0);
         }
         else
         {
-            ui_ItemIcon.material.SetFloat("_GreyLerp", 0);
+            ui_ItemIcon.material.SetFloat("_EffectAmount", 1);
         }
     }
 

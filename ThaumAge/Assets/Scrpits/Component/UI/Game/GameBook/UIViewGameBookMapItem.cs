@@ -28,6 +28,7 @@ public partial class UIViewGameBookMapItem : BaseUIView
             {
                 ui_BG.sprite = sprite;
                 ui_BG.color = Color.green;
+                ui_Icon.material.SetFloat("_EffectAmount", 0);
             });
         }
         else
@@ -36,6 +37,7 @@ public partial class UIViewGameBookMapItem : BaseUIView
             {
                 ui_BG.sprite = sprite;
                 ui_BG.color = Color.white;
+                ui_Icon.material.SetFloat("_EffectAmount", 1);
             });
         }
     }
