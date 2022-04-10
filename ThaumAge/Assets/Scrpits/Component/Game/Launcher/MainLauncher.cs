@@ -13,7 +13,7 @@ public class MainLauncher : BaseLauncher
     {
         base.Launch();
         UIHandler.Instance.OpenUIAndCloseOther<UILoading>(UIEnum.Loading);
-
+        IconHandler.Instance.InitData();
         GameHandler.Instance.LoadGameResources(() =>
         {
             //设置游戏状态

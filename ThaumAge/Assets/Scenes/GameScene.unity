@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.025367752, g: 0.04733649, b: 0.096936345, a: 1}
+  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -660,7 +660,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4499381196003094719, guid: 5c61e63afb4d67740855fd8526300679, type: 3}
       propertyPath: m_Lens.m_SensorSize.x
-      value: 2.1880999
+      value: 2.0211766
       objectReference: {fileID: 0}
     - target: {fileID: 4551723306302857165, guid: 5c61e63afb4d67740855fd8526300679, type: 3}
       propertyPath: m_LocalPosition.y
@@ -686,21 +686,17 @@ PrefabInstance:
       propertyPath: m_LocalRotation.z
       value: -0
       objectReference: {fileID: 0}
-    - target: {fileID: 5223264256430687388, guid: 5c61e63afb4d67740855fd8526300679, type: 3}
-      propertyPath: moveSpeed
-      value: 20
-      objectReference: {fileID: 0}
     - target: {fileID: 7311094454041643296, guid: 5c61e63afb4d67740855fd8526300679, type: 3}
       propertyPath: m_Lens.FarClipPlane
       value: 200
       objectReference: {fileID: 0}
     - target: {fileID: 7311094454041643296, guid: 5c61e63afb4d67740855fd8526300679, type: 3}
       propertyPath: m_Lens.m_SensorSize.x
-      value: 1.7777778
+      value: 2.0211766
       objectReference: {fileID: 0}
     - target: {fileID: 7797179889788700148, guid: 5c61e63afb4d67740855fd8526300679, type: 3}
       propertyPath: m_Lens.m_SensorSize.x
-      value: 2.1880999
+      value: 2.0211766
       objectReference: {fileID: 0}
     - target: {fileID: 7866382187774823357, guid: 5c61e63afb4d67740855fd8526300679, type: 3}
       propertyPath: m_LocalPosition.z
@@ -724,7 +720,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8105604369806812267, guid: 5c61e63afb4d67740855fd8526300679, type: 3}
       propertyPath: m_Lens.m_SensorSize.x
-      value: 2.1880999
+      value: 2.0211766
       objectReference: {fileID: 0}
     - target: {fileID: 8533266650839486888, guid: 5c61e63afb4d67740855fd8526300679, type: 3}
       propertyPath: m_RootOrder

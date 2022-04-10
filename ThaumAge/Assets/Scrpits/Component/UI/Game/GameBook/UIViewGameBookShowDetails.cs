@@ -1,7 +1,7 @@
 ﻿using UnityEditor;
 using UnityEngine;
 
-public class UIViewGameBookShowDetails : BaseUIView
+public partial class UIViewGameBookShowDetails : BaseUIView
 {
     
 }

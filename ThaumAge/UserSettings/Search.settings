@@ -15,6 +15,9 @@ scopes = {
 	"currentGroup.7F95D817" = "scene"
 	"OpenInspectorPreview.83F126EB" = "0"
 	"OpenInspectorPreview.7F95D817" = "0"
+	"last_search.7BEC51F9" = ""
+	"OpenInspectorPreview.7BEC51F9" = "0"
+	"currentGroup.7BEC51F9" = "asset"
 }
 providers = {
 	asset = {

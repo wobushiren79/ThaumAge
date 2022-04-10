@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 3259043571814320104}
   - component: {fileID: 2105486256826653319}
   - component: {fileID: 7158296812466800880}
+  - component: {fileID: 4483299758091093413}
   m_Layer: 5
   m_Name: ViewGameBookShowItemContent
   m_TagString: Untagged
@@ -88,6 +89,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_HorizontalFit: 0
   m_VerticalFit: 2
+--- !u!114 &4483299758091093413
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3153061950403060796}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8c93ae217ef02164c99c3854c66e5ffc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rectTransform: {fileID: 0}
+  ui_Content: {fileID: 4591032202417343520}
 --- !u!1 &6986552059706961464
 GameObject:
   m_ObjectHideFlags: 0
@@ -99,6 +114,7 @@ GameObject:
   - component: {fileID: 4323080422340943613}
   - component: {fileID: 6029301068881492456}
   - component: {fileID: 4591032202417343520}
+  - component: {fileID: 291416147142513378}
   m_Layer: 5
   m_Name: Content
   m_TagString: Untagged
@@ -123,8 +139,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 30}
+  m_AnchoredPosition: {x: 263, y: 0}
+  m_SizeDelta: {x: 526, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6029301068881492456
 CanvasRenderer:
@@ -168,3 +184,17 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: 
+--- !u!114 &291416147142513378
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6986552059706961464}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3245ec927659c4140ac4f8d17403cc18, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_HorizontalFit: 0
+  m_VerticalFit: 2
