@@ -1,3 +1,4 @@
+using System;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
@@ -13,6 +14,5 @@ public partial class UIViewGameBookShowItemSubmit
     public Text ui_CompleteText;
 
     public RectTransform ui_Content;
-
 
 }

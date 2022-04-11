@@ -21,5 +21,17 @@ public class UserAchievementBean
         return false;
     }
 
+    /// <summary>
+    /// 解锁模块
+    /// </summary>
+    /// <param name="modelDetailsId"></param>
+    public void UnlockBookModelDetails(int modelDetailsId)
+    {
+        if (!listBookModelDetailsUnlock.Contains(modelDetailsId))
+        {
+            listBookModelDetailsUnlock.Add(modelDetailsId);
+        }
+    }
+
 
 }

@@ -17,7 +17,7 @@ public partial class UIViewGameBookContentMap : BaseUIView
     public override void OpenUI()
     {
         base.OpenUI();
-        RegisterEvent<BookModelDetailsInfoBean>(EventsInfo.UIGameBook_MapItemChange, CallBackForMapItemChange);
+        RegisterEvent<BookModelDetailsInfoBean>(EventsInfo.UIGameBook_MapItemChange, EventForMapItemChange);
     }
 
     public void SetData(BookModelInfoBean bookModelInfo)
@@ -99,10 +99,10 @@ public partial class UIViewGameBookContentMap : BaseUIView
 
 
     /// <summary>
-    /// 地图item改变
+    /// 事件-地图item改变
     /// </summary>
     /// <param name="bookModelDetailsInfo"></param>
-    protected void CallBackForMapItemChange(BookModelDetailsInfoBean bookModelDetailsInfo)
+    protected void EventForMapItemChange(BookModelDetailsInfoBean bookModelDetailsInfo)
     {
 
     }
