@@ -5,7 +5,6 @@ using UnityEngine.UI;
 
 public partial class UIGameBook : UIGameCommonNormal, IRadioGroupCallBack
 {
-
     protected List<RadioButtonView> listLabels = new List<RadioButtonView>();
     protected List<BookModelInfoBean> listBookModel;
 
@@ -19,13 +18,16 @@ public partial class UIGameBook : UIGameCommonNormal, IRadioGroupCallBack
     public override void OpenUI()
     {
         base.OpenUI();
+        ui_ViewGameBookContentMap.OpenUI();
+        ui_ViewGameBookShowDetails.OpenUI();
         InitData();
     }
 
     public override void CloseUI()
     {
         base.CloseUI();
-
+        ui_ViewGameBookContentMap.CloseUI();
+        ui_ViewGameBookShowDetails.CloseUI();
     }
 
     public void InitData()

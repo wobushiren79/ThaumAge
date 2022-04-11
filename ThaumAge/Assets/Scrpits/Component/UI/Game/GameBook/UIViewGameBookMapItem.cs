@@ -1,11 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public partial class UIViewGameBookMapItem : BaseUIView
 {
     protected BookModelDetailsInfoBean bookModelDetailsInfo;
 
+    /// <summary>
+    /// 设置数据
+    /// </summary>
+    /// <param name="bookModelDetailsInfo"></param>
     public void SetData(BookModelDetailsInfoBean bookModelDetailsInfo)
     {
         this.bookModelDetailsInfo = bookModelDetailsInfo;
@@ -61,5 +66,27 @@ public partial class UIViewGameBookMapItem : BaseUIView
         string postionStr = bookModelDetailsInfo.map_position;
         float[] position = postionStr.SplitForArrayFloat(',');
         rectTransform.anchoredPosition = new Vector2(position[0], position[1]);
+    }
+
+
+    /// <summary>
+    /// 按钮
+    /// </summary>
+    /// <param name="viewButton"></param>
+    public override void OnClickForButton(Button viewButton)
+    {
+        base.OnClickForButton(viewButton);
+        if (viewButton == ui_BTSubmit)
+        {
+            OnClickForSubmit();
+        }
+    }
+
+    /// <summary>
+    /// 点击-提交
+    /// </summary>
+    protected void OnClickForSubmit()
+    {
+        TriggerEvent(EventsInfo.UIGameBook_MapItemChange, bookModelDetailsInfo);
     }
 }

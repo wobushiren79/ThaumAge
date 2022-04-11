@@ -52,12 +52,14 @@ public partial class UIViewGameBookContentMap : BaseUIView
     {
         if (bookModelInfo == null)
             return;
-        listBookModelInfoDetails =  GameInfoHandler.Instance.manager.GetBookModelDetailsById(bookModelInfo.id);
-        ui_ContentBG.transform.DestroyAllChild(true,1);
+        listBookModelInfoDetails = GameInfoHandler.Instance.manager.GetBookModelDetailsById(bookModelInfo.id);
+        ui_ContentBG.transform.DestroyAllChild(true, 1);
+        if (listBookModelInfoDetails == null || listBookModelInfoDetails.Count == 0)
+            return;
         for (int i = 0; i < listBookModelInfoDetails.Count; i++)
         {
             BookModelDetailsInfoBean itemData = listBookModelInfoDetails[i];
-            GameObject objItem =  Instantiate(ui_ContentBG.gameObject, ui_ViewGameBookMapItem.gameObject);
+            GameObject objItem = Instantiate(ui_ContentBG.gameObject, ui_ViewGameBookMapItem.gameObject);
             UIViewGameBookMapItem mapItem = objItem.GetComponent<UIViewGameBookMapItem>();
             mapItem.SetData(itemData);
         }

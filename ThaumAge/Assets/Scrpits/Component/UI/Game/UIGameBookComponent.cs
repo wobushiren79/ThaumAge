@@ -10,5 +10,7 @@ public partial class UIGameBook
 
     public UIViewGameBookContentMap ui_ViewGameBookContentMap;
 
+    public UIViewGameBookShowDetails ui_ViewGameBookShowDetails;
+
 
 }

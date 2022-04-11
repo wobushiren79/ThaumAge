@@ -8,5 +8,7 @@ public partial class UIViewGameBookMapItem
 
     public Image ui_Icon;
 
+    public Button ui_BTSubmit;
+
 
 }
