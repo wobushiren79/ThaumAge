@@ -8,6 +8,7 @@ public enum BlockShapeEnum
     CubeTransparent = 2,//透明方块
     CubeCuboid = 3,//长方体方块
     CubeLeaves = 4,//树叶方块
+    CubeHalf = 5,//一半
 
 
     Cross = 101,// 正交叉

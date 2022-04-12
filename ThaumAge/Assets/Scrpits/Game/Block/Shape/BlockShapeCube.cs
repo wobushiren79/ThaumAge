@@ -128,7 +128,6 @@ public class BlockShapeCube : BlockShape
         };
     }
 
-
     /// <summary>
     /// 构建方块的六个面
     /// </summary>
@@ -144,22 +143,6 @@ public class BlockShapeCube : BlockShape
 
         if (block.blockType != BlockTypeEnum.None)
         {
-            int startVertsIndex = chunk.chunkMeshData.verts.Count;
-            int startTrisIndex = chunk.chunkMeshData.dicTris[block.blockInfo.material_type].Count;
-
-            int startVertsColliderIndex = 0;
-            int startTrisColliderIndex = 0;
-
-            if (block.blockInfo.collider_state == 1)
-            {
-                startVertsColliderIndex = chunk.chunkMeshData.vertsCollider.Count;
-                startTrisColliderIndex = chunk.chunkMeshData.trisCollider.Count;
-            }
-            else if (block.blockInfo.trigger_state == 1)
-            {
-                startVertsColliderIndex = chunk.chunkMeshData.vertsTrigger.Count;
-                startTrisColliderIndex = chunk.chunkMeshData.trisTrigger.Count;
-            }
             int buildFaceCount = 0;
 
             //只有在能旋转的时候才去查询旋转方向
@@ -210,15 +193,43 @@ public class BlockShapeCube : BlockShape
                 buildFaceCount++;
             }
 
-            int vertsCount = buildFaceCount * 4;
-            int trisIndex = buildFaceCount * 6;
+            AddMeshIndexData(chunk, localPosition, buildFaceCount);
+        }
+    }
 
-            if (vertsCount != 0)
+    /// <summary>
+    /// 增加保存的mesh数据
+    /// </summary>
+    /// <param name="chunk"></param>
+    /// <param name="localPosition"></param>
+    /// <param name="buildFaceCount"></param>
+    protected virtual void AddMeshIndexData(Chunk chunk, Vector3Int localPosition,int buildFaceCount)
+    {
+        int vertsCount = buildFaceCount * 4;
+        int trisIndex = buildFaceCount * 6;
+
+        if (vertsCount != 0)
+        {
+            int startVertsIndex = chunk.chunkMeshData.verts.Count;
+            int startTrisIndex = chunk.chunkMeshData.dicTris[block.blockInfo.material_type].Count;
+
+            int startVertsColliderIndex = 0;
+            int startTrisColliderIndex = 0;
+
+            if (block.blockInfo.collider_state == 1)
             {
-                chunk.chunkMeshData.AddMeshIndexData(localPosition,
-                    startVertsIndex, vertsCount, startTrisIndex, trisIndex,
-                    startVertsColliderIndex, vertsCount, startTrisColliderIndex, trisIndex);
+                startVertsColliderIndex = chunk.chunkMeshData.vertsCollider.Count;
+                startTrisColliderIndex = chunk.chunkMeshData.trisCollider.Count;
             }
+            else if (block.blockInfo.trigger_state == 1)
+            {
+                startVertsColliderIndex = chunk.chunkMeshData.vertsTrigger.Count;
+                startTrisColliderIndex = chunk.chunkMeshData.trisTrigger.Count;
+            }
+
+            chunk.chunkMeshData.AddMeshIndexData(localPosition,
+                startVertsIndex, vertsCount, startTrisIndex, trisIndex,
+                startVertsColliderIndex, vertsCount, startTrisColliderIndex, trisIndex);
         }
     }
 

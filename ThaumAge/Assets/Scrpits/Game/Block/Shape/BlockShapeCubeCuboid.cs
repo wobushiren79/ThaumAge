@@ -78,23 +78,6 @@ public class BlockShapeCubeCuboid : BlockShapeCube
     {
         if (block.blockType != BlockTypeEnum.None)
         {
-            int startVertsIndex = chunk.chunkMeshData.verts.Count;
-            int startTrisIndex = chunk.chunkMeshData.dicTris[block.blockInfo.material_type].Count;
-
-            int startVertsColliderIndex = 0;
-            int startTrisColliderIndex = 0;
-
-            if (block.blockInfo.collider_state == 1)
-            {
-                startVertsColliderIndex = chunk.chunkMeshData.vertsCollider.Count;
-                startTrisColliderIndex = chunk.chunkMeshData.trisCollider.Count;
-            }
-            else if (block.blockInfo.trigger_state == 1)
-            {
-                startVertsColliderIndex = chunk.chunkMeshData.vertsTrigger.Count;
-                startTrisColliderIndex = chunk.chunkMeshData.trisTrigger.Count;
-            }
-
             int buildFaceCount = 0;
 
             //只有在能旋转的时候才去查询旋转方向
@@ -139,15 +122,7 @@ public class BlockShapeCubeCuboid : BlockShapeCube
                 BuildFace(block, chunk, localPosition, direction, DirectionEnum.Back, vertsAddBackOffset, uvsAddBack, false);
                 buildFaceCount++;
             }
-            int vertsCount = buildFaceCount * 4;
-            int trisIndex = buildFaceCount * 6;
-
-            if (vertsCount != 0)
-            {
-                chunk.chunkMeshData.AddMeshIndexData(localPosition,
-                    startVertsIndex, vertsCount, startTrisIndex, trisIndex,
-                    startVertsColliderIndex, vertsCount, startTrisColliderIndex, trisIndex);
-            }
+            AddMeshIndexData(chunk, localPosition, buildFaceCount);
         }
     }
 
