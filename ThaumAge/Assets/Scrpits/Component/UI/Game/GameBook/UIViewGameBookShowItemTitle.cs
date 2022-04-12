@@ -19,5 +19,6 @@ public partial class UIViewGameBookShowItemTitle : BaseUIView
     public void SetContent(string titleStr)
     {
         ui_Content.text = titleStr;
+        UGUIUtil.RefreshUISize(ui_Content.rectTransform);
     }
 }

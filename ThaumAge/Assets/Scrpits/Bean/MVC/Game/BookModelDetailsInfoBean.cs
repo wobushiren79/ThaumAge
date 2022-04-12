@@ -31,6 +31,10 @@ using System;
 		/// </summary>
 		public string content_en;
 		/// <summary>
+		///解锁拥有道具
+		/// </summary>
+		public string unlock_items;
+		/// <summary>
 		///备注
 		/// </summary>
 		public string remark;

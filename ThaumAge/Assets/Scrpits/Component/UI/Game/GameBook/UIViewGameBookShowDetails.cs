@@ -20,6 +20,6 @@ public partial class UIViewGameBookShowDetails : BaseUIView
         this.bookModelDetailsInfo = bookModelDetailsInfo;
         ui_ViewGameBookShowItemTitle.SetData(bookModelDetailsInfo.title);
         ui_ViewGameBookShowItemContent.SetData(bookModelDetailsInfo.content);
-        ui_ViewGameBookShowItemSubmit.SetData(bookModelDetailsInfo.id);
+        ui_ViewGameBookShowItemSubmit.SetData(bookModelDetailsInfo);
     }
 }

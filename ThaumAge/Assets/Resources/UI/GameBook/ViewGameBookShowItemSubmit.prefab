@@ -682,6 +682,7 @@ MonoBehaviour:
   ui_BTComplete: {fileID: 4408945468759063716}
   ui_CompleteText: {fileID: 5111336013872292218}
   ui_Content: {fileID: 7408082741325124188}
+  ui_ItemList: {fileID: 9067747253142190123}
 --- !u!1 &7682802369911334562
 GameObject:
   m_ObjectHideFlags: 0

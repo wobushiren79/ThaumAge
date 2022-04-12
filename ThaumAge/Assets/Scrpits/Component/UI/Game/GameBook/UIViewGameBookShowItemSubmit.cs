@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 public partial class UIViewGameBookShowItemSubmit : BaseUIView
 {
-    protected int bookModelDetailsInfoId;
+    protected BookModelDetailsInfoBean bookModelDetailsInfo;
 
     public override void OnClickForButton(Button viewButton)
     {
@@ -18,11 +18,26 @@ public partial class UIViewGameBookShowItemSubmit : BaseUIView
     /// <summary>
     /// 设置数据
     /// </summary>
-    /// <param name="bookModelDetailsInfoId"></param>
-    public void SetData(int bookModelDetailsInfoId)
+    /// <param name="bookModelDetailsInfo"></param>
+    public void SetData(BookModelDetailsInfoBean bookModelDetailsInfo)
     {
-        this.bookModelDetailsInfoId = bookModelDetailsInfoId;
-        SetSubmitState(bookModelDetailsInfoId);
+        this.bookModelDetailsInfo = bookModelDetailsInfo;
+        SetSubmitState(bookModelDetailsInfo.id);
+        SetUnlockItems(bookModelDetailsInfo.unlock_items);
+    }
+
+    /// <summary>
+    /// 设置待解锁道具
+    /// </summary>
+    /// <param name="itemsData"></param>
+    public void SetUnlockItems(string unlockItemsData)
+    {
+        if (unlockItemsData.IsNull())
+        {
+            ui_ItemList.gameObject.SetActive(false);
+            return;
+        }
+        ui_ItemList.gameObject.SetActive(true);
     }
 
     /// <summary>
@@ -50,6 +65,6 @@ public partial class UIViewGameBookShowItemSubmit : BaseUIView
     public void OnClickForSubmit()
     {
         UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();
-        userData.userAchievement.UnlockBookModelDetails(bookModelDetailsInfoId);
+        userData.userAchievement.UnlockBookModelDetails(bookModelDetailsInfo.id);
     }
 }

@@ -19,5 +19,6 @@ public partial class UIViewGameBookShowItemContent : BaseUIView
     public void SetContent(string contentStr)
     {
         ui_Content.text = contentStr;
+        UGUIUtil.RefreshUISize(ui_Content.rectTransform);
     }
 }
