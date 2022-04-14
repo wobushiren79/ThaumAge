@@ -23,10 +23,9 @@ public class ChunkMeshData
     //所有三角形合集，根据材质球区分
     public List<int>[] dicTris;
 
-    //下标数据
+    //下标数据(用于缓存方块的mesh的数据 暂时不需要用)
     public Dictionary<Vector3, ChunkMeshIndexData> dicIndexData;
-
-    //刷新次数
+    //刷新次数(用于缓存方块的mesh的数据 暂时不需要用)
     public int refreshNumber;
 
     public ChunkMeshData()

@@ -399,7 +399,8 @@ public class Chunk
         //刷新blockMesh
         if (isRefreshMesh)
         {
-            WorldCreateHandler.Instance.HandleForUpdateChunk(this, localPosition, oldBlock, newBlock, direction);
+            WorldCreateHandler.Instance.HandleForUpdateChunk(true , null);
+            //WorldCreateHandler.Instance.HandleForUpdateChunk(this, localPosition, oldBlock, newBlock, direction);
         }
         //初始化方块(放再这里是等处理完数据和mesh之后再初始化)
         newBlock.InitBlock(this, localPosition, 1);

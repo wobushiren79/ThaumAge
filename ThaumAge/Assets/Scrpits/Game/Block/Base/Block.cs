@@ -131,7 +131,8 @@ public class Block
     public virtual void RemoveBlockMesh(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction, ChunkMeshIndexData meshIndexData)
     {
         //删除该条下标信息
-        chunk.chunkMeshData.dicIndexData.Remove(localPosition);
+        //chunk.chunkMeshData.dicIndexData.Remove(localPosition);
+
         //移除对应三角数据
         List<int> tris = chunk.chunkMeshData.dicTris[blockInfo.material_type];
         MeshTrisRemove(tris, meshIndexData.trisStartIndex, meshIndexData.trisCount);
@@ -258,9 +259,10 @@ public class Block
     /// 刷新方块
     /// </summary>
     public virtual void RefreshBlock(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction)
-    {
+    {  
         //更新方块
-        WorldCreateHandler.Instance.HandleForUpdateChunk(chunk, localPosition, this, this, direction, false);
+        WorldCreateHandler.Instance.HandleForUpdateChunk(true, null);
+        //WorldCreateHandler.Instance.HandleForUpdateChunk(chunk, localPosition, this, this, direction, false);
     }
 
     /// <summary>

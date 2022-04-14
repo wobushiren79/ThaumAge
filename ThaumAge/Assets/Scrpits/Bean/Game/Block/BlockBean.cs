@@ -54,7 +54,7 @@ public class BlockBean
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <returns></returns>
-    public T GetBlockData<T>()
+    public T GetBlockMeta<T>()
     {
         if (meta.IsNull())
             return default;
