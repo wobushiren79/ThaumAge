@@ -134,6 +134,46 @@ public static class VectorExtension
         return self;
     }
 
+    public static Vector3 SetX(this Vector3 self, float data)
+    {
+        self.x = data;
+        return self;
+    }
+    public static Vector3 SetY(this Vector3 self, float data)
+    {
+        self.y = data;
+        return self;
+    }
+    public static Vector3 SetZ(this Vector3 self, float data)
+    {
+        self.z = data;
+        return self;
+    }
+    public static Vector3 SetXY(this Vector3 self, float x, float y)
+    {
+        self.x = x;
+        self.y = y;
+        return self;
+    }
+    public static Vector3 SetXZ(this Vector3 self, float x, float z)
+    {
+        self.x = x;
+        self.z = z;
+        return self;
+    }
+    public static Vector3 SetYZ(this Vector3 self, float y, float z)
+    {
+        self.y = y;
+        self.z = z;
+        return self;
+    }
+    public static Vector3 SetXYZ(this Vector3 self, float x, float y, float z)
+    {
+        self.x = x;
+        self.y = y;
+        self.z = z;
+        return self;
+    }
     //-------Vector2Int--------
     public static Vector2Int AddX(this Vector2Int self, int add)
     {
@@ -192,5 +232,149 @@ public static class VectorExtension
         self.y += y;
         self.z += z;
         return self;
+    }
+
+    //-------Vector3[]--------
+
+    public static Vector3[] AddX(this Vector3[] self, float add)
+    {
+        Vector3[] newSelf = new Vector3[self.Length];
+        for (int i = 0; i < self.Length; i++)
+        {
+            newSelf[i] = self[i].AddX(add);
+        }
+        return newSelf;
+    }
+
+    public static Vector3[] AddY(this Vector3[] self, float add)
+    {
+        Vector3[] newSelf = new Vector3[self.Length];
+        for (int i = 0; i < self.Length; i++)
+        {
+            newSelf[i] = self[i].AddY(add);
+        }
+        return newSelf;
+    }
+
+    public static Vector3[] AddZ(this Vector3[] self, float add)
+    {
+        Vector3[] newSelf = new Vector3[self.Length];
+        for (int i = 0; i < self.Length; i++)
+        {
+            newSelf[i] = self[i].AddZ(add);
+        }
+        return newSelf;
+    }
+
+
+    public static Vector3[] AddXY(this Vector3[] self, float x, float y)
+    {
+        Vector3[] newSelf = new Vector3[self.Length];
+        for (int i = 0; i < self.Length; i++)
+        {
+            newSelf[i] = self[i].AddXY(x, y);
+        }
+        return newSelf;
+    }
+
+    public static Vector3[] AddXZ(this Vector3[] self, float x, float z)
+    {
+        Vector3[] newSelf = new Vector3[self.Length];
+        for (int i = 0; i < self.Length; i++)
+        {
+            newSelf[i] = self[i].AddXZ(x, z);
+        }
+        return newSelf;
+    }
+
+    public static Vector3[] AddYZ(this Vector3[] self, float y, float z)
+    {
+        Vector3[] newSelf = new Vector3[self.Length];
+        for (int i = 0; i < self.Length; i++)
+        {
+            newSelf[i] = self[i].AddYZ(y, z);
+        }
+        return newSelf;
+    }
+
+    public static Vector3[] AddXYZ(this Vector3[] self, float x, float y, float z)
+    {
+        Vector3[] newSelf = new Vector3[self.Length];
+        for (int i = 0; i < self.Length; i++)
+        {
+            newSelf[i] = self[i].AddXYZ(x, y, z);
+        }
+        return newSelf;
+    }
+
+    public static Vector3[] SetX(this Vector3[] self, float data)
+    {
+        Vector3[] newSelf = new Vector3[self.Length];
+        for (int i = 0; i < self.Length; i++)
+        {
+            newSelf[i] = self[i].SetX(data);
+        }
+        return newSelf;
+    }
+
+    public static Vector3[] SetY(this Vector3[] self, float data)
+    {
+        Vector3[] newSelf = new Vector3[self.Length];
+        for (int i = 0; i < self.Length; i++)
+        {
+            newSelf[i] = self[i].SetY(data);
+        }
+        return newSelf;
+    }
+
+    public static Vector3[] SetZ(this Vector3[] self, float data)
+    {
+        Vector3[] newSelf = new Vector3[self.Length];
+        for (int i = 0; i < self.Length; i++)
+        {
+            newSelf[i] = self[i].SetZ(data);
+        }
+        return newSelf;
+    }
+
+
+    public static Vector3[] SetXY(this Vector3[] self, float x, float y)
+    {
+        Vector3[] newSelf = new Vector3[self.Length];
+        for (int i = 0; i < self.Length; i++)
+        {
+            newSelf[i] = self[i].SetXY(x, y);
+        }
+        return newSelf;
+    }
+
+    public static Vector3[] SetXZ(this Vector3[] self, float x, float z)
+    {
+        Vector3[] newSelf = new Vector3[self.Length];
+        for (int i = 0; i < self.Length; i++)
+        {
+            newSelf[i] = self[i].SetXZ(x, z);
+        }
+        return newSelf;
+    }
+
+    public static Vector3[] SetYZ(this Vector3[] self, float y, float z)
+    {
+        Vector3[] newSelf = new Vector3[self.Length];
+        for (int i = 0; i < self.Length; i++)
+        {
+            newSelf[i] = self[i].SetYZ(y, z);
+        }
+        return newSelf;
+    }
+
+    public static Vector3[] SetXYZ(this Vector3[] self, float x, float y, float z)
+    {
+        Vector3[] newSelf = new Vector3[self.Length];
+        for (int i = 0; i < self.Length; i++)
+        {
+            newSelf[i] = self[i].SetXYZ(x, y, z);
+        }
+        return newSelf;
     }
 }
