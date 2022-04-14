@@ -272,17 +272,18 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
         if (manager.listUpdateDrawChunkEditor.Count > 0)
         {
             //按照顺序依次渲染 编辑的区块 
-            Chunk updateDrawChunk = manager.listUpdateDrawChunkEditor.Dequeue();
+            Chunk updateDrawChunk = manager.listUpdateDrawChunkEditor.Peek();
             if (updateDrawChunk != null && updateDrawChunk.isInit)
             {
                 if (!updateDrawChunk.isBuildChunk)
                 {
+                    manager.listUpdateDrawChunkEditor.Dequeue();
                     //构建修改过的区块
                     updateDrawChunk.chunkComponent.DrawMesh();
                 }
             }
         }
-        if (manager.listUpdateDrawChunkEditor.Count > 0 || manager.listUpdateDrawChunkInit.Count > 0)
+        if (manager.listUpdateDrawChunkInit.Count > 0)
         {
             HandleForDrawChunk();
         }

@@ -259,8 +259,9 @@ public class Block
     /// 刷新方块
     /// </summary>
     public virtual void RefreshBlock(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction)
-    {  
+    {       
         //更新方块
+        WorldCreateHandler.Instance.manager.AddUpdateChunk(chunk);
         WorldCreateHandler.Instance.HandleForUpdateChunk(true, null);
         //WorldCreateHandler.Instance.HandleForUpdateChunk(chunk, localPosition, this, this, direction, false);
     }

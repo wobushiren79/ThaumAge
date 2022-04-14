@@ -399,6 +399,7 @@ public class Chunk
         //刷新blockMesh
         if (isRefreshMesh)
         {
+            WorldCreateHandler.Instance.manager.AddUpdateChunk(this);
             WorldCreateHandler.Instance.HandleForUpdateChunk(true , null);
             //WorldCreateHandler.Instance.HandleForUpdateChunk(this, localPosition, oldBlock, newBlock, direction);
         }
