@@ -22,6 +22,7 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
     {
         HandleForWorldUpdate();
         HandleForDrawChunk();
+        HandleForUpdateChunk();
     }
 
     /// <summary>
@@ -131,6 +132,7 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
                 {
                     Action<Chunk> callBackForCreateChunk = (successCreateChunk) =>
                     {
+                        manager.AddUpdateChunk(successCreateChunk, 0);
                         //创建所有初始化区块数据完成之后 再一次性更新所有区块
                         totalNumber++;
                         if (totalNumber >= rangeNumber)
@@ -144,7 +146,7 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
                                     callBackForComplete?.Invoke(successUpdateChunk);
                                 }
                             };
-                            HandleForUpdateChunk(false, callBackForUpdateChunk);
+        
                         }
                     };
                     CreateChunk(currentPosition, callBackForCreateChunk);
@@ -154,7 +156,7 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
                 {
                     Action<Chunk> callBackForCreateChunk = (successCreateChunk) =>
                     {
-                        HandleForUpdateChunk(false, callBackForComplete);
+                        manager.AddUpdateChunk(successCreateChunk,0);
                     };
                     CreateChunk(currentPosition, callBackForCreateChunk);
                 }
@@ -258,16 +260,21 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
     /// </summary>
     public void HandleForDrawChunk()
     {
+        //首先处理初始化的区块
         if (manager.listUpdateDrawChunkInit.Count > 0)
         {
-            Chunk updateDrawChunk = manager.listUpdateDrawChunkInit.Dequeue();
-            if (updateDrawChunk != null && updateDrawChunk.isInit)
+            //因为是更新数据完成之后再加的列表 所以可以直接开始绘制
+            foreach (var updateDrawChunk in manager.listUpdateDrawChunkInit)
             {
-                if (!updateDrawChunk.isBuildChunk)
+                if (updateDrawChunk != null && updateDrawChunk.isInit)
                 {
-                    updateDrawChunk.chunkComponent.DrawMesh();
+                    if (!updateDrawChunk.isBuildChunk)
+                    {
+                        updateDrawChunk.chunkComponent.DrawMesh();
+                    }
                 }
             }
+            manager.listUpdateDrawChunkInit.Clear();
         }
         if (manager.listUpdateDrawChunkEditor.Count > 0)
         {
@@ -283,110 +290,61 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
                 }
             }
         }
-        if (manager.listUpdateDrawChunkInit.Count > 0)
-        {
-            HandleForDrawChunk();
-        }
+        //if (manager.listUpdateDrawChunkInit.Count > 0)
+        //{
+        //    HandleForDrawChunk();
+        //}
     }
 
     /// <summary>
     ///  处理 待更新区块
     /// </summary>
-    /// <param name="isOrderDraw">是否按顺序绘制</param>
-    /// <param name="callBackForUpdateChunk"></param>
-    public void HandleForUpdateChunk(bool isOrderDraw, Action<Chunk> callBackForUpdateChunk)
+    public void HandleForUpdateChunk()
     {
-        while (manager.listUpdateChunk.Count > 0)
+        if (manager.listUpdateChunkInit.Count > 0)
         {
-            manager.listUpdateChunk.TryDequeue(out Chunk updateChunk);
-            if (updateChunk == null)
-                break;
-            if (!updateChunk.isInit || updateChunk.isDrawMesh)
+            //处理初始化待更新的Chunk
+            lock (WorldCreateManager.lockForUpdateBlock)
             {
-                manager.listUpdateChunk.Enqueue(updateChunk);
-                break;
-            }
-            if (isOrderDraw)
-            {
-                manager.AddUpdateDrawChunk(updateChunk, 1);
-            }
-            //构建修改过的区块
-            Action callBackForComplete = () =>
-            {
-                if (!isOrderDraw)
+                foreach (var updateChunk in manager.listUpdateChunkInit)
                 {
-                    //构建修改过的区块
-                    manager.AddUpdateDrawChunk(updateChunk, 0);
+                    if (updateChunk == null || !updateChunk.isInit || updateChunk.isDrawMesh)
+                    {
+                        continue;
+                    }                    
+                    Action callBackForComplete = () =>
+                    {
+                        //当更新完数据之后再添加到绘制列表
+                        manager.AddUpdateDrawChunk(updateChunk, 0);
+                    };
+                    updateChunk.BuildChunkForAsync(callBackForComplete);
                 }
-                callBackForUpdateChunk?.Invoke(updateChunk);
-            };
-            updateChunk.BuildChunkForAsync(callBackForComplete);
+                manager.listUpdateChunkInit.Clear();
+            }
+        }
+        if (manager.listUpdateChunkEditor.Count > 0)
+        {
+            //处理实时更新的chunk
+            lock (WorldCreateManager.lockForUpdateBlock)
+            {
+                while (manager.listUpdateChunkEditor.Count > 0)
+                {
+                    Chunk updateChunk = manager.listUpdateChunkEditor.Dequeue();
+                    if (updateChunk == null || !updateChunk.isInit || updateChunk.isDrawMesh)
+                    {
+                        continue;
+                    }
+                    //因为需要按顺序排序 所以先添加到绘制列表
+                    manager.AddUpdateChunk(updateChunk, 1);
+                    Action callBackForComplete = () =>
+                    {
+
+                    };
+                    updateChunk.BuildChunkForAsync(callBackForComplete);
+                }
+            }
         }
     }
-
-
-    /// <summary>
-    /// 处理 待更新区块
-    /// </summary>
-    /// <param name="chunk"></param>
-    /// <param name="localPosition"></param>
-    /// <param name="block"></param>
-    /// <param name="direction"></param>
-    /// <param name="isRefreshRange">是否刷新周围方块</param>
-    public void HandleForUpdateChunk(Chunk chunk, Vector3Int localPosition, Block oldBlock, Block newBlock, BlockDirectionEnum direction = BlockDirectionEnum.UpForward, bool isRefreshRange = true)
-    {
-        //如果正在构建方块 则先不更新mesh
-        if (chunk.isBuildChunk)
-            return;
-        //如果超过刷新上限 则重新刷新
-        if (chunk.chunkMeshData.refreshNumber >= 1024)
-        {
-            manager.AddUpdateChunk(chunk);
-            HandleForUpdateChunk(true, null);
-            return;
-        }
-
-        //如果是需要刷新周围方块
-        if (isRefreshRange)
-        {
-            //暂时不需要 放在每个方块的refres方法中刷新
-            //上
-            //HandleForUpdateChunkClose(chunk, localPosition + Vector3Int.up);
-            //下
-            //HandleForUpdateChunkClose(chunk, localPosition + Vector3Int.down);
-            //左
-            //HandleForUpdateChunkClose(chunk, localPosition + Vector3Int.left);
-            //右
-            //HandleForUpdateChunkClose(chunk, localPosition + Vector3Int.right);
-            //前
-            //HandleForUpdateChunkClose(chunk, localPosition + Vector3Int.forward);
-            //后
-            //HandleForUpdateChunkClose(chunk, localPosition + Vector3Int.back);
-        }
-
-        if (chunk.chunkMeshData.dicIndexData.TryGetValue(localPosition, out ChunkMeshIndexData meshIndexData))
-        {
-            //先删除指定方块
-            if (oldBlock != null)
-                oldBlock.RemoveBlockMesh(chunk, localPosition, direction, meshIndexData);
-        }
-        else
-        {
-
-        }
-        newBlock.BuildBlock(chunk, localPosition);
-        manager.AddUpdateDrawChunk(chunk, 1);
-    }
-
-    protected void HandleForUpdateChunkClose(Chunk chunk, Vector3Int localPosition)
-    {
-        chunk.GetBlockForLocal(localPosition, out Block closeBlock, out BlockDirectionEnum closeBlockDirection, out Chunk closeChunk);
-        if (closeChunk != null && closeBlock != null && closeBlock.blockType != BlockTypeEnum.None)
-        {
-            HandleForUpdateChunk(closeChunk, localPosition + chunk.chunkData.positionForWorld - closeChunk.chunkData.positionForWorld, closeBlock, closeBlock, closeBlockDirection, false);
-        }
-    }
-
 
     /// <summary>
     /// 处理-世界刷新

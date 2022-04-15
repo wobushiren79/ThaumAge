@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 public class WorldCreateManager : BaseManager
@@ -12,13 +11,16 @@ public class WorldCreateManager : BaseManager
     //存储着世界中所有的Chunk
     public Dictionary<long, Chunk> dicChunk = new Dictionary<long, Chunk>();
 
-    //所有待修改的区块
-    public ConcurrentQueue<Chunk> listUpdateChunk = new ConcurrentQueue<Chunk>();
+    //所有待修改的区块 用于场景初始化
+    public HashSet<Chunk> listUpdateChunkInit = new HashSet<Chunk>();
+    //所有待修改的区块 用于修改
+    public Queue<Chunk> listUpdateChunkEditor = new Queue<Chunk>();
 
-    //待绘制的区块 用于角色修改
-    public Queue<Chunk> listUpdateDrawChunkEditor = new Queue<Chunk>();
     //待绘制的区块 用于场景初始化
-    public Queue<Chunk> listUpdateDrawChunkInit = new Queue<Chunk>();
+    public HashSet<Chunk> listUpdateDrawChunkInit = new HashSet<Chunk>();
+    //待绘制的区块 用于修改
+    public Queue<Chunk> listUpdateDrawChunkEditor = new Queue<Chunk>();
+
 
     //世界种子
     protected int worldSeed;
@@ -32,7 +34,7 @@ public class WorldCreateManager : BaseManager
 
     public WorldTypeEnum worldType = WorldTypeEnum.Main;
 
-    protected static object lockForUpdateBlock = new object();
+    public static object lockForUpdateBlock = new object();
 
     public static string pathForChunk = "Assets/Prefabs/Game/Chunk.prefab";
 
@@ -111,13 +113,24 @@ public class WorldCreateManager : BaseManager
     /// 增加需要更新的区块
     /// </summary>
     /// <param name="chunk"></param>
-    public void AddUpdateChunk(Chunk chunk)
+    /// <param name="type">0场景创建 1创景编辑</param>
+    public void AddUpdateChunk(Chunk chunk,int type)
     {
         if (chunk == null || !chunk.isInit)
             return;
-        if (!listUpdateChunk.Contains(chunk))
+        lock (lockForUpdateBlock)
         {
-            listUpdateChunk.Enqueue(chunk);
+            if (type == 0)
+            {
+                listUpdateChunkInit.Add(chunk);
+            }
+            else if (type == 1)
+            {
+                if (!listUpdateChunkEditor.Contains(chunk))
+                {
+                    listUpdateChunkEditor.Enqueue(chunk);
+                }
+            }
         }
     }
 
@@ -130,10 +143,7 @@ public class WorldCreateManager : BaseManager
     {
         if (type == 0)
         {
-            if (!listUpdateDrawChunkInit.Contains(chunk))
-            {
-                listUpdateDrawChunkInit.Enqueue(chunk);
-            }
+            listUpdateDrawChunkInit.Add(chunk);
         }
         else if (type == 1)
         {

@@ -24,9 +24,9 @@ public class ChunkMeshData
     public List<int>[] dicTris;
 
     //下标数据(用于缓存方块的mesh的数据 暂时不需要用)
-    public Dictionary<Vector3, ChunkMeshIndexData> dicIndexData;
+    //public Dictionary<Vector3, ChunkMeshIndexData> dicIndexData;
     //刷新次数(用于缓存方块的mesh的数据 暂时不需要用)
-    public int refreshNumber;
+    //public int refreshNumber;
 
     public ChunkMeshData()
     {
@@ -45,13 +45,12 @@ public class ChunkMeshData
             dicTris[i] = new List<int>();
         }
 
-        dicIndexData = new Dictionary<Vector3, ChunkMeshIndexData>();
-
-        refreshNumber = 0;
+        //dicIndexData = new Dictionary<Vector3, ChunkMeshIndexData>();
+        //refreshNumber = 0;
 
         //默认构建一个触发collider 防止Chunk没有触发时的报错
-        vertsTrigger.AddRange(new List<Vector3> { new Vector3(0, -9999, 0), new Vector3(1, -9999, 0), new Vector3(0, -9999, 1) });
-        trisTrigger.AddRange(new List<int> { 0, 1, 2 });
+        //vertsTrigger.AddRange(new List<Vector3> { new Vector3(0, -9999, 0), new Vector3(1, -9999, 0), new Vector3(0, -9999, 1) });
+        //trisTrigger.AddRange(new List<int> { 0, 1, 2 });
     }
 
     public VertexStruct[] GetVertexStruct()
@@ -88,22 +87,22 @@ public class ChunkMeshData
     /// <summary>
     /// 添加mesh下标
     /// </summary>
-    public void AddMeshIndexData(Vector3 position,
-        int vertsStartIndex, int vertsCount, int trisStartIndex, int trisCount,
-        int vertsColliderStartIndex = 0, int vertsColliderCount = 0, int trisColliderStartIndex = 0, int trisColliderCount = 0)
-    {
-        ChunkMeshIndexData chunkMeshIndex = new ChunkMeshIndexData();
-        chunkMeshIndex.vertsStartIndex = vertsStartIndex;
-        chunkMeshIndex.vertsCount = vertsCount;
-        chunkMeshIndex.trisStartIndex = trisStartIndex;
-        chunkMeshIndex.trisCount = trisCount;
+    //public void AddMeshIndexData(Vector3 position,
+    //    int vertsStartIndex, int vertsCount, int trisStartIndex, int trisCount,
+    //    int vertsColliderStartIndex = 0, int vertsColliderCount = 0, int trisColliderStartIndex = 0, int trisColliderCount = 0)
+    //{
+    //    ChunkMeshIndexData chunkMeshIndex = new ChunkMeshIndexData();
+    //    chunkMeshIndex.vertsStartIndex = vertsStartIndex;
+    //    chunkMeshIndex.vertsCount = vertsCount;
+    //    chunkMeshIndex.trisStartIndex = trisStartIndex;
+    //    chunkMeshIndex.trisCount = trisCount;
 
-        chunkMeshIndex.vertsColliderStartIndex = vertsColliderStartIndex;
-        chunkMeshIndex.vertsColliderCount = vertsColliderCount;
-        chunkMeshIndex.trisColliderStartIndex = trisColliderStartIndex;
-        chunkMeshIndex.trisColliderCount = trisColliderCount;
-        dicIndexData.Add(position, chunkMeshIndex);
-    }
+    //    chunkMeshIndex.vertsColliderStartIndex = vertsColliderStartIndex;
+    //    chunkMeshIndex.vertsColliderCount = vertsColliderCount;
+    //    chunkMeshIndex.trisColliderStartIndex = trisColliderStartIndex;
+    //    chunkMeshIndex.trisColliderCount = trisColliderCount;
+    //    dicIndexData.Add(position, chunkMeshIndex);
+    //}
 }
 
 
