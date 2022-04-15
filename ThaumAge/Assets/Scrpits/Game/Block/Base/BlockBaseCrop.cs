@@ -121,9 +121,7 @@ public class BlockBaseCrop : BlockBasePlant
         blockData.meta = newMeta;
         chunk.SetBlockData(blockData);
         //刷新
-        WorldCreateHandler.Instance.manager.AddUpdateChunk(chunk);
-        WorldCreateHandler.Instance.HandleForUpdateChunk(true, null);
-        //WorldCreateHandler.Instance.HandleForUpdateChunk(chunk, localPosition, block, block, direction);
+        WorldCreateHandler.Instance.manager.AddUpdateChunk(chunk, 1);
 
         //判断是否已经是最大生长周期
         int lifeCycle = GetCropLifeCycle();

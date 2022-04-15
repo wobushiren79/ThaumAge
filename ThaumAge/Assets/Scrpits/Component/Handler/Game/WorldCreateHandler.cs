@@ -54,12 +54,12 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
     /// <param name="isCreateChunkComponent">是否创建区块组件</param>
     /// <param name="isCreateBlockData">是否创建方块数据</param>
     public Chunk CreateChunk(Vector3Int position, Action<Chunk> callBackForCreateData,
-         bool isCreateChunkComponent = true , bool isCreateBlockData = true)
+         bool isCreateChunkComponent = true, bool isCreateBlockData = true)
     {
         Chunk chunk;
 
         lock (lockWorldCreate)
-        {       
+        {
             //检测当前位置是否有区块
             chunk = manager.GetChunk(position);
             //创建区块
@@ -98,7 +98,7 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
         }
         //创建基础方块数据（没有创建过基础数据）
         if (isCreateBlockData && !chunk.isInit)
-        {        
+        {
             //开始异步创建方块数据
             chunk.BuildChunkBlockDataForAsync(callBackForCreateData);
         }
@@ -115,7 +115,7 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
     /// <param name="centerPosition"></param>
     /// <param name="range"></param>
     /// <param name="callback"></param>
-    public void CreateChunkRangeForCenterPosition(Vector3Int centerPosition, int range, bool isInit, Action<Chunk> callBackForComplete)
+    public void CreateChunkRangeForCenterPosition(Vector3Int centerPosition, int range, bool isInit, Action callBackForComplete)
     {
         manager.worldRefreshRange = range;
 
@@ -137,16 +137,7 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
                         totalNumber++;
                         if (totalNumber >= rangeNumber)
                         {
-                            totalNumber = 0;
-                            Action<Chunk> callBackForUpdateChunk = (successUpdateChunk) =>
-                            {
-                                totalNumber++;
-                                if (totalNumber >= rangeNumber)
-                                {
-                                    callBackForComplete?.Invoke(successUpdateChunk);
-                                }
-                            };
-        
+                            callBackForComplete?.Invoke();
                         }
                     };
                     CreateChunk(currentPosition, callBackForCreateChunk);
@@ -156,7 +147,7 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
                 {
                     Action<Chunk> callBackForCreateChunk = (successCreateChunk) =>
                     {
-                        manager.AddUpdateChunk(successCreateChunk,0);
+                        manager.AddUpdateChunk(successCreateChunk, 0);
                     };
                     CreateChunk(currentPosition, callBackForCreateChunk);
                 }
@@ -179,8 +170,8 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
         Vector3Int minPosition = -manager.widthChunk * range * new Vector3Int(1, 0, 1) + centerPosition;
 
         //没有初始化的删除范围
-        Vector3Int maxNoInitPosition = manager.widthChunk * (range+10) * new Vector3Int(1, 0, 1) + centerPosition;
-        Vector3Int minNoInitPosition = -manager.widthChunk * (range+10) * new Vector3Int(1, 0, 1) + centerPosition;
+        Vector3Int maxNoInitPosition = manager.widthChunk * (range + 10) * new Vector3Int(1, 0, 1) + centerPosition;
+        Vector3Int minNoInitPosition = -manager.widthChunk * (range + 10) * new Vector3Int(1, 0, 1) + centerPosition;
 
         List<Chunk> listRemoveChunk = new List<Chunk>();
         foreach (var chunk in manager.dicChunk.Values)
@@ -224,7 +215,7 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
     /// <param name="range"></param>
     /// <param name="callBackForComplete"></param>
 
-    public void CreateChunkRangeForWorldPostion(Vector3 position, int range, Action<Chunk> callBackForComplete)
+    public void CreateChunkRangeForWorldPostion(Vector3 position, int range, Action callBackForComplete)
     {
         Vector3Int centerPosition = GetChunkCenterPositionByWorldPosition(position);
         CreateChunkRangeForCenterPosition(centerPosition, range, false, callBackForComplete);
@@ -264,7 +255,7 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
         if (manager.listUpdateDrawChunkInit.Count > 0)
         {
             //因为是更新数据完成之后再加的列表 所以可以直接开始绘制
-            foreach (var updateDrawChunk in manager.listUpdateDrawChunkInit)
+            while (manager.listUpdateDrawChunkInit.TryDequeue(out Chunk updateDrawChunk))
             {
                 if (updateDrawChunk != null && updateDrawChunk.isInit)
                 {
@@ -274,19 +265,20 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
                     }
                 }
             }
-            manager.listUpdateDrawChunkInit.Clear();
         }
         if (manager.listUpdateDrawChunkEditor.Count > 0)
         {
             //按照顺序依次渲染 编辑的区块 
-            Chunk updateDrawChunk = manager.listUpdateDrawChunkEditor.Peek();
+            manager.listUpdateDrawChunkEditor.TryPeek(out Chunk updateDrawChunk);
             if (updateDrawChunk != null && updateDrawChunk.isInit)
             {
                 if (!updateDrawChunk.isBuildChunk)
                 {
-                    manager.listUpdateDrawChunkEditor.Dequeue();
-                    //构建修改过的区块
-                    updateDrawChunk.chunkComponent.DrawMesh();
+                    if (manager.listUpdateDrawChunkEditor.TryDequeue(out updateDrawChunk))
+                    {
+                        //构建修改过的区块
+                        updateDrawChunk.chunkComponent.DrawMesh();
+                    }
                 }
             }
         }
@@ -304,44 +296,32 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
         if (manager.listUpdateChunkInit.Count > 0)
         {
             //处理初始化待更新的Chunk
-            lock (WorldCreateManager.lockForUpdateBlock)
+            while (manager.listUpdateChunkInit.TryDequeue(out Chunk updateChunk))
             {
-                foreach (var updateChunk in manager.listUpdateChunkInit)
+                if (updateChunk == null || !updateChunk.isInit || updateChunk.isDrawMesh)
                 {
-                    if (updateChunk == null || !updateChunk.isInit || updateChunk.isDrawMesh)
-                    {
-                        continue;
-                    }                    
-                    Action callBackForComplete = () =>
-                    {
-                        //当更新完数据之后再添加到绘制列表
-                        manager.AddUpdateDrawChunk(updateChunk, 0);
-                    };
-                    updateChunk.BuildChunkForAsync(callBackForComplete);
+                    continue;
                 }
-                manager.listUpdateChunkInit.Clear();
+                Action callBackForComplete = () =>
+                {
+                    //当更新完数据之后再添加到绘制列表
+                    manager.AddUpdateDrawChunk(updateChunk, 0);
+                };
+                updateChunk.BuildChunkForAsync(callBackForComplete);
             }
         }
         if (manager.listUpdateChunkEditor.Count > 0)
         {
             //处理实时更新的chunk
-            lock (WorldCreateManager.lockForUpdateBlock)
+            while (manager.listUpdateChunkEditor.TryDequeue(out Chunk updateChunk))
             {
-                while (manager.listUpdateChunkEditor.Count > 0)
+                if (updateChunk == null || !updateChunk.isInit || updateChunk.isDrawMesh)
                 {
-                    Chunk updateChunk = manager.listUpdateChunkEditor.Dequeue();
-                    if (updateChunk == null || !updateChunk.isInit || updateChunk.isDrawMesh)
-                    {
-                        continue;
-                    }
-                    //因为需要按顺序排序 所以先添加到绘制列表
-                    manager.AddUpdateChunk(updateChunk, 1);
-                    Action callBackForComplete = () =>
-                    {
-
-                    };
-                    updateChunk.BuildChunkForAsync(callBackForComplete);
+                    continue;
                 }
+                //因为需要按顺序排序 所以先添加到绘制列表
+                manager.AddUpdateDrawChunk(updateChunk, 1);
+                updateChunk.BuildChunkForAsync(null);
             }
         }
     }

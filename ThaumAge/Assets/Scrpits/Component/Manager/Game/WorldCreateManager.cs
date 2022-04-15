@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class WorldCreateManager : BaseManager
@@ -12,14 +13,14 @@ public class WorldCreateManager : BaseManager
     public Dictionary<long, Chunk> dicChunk = new Dictionary<long, Chunk>();
 
     //所有待修改的区块 用于场景初始化
-    public HashSet<Chunk> listUpdateChunkInit = new HashSet<Chunk>();
+    public ConcurrentQueue<Chunk> listUpdateChunkInit = new ConcurrentQueue<Chunk>();
     //所有待修改的区块 用于修改
-    public Queue<Chunk> listUpdateChunkEditor = new Queue<Chunk>();
+    public ConcurrentQueue<Chunk> listUpdateChunkEditor = new ConcurrentQueue<Chunk>();
 
     //待绘制的区块 用于场景初始化
-    public HashSet<Chunk> listUpdateDrawChunkInit = new HashSet<Chunk>();
+    public ConcurrentQueue<Chunk> listUpdateDrawChunkInit = new ConcurrentQueue<Chunk>();
     //待绘制的区块 用于修改
-    public Queue<Chunk> listUpdateDrawChunkEditor = new Queue<Chunk>();
+    public ConcurrentQueue<Chunk> listUpdateDrawChunkEditor = new ConcurrentQueue<Chunk>();
 
 
     //世界种子
@@ -118,18 +119,18 @@ public class WorldCreateManager : BaseManager
     {
         if (chunk == null || !chunk.isInit)
             return;
-        lock (lockForUpdateBlock)
+        if (type == 0)
         {
-            if (type == 0)
+            if (!listUpdateChunkInit.Contains(chunk))
             {
-                listUpdateChunkInit.Add(chunk);
+                listUpdateChunkInit.Enqueue(chunk);
             }
-            else if (type == 1)
+        }
+        else if (type == 1)
+        {
+            if (!listUpdateChunkEditor.Contains(chunk))
             {
-                if (!listUpdateChunkEditor.Contains(chunk))
-                {
-                    listUpdateChunkEditor.Enqueue(chunk);
-                }
+                listUpdateChunkEditor.Enqueue(chunk);
             }
         }
     }
@@ -143,7 +144,10 @@ public class WorldCreateManager : BaseManager
     {
         if (type == 0)
         {
-            listUpdateDrawChunkInit.Add(chunk);
+            if (!listUpdateDrawChunkInit.Contains(chunk))
+            {
+                listUpdateDrawChunkInit.Enqueue(chunk);
+            }
         }
         else if (type == 1)
         {
@@ -175,7 +179,7 @@ public class WorldCreateManager : BaseManager
         chunk.chunkData.SetBlockForLocal(localX, localY, localZ, blockUpdate, itemBlock.direction);
         //chunk.SetBlockForLocal(new Vector3Int(localX, localY, localZ), itemBlock.GetBlockType(), itemBlock.GetDirection(), null, false, false, false);
         //添加需要更新的chunk
-        AddUpdateChunk(chunk);
+        AddUpdateChunk(chunk,0);
     }
 
 

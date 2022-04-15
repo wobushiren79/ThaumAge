@@ -122,7 +122,7 @@ public class BlockShapeCubeCuboid : BlockShapeCube
                 BuildFace(block, chunk, localPosition, direction, DirectionEnum.Back, vertsAddBackOffset, uvsAddBack);
                 buildFaceCount++;
             }
-            AddMeshIndexData(chunk, localPosition, buildFaceCount);
+            //AddMeshIndexData(chunk, localPosition, buildFaceCount);
         }
     }
 

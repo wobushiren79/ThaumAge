@@ -32,7 +32,7 @@ public class MainLauncher : BaseLauncher
     /// <summary>
     /// 刷新完成后
     /// </summary>
-    public void CompleteForUpdateChunk(Chunk completeChunk)
+    public void CompleteForUpdateChunk()
     {
         //显示人物
         SceneMainHandler.Instance.ShowCharacter();

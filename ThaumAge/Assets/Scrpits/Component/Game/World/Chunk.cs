@@ -174,36 +174,14 @@ public class Chunk
     /// <summary>
     /// 增加四周待更新的区块
     /// </summary>
-    public void AddUpdateChunkForRange()
+    /// <param name="type">0场景创建 1创景编辑</param>
+    public void AddUpdateChunkForRange(int type)
     {
-        Vector3Int worldPosition = chunkData.positionForWorld;
-        int chunkWidth = chunkData.chunkWidth;
-        Chunk leftChunk = WorldCreateHandler.Instance.manager.GetChunk(worldPosition - new Vector3Int(-chunkWidth, 0, 0));
-        Chunk rightChunk = WorldCreateHandler.Instance.manager.GetChunk(worldPosition - new Vector3Int(chunkWidth, 0, 0));
-        Chunk upChunk = WorldCreateHandler.Instance.manager.GetChunk(worldPosition - new Vector3Int(0, 0, chunkWidth));
-        Chunk downChunk = WorldCreateHandler.Instance.manager.GetChunk(worldPosition - new Vector3Int(0, 0, -chunkWidth));
-        WorldCreateHandler.Instance.manager.AddUpdateChunk(leftChunk);
-        WorldCreateHandler.Instance.manager.AddUpdateChunk(rightChunk);
-        WorldCreateHandler.Instance.manager.AddUpdateChunk(upChunk);
-        WorldCreateHandler.Instance.manager.AddUpdateChunk(downChunk);
-        WorldCreateHandler.Instance.manager.AddUpdateChunk(this);
-    }
-
-    public void AddUpdateChunkForRange(Vector3Int worldPosition)
-    {
-        Chunk leftChunk = WorldCreateHandler.Instance.manager.GetChunkForWorldPosition(worldPosition - new Vector3Int(-1, 0, 0));
-        Chunk rightChunk = WorldCreateHandler.Instance.manager.GetChunkForWorldPosition(worldPosition - new Vector3Int(1, 0, 0));
-        Chunk upChunk = WorldCreateHandler.Instance.manager.GetChunkForWorldPosition(worldPosition - new Vector3Int(0, 0, 1));
-        Chunk downChunk = WorldCreateHandler.Instance.manager.GetChunkForWorldPosition(worldPosition - new Vector3Int(0, 0, -1));
-        if (leftChunk != this)
-            WorldCreateHandler.Instance.manager.AddUpdateChunk(leftChunk);
-        if (rightChunk != this)
-            WorldCreateHandler.Instance.manager.AddUpdateChunk(rightChunk);
-        if (upChunk != this)
-            WorldCreateHandler.Instance.manager.AddUpdateChunk(upChunk);
-        if (downChunk != this)
-            WorldCreateHandler.Instance.manager.AddUpdateChunk(downChunk);
-        WorldCreateHandler.Instance.manager.AddUpdateChunk(this);
+        WorldCreateHandler.Instance.manager.AddUpdateChunk(chunkData.chunkLeft, type);
+        WorldCreateHandler.Instance.manager.AddUpdateChunk(chunkData.chunkRight, type);
+        WorldCreateHandler.Instance.manager.AddUpdateChunk(chunkData.chunkBack, type);
+        WorldCreateHandler.Instance.manager.AddUpdateChunk(chunkData.chunkForward, type);
+        WorldCreateHandler.Instance.manager.AddUpdateChunk(this, type);
     }
 
     /// <summary>
@@ -234,7 +212,7 @@ public class Chunk
                     //初始化完成
                     isInit = true;
                     //设置数据
-                    AddUpdateChunkForRange();
+                    AddUpdateChunkForRange(0);
 #if UNITY_EDITOR
                     TimeUtil.GetMethodTimeEnd("Time_BuildChunkBlockDataForAsync:", stopwatch);
 #endif
@@ -399,9 +377,7 @@ public class Chunk
         //刷新blockMesh
         if (isRefreshMesh)
         {
-            WorldCreateHandler.Instance.manager.AddUpdateChunk(this);
-            WorldCreateHandler.Instance.HandleForUpdateChunk(true , null);
-            //WorldCreateHandler.Instance.HandleForUpdateChunk(this, localPosition, oldBlock, newBlock, direction);
+            WorldCreateHandler.Instance.manager.AddUpdateChunk(this,1);
         }
         //初始化方块(放再这里是等处理完数据和mesh之后再初始化)
         newBlock.InitBlock(this, localPosition, 1);

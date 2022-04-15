@@ -197,35 +197,35 @@ public class BlockShapeCube : BlockShape
     /// <param name="chunk"></param>
     /// <param name="localPosition"></param>
     /// <param name="buildFaceCount"></param>
-    protected virtual void AddMeshIndexData(Chunk chunk, Vector3Int localPosition, int buildFaceCount)
-    {
-        int vertsCount = buildFaceCount * 4;
-        int trisIndex = buildFaceCount * 6;
+    //protected virtual void AddMeshIndexData(Chunk chunk, Vector3Int localPosition, int buildFaceCount)
+    //{
+    //    int vertsCount = buildFaceCount * 4;
+    //    int trisIndex = buildFaceCount * 6;
 
-        if (vertsCount != 0)
-        {
-            int startVertsIndex = chunk.chunkMeshData.verts.Count;
-            int startTrisIndex = chunk.chunkMeshData.dicTris[block.blockInfo.material_type].Count;
+    //    if (vertsCount != 0)
+    //    {
+    //        int startVertsIndex = chunk.chunkMeshData.verts.Count;
+    //        int startTrisIndex = chunk.chunkMeshData.dicTris[block.blockInfo.material_type].Count;
 
-            int startVertsColliderIndex = 0;
-            int startTrisColliderIndex = 0;
+    //        int startVertsColliderIndex = 0;
+    //        int startTrisColliderIndex = 0;
 
-            if (block.blockInfo.collider_state == 1)
-            {
-                startVertsColliderIndex = chunk.chunkMeshData.vertsCollider.Count;
-                startTrisColliderIndex = chunk.chunkMeshData.trisCollider.Count;
-            }
-            else if (block.blockInfo.trigger_state == 1)
-            {
-                startVertsColliderIndex = chunk.chunkMeshData.vertsTrigger.Count;
-                startTrisColliderIndex = chunk.chunkMeshData.trisTrigger.Count;
-            }
+    //        if (block.blockInfo.collider_state == 1)
+    //        {
+    //            startVertsColliderIndex = chunk.chunkMeshData.vertsCollider.Count;
+    //            startTrisColliderIndex = chunk.chunkMeshData.trisCollider.Count;
+    //        }
+    //        else if (block.blockInfo.trigger_state == 1)
+    //        {
+    //            startVertsColliderIndex = chunk.chunkMeshData.vertsTrigger.Count;
+    //            startTrisColliderIndex = chunk.chunkMeshData.trisTrigger.Count;
+    //        }
 
-            chunk.chunkMeshData.AddMeshIndexData(localPosition,
-                startVertsIndex, vertsCount, startTrisIndex, trisIndex,
-                startVertsColliderIndex, vertsCount, startTrisColliderIndex, trisIndex);
-        }
-    }
+    //        chunk.chunkMeshData.AddMeshIndexData(localPosition,
+    //            startVertsIndex, vertsCount, startTrisIndex, trisIndex,
+    //            startVertsColliderIndex, vertsCount, startTrisColliderIndex, trisIndex);
+    //    }
+    //}
 
     public override void BuildBlockNoCheck(Chunk chunk, Vector3Int localPosition)
     {

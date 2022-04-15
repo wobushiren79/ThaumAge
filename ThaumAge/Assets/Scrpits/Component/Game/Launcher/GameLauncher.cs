@@ -44,7 +44,7 @@ public class GameLauncher : BaseLauncher
     /// <summary>
     /// 刷新完成后
     /// </summary>
-    public void CompleteForUpdateChunk(Chunk completeChunk)
+    public void CompleteForUpdateChunk()
     {
         //修改游戏状态
         GameHandler.Instance.manager.SetGameState(GameStateEnum.Gaming);

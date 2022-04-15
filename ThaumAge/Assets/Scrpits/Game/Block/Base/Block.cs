@@ -261,9 +261,7 @@ public class Block
     public virtual void RefreshBlock(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction)
     {       
         //¸üÐÂ·½¿é
-        WorldCreateHandler.Instance.manager.AddUpdateChunk(chunk);
-        WorldCreateHandler.Instance.HandleForUpdateChunk(true, null);
-        //WorldCreateHandler.Instance.HandleForUpdateChunk(chunk, localPosition, this, this, direction, false);
+        WorldCreateHandler.Instance.manager.AddUpdateChunk(chunk,1);
     }
 
     /// <summary>
