@@ -3,15 +3,22 @@ using UnityEngine;
 
 public class BlockShapeCubeHalf : BlockShapeCube
 {
+    protected static float offsetCubeHalf = 0.5f;
     protected static Vector3[] HandleHalfVerts(Vector3[] verts, Vector3 offsetPosition)
     {
         Vector3[] newVerts = new Vector3[verts.Length];
         for (int i = 0; i < verts.Length; i++)
         {
             Vector3 itemVert = verts[i];
-            float newX = offsetPosition.x == 0 ? itemVert.x : (itemVert.x > 0.5f ? itemVert.x - offsetPosition.x : itemVert.x);
-            float newY = offsetPosition.y == 0 ? itemVert.y : (itemVert.y > 0.5f ? itemVert.y - offsetPosition.y : itemVert.y);
-            float newZ = offsetPosition.z == 0 ? itemVert.z : (itemVert.z > 0.5f ? itemVert.z - offsetPosition.z : itemVert.z);
+            float newX = offsetPosition.x == 0 
+                ? itemVert.x :(offsetPosition.x > 0 
+                ? (itemVert.x < 0.5f ? itemVert.x + offsetPosition.x : itemVert.x) : (itemVert.x > 0.5f ? itemVert.x + offsetPosition.x : itemVert.x));
+            float newY = offsetPosition.y == 0
+                ? itemVert.y : (offsetPosition.y > 0
+                ? (itemVert.y < 0.5f ? itemVert.y + offsetPosition.y : itemVert.y) : (itemVert.x > 0.5f ? itemVert.y + offsetPosition.y : itemVert.y));
+            float newZ = offsetPosition.z == 0
+                ? itemVert.z : (offsetPosition.z > 0
+                ? (itemVert.z < 0.5f ? itemVert.z + offsetPosition.z : itemVert.z) : (itemVert.x > 0.5f ? itemVert.z + offsetPosition.z : itemVert.z));
             newVerts[i] = new Vector3(newX, newY, newZ);
         }
         return newVerts;
@@ -19,54 +26,62 @@ public class BlockShapeCubeHalf : BlockShapeCube
 
     public static Vector3[][] vertsAddHalfUp = new Vector3[][]
     {
-           vertsAddLeft,
-           vertsAddRight,
-           vertsAddUp,
-           vertsAddDown,
-           vertsAddForward,
-           vertsAddBack,
+           HandleHalfVerts(vertsAddLeft,new Vector3(0,offsetCubeHalf,0)),
+           HandleHalfVerts(vertsAddRight,new Vector3(0,offsetCubeHalf,0)),
+           HandleHalfVerts(vertsAddUp,new Vector3(0,offsetCubeHalf,0)),
+           HandleHalfVerts(vertsAddDown,new Vector3(0,offsetCubeHalf,0)),
+           HandleHalfVerts(vertsAddForward,new Vector3(0,offsetCubeHalf,0)),
+           HandleHalfVerts(vertsAddBack,new Vector3(0,offsetCubeHalf,0))
     };
 
     public static Vector3[][] vertsAddHalfDown = new Vector3[][]
     {
-           vertsAddLeft,
-           vertsAddRight,
-           vertsAddUp,
-           vertsAddDown,
-           vertsAddForward,
-           vertsAddBack,
+           HandleHalfVerts(vertsAddLeft,new Vector3(0,-offsetCubeHalf,0)),
+           HandleHalfVerts(vertsAddRight,new Vector3(0,-offsetCubeHalf,0)),
+           HandleHalfVerts(vertsAddUp,new Vector3(0,-offsetCubeHalf,0)),
+           HandleHalfVerts(vertsAddDown,new Vector3(0,-offsetCubeHalf,0)),
+           HandleHalfVerts(vertsAddForward,new Vector3(0,-offsetCubeHalf,0)),
+           HandleHalfVerts(vertsAddBack,new Vector3(0,-offsetCubeHalf,0))
     };
 
-    public static Vector3[] vertsAddHalfFaceLeft = new Vector3[]
+    public static Vector3[][] vertsAddHalfLeft = new Vector3[][]
     {
-            new Vector3(0.5f,1,1),
-            new Vector3(0.5f,1,0),
-            new Vector3(0.5f,0,0),
-            new Vector3(0.5f,0,1)
+           HandleHalfVerts(vertsAddLeft,new Vector3(-offsetCubeHalf,0,0)),
+           HandleHalfVerts(vertsAddRight,new Vector3(-offsetCubeHalf,0,0)),
+           HandleHalfVerts(vertsAddUp,new Vector3(-offsetCubeHalf,0,0)),
+           HandleHalfVerts(vertsAddDown,new Vector3(-offsetCubeHalf,0,0)),
+           HandleHalfVerts(vertsAddForward,new Vector3(-offsetCubeHalf,0,0)),
+           HandleHalfVerts(vertsAddBack,new Vector3(-offsetCubeHalf,0,0))
     };
 
-    public static Vector3[] vertsAddHalfFaceRight = new Vector3[]
+    public static Vector3[][] vertsAddHalfRight = new Vector3[][]
     {
-            new Vector3(0.5f,0,0),
-            new Vector3(0.5f,1,0),
-            new Vector3(0.5f,1,1),
-            new Vector3(0.5f,0,1)
+           HandleHalfVerts(vertsAddLeft,new Vector3(offsetCubeHalf,0,0)),
+           HandleHalfVerts(vertsAddRight,new Vector3(offsetCubeHalf,0,0)),
+           HandleHalfVerts(vertsAddUp,new Vector3(offsetCubeHalf,0,0)),
+           HandleHalfVerts(vertsAddDown,new Vector3(offsetCubeHalf,0,0)),
+           HandleHalfVerts(vertsAddForward,new Vector3(offsetCubeHalf,0,0)),
+           HandleHalfVerts(vertsAddBack,new Vector3(offsetCubeHalf,0,0))
     };
 
-    public static Vector3[] vertsAddHalfFaceForward = new Vector3[]
+    public static Vector3[][] vertsAddHalfForward = new Vector3[][]
     {
-            new Vector3(0,0,0.5f),
-            new Vector3(0,1,0.5f),
-            new Vector3(1,1,0.5f),
-            new Vector3(1,0,0.5f)
+           HandleHalfVerts(vertsAddLeft,new Vector3(0,0,-offsetCubeHalf)),
+           HandleHalfVerts(vertsAddRight,new Vector3(0,0,-offsetCubeHalf)),
+           HandleHalfVerts(vertsAddUp,new Vector3(0,0,-offsetCubeHalf)),
+           HandleHalfVerts(vertsAddDown,new Vector3(0,0,-offsetCubeHalf)),
+           HandleHalfVerts(vertsAddForward,new Vector3(0,0,-offsetCubeHalf)),
+           HandleHalfVerts(vertsAddBack,new Vector3(0,0,-offsetCubeHalf))
     };
 
-    public static Vector3[] vertsAddHalfFaceBack = new Vector3[]
+    public static Vector3[][] vertsAddHalfBack = new Vector3[][]
     {
-            new Vector3(1,1,0.5f),
-            new Vector3(0,1,0.5f),
-            new Vector3(0,0,0.5f),
-            new Vector3(1,0,0.5f)
+           HandleHalfVerts(vertsAddLeft,new Vector3(0,0,offsetCubeHalf)),
+           HandleHalfVerts(vertsAddRight,new Vector3(0,0,offsetCubeHalf)),
+           HandleHalfVerts(vertsAddUp,new Vector3(0,0,offsetCubeHalf)),
+           HandleHalfVerts(vertsAddDown,new Vector3(0,0,offsetCubeHalf)),
+           HandleHalfVerts(vertsAddForward,new Vector3(0,0,offsetCubeHalf)),
+           HandleHalfVerts(vertsAddBack,new Vector3(0,0,offsetCubeHalf))
     };
 
     public override void InitData(Block block)
@@ -97,27 +112,36 @@ public class BlockShapeCubeHalf : BlockShapeCube
             BlockMetaCubeHalf blockMeta = blockData.GetBlockMeta<BlockMetaCubeHalf>();
             DirectionEnum halfPosition = blockMeta.GetHalfPosition();
 
-            Vector3[] useVertsAddLeft = vertsAddLeft;
-            Vector3[] useVertsAddRight = vertsAddRight;
-            Vector3[] useVertsAddDown = vertsAddDown;
-            Vector3[] useVertsAddUp = vertsAddUp;
-            Vector3[] useVertsAddForward = vertsAddForward;
-            Vector3[] useVertsAddBack = vertsAddBack;
+            Vector3[][] arrayData = null;
             switch (halfPosition)
             {
                 case DirectionEnum.UP:
+                    arrayData = vertsAddHalfUp;
                     break;
                 case DirectionEnum.Down:
+                    arrayData = vertsAddHalfDown;
                     break;
                 case DirectionEnum.Left:
+                    arrayData = vertsAddHalfLeft;
                     break;
                 case DirectionEnum.Right:
+                    arrayData = vertsAddHalfRight;
                     break;
                 case DirectionEnum.Forward:
+                    arrayData = vertsAddHalfForward;
                     break;
                 case DirectionEnum.Back:
+                    arrayData = vertsAddHalfBack;
                     break;
             }
+
+            Vector3[] useVertsAddLeft = arrayData[0];
+            Vector3[] useVertsAddRight = arrayData[1];
+            Vector3[] useVertsAddUp = arrayData[2];
+            Vector3[] useVertsAddDown = arrayData[3];
+            Vector3[] useVertsAddForward = arrayData[4];
+            Vector3[] useVertsAddBack = arrayData[5];
+
             //Left
             if (CheckNeedBuildFace(chunk, localPosition, direction, DirectionEnum.Left))
             {
