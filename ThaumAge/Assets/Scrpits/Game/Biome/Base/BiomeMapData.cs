@@ -14,7 +14,7 @@ public class BiomeMapData
     //生态
     public Biome biome;
 
-    public void InitData(FastNoise fastNoise, Vector3Int wPos, Vector3Int[] listBiomeCenterPosition, Biome[] listBiome)
+    public void InitData(Vector3Int wPos, Vector3Int[] listBiomeCenterPosition, Biome[] listBiome)
     {
 
         //距离该方块最近的生态点距离

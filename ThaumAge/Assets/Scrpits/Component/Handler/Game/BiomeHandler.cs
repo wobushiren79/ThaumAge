@@ -6,24 +6,22 @@ using UnityEngine;
 public class BiomeHandler : BaseHandler<BiomeHandler, BiomeManager>
 {
     protected static object lockWorldCreate = new object();
-
-    protected int maxBiomeData = 1024;
-    protected Dictionary<Vector3Int, BiomeMapData[,]> dicBiomeMapData;
     public FastNoise fastNoise;
 
     public Vector3 offset0;
     public Vector3 offset1;
     public Vector3 offset2;
     public float offsetBiome;
+
     public override void Awake()
     {
         base.Awake();
-        dicBiomeMapData = new Dictionary<Vector3Int, BiomeMapData[,]>(maxBiomeData);
+
     }
 
     public void InitWorldBiomeData()
     {
-        dicBiomeMapData.Clear();
+
     }
 
     public void InitWorldBiomeSeed()
@@ -38,40 +36,24 @@ public class BiomeHandler : BaseHandler<BiomeHandler, BiomeManager>
 
     public BiomeMapData[,] GetBiomeMapData(Chunk chunk)
     {
-        lock (lockWorldCreate)
-        {
-            if (dicBiomeMapData.TryGetValue(chunk.chunkData.positionForWorld, out BiomeMapData[,] mapData))
-            {
-                return mapData;
-            }
-            else
-            {
-                WorldTypeEnum worldType = WorldCreateHandler.Instance.manager.worldType;
-                //获取该世界的所有生态
-                Biome[] listBiome = manager.GetBiomeListByWorldType(worldType);
-                //获取一定范围内的生态点
-                Vector3Int[] listBiomeCenter = GetBiomeCenterPosition(chunk, 5, 10);
+        WorldTypeEnum worldType = WorldCreateHandler.Instance.manager.worldType;
+        //获取该世界的所有生态
+        Biome[] listBiome = manager.GetBiomeListByWorldType(worldType);
+        //获取一定范围内的生态点
+        Vector3Int[] listBiomeCenter = GetBiomeCenterPosition(chunk, 5, 10);
 
-                //如果已经超过 最大缓存 则清理一波 已经没有使用的chunk数据
-                if (dicBiomeMapData.Count > maxBiomeData)
-                {
-                    dicBiomeMapData.Clear();
-                }
-                //添加新的数据
-                mapData = new BiomeMapData[chunk.chunkData.chunkWidth, chunk.chunkData.chunkHeight];
-                for (int x = 0; x < chunk.chunkData.chunkWidth; x++)
-                {
-                    for (int z = 0; z < chunk.chunkData.chunkWidth; z++)
-                    {
-                        BiomeMapData biomeMap = new BiomeMapData();
-                        biomeMap.InitData(fastNoise, new Vector3Int(x + chunk.chunkData.positionForWorld.x, chunk.chunkData.positionForWorld.y, chunk.chunkData.positionForWorld.z + z), listBiomeCenter, listBiome);
-                        mapData[x, z] = biomeMap;
-                    }
-                }
-                dicBiomeMapData.Add(chunk.chunkData.positionForWorld, mapData);
-                return mapData;
+        //添加新的数据
+        BiomeMapData[,] mapData = new BiomeMapData[chunk.chunkData.chunkWidth, chunk.chunkData.chunkHeight];
+        for (int x = 0; x < chunk.chunkData.chunkWidth; x++)
+        {
+            for (int z = 0; z < chunk.chunkData.chunkWidth; z++)
+            {
+                BiomeMapData biomeMap = new BiomeMapData();
+                biomeMap.InitData(new Vector3Int(x + chunk.chunkData.positionForWorld.x, chunk.chunkData.positionForWorld.y, chunk.chunkData.positionForWorld.z + z), listBiomeCenter, listBiome);
+                mapData[x, z] = biomeMap;
             }
         }
+        return mapData;
     }
 
     /// <summary>

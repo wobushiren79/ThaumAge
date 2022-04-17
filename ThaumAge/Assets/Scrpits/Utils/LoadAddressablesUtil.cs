@@ -62,7 +62,6 @@ public class LoadAddressablesUtil
     /// <param name="callBack"></param>
     public static void LoadAssetAndInstantiateAsync(string keyName, Action<AsyncOperationHandle<GameObject>> callBack)
     {
-
         Addressables.InstantiateAsync(keyName).Completed += callBack;
     }
 

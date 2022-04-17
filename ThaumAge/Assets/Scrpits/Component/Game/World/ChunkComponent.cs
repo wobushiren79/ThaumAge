@@ -61,11 +61,6 @@ public class ChunkComponent : BaseMonoBehaviour
         chunkMeshTrigger.MarkDynamic();
     }
 
-    public void FixedUpdate()
-    {
-        DrawMeshCollider();
-    }
-
     /// <summary>
     /// 设置数据
     /// </summary>
@@ -164,7 +159,12 @@ public class ChunkComponent : BaseMonoBehaviour
 
             Physics.BakeMesh(chunkMeshCollider.GetInstanceID(), false);
             Physics.BakeMesh(chunkMeshTrigger.GetInstanceID(), false);
-            isDrawMeshCollider = true;
+
+            meshCollider.sharedMesh = chunkMeshCollider;
+            meshTrigger.sharedMesh = chunkMeshTrigger;
+
+            meshCollider.enabled = true;
+            meshTrigger.enabled = true;
 
             if (chunkMesh.vertexCount >= 3) meshFilter.sharedMesh = chunkMesh;
 
@@ -190,22 +190,6 @@ public class ChunkComponent : BaseMonoBehaviour
         {
             chunk.isDrawMesh = false;
         }
-    }
-
-    /// <summary>
-    /// 绘制meshCollider 首先使用Physics.BakeMesh烘培  再在fixupdate中绘制 
-    /// </summary>
-    public void DrawMeshCollider()
-    {
-        if (!isDrawMeshCollider)
-            return;
-        isDrawMeshCollider = false;
-
-        meshCollider.sharedMesh = chunkMeshCollider;
-        meshTrigger.sharedMesh = chunkMeshTrigger;
-
-        meshCollider.enabled = true;
-        meshTrigger.enabled = true;
     }
 
     /// <summary>

@@ -1,4 +1,5 @@
-﻿using UnityEditor;
+﻿using System;
+using UnityEditor;
 using UnityEngine;
 
 public class ChunkSectionData
@@ -23,6 +24,18 @@ public class ChunkSectionData
         this.yBase = yBase;
         arrayBlock = new int[sectionSize * sectionSize * sectionSize];
         arrayBlockDirection = new byte[sectionSize * sectionSize * sectionSize];
+
+        airBlockNumber = sectionSize * sectionSize * sectionSize;
+        cubeBlockNumber = 0;
+    }
+
+    /// <summary>
+    /// 清理数据
+    /// </summary>
+    public void ClearData()
+    {
+        Array.Clear(arrayBlock,0, arrayBlock.Length);
+        Array.Clear(arrayBlockDirection, 0, arrayBlockDirection.Length);
 
         airBlockNumber = sectionSize * sectionSize * sectionSize;
         cubeBlockNumber = 0;

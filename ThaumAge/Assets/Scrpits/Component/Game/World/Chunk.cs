@@ -26,11 +26,14 @@ public class Chunk
     //方块模型
     public Dictionary<int, GameObject> dicBlockModel = new Dictionary<int, GameObject>();
 
-    //是否初始化
+    //是否激活
+    public bool isActive = false;
+    //是否初始化数据
     public bool isInit = false;
+    //时候构建
     public bool isBuildChunk = false;
+    //是否绘制
     public bool isDrawMesh = false;
-    public bool isFirstDraw = true;
 
     //包含Chunk内的所有信息
     public ChunkData chunkData;
@@ -418,7 +421,6 @@ public class Chunk
                 }    
             }
         }
-
         //生成洞穴 不放在每一个方块里去检测 提升效率
         //BiomeCreateTool.BiomeForCaveData caveData = new BiomeCreateTool.BiomeForCaveData();
         //caveData.minDepth = 100;

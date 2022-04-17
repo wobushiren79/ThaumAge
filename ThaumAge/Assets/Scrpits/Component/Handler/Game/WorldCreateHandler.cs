@@ -50,61 +50,76 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
     /// 建造区块
     /// </summary>
     /// <param name="position"></param>
-    /// <param name="callBackForCreateData"></param>
-    /// <param name="isCreateChunkComponent">是否创建区块组件</param>
-    /// <param name="isCreateBlockData">是否创建方块数据</param>
-    public Chunk CreateChunk(Vector3Int position, Action<Chunk> callBackForCreateData,
-         bool isCreateChunkComponent = true, bool isCreateBlockData = true)
+    /// <param name="callBackForCreateData">是否成功创建数据回调</param>
+    /// <param name="isActive">是否激活</param>
+    public Chunk CreateChunk(Vector3Int position, bool isActive = true, Action<Chunk> callBackForCreateData = null)
     {
         Chunk chunk;
+        //===========================如果创建的是激活区块============================
+        if (isActive)
+        {
+            lock (lockWorldCreate)
+            {
+                //检测当前位置是否有区块
+                chunk = manager.GetChunk(position);
+                //如果是已经有区块了 并且已经激活了 则不创建了
+                if (chunk != null && chunk.isActive)
+                {
+                    return chunk;
+                }
+                if (chunk == null)
+                {
+                    //生成区块
+                    chunk = new Chunk();
+                    //设置数据
+                    chunk.SetData(position, manager.widthChunk, manager.heightChunk);
+                    //添加区块
+                    manager.AddChunk(position, chunk);
+                }
+            }
+            //创建区块组件(没有创建过组件)
+            if (chunk.chunkComponent == null)
+            {
+                ChunkComponent chunkComponent;
+                if (manager.listChunkComponentPool.TryDequeue(out chunkComponent))
+                {
 
-        lock (lockWorldCreate)
-        {
-            //检测当前位置是否有区块
-            chunk = manager.GetChunk(position);
-            //创建区块
-            if (chunk == null)
-            {   //生成区块
-                chunk = new Chunk();
-                //设置数据
-                chunk.SetData(position, manager.widthChunk, manager.heightChunk);
-                //添加区块
-                manager.AddChunk(position, chunk);
+                }
+                else
+                {
+                    //生成区块组件
+                    GameObject objModel = manager.GetChunkModel();
+                    GameObject objChunk = Instantiate(gameObject, objModel);
+                    chunkComponent = objChunk.GetComponent<ChunkComponent>();
+                }
+                chunkComponent.transform.position = position;
+                chunkComponent.name = $"Chunk_X:{position.x}_Y:{ position.y}_Z:{position.z}";
+                chunkComponent.SetData(chunk);
+                chunk.chunkComponent = chunkComponent;
             }
-            else
-            {
-                chunk.isInit = false;
-            }
-        }
-        //创建区块组件(没有创建过组件)
-        if (isCreateChunkComponent && chunk.chunkComponent == null)
-        {
-            ChunkComponent chunkComponent;
-            if (manager.listChunkComponentPool.TryDequeue(out chunkComponent))
-            {
-
-            }
-            else
-            {
-                //生成区块组件
-                GameObject objModel = manager.GetChunkModel();
-                GameObject objChunk = Instantiate(gameObject, objModel);
-                chunkComponent = objChunk.GetComponent<ChunkComponent>();
-            }
-            chunkComponent.transform.position = position;
-            chunkComponent.name = $"Chunk_X:{position.x}_Y:{ position.y}_Z:{position.z}";
-            chunkComponent.SetData(chunk);
-            chunk.chunkComponent = chunkComponent;
-        }
-        //创建基础方块数据（没有创建过基础数据）
-        if (isCreateBlockData && !chunk.isInit)
-        {
             //开始异步创建方块数据
             chunk.BuildChunkBlockDataForAsync(callBackForCreateData);
+            //开始异步创建方块数据
+            chunk.isActive = true;
         }
+        //===========================如果创建的是不激活的临时方块===========================
         else
         {
-            callBackForCreateData?.Invoke(chunk);
+            lock (lockWorldCreate)
+            {
+                //检测当前位置是否有区块
+                chunk = manager.GetChunk(position);
+                //创建区块
+                if (chunk == null)
+                {
+                    //生成区块
+                    chunk = new Chunk();
+                    //设置数据
+                    chunk.SetData(position, manager.widthChunk, manager.heightChunk);
+                    //添加区块
+                    manager.AddChunk(position, chunk);
+                }
+            }
         }
         return chunk;
     }
@@ -140,7 +155,7 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
                             callBackForComplete?.Invoke();
                         }
                     };
-                    CreateChunk(currentPosition, callBackForCreateChunk);
+                    CreateChunk(currentPosition, callBackForCreateData: callBackForCreateChunk);
                 }
                 //如果不是初始化创建
                 else
@@ -149,7 +164,7 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
                     {
                         manager.AddUpdateChunk(successCreateChunk, 0);
                     };
-                    CreateChunk(currentPosition, callBackForCreateChunk);
+                    CreateChunk(currentPosition, callBackForCreateData: callBackForCreateChunk);
                 }
                 currentPosition += new Vector3Int(0, 0, manager.widthChunk);
             }
@@ -176,8 +191,8 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
         List<Chunk> listRemoveChunk = new List<Chunk>();
         foreach (var chunk in manager.dicChunk.Values)
         {
-            //如果区块已经初始化了
-            if (chunk.isInit)
+            //如果区块已经激活
+            if (chunk.isActive)
             {
                 if (chunk.chunkData.positionForWorld.x > maxPosition.x
                     || chunk.chunkData.positionForWorld.x < minPosition.x
@@ -187,7 +202,7 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
                     listRemoveChunk.Add(chunk);
                 }
             }
-            //如果区块还没有初始化
+            //如果区块还没有激活
             else
             {
                 if (chunk.chunkData.positionForWorld.x > maxNoInitPosition.x
@@ -282,10 +297,6 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
                 }
             }
         }
-        //if (manager.listUpdateDrawChunkInit.Count > 0)
-        //{
-        //    HandleForDrawChunk();
-        //}
     }
 
     /// <summary>
@@ -294,7 +305,7 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
     public void HandleForUpdateChunk()
     {
         if (manager.listUpdateChunkInit.Count > 0)
-        {
+        {          
             //处理初始化待更新的Chunk
             while (manager.listUpdateChunkInit.TryDequeue(out Chunk updateChunk))
             {
