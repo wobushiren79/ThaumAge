@@ -15,13 +15,13 @@ public class BiomeTest : Biome
     {
         if (wPos.y == genHeight)
         {
-            AddWeed(wPos);
-            AddBigTree(wPos);
+            //AddWeed(wPos);
+            //AddBigTree(wPos);
             //AddWorldTree(wPos);
             //AddMushroomTree(wPos);
-            AddStoneMoss(wPos);
-            AddFlower(wPos);
-            AddDeadwood(wPos);
+            //AddStoneMoss(wPos);
+            //AddFlower(wPos);
+            //AddDeadwood(wPos);
             //草
             return BlockTypeEnum.Grass;
         }

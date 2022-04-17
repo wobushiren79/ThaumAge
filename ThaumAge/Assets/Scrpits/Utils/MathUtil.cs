@@ -26,4 +26,24 @@ public class MathUtil
     {
         return a * size1 * size2 + b * size1 + c;
     }
+
+    /// <summary>
+    /// 获取数字的十位
+    /// </summary>
+    /// <param name="data"></param>
+    /// <returns></returns>
+    public static int GetUnitTen(int data)
+    {
+         return (data % 100) / 10;
+    }
+
+    /// <summary>
+    /// 获取数字的百位
+    /// </summary>
+    /// <param name="data"></param>
+    /// <returns></returns>
+    public static int GetUnitHundred(int data)
+    {
+        return (data % 1000) / 100;
+    }
 }

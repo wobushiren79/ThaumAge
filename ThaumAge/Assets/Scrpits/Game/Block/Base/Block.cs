@@ -309,6 +309,15 @@ public class Block
         return localPosition.x * chunkWidth * chunkHeight + localPosition.y * chunkWidth + localPosition.z;
     }
 
+    /// <summary>
+    /// 获取使用道具时的数据
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <returns></returns>
+    public virtual string GetUseMetaData(Vector3Int worldPosition, BlockTypeEnum blockType, BlockDirectionEnum direction, string curMeta)
+    {
+        return curMeta;
+    }
 
     public Vector3Int GetClosePositionByDirection(DirectionEnum getDirection, Vector3Int localPosition)
     {

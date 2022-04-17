@@ -61,6 +61,12 @@ public class ChunkComponent : BaseMonoBehaviour
         chunkMeshTrigger.MarkDynamic();
     }
 
+    public void Update()
+    {
+        if (chunk != null)
+            chunk.Update();
+    }
+
     /// <summary>
     /// 设置数据
     /// </summary>
@@ -197,6 +203,7 @@ public class ChunkComponent : BaseMonoBehaviour
     /// </summary>
     public void ClearData()
     {
+        chunk = null;
         objBlockContainer.transform.DestroyAllChild();
         meshCollider.enabled = false;
         meshTrigger.enabled = false;

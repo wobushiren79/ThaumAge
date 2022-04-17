@@ -36,19 +36,23 @@ public class ItemTypeBlock : Item
                             return;
                         //获取物品信息
                         ItemsInfoBean itemsInfo = ItemsHandler.Instance.manager.GetItemsInfoById(itemData.itemId);
-                        //如果是可放置的方块
-                        BlockInfoBean blockInfo = BlockHandler.Instance.manager.GetBlockInfo(itemsInfo.type_id);
+                        //获取方块信息
+                        Block useBlock = BlockHandler.Instance.manager.GetRegisterBlock(itemsInfo.type_id);
+                        BlockInfoBean blockInfo = useBlock.blockInfo;
 
                         BlockTypeEnum changeBlockType = blockInfo.GetBlockType();
+
+                        //获取meta数据
+                        string metaData = useBlock.GetUseMetaData(closePosition, changeBlockType, direction,itemData.meta);
 
                         //更新方块并 添加更新区块
                         if (blockInfo.rotate_state == 0)
                         {
-                            closeChunk.SetBlockForWorld(closePosition, changeBlockType, BlockDirectionEnum.UpForward, itemData.meta);
+                            closeChunk.SetBlockForWorld(closePosition, changeBlockType, BlockDirectionEnum.UpForward, metaData);
                         }
                         else if (blockInfo.rotate_state == 1)
                         {
-                            closeChunk.SetBlockForWorld(closePosition, changeBlockType, direction, itemData.meta);
+                            closeChunk.SetBlockForWorld(closePosition, changeBlockType, direction, metaData);
                         }
                         else if (blockInfo.rotate_state == 2)
                         {
@@ -57,7 +61,7 @@ public class ItemTypeBlock : Item
                             {
                                 direction = (BlockDirectionEnum)((int)direction%10 + 10);
                             }
-                            closeChunk.SetBlockForWorld(closePosition, changeBlockType, direction, itemData.meta);
+                            closeChunk.SetBlockForWorld(closePosition, changeBlockType, direction, metaData);
                         }
                         //扣除道具
                         UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();

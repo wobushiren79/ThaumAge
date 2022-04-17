@@ -15,10 +15,10 @@ public class BlockShapeCubeHalf : BlockShapeCube
                 ? (itemVert.x < 0.5f ? itemVert.x + offsetPosition.x : itemVert.x) : (itemVert.x > 0.5f ? itemVert.x + offsetPosition.x : itemVert.x));
             float newY = offsetPosition.y == 0
                 ? itemVert.y : (offsetPosition.y > 0
-                ? (itemVert.y < 0.5f ? itemVert.y + offsetPosition.y : itemVert.y) : (itemVert.x > 0.5f ? itemVert.y + offsetPosition.y : itemVert.y));
+                ? (itemVert.y < 0.5f ? itemVert.y + offsetPosition.y : itemVert.y) : (itemVert.y > 0.5f ? itemVert.y + offsetPosition.y : itemVert.y));
             float newZ = offsetPosition.z == 0
                 ? itemVert.z : (offsetPosition.z > 0
-                ? (itemVert.z < 0.5f ? itemVert.z + offsetPosition.z : itemVert.z) : (itemVert.x > 0.5f ? itemVert.z + offsetPosition.z : itemVert.z));
+                ? (itemVert.z < 0.5f ? itemVert.z + offsetPosition.z : itemVert.z) : (itemVert.z > 0.5f ? itemVert.z + offsetPosition.z : itemVert.z));
             newVerts[i] = new Vector3(newX, newY, newZ);
         }
         return newVerts;
@@ -178,5 +178,10 @@ public class BlockShapeCubeHalf : BlockShapeCube
                 BuildFace(block, chunk, localPosition, direction, DirectionEnum.Back, useVertsAddBack, uvsAddBack);
             }
         }
+    }
+
+    public override bool CheckNeedBuildFace(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction, DirectionEnum closeDirection)
+    {
+        return true;
     }
 }
