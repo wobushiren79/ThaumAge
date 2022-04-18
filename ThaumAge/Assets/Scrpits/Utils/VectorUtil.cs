@@ -122,4 +122,14 @@ public class VectorUtil
         Vector3 rotatedDirection = Quaternion.Euler(angles) * direction;
         return rotatedDirection + centerPosition;
     }
+
+    public static Vector3[] GetRotatedPosition(Vector3 centerPosition, Vector3[] positionArray, Vector3 angles)
+    {
+        Vector3[] newArray = new Vector3[positionArray.Length];
+        for (int i = 0; i < positionArray.Length; i++)
+        {
+            newArray[i] = GetRotatedPosition(centerPosition, positionArray[i], angles);
+        }
+        return newArray;
+    }
 }

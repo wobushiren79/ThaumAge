@@ -22,6 +22,8 @@ public enum BlockShapeEnum
     CropWell = 303,//种植，＃字型
 
     Plough = 401,//耕地
+
+    CustomLinkAround = 99998,//自定义 4面环绕链接
     Custom = 99999,//自定义
-    
+
 }
