@@ -46,7 +46,7 @@ public class BlockShapePlough : BlockShapeCubeCuboid
     public override bool CheckNeedBuildFace(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction, DirectionEnum closeDirection)
     {
         if (localPosition.y == 0) return false;
-        GetCloseRotateBlockByDirection(chunk, localPosition, direction, closeDirection, out Block closeBlock, out Chunk closeBlockChunk);
+        GetCloseRotateBlockByDirection(chunk, localPosition, direction, closeDirection, out Block closeBlock, out Chunk closeBlockChunk,out Vector3Int closeLocalPosition);
         if (closeBlock == null || closeBlock.blockType == BlockTypeEnum.None)
         {
             if (closeBlockChunk != null && closeBlockChunk.isInit)

@@ -22,8 +22,8 @@ public class BlockTypeCropCorn : BlockBaseCrop
             //在玉米的上2格再生成同样的方格
 
             //更新方块并 添加更新区块
-            GetCloseBlockByDirection(chunk, localPosition, DirectionEnum.UP, out Block blockUp, out Chunk chunkUp);
-            GetCloseBlockByDirection(chunk, localPosition + Vector3Int.up, DirectionEnum.UP, out Block blockUpUp, out Chunk chunkUpUp);
+            GetCloseBlockByDirection(chunk, localPosition, DirectionEnum.UP, out Block blockUp, out Chunk chunkUp, out Vector3Int localPositionUp);
+            GetCloseBlockByDirection(chunk, localPosition + Vector3Int.up, DirectionEnum.UP, out Block blockUpUp, out Chunk chunkUpUp,out Vector3Int localPositionUpUp);
 
             if (chunkUp != null && blockUp != null && blockUp.blockType != BlockTypeEnum.None)
             {

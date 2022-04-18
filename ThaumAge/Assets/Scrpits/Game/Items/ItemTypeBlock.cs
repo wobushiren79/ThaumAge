@@ -44,25 +44,12 @@ public class ItemTypeBlock : Item
 
                         //获取meta数据
                         string metaData = useBlock.GetUseMetaData(closePosition, changeBlockType, direction,itemData.meta);
+                        //使用方块
+                        useBlock.ItemUse(
+                            targetPosition, targetBlockDirection, targetBlock, taragetChunk,
+                            closePosition, closeBlockDirection, closeBlock, closeChunk,
+                            direction, metaData);
 
-                        //更新方块并 添加更新区块
-                        if (blockInfo.rotate_state == 0)
-                        {
-                            closeChunk.SetBlockForWorld(closePosition, changeBlockType, BlockDirectionEnum.UpForward, metaData);
-                        }
-                        else if (blockInfo.rotate_state == 1)
-                        {
-                            closeChunk.SetBlockForWorld(closePosition, changeBlockType, direction, metaData);
-                        }
-                        else if (blockInfo.rotate_state == 2)
-                        {
-                            //只能朝上
-                            if((int)direction > 20)
-                            {
-                                direction = (BlockDirectionEnum)((int)direction%10 + 10);
-                            }
-                            closeChunk.SetBlockForWorld(closePosition, changeBlockType, direction, metaData);
-                        }
                         //扣除道具
                         UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();
                         userData.AddItems(itemData, -1);

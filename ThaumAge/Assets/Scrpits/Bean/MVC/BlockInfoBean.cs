@@ -45,6 +45,8 @@ public class BlockInfoBean : BaseBean
     public string break_type;//指定破坏类型
 
     public int interactive_state;//互动状态 0不可互动 1可互动(F键)
+
+    public int remark_int;//备注int
     /// <summary>
     /// 获取方块类型
     /// </summary>

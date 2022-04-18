@@ -126,7 +126,7 @@ public class BlockShapeLiquid : BlockShapeCube
 
     protected void GetVertsAddNewForUpDown(Chunk chunk, DirectionEnum direction, Vector3Int localPosition, Vector3[] vertsAddNew, Vector3[] vertsAdd, int index1, int index2)
     {
-        block.GetCloseBlockByDirection(chunk, localPosition, direction, out Block closeBlock, out Chunk closeChunk);
+        block.GetCloseBlockByDirection(chunk, localPosition, direction, out Block closeBlock, out Chunk closeChunk, out Vector3Int closeLocalPosition);
         if (closeBlock != null && closeBlock.blockType == block.blockType)
         {
             Vector3Int tempPosition = block.GetClosePositionByDirection(direction, localPosition);
@@ -151,7 +151,7 @@ public class BlockShapeLiquid : BlockShapeCube
 
     protected void GetVertsAddNewForRange(Chunk chunk, DirectionEnum direction, Vector3Int localPosition, Vector3[] vertsAddNew, Vector3[] vertsAdd, int indexPosition)
     {
-        block.GetCloseBlockByDirection(chunk, localPosition, direction, out Block closeBlock, out Chunk closeChunk);
+        block.GetCloseBlockByDirection(chunk, localPosition, direction, out Block closeBlock, out Chunk closeChunk, out Vector3Int closeLocalPosition);
 
         if (closeBlock != null && closeBlock.blockType == block.blockType)
         {
@@ -181,7 +181,7 @@ public class BlockShapeLiquid : BlockShapeCube
     public override bool CheckNeedBuildFace(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction, DirectionEnum closeDirection)
     {
         if (localPosition.y == 0) return false;
-        GetCloseRotateBlockByDirection(chunk, localPosition, direction, closeDirection, out Block closeBlock, out Chunk closeBlockChunk);
+        GetCloseRotateBlockByDirection(chunk, localPosition, direction, closeDirection, out Block closeBlock, out Chunk closeBlockChunk, out Vector3Int closeLocalPosition);
         if (closeBlock == null || closeBlock.blockType == BlockTypeEnum.None)
         {
             if (closeBlockChunk != null && closeBlockChunk.isInit)

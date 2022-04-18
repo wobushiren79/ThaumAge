@@ -319,6 +319,34 @@ public class Block
         return curMeta;
     }
 
+    /// <summary>
+    /// 道具使用，用于方块的放置或者其他处理
+    /// </summary>
+    public virtual void ItemUse(
+        Vector3Int targetWorldPosition, BlockDirectionEnum targetBlockDirection, Block targetBlock, Chunk targetChunk,
+        Vector3Int closeWorldPosition, BlockDirectionEnum closeBlockDirection, Block closeBlock, Chunk closeChunk,
+        BlockDirectionEnum direction , string metaData)
+    {               
+        //更新方块并 添加更新区块
+        if (blockInfo.rotate_state == 0)
+        {
+            closeChunk.SetBlockForWorld(closeWorldPosition, blockType, BlockDirectionEnum.UpForward, metaData);
+        }
+        else if (blockInfo.rotate_state == 1)
+        {
+            closeChunk.SetBlockForWorld(closeWorldPosition, blockType, direction, metaData);
+        }
+        else if (blockInfo.rotate_state == 2)
+        {
+            //只能朝上
+            if ((int)direction > 20)
+            {
+                direction = (BlockDirectionEnum)((int)direction % 10 + 10);
+            }
+            closeChunk.SetBlockForWorld(closeWorldPosition, blockType, direction, metaData);
+        }
+    }
+
     public Vector3Int GetClosePositionByDirection(DirectionEnum getDirection, Vector3Int localPosition)
     {
         switch (getDirection)
@@ -346,20 +374,23 @@ public class Block
     /// <param name="closeBlock"></param>
     /// <param name="hasChunk"></param>
     public virtual void GetCloseBlockByDirection(Chunk chunk, Vector3Int localPosition, DirectionEnum getDirection,
-        out Block block, out Chunk blockChunk)
+        out Block block, out Chunk blockChunk,out Vector3Int closeLocalPosition)
     {
         //获取目标的本地坐标
         block = null;
 
         localPosition = GetClosePositionByDirection(getDirection, localPosition);
+        closeLocalPosition = localPosition;
 
         int maxWidth = chunk.chunkData.chunkWidth - 1;
         int maxHeight = chunk.chunkData.chunkHeight - 1;
+
         if (localPosition.x < 0)
         {
             blockChunk = chunk.chunkData.chunkLeft;
             if (blockChunk != null)
             {
+                closeLocalPosition = new Vector3Int(maxWidth, localPosition.y, localPosition.z);
                 block = blockChunk.chunkData.GetBlockForLocal(maxWidth, localPosition.y, localPosition.z);
                 return;
             }
@@ -370,6 +401,7 @@ public class Block
             blockChunk = chunk.chunkData.chunkRight;
             if (blockChunk != null)
             {
+                closeLocalPosition = new Vector3Int(0, localPosition.y, localPosition.z);
                 block = blockChunk.chunkData.GetBlockForLocal(0, localPosition.y, localPosition.z);
                 return;
             }
@@ -380,6 +412,7 @@ public class Block
             blockChunk = chunk.chunkData.chunkForward;
             if (blockChunk != null)
             {
+                closeLocalPosition = new Vector3Int(localPosition.x, localPosition.y, maxWidth);
                 block = blockChunk.chunkData.GetBlockForLocal(localPosition.x, localPosition.y, maxWidth);
                 return;
             }
@@ -390,6 +423,7 @@ public class Block
             blockChunk = chunk.chunkData.chunkBack;
             if (blockChunk != null)
             {
+                closeLocalPosition = new Vector3Int(localPosition.x, localPosition.y, 0);
                 block = blockChunk.chunkData.GetBlockForLocal(localPosition.x, localPosition.y, 0);
                 return;
             }
