@@ -51,27 +51,27 @@ public class BlockBaseHalf : Block
             switch (targetHalfPosition)
             {
                 case DirectionEnum.UP:
-                    if (curHalfPosition == DirectionEnum.Down)
-                        isMerge = true;
-                    break;
-                case DirectionEnum.Down:
                     if (curHalfPosition == DirectionEnum.UP)
                         isMerge = true;
                     break;
-                case DirectionEnum.Left:
-                    if (curHalfPosition == DirectionEnum.Right)
+                case DirectionEnum.Down:
+                    if (curHalfPosition == DirectionEnum.Down)
                         isMerge = true;
                     break;
-                case DirectionEnum.Right:
+                case DirectionEnum.Left:
                     if (curHalfPosition == DirectionEnum.Left)
                         isMerge = true;
                     break;
+                case DirectionEnum.Right:
+                    if (curHalfPosition == DirectionEnum.Right)
+                        isMerge = true;
+                    break;
                 case DirectionEnum.Forward:
-                    if (curHalfPosition == DirectionEnum.Back)
+                    if (curHalfPosition == DirectionEnum.Forward)
                         isMerge = true;
                     break;
                 case DirectionEnum.Back:
-                    if (curHalfPosition == DirectionEnum.Forward)
+                    if (curHalfPosition == DirectionEnum.Back)
                         isMerge = true;
                     break;
             }
