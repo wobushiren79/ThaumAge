@@ -16,8 +16,7 @@ public class BlockShapeLiquid : BlockShapeCube
             new Vector2(1,0),
         };
     }
-
-    public override void BaseAddVerts(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction, DirectionEnum face, Vector3[] vertsAdd)
+    public override void BaseAddVertsUVsColors(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction, DirectionEnum face, Vector3[] vertsAdd, Vector2[] uvsAdd, Color[] colorsAdd)
     {
         //检测上方 如果上方
         chunk.GetBlockForLocal(localPosition + Vector3Int.up, out Block upBlock, out BlockDirectionEnum upDirection, out Chunk upChunk);
@@ -28,15 +27,16 @@ public class BlockShapeLiquid : BlockShapeCube
             {
                 vertsAddLiquid[i] = new Vector3(vertsAdd[i].x, vertsAdd[i].y * (7f / 8f), vertsAdd[i].z);
             }
-            BaseAddVertsDetails(chunk, localPosition, direction, face, vertsAddLiquid);
+            BaseAddVertsUVsTrisDetails(chunk, localPosition, direction, face, vertsAddLiquid, uvsAdd, colorsAdd);
         }
         else
         {
-            BaseAddVertsDetails(chunk, localPosition, direction, face, vertsAdd);
+            BaseAddVertsUVsTrisDetails(chunk, localPosition, direction, face, vertsAdd, uvsAdd, colorsAdd);
         }
     }
 
-    protected virtual void BaseAddVertsDetails(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction, DirectionEnum face, Vector3[] vertsAdd)
+    protected virtual void BaseAddVertsUVsTrisDetails(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction, DirectionEnum face,
+        Vector3[] vertsAdd, Vector2[] uvsAdd, Color[] colorsAdd)
     {
         BlockBean blockData = chunk.GetBlockData(localPosition);
         if (blockData != null)
@@ -48,12 +48,12 @@ public class BlockShapeLiquid : BlockShapeCube
                 {
                     Vector3[] vertsAddNew = GetAddVertsNew(chunk, localPosition, face, vertsAdd);
                     //获取四周的方块
-                    base.BaseAddVerts(chunk, localPosition, direction, face, vertsAddNew);
+                    base.BaseAddVertsUVsColors(chunk, localPosition, direction, face, vertsAddNew, uvsAdd, colorsAdd);
                     return;
                 }
             }
         }
-        base.BaseAddVerts(chunk, localPosition, direction, face, vertsAdd);
+        base.BaseAddVertsUVsColors(chunk, localPosition, direction, face, vertsAdd, uvsAdd, colorsAdd);
     }
 
     /// <summary>

@@ -23,6 +23,12 @@ public class BlockShapeCross : BlockShape
         {
             0,1,2, 0,2,3, 4,5,6, 4,6,7
         };
+
+        colorsAdd = new Color[]
+        {
+            Color.white,Color.white,Color.white,Color.white,
+            Color.white,Color.white,Color.white,Color.white
+        };
     }
 
     public override void InitData(Block block)
@@ -49,7 +55,7 @@ public class BlockShapeCross : BlockShape
         base.BuildBlock(chunk, localPosition);
         if (block.blockType != BlockTypeEnum.None)
         {
-            BuildFace(chunk, localPosition, vertsAdd);
+            BuildFace(chunk, localPosition,vertsAdd,uvsAdd,colorsAdd);
             //AddMeshIndexData( chunk,  localPosition);
         }
     }
@@ -83,7 +89,7 @@ public class BlockShapeCross : BlockShape
     //}
 
 
-    public override void BaseAddTris(Chunk chunk, Vector3Int localPosition,BlockDirectionEnum blockDirection)
+    public override void BaseAddTris(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum blockDirection)
     {
         base.BaseAddTris(chunk, localPosition, blockDirection);
 
@@ -106,20 +112,17 @@ public class BlockShapeCross : BlockShape
         }
     }
 
-    public override void BaseAddUVs(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum blockDirection)
+    public override void BaseAddVertsUVsColors(
+        Chunk chunk, Vector3Int localPosition, BlockDirectionEnum blockDirection,
+        Vector3[] vertsAdd,Vector2[] uvsAdd,Color[] colorsAdd)
     {
-        base.BaseAddUVs(chunk, localPosition, blockDirection);
-        AddUVs(chunk.chunkMeshData.uvs, uvsAdd);
-    }
-
-    public override void BaseAddVerts(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum blockDirection, Vector3[] vertsAdd)
-    {
-        base.BaseAddVerts(chunk, localPosition, blockDirection, vertsAdd);
-        AddVerts(localPosition, blockDirection, chunk.chunkMeshData.verts, vertsAdd);
+        AddVertsUVsColors(localPosition, blockDirection,
+            chunk.chunkMeshData.verts, chunk.chunkMeshData.uvs, chunk.chunkMeshData.colors,
+            vertsAdd, uvsAdd, colorsAdd);
         if (block.blockInfo.collider_state == 1)
-            AddVerts(localPosition, blockDirection, chunk.chunkMeshData.vertsCollider, vertsColliderAdd);
+            AddVertsFor(localPosition, blockDirection, chunk.chunkMeshData.vertsCollider, vertsColliderAdd);
         if (block.blockInfo.trigger_state == 1)
-            AddVerts(localPosition, blockDirection, chunk.chunkMeshData.vertsTrigger, vertsColliderAdd);
+            AddVertsFor(localPosition, blockDirection, chunk.chunkMeshData.vertsTrigger, vertsColliderAdd);
     }
 
     public virtual Vector2 GetUVStartPosition(Block block)

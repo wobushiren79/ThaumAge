@@ -47,8 +47,8 @@ public class BlockShapeCustomLinkAround : BlockShapeCustom
     {
         Vector3[] rotatePositionArray = VectorUtil.GetRotatedPosition(GetCenterPosition(localPosition), vertsAddLink, new Vector3(0, angle, 0));
         BaseAddTrisForCustom(chunk, trisAddLink);
-        BaseAddVertsForCustom(chunk, localPosition, BlockDirectionEnum.UpForward, rotatePositionArray, new Vector3[0]);
-        BaseAddUVsForCustom(chunk, uvsAddLink);
+        BaseAddVertsUVsColorsForCustom(chunk, localPosition, BlockDirectionEnum.UpForward,
+            rotatePositionArray, uvsAddLink,colorsAdd, new Vector3[0]);
     }
 
     /// <summary>

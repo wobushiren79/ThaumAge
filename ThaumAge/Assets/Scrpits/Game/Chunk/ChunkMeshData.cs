@@ -11,6 +11,7 @@ public class ChunkMeshData
     //普通使用的三角形合集
     public List<Vector3> verts;
     public List<Vector2> uvs;
+    public List<Color> colors;
 
     //碰撞使用的三角形合集
     public List<Vector3> vertsCollider;
@@ -32,6 +33,7 @@ public class ChunkMeshData
     {
         verts = new List<Vector3>();
         uvs = new List<Vector2>();
+        colors = new List<Color>();
 
         vertsCollider = new List<Vector3>();
         trisCollider = new List<int>();
@@ -60,6 +62,7 @@ public class ChunkMeshData
         {
             arrayData[i].vertice = verts[i];
             arrayData[i].uv = uvs[i];
+            arrayData[i].color = colors[i];
         }
         return arrayData;
     }

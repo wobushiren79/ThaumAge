@@ -19,20 +19,20 @@ public class BlockShapePlough : BlockShapeCubeCuboid
         };
     }
 
-    public override void BaseAddUVs(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction, DirectionEnum face, Vector2[] uvsAdd)
+    public override void BaseAddVertsUVsColors(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction, DirectionEnum face, Vector3[] vertsAdd, Vector2[] uvsAdd, Color[] colorsAdd)
     {
         BlockBean blockData = chunk.GetBlockData(localPosition);
         if (blockData != null && face == DirectionEnum.UP)
         {
             BlockBasePlough blockPlough = (BlockBasePlough)block;
             int rotate = (int)direction % 10;
-            if (rotate == 3|| rotate == 4)
+            if (rotate == 3 || rotate == 4)
             {
-                AddUVs(chunk.chunkMeshData.uvs, blockPlough.uvsAddUpRotate);
+                base.BaseAddVertsUVsColors(chunk, localPosition, direction, face, vertsAdd, blockPlough.uvsAddUpRotate, colorsAdd);
                 return;
             }
         }
-        base.BaseAddUVs(chunk, localPosition, direction, face, uvsAdd);
+        base.BaseAddVertsUVsColors(chunk, localPosition, direction, face, vertsAdd, uvsAdd, colorsAdd);
     }
 
     /// <summary>

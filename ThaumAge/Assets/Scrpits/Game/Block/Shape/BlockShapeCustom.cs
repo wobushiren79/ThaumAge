@@ -27,8 +27,7 @@ public class BlockShapeCustom : BlockShape
     {
         if (block.blockType != BlockTypeEnum.None)
         {
-            BuildFace(chunk, localPosition, vertsAdd);
-
+            BuildFace(chunk, localPosition, vertsAdd, uvsAdd, colorsAdd);
             //AddMeshIndexData(chunk, localPosition);
         }
     }
@@ -61,19 +60,6 @@ public class BlockShapeCustom : BlockShape
     //             startVertsColliderIndex, vertsColliderAddCustom.Length, startTrisColliderIndex, trisColliderAddCustom.Length);
     //}
 
-    #region 增加UV
-    public override void BaseAddUVs(Chunk chunk, Vector3Int localPosition,BlockDirectionEnum blockDirection)
-    {
-        base.BaseAddUVs(chunk, localPosition, blockDirection);
-        BaseAddUVsForCustom(chunk, uvsAdd);
-    }
-
-    protected virtual void BaseAddUVsForCustom(Chunk chunk,Vector2[] uvsAdd)
-    {
-        AddUVs(chunk.chunkMeshData.uvs, uvsAdd);
-    }
-    #endregion
-
     #region 增加三角
     public override void BaseAddTris(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum blockDirection)
     {
@@ -105,20 +91,21 @@ public class BlockShapeCustom : BlockShape
 
 
 
-    #region 增加顶点
-    public override void BaseAddVerts(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction, Vector3[] vertsAdd)
+    #region 增加顶点UV颜色
+    public override void BaseAddVertsUVsColors(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction, Vector3[] vertsAdd, Vector2[] uvsAdd, Color[] colorsAdd)
     {
-        base.BaseAddVerts(chunk, localPosition, direction, vertsAdd);
-        BaseAddVertsForCustom(chunk, localPosition, direction, vertsAdd, vertsColliderAdd);
+        BaseAddVertsUVsColorsForCustom(chunk, localPosition, direction, vertsAdd, uvsAdd, colorsAdd, vertsColliderAdd);
     }
 
-    protected virtual void BaseAddVertsForCustom(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction,Vector3[] vertsAdd,Vector3[] vertsColliderAdd)
+    public virtual void BaseAddVertsUVsColorsForCustom(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction, Vector3[] vertsAdd, Vector2[] uvsAdd, Color[] colorsAdd, Vector3[] vertsColliderAdd)
     {
-        AddVerts(localPosition, direction, chunk.chunkMeshData.verts, vertsAdd);
+        AddVertsUVsColors(localPosition, direction, 
+            chunk.chunkMeshData.verts, chunk.chunkMeshData.uvs, chunk.chunkMeshData.colors, 
+            vertsAdd, uvsAdd, colorsAdd);
         if (block.blockInfo.collider_state == 1)
-            AddVerts(localPosition, direction, chunk.chunkMeshData.vertsCollider, vertsColliderAdd);
+            AddVertsFor(localPosition, direction, chunk.chunkMeshData.vertsCollider, vertsColliderAdd);
         else if (block.blockInfo.trigger_state == 1)
-            AddVerts(localPosition, direction, chunk.chunkMeshData.vertsTrigger, vertsColliderAdd);
+            AddVertsFor(localPosition, direction, chunk.chunkMeshData.vertsTrigger, vertsColliderAdd);
     }
     #endregion
 }

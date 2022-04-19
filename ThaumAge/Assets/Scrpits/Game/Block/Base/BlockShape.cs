@@ -8,6 +8,7 @@ public class BlockShape
 
     public Vector3[] vertsAdd;
     public Vector2[] uvsAdd;
+    public Color[] colorsAdd;
     public int[] trisAdd;
 
     public static Vector3[] vertsColliderAdd = new Vector3[]
@@ -96,16 +97,14 @@ public class BlockShape
     /// <param name="verts"></param>
     /// <param name="uvs"></param>
     /// <param name="tris"></param>
-    public virtual void BuildFace(Chunk chunk, Vector3Int localPosition,Vector3[] vertsAdd)
+    public virtual void BuildFace(Chunk chunk, Vector3Int localPosition, Vector3[] vertsAdd, Vector2[] uvsAdd, Color[] colorsAdd)
     {
         BlockDirectionEnum direction = BlockDirectionEnum.UpForward;
         if (block.blockInfo.rotate_state != 0)
         {
             direction = chunk.chunkData.GetBlockDirection(localPosition.x, localPosition.y, localPosition.z);
         }
-        BaseAddTris(chunk, localPosition, direction);
-        BaseAddVerts(chunk, localPosition, direction, vertsAdd);
-        BaseAddUVs(chunk, localPosition, direction);
+        BaseAddVertsUVsColors(chunk, localPosition, direction, vertsAdd, uvsAdd, colorsAdd);
     }
 
     /// <summary>
@@ -115,17 +114,9 @@ public class BlockShape
     /// <param name="up"></param>
     /// <param name="right"></param>
     /// <param name="verts"></param>
-    public virtual void BaseAddVerts(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction, Vector3[] vertsAdd)
-    {
-
-    }
-
-    /// <summary>
-    /// 添加UV
-    /// </summary>
-    /// <param name="blockData"></param>
-    /// <param name="uvs"></param>
-    public virtual void BaseAddUVs(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction)
+    public virtual void BaseAddVertsUVsColors(
+        Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction,
+        Vector3[] vertsAdd, Vector2[] uvsAdd, Color[] colorsAdd)
     {
 
     }
@@ -891,42 +882,35 @@ public class BlockShape
     }
 
     /// <summary>
+    /// 添加顶点 UV Colors
+    /// </summary>
+    /// <param name="localPosition"></param>
+    /// <param name="direction"></param>
+    /// <param name="listVerts"></param>
+    public virtual void AddVertsUVsColors(Vector3Int localPosition, BlockDirectionEnum direction,
+        List<Vector3> listVerts, List<Vector2> listUVs, List<Color> listColors,
+        Vector3[] vertsAdd, Vector2[] uvsAdd,Color[] colorsAdd)
+    {
+        for (int i = 0; i < vertsAdd.Length; i++)
+        {
+            listVerts.Add(RotatePosition(direction, localPosition + vertsAdd[i], GetCenterPosition(localPosition)));
+            listUVs.Add(uvsAdd[i]);
+            listColors.Add(colorsAdd[i]);
+        }
+    }
+
+    /// <summary>
     /// 添加顶点
     /// </summary>
     /// <param name="localPosition"></param>
     /// <param name="direction"></param>
     /// <param name="listVerts"></param>
-    /// <param name="vert"></param>
-    public virtual void AddVert(Vector3Int localPosition, BlockDirectionEnum direction, List<Vector3> listVerts, Vector3 vert)
-    {
-        listVerts.Add(RotatePosition(direction, vert, GetCenterPosition(localPosition)));
-    }
-
-    public virtual void AddVert(Vector3Int localPosition, BlockDirectionEnum direction, Vector3[] arrayVerts, int indexVerts, Vector3 vert)
-    {
-        arrayVerts[indexVerts] = RotatePosition(direction, vert, GetCenterPosition(localPosition));
-    }
-
-    public virtual void AddVerts(Vector3Int localPosition, BlockDirectionEnum direction, List<Vector3> listVerts, Vector3[] vertsAdd)
+    /// <param name="vertsAdd"></param>
+    public virtual void AddVertsFor(Vector3Int localPosition, BlockDirectionEnum direction, List<Vector3> listVerts,Vector3[] vertsAdd)
     {
         for (int i = 0; i < vertsAdd.Length; i++)
         {
             listVerts.Add(RotatePosition(direction, localPosition + vertsAdd[i], GetCenterPosition(localPosition)));
-        }
-    }
-
-    /// <summary>
-    /// 增加UV
-    /// </summary>
-    /// <param name="localPosition"></param>
-    /// <param name="direction"></param>
-    /// <param name="listUVs"></param>
-    /// <param name="uvsAdd"></param>
-    public virtual void AddUVs(List<Vector2> listUVs, Vector2[] uvsAdd)
-    {
-        for (int i = 0; i < uvsAdd.Length; i++)
-        {
-            listUVs.Add(uvsAdd[i]);
         }
     }
 

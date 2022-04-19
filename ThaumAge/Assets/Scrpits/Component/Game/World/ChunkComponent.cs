@@ -215,8 +215,8 @@ public class ChunkComponent : BaseMonoBehaviour
     public struct VertexStruct
     {
         public Vector3 vertice;
-        public Vector3 normal;
         public Vector2 uv;
+        public Color color;
     }
 
     public void CombineMesh(ChunkMeshData chunkMeshData)

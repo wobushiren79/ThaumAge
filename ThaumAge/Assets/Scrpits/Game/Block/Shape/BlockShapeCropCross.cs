@@ -9,10 +9,11 @@ public class BlockShapeCropCross : BlockShapeCross
         BlockBaseCrop.InitCropVert(vertsAdd);
     }
 
-    public override void BaseAddUVs(Chunk chunk, Vector3Int localPosition,BlockDirectionEnum blockDirection)
+    public override void BaseAddVertsUVsColors(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum blockDirection,
+        Vector3[] vertsAdd, Vector2[] uvsAdd, Color[] colorsAdd)
     {
-        Vector2[] uvsAdd = this.GetUVsAddForCrop(chunk, localPosition, block.blockInfo);
-        AddUVs(chunk.chunkMeshData.uvs, uvsAdd);
+        Vector2[] uvsAddNew = this.GetUVsAddForCrop(chunk, localPosition, block.blockInfo);
+        base.BaseAddVertsUVsColors(chunk, localPosition, blockDirection, vertsAdd, uvsAddNew, colorsAdd);
     }
 
     /// <summary>
