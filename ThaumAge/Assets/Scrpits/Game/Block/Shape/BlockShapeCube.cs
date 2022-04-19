@@ -120,6 +120,14 @@ public class BlockShapeCube : BlockShape
             new Vector2(uvStart.x,uvStart.y),
             new Vector2(uvStart.x+ uvWidth,uvStart.y)
         };
+
+        colorsAdd = new Color[]
+        {
+            Color.white,
+            Color.white,
+            Color.white,
+            Color.white
+        };
     }
 
     /// <summary>
@@ -261,6 +269,7 @@ public class BlockShapeCube : BlockShape
     /// <param name="chunkData"></param>
     public virtual void BuildFace(Block block, Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction, DirectionEnum face, Vector3[] vertsAdd, Vector2[] uvsAdd, Color[] colorsAdd)
     {
+        BaseAddTris(chunk, localPosition, direction, face);
         BaseAddVertsUVsColors(chunk, localPosition, direction, face, vertsAdd, uvsAdd, colorsAdd);
     }
 
@@ -271,9 +280,9 @@ public class BlockShapeCube : BlockShape
             chunk.chunkMeshData.verts, chunk.chunkMeshData.uvs, chunk.chunkMeshData.colors,
             vertsAdd, uvsAdd, colorsAdd);
         if (block.blockInfo.collider_state == 1)
-            AddVertsFor(localPosition, direction, chunk.chunkMeshData.vertsCollider, vertsAdd);
+            AddVerts(localPosition, direction, chunk.chunkMeshData.vertsCollider, vertsAdd);
         if (block.blockInfo.trigger_state == 1)
-            AddVertsFor(localPosition, direction, chunk.chunkMeshData.vertsTrigger, vertsAdd);
+            AddVerts(localPosition, direction, chunk.chunkMeshData.vertsTrigger, vertsAdd);
     }
 
 

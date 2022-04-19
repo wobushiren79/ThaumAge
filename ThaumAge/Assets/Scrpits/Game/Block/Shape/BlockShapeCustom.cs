@@ -15,6 +15,11 @@ public class BlockShapeCustom : BlockShape
         vertsAdd = blockMeshData.mainMeshData.vertices;
         trisAdd = blockMeshData.mainMeshData.triangles;
         uvsAdd = blockMeshData.mainMeshData.uv;
+        colorsAdd = new Color[uvsAdd.Length];
+        for (int i = 0; i < colorsAdd.Length; i++)
+        {
+            colorsAdd[i] = Color.white;
+        }
 
         if (!blockMeshData.verticesCollider.IsNull())
             vertsColliderAddCustom = blockMeshData.verticesCollider;
@@ -99,13 +104,13 @@ public class BlockShapeCustom : BlockShape
 
     public virtual void BaseAddVertsUVsColorsForCustom(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction, Vector3[] vertsAdd, Vector2[] uvsAdd, Color[] colorsAdd, Vector3[] vertsColliderAdd)
     {
-        AddVertsUVsColors(localPosition, direction, 
-            chunk.chunkMeshData.verts, chunk.chunkMeshData.uvs, chunk.chunkMeshData.colors, 
+        AddVertsUVsColors(localPosition, direction,
+            chunk.chunkMeshData.verts, chunk.chunkMeshData.uvs, chunk.chunkMeshData.colors,
             vertsAdd, uvsAdd, colorsAdd);
         if (block.blockInfo.collider_state == 1)
-            AddVertsFor(localPosition, direction, chunk.chunkMeshData.vertsCollider, vertsColliderAdd);
+            AddVerts(localPosition, direction, chunk.chunkMeshData.vertsCollider, vertsColliderAdd);
         else if (block.blockInfo.trigger_state == 1)
-            AddVertsFor(localPosition, direction, chunk.chunkMeshData.vertsTrigger, vertsColliderAdd);
+            AddVerts(localPosition, direction, chunk.chunkMeshData.vertsTrigger, vertsColliderAdd);
     }
     #endregion
 }

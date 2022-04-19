@@ -9,13 +9,21 @@ public class BlockShapePlough : BlockShapeCubeCuboid
 
         //获取耕地不同的UV
         BlockBasePlough blockPlough = (BlockBasePlough)block;
-        Vector2 uvStart = GetUVStartPosition(block,DirectionEnum.UP);
+        Vector2 uvStart = GetUVStartPosition(block, DirectionEnum.UP);
         blockPlough.uvsAddUpRotate = new Vector2[]
         {
             new Vector2(uvStart.x,uvStart.y + uvWidth),
-            new Vector2(uvStart.x+ uvWidth,uvStart.y+ uvWidth),
-            new Vector2(uvStart.x+ uvWidth,uvStart.y),
+            new Vector2(uvStart.x + uvWidth,uvStart.y + uvWidth),
+            new Vector2(uvStart.x + uvWidth,uvStart.y),
             new Vector2(uvStart.x,uvStart.y),
+        };
+
+        colorsAdd = new Color[]
+        {
+            Color.white,
+            Color.white,
+            Color.white,
+            Color.white
         };
     }
 
@@ -46,7 +54,7 @@ public class BlockShapePlough : BlockShapeCubeCuboid
     public override bool CheckNeedBuildFace(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction, DirectionEnum closeDirection)
     {
         if (localPosition.y == 0) return false;
-        GetCloseRotateBlockByDirection(chunk, localPosition, direction, closeDirection, out Block closeBlock, out Chunk closeBlockChunk,out Vector3Int closeLocalPosition);
+        GetCloseRotateBlockByDirection(chunk, localPosition, direction, closeDirection, out Block closeBlock, out Chunk closeBlockChunk, out Vector3Int closeLocalPosition);
         if (closeBlock == null || closeBlock.blockType == BlockTypeEnum.None)
         {
             if (closeBlockChunk != null && closeBlockChunk.isInit)

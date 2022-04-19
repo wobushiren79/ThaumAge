@@ -104,6 +104,7 @@ public class BlockShape
         {
             direction = chunk.chunkData.GetBlockDirection(localPosition.x, localPosition.y, localPosition.z);
         }
+        BaseAddTris(chunk, localPosition, direction);
         BaseAddVertsUVsColors(chunk, localPosition, direction, vertsAdd, uvsAdd, colorsAdd);
     }
 
@@ -906,7 +907,7 @@ public class BlockShape
     /// <param name="direction"></param>
     /// <param name="listVerts"></param>
     /// <param name="vertsAdd"></param>
-    public virtual void AddVertsFor(Vector3Int localPosition, BlockDirectionEnum direction, List<Vector3> listVerts,Vector3[] vertsAdd)
+    public virtual void AddVerts(Vector3Int localPosition, BlockDirectionEnum direction, List<Vector3> listVerts,Vector3[] vertsAdd)
     {
         for (int i = 0; i < vertsAdd.Length; i++)
         {

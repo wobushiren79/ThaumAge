@@ -62,7 +62,7 @@ public class ChunkMeshData
         {
             arrayData[i].vertice = verts[i];
             arrayData[i].uv = uvs[i];
-            arrayData[i].color = colors[i];
+            //arrayData[i].color = colors[i];
         }
         return arrayData;
     }

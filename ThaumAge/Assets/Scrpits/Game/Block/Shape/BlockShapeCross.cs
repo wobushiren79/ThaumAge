@@ -120,9 +120,9 @@ public class BlockShapeCross : BlockShape
             chunk.chunkMeshData.verts, chunk.chunkMeshData.uvs, chunk.chunkMeshData.colors,
             vertsAdd, uvsAdd, colorsAdd);
         if (block.blockInfo.collider_state == 1)
-            AddVertsFor(localPosition, blockDirection, chunk.chunkMeshData.vertsCollider, vertsColliderAdd);
+            AddVerts(localPosition, blockDirection, chunk.chunkMeshData.vertsCollider, vertsColliderAdd);
         if (block.blockInfo.trigger_state == 1)
-            AddVertsFor(localPosition, blockDirection, chunk.chunkMeshData.vertsTrigger, vertsColliderAdd);
+            AddVerts(localPosition, blockDirection, chunk.chunkMeshData.vertsTrigger, vertsColliderAdd);
     }
 
     public virtual Vector2 GetUVStartPosition(Block block)
