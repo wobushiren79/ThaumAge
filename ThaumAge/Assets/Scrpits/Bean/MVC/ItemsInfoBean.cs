@@ -24,7 +24,9 @@ public class ItemsInfoBean : BaseBean
     public int atk;//攻击力
     public string range_damage;//伤害范围 长宽高
     public string anim_use;//使用动画
-    public string hold_data;//拿 数据
+    public string hold_data;//拿住道具的数据（位置旋转等）
+    public string link_class;//关联的类（针对有对应类 需要单独处理的特殊道具）
+
     public ItemsTypeEnum GetItemsType()
     {
         return (ItemsTypeEnum)items_type;

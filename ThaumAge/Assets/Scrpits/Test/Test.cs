@@ -7,18 +7,17 @@ using UnityEngine;
 using Unity.Burst;
 public class Test : BaseMonoBehaviour
 {
-    private void Awake()
-    {
 
+    public void Start()
+    {
+        //开关角色控制
+        GameControlHandler.Instance.SetPlayerControlEnabled(true);
+        GameHandler.Instance.manager.SetGameState(GameStateEnum.Gaming);
     }
 
     private void OnGUI()
     {
-        if (GUILayout.Button("11111111111"))
-        {
-            int[,] data = new int[16,16];
-            ref int outData = ref data[18, 18];
-        }
+
 
     }
 

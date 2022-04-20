@@ -209,16 +209,16 @@ public class ControlForPlayer : ControlForBase
     }
 
     /// <summary>
-    /// 处理-使用道具目标
+    /// 处理-瞄准使用道具的目标
     /// </summary>
-    public void HandlerForUseItemTarget()
+    public void HandlerForUseItemSightTarget()
     {
         if (!isActiveAndEnabled)
             return;
         //获取道具栏上的物品
         UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();
         ItemsBean itemsData = userData.GetItemsFromShortcut();
-        ItemsHandler.Instance.UseItemTarget(itemsData);
+        ItemsHandler.Instance.UseItemForSightTarget(itemsData);
     }
 
     /// <summary>

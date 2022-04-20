@@ -20,7 +20,7 @@ public class ItemsManager : BaseManager,
 
     //注册道具列表
     protected Item[] arrayItemRegister = new Item[EnumExtension.GetEnumMaxIndex<ItemsTypeEnum>() + 1];
-
+    protected Dictionary<int, Item> dicItemRegisterForId = new Dictionary<int, Item>();
     //道具模型列表
     protected Dictionary<long, GameObject> dicItemsObj = new();
     //道具模型贴图
@@ -35,8 +35,6 @@ public class ItemsManager : BaseManager,
 
         controllerForSynthesis = new ItemsSynthesisController(this, this);
         controllerForSynthesis.GetAllItemsSynthesisData(InitItemsSynthesis);
-
-        RegisterItem();
     }
 
     /// <summary>
@@ -58,6 +56,7 @@ public class ItemsManager : BaseManager,
             })
             .ToList();
         InitData(dicItemsInfo, listItemsInfo);
+        RegisterItem();
     }
 
     /// <summary>
@@ -240,11 +239,25 @@ public class ItemsManager : BaseManager,
     /// <summary>
     /// 获取注册物品类
     /// </summary>
-    /// <param name="itemsType"></param>
-    /// <returns></returns>
     public Item GetRegisterItem(ItemsTypeEnum itemsType)
     {
         return arrayItemRegister[(int)itemsType];
+    }
+
+    /// <summary>
+    /// 获取注册物品类
+    /// </summary>
+    public Item GetRegisterItem(int itemId, ItemsTypeEnum itemsType = ItemsTypeEnum.None)
+    {
+        if (dicItemRegisterForId.TryGetValue(itemId, out Item item))
+        {
+            return item;
+        }
+        if(itemsType != ItemsTypeEnum.None)
+        {
+            return GetRegisterItem(itemsType);
+        }
+        return null;
     }
 
     /// <summary>
@@ -252,6 +265,19 @@ public class ItemsManager : BaseManager,
     /// </summary>
     public void RegisterItem()
     {
+        //注册所有有类的道具
+        dicItemRegisterForId.Clear();
+        for (int i = 0; i < listItemsInfo.Count; i++)
+        {
+            var itemInfo = listItemsInfo[i];
+            //通过反射获取类
+            Item item = ReflexUtil.CreateInstance<Item>($"{itemInfo.link_class}");
+            if (item != null)
+            {
+                RegisterItem(itemInfo.id, item);
+            }
+        }
+        //注册所有类型道具
         List<ItemsTypeEnum> listItemsType = EnumExtension.GetEnumValue<ItemsTypeEnum>();
         for (int i = 0; i < listItemsType.Count; i++)
         {
@@ -270,6 +296,10 @@ public class ItemsManager : BaseManager,
     public void RegisterItem(ItemsTypeEnum itemsType, Item item)
     {
         arrayItemRegister[(int)itemsType] = item;
+    }
+    public void RegisterItem(int itemsId, Item item)
+    {
+        dicItemRegisterForId.Add(itemsId, item);
     }
 
     #region 数据回调

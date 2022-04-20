@@ -26,7 +26,7 @@ public class ItemsHandler : BaseHandler<ItemsHandler, ItemsManager>
             //如果手上有东西
             ItemsInfoBean itemsInfo = manager.GetItemsInfoById(itemsData.itemId);
             //获取对应得处理类
-            item = manager.GetRegisterItem((ItemsTypeEnum)itemsInfo.items_type);
+            item = manager.GetRegisterItem(itemsInfo.id,(ItemsTypeEnum)itemsInfo.items_type);
         }
         item.Use(user, itemsData, type);
         if (type == 2)
@@ -41,9 +41,9 @@ public class ItemsHandler : BaseHandler<ItemsHandler, ItemsManager>
 
 
     /// <summary>
-    /// 使用物品目标
+    /// 瞄准使用的目标
     /// </summary>
-    public void UseItemTarget(ItemsBean itemsData)
+    public void UseItemForSightTarget(ItemsBean itemsData)
     {
         Item item;
         if (itemsData == null || itemsData.itemId == 0)
@@ -56,9 +56,9 @@ public class ItemsHandler : BaseHandler<ItemsHandler, ItemsManager>
             //如果手上有东西
             ItemsInfoBean itemsInfo = manager.GetItemsInfoById(itemsData.itemId);
             //获取对应得处理类
-            item = manager.GetRegisterItem((ItemsTypeEnum)itemsInfo.items_type);
+            item = manager.GetRegisterItem(itemsInfo.id, (ItemsTypeEnum)itemsInfo.items_type);
         }
-        item.UseTarget(itemsData);
+        item.UseForSightTarget(itemsData);
     }
 
     /// <summary>

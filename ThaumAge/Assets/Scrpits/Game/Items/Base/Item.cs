@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class Item
 {
+
     /// <summary>
     /// /获取道具信息
     /// </summary>
@@ -47,22 +48,22 @@ public class Item
     /// <param name="user"></param>
     /// <param name="itemsData"></param>
     /// <param name="type">0鼠标左键使用 1鼠标右键使用 2F交互</param>
-    public virtual void Use(GameObject user, ItemsBean itemsData, int type)
+    public virtual void Use(GameObject user, ItemsBean itemsData, ItemUseTypeEnum itemUseType)
     {
         Player player = user.GetComponent<Player>();
         if (player)
         {
             //如果是F键交互
-            if (type == 2)
+            if (itemUseType ==  ItemUseTypeEnum.E)
             {
                 UseForInteractive(player);
                 return;
             }
-            UseForPlayer(player, itemsData, type);
+            UseForPlayer(player, itemsData, itemUseType);
         }
         else
         {
-            UseForOther(user, itemsData, type);
+            UseForOther(user, itemsData, itemUseType);
         }
     }
 
@@ -92,7 +93,7 @@ public class Item
     }
 
 
-    protected virtual void UseForPlayer(Player player, ItemsBean itemsData, int type)
+    protected virtual void UseForPlayer(Player player, ItemsBean itemsData, ItemUseTypeEnum itemUseType)
     {
         //检测玩家前方是否有方块
         if (player.playerRay.RayToChunkBlock(out RaycastHit hit, out Vector3Int targetBlockPosition))
@@ -103,20 +104,27 @@ public class Item
                 //获取位置和方向
                 player.playerRay.GetHitPositionAndDirection(hit, out Vector3Int targetPosition, out Vector3Int closePosition, out BlockDirectionEnum direction);
                 //挖掘
-                BreakTarget(itemsData, targetPosition);
+                if (itemUseType ==  ItemUseTypeEnum.Left)
+                {
+                    TargetBreak(itemsData, targetPosition);         
+                }
+                else
+                {
+                    TargetUse(itemsData, targetPosition);
+                }
             }
         }
     }
 
-    protected virtual void UseForOther(GameObject user, ItemsBean itemsData, int type)
+    protected virtual void UseForOther(GameObject user, ItemsBean itemsData, ItemUseTypeEnum itemUseType)
     {
 
     }
 
     /// <summary>
-    /// 使用目标
+    /// 瞄准
     /// </summary>
-    public virtual void UseTarget(ItemsBean itemsData)
+    public virtual void UseForSightTarget(ItemsBean itemsData)
     {
         Player player = GameHandler.Instance.manager.player;
         if (player.playerRay.RayToChunkBlock(out RaycastHit hit, out Vector3Int targetBlockPosition))
@@ -142,14 +150,38 @@ public class Item
         else
         {
             //展示目标位置
-            GameHandler.Instance.manager.playerTargetBlock.Hide();
+            if(GameHandler.Instance.manager.playerTargetBlock)
+                GameHandler.Instance.manager.playerTargetBlock.Hide();
         }
+    }
+
+    /// <summary>
+    /// 使用道具 (默认是破坏)
+    /// </summary>
+    public virtual void TargetUse(ItemsBean itemsData, Vector3Int targetPosition)
+    {
+        //获取原位置方块
+        WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(targetPosition, out Block oldBlock, out BlockDirectionEnum oldBlockDirection, out Chunk targetChunk);
+        if (targetChunk == null)
+            return;
+        //如果原位置是空则不做处理
+        if (oldBlock == null || oldBlock.blockType == BlockTypeEnum.None)
+            return;
+        ItemUseHandle(itemsData, targetPosition, oldBlock, oldBlockDirection, targetChunk);
+    }
+
+    /// <summary>
+    /// 道具使用处理
+    /// </summary>
+    public virtual void ItemUseHandle(ItemsBean itemsData, Vector3Int targetPosition, Block targetBlock, BlockDirectionEnum targetBlockDirection, Chunk targetChunk)
+    {
+
     }
 
     /// <summary>
     /// 破碎目标
     /// </summary>
-    public virtual void BreakTarget(ItemsBean itemsData, Vector3Int targetPosition)
+    public virtual void TargetBreak(ItemsBean itemsData, Vector3Int targetPosition)
     {
         //获取原位置方块
         WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(targetPosition, out Block oldBlock, out BlockDirectionEnum oldBlockDirection, out Chunk targetChunk);

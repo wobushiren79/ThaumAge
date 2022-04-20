@@ -4,7 +4,7 @@ using UnityEngine;
 public class ItemTypeSeed : Item
 {
 
-    protected override void UseForPlayer(Player player, ItemsBean itemData, int type)
+    protected override void UseForPlayer(Player player, ItemsBean itemData, ItemUseTypeEnum useType)
     {
         //检测玩家前方是否有方块
         if (player.playerRay.RayToChunkBlock(out RaycastHit hit, out Vector3Int targetBlockPosition))

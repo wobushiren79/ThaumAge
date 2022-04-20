@@ -4,7 +4,7 @@ using UnityEngine;
 public class ItemTypeSword : ItemBaseWeapon
 {
 
-    protected override void UseForPlayer(Player player, ItemsBean itemData,int type)
+    protected override void UseForPlayer(Player player, ItemsBean itemData, ItemUseTypeEnum useType)
     {
     }
 

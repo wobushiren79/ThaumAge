@@ -63,4 +63,13 @@ public class CreatureCptCharacter : CreatureCptBase
         }
         return characterData;
     }
+
+    /// <summary>
+    /// 隐藏显示头
+    /// </summary>
+    /// <param name="isShow"></param>
+    public void SetActiveHead(bool isShow)
+    {
+        characterHead.gameObject.SetActive(isShow);
+    }
 }
