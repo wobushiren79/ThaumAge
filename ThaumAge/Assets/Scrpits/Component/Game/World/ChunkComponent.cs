@@ -113,55 +113,48 @@ public class ChunkComponent : BaseMonoBehaviour
                 chunk.isDrawMesh = false;
                 return;
             }
-            //chunkMesh.Clear();
-            //chunkMesh.subMeshCount = meshRenderer.materials.Length;
-            ////设置顶点
-            //chunkMesh.SetVertices(chunk.chunkMeshData.verts);
-            ////设置UV
-            //chunkMesh.SetUVs(0, chunk.chunkMeshData.uvs);
+            chunkMesh.Clear();
+            chunkMesh.subMeshCount = meshRenderer.materials.Length;
+            //设置顶点
+            chunkMesh.SetVertices(chunk.chunkMeshData.verts);
+            //设置UV
+            chunkMesh.SetUVs(0, chunk.chunkMeshData.uvs);
+            //设置颜色
+            chunkMesh.SetColors(chunk.chunkMeshData.colors);
+            //设置三角（单面渲染，双面渲染,液体）
+            int indexMat = 0;
+            for (int i = 0; i < chunk.chunkMeshData.dicTris.Length; i++)
+            {
+                List<int> trisData = chunk.chunkMeshData.dicTris[i];
+                if (trisData.IsNull())
+                    continue;
+                chunkMesh.SetTriangles(trisData, indexMat);
+                indexMat++;
+            }
 
-            ////设置三角（单面渲染，双面渲染,液体）
-            //int indexMat = 0;
-            //for (int i = 0; i < chunk.chunkMeshData.dicTris.Length; i++)
-            //{
-            //    List<int> trisData = chunk.chunkMeshData.dicTris[i];
-            //    if (trisData.IsNull())
-            //        continue;
-            //    chunkMesh.SetTriangles(trisData, indexMat);
-            //    indexMat++;
-            //}
+            //碰撞数据设置
+            if (chunk.chunkMeshData.vertsCollider.Count >= 3)
+            {
+                chunkMeshCollider.Clear();
+                chunkMeshCollider.SetVertices(chunk.chunkMeshData.vertsCollider);
+                chunkMeshCollider.SetTriangles(chunk.chunkMeshData.trisCollider, 0);
+            }
+            //触发数据设置
+            if (chunk.chunkMeshData.vertsTrigger.Count >= 3)
+            {
+                chunkMeshTrigger.Clear();
+                chunkMeshTrigger.SetVertices(chunk.chunkMeshData.vertsTrigger);
+                chunkMeshTrigger.SetTriangles(chunk.chunkMeshData.trisTrigger, 0);
+            }
+            //刷新
+            chunkMesh.RecalculateBounds();
+            chunkMesh.RecalculateNormals();
 
-            ////碰撞数据设置
-            //if (chunk.chunkMeshData.vertsCollider.Count >= 3)
-            //{
-            //    chunkMeshCollider.Clear();
-            //    chunkMeshCollider.SetVertices(chunk.chunkMeshData.vertsCollider);
-            //    chunkMeshCollider.SetTriangles(chunk.chunkMeshData.trisCollider, 0);
-            //}
-            ////触发数据设置
-            //if (chunk.chunkMeshData.vertsTrigger.Count >= 3)
-            //{
-            //    chunkMeshTrigger.Clear();
-            //    chunkMeshTrigger.SetVertices(chunk.chunkMeshData.vertsTrigger);
-            //    chunkMeshTrigger.SetTriangles(chunk.chunkMeshData.trisTrigger, 0);
-            //}
+            meshFilter.mesh.Optimize();
+            chunkMeshTrigger.Optimize();
+            chunkMeshCollider.Optimize();
 
-
-            ////刷新
-            //chunkMesh.RecalculateBounds();
-            //chunkMesh.RecalculateNormals();
-            ////刷新
-            ////chunkMeshCollider.RecalculateBounds();
-            ////chunkMeshCollider.RecalculateNormals();
-            ////刷新
-            ////chunkMeshTrigger.RecalculateBounds();
-            ////chunkMeshTrigger.RecalculateNormals();
-
-            //meshFilter.mesh.Optimize();
-            //chunkMeshTrigger.Optimize();
-            //chunkMeshCollider.Optimize();
-
-            CombineMesh(chunk.chunkMeshData);
+            //CombineMesh(chunk.chunkMeshData);
 
             Physics.BakeMesh(chunkMeshCollider.GetInstanceID(), false);
             Physics.BakeMesh(chunkMeshTrigger.GetInstanceID(), false);
@@ -217,7 +210,7 @@ public class ChunkComponent : BaseMonoBehaviour
         public Vector3 vertice;
         public Vector3 normal;
         public Vector2 uv;
-        //public Color color;
+        public Color color;
     }
 
     public void CombineMesh(ChunkMeshData chunkMeshData)
@@ -331,7 +324,7 @@ public class ChunkComponent : BaseMonoBehaviour
          new VertexAttributeDescriptor(VertexAttribute.Position, VertexAttributeFormat.Float32, 3,0),
          new VertexAttributeDescriptor(VertexAttribute.Normal, VertexAttributeFormat.Float32, 3,0),
          new VertexAttributeDescriptor(VertexAttribute.TexCoord0, VertexAttributeFormat.Float32, 2,0),
-         //new VertexAttributeDescriptor(VertexAttribute.Color, VertexAttributeFormat.Float32, 4,0)
+         new VertexAttributeDescriptor(VertexAttribute.Color, VertexAttributeFormat.Float32, 4,0)
     };
 
     public struct BakeJob : IJobParallelFor

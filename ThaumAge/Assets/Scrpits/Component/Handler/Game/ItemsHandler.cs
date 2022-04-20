@@ -13,7 +13,7 @@ public class ItemsHandler : BaseHandler<ItemsHandler, ItemsManager>
     /// <param name="user"></param>
     /// <param name="itemsData"></param>
     /// <param name="type">0 左键 1右键 2F建</param>
-    public void UseItem(GameObject user, ItemsBean itemsData, int type)
+    public void UseItem(GameObject user, ItemsBean itemsData, ItemUseTypeEnum useType)
     {
         Item item;
         if (itemsData == null || itemsData.itemId == 0)
@@ -28,8 +28,8 @@ public class ItemsHandler : BaseHandler<ItemsHandler, ItemsManager>
             //获取对应得处理类
             item = manager.GetRegisterItem(itemsInfo.id,(ItemsTypeEnum)itemsInfo.items_type);
         }
-        item.Use(user, itemsData, type);
-        if (type == 2)
+        item.Use(user, itemsData, useType);
+        if (useType ==  ItemUseTypeEnum.E)
         {
             //如果是交互 则不播放动画
         }

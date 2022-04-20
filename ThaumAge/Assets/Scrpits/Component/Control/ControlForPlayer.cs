@@ -57,7 +57,7 @@ public class ControlForPlayer : ControlForBase
         inputActionUseR.canceled += HandleForUseEnd;
 
         inputActionUseFace = InputHandler.Instance.manager.GetInputPlayerData("UseE");
-        inputActionUseFace.started += HandleForUseF;
+        inputActionUseFace.started += HandleForUseE;
 
         inputActionUseDrop = InputHandler.Instance.manager.GetInputPlayerData("Drop");
         inputActionUseDrop.started += HandleForDrop;
@@ -66,7 +66,7 @@ public class ControlForPlayer : ControlForBase
         inputActionuserDetailsData.started += HandleForUserDetails;
         inputActionMove = InputHandler.Instance.manager.GetInputPlayerData("Move");
 
-        InvokeRepeating("HandlerForUseItemTarget", 0.1f, 0.1f);
+        InvokeRepeating("HandlerForUseItemSightTarget", 0.1f, 0.1f);
     }
 
     public void Update()
@@ -86,7 +86,7 @@ public class ControlForPlayer : ControlForBase
         inputActionUseL.canceled -= HandleForUseEnd;
         inputActionUseR.started -= HandleForUseR;
         inputActionUseR.canceled -= HandleForUseEnd;
-        inputActionUseFace.started -= HandleForUseF;
+        inputActionUseFace.started -= HandleForUseE;
         inputActionuserDetailsData.started -= HandleForUserDetails;
         inputActionUseDrop.started -= HandleForDrop;
     }
@@ -244,7 +244,7 @@ public class ControlForPlayer : ControlForBase
     /// <param name="callback"></param>
     public void HandleForUseL(CallbackContext callback)
     {
-        HandleForUse(callback, 0);
+        HandleForUse(callback, ItemUseTypeEnum.Left);
     }
 
 
@@ -254,16 +254,16 @@ public class ControlForPlayer : ControlForBase
     /// <param name="callback"></param>
     public void HandleForUseR(CallbackContext callback)
     {
-        HandleForUse(callback, 1);
+        HandleForUse(callback, ItemUseTypeEnum.Right);
     }
 
     /// <summary>
     /// 互动处理
     /// </summary>
     /// <param name="callback"></param>
-    public void HandleForUseF(CallbackContext callback)
+    public void HandleForUseE(CallbackContext callback)
     {
-        HandleForUse(callback, 2, false);
+        HandleForUse(callback, ItemUseTypeEnum.E, false);
     }
 
     /// <summary>
@@ -287,7 +287,7 @@ public class ControlForPlayer : ControlForBase
         UIHandler.Instance.RefreshUI();
     }
 
-    public void HandleForUse(CallbackContext callback, int type, bool isUserItem = true)
+    public void HandleForUse(CallbackContext callback, ItemUseTypeEnum useType, bool isUserItem = true)
     {
         if (!isActiveAndEnabled)
             return;
@@ -299,7 +299,7 @@ public class ControlForPlayer : ControlForBase
         UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();
         ItemsBean itemsData = userData.GetItemsFromShortcut();
         Player player = GameHandler.Instance.manager.player;
-        ItemsHandler.Instance.UseItem(player.gameObject, itemsData, type);
+        ItemsHandler.Instance.UseItem(player.gameObject, itemsData, useType);
     }
 
     /// <summary>
