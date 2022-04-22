@@ -126,6 +126,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 9fb7765f63c19f043a167bf941dcd02a, type: 3}
   - {fileID: 21300000, guid: 31eccf8fe76d0f742b3ae195aa302fc4, type: 3}
   - {fileID: 21300000, guid: 2ee93b9f138965343a3ccb2c1b60c872, type: 3}
+  - {fileID: 21300000, guid: d6e6a8afc4dcae64c918c588ff6a7f80, type: 3}
   - {fileID: 21300000, guid: 8f6ec9cfee809fc48a3e349875465a5e, type: 3}
   - {fileID: 21300000, guid: 3fea91ff766c6bd439dfa4e16e209897, type: 3}
   - {fileID: 21300000, guid: a307b5ff1350cbf46b28f6d5ec571df7, type: 3}
@@ -205,6 +206,7 @@ SpriteAtlas:
   - icon_grass_magic
   - icon_grass
   - icon_item_1200002
+  - icon_item_108021
   - icon_item_900001
   - icon_item_310011
   - icon_item_200002

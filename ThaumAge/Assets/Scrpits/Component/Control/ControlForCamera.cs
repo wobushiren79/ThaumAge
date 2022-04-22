@@ -1,4 +1,5 @@
 ﻿using JetBrains.Annotations;
+using System;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -49,6 +50,7 @@ public class ControlForCamera : ControlForBase
         {
             cameraDistance = 1;
         }
+        cameraDistance = (float)Math.Round(double.Parse($"{cameraDistance}"), 2);
         CameraHandler.Instance.ChangeCameraDistance(cameraDistance);
     }
 }

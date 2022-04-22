@@ -335,58 +335,69 @@ public class ControlForPlayer : ControlForBase
     /// <param name="targetPosition"></param>
     public void RotateCharacter(Vector2 moveOffset, float rotateSpeed)
     {
-        if (moveOffset == Vector2.zero)
-            return;
         Camera mainCamera = CameraHandler.Instance.manager.mainCamera;
-        Vector3 rotateAngles = new Vector3(0, mainCamera.transform.rotation.eulerAngles.y, 0);
-        //前进后退的旋转
-        if (moveOffset.y > 0)
+        ControlForCamera controlForCamera = GameControlHandler.Instance.manager.controlForCamera;
+        //如果是第一人称
+        if (controlForCamera.cameraDistance <= 0)
         {
-            //左右移动的旋转
-            if (moveOffset.x > 0)
-            {
-                rotateAngles.y += 45;
-            }
-            else if (moveOffset.x < 0)
-            {
-                rotateAngles.y += -45;
-            }
-            else
-            {
-                rotateAngles.y += 0;
-            }
-        }
-        else if (moveOffset.y < 0)
-        {
-            //左右移动的旋转
-            if (moveOffset.x > 0)
-            {
-                rotateAngles.y += 135;
-            }
-            else if (moveOffset.x < 0)
-            {
-                rotateAngles.y += -135;
-            }
-            else
-            {
-                rotateAngles.y += 180;
-            }
+            Vector3 rotateAngles = new Vector3(0, mainCamera.transform.rotation.eulerAngles.y, 0);
+            //朝摄像头方向移动
+            characterController.transform.eulerAngles = rotateAngles;
         }
         else
         {
-            //左右移动的旋转
-            if (moveOffset.x > 0)
+            if (moveOffset == Vector2.zero)
+                return;
+            Vector3 rotateAngles = new Vector3(0, mainCamera.transform.rotation.eulerAngles.y, 0);
+            //前进后退的旋转
+            if (moveOffset.y > 0)
             {
-                rotateAngles.y += 90;
+                //左右移动的旋转
+                if (moveOffset.x > 0)
+                {
+                    rotateAngles.y += 45;
+                }
+                else if (moveOffset.x < 0)
+                {
+                    rotateAngles.y += -45;
+                }
+                else
+                {
+                    rotateAngles.y += 0;
+                }
             }
-            else if (moveOffset.x < 0)
+            else if (moveOffset.y < 0)
             {
-                rotateAngles.y += -90;
+                //左右移动的旋转
+                if (moveOffset.x > 0)
+                {
+                    rotateAngles.y += 135;
+                }
+                else if (moveOffset.x < 0)
+                {
+                    rotateAngles.y += -135;
+                }
+                else
+                {
+                    rotateAngles.y += 180;
+                }
             }
+            else
+            {
+                //左右移动的旋转
+                if (moveOffset.x > 0)
+                {
+                    rotateAngles.y += 90;
+                }
+                else if (moveOffset.x < 0)
+                {
+                    rotateAngles.y += -90;
+                }
+            }
+            Quaternion rotate = Quaternion.Euler(rotateAngles);
+            //朝摄像头方向移动
+            characterController.transform.rotation = Quaternion.Slerp(transform.rotation, rotate, rotateSpeed * Time.unscaledDeltaTime);
         }
-        Quaternion rotate = Quaternion.Euler(rotateAngles);
-        //朝摄像头方向移动
-        characterController.transform.rotation = Quaternion.Slerp(transform.rotation, rotate, rotateSpeed * Time.unscaledDeltaTime);
     }
 
 }

@@ -41,7 +41,7 @@ public class GameConfigBean
     //角色X轴镜头移动速度
     public float speedForPlayerCameraMoveX = 2f;
     //角色Y轴镜头移动速度
-    public float speedForPlayerCameraMoveY = 0.02f;
+    public float speedForPlayerCameraMoveY = 2f;
 
     //世界刷新范围
     public int worldRefreshRange = 5;

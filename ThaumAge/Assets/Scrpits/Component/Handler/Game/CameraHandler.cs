@@ -137,14 +137,14 @@ public class CameraHandler : BaseHandler<CameraHandler, CameraManager>
         CinemachinePOV cinemachinePOV = cameraForFirst.GetCinemachineComponent<CinemachinePOV>();
         if (cinemachinePOV != null)
         {
-            cinemachinePOV.m_VerticalAxis.m_MaxSpeed = xSpeed / timeScale;
-            cinemachinePOV.m_HorizontalAxis.m_MaxSpeed = ySpeed / timeScale;
+            cinemachinePOV.m_VerticalAxis.m_MaxSpeed = ySpeed / timeScale;
+            cinemachinePOV.m_HorizontalAxis.m_MaxSpeed = xSpeed / timeScale;
         }
 
         CinemachineFreeLook cameraForThree = manager.cameraForThree;
         //第三人称
         cameraForThree.m_XAxis.m_MaxSpeed = xSpeed / timeScale;
-        cameraForThree.m_YAxis.m_MaxSpeed = ySpeed / timeScale;
+        cameraForThree.m_YAxis.m_MaxSpeed = ySpeed / 100 / timeScale;
     }
 
     /// <summary>

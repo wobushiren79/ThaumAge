@@ -13,20 +13,8 @@ public class Test : BaseMonoBehaviour
     public void Start()
     {
         //开关角色控制
-        //GameControlHandler.Instance.SetPlayerControlEnabled(true);
-        //GameHandler.Instance.manager.SetGameState(GameStateEnum.Gaming);
-        MeshFilter meshFilter = GetComponent<MeshFilter>();
-        List<Color> listColor = new List<Color>();
-        for (int i=0;i<meshFilter.mesh.vertexCount;i++)
-        {
-            listColor.Add(Color.red);
-        }
-        Mesh mesh = meshFilter.mesh;
-        mesh.SetColors(listColor);
-        mesh.RecalculateBounds();
-        mesh.RecalculateNormals();
-        mesh.RecalculateTangents();
-        meshFilter.mesh = mesh;
+        GameControlHandler.Instance.SetPlayerControlEnabled(true);
+        GameHandler.Instance.manager.SetGameState(GameStateEnum.Gaming);
     }
 
     private void OnGUI()
