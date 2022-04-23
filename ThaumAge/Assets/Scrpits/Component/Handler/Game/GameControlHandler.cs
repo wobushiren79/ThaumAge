@@ -9,6 +9,9 @@ public class GameControlHandler : BaseHandler<GameControlHandler, GameControlMan
     /// <param name="enabled"></param>
     public void SetPlayerControlEnabled(bool enabled)
     {
+        UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();
+        CameraHandler.Instance.ChangeCameraDistance(userData.userSetting.cameraDistance);
+
         manager.controlForPlayer?.EnabledControl(enabled);
         manager.controlForCamera?.EnabledControl(enabled);
     }

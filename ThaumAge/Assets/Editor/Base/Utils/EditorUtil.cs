@@ -236,24 +236,34 @@ public static class EditorUtil
     /// 设置贴图数据
     /// </summary>
     public static void SetTextureData(string texturePath,
+        TextureImporterType textureImporterType　= TextureImporterType.Default,
+        int spritePixelsPerUnit = 16,
         bool isReadable = true,//是否可读
         bool mipmapEnabled = false,//是否开启mipmap
         TextureWrapMode wrapMode = TextureWrapMode.Repeat,//循环模式
         FilterMode filterMode = FilterMode.Point,//像素模式
         TextureImporterFormat format = TextureImporterFormat.RGBA32,//颜色
-        string platform = "Standalone")
+        string platform = "Standalone",
+        int maxTextureSize = 2048,
+        TextureImporterCompression textureImporterCompression = TextureImporterCompression.CompressedHQ)//平台
     {
         TextureImporter textureImporter = AssetImporter.GetAtPath(texturePath) as TextureImporter;
+        textureImporter.textureType = textureImporterType;
+
+        textureImporter.spriteImportMode = SpriteImportMode.Single;
+        textureImporter.spritePixelsPerUnit = spritePixelsPerUnit;
         textureImporter.isReadable = isReadable;
         textureImporter.mipmapEnabled = mipmapEnabled;
         textureImporter.wrapMode = wrapMode;
         textureImporter.filterMode = filterMode;
         textureImporter.crunchedCompression = true;
         textureImporter.compressionQuality = 100;
-        textureImporter.textureCompression = TextureImporterCompression.CompressedHQ;
+        textureImporter.maxTextureSize = maxTextureSize;
+        textureImporter.textureCompression = textureImporterCompression;
         var settingPlatform = textureImporter.GetPlatformTextureSettings(platform);
         settingPlatform.format = format;
-        settingPlatform.textureCompression = TextureImporterCompression.CompressedHQ;
+        settingPlatform.maxTextureSize = maxTextureSize;
+        settingPlatform.textureCompression = textureImporterCompression;
         textureImporter.SetPlatformTextureSettings(settingPlatform);
 
         AssetDatabase.ImportAsset(texturePath);

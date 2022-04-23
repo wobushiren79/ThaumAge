@@ -18,7 +18,7 @@ public class AddressableWindow : EditorWindow
         AddressableUtil.AddCallBackForAssetChange(HandleForAssetChange);
     }
 
-    [MenuItem("Custom/Addressable/Window")]
+    [MenuItem("Custom/资源/Addressable")]
     static void CreateWindows()
     {
         EditorWindow.GetWindow(typeof(AddressableWindow));
@@ -29,7 +29,7 @@ public class AddressableWindow : EditorWindow
     protected static AddressableSaveBean addressableSaveData;
 
     protected static string pathSaveData = "Assets/Data/Addressable";
-    protected static string saveDataFileName = "SaveData";
+    protected static string saveDataFileName = "AddressableSaveData";
 
     public void OnEnable()
     {

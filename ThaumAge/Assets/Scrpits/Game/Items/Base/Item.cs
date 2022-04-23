@@ -75,15 +75,15 @@ public class Item
         //检测玩家前方是否有方块
         if (player.playerRay.RayToChunkBlock(out RaycastHit hit, out Vector3Int targetBlockPosition))
         {
-            Chunk chunkForHit = hit.collider.GetComponentInParent<Chunk>();
+            ChunkComponent chunkForHit = hit.collider.GetComponentInParent<ChunkComponent>();
             if (chunkForHit != null)
             {
                 //获取位置和方向
                 player.playerRay.GetHitPositionAndDirection(hit, out Vector3Int targetPosition, out Vector3Int closePosition, out BlockDirectionEnum direction);
 
-                Vector3Int localPosition = targetPosition - chunkForHit.chunkData.positionForWorld;
+                Vector3Int localPosition = targetPosition - chunkForHit.chunk.chunkData.positionForWorld;
                 //获取原位置方块
-                chunkForHit.chunkData.GetBlockForLocal(localPosition, out Block tagetBlock, out BlockDirectionEnum targetDirection);
+                chunkForHit.chunk.chunkData.GetBlockForLocal(localPosition, out Block tagetBlock, out BlockDirectionEnum targetDirection);
                 if (tagetBlock != null && tagetBlock.blockInfo.interactive_state == 1)
                 {
                     tagetBlock.Interactive(player.gameObject, targetPosition, targetDirection);

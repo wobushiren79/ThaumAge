@@ -46,7 +46,7 @@ public class BlockShapeCustomLinkAround : BlockShapeCustom
     protected void AddOtherMeshData(Chunk chunk, Vector3Int localPosition,float angle)
     {
         Vector3[] rotatePositionArray = VectorUtil.GetRotatedPosition(GetCenterPosition(localPosition), vertsAddLink, new Vector3(0, angle, 0));
-        BaseAddTrisForCustom(chunk, trisAddLink);
+        BaseAddTrisForCustom(chunk, localPosition, BlockDirectionEnum.UpForward, trisAddLink);
         BaseAddVertsUVsColorsForCustom(chunk, localPosition, BlockDirectionEnum.UpForward,
             rotatePositionArray, uvsAddLink,colorsAdd, new Vector3[0]);
     }

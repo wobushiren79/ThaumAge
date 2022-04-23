@@ -6,10 +6,10 @@ public class BlockShape
 {
     public Block block;
 
-    public Vector3[] vertsAdd;
-    public Vector2[] uvsAdd;
-    public Color[] colorsAdd;
-    public int[] trisAdd;
+    public Vector3[] vertsAdd = new Vector3[0];
+    public Vector2[] uvsAdd = new Vector2[0];
+    public Color[] colorsAdd = new Color[0];
+    public int[] trisAdd = new int[0];
 
     public static Vector3[] vertsColliderAdd = new Vector3[]
     {

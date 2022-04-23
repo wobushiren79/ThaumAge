@@ -35,6 +35,22 @@ public static class CheckExtension
     }
 
     /// <summary>
+    /// 检测字典是否为Null
+    /// </summary>
+    /// <typeparam name="A"></typeparam>
+    /// <typeparam name="B"></typeparam>
+    /// <param name="self"></param>
+    /// <returns></returns>
+    public static bool IsNull<A,B>(this Dictionary<A,B> self)
+    {
+        if (self == null || self.Count == 0)
+        {
+            return true;
+        }
+        return false;
+    }
+
+    /// <summary>
     /// 检测Array是否为Null
     /// </summary>
     /// <param name="array"></param>

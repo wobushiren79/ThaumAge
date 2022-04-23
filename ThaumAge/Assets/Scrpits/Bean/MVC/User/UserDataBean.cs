@@ -25,6 +25,8 @@ public class UserDataBean
     public UserPositionBean userPosition = new UserPositionBean();
     //玩家成就数据
     public UserAchievementBean userAchievement = new UserAchievementBean();
+    //玩家设置数据
+    public UserSettingBean userSetting = new UserSettingBean();
 
     //游戏时间
     public TimeBean timeForGame = new TimeBean();

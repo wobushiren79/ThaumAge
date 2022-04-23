@@ -352,7 +352,7 @@ public class BlockEditorWindow : EditorWindow
             var itemImporter = AssetImporter.GetAtPath(pathBlock) as TextureImporter;
             itemImporter.textureType = TextureImporterType.Default;
             itemImporter.isReadable = true;
-            itemImporter.textureCompression = TextureImporterCompression.CompressedHQ;
+            itemImporter.textureCompression = TextureImporterCompression.Uncompressed;
             itemImporter.mipmapEnabled = false;
             itemImporter.filterMode = FilterMode.Point;
 
@@ -401,7 +401,7 @@ public class BlockEditorWindow : EditorWindow
         File.WriteAllBytes(saveCompletePath, outTexture.EncodeToPNG());
 
         EditorUtil.RefreshAsset();
-        EditorUtil.SetTextureData(saveCompletePath, format: TextureImporterFormat.DXT5);
+        EditorUtil.SetTextureData(saveCompletePath, format: TextureImporterFormat.DXT5, textureImporterCompression: TextureImporterCompression.Uncompressed);
     }
 
     /// <summary>

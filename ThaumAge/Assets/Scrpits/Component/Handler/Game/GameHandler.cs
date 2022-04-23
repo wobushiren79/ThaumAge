@@ -11,8 +11,6 @@ public class GameHandler : BaseHandler<GameHandler, GameManager>
     //场景启动
     public Action actionForLauncher;
 
-
-
     /// <summary>
     /// 加载游戏资源
     /// </summary>

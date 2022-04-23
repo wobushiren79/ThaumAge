@@ -145,8 +145,6 @@ public class BlockShapeCube : BlockShape
 
         if (block.blockType != BlockTypeEnum.None)
         {
-            //int buildFaceCount = 0;
-
             //只有在能旋转的时候才去查询旋转方向
             BlockDirectionEnum direction = BlockDirectionEnum.UpForward;
             if (block.blockInfo.rotate_state != 0)
@@ -157,83 +155,39 @@ public class BlockShapeCube : BlockShape
             if (CheckNeedBuildFace(chunk, localPosition, direction, DirectionEnum.Left))
             {
                 BuildFace(block, chunk, localPosition, direction, DirectionEnum.Left, vertsAddLeft, uvsAddLeft, colorsAdd);
-                //buildFaceCount++;
             }
 
             //Right
             if (CheckNeedBuildFace(chunk, localPosition, direction, DirectionEnum.Right))
             {
                 BuildFace(block, chunk, localPosition, direction, DirectionEnum.Right, vertsAddRight, uvsAddRight, colorsAdd);
-                //buildFaceCount++;
             }
 
             //Bottom
             if (CheckNeedBuildFace(chunk, localPosition, direction, DirectionEnum.Down))
             {
                 BuildFace(block, chunk, localPosition, direction, DirectionEnum.Down, vertsAddDown, uvsAddDown, colorsAdd);
-                //buildFaceCount++;
             }
 
             //Top
             if (CheckNeedBuildFace(chunk, localPosition, direction, DirectionEnum.UP))
             {
                 BuildFace(block, chunk, localPosition, direction, DirectionEnum.UP, vertsAddUp, uvsAddUp, colorsAdd);
-                //buildFaceCount++;
             }
 
             //Forward
             if (CheckNeedBuildFace(chunk, localPosition, direction, DirectionEnum.Forward))
             {
                 BuildFace(block, chunk, localPosition, direction, DirectionEnum.Forward, vertsAddForward, uvsAddForward, colorsAdd);
-                //buildFaceCount++;
             }
 
             //Back
             if (CheckNeedBuildFace(chunk, localPosition, direction, DirectionEnum.Back))
             {
                 BuildFace(block, chunk, localPosition, direction, DirectionEnum.Back, vertsAddBack, uvsAddBack, colorsAdd);
-                //buildFaceCount++;
             }
-
-            //AddMeshIndexData(chunk, localPosition, buildFaceCount);
         }
     }
-
-    /// <summary>
-    /// 增加保存的mesh数据
-    /// </summary>
-    /// <param name="chunk"></param>
-    /// <param name="localPosition"></param>
-    /// <param name="buildFaceCount"></param>
-    //protected virtual void AddMeshIndexData(Chunk chunk, Vector3Int localPosition, int buildFaceCount)
-    //{
-    //    int vertsCount = buildFaceCount * 4;
-    //    int trisIndex = buildFaceCount * 6;
-
-    //    if (vertsCount != 0)
-    //    {
-    //        int startVertsIndex = chunk.chunkMeshData.verts.Count;
-    //        int startTrisIndex = chunk.chunkMeshData.dicTris[block.blockInfo.material_type].Count;
-
-    //        int startVertsColliderIndex = 0;
-    //        int startTrisColliderIndex = 0;
-
-    //        if (block.blockInfo.collider_state == 1)
-    //        {
-    //            startVertsColliderIndex = chunk.chunkMeshData.vertsCollider.Count;
-    //            startTrisColliderIndex = chunk.chunkMeshData.trisCollider.Count;
-    //        }
-    //        else if (block.blockInfo.trigger_state == 1)
-    //        {
-    //            startVertsColliderIndex = chunk.chunkMeshData.vertsTrigger.Count;
-    //            startTrisColliderIndex = chunk.chunkMeshData.trisTrigger.Count;
-    //        }
-
-    //        chunk.chunkMeshData.AddMeshIndexData(localPosition,
-    //            startVertsIndex, vertsCount, startTrisIndex, trisIndex,
-    //            startVertsColliderIndex, vertsCount, startTrisColliderIndex, trisIndex);
-    //    }
-    //}
 
     public override void BuildBlockNoCheck(Chunk chunk, Vector3Int localPosition)
     {
@@ -273,8 +227,29 @@ public class BlockShapeCube : BlockShape
         BaseAddVertsUVsColors(chunk, localPosition, direction, face, vertsAdd, uvsAdd, colorsAdd);
     }
 
+    public virtual void BaseAddTris(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction, DirectionEnum face)
+    {
+        int index = chunk.chunkMeshData.verts.Count;
+
+        List<int> trisNormal = chunk.chunkMeshData.dicTris[block.blockInfo.material_type];
+        AddTris(index, trisNormal, trisAdd);
+
+        if (block.blockInfo.collider_state == 1)
+        {
+            List<int> trisCollider = chunk.chunkMeshData.trisCollider;
+            int colliderIndex = chunk.chunkMeshData.vertsCollider.Count;
+            AddTris(colliderIndex, trisCollider, trisAdd);
+        }
+        if (block.blockInfo.trigger_state == 1)
+        {
+            List<int> trisTrigger = chunk.chunkMeshData.trisTrigger;
+            int triggerIndex = chunk.chunkMeshData.vertsTrigger.Count;
+            AddTris(triggerIndex, trisTrigger, trisAdd);
+        }
+    }
+
     public virtual void BaseAddVertsUVsColors(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction, DirectionEnum face,
-        Vector3[] vertsAdd, Vector2[] uvsAdd, Color[] colorsAdd)
+    Vector3[] vertsAdd, Vector2[] uvsAdd, Color[] colorsAdd)
     {
         AddVertsUVsColors(localPosition, direction,
             chunk.chunkMeshData.verts, chunk.chunkMeshData.uvs, chunk.chunkMeshData.colors,
@@ -283,30 +258,6 @@ public class BlockShapeCube : BlockShape
             AddVerts(localPosition, direction, chunk.chunkMeshData.vertsCollider, vertsAdd);
         if (block.blockInfo.trigger_state == 1)
             AddVerts(localPosition, direction, chunk.chunkMeshData.vertsTrigger, vertsAdd);
-    }
-
-
-    public virtual void BaseAddTris(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction, DirectionEnum face)
-    {
-        base.BaseAddTris(chunk, localPosition, direction);
-
-        int index = chunk.chunkMeshData.verts.Count;
-
-        List<int> trisNormal = chunk.chunkMeshData.dicTris[block.blockInfo.material_type];
-        List<int> trisCollider = chunk.chunkMeshData.trisCollider;
-        List<int> trisTrigger = chunk.chunkMeshData.trisTrigger;
-
-        AddTris(index, trisNormal, trisAdd);
-        if (block.blockInfo.collider_state == 1)
-        {
-            int colliderIndex = chunk.chunkMeshData.vertsCollider.Count;
-            AddTris(colliderIndex, trisCollider, trisAdd);
-        }
-        if (block.blockInfo.trigger_state == 1)
-        {
-            int triggerIndex = chunk.chunkMeshData.vertsTrigger.Count;
-            AddTris(triggerIndex, trisTrigger, trisAdd);
-        }
     }
 
     /// <summary>

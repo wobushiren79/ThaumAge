@@ -95,7 +95,7 @@ public class ResourcesRefresh : Editor
         EditorUtil.RefreshAsset();
     }
 
-    [MenuItem("工具/资源/刷新自定义方块模型")]
+    [MenuItem("工具/资源/刷新自定义方块模型（合并的模型）")]
     public static void RefreshBlockModelCustomRes()
     {
         //注： 如果是超过2048的图片 需要选用其他的压缩格式
@@ -103,7 +103,7 @@ public class ResourcesRefresh : Editor
         BlockEditorWindow.CreateBlockMeshData();
     }
 
-    [MenuItem("工具/资源/刷新通用方块模型")]
+    [MenuItem("工具/资源/刷新通用方块模型(单独的模型)")]
     public static void RefreshBlockModelCommonRes()
     {
         //注： 如果是超过2048的图片 需要选用其他的压缩格式

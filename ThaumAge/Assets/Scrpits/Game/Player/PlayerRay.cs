@@ -23,7 +23,17 @@ public class PlayerRay : PlayerBase
 
         //获取摄像头到角色的距离
         Vector3 cameraPosition = CameraHandler.Instance.manager.mainCamera.transform.position;
-        float disMax = Vector3.Distance(cameraPosition, player.objThirdLook.transform.position);
+        ControlForCamera controlForCamera = GameControlHandler.Instance.manager.controlForCamera;
+        float disMax;
+        if (controlForCamera.cameraDistance <= 0)
+        {
+             disMax = Vector3.Distance(cameraPosition, player.objFirstLook.transform.position);
+        }
+        else
+        {
+             disMax = Vector3.Distance(cameraPosition, player.objThirdLook.transform.position);
+        }
+
 
         //发射射线检测
         RayUtil.RayAllToScreenPointForScreenCenter(disMax + disRayBlock, 1 << LayerInfo.ChunkTrigger | 1 << LayerInfo.ChunkCollider, out RaycastHit[] arrayHit);

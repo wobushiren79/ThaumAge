@@ -69,7 +69,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 1.2983193, y: 1}
+    m_SensorSize: {x: 1.8895522, y: 1}
     Iso: 200
     ShutterSpeed: 0.005
     Aperture: 16
@@ -162,7 +162,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 776616026688040902}
   m_LocalRotation: {x: 0.07858858, y: -0.000000018216618, z: -0.0000000014360595, w: -0.9969072}
-  m_LocalPosition: {x: 0, y: 21, z: -10}
+  m_LocalPosition: {x: 0, y: 1, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -404,7 +404,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1251835814350291142}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 21, z: -10}
+  m_LocalPosition: {x: 0, y: 1, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -444,7 +444,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 1.2983193, y: 1}
+    m_SensorSize: {x: 1.8895522, y: 1}
     Iso: 200
     ShutterSpeed: 0.005
     Aperture: 16
@@ -623,6 +623,7 @@ MonoBehaviour:
   customPasses:
   - rid: 1481773615586738273
   - rid: 1481773646670987267
+  - rid: 6847138817547698219
   injectionPoint: 3
   m_TargetCamera: {fileID: 0}
   useTargetCamera: 0
@@ -637,7 +638,7 @@ MonoBehaviour:
         targetColorBuffer: 0
         targetDepthBuffer: 0
         clearFlags: 0
-        passFoldout: 0
+        passFoldout: 1
         m_Version: 0
         blurRadius: 0
         uiLayer:
@@ -651,7 +652,7 @@ MonoBehaviour:
         targetColorBuffer: 0
         targetDepthBuffer: 0
         clearFlags: 6
-        passFoldout: 0
+        passFoldout: 1
         m_Version: 0
         filterFoldout: 1
         rendererFoldout: 1
@@ -667,6 +668,22 @@ MonoBehaviour:
         depthCompareFunction: 4
         depthWrite: 1
         shaderPass: 0
+    - rid: 6847138817547698219
+      type: {class: Outline, ns: , asm: NewAssembly}
+      data:
+        m_Name: PlayerTargetBlock
+        enabled: 1
+        targetColorBuffer: 0
+        targetDepthBuffer: 0
+        clearFlags: 0
+        passFoldout: 0
+        m_Version: 0
+        outlineLayer:
+          serializedVersion: 2
+          m_Bits: 16384
+        outlineColor: {r: 0, g: 0, b: 0, a: 1}
+        threshold: 0
+        outlineShader: {fileID: 4800000, guid: 67b51d016f2a4974d92bcd1779197183, type: 3}
 --- !u!1 &3311853048982969207
 GameObject:
   m_ObjectHideFlags: 3
@@ -736,7 +753,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 1.2983193, y: 1}
+    m_SensorSize: {x: 1.8895522, y: 1}
     Iso: 200
     ShutterSpeed: 0.005
     Aperture: 16
@@ -821,7 +838,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 1.2983193, y: 1}
+    m_SensorSize: {x: 1.8895522, y: 1}
     Iso: 200
     ShutterSpeed: 0.005
     Aperture: 16
@@ -1364,7 +1381,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4997985065325111164}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 21.4, z: 0.2}
+  m_LocalPosition: {x: 0, y: 1.4, z: 0.2}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1401,7 +1418,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 1.2983193, y: 1}
+    m_SensorSize: {x: 1.8895522, y: 1}
     Iso: 200
     ShutterSpeed: 0.005
     Aperture: 16
