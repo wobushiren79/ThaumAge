@@ -130,6 +130,16 @@ public class Chunk
     }
 
     /// <summary>
+    /// 获取存储的方块数据
+    /// </summary>
+    /// <param name="worldPosition"></param>
+    /// <returns></returns>
+    public BlockBean GetBlockDataForWorldPosition(Vector3Int worldPosition)
+    {
+       return GetBlockData(worldPosition - chunkData.positionForWorld);
+    }
+
+    /// <summary>
     /// 获取方块模型
     /// </summary>
     /// <param name="localPosition"></param>

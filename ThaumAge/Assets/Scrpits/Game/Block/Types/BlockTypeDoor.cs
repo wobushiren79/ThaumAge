@@ -42,25 +42,6 @@ public class BlockTypeDoor : Block
         DestoryLinkBlock(chunk, localPosition, direction, new List<Vector3Int>() { Vector3Int.up });
     }
 
-    public override void BuildBlock(Chunk chunk, Vector3Int localPosition)
-    {
-        BlockShapeCustom blockShapeCustom = blockShape as BlockShapeCustom;
-        //获取数据
-        BlockBean blockData = chunk.GetBlockData(localPosition);
-        BlockDoorBean blockDoorData = null;
-        if (blockData != null)
-        {
-            blockDoorData = FromMetaData<BlockDoorBean>(blockData.meta);
-        }
-        if (blockDoorData == null)
-        {
-            blockDoorData = new BlockDoorBean();
-            blockDoorData.state = 0;
-            blockDoorData.linkBasePosition = new Vector3IntBean(localPosition + chunk.chunkData.positionForWorld);
-        }
-        blockShapeCustom.BuildBlock(chunk, localPosition);
-    }
-
     /// <summary>
     /// 互动
     /// </summary>
@@ -71,17 +52,8 @@ public class BlockTypeDoor : Block
         WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(worldPosition, out Block block, out BlockDirectionEnum direction, out Chunk chunk);
         //获取数据
         BlockBean blockData = chunk.GetBlockData(worldPosition - chunk.chunkData.positionForWorld);
-        Vector3Int baseWorldPosition = worldPosition;
 
-        BlockDoorBean blockDoorData = null;
-        if (blockData != null)
-        {
-            blockDoorData = FromMetaData<BlockDoorBean>(blockData.meta);
-            if (blockDoorData != null)
-            {
-                baseWorldPosition = blockDoorData.linkBasePosition.GetVector3Int();
-            }
-        }
+        BlockDoorBean blockDoorData = GetLinkBaseBlockData<BlockDoorBean>(blockData.meta);
         if (blockDoorData == null)
         {
             blockDoorData = new BlockDoorBean();
@@ -89,6 +61,7 @@ public class BlockTypeDoor : Block
             blockDoorData.linkBasePosition = new Vector3IntBean(worldPosition);
         }
 
+        Vector3Int baseWorldPosition = blockDoorData.GetBasePosition();
         GameObject objDoor = BlockHandler.Instance.GetBlockObj(baseWorldPosition);
         Transform tfDoor = objDoor.transform.Find("Door");
         if (blockDoorData.state == 0)
@@ -161,8 +134,7 @@ public class BlockTypeDoor : Block
             tfDoor.DOLocalRotate(new Vector3(0, 0, 0), 0.2f);
             blockDoorData.state = 0;
         }
-        List<Vector3Int> listLinkPosition = new List<Vector3Int>() { Vector3Int.zero, Vector3Int.up };
-        SaveLinkBlockData(baseWorldPosition, listLinkPosition, blockDoorData);
+        SaveLinkBaseBlockData(baseWorldPosition, blockDoorData);
     }
 
 }

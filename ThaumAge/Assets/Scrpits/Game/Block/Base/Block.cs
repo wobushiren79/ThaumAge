@@ -542,26 +542,33 @@ public class Block
     /// <param name="baseWorldPosition"></param>
     /// <param name="listLinkPosition"></param>
     /// <param name="data"></param>
-    public void SaveLinkBlockData<T>(Vector3Int baseWorldPosition, List<Vector3Int> listLinkPosition, T data) where T : BlockBaseLinkBean
+    public void SaveLinkBaseBlockData<T>(Vector3Int baseWorldPosition, T data) where T : BlockBaseLinkBean
     {
-        for (int i = 0; i < listLinkPosition.Count; i++)
+        WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(baseWorldPosition, out Block baseBlock, out Chunk baseChunk);
+        BlockBean baseBlockData = baseChunk.GetBlockDataForWorldPosition(baseWorldPosition);
+        baseBlockData.meta = ToMetaData(data);
+        baseChunk.SetBlockData(baseBlockData);
+    }
+
+    /// <summary>
+    /// 获取连接的基础方块数据
+    /// </summary>
+    public T GetLinkBaseBlockData<T>(string meta) where T : BlockBaseLinkBean
+    {
+        //获取link数据
+        T blockLink = FromMetaData<T>(meta);
+        if (blockLink.level == 0)
         {
-            Vector3Int linkOffsetPosition = listLinkPosition[i];
-            Vector3Int linkWorldPosition = linkOffsetPosition + baseWorldPosition;
-            WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(linkWorldPosition, out Block itemBlock, out Chunk itemChunk);
-
-            if (linkOffsetPosition == Vector3Int.zero)
-            {
-                data.level = 0;
-            }
-            else
-            {
-                data.level = 1;
-            }
-
-            BlockBean itemBlockData = itemChunk.GetBlockData(linkWorldPosition - itemChunk.chunkData.positionForWorld);
-            itemBlockData.meta = ToMetaData(data);
-            itemChunk.SetBlockData(itemBlockData);
+            //如果自己就是基础连接方块
+            return blockLink;
+        }
+        else
+        {
+            //获取基础连接方块
+            Vector3Int baseWorldPosition = blockLink.linkBasePosition.GetVector3Int();
+            WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(baseWorldPosition, out Block baseBlock, out BlockDirectionEnum baseBlockDirection, out Chunk baseChunk);
+            BlockBean blockDataBase = baseChunk.GetBlockData(baseWorldPosition - baseChunk.chunkData.positionForWorld);
+            return FromMetaData<T>(blockDataBase.meta);
         }
     }
 
