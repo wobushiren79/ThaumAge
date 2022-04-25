@@ -1,7 +1,7 @@
 ﻿using UnityEditor;
 using UnityEngine;
 
-public class BlockTypeStairsWood : Block
+public class BlockTypeLadderWood : Block
 {
     public override void OnCollision(GameObject user, Vector3Int worldPosition, DirectionEnum direction)
     {

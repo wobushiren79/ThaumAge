@@ -97,14 +97,14 @@ public class BlockShape
     /// <param name="verts"></param>
     /// <param name="uvs"></param>
     /// <param name="tris"></param>
-    public virtual void BuildFace(Chunk chunk, Vector3Int localPosition, Vector3[] vertsAdd, Vector2[] uvsAdd, Color[] colorsAdd)
+    public virtual void BuildFace(Chunk chunk, Vector3Int localPosition, Vector3[] vertsAdd, Vector2[] uvsAdd, Color[] colorsAdd,int[] trisAdd)
     {
         BlockDirectionEnum direction = BlockDirectionEnum.UpForward;
         if (block.blockInfo.rotate_state != 0)
         {
             direction = chunk.chunkData.GetBlockDirection(localPosition.x, localPosition.y, localPosition.z);
         }
-        BaseAddTris(chunk, localPosition, direction);
+        BaseAddTris(chunk, localPosition, direction, trisAdd);
         BaseAddVertsUVsColors(chunk, localPosition, direction, vertsAdd, uvsAdd, colorsAdd);
     }
 
@@ -129,7 +129,7 @@ public class BlockShape
     /// <param name="tris"></param>
     /// <param name="indexCollider"></param>
     /// <param name="trisCollider"></param>
-    public virtual void BaseAddTris(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction)
+    public virtual void BaseAddTris(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction, int[] trisAdd)
     {
 
     }

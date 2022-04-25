@@ -59,7 +59,7 @@ public enum BlockTypeEnum
     CropWatermelonGrow = 5101,//种植生长中 西瓜
     CropWatermelon = 5102,//种植 西瓜
 
-    StairsWood = 6001,//木楼梯
+    LadderWood = 6001,//木梯子
     CraftingTableSimple = 6101,//简易制作台
     Door = 6010,//门
     Sign = 6101,//牌子

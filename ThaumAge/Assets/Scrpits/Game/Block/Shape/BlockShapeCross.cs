@@ -55,7 +55,7 @@ public class BlockShapeCross : BlockShape
         base.BuildBlock(chunk, localPosition);
         if (block.blockType != BlockTypeEnum.None)
         {
-            BuildFace(chunk, localPosition,vertsAdd,uvsAdd,colorsAdd);
+            BuildFace(chunk, localPosition, vertsAdd, uvsAdd, colorsAdd, trisAdd);
             //AddMeshIndexData( chunk,  localPosition);
         }
     }
@@ -89,9 +89,9 @@ public class BlockShapeCross : BlockShape
     //}
 
 
-    public override void BaseAddTris(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum blockDirection)
+    public override void BaseAddTris(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum blockDirection, int[] trisAdd)
     {
-        base.BaseAddTris(chunk, localPosition, blockDirection);
+        base.BaseAddTris(chunk, localPosition, blockDirection, trisAdd);
 
         int index = chunk.chunkMeshData.verts.Count;
 
@@ -114,7 +114,7 @@ public class BlockShapeCross : BlockShape
 
     public override void BaseAddVertsUVsColors(
         Chunk chunk, Vector3Int localPosition, BlockDirectionEnum blockDirection,
-        Vector3[] vertsAdd,Vector2[] uvsAdd,Color[] colorsAdd)
+        Vector3[] vertsAdd, Vector2[] uvsAdd, Color[] colorsAdd)
     {
         AddVertsUVsColors(localPosition, blockDirection,
             chunk.chunkMeshData.verts, chunk.chunkMeshData.uvs, chunk.chunkMeshData.colors,

@@ -89,37 +89,37 @@ public class BlockShapeCubeCuboid : BlockShapeCube
             //Left
             if (leftOffsetBorder == 0 ? CheckNeedBuildFace(chunk, localPosition, direction, DirectionEnum.Left) : true)
             {
-                BuildFace(block, chunk, localPosition, direction, DirectionEnum.Left, vertsAddLeftOffset, uvsAddLeft, colorsAdd);
+                BuildFace(chunk, localPosition, direction, DirectionEnum.Left, vertsAddLeftOffset, uvsAddLeft, colorsAdd, trisAdd);
                 buildFaceCount++;
             }
             //Right
             if (rightOffsetBorder == 0 ? CheckNeedBuildFace(chunk, localPosition, direction, DirectionEnum.Right) : true)
             {
-                BuildFace(block, chunk, localPosition, direction, DirectionEnum.Right, vertsAddRightOffset, uvsAddRight, colorsAdd);
+                BuildFace(chunk, localPosition, direction, DirectionEnum.Right, vertsAddRightOffset, uvsAddRight, colorsAdd, trisAdd);
                 buildFaceCount++;
             }
             //Bottom
             if (downOffsetBorder == 0 ? CheckNeedBuildFace(chunk, localPosition, direction, DirectionEnum.Down) : true)
             {
-                BuildFace(block, chunk, localPosition, direction, DirectionEnum.Down, vertsAddDownOffset, uvsAddDown, colorsAdd);
+                BuildFace(chunk, localPosition, direction, DirectionEnum.Down, vertsAddDownOffset, uvsAddDown, colorsAdd, trisAdd);
                 buildFaceCount++;
             }
             //Top
             if (upOffsetBorder == 0 ? CheckNeedBuildFace(chunk, localPosition, direction, DirectionEnum.UP) : true)
             {
-                BuildFace(block, chunk, localPosition, direction, DirectionEnum.UP, vertsAddUpOffset, uvsAddUp, colorsAdd);
+                BuildFace(chunk, localPosition, direction, DirectionEnum.UP, vertsAddUpOffset, uvsAddUp, colorsAdd, trisAdd);
                 buildFaceCount++;
             }
             //Front
             if (forwardOffsetBorder == 0 ? CheckNeedBuildFace(chunk, localPosition, direction, DirectionEnum.Forward) : true)
             {
-                BuildFace(block, chunk, localPosition, direction, DirectionEnum.Forward, vertsAddForwardOffset, uvsAddForward, colorsAdd);
+                BuildFace(chunk, localPosition, direction, DirectionEnum.Forward, vertsAddForwardOffset, uvsAddForward, colorsAdd, trisAdd);
                 buildFaceCount++;
             }
             //Back
             if (backOffsetBorder == 0 ? CheckNeedBuildFace(chunk, localPosition, direction, DirectionEnum.Back) : true)
             {
-                BuildFace(block, chunk, localPosition, direction, DirectionEnum.Back, vertsAddBackOffset, uvsAddBack, colorsAdd);
+                BuildFace(chunk, localPosition, direction, DirectionEnum.Back, vertsAddBackOffset, uvsAddBack, colorsAdd, trisAdd);
                 buildFaceCount++;
             }
             //AddMeshIndexData(chunk, localPosition, buildFaceCount);

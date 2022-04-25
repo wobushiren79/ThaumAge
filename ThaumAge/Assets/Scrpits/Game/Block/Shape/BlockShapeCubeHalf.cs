@@ -233,7 +233,7 @@ public class BlockShapeCubeHalf : BlockShapeCube
             {
                 Vector3[] useVertsAddLeft = arrayVertsData[0];
                 Vector2[] useUvsAddLeft = arrayUvsData[0];
-                BuildFace(block, chunk, localPosition, direction, DirectionEnum.Left, useVertsAddLeft, useUvsAddLeft, colorsAdd);
+                BuildFace(chunk, localPosition, direction, DirectionEnum.Left, useVertsAddLeft, useUvsAddLeft, colorsAdd, trisAdd);
             }
 
             //Right
@@ -241,7 +241,7 @@ public class BlockShapeCubeHalf : BlockShapeCube
             {
                 Vector3[] useVertsAddRight = arrayVertsData[1];
                 Vector2[] useUvsAddRight = arrayUvsData[1];
-                BuildFace(block, chunk, localPosition, direction, DirectionEnum.Right, useVertsAddRight, useUvsAddRight, colorsAdd);
+                BuildFace(chunk, localPosition, direction, DirectionEnum.Right, useVertsAddRight, useUvsAddRight, colorsAdd, trisAdd);
             }
 
             //Bottom
@@ -249,7 +249,7 @@ public class BlockShapeCubeHalf : BlockShapeCube
             {
                 Vector3[] useVertsAddDown = arrayVertsData[3];
                 Vector2[] useUvsAddDown = arrayUvsData[3];
-                BuildFace(block, chunk, localPosition, direction, DirectionEnum.Down, useVertsAddDown, useUvsAddDown, colorsAdd);
+                BuildFace(chunk, localPosition, direction, DirectionEnum.Down, useVertsAddDown, useUvsAddDown, colorsAdd, trisAdd);
             }
 
             //Top
@@ -257,7 +257,7 @@ public class BlockShapeCubeHalf : BlockShapeCube
             {
                 Vector3[] useVertsAddUp = arrayVertsData[2];
                 Vector2[] useUvsAddUp = arrayUvsData[2];
-                BuildFace(block, chunk, localPosition, direction, DirectionEnum.UP, useVertsAddUp, useUvsAddUp, colorsAdd);
+                BuildFace(chunk, localPosition, direction, DirectionEnum.UP, useVertsAddUp, useUvsAddUp, colorsAdd, trisAdd);
             }
 
             //Forward
@@ -265,7 +265,7 @@ public class BlockShapeCubeHalf : BlockShapeCube
             {
                 Vector3[] useVertsAddForward = arrayVertsData[4];
                 Vector2[] useUvsAddForward = arrayUvsData[4];
-                BuildFace(block, chunk, localPosition, direction, DirectionEnum.Forward, useVertsAddForward, useUvsAddForward, colorsAdd);
+                BuildFace(chunk, localPosition, direction, DirectionEnum.Forward, useVertsAddForward, useUvsAddForward, colorsAdd, trisAdd);
             }
 
             //Back
@@ -273,7 +273,7 @@ public class BlockShapeCubeHalf : BlockShapeCube
             {
                 Vector3[] useVertsAddBack = arrayVertsData[5];
                 Vector2[] useUvsAddBack = arrayUvsData[5];
-                BuildFace(block, chunk, localPosition, direction, DirectionEnum.Back, useVertsAddBack, useUvsAddBack, colorsAdd);
+                BuildFace(chunk, localPosition, direction, DirectionEnum.Back, useVertsAddBack, useUvsAddBack, colorsAdd, trisAdd);
             }
         }
     }
