@@ -235,10 +235,4 @@ public class BlockShapeStairs : BlockShapeCube
             BuildFace(chunk, localPosition, direction, DirectionEnum.Left, vertsAdd, uvsAdd, colorsAddCommon, trisAddStairsCommon);
         }
     }
-
-
-    public override bool CheckNeedBuildFace(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction, DirectionEnum closeDirection)
-    {
-        return base.CheckNeedBuildFace(chunk, localPosition, direction, closeDirection);
-    }
 }
