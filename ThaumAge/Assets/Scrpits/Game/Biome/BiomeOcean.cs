@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using static BiomeCreatePlantTool;
 using static BiomeCreateTool;
 
 public class BiomeOcean : Biome
@@ -44,11 +45,11 @@ public class BiomeOcean : Biome
 
     public void AddFlower(Vector3Int wPos)
     {
-        BiomeForFlowerData flowersData = new BiomeForFlowerData
+        BiomeForPlantData flowersData = new BiomeForPlantData
         {
             addRate = 0.005f,
-            listFlowerType = new List<BlockTypeEnum> { BlockTypeEnum.FlowerWater }
+            listPlantType = new List<BlockTypeEnum> { BlockTypeEnum.FlowerWater }
         };
-        BiomeCreateTool.AddFlower(101, wPos, flowersData);
+        BiomeCreatePlantTool.AddFlower(101, wPos, flowersData);
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using static BiomeCreatePlantTool;
 using static BiomeCreateTool;
 
 public class BiomeVolcano : Biome
@@ -43,7 +44,7 @@ public class BiomeVolcano : Biome
     /// <param name="startPosition"></param>
     public void AddDeadwood(Vector3Int startPosition)
     {
-        BiomeCreateTool.AddDeadwood(101, 0.005f, startPosition);
+        BiomeCreatePlantTool.AddDeadwood(101, 0.005f, startPosition);
     }
 
     /// <summary>
@@ -52,11 +53,11 @@ public class BiomeVolcano : Biome
     /// <param name="wPos"></param>
     public void AddFireFlower(Vector3Int wPos)
     {
-        BiomeForFlowerData flowersData = new BiomeForFlowerData
+        BiomeForPlantData flowersData = new BiomeForPlantData
         {
             addRate = 0.005f,
-            listFlowerType = new List<BlockTypeEnum> { BlockTypeEnum.FlowerFire }
+            listPlantType = new List<BlockTypeEnum> { BlockTypeEnum.FlowerFire }
         };
-        BiomeCreateTool.AddFlower(201, wPos, flowersData);
+        BiomeCreatePlantTool.AddFlower(201, wPos, flowersData);
     }
 }

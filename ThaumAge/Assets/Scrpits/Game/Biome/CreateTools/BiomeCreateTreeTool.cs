@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using UnityEditor;
 using UnityEngine;
 
-public class BiomeCreateTool
+public class BiomeCreateTreeTool
 {
     public struct BiomeForTreeData
     {
@@ -17,43 +15,32 @@ public class BiomeCreateTool
         public int leavesRange;//树叶范围
     }
 
-    public struct BiomeForPlantData
-    {
-        public float addRate;
-        public List<BlockTypeEnum> listPlantType;
-    }
 
-    public struct BiomeForCactusData
+    /// <summary>
+    ///  增加仙人掌
+    /// </summary>
+    /// <param name="randomData"></param>
+    /// <param name="startPosition"></param>
+    /// <param name="cactusData"></param>
+    public static void AddCactus(uint randomData, Vector3Int startPosition, BiomeForTreeData cactusData)
     {
-        public float addRate;
-        public int minHeight;
-        public int maxHeight;
-        public BlockTypeEnum cactusType;
-    }
+        //生成概率
+        float addRate = WorldRandTools.GetValue(startPosition, randomData);
+        //高度
+        int treeHeight = WorldRandTools.Range(cactusData.minHeight, cactusData.maxHeight);
 
-    public struct BiomeForFlowerData
-    {
-        public float addRate;
-        public float flowerRange;
-        public List<BlockTypeEnum> listFlowerType;
-    }
-
-    public struct BiomeForCaveData
-    {
-        public float addRate;
-        public int minDepth;
-        public int maxDepth;
-        public int minSize;
-        public int maxSize;
-    }
-
-    public struct BiomeForWaterPoolData
-    {
-        public float addRate;
-        public int minDepth;
-        public int maxDepth;
-        public int minSize;
-        public int maxSize;
+        if (addRate < cactusData.addRate)
+        {
+            for (int i = 0; i < treeHeight; i++)
+            {
+                Vector3Int treeTrunkPosition = startPosition + Vector3Int.up * (i + 1);
+                //生成树干
+                if (i < treeHeight)
+                {
+                    WorldCreateHandler.Instance.manager.AddUpdateBlock(treeTrunkPosition, cactusData.treeTrunk);
+                }
+            }
+        }
     }
 
 
@@ -105,7 +92,7 @@ public class BiomeCreateTool
                                 if (randomLeaves == 0)
                                     continue;
                             }
-                            WorldCreateHandler.Instance.manager.AddUpdateBlock(treeTrunkPosition.x + x, treeTrunkPosition.y, treeTrunkPosition.z + z,treeData.treeLeaves);
+                            WorldCreateHandler.Instance.manager.AddUpdateBlock(treeTrunkPosition.x + x, treeTrunkPosition.y, treeTrunkPosition.z + z, treeData.treeLeaves);
                         }
                     }
                 }
@@ -335,7 +322,7 @@ public class BiomeCreateTool
                                     Vector3Int addPosition = new(addPositionX, addPositionY, addPositionZ);
                                     baseStartPosition += addPosition;
                                     //干
-                                    WorldCreateHandler.Instance.manager.AddUpdateBlock(baseStartPosition, treeData.treeTrunk,baseDirection);
+                                    WorldCreateHandler.Instance.manager.AddUpdateBlock(baseStartPosition, treeData.treeTrunk, baseDirection);
                                 }
                             }
 
@@ -491,358 +478,4 @@ public class BiomeCreateTool
         }
     }
 
-    /// <summary>
-    /// 增加植物
-    /// </summary>
-    /// <param name="startPosition"></param>
-    /// <param name="weedData"></param>
-    public static void AddPlant(uint randomData, Vector3Int startPosition, BiomeForPlantData plantData)
-    {
-        //生成概率
-        float addRate = WorldRandTools.GetValue(startPosition, randomData);
-        int weedTypeNumber = WorldRandTools.Range(0, plantData.listPlantType.Count);
-        if (addRate < plantData.addRate)
-        {
-            WorldCreateHandler.Instance.manager.AddUpdateBlock(startPosition.x, startPosition.y + 1, startPosition.z, plantData.listPlantType[weedTypeNumber]);
-        }
-    }
-
-    /// <summary>
-    ///  增加仙人掌
-    /// </summary>
-    /// <param name="randomData"></param>
-    /// <param name="startPosition"></param>
-    /// <param name="cactusData"></param>
-    public static void AddCactus(uint randomData, Vector3Int startPosition, BiomeForCactusData cactusData)
-    {
-        //生成概率
-        float addRate = WorldRandTools.GetValue(startPosition, randomData);
-        //高度
-        int treeHeight = WorldRandTools.Range(cactusData.minHeight, cactusData.maxHeight);
-
-        if (addRate < cactusData.addRate)
-        {
-            for (int i = 0; i < treeHeight; i++)
-            {
-                Vector3Int treeTrunkPosition = startPosition + Vector3Int.up * (i + 1);
-                //生成树干
-                if (i < treeHeight)
-                {
-                    WorldCreateHandler.Instance.manager.AddUpdateBlock(treeTrunkPosition, cactusData.cactusType);
-                }
-            }
-        }
-    }
-
-
-    /// <summary>
-    /// 增加鲜花
-    /// </summary>
-    /// <param name="randomData"></param>
-    /// <param name="startPosition"></param>
-    /// <param name="flowerData"></param>
-    public static void AddFlower(uint randomData, Vector3Int startPosition, BiomeForFlowerData flowerData)
-    {
-        float addRate = WorldRandTools.GetValue(startPosition, randomData);
-        int flowerTypeNumber = WorldRandTools.Range(0, flowerData.listFlowerType.Count);
-        if (addRate < flowerData.addRate)
-        {
-            WorldCreateHandler.Instance.manager.AddUpdateBlock(startPosition.x, startPosition.y + 1, startPosition.z, flowerData.listFlowerType[flowerTypeNumber]);
-        }
-    }
-
-    /// <summary>
-    /// 增加水池
-    /// </summary>
-    /// <param name="randomData"></param>
-    /// <param name="startPosition"></param>
-    /// <param name="riverData"></param>
-    public static void AddWaterPool(uint randomData, Vector3Int startPosition, BiomeForWaterPoolData riverData)
-    {
-        //生成概率
-        float addRate = WorldRandTools.GetValue(startPosition, randomData);
-
-        if (addRate < riverData.addRate)
-        {
-            //高度
-            int depth = WorldRandTools.Range(riverData.minDepth, riverData.maxDepth, startPosition, 1);
-            int size = WorldRandTools.Range(riverData.minSize, riverData.maxSize, startPosition, 101);
-
-            Vector3Int tempPosition = startPosition;
-            for (int z = -size; z <= size; z++)
-            {
-                for (int y = -depth; y <= 0; y++)
-                {
-                    for (int x = -size; x <= size; x++)
-                    {
-                        Vector3Int currentPosition = tempPosition + new Vector3Int(x, y, z);
-                        float dis = Vector3.Distance(currentPosition, startPosition);
-                        if (tempPosition.y <= 0 || dis >= size)
-                        {
-                            continue;
-                        }
-                        WorldCreateHandler.Instance.manager.AddUpdateBlock(currentPosition.x, currentPosition.y, currentPosition.z, BlockTypeEnum.None);
-                    }
-                }
-            }
-        }
-    }
-
-    /// <summary>
-    /// 生成枯木
-    /// </summary>
-    /// <param name="randomData"></param>
-    /// <param name="startPosition"></param>
-    public static void AddDeadwood(uint randomData, float addRate, Vector3Int startPosition)
-    {
-        //生成概率
-        float addRateRandom = WorldRandTools.GetValue(startPosition, randomData);
-        if (addRateRandom < addRate)
-        {
-            //高度
-            int treeHeight = WorldRandTools.Range(1, 4);
-
-            Vector3Int treeDataPosition = startPosition;
-            for (int i = 0; i < treeHeight; i++)
-            {
-                WorldCreateHandler.Instance.manager.AddUpdateBlock(treeDataPosition.x, treeDataPosition.y + i + 1, treeDataPosition.z, BlockTypeEnum.WoodDead,BlockDirectionEnum.UpForward);
-            }
-        }
-    }
-
-    /// <summary>
-    /// 增加矿石
-    /// </summary>
-    /// <param name="randomData"></param>
-    /// <param name="addRate"></param>
-    /// <param name="blockType"></param>
-    /// <param name="startPosition"></param>
-    public static void AddOre(uint randomData, float addRate, Vector3Int startPosition)
-    {
-        //生成概率
-        float addRateRandom = WorldRandTools.GetValue(startPosition, randomData);
-
-        if (addRateRandom < addRate)
-        {
-            //高度
-            int range = 2;
-            //不能直接用 startPosition 因为addRateRandom 的概率已经决定了他的值
-            int randomOre = WorldRandTools.Range(0, arrayBlockOre.Length, new Vector3(startPosition.x, 0, 0));
-            for (int x = -range; x < range; x++)
-            {
-                for (int y = -range; y < range; y++)
-                {
-                    for (int z = -range; z < range; z++)
-                    {
-                        Vector3Int blockPosition = new Vector3Int(startPosition.x + x, startPosition.y + y, startPosition.z + z);
-                        float disTemp = Vector3Int.Distance(blockPosition, startPosition);
-                        if (blockPosition.y <= 3 || disTemp >= range - 0.5f)
-                        {
-                            continue;
-                        }
-                        WorldCreateHandler.Instance.manager.AddUpdateBlock(blockPosition, arrayBlockOre[randomOre]);
-                    }
-                }
-            }
-        }
-    }
-
-    public static BlockTypeEnum[] arrayBlockOre = new BlockTypeEnum[]
-    {   
-        //煤矿
-        BlockTypeEnum.OreCoal , BlockTypeEnum.OreCoal , BlockTypeEnum.OreCoal,
-        BlockTypeEnum.OreCopper,//铜矿
-        BlockTypeEnum.OreIron,//铁矿
-        BlockTypeEnum.OreSilver,//银矿
-        BlockTypeEnum.OreGold,//金矿
-        BlockTypeEnum.OreTin,//锡矿
-        BlockTypeEnum. OreAluminum,//铝矿
-    };
-
-    /// <summary>
-    /// 增加建筑
-    /// </summary>
-    /// <param name="addRate"></param>
-    /// <param name="randomData"></param>
-    /// <param name="startPosition"></param>
-    /// <param name="buildingType"></param>
-    public static bool AddBuilding(float addRate, uint randomData, Vector3Int startPosition, BuildingTypeEnum buildingType)
-    {
-        float randomRate;
-        if (addRate < 0.00001f)
-        {
-            //概率小于万分之一的用RandomTools
-            int seed = WorldCreateHandler.Instance.manager.GetWorldSeed();
-            RandomTools randomTools = RandomUtil.GetRandom(seed, startPosition.x, startPosition.y, startPosition.z);
-            //生成概率
-            randomRate = randomTools.NextFloat();
-        }
-        else
-        {
-            randomRate = WorldRandTools.GetValue(startPosition, randomData);
-        }
-        if (randomRate < addRate)
-        {
-            BuildingInfoBean buildingInfo = BiomeHandler.Instance.manager.GetBuildingInfo(buildingType);
-
-            List<BuildingBean> listBuildingData = buildingInfo.listBuildingData;
-
-            int randomAngle = WorldRandTools.Range(0, 4, startPosition) * 90;
-
-            for (int i = 0; i < listBuildingData.Count; i++)
-            {
-                BuildingBean buildingData = listBuildingData[i];
-                Vector3Int targetPosition = startPosition + buildingData.GetPosition();
-                float createRate = WorldRandTools.GetValue(targetPosition);
-
-                if (buildingData.randomRate == 0 || createRate < buildingData.randomRate)
-                {
-                    VectorUtil.GetRotatedPosition(startPosition, targetPosition, new Vector3(0, randomAngle, 0));
-                    WorldCreateHandler.Instance.manager.AddUpdateBlock(targetPosition, buildingData.blockId, (BlockDirectionEnum)buildingData.direction);
-                }
-            }
-            return true;
-        }
-        return false;
-    }
-
-    /// <summary>
-    /// 增加山洞
-    /// </summary>
-    /// <param name="startPosition"></param>
-    /// <param name="caveData"></param>
-    public static void AddCave(Chunk chunk, BiomeMapData[,] mapData, BiomeForCaveData caveData)
-    {
-        float frequency = 2;
-        float amplitude = 1;
-
-        FastNoise fastNoise = BiomeHandler.Instance.fastNoise;
-        int caveNumber = WorldRandTools.Range(0, 10, chunk.chunkData.positionForWorld);
-        for (int i = 8; i < caveNumber; i++)
-        {
-            int positionX = WorldRandTools.Range(1, chunk.chunkData.chunkWidth);
-            int positionZ = WorldRandTools.Range(1, chunk.chunkData.chunkWidth);
-            BiomeMapData biomeMapData = mapData[positionX, positionZ];
-            int positionY = WorldRandTools.Range(1, biomeMapData.maxHeight);
-            Vector3Int startPosition = new Vector3Int(positionX, positionY, positionZ) + chunk.chunkData.positionForWorld;
-
-            int caveDepth = WorldRandTools.Range(caveData.minDepth, caveData.maxDepth);
-            int lastType = 0;
-            for (int f = 0; f < caveDepth; f++)
-            {
-
-                int caveRange = WorldRandTools.Range(caveData.minSize, caveData.maxSize);
-                if (startPosition.y < 5)
-                {
-                    continue;
-                }
-
-                float offsetX = fastNoise.GetPerlin(0, startPosition.y * frequency, startPosition.z * frequency) * amplitude;
-                float offsetY = fastNoise.GetPerlin(startPosition.x * frequency, 0, startPosition.z * frequency) * amplitude;
-                float offsetZ = fastNoise.GetPerlin(startPosition.x * frequency, startPosition.y * frequency, 0) * amplitude;
-
-                Vector3 offset = new Vector3(offsetX, offsetY, offsetZ).normalized;
-                Vector3Int offsetInt = new Vector3Int(GetCaveDirection(offset.x), GetCaveDirection(offset.y), GetCaveDirection(offset.z));
-                startPosition += offsetInt;
-
-                if (startPosition.y <= 3 || startPosition.y > biomeMapData.maxHeight)
-                    break;
-
-                float absOffsetX = Mathf.Abs(offsetX);
-                float absOffsetY = Mathf.Abs(offsetY);
-                float absOffsetZ = Mathf.Abs(offsetZ);
-                if (absOffsetX > absOffsetY && absOffsetX > absOffsetZ)
-                {
-                    AddCaveRange(startPosition, caveRange, 1, lastType);
-                    lastType = 1;
-                }
-                else if (absOffsetY > absOffsetX && absOffsetY > absOffsetZ)
-                {
-                    AddCaveRange(startPosition, caveRange, 2, lastType);
-                    lastType = 2;
-                }
-                else if (absOffsetZ > absOffsetX && absOffsetZ > absOffsetY)
-                {
-                    AddCaveRange(startPosition, caveRange, 3, lastType);
-                    lastType = 3;
-                }
-            }
-        }
-    }
-
-    protected static int GetCaveDirection(float data)
-    {
-        if (data > 0.5f)
-        {
-            return 1;
-        }
-        else if (data < -0.5f)
-        {
-            return -1;
-        }
-        else
-        {
-            return 0;
-        }
-    }
-
-    protected static void AddCaveRange(Vector3Int startPosition, int caveRange, int type, int lastType)
-    {
-        if (type == lastType)
-        {
-            for (int a = -caveRange; a <= caveRange; a++)
-            {
-                for (int b = -caveRange; b <= caveRange; b++)
-                {
-
-                    Vector3Int blockPosition;
-                    switch (type)
-                    {
-                        //x
-                        case 1:
-                            blockPosition = new Vector3Int(startPosition.x, startPosition.y + a, startPosition.z + b);
-                            break;
-                        //y
-                        case 2:
-                            blockPosition = new Vector3Int(startPosition.x + a, startPosition.y, startPosition.z + b);
-                            break;
-                        //z
-                        case 3:
-                            blockPosition = new Vector3Int(startPosition.x + a, startPosition.y + b, startPosition.z);
-                            break;
-
-                        default:
-                            blockPosition = new Vector3Int(startPosition.x, startPosition.y, startPosition.z);
-                            break;
-                    }
-                    float disTemp = Vector3Int.Distance(blockPosition, startPosition);
-                    if (blockPosition.y <= 3 || disTemp >= caveRange - 0.5f)
-                    {
-                        continue;
-                    }
-                    WorldCreateHandler.Instance.manager.AddUpdateBlock(blockPosition, BlockTypeEnum.None);
-                }
-            }
-        }
-        else
-        {
-            for (int a = -caveRange; a <= caveRange; a++)
-            {
-                for (int b = -caveRange; b <= caveRange; b++)
-                {
-                    for (int c = -caveRange; c <= caveRange; c++)
-                    {
-                        Vector3Int blockPosition = new Vector3Int(startPosition.x + a, startPosition.y + b, startPosition.z + c);
-                        float disTemp = Vector3Int.Distance(blockPosition, startPosition);
-                        if (blockPosition.y <= 3 || disTemp >= caveRange - 0.5f)
-                        {
-                            continue;
-                        }
-                        WorldCreateHandler.Instance.manager.AddUpdateBlock(blockPosition, BlockTypeEnum.None);
-                    }
-                }
-            }
-        }
-
-    }
 }

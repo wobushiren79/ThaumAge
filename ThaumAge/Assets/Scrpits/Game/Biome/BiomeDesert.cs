@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using static BiomeCreatePlantTool;
 using static BiomeCreateTool;
+using static BiomeCreateTreeTool;
 
 public class BiomeDesert : Biome
 {
@@ -40,22 +42,22 @@ public class BiomeDesert : Biome
 
     public void AddCactus(Vector3Int startPosition)
     {
-        BiomeForCactusData cactusData = new BiomeForCactusData();
+        BiomeForTreeData cactusData = new BiomeForTreeData();
         cactusData.addRate = 0.1f;
         cactusData.minHeight = 1;
         cactusData.maxHeight = 5;
-        cactusData.cactusType = BlockTypeEnum.Cactus;
-        BiomeCreateTool.AddCactus(1, startPosition, cactusData);
+        cactusData.treeTrunk = BlockTypeEnum.Cactus;
+        BiomeCreateTreeTool.AddCactus(1, startPosition, cactusData);
     }
 
     protected void AddFlower(Vector3Int wPos)
     {
-        BiomeForFlowerData flowersData = new BiomeForFlowerData
+        BiomeForPlantData flowersData = new BiomeForPlantData
         {
             addRate = 0.01f,
-            listFlowerType = new List<BlockTypeEnum> { BlockTypeEnum.FlowerFire }
+            listPlantType = new List<BlockTypeEnum> { BlockTypeEnum.FlowerFire }
         };
-        BiomeCreateTool.AddFlower(101, wPos, flowersData);
+        BiomeCreatePlantTool.AddFlower(101, wPos, flowersData);
     }
 
     protected void AddWeed(Vector3Int wPos)
@@ -65,6 +67,6 @@ public class BiomeDesert : Biome
             addRate = 0.02f,
             listPlantType = new List<BlockTypeEnum> { BlockTypeEnum.WeedLong, BlockTypeEnum.WeedNormal, BlockTypeEnum.WeedShort }
         };
-        BiomeCreateTool.AddPlant(201, wPos, weedData);
+        BiomeCreatePlantTool.AddPlant(201, wPos, weedData);
     }
 }

@@ -2,7 +2,9 @@
 using UnityEditor;
 using UnityEngine;
 
+using static BiomeCreatePlantTool;
 using static BiomeCreateTool;
+using static BiomeCreateTreeTool;
 
 public class BiomeMagicForest : Biome
 {
@@ -58,9 +60,9 @@ public class BiomeMagicForest : Biome
     protected void AddMushroomTree(Vector3Int wPos)
     {
         Vector3Int startPosition = wPos + Vector3Int.up;
-        BiomeCreateTool.AddBuilding(0.0001f, 101, startPosition, BuildingTypeEnum.MushrooBig);
-        BiomeCreateTool.AddBuilding(0.0001f, 201, startPosition, BuildingTypeEnum.Mushroom);
-        BiomeCreateTool.AddBuilding(0.0001f, 301, startPosition, BuildingTypeEnum.MushrooSmall);
+        AddBuilding(0.0001f, 101, startPosition, BuildingTypeEnum.MushrooBig);
+        AddBuilding(0.0001f, 201, startPosition, BuildingTypeEnum.Mushroom);
+        AddBuilding(0.0001f, 301, startPosition, BuildingTypeEnum.MushrooSmall);
     }
 
     protected void AddTree(Vector3Int wPos)
@@ -74,7 +76,7 @@ public class BiomeMagicForest : Biome
             treeLeaves = BlockTypeEnum.LeavesOak,
             leavesRange = 2,
         };
-        BiomeCreateTool.AddTree(401, wPos, treeData);
+        BiomeCreateTreeTool.AddTree(401, wPos, treeData);
     }
 
     protected void AddBigTree(Vector3Int wPos)
@@ -88,7 +90,7 @@ public class BiomeMagicForest : Biome
             treeLeaves = BlockTypeEnum.LeavesSilver,
             leavesRange = 4,
         };
-        BiomeCreateTool.AddTreeForBig(501, wPos, treeData);
+        BiomeCreateTreeTool.AddTreeForBig(501, wPos, treeData);
     }
 
     protected void AddWorldTree(Vector3Int wPos)
@@ -103,7 +105,7 @@ public class BiomeMagicForest : Biome
             leavesRange = 4,
             trunkRange = 3,
         };
-        BiomeCreateTool.AddTreeForWorld(wPos, treeData);
+        BiomeCreateTreeTool.AddTreeForWorld(wPos, treeData);
     }
 
     protected void AddWeed(Vector3Int wPos)
@@ -113,23 +115,23 @@ public class BiomeMagicForest : Biome
             addRate = 0.3f,
             listPlantType = new List<BlockTypeEnum> { BlockTypeEnum.WeedLong, BlockTypeEnum.WeedNormal, BlockTypeEnum.WeedShort }
         };
-        BiomeCreateTool.AddPlant(601,wPos, weedData);
+        BiomeCreatePlantTool.AddPlant(601,wPos, weedData);
     }
 
     public void AddFlower(Vector3Int wPos)
     {
-        BiomeForFlowerData flowersData = new BiomeForFlowerData
+        BiomeForPlantData flowersData = new BiomeForPlantData
         {
             addRate = 0.005f,
-            listFlowerType = new List<BlockTypeEnum> { BlockTypeEnum.MushroomLuminous }
+            listPlantType = new List<BlockTypeEnum> { BlockTypeEnum.MushroomLuminous }
         };
-        BiomeCreateTool.AddFlower(701, wPos, flowersData);
+        BiomeCreatePlantTool.AddFlower(701, wPos, flowersData);
     }
 
     protected void AddStoneMoss(Vector3Int wPos)
     {
         Vector3Int startPosition = wPos + Vector3Int.up;
-        BiomeCreateTool.AddBuilding(0.005f, 801, startPosition, BuildingTypeEnum.StoneMoss);
+        AddBuilding(0.005f, 801, startPosition, BuildingTypeEnum.StoneMoss);
     }
 
     /// <summary>
@@ -138,6 +140,6 @@ public class BiomeMagicForest : Biome
     /// <param name="startPosition"></param>
     public void AddDeadwood(Vector3Int startPosition)
     {
-        BiomeCreateTool.AddDeadwood(101, 0.001f, startPosition);
+        BiomeCreatePlantTool.AddDeadwood(101, 0.001f, startPosition);
     }
 }

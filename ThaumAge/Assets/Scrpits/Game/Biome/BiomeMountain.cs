@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using static BiomeCreatePlantTool;
 using static BiomeCreateTool;
 
 public class BiomeMountain : Biome
@@ -40,12 +41,12 @@ public class BiomeMountain : Biome
 
     protected void AddFlower(Vector3Int wPos)
     {
-        BiomeForFlowerData flowersData = new BiomeForFlowerData
+        BiomeForPlantData flowersData = new BiomeForPlantData
         {
             addRate = 0.02f,
-            listFlowerType = new List<BlockTypeEnum> { BlockTypeEnum.FlowerGold }
+            listPlantType = new List<BlockTypeEnum> { BlockTypeEnum.FlowerGold }
         };
-        BiomeCreateTool.AddFlower(101, wPos, flowersData);
+        BiomeCreatePlantTool.AddFlower(101, wPos, flowersData);
     }
 
     protected void AddWeed(Vector3Int wPos)
@@ -55,6 +56,6 @@ public class BiomeMountain : Biome
             addRate = 0.05f,
             listPlantType = new List<BlockTypeEnum> { BlockTypeEnum.WeedLong, BlockTypeEnum.WeedNormal, BlockTypeEnum.WeedShort }
         };
-        BiomeCreateTool.AddPlant(201, wPos, weedData);
+        BiomeCreatePlantTool.AddPlant(201, wPos, weedData);
     }
 }
