@@ -42,7 +42,7 @@ MonoBehaviour:
     - BlockMeshData
     - BlockMesh
   - m_GUID: 7dba8aa21ba23a34c8d9433694bdf350
-    m_Address: Assets/Prefabs/BlockMeshData/BlockStairsWood.txt
+    m_Address: Assets/Prefabs/BlockMeshData/BlockLadderWood.txt
     m_ReadOnly: 0
     m_SerializedLabels:
     - BlockMeshData

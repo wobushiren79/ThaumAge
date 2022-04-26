@@ -43,7 +43,7 @@ GameObject:
   - component: {fileID: 4225425581871103741}
   - component: {fileID: 5031982672662484177}
   m_Layer: 0
-  m_Name: BlockStairsWood
+  m_Name: BlockLadderWood
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

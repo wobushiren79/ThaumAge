@@ -56,11 +56,6 @@ public class BlockShapeStairs : BlockShapeCube
         0,1,5, 1,4,5, 1,3,4, 1,2,3
     };
 
-    public static int[] trisAddStairs2 = new int[]
-    {
-        0,1,2, 0,2,3
-    };
-
     public static int[] trisAddStairsCommon = new int[]
     {
         0,1,4,0,4,5,
@@ -205,7 +200,7 @@ public class BlockShapeStairs : BlockShapeCube
             //Right
             if (CheckNeedBuildFace(chunk, localPosition, direction, DirectionEnum.Right))
             {
-                BuildFace(chunk, localPosition, direction, DirectionEnum.Right, vertsAddRightStairs, uvsAddRight, colorsAdd1, trisAddStairs2);
+                BuildFace(chunk, localPosition, direction, DirectionEnum.Right, vertsAddRightStairs, uvsAddRight, colorsAdd1, trisAddStairs1);
             }
 
             //Bottom

@@ -67,6 +67,8 @@ public enum BlockTypeEnum
     SwitchesWooden = 6301,//木制开关
     Bed = 6901,//床
 
+    StairsOak = 8101,//橡木楼梯
+
     HalfStone = 7001,//石头-半
 
     Water = 9001,//水
