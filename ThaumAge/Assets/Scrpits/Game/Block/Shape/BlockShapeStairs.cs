@@ -244,12 +244,12 @@ public class BlockShapeStairs : BlockShapeCube
             .Concat(vertsAdd)
             .ToArray();
         mesh.triangles = trisAddStairs1
-            .Concat(trisAddStairs1)
-            .Concat(trisAdd)
-            .Concat(trisAdd)
-            .Concat(trisAdd)
-            .Concat(trisAdd)
-            .Concat(trisAddStairsCommon)
+            .Concat(trisAddStairs1.Add(6))
+            .Concat(trisAdd.Add(12))
+            .Concat(trisAdd.Add(16))
+            .Concat(trisAdd.Add(20))
+            .Concat(trisAdd.Add(24))
+            .Concat(trisAddStairsCommon.Add(28))
             .ToArray();
         mesh.uv = uvsAddLeft
              .Concat(uvsAddRight)

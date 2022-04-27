@@ -591,11 +591,11 @@ public class BlockShapeCubeHalf : BlockShapeCube
             .Concat(arrayVertsData[5])
             .ToArray();
         mesh.triangles = trisAdd
-            .Concat(trisAdd)
-            .Concat(trisAdd)
-            .Concat(trisAdd)
-            .Concat(trisAdd)
-            .Concat(trisAdd)
+            .Concat(trisAdd.Add(4))
+            .Concat(trisAdd.Add(8))
+            .Concat(trisAdd.Add(12))
+            .Concat(trisAdd.Add(16))
+            .Concat(trisAdd.Add(20))
             .ToArray();
         mesh.uv = arrayUvsData[0]
              .Concat(arrayUvsData[1])

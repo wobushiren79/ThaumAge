@@ -166,11 +166,11 @@ public class BlockShapeCubeCuboid : BlockShapeCube
             .Concat(vertsAddBackOffset)
             .ToArray();
         mesh.triangles = trisAdd
-            .Concat(trisAdd)
-            .Concat(trisAdd)
-            .Concat(trisAdd)
-            .Concat(trisAdd)
-            .Concat(trisAdd)
+            .Concat(trisAdd.Add(4))
+            .Concat(trisAdd.Add(8))
+            .Concat(trisAdd.Add(12))
+            .Concat(trisAdd.Add(16))
+            .Concat(trisAdd.Add(20))
             .ToArray();
         mesh.uv = uvsAddLeft
              .Concat(uvsAddRight)
