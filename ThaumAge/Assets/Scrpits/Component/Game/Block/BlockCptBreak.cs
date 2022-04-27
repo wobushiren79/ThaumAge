@@ -97,31 +97,28 @@ public class BlockCptBreak : BaseMonoBehaviour
         }
         WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(worldPosition, out Block targetBlock, out BlockDirectionEnum targetDirection, out Chunk targetChunk);
         //设置破坏的形状
+        Mesh newMeshData = block.blockShape.GetCompleteMeshData();
         if (block.blockShape is BlockShapeCustom blockShapeCustom)
         {
-            //GameObject objBlock = targetChunk.GetBlockObjForLocal(worldPosition - targetChunk.chunkData.positionForWorld);
-            mfBlockBreak.mesh = blockShapeCustom.blockMeshData.GetMainMesh();
             Vector2[] newUVS = new Vector2[mfBlockBreak.mesh.uv.Length];
             for (int i = 0; i < mfBlockBreak.mesh.uv.Length; i++)
             {
                 int indexUV = i % 4;
                 newUVS[i] = uvList[indexUV];
             }
-            mfBlockBreak.mesh.SetUVs(0, newUVS);
+            newMeshData.SetUVs(0, newUVS);
         }
         else
         {
-            mfBlockBreak.mesh = new Mesh();
-            Vector2[] newUVS = new Vector2[BlockShape.vertsColliderAdd.Length];
-            for (int i = 0; i < BlockShape.vertsColliderAdd.Length; i++)
+            Vector2[] newUVS = new Vector2[newMeshData.vertices.Length];
+            for (int i = 0; i < newMeshData.vertices.Length; i++)
             {
                 int indexUV = i % 4;
                 newUVS[i] = uvList[indexUV];
             }
-            mfBlockBreak.mesh.SetVertices(BlockShape.vertsColliderAdd);
-            mfBlockBreak.mesh.SetUVs(0, newUVS);
-            mfBlockBreak.mesh.SetTriangles(BlockShape.trisColliderAdd, 0);
+            newMeshData.SetUVs(0, newUVS);
         }
+        mfBlockBreak.mesh = newMeshData;
         tfCenter.eulerAngles = BlockShape.GetRotateAngles(targetDirection);
         tfCenter.localScale = new Vector3(1.001f, 1.001f, 1.001f);
     }

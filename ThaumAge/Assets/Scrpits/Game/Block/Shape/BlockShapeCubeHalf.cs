@@ -1,4 +1,5 @@
-﻿using UnityEditor;
+﻿using System.Linq;
+using UnityEditor;
 using UnityEngine;
 
 public class BlockShapeCubeHalf : BlockShapeCube
@@ -570,5 +571,41 @@ public class BlockShapeCubeHalf : BlockShapeCube
             default:
                 return false;
         }
+    }
+
+
+    /// <summary>
+    /// 获取完整的mesh数据
+    /// </summary>
+    /// <returns></returns>
+    public override Mesh GetCompleteMeshData()
+    {
+        Mesh mesh = new Mesh();
+        Vector3[][] arrayVertsData = vertsAddHalfDown;
+        Vector2[][] arrayUvsData = uvsAddHalfDown;
+        mesh.vertices = arrayVertsData[0]
+            .Concat(arrayVertsData[1])
+            .Concat(arrayVertsData[2])
+            .Concat(arrayVertsData[3])
+            .Concat(arrayVertsData[4])
+            .Concat(arrayVertsData[5])
+            .ToArray();
+        mesh.triangles = trisAdd
+            .Concat(trisAdd)
+            .Concat(trisAdd)
+            .Concat(trisAdd)
+            .Concat(trisAdd)
+            .Concat(trisAdd)
+            .ToArray();
+        mesh.uv = arrayUvsData[0]
+             .Concat(arrayUvsData[1])
+             .Concat(arrayUvsData[2])
+             .Concat(arrayUvsData[3])
+             .Concat(arrayUvsData[4])
+             .Concat(arrayUvsData[5])
+             .ToArray();
+        mesh.RecalculateBounds();
+        mesh.RecalculateNormals();
+        return mesh;
     }
 }

@@ -32,35 +32,22 @@ public class PlayerTargetBlock : BaseMonoBehaviour
         }
         lastBlockType = block.blockType;
 
+        Mesh newMeshData = block.blockShape.GetCompleteMeshData();
         //设置形状
         if (block.blockShape is BlockShapeCustom blockShapeCustom)
         {
-            meshFilter.mesh = blockShapeCustom.blockMeshData.GetMainMesh();
-        }
-        else if (block.blockShape is BlockShapeCube blockShapeCube)
-        {
-            meshFilter.mesh = new Mesh();
-            Vector2[] newUVS = new Vector2[BlockShape.vertsColliderAdd.Length];
-            for (int i = 0; i < BlockShape.vertsColliderAdd.Length; i++)
-            {
-                newUVS[i] = Vector2.zero;
-            }
-            meshFilter.mesh.SetVertices(BlockShape.vertsColliderAdd);
-            meshFilter.mesh.SetUVs(0, newUVS);
-            meshFilter.mesh.SetTriangles(BlockShape.trisColliderAdd, 0);
+            meshFilter.mesh = newMeshData;
         }
         else
         {
-            meshFilter.mesh = new Mesh();
-            Vector2[] newUVS = new Vector2[block.blockShape.vertsAdd.Length];
-            for (int i = 0; i < block.blockShape.vertsAdd.Length; i++)
+            Vector2[] newUVS = new Vector2[newMeshData.vertices.Length];
+            for (int i = 0; i < newMeshData.vertices.Length; i++)
             {
                 newUVS[i] = Vector2.zero;
             }
-            meshFilter.mesh.SetVertices(block.blockShape.vertsAdd);
-            meshFilter.mesh.SetUVs(0, newUVS);
-            meshFilter.mesh.SetTriangles(block.blockShape.trisAdd, 0);
+            newMeshData.SetUVs(0, newUVS);
         }
+        meshFilter.mesh = newMeshData;
         WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(worldPosition, out Block targetBlock, out BlockDirectionEnum targetDirection, out Chunk targetChunk);
         objTargetCenterBlock.transform.eulerAngles = BlockShape.GetRotateAngles(targetDirection);
 

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
 public class BlockShapeCube : BlockShape
@@ -189,27 +190,6 @@ public class BlockShapeCube : BlockShape
         }
     }
 
-    public override void BuildBlockNoCheck(Chunk chunk, Vector3Int localPosition)
-    {
-        base.BuildBlockNoCheck(chunk, localPosition);
-        if (block.blockType != BlockTypeEnum.None)
-        {
-            //只有在能旋转的时候才去查询旋转方向
-            BlockDirectionEnum direction = BlockDirectionEnum.UpForward;
-            if (block.blockInfo.rotate_state != 0)
-            {
-                direction = chunk.chunkData.GetBlockDirection(localPosition.x, localPosition.y, localPosition.z);
-            }
-            BuildFace(chunk, localPosition, direction, DirectionEnum.Left, vertsAddLeft, uvsAddLeft, colorsAdd,trisAdd);
-            BuildFace(chunk, localPosition, direction, DirectionEnum.Right, vertsAddRight, uvsAddRight, colorsAdd, trisAdd);
-            BuildFace(chunk, localPosition, direction, DirectionEnum.Down, vertsAddDown, uvsAddDown, colorsAdd, trisAdd);
-            BuildFace(chunk, localPosition, direction, DirectionEnum.UP, vertsAddUp, uvsAddUp, colorsAdd, trisAdd);
-            BuildFace(chunk, localPosition, direction, DirectionEnum.Forward, vertsAddForward, uvsAddForward, colorsAdd, trisAdd);
-            BuildFace(chunk, localPosition, direction, DirectionEnum.Back, vertsAddBack, uvsAddBack, colorsAdd, trisAdd);
-        }
-    }
-
-
     /// <summary>
     /// 构建方块的面
     /// </summary>
@@ -319,5 +299,39 @@ public class BlockShapeCube : BlockShape
             uvStartPosition = Vector2.zero;
         }
         return uvStartPosition;
+    }
+
+
+    /// <summary>
+    /// 获取完整的mesh数据
+    /// </summary>
+    /// <returns></returns>
+    public override Mesh GetCompleteMeshData()
+    {
+        Mesh mesh = new Mesh();
+        mesh.vertices = vertsAddLeft
+            .Concat(vertsAddRight)
+            .Concat(vertsAddUp)
+            .Concat(vertsAddDown)
+            .Concat(vertsAddForward)
+            .Concat(vertsAddBack)
+            .ToArray();
+        mesh.triangles = trisAdd
+            .Concat(trisAdd)
+            .Concat(trisAdd)
+            .Concat(trisAdd)
+            .Concat(trisAdd)
+            .Concat(trisAdd)
+            .ToArray();
+        mesh.uv = uvsAddLeft
+             .Concat(uvsAddRight)
+             .Concat(uvsAddUp)
+             .Concat(uvsAddDown)
+             .Concat(uvsAddForward)
+             .Concat(uvsAddBack)
+             .ToArray();
+        mesh.RecalculateBounds();
+        mesh.RecalculateNormals();
+        return mesh;
     }
 }

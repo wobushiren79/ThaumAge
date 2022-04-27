@@ -82,4 +82,13 @@ public class BlockShapeCustom : BlockShape
             AddVerts(localPosition, direction, chunk.chunkMeshData.vertsTrigger, vertsColliderAdd);
     }
     #endregion
+
+    /// <summary>
+    /// 获取完整mesh数据
+    /// </summary>
+    /// <returns></returns>
+    public override Mesh GetCompleteMeshData()
+    {
+        return blockMeshData.GetMainMesh();
+    }
 }

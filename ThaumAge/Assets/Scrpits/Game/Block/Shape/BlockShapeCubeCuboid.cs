@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
@@ -78,8 +79,6 @@ public class BlockShapeCubeCuboid : BlockShapeCube
     {
         if (block.blockType != BlockTypeEnum.None)
         {
-            int buildFaceCount = 0;
-
             //只有在能旋转的时候才去查询旋转方向
             BlockDirectionEnum direction = BlockDirectionEnum.UpForward;
             if (block.blockInfo.rotate_state != 0)
@@ -90,39 +89,32 @@ public class BlockShapeCubeCuboid : BlockShapeCube
             if (leftOffsetBorder == 0 ? CheckNeedBuildFace(chunk, localPosition, direction, DirectionEnum.Left) : true)
             {
                 BuildFace(chunk, localPosition, direction, DirectionEnum.Left, vertsAddLeftOffset, uvsAddLeft, colorsAdd, trisAdd);
-                buildFaceCount++;
             }
             //Right
             if (rightOffsetBorder == 0 ? CheckNeedBuildFace(chunk, localPosition, direction, DirectionEnum.Right) : true)
             {
                 BuildFace(chunk, localPosition, direction, DirectionEnum.Right, vertsAddRightOffset, uvsAddRight, colorsAdd, trisAdd);
-                buildFaceCount++;
             }
             //Bottom
             if (downOffsetBorder == 0 ? CheckNeedBuildFace(chunk, localPosition, direction, DirectionEnum.Down) : true)
             {
                 BuildFace(chunk, localPosition, direction, DirectionEnum.Down, vertsAddDownOffset, uvsAddDown, colorsAdd, trisAdd);
-                buildFaceCount++;
             }
             //Top
             if (upOffsetBorder == 0 ? CheckNeedBuildFace(chunk, localPosition, direction, DirectionEnum.UP) : true)
             {
                 BuildFace(chunk, localPosition, direction, DirectionEnum.UP, vertsAddUpOffset, uvsAddUp, colorsAdd, trisAdd);
-                buildFaceCount++;
             }
             //Front
             if (forwardOffsetBorder == 0 ? CheckNeedBuildFace(chunk, localPosition, direction, DirectionEnum.Forward) : true)
             {
                 BuildFace(chunk, localPosition, direction, DirectionEnum.Forward, vertsAddForwardOffset, uvsAddForward, colorsAdd, trisAdd);
-                buildFaceCount++;
             }
             //Back
             if (backOffsetBorder == 0 ? CheckNeedBuildFace(chunk, localPosition, direction, DirectionEnum.Back) : true)
             {
                 BuildFace(chunk, localPosition, direction, DirectionEnum.Back, vertsAddBackOffset, uvsAddBack, colorsAdd, trisAdd);
-                buildFaceCount++;
             }
-            //AddMeshIndexData(chunk, localPosition, buildFaceCount);
         }
     }
 
@@ -161,5 +153,34 @@ public class BlockShapeCubeCuboid : BlockShapeCube
             default:
                 return true;
         }
+    }
+
+    public override Mesh GetCompleteMeshData()
+    {
+        Mesh mesh = new Mesh();
+        mesh.vertices = vertsAddLeftOffset
+            .Concat(vertsAddRightOffset)
+            .Concat(vertsAddUpOffset)
+            .Concat(vertsAddDownOffset)
+            .Concat(vertsAddForwardOffset)
+            .Concat(vertsAddBackOffset)
+            .ToArray();
+        mesh.triangles = trisAdd
+            .Concat(trisAdd)
+            .Concat(trisAdd)
+            .Concat(trisAdd)
+            .Concat(trisAdd)
+            .Concat(trisAdd)
+            .ToArray();
+        mesh.uv = uvsAddLeft
+             .Concat(uvsAddRight)
+             .Concat(uvsAddUp)
+             .Concat(uvsAddDown)
+             .Concat(uvsAddForward)
+             .Concat(uvsAddBack)
+             .ToArray();
+        mesh.RecalculateBounds();
+        mesh.RecalculateNormals();
+        return mesh;
     }
 }

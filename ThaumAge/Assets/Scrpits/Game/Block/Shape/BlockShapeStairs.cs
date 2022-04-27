@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
@@ -229,5 +230,37 @@ public class BlockShapeStairs : BlockShapeCube
 
             BuildFace(chunk, localPosition, direction, DirectionEnum.Left, vertsAdd, uvsAdd, colorsAddCommon, trisAddStairsCommon);
         }
+    }
+
+    public override Mesh GetCompleteMeshData()
+    {
+        Mesh mesh = new Mesh();
+        mesh.vertices = vertsAddLeftStairs
+            .Concat(vertsAddRightStairs)
+            .Concat(vertsAddUpStairs)
+            .Concat(vertsAddDownStairs)
+            .Concat(vertsAddForwardStairs)
+            .Concat(vertsAddBackStairs)
+            .Concat(vertsAdd)
+            .ToArray();
+        mesh.triangles = trisAddStairs1
+            .Concat(trisAddStairs1)
+            .Concat(trisAdd)
+            .Concat(trisAdd)
+            .Concat(trisAdd)
+            .Concat(trisAdd)
+            .Concat(trisAddStairsCommon)
+            .ToArray();
+        mesh.uv = uvsAddLeft
+             .Concat(uvsAddRight)
+             .Concat(uvsAddUp)
+             .Concat(uvsAddDown)
+             .Concat(uvsAddForward)
+             .Concat(uvsAddBack)
+             .Concat(uvsAdd)
+             .ToArray();
+        mesh.RecalculateBounds();
+        mesh.RecalculateNormals();
+        return mesh;
     }
 }

@@ -81,10 +81,6 @@ public class BlockShape
     {
 
     }
-    public virtual void BuildBlockNoCheck(Chunk chunk, Vector3Int localPosition)
-    {
-
-    }
 
     /// <summary>
     /// 构建面
@@ -132,6 +128,21 @@ public class BlockShape
     public virtual void BaseAddTris(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction, int[] trisAdd)
     {
 
+    }
+
+    /// <summary>
+    /// 获取该方块完整的mesh数据
+    /// </summary>
+    public virtual Mesh GetCompleteMeshData()
+    {
+        Mesh mesh = new Mesh();
+        mesh.vertices = vertsAdd;
+        mesh.colors = colorsAdd;
+        mesh.triangles = trisAdd;
+        mesh.uv = uvsAdd;
+        mesh.RecalculateBounds();
+        mesh.RecalculateNormals();
+        return mesh;
     }
 
     /// <summary>
