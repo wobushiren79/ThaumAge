@@ -12,9 +12,32 @@ public class BlockTypeDoor : Block
         //如果是放置
         if (state == 1)
         {
-            CreateLinkBlock(chunk, localPosition, new List<Vector3Int>() { Vector3Int.up });
+
         }
     }
+
+    public override string ItemUseMetaData(Vector3Int worldPosition, BlockTypeEnum blockType, BlockDirectionEnum direction, string curMeta)
+    {
+        BlockDoorBean blockDoor = new BlockDoorBean();
+        blockDoor.level = 0;
+        blockDoor.linkBasePosition = new Vector3IntBean(worldPosition);
+        return ToMetaData(blockDoor);
+    }
+
+    /// <summary>
+    /// 道具放置
+    /// </summary>
+    public override void ItemUse(
+        Vector3Int targetWorldPosition, BlockDirectionEnum targetBlockDirection, Block targetBlock, Chunk targetChunk, 
+        Vector3Int closeWorldPosition, BlockDirectionEnum closeBlockDirection, Block closeBlock, Chunk closeChunk, 
+        BlockDirectionEnum direction, string metaData)
+    {
+        base.ItemUse(targetWorldPosition, targetBlockDirection, targetBlock, targetChunk, closeWorldPosition, closeBlockDirection, closeBlock, closeChunk, direction, metaData);
+
+        CreateLinkBlock(closeChunk, closeWorldPosition - closeChunk.chunkData.positionForWorld, new List<Vector3Int>() { Vector3Int.up });
+    }
+
+
 
     public override void CreateBlockModel(Chunk chunk, Vector3Int localPosition)
     {

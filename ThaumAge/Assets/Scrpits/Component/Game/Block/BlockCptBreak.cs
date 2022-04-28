@@ -151,7 +151,7 @@ public class BlockCptBreak : BaseMonoBehaviour
         }
         //如果进度没有变，则不修改贴图
         Texture2D tex2D = listBreakTex[index];
-        mrBlockBreak.material.SetTexture("_BaseColorMap", tex2D);
+        mrBlockBreak.material.SetTexture("_Tex", tex2D);
         currentProIndex = index;
     }
 

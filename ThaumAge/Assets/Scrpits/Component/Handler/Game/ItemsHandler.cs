@@ -146,7 +146,8 @@ public class ItemsHandler : BaseHandler<ItemsHandler, ItemsManager>
             if (listDrop.IsNull())
             {
                 //创建掉落物
-                CreateItemCptDrop(targetBlock.blockType, 1, blockData.meta, targetWorldPosition + Vector3.one * 0.5f, ItemDropStateEnum.DropPick);
+                string blockMeta = blockData == null ? null : blockData.meta;
+                CreateItemCptDrop(targetBlock.blockType, 1, blockMeta, targetWorldPosition + Vector3.one * 0.5f, ItemDropStateEnum.DropPick);
             }
             else
             {

@@ -139,18 +139,18 @@ public class BlockShapeStairs : BlockShapeCube
         uvStart = GetUVStartPosition(block, DirectionEnum.UP);
         uvsAddUp = new Vector2[]
         {
-            new Vector2(uvStart.x,uvStart.y),
+            new Vector2(uvStart.x,uvStart.y + uvWidth/2),
             new Vector2(uvStart.x,uvStart.y + uvWidth),
             new Vector2(uvStart.x + uvWidth,uvStart.y + uvWidth),
-            new Vector2(uvStart.x + uvWidth,uvStart.y)
+            new Vector2(uvStart.x + uvWidth,uvStart.y+ uvWidth/2)
         };
 
         uvStart = GetUVStartPosition(block, DirectionEnum.Forward);
         uvsAddForward = new Vector2[]
         {
             new Vector2(uvStart.x,uvStart.y),
-            new Vector2(uvStart.x,uvStart.y + uvWidth),
-            new Vector2(uvStart.x + uvWidth,uvStart.y + uvWidth),
+            new Vector2(uvStart.x,uvStart.y + uvWidth/2),
+            new Vector2(uvStart.x + uvWidth,uvStart.y + uvWidth/2),
             new Vector2(uvStart.x+ uvWidth,uvStart.y)
         };
 

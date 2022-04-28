@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class BlockBaseHalf : Block
 {
-    public override string GetUseMetaData(Vector3Int worldPosition, BlockTypeEnum blockType, BlockDirectionEnum blockDirection, string curMeta)
+    public override string ItemUseMetaData(Vector3Int worldPosition, BlockTypeEnum blockType, BlockDirectionEnum blockDirection, string curMeta)
     {
         BlockMetaCubeHalf blockMeta = FromMetaData<BlockMetaCubeHalf>(curMeta);
         if (blockMeta == null)

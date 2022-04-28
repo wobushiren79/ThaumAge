@@ -314,7 +314,7 @@ public class Block
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <returns></returns>
-    public virtual string GetUseMetaData(Vector3Int worldPosition, BlockTypeEnum blockType, BlockDirectionEnum direction, string curMeta)
+    public virtual string ItemUseMetaData(Vector3Int worldPosition, BlockTypeEnum blockType, BlockDirectionEnum direction, string curMeta)
     {
         return curMeta;
     }

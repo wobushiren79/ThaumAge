@@ -70,11 +70,11 @@ public class BlockShapeCube : BlockShape
         Vector2 uvStart = GetUVStartPosition(block, DirectionEnum.Left);
 
         uvsAddLeft = new Vector2[]
-        {
+        {   
+            new Vector2(uvStart.x ,uvStart.y + uvWidth),
             new Vector2(uvStart.x + uvWidth,uvStart.y + uvWidth),
-            new Vector2(uvStart.x,uvStart.y + uvWidth),
-            new Vector2(uvStart.x,uvStart.y),
-            new Vector2(uvStart.x + uvWidth,uvStart.y)
+            new Vector2(uvStart.x + uvWidth ,uvStart.y),
+            new Vector2(uvStart.x ,uvStart.y)
         };
 
         uvStart = GetUVStartPosition(block, DirectionEnum.Right);
@@ -116,10 +116,10 @@ public class BlockShapeCube : BlockShape
         uvStart = GetUVStartPosition(block, DirectionEnum.Back);
         uvsAddBack = new Vector2[]
         {
+            new Vector2(uvStart.x ,uvStart.y + uvWidth),
             new Vector2(uvStart.x + uvWidth,uvStart.y + uvWidth),
-            new Vector2(uvStart.x,uvStart.y + uvWidth),
-            new Vector2(uvStart.x,uvStart.y),
-            new Vector2(uvStart.x+ uvWidth,uvStart.y)
+            new Vector2(uvStart.x + uvWidth ,uvStart.y),
+            new Vector2(uvStart.x ,uvStart.y)
         };
 
         colorsAdd = new Color[]

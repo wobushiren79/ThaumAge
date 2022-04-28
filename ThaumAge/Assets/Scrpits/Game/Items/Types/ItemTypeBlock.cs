@@ -43,7 +43,7 @@ public class ItemTypeBlock : Item
                         BlockTypeEnum changeBlockType = blockInfo.GetBlockType();
 
                         //获取meta数据
-                        string metaData = useBlock.GetUseMetaData(closePosition, changeBlockType, direction,itemData.meta);
+                        string metaData = useBlock.ItemUseMetaData(closePosition, changeBlockType, direction,itemData.meta);
                         //使用方块
                         useBlock.ItemUse(
                             targetPosition, targetBlockDirection, targetBlock, taragetChunk,

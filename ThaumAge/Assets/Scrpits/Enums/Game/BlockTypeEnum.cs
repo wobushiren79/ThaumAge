@@ -70,7 +70,7 @@ public enum BlockTypeEnum
     StairsOak = 8101,//ÏðÄ¾Â¥ÌÝ
 
     HalfStone = 7001,//Ê¯Í·-°ë
-
+    FloorOak = 8051,//ÏðÄ¾µØ°å
     Water = 9001,//Ë®
     Magma = 9002,//ÑÒ½¬
 
