@@ -326,24 +326,24 @@ public class Block
         Vector3Int targetWorldPosition, BlockDirectionEnum targetBlockDirection, Block targetBlock, Chunk targetChunk,
         Vector3Int closeWorldPosition, BlockDirectionEnum closeBlockDirection, Block closeBlock, Chunk closeChunk,
         BlockDirectionEnum direction , string metaData)
-    {               
+    {
         //更新方块并 添加更新区块
-        if (blockInfo.rotate_state == 0)
+        switch (blockInfo.rotate_state)
         {
-            closeChunk.SetBlockForWorld(closeWorldPosition, blockType, BlockDirectionEnum.UpForward, metaData);
-        }
-        else if (blockInfo.rotate_state == 1)
-        {
-            closeChunk.SetBlockForWorld(closeWorldPosition, blockType, direction, metaData);
-        }
-        else if (blockInfo.rotate_state == 2)
-        {
-            //只能朝上
-            if ((int)direction > 20)
-            {
-                direction = (BlockDirectionEnum)((int)direction % 10 + 10);
-            }
-            closeChunk.SetBlockForWorld(closeWorldPosition, blockType, direction, metaData);
+            case 0:
+                closeChunk.SetBlockForWorld(closeWorldPosition, blockType, BlockDirectionEnum.UpForward, metaData);
+                break;
+            case 1:
+                closeChunk.SetBlockForWorld(closeWorldPosition, blockType, direction, metaData);
+                break;
+            case 2:
+                //只能朝上
+                if ((int)direction > 20)
+                {
+                    direction = (BlockDirectionEnum)((int)direction % 10 + 10);
+                }
+                closeChunk.SetBlockForWorld(closeWorldPosition, blockType, direction, metaData);
+                break;
         }
     }
 

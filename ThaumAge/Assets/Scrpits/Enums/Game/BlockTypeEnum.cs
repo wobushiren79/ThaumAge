@@ -44,7 +44,7 @@ public enum BlockTypeEnum
 
     WoodDead = 3101,//枯木
 
-    FlowerGold = 3021,//金耀花
+    FlowerMetal = 3021,//金耀花
     FlowerWood = 3022,//木植花
     FlowerWater = 3023,//水悦花
     FlowerFire = 3024,//火焰花

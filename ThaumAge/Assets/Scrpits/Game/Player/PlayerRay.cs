@@ -3,7 +3,6 @@ using UnityEngine;
 
 public class PlayerRay : PlayerBase
 {
-    protected float disRayBlock = 3;
 
     public PlayerRay(Player player) : base(player)
     {
@@ -25,6 +24,7 @@ public class PlayerRay : PlayerBase
         Vector3 cameraPosition = CameraHandler.Instance.manager.mainCamera.transform.position;
         ControlForCamera controlForCamera = GameControlHandler.Instance.manager.controlForCamera;
         float disMax;
+        float disRayBlock = 4;
         if (controlForCamera.cameraDistance <= 0)
         {
              disMax = Vector3.Distance(cameraPosition, player.objFirstLook.transform.position);
@@ -33,8 +33,7 @@ public class PlayerRay : PlayerBase
         {
              disMax = Vector3.Distance(cameraPosition, player.objThirdLook.transform.position);
         }
-
-
+  
         //发射射线检测
         RayUtil.RayAllToScreenPointForScreenCenter(disMax + disRayBlock, 1 << LayerInfo.ChunkTrigger | 1 << LayerInfo.ChunkCollider, out RaycastHit[] arrayHit);
         //如果没有发生碰撞

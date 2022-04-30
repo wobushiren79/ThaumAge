@@ -434,6 +434,7 @@ public class BlockEditorWindow : EditorWindow
                 if (tfModel != null)
                 {
                     offsetPosition += (tfModel.localPosition - new Vector3(0.5f,0.5f,0.5f));
+                    offsetPosition += meshFilter.transform.localPosition + new Vector3(0f,0.5f,0f);
                 }
                 meshData = new MeshDataCustom(collider, meshFilter.sharedMesh, 0.03125f, offsetPosition);
             }

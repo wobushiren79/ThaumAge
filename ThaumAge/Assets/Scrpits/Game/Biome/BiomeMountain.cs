@@ -44,7 +44,7 @@ public class BiomeMountain : Biome
         BiomeForPlantData flowersData = new BiomeForPlantData
         {
             addRate = 0.02f,
-            listPlantType = new List<BlockTypeEnum> { BlockTypeEnum.FlowerGold }
+            listPlantType = new List<BlockTypeEnum> { BlockTypeEnum.FlowerMetal }
         };
         BiomeCreatePlantTool.AddFlower(101, wPos, flowersData);
     }

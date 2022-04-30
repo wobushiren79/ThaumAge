@@ -28,7 +28,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 4346491535970236421}
+  - {fileID: 6141908011322470323}
   m_Father: {fileID: 4225425581871103741}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -85,6 +85,18 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 3640859523464299640}
     m_Modifications:
+    - target: {fileID: 800062472579262501, guid: a5fd91527b289624db739092b9908cf8, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 800062472579262501, guid: a5fd91527b289624db739092b9908cf8, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 800062472579262501, guid: a5fd91527b289624db739092b9908cf8, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.43750003
+      objectReference: {fileID: 0}
     - target: {fileID: 6441319885246040198, guid: a5fd91527b289624db739092b9908cf8, type: 3}
       propertyPath: m_Name
       value: BlockStairsWood
@@ -135,8 +147,8 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a5fd91527b289624db739092b9908cf8, type: 3}
---- !u!4 &4346491535970236421 stripped
+--- !u!4 &6141908011322470323 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: 7095354529436811155, guid: a5fd91527b289624db739092b9908cf8, type: 3}
+  m_CorrespondingSourceObject: {fileID: 800062472579262501, guid: a5fd91527b289624db739092b9908cf8, type: 3}
   m_PrefabInstance: {fileID: 6784132291199584150}
   m_PrefabAsset: {fileID: 0}

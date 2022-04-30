@@ -38,11 +38,27 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
   - m_GUID: 58f02310ae5fb86489d536bce37747ee
-    m_Address: Assets/Prefabs/Block/BlockStairsWood.prefab
+    m_Address: Assets/Prefabs/Block/BlockLadderWood.prefab
     m_ReadOnly: 0
     m_SerializedLabels: []
   - m_GUID: 48832c3eed09a8647a7e00f2ceb5a7d6
     m_Address: Assets/Prefabs/Block/BlockSwitchesWooden.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 8111ab5149754f949a638f8d78c13bc6
+    m_Address: Assets/Prefabs/Block/BlockFlowerMetal.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: c017ad5f5df5eca43a6612e1c74dec3b
+    m_Address: Assets/Prefabs/Block/BlockFlowerWater.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 67fc7524100da504a9dd58441acc2e83
+    m_Address: Assets/Prefabs/Block/BlockFlowerFire.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 747fc01494cfae64f9f32b5aa39c3d84
+    m_Address: Assets/Prefabs/Block/BlockFlowerEarth.prefab
     m_ReadOnly: 0
     m_SerializedLabels: []
   m_ReadOnly: 0

@@ -103,16 +103,14 @@ public class ChunkComponent : BaseMonoBehaviour
             return;
         try
         {
-            InitBlockMats();
-            chunk.isDrawMesh = true;
-
-            chunkMesh.subMeshCount = meshRenderer.materials.Length;
             //定点数判断
             if (chunk.chunkMeshData == null && chunk.chunkMeshData.verts.Count < 3)
             {
                 chunk.isDrawMesh = false;
                 return;
             }
+            InitBlockMats();
+            chunk.isDrawMesh = true;
             chunkMesh.Clear();
             chunkMesh.subMeshCount = meshRenderer.materials.Length;
             //设置顶点

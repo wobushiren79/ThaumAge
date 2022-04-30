@@ -24,7 +24,12 @@ public class BlockInfoBean : BaseBean
 
     public float weight;//重量
 
-    public int rotate_state;//是否能旋转 0不能旋转 1能旋转 2只能LRFB方向旋转
+
+    //是否能旋转 
+    //0不能旋转(永远只能UpForward)
+    //1能旋转(各个方向)
+    //2只能LRFB方向旋转(只能是 UpLeft,UpRight,UpForward,UpBack　4个方向)
+    public int rotate_state;
 
     public int life;//生命值
 

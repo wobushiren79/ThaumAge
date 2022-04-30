@@ -52,7 +52,6 @@ SpriteAtlas:
   m_MasterAtlas: {fileID: 0}
   m_PackedSprites:
   - {fileID: 21300000, guid: a5a18ff04ce150042bf6e238f46a67c3, type: 3}
-  - {fileID: 21300000, guid: b31d648132a133c43850570ce05c59e6, type: 3}
   - {fileID: 21300000, guid: 808db19190da28a4a963429749dd3f15, type: 3}
   - {fileID: 21300000, guid: a30845916df1c3b48bcb03e1462b1647, type: 3}
   - {fileID: 21300000, guid: c84110b19e6b18b4a9404d8c68d49363, type: 3}
@@ -106,7 +105,6 @@ SpriteAtlas:
   - {fileID: 21300000, guid: fa3d620afd435d140aff1309a5e14db3, type: 3}
   - {fileID: 21300000, guid: f1fe814adb7c1584a9ba9915c223eae9, type: 3}
   - {fileID: 21300000, guid: 438e994a5ea518c4c9c34601b259beb4, type: 3}
-  - {fileID: 21300000, guid: 281ff16adcdeb6a428980acbed103408, type: 3}
   - {fileID: 21300000, guid: 092e4d9a501d75a4baf81cfea5cbff6a, type: 3}
   - {fileID: 21300000, guid: 85ba321b0817af54db933841795a0916, type: 3}
   - {fileID: 21300000, guid: bac5164b3d43e5644a2df6c1550139a4, type: 3}
@@ -114,9 +112,11 @@ SpriteAtlas:
   - {fileID: 21300000, guid: f55b38cba06c0ea4b9c5f1a3dfe464d1, type: 3}
   - {fileID: 21300000, guid: 91deda1c0db202f46af9477a1166fefc, type: 3}
   - {fileID: 21300000, guid: eae48e3cf338f41408444294e890f651, type: 3}
+  - {fileID: 21300000, guid: 014d244ca1fb2ba418dbc248dcb893f7, type: 3}
   - {fileID: 21300000, guid: 0a78d65c50add214089c05e46d4a0fbc, type: 3}
   - {fileID: 21300000, guid: 98d1085c9848ff8458c5e002f486aa0b, type: 3}
   - {fileID: 21300000, guid: afddf66c1247585499f66a8bf5056a7a, type: 3}
+  - {fileID: 21300000, guid: 712e577caf5830247bbbd12deafa4e6c, type: 3}
   - {fileID: 21300000, guid: 1825e28c6c1957240add08220d5f494a, type: 3}
   - {fileID: 21300000, guid: 3f18219ca88c6454fba5a49d5ca324d4, type: 3}
   - {fileID: 21300000, guid: b0d748acc4b51684ca302bc03196f25a, type: 3}
@@ -146,7 +146,6 @@ SpriteAtlas:
   - {fileID: 21300000, guid: a307b5ff1350cbf46b28f6d5ec571df7, type: 3}
   m_PackedSpriteNamesToIndex:
   - icon_item_100900
-  - icon_flower_fireflower
   - icon_item_100907
   - icon_item_310022
   - icon_cactus
@@ -200,7 +199,6 @@ SpriteAtlas:
   - icon_item_108002
   - icon_item_108051
   - icon_item_3200001
-  - icon_flower_goldflower
   - icon_water
   - icon_item_108053
   - icon_item_100905
@@ -208,9 +206,11 @@ SpriteAtlas:
   - icon_leaves_silver
   - icon_flower_earthflower
   - icon_flower_chrysanthemum
+  - icon_item_103024
   - icon_flower_woodflower
   - icon_item_300001
   - icon_ore_iron
+  - icon_item_103021
   - icon_item_2400001
   - icon_base
   - icon_grass_wild

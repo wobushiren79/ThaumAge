@@ -12,6 +12,7 @@ public class PlayerTargetBlock : BaseMonoBehaviour
     protected MeshRenderer meshRenderer;
 
     protected BlockTypeEnum lastBlockType = BlockTypeEnum.None;
+    protected Vector3Int lastWorldPosition = Vector3Int.one * int.MaxValue;
     public void Awake()
     {
         meshFilter = objTargetBlock.GetComponent<MeshFilter>();
@@ -24,6 +25,18 @@ public class PlayerTargetBlock : BaseMonoBehaviour
         //展示文本互动提示
         objInteractive.ShowObj(isInteractive);
 
+        //如果和上一个方块处于同一个位置
+        if (lastWorldPosition == worldPosition)
+        {
+            lastWorldPosition = worldPosition;
+            return;
+        }
+        lastWorldPosition = worldPosition;
+
+        //设置方向
+        WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(worldPosition, out Block targetBlock, out BlockDirectionEnum targetDirection, out Chunk targetChunk);
+        objTargetCenterBlock.transform.eulerAngles = BlockShape.GetRotateAngles(targetDirection);
+
         //如果和上一个时同一个
         if (lastBlockType == block.blockType)
         {
@@ -31,6 +44,11 @@ public class PlayerTargetBlock : BaseMonoBehaviour
             return;
         }
         lastBlockType = block.blockType;
+
+
+
+
+
 
         Mesh newMeshData = block.blockShape.GetCompleteMeshData();
         //设置形状
@@ -48,9 +66,6 @@ public class PlayerTargetBlock : BaseMonoBehaviour
             newMeshData.SetUVs(0, newUVS);
         }
         meshFilter.mesh = newMeshData;
-        WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(worldPosition, out Block targetBlock, out BlockDirectionEnum targetDirection, out Chunk targetChunk);
-        objTargetCenterBlock.transform.eulerAngles = BlockShape.GetRotateAngles(targetDirection);
-
     }
 
     public void Hide()
