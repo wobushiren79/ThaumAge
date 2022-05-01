@@ -60,17 +60,34 @@ public enum BlockTypeEnum
     CropWatermelon = 5102,//种植 西瓜
 
     LadderWood = 6001,//木梯子
-    CraftingTableSimple = 6101,//简易制作台
     Door = 6010,//门
-    Sign = 6101,//牌子
+    CraftingTableSimple = 6101,//简易制作台
+    FurnacesSimple = 6151,//简易熔炉
     Box = 6201,//箱子
     SwitchesWooden = 6301,//木制开关
+    TorchWooden = 6311, //木制火把
+    SignWooden = 6341,//木制牌子
     Bed = 6901,//床
 
-    StairsOak = 8101,//橡木楼梯
+    BookshelfOak = 8001, //书架-橡树           
+    BookshelfSilver = 8002, //书架-银树
+    BookshelfWorl = 8003,  //书架-世界树
 
-    HalfStone = 7001,//石头-半
+    StairsOak = 8101,//橡木楼梯
+    StairsSilver = 8102, //银树楼梯
+    StairsWorld = 8103, //世界树楼梯
+
+    HalfSand = 7003,//沙子-半
+    HalfDirt = 7004,//泥土-半
+    HalfStone = 7005,//石头-半
+    HalfFloorOak = 7101,//橡树地板-半
+    HalfFloorSilver = 7102, //银树地板-半
+    HalfFloorWorld = 7103, //世界树地板-半
+
     FloorOak = 8051,//橡木地板
+    FloorSilver = 8052,//银树地板
+    FloorWorld = 8053,//世界树地板
+
     Water = 9001,//水
     Magma = 9002,//岩浆
 

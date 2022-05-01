@@ -28,6 +28,16 @@ public class MathUtil
     }
 
     /// <summary>
+    /// 获取个位
+    /// </summary>
+    /// <param name="data"></param>
+    /// <returns></returns>
+    public static int GetUnit(int data)
+    {
+        return data % 10;
+    }
+
+    /// <summary>
     /// 获取数字的十位
     /// </summary>
     /// <param name="data"></param>

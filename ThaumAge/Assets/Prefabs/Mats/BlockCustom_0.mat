@@ -141,7 +141,7 @@ Material:
     - _AlphaSrcBlend: 1
     - _AlphaToMask: 0
     - _AlphaToMaskInspectorValue: 0
-    - _AmbientOcclusion: 0
+    - _AmbientOcclusion: 1
     - _AnimLength: 11
     - _AnimSpeed: 1
     - _Anisotropy: 0

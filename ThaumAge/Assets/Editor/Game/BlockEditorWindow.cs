@@ -367,7 +367,7 @@ public class BlockEditorWindow : EditorWindow
     /// <summary>
     /// 创建方块贴图列表
     /// </summary>
-    public static void CreateBlockAnimTexture(int blockTextureSize, int frameNumber, string savePath,string saveName, List<BlockModelCreateBean> listCreateData)
+    public static void CreateBlockAnimTexture(int blockTextureSize, int frameNumber, string savePath, string saveName, List<BlockModelCreateBean> listCreateData)
     {
         for (int i = 0; i < frameNumber; i++)
         {
@@ -379,7 +379,7 @@ public class BlockEditorWindow : EditorWindow
     /// <summary>
     /// 创建方块贴图
     /// </summary>
-    public static void CreateBlockTexture(int blockTextureSize, string savePath,string saveName, int frameIndex, List<BlockModelCreateBean> listCreateData)
+    public static void CreateBlockTexture(int blockTextureSize, string savePath, string saveName, int frameIndex, List<BlockModelCreateBean> listCreateData)
     {
         //生成图片tex
         Texture2D outTexture = new Texture2D(blockTextureSize, blockTextureSize, TextureFormat.RGBA32, false);
@@ -423,25 +423,58 @@ public class BlockEditorWindow : EditorWindow
                 continue;
             LogUtil.Log($"CreateBlockMeshData:{itemFile.Name}");
             GameObject obj = EditorUtil.GetAssetByPath<GameObject>($"{Path_Block_MeshModel}/{itemFile.Name}");
-            MeshFilter meshFilter = obj.GetComponentInChildren<MeshFilter>();
-            Collider collider = obj.GetComponentInChildren<Collider>();
-
+            Collider colliderModel = obj.GetComponentInChildren<Collider>();
+            //首先获取主体
+            Transform tfModel = obj.transform.Find("Model");
+            MeshFilter meshFilterModel = null;
+            if (tfModel != null)
+            {
+                meshFilterModel = tfModel.GetComponentInChildren<MeshFilter>();
+            }
             MeshDataCustom meshData;
-            if (meshFilter != null)
+            if (meshFilterModel != null)
             {
                 Vector3 offsetPosition = new Vector3(0.5f, 0f, 0.5f);
-                Transform tfModel= obj.transform.Find("Model");
                 if (tfModel != null)
                 {
-                    offsetPosition += (tfModel.localPosition - new Vector3(0.5f,0.5f,0.5f));
-                    offsetPosition += meshFilter.transform.localPosition + new Vector3(0f,0.5f,0f);
+                    offsetPosition += (tfModel.localPosition - new Vector3(0.5f, 0.5f, 0.5f));
+                    offsetPosition += meshFilterModel.transform.localPosition + new Vector3(0f, 0.5f, 0f);
                 }
-                meshData = new MeshDataCustom(collider, meshFilter.sharedMesh, 0.03125f, offsetPosition);
+                meshData = new MeshDataCustom(colliderModel, meshFilterModel.sharedMesh, 0.03125f, offsetPosition, meshFilterModel.transform.localEulerAngles);
             }
             else
             {
-                meshData = new MeshDataCustom(collider, 0.03125f, new Vector3(0.5f, 0f, 0.5f));
+                meshData = new MeshDataCustom(colliderModel, 0.03125f, new Vector3(0.5f, 0f, 0.5f), Vector3.zero);
             }
+            //获取Other
+            List<Mesh> listMesh0ther = new List<Mesh>(); ;
+            List<float> listSizeOther = new List<float>();
+            List<Vector3> listOffsetOther = new List<Vector3>();
+            List<Vector3> listRotateOther = new List<Vector3>();
+            for (int f = 1; f < 10; f++)
+            {
+                Transform tfOther = obj.transform.Find($"Other{f}");
+                if (tfOther == null)
+                    continue;
+                MeshFilter meshFiltertfOther = tfOther.GetComponentInChildren<MeshFilter>();
+                Collider colliderOther = tfOther.GetComponentInChildren<Collider>();
+
+                if (meshFiltertfOther != null)
+                {
+                    Vector3 offsetPosition = new Vector3(0.5f, 0f, 0.5f);
+                    offsetPosition += (tfOther.localPosition - new Vector3(0.5f, 0.5f, 0.5f));
+                    offsetPosition += meshFiltertfOther.transform.localPosition + new Vector3(0f, 0.5f, 0f);
+                    listSizeOther.Add(0.03125f);
+                    listOffsetOther.Add(offsetPosition);
+                    listMesh0ther.Add(meshFiltertfOther.sharedMesh);
+                    listRotateOther.Add(meshFiltertfOther.transform.localEulerAngles);
+                }
+            }
+            if (!listMesh0ther.IsNull())
+            {
+                meshData.SetOtherMeshData(listMesh0ther, listSizeOther, listOffsetOther, listRotateOther);
+            }
+
             string jsonData = JsonUtil.ToJson(meshData);
             string saveFileName = $"{itemFile.Name.Replace(".prefab", "").Replace(".obj", "")}";
             //创建文件
@@ -456,7 +489,7 @@ public class BlockEditorWindow : EditorWindow
     /// <summary>
     /// 创建方块模型
     /// </summary>
-    public static void CreateBlockModel(int blockTextureSize, string pathRes, string pathSaveTexure,string saveName, string pathMatBlock, int textureArrayNumber = 1)
+    public static void CreateBlockModel(int blockTextureSize, string pathRes, string pathSaveTexure, string saveName, string pathMatBlock, int textureArrayNumber = 1)
     {
         try
         {
@@ -543,7 +576,7 @@ public class BlockEditorWindow : EditorWindow
 
             if (textureArrayNumber > 1)
             {
-                CreateBlockAnimTexture(blockTextureSize, textureArrayNumber, pathSaveTexure, saveName,listCreateData);
+                CreateBlockAnimTexture(blockTextureSize, textureArrayNumber, pathSaveTexure, saveName, listCreateData);
                 CreateBlockTextureArray(blockTextureSize, textureArrayNumber, new List<string>() { saveName });
                 EditorUtil.RefreshAsset(matUse);
             }

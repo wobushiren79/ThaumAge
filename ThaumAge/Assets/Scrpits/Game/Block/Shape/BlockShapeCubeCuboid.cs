@@ -155,7 +155,7 @@ public class BlockShapeCubeCuboid : BlockShapeCube
         }
     }
 
-    public override Mesh GetCompleteMeshData()
+    public override Mesh GetCompleteMeshData(Vector3Int worldPosition)
     {
         Mesh mesh = new Mesh();
         mesh.vertices = vertsAddLeftOffset

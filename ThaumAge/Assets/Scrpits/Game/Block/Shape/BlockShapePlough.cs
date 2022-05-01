@@ -12,18 +12,10 @@ public class BlockShapePlough : BlockShapeCubeCuboid
         Vector2 uvStart = GetUVStartPosition(block, DirectionEnum.UP);
         blockPlough.uvsAddUpRotate = new Vector2[]
         {
-            new Vector2(uvStart.x,uvStart.y + uvWidth),
+            new Vector2(uvStart.x, uvStart.y + uvWidth),
             new Vector2(uvStart.x + uvWidth,uvStart.y + uvWidth),
             new Vector2(uvStart.x + uvWidth,uvStart.y),
             new Vector2(uvStart.x,uvStart.y),
-        };
-
-        colorsAdd = new Color[]
-        {
-            Color.white,
-            Color.white,
-            Color.white,
-            Color.white
         };
     }
 
@@ -36,11 +28,11 @@ public class BlockShapePlough : BlockShapeCubeCuboid
             int rotate = (int)direction % 10;
             if (rotate == 3 || rotate == 4)
             {
-                base.BaseAddVertsUVsColors(chunk, localPosition, direction, face, vertsAdd, blockPlough.uvsAddUpRotate, colorsAdd);
+                base.BaseAddVertsUVsColors(chunk, localPosition, BlockDirectionEnum.UpForward, face, vertsAdd, blockPlough.uvsAddUpRotate, colorsAdd);
                 return;
             }
         }
-        base.BaseAddVertsUVsColors(chunk, localPosition, direction, face, vertsAdd, uvsAdd, colorsAdd);
+        base.BaseAddVertsUVsColors(chunk, localPosition, BlockDirectionEnum.UpForward, face, vertsAdd, uvsAdd, colorsAdd);
     }
 
     /// <summary>

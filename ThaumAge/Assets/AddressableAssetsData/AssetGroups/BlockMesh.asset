@@ -63,6 +63,11 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels:
     - BlockMesh
+  - m_GUID: 45bc797d554f3e044b4abb1ee6d9cd2d
+    m_Address: Assets/Prefabs/BlockMeshData/BlockTorchWooden.txt
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - BlockMesh
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: fd6114d87f1af534fbf270c47c0f10bf, type: 2}
   m_SchemaSet:

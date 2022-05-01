@@ -578,7 +578,7 @@ public class BlockShapeCubeHalf : BlockShapeCube
     /// 获取完整的mesh数据
     /// </summary>
     /// <returns></returns>
-    public override Mesh GetCompleteMeshData()
+    public override Mesh GetCompleteMeshData(Vector3Int worldPosition)
     {
         Mesh mesh = new Mesh();
         Vector3[][] arrayVertsData = vertsAddHalfDown;

@@ -14,15 +14,15 @@ public class MeshDataCustom
 
     public Vector3 colliderSize;
 
-    public MeshDataCustom(Collider collider, Mesh mesh, float size, Vector3 offset)
+    public MeshDataCustom(Collider collider, Mesh mesh, float size, Vector3 offset, Vector3 rotate)
     {
-        mainMeshData = new MeshDataDetailsCustom(mesh, size, offset);
+        mainMeshData = new MeshDataDetailsCustom(mesh, size, offset, rotate);
         InitMeshCollider(collider);
     }
 
-    public MeshDataCustom(Collider collider, float size, Vector3 offset)
+    public MeshDataCustom(Collider collider, float size, Vector3 offset, Vector3 rotate)
     {
-        mainMeshData = new MeshDataDetailsCustom(size, offset);
+        mainMeshData = new MeshDataDetailsCustom(size, offset, rotate);
         InitMeshCollider(collider);
     }
 
@@ -32,7 +32,7 @@ public class MeshDataCustom
     /// <param name="listMesh"></param>
     /// <param name="listSize"></param>
     /// <param name="listOffset"></param>
-    public void SetOtherMeshData(List<Mesh> listMesh, List<float> listSize, List<Vector3> listOffset)
+    public void SetOtherMeshData(List<Mesh> listMesh, List<float> listSize, List<Vector3> listOffset, List<Vector3> listRotate)
     {
         otherMeshData = new MeshDataDetailsCustom[listMesh.Count];
         for (int i = 0; i < listMesh.Count; i++)
@@ -40,7 +40,8 @@ public class MeshDataCustom
             Mesh itemMesh = listMesh[i];
             float itemSize = listSize[i];
             Vector3 itemOffset = listOffset[i];
-            MeshDataDetailsCustom itemMeshData = new MeshDataDetailsCustom(itemMesh, itemSize, itemOffset);
+            Vector3 itemRotate = listRotate[i];
+            MeshDataDetailsCustom itemMeshData = new MeshDataDetailsCustom(itemMesh, itemSize, itemOffset, itemRotate);
             otherMeshData[i] = itemMeshData;
         }
     }
@@ -63,6 +64,11 @@ public class MeshDataCustom
     public Mesh GetMainMesh()
     {
         return mainMeshData.GetMesh();
+    }
+
+    public Mesh GetOtherMesh(int index)
+    {
+        return otherMeshData[index].GetMesh();
     }
 
     /// <summary>

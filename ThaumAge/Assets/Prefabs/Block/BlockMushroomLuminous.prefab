@@ -284,6 +284,12 @@ VisualEffect:
       - m_Value: 0.05
         m_Name: size
         m_Overridden: 1
+      - m_Value: 0.1
+        m_Name: SizeMax
+        m_Overridden: 1
+      - m_Value: 0.15
+        m_Name: SizeMin
+        m_Overridden: 1
     m_Vector2f:
       m_Array: []
     m_Vector3f:
@@ -292,6 +298,9 @@ VisualEffect:
       m_Array:
       - m_Value: {x: 0.0627451, y: 0, z: 11.984314, w: 1}
         m_Name: color
+        m_Overridden: 1
+      - m_Value: {x: 0, y: 2.1328127, z: 85.445015, w: 1}
+        m_Name: TexColor
         m_Overridden: 1
     m_Uint:
       m_Array: []
@@ -304,7 +313,10 @@ VisualEffect:
     m_Gradient:
       m_Array: []
     m_NamedObject:
-      m_Array: []
+      m_Array:
+      - m_Value: {fileID: 2800000, guid: f8578fd4cdc56cf48b78b851fc394452, type: 3}
+        m_Name: Tex
+        m_Overridden: 1
     m_Bool:
       m_Array: []
 --- !u!73398921 &1442911306976538108

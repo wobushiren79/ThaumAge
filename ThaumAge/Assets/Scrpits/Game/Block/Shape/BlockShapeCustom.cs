@@ -87,7 +87,7 @@ public class BlockShapeCustom : BlockShape
     /// 获取完整mesh数据
     /// </summary>
     /// <returns></returns>
-    public override Mesh GetCompleteMeshData()
+    public override Mesh GetCompleteMeshData(Vector3Int worldPosition)
     {
         return blockMeshData.GetMainMesh();
     }

@@ -133,7 +133,7 @@ public class BlockShape
     /// <summary>
     /// 获取该方块完整的mesh数据
     /// </summary>
-    public virtual Mesh GetCompleteMeshData()
+    public virtual Mesh GetCompleteMeshData(Vector3Int worldPosition)
     {
         Mesh mesh = new Mesh();
         mesh.vertices = vertsAdd;

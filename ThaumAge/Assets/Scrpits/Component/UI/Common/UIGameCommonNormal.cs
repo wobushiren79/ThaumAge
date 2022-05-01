@@ -11,6 +11,10 @@ public partial class UIGameCommonNormal : BaseUIComponent
     {
         base.OpenUI();
         GameControlHandler.Instance.SetPlayerControlEnabled(false);
+
+        //关闭提示显示
+        PlayerTargetBlock playerTarget = GameHandler.Instance.manager.playerTargetBlock;
+        playerTarget?.Hide();
     }
 
     public override void CloseUI()

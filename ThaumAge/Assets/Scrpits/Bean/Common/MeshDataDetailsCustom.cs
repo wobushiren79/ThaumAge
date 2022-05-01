@@ -15,25 +15,26 @@ public class MeshDataDetailsCustom
     /// <param name="mesh"></param>
     /// <param name="size">大小</param>
     /// <param name="offset">偏移</param>
-    public MeshDataDetailsCustom(Mesh mesh, float size, Vector3 offset)
+    public MeshDataDetailsCustom(Mesh mesh, float size, Vector3 offset, Vector3 rotate)
     {
         vertices = mesh.vertices;
         uv = mesh.uv;
         triangles = mesh.triangles;
-
+        vertices = VectorUtil.GetRotatedPosition(Vector3.zero, vertices, rotate);
         for (int i = 0; i < vertices.Length; i++)
         {
             Vector3 itemVer = vertices[i];
+
             Vector3 newVer = itemVer * size + offset;
             vertices[i] = newVer;
         }
     }
-    public MeshDataDetailsCustom(float size, Vector3 offset)
+    public MeshDataDetailsCustom(float size, Vector3 offset, Vector3 rotate)
     {
         vertices = new Vector3[0];
         uv = new Vector2[0];
         triangles = new int[0];
-
+        vertices = VectorUtil.GetRotatedPosition(Vector3.zero, vertices, rotate);
         for (int i = 0; i < vertices.Length; i++)
         {
             Vector3 itemVer = vertices[i];

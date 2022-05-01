@@ -9,15 +9,15 @@ public class ItemTypeSeed : Item
         //检测玩家前方是否有方块
         if (player.playerRay.RayToChunkBlock(out RaycastHit hit, out Vector3Int targetBlockPosition))
         {
-            Chunk chunkForHit = hit.collider.GetComponentInParent<Chunk>();
+            ChunkComponent chunkForHit = hit.collider.GetComponentInParent<ChunkComponent>();
             if (chunkForHit != null)
             {
                 //获取位置和方向
                 player.playerRay.GetHitPositionAndDirection(hit, out Vector3Int targetPosition, out Vector3Int closePosition, out BlockDirectionEnum direction);
 
-                Vector3Int localPosition = targetPosition - chunkForHit.chunkData.positionForWorld;
+                Vector3Int localPosition = targetPosition - chunkForHit.chunk.chunkData.positionForWorld;
                 //获取原位置方块
-                Block tagetBlock = chunkForHit.chunkData.GetBlockForLocal(localPosition);
+                Block tagetBlock = chunkForHit.chunk.chunkData.GetBlockForLocal(localPosition);
 
                 //如果不能种地
                 if (tagetBlock.blockInfo.plant_state == 0)
@@ -26,7 +26,7 @@ public class ItemTypeSeed : Item
                 //种植位置
                 Vector3Int upLocalPosition = localPosition + Vector3Int.up;
                 //获取上方方块
-                Block upBlock = chunkForHit.chunkData.GetBlockForLocal(upLocalPosition);
+                Block upBlock = chunkForHit.chunk.chunkData.GetBlockForLocal(upLocalPosition);
 
                 //如果上方有方块 则无法种植
                 if (upBlock != null && upBlock.blockType != BlockTypeEnum.None)
@@ -41,7 +41,7 @@ public class ItemTypeSeed : Item
                 blockCropData.growPro = 0;
                 string metaData = BlockBaseCrop.ToMetaData(blockCropData);
                 //替换为种植
-                chunkForHit.SetBlockForLocal(upLocalPosition, plantBlockType, BlockDirectionEnum.UpForward, metaData);
+                chunkForHit.chunk.SetBlockForLocal(upLocalPosition, plantBlockType, BlockDirectionEnum.UpForward, metaData);
 
                 //扣除道具
                 UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();

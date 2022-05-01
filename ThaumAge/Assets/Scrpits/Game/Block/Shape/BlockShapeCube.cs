@@ -100,8 +100,8 @@ public class BlockShapeCube : BlockShape
         {
             new Vector2(uvStart.x,uvStart.y),
             new Vector2(uvStart.x,uvStart.y + uvWidth),
-            new Vector2(uvStart.x+ uvWidth,uvStart.y+ uvWidth),
-            new Vector2(uvStart.x+ uvWidth,uvStart.y)
+            new Vector2(uvStart.x + uvWidth,uvStart.y+ uvWidth),
+            new Vector2(uvStart.x + uvWidth,uvStart.y)
         };
 
         uvStart = GetUVStartPosition(block, DirectionEnum.Forward);
@@ -306,7 +306,7 @@ public class BlockShapeCube : BlockShape
     /// 获取完整的mesh数据
     /// </summary>
     /// <returns></returns>
-    public override Mesh GetCompleteMeshData()
+    public override Mesh GetCompleteMeshData(Vector3Int worldPosition)
     {
         Mesh mesh = new Mesh();
         mesh.vertices = vertsAddLeft
