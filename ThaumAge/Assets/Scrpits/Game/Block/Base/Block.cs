@@ -247,6 +247,14 @@ public class Block
     }
 
     /// <summary>
+    /// 创建方块模型成功
+    /// </summary>
+    public virtual void CreateBlockModelSuccess(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum blockDirection, GameObject obj)
+    {
+
+    }
+
+    /// <summary>
     /// 删除方块的模型
     /// </summary>
     public virtual void DestoryBlockModel(Chunk chunk, Vector3Int localPosition)
@@ -570,6 +578,16 @@ public class Block
             BlockBean blockDataBase = baseChunk.GetBlockData(baseWorldPosition - baseChunk.chunkData.positionForWorld);
             return FromMetaData<T>(blockDataBase.meta);
         }
+    }
+
+    /// <summary>
+    /// 获取旋转的角度
+    /// </summary>
+    /// <param name="direction"></param>
+    /// <returns></returns>
+    public virtual Vector3 GetRotateAngles(BlockDirectionEnum direction)
+    {
+        return BlockShape.GetRotateAngles(direction);
     }
 
     /// <summary>

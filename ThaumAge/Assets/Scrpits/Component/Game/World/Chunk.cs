@@ -532,8 +532,10 @@ public class Chunk
         //添加数据记录
         dicBlockModel.Add(blockIndex, objBlockModel);
         //设置方向
-        Vector3 rotateAngles = BlockShape.GetRotateAngles(direction);
+        Vector3 rotateAngles = block.GetRotateAngles(direction);
         objBlockModel.transform.localEulerAngles = rotateAngles;
+        //回调
+        block.CreateBlockModelSuccess(this,localPosition, direction, objBlockModel);
     }
 
     /// <summary>
