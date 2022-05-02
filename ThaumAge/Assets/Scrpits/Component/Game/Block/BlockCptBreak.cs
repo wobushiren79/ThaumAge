@@ -96,8 +96,9 @@ public class BlockCptBreak : BaseMonoBehaviour
             PlayBlockCptBreakEffect(block, worldPosition);
         }
 
+        WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(worldPosition, out Block targetBlock, out BlockDirectionEnum targetDirection, out Chunk targetChunk);
         //设置破坏的形状
-        Mesh newMeshData = block.blockShape.GetCompleteMeshData(worldPosition);
+        Mesh newMeshData = block.blockShape.GetCompleteMeshData(targetChunk, worldPosition - targetChunk.chunkData.positionForWorld, targetDirection);
         if (block.blockShape is BlockShapeCustom blockShapeCustom)
         {
             Vector2[] newUVS = new Vector2[newMeshData.vertices.Length];
@@ -121,15 +122,7 @@ public class BlockCptBreak : BaseMonoBehaviour
         mfBlockBreak.mesh = newMeshData;
 
         //设置方向
-        if (block.blockShape is BlockShapeCustomDirection blockShapeCustomDirection)
-        {
-            //特殊的形状不需要旋转
-        }
-        else
-        {
-            WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(worldPosition, out Block targetBlock, out BlockDirectionEnum targetDirection, out Chunk targetChunk);
-            tfCenter.eulerAngles = BlockShape.GetRotateAngles(targetDirection);
-        }
+        tfCenter.eulerAngles = targetBlock.GetRotateAngles(targetDirection);
         tfCenter.localScale = new Vector3(1.001f, 1.001f, 1.001f);
     }
 
@@ -191,6 +184,7 @@ public class BlockCptBreak : BaseMonoBehaviour
 
             if (block.blockInfo.GetBlockShape() == BlockShapeEnum.Custom
                 || block.blockInfo.GetBlockShape() == BlockShapeEnum.CustomDirection
+                || block.blockInfo.GetBlockShape() == BlockShapeEnum.CustomDirectionUpDown
                 || block.blockInfo.GetBlockShape() == BlockShapeEnum.CustomLinkAround)
             {
                 //如果是自定义模型的方块 则直接随机获取颜色

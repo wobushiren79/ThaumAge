@@ -232,7 +232,7 @@ public class BlockShapeStairs : BlockShapeCube
         }
     }
 
-    public override Mesh GetCompleteMeshData(Vector3Int worldPosition)
+    public override Mesh GetCompleteMeshData(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum blockDirection)
     {
         Mesh mesh = new Mesh();
         mesh.vertices = vertsAddLeftStairs

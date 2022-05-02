@@ -306,7 +306,7 @@ public class BlockShapeCube : BlockShape
     /// 获取完整的mesh数据
     /// </summary>
     /// <returns></returns>
-    public override Mesh GetCompleteMeshData(Vector3Int worldPosition)
+    public override Mesh GetCompleteMeshData(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction)
     {
         Mesh mesh = new Mesh();
         mesh.vertices = vertsAddLeft

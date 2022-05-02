@@ -345,10 +345,20 @@ public class Block
                 closeChunk.SetBlockForWorld(closeWorldPosition, blockType, direction, metaData);
                 break;
             case 2:
-                //Ö»ÄÜ³¯ÉÏ
                 if ((int)direction > 20)
                 {
                     direction = (BlockDirectionEnum)((int)direction % 10 + 10);
+                }
+                closeChunk.SetBlockForWorld(closeWorldPosition, blockType, direction, metaData);
+                break;
+            case 3:
+                if ((int)direction > 20&& (int)direction < 30)
+                {
+                    direction = BlockDirectionEnum.DownForward;
+                }
+                else
+                {
+                    direction = BlockDirectionEnum.UpForward;
                 }
                 closeChunk.SetBlockForWorld(closeWorldPosition, blockType, direction, metaData);
                 break;

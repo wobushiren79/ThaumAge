@@ -33,19 +33,11 @@ public class PlayerTargetBlock : BaseMonoBehaviour
         lastWorldPosition = worldPosition;
 
         //设置方向
-        if (block.blockShape is BlockShapeCustomDirection blockShapeCustomDirection)
-        {
-            //特殊的形状不需要旋转
-        }
-        else
-        {
-            WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(worldPosition, out Block targetBlock, out BlockDirectionEnum targetDirection, out Chunk targetChunk);
-            objTargetCenterBlock.transform.eulerAngles = BlockShape.GetRotateAngles(targetDirection);
-        }
+        WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(worldPosition, out Block targetBlock, out BlockDirectionEnum targetDirection, out Chunk targetChunk);
+        objTargetCenterBlock.transform.eulerAngles = targetBlock.GetRotateAngles(targetDirection);
 
         //如果和上一个时同一个
-
-        Mesh newMeshData = block.blockShape.GetCompleteMeshData(worldPosition);
+        Mesh newMeshData = block.blockShape.GetCompleteMeshData(targetChunk, worldPosition - targetChunk.chunkData.positionForWorld, targetDirection);
         //设置形状
         if (block.blockShape is BlockShapeCustom blockShapeCustom)
         {

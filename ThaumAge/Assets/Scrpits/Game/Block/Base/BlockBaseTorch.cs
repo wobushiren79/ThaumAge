@@ -3,6 +3,21 @@ using UnityEngine;
 
 public class BlockBaseTorch : Block
 {
+
+    public override void SetData(BlockTypeEnum blockType)
+    {
+        base.SetData(blockType);
+        BlockShapeCustomDirection blockShapeCustomDirection = blockShape as BlockShapeCustomDirection;
+        for (int i = 0; i < blockShapeCustomDirection.colorsAddDirection.Length; i++)
+        {
+            blockShapeCustomDirection.colorsAddDirection[i].a = 2;
+        }
+        for (int i = 0; i < blockShapeCustomDirection.colorsAdd.Length; i++)
+        {
+            blockShapeCustomDirection.colorsAdd[i].a = 2;
+        }
+    }
+
     /// <summary>
     /// 获取旋转角度 不旋转
     /// </summary>

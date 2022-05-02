@@ -3,10 +3,10 @@ using UnityEngine;
 
 public class BlockShapeCustomDirection : BlockShapeCustom
 {
-    protected Vector3[] vertsAddDirection;
-    protected int[] trisAddDirection;
-    protected Vector2[] uvsAddDirection;
-
+    public Vector3[] vertsAddDirection;
+    public int[] trisAddDirection;
+    public Vector2[] uvsAddDirection;
+    public Color[] colorsAddDirection;
     public override void InitData(Block block)
     {
         base.InitData(block);
@@ -14,6 +14,11 @@ public class BlockShapeCustomDirection : BlockShapeCustom
         vertsAddDirection = otherMesh.vertices;
         trisAddDirection = otherMesh.triangles;
         uvsAddDirection = otherMesh.uv;
+        colorsAddDirection = new Color[vertsAddDirection.Length];
+        for (int i = 0; i < colorsAddDirection.Length; i++)
+        {
+            colorsAddDirection[i] = Color.white;
+        }
     }
 
     public override void BuildBlock(Chunk chunk, Vector3Int localPosition)
@@ -52,7 +57,7 @@ public class BlockShapeCustomDirection : BlockShapeCustom
         Vector3[] rotatePositionArray = RotateOtherMeshVerts(angle);
         BaseAddTrisForCustom(chunk, localPosition, BlockDirectionEnum.UpForward, trisAddDirection);
         BaseAddVertsUVsColorsForCustom(chunk, localPosition, BlockDirectionEnum.UpForward,
-            rotatePositionArray, uvsAddDirection, colorsAdd, vertsColliderAddCustom);
+            rotatePositionArray, uvsAddDirection, colorsAddDirection, vertsColliderAddCustom);
     }
 
     protected Vector3[] RotateOtherMeshVerts(float angle)
@@ -61,16 +66,15 @@ public class BlockShapeCustomDirection : BlockShapeCustom
     }
 
 
-    public override Mesh GetCompleteMeshData(Vector3Int worldPosition)
+    public override Mesh GetCompleteMeshData(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum blockDirection)
     {
-        WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(worldPosition, out Block block, out BlockDirectionEnum blockDirection, out Chunk chunk);
         int unitTen = MathUtil.GetUnitTen((int)blockDirection);
         Vector3[] otherVerts = null;
         switch (unitTen)
         {
             case 1:
             case 2:
-                return base.GetCompleteMeshData(worldPosition);
+                return base.GetCompleteMeshData(chunk, localPosition, blockDirection);
             case 3:
                 otherVerts = RotateOtherMeshVerts(-90);
                 break;

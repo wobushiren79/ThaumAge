@@ -68,6 +68,17 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels:
     - BlockMesh
+  - m_GUID: c76e00e2e48519940942c16d5d7e220c
+    m_Address: Assets/Prefabs/BlockMeshData/BlockFurnacesSimple.txt
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - BlockMesh
+  - m_GUID: 6f4b865de55e77a4c87c5ed9b2e55a54
+    m_Address: Assets/Prefabs/BlockMeshData/BlockLanternStone.txt
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - BlockMeshData
+    - BlockMesh
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: fd6114d87f1af534fbf270c47c0f10bf, type: 2}
   m_SchemaSet:

@@ -29,6 +29,7 @@ public class BlockInfoBean : BaseBean
     //0不能旋转(永远只能UpForward)
     //1能旋转(各个方向)
     //2只能LRFB方向旋转(只能是 UpLeft,UpRight,UpForward,UpBack　4个方向)
+    //3只能UD 方向（只能是Up,Down）
     public int rotate_state;
 
     public int life;//生命值

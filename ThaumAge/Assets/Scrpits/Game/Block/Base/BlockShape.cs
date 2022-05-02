@@ -133,7 +133,7 @@ public class BlockShape
     /// <summary>
     /// 获取该方块完整的mesh数据
     /// </summary>
-    public virtual Mesh GetCompleteMeshData(Vector3Int worldPosition)
+    public virtual Mesh GetCompleteMeshData(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction)
     {
         Mesh mesh = new Mesh();
         mesh.vertices = vertsAdd;
@@ -227,7 +227,7 @@ public class BlockShape
     /// <param name="direction"></param>
     /// <param name="getDirection"></param>
     /// <returns></returns>
-    public DirectionEnum GetRotateDirection(BlockDirectionEnum direction, DirectionEnum getDirection)
+    public virtual DirectionEnum GetRotateDirection(BlockDirectionEnum direction, DirectionEnum getDirection)
     {
         DirectionEnum targetDirection = DirectionEnum.UP;
         switch (direction)
@@ -889,6 +889,10 @@ public class BlockShape
             //旋转6面
             Vector3 rotatePosition = VectorUtil.GetRotatedPosition(centerPosition, position, angles);
             return rotatePosition;
+        }
+        else if (block.blockInfo.rotate_state == 3)
+        {
+            return position;
         }
         return position;
     }
