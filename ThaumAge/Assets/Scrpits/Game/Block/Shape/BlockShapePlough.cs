@@ -3,37 +3,6 @@ using UnityEngine;
 
 public class BlockShapePlough : BlockShapeCubeCuboid
 {
-    public override void InitData(Block block)
-    {
-        base.InitData(block);
-
-        //获取耕地不同的UV
-        BlockBasePlough blockPlough = (BlockBasePlough)block;
-        Vector2 uvStart = GetUVStartPosition(block, DirectionEnum.UP);
-        blockPlough.uvsAddUpRotate = new Vector2[]
-        {
-            new Vector2(uvStart.x, uvStart.y + uvWidth),
-            new Vector2(uvStart.x + uvWidth,uvStart.y + uvWidth),
-            new Vector2(uvStart.x + uvWidth,uvStart.y),
-            new Vector2(uvStart.x,uvStart.y),
-        };
-    }
-
-    public override void BaseAddVertsUVsColors(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction, DirectionEnum face, Vector3[] vertsAdd, Vector2[] uvsAdd, Color[] colorsAdd)
-    {
-        BlockBean blockData = chunk.GetBlockData(localPosition);
-        if (blockData != null && face == DirectionEnum.UP)
-        {
-            BlockBasePlough blockPlough = (BlockBasePlough)block;
-            int rotate = (int)direction % 10;
-            if (rotate == 3 || rotate == 4)
-            {
-                base.BaseAddVertsUVsColors(chunk, localPosition, BlockDirectionEnum.UpForward, face, vertsAdd, blockPlough.uvsAddUpRotate, colorsAdd);
-                return;
-            }
-        }
-        base.BaseAddVertsUVsColors(chunk, localPosition, BlockDirectionEnum.UpForward, face, vertsAdd, uvsAdd, colorsAdd);
-    }
 
     /// <summary>
     /// 检测是否需要构建面

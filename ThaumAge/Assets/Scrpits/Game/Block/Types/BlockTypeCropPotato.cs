@@ -1,7 +1,7 @@
 ﻿using UnityEditor;
 using UnityEngine;
 
-public class BlockTypePlantPotato : BlockBaseCrop
+public class BlockTypeCropPotato : BlockBaseCrop
 {
 
 

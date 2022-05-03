@@ -35,10 +35,10 @@ public class ItemsBean
     public T GetMetaData<T>() where T : ItemsDetailsBean
     {        
         //如果meta数据是null的 则按items的类型赋予不同的数据
-        if (meta.IsNull())
+        if (meta.IsNull()||meta.Equals("{}"))
         {
             ItemsInfoBean itemsInfo = ItemsHandler.Instance.manager.GetItemsInfoById(itemId);
-            Item item = ItemsHandler.Instance.manager.GetRegisterItem(itemsInfo.GetItemsType());
+            Item item = ItemsHandler.Instance.manager.GetRegisterItem(itemsInfo.id,itemsInfo.GetItemsType());
             ItemsDetailsBean itemsDetails = item.GetItemsDetailsBean(itemId);
             meta =  SetMetaData(itemsDetails);
             return itemsDetails as T;

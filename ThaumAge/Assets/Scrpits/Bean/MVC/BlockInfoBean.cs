@@ -42,8 +42,6 @@ public class BlockInfoBean : BaseBean
 
     public int plough_state;//耕地状态 0不能耕地 1能耕地
 
-    public int plough_change;//耕地后改变的方块
-
     public int plant_state;//种植状态 0不能种植 1能种植
 
     public string items_drop;//掉落

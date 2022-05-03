@@ -33,37 +33,12 @@ public class BlockShapeCubeCuboid : BlockShapeCube
         forwardOffsetBorder = offsetBorder[4];
         backOffsetBorder = offsetBorder[5];
 
-        vertsAddLeftOffset = new Vector3[vertsAddLeft.Length];
-        vertsAddRightOffset = new Vector3[vertsAddRight.Length];
-        vertsAddDownOffset = new Vector3[vertsAddDown.Length];
-        vertsAddUpOffset = new Vector3[vertsAddUp.Length];
-        vertsAddForwardOffset = new Vector3[vertsAddForward.Length];
-        vertsAddBackOffset = new Vector3[vertsAddBack.Length];
-
-        for (int i = 0; i < vertsAddLeft.Length; i++)
-        {
-            vertsAddLeftOffset[i] = vertsAddLeft[i].AddX(leftOffsetBorder);
-        }
-        for (int i = 0; i < vertsAddRight.Length; i++)
-        {
-            vertsAddRightOffset[i] = vertsAddRight[i].AddX(rightOffsetBorder);
-        }
-        for (int i = 0; i < vertsAddUp.Length; i++)
-        {
-            vertsAddUpOffset[i] = vertsAddUp[i].AddY(upOffsetBorder);
-        }
-        for (int i = 0; i < vertsAddDown.Length; i++)
-        {
-            vertsAddDownOffset[i] = vertsAddDown[i].AddY(downOffsetBorder);
-        }
-        for (int i = 0; i < vertsAddForward.Length; i++)
-        {
-            vertsAddForwardOffset[i] = vertsAddForward[i].AddZ(forwardOffsetBorder);
-        }
-        for (int i = 0; i < vertsAddBack.Length; i++)
-        {
-            vertsAddBackOffset[i] = vertsAddBack[i].AddZ(backOffsetBorder);
-        }
+        vertsAddLeftOffset = vertsAddLeft.AddX(leftOffsetBorder);
+        vertsAddRightOffset = vertsAddLeft.AddX(rightOffsetBorder);
+        vertsAddDownOffset = vertsAddDown.AddY(downOffsetBorder);
+        vertsAddUpOffset = vertsAddUp.AddY(upOffsetBorder);
+        vertsAddForwardOffset = vertsAddForward.AddZ(forwardOffsetBorder);
+        vertsAddBackOffset = vertsAddBack.AddZ(backOffsetBorder);
     }
 
     /// <summary>
@@ -122,10 +97,6 @@ public class BlockShapeCubeCuboid : BlockShapeCube
     /// <summary>
     /// 检测是否需要构建面
     /// </summary>
-    /// <param name="chunk"></param>
-    /// <param name="localPosition"></param>
-    /// <param name="direction"></param>
-    /// <param name="closeDirection"></param>
     /// <returns></returns>
     public override bool CheckNeedBuildFace(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction, DirectionEnum closeDirection)
     {

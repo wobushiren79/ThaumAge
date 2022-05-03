@@ -45,7 +45,7 @@ public class BlockShapeCropCross : BlockShapeCross
     /// </summary>
     public virtual Vector2 GetUVStartPosition(BlockInfoBean blockInfo, BlockCropBean blockCropData)
     {
-        BlockBaseCrop blockCrop = BlockHandler.Instance.manager.GetRegisterBlock(blockInfo.id) as BlockBaseCrop;
+        BlockBaseCrop blockCrop = block as BlockBaseCrop;
         List<Vector2Int[]> listUVData = blockCrop.GetListGrowUV();
         Vector2 uvStartPosition;
         if (listUVData.IsNull())

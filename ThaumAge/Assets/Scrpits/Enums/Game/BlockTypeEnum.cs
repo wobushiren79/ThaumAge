@@ -79,6 +79,13 @@ public enum BlockTypeEnum
     StairsSilver = 8102, //ÒøÊ÷Â¥ÌÝ
     StairsWorld = 8103, //ÊÀ½çÊ÷Â¥ÌÝ
 
+    BricksStone = 8201,//Ê¯×©
+    BricksStoneMoss = 8202,//Ì¦ÞºÊ¯×©
+    BricksRed = 8203,//×©¿é
+    BricksRedMoss = 8204,//Ì¦Þº×©¿é
+    BricksSand = 8205,//É³×©
+    BricksSandMoss = 8206,//Ì¦ÞºÉ³×©
+
     HalfSand = 7003,//É³×Ó-°ë
     HalfDirt = 7004,//ÄàÍÁ-°ë
     HalfStone = 7005,//Ê¯Í·-°ë

@@ -51,7 +51,7 @@ public class ItemTypeHoe : ItemBaseTool
                         EventHandler.Instance.TriggerEvent(EventsInfo.ItemsBean_MetaChange, itemData);
                     }
 
-                    BlockTypeEnum ploughBlockType = (BlockTypeEnum)tagetBlock.blockInfo.plough_change;
+                    BlockTypeEnum ploughBlockType = (BlockTypeEnum)tagetBlock.blockInfo.remark_int;
                     //替换为耕地方块
                     chunkForHit.chunk.SetBlockForLocal(localPosition, ploughBlockType, direction);
 

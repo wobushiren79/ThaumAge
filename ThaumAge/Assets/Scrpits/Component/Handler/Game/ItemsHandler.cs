@@ -6,7 +6,6 @@ using UnityEngine.UI;
 
 public class ItemsHandler : BaseHandler<ItemsHandler, ItemsManager>
 {
-
     /// <summary>
     /// 使用物品
     /// </summary>
@@ -19,17 +18,17 @@ public class ItemsHandler : BaseHandler<ItemsHandler, ItemsManager>
         if (itemsData == null || itemsData.itemId == 0)
         {
             //如果手上没有东西
-            item = manager.GetRegisterItem(ItemsTypeEnum.Block);
+            item = manager.GetRegisterItem(itemsData.itemId, ItemsTypeEnum.Block);
         }
         else
         {
             //如果手上有东西
             ItemsInfoBean itemsInfo = manager.GetItemsInfoById(itemsData.itemId);
             //获取对应得处理类
-            item = manager.GetRegisterItem(itemsInfo.id,(ItemsTypeEnum)itemsInfo.items_type);
+            item = manager.GetRegisterItem(itemsInfo.id, (ItemsTypeEnum)itemsInfo.items_type);
         }
         item.Use(user, itemsData, useType);
-        if (useType ==  ItemUseTypeEnum.E)
+        if (useType == ItemUseTypeEnum.E)
         {
             //如果是交互 则不播放动画
         }

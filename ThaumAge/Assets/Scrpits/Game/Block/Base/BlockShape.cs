@@ -200,23 +200,11 @@ public class BlockShape
                 block.GetCloseBlockByDirection(chunk, localPosition, getDirection, out closeBlock, out closeBlockChunk,out closeLocalPosition);
                 break;
             case 1:
+            case 2:
+            default:
                 //旋转
                 DirectionEnum rotateDirection = GetRotateDirection(direction, getDirection);
                 block.GetCloseBlockByDirection(chunk, localPosition, rotateDirection, out closeBlock, out closeBlockChunk, out closeLocalPosition);
-                break;
-            case 2:
-                //旋转
-                rotateDirection = GetRotateDirection(direction, getDirection);
-                if (rotateDirection == DirectionEnum.Down)
-                {
-                    rotateDirection = DirectionEnum.UP;
-                }
-                block.GetCloseBlockByDirection(chunk, localPosition, rotateDirection, out closeBlock, out closeBlockChunk, out closeLocalPosition);
-                break;
-            default:
-                closeBlock = BlockHandler.Instance.manager.GetRegisterBlock(BlockTypeEnum.None);
-                closeBlockChunk = null;
-                closeLocalPosition = Vector3Int.zero;
                 break;
         }
     }

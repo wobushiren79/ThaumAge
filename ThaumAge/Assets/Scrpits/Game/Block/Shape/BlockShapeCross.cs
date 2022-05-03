@@ -56,38 +56,8 @@ public class BlockShapeCross : BlockShape
         if (block.blockType != BlockTypeEnum.None)
         {
             BuildFace(chunk, localPosition, vertsAdd, uvsAdd, colorsAdd, trisAdd);
-            //AddMeshIndexData( chunk,  localPosition);
         }
     }
-
-    /// <summary>
-    /// 增加保存的mesh数据
-    /// </summary>
-    /// <param name="chunk"></param>
-    /// <param name="localPosition"></param>
-    //protected virtual void AddMeshIndexData(Chunk chunk, Vector3Int localPosition)
-    //{
-    //    int startVertsIndex = chunk.chunkMeshData.verts.Count;
-    //    int startTrisIndex = chunk.chunkMeshData.dicTris[block.blockInfo.material_type].Count;
-
-    //    int startVertsColliderIndex = 0;
-    //    int startTrisColliderIndex = 0;
-
-    //    if (block.blockInfo.collider_state == 1)
-    //    {
-    //        startVertsColliderIndex = chunk.chunkMeshData.vertsCollider.Count;
-    //        startTrisColliderIndex = chunk.chunkMeshData.trisCollider.Count;
-    //    }
-    //    else if (block.blockInfo.trigger_state == 1)
-    //    {
-    //        startVertsColliderIndex = chunk.chunkMeshData.vertsTrigger.Count;
-    //        startTrisColliderIndex = chunk.chunkMeshData.trisTrigger.Count;
-    //    }
-    //    chunk.chunkMeshData.AddMeshIndexData(localPosition,
-    //             startVertsIndex, vertsAdd.Length, startTrisIndex, trisAdd.Length,
-    //             startVertsColliderIndex, vertsColliderAdd.Length, startTrisColliderIndex, trisColliderAdd.Length);
-    //}
-
 
     public override void BaseAddTris(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum blockDirection, int[] trisAdd)
     {

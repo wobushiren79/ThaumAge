@@ -25,7 +25,7 @@ public enum ItemsTypeEnum
     Pickaxe = 22,//镐子
     Axe = 23,//斧头
     Shovel = 24,//铲子
-
+    WateringCan = 29,//洒水壶
     Sword = 31,//剑
     Knife = 32,//刀
     Bow = 33, //弓
