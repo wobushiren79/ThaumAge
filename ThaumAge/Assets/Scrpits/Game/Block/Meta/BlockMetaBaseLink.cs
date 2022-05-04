@@ -3,7 +3,7 @@ using UnityEditor;
 using UnityEngine;
 
 [Serializable]
-public class BlockBaseLinkBean : BlockBaseBean
+public class BlockMetaBaseLink : BlockMetaBase
 {
     public int level;
     public Vector3IntBean linkBasePosition;

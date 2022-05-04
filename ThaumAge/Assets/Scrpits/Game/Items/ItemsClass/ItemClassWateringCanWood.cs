@@ -24,5 +24,13 @@ public class ItemClassWateringCanWood : ItemBaseTool
 
         //修改耕地的状态
         BlockBean blockData = targetChunk.GetBlockData(targetPosition - targetChunk.chunkData.positionForWorld);
+        BlockMetaPlough blockMetaPlough = Block.FromMetaData<BlockMetaPlough>(blockData.meta);
+        if (blockMetaPlough == null)
+            blockMetaPlough = new BlockMetaPlough();
+        blockMetaPlough.waterState = 1;
+        blockData.meta = Block.ToMetaData(blockMetaPlough);
+        targetChunk.SetBlockData(blockData);
+        //更新区块
+        WorldCreateHandler.Instance.manager.AddUpdateChunk(targetChunk, 1);
     }
 }

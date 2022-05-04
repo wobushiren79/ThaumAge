@@ -5,7 +5,7 @@ using UnityEngine;
 public partial class UIViewBoxList : BaseUIView
 {
     protected BlockBean blockData;
-    protected BlockBoxBean blockBoxData;
+    protected BlockMetaBox blockBoxData;
     protected Vector3Int blockWorldPosition;
     public override void Awake()
     {
@@ -59,8 +59,8 @@ public partial class UIViewBoxList : BaseUIView
             return;
         this.blockWorldPosition = worldPosition;
         this.blockData = blockData;
-        this.blockBoxData = Block.FromMetaData<BlockBoxBean>(blockData.meta);
-        if (blockBoxData == null) blockBoxData = new BlockBoxBean(7 * 7);
+        this.blockBoxData = Block.FromMetaData<BlockMetaBox>(blockData.meta);
+        if (blockBoxData == null) blockBoxData = new BlockMetaBox(7 * 7);
         ui_ItemList.SetCellCount(blockBoxData.items.Length);
         ui_ItemList.RefreshAllCells();
     }

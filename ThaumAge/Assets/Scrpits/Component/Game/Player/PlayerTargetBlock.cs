@@ -19,7 +19,7 @@ public class PlayerTargetBlock : BaseMonoBehaviour
     }
     public void Show(Vector3Int worldPosition, Block block, bool isInteractive)
     {
-        transform.position = worldPosition;
+
         gameObject.SetActive(true);
         //展示文本互动提示
         objInteractive.ShowObj(isInteractive);
@@ -35,9 +35,9 @@ public class PlayerTargetBlock : BaseMonoBehaviour
         //设置方向
         WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(worldPosition, out Block targetBlock, out BlockDirectionEnum targetDirection, out Chunk targetChunk);
         objTargetCenterBlock.transform.eulerAngles = targetBlock.GetRotateAngles(targetDirection);
-
+        Vector3Int localPosition = worldPosition - targetChunk.chunkData.positionForWorld;
         //如果和上一个时同一个
-        Mesh newMeshData = block.blockShape.GetCompleteMeshData(targetChunk, worldPosition - targetChunk.chunkData.positionForWorld, targetDirection);
+        Mesh newMeshData = block.blockShape.GetCompleteMeshData(targetChunk, localPosition, targetDirection);
         //设置形状
         if (block.blockShape is BlockShapeCustom blockShapeCustom)
         {
@@ -53,6 +53,14 @@ public class PlayerTargetBlock : BaseMonoBehaviour
             newMeshData.SetUVs(0, newUVS);
         }
         meshFilter.mesh = newMeshData;
+        transform.position = worldPosition;
+        //如果是link类型，
+        if (targetBlock.blockInfo.GetBlockShape() == BlockShapeEnum.CustomLink)
+        {
+            BlockBean blockData = targetChunk.GetBlockData(localPosition.x, localPosition.y, localPosition.z);
+            BlockMetaBaseLink blockMetaBaseLink = Block.FromMetaData<BlockMetaBaseLink>(blockData.meta);
+            transform.position = blockMetaBaseLink.GetBasePosition();
+        }
     }
 
     public void Hide()

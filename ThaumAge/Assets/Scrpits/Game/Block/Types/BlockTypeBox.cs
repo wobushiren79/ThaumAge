@@ -13,7 +13,7 @@ public class BlockTypeBox : BlockBaseBox
         //添加箱子里的物品
         if (blockData == null)
             return listData;
-        BlockBoxBean blockBoxData = FromMetaData<BlockBoxBean>(blockData.meta);
+        BlockMetaBox blockBoxData = FromMetaData<BlockMetaBox>(blockData.meta);
         if (blockBoxData == null)
             return listData;
         for (int i = 0; i < blockBoxData.items.Length; i++)

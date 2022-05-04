@@ -17,7 +17,6 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
     protected Vector3 positionForWorldUpdate = Vector3.zero;
 
     protected static object lockWorldCreate = new object();
-
     protected void Update()
     {
         HandleForWorldUpdate();

@@ -77,7 +77,7 @@ public class BlockBaseLiquid : Block
                 BlockBean downBlockData = downChunk.GetBlockData(downWorldPosition - downChunk.chunkData.positionForWorld);
                 if (downBlockData != null)
                 {
-                    BlockLiquidBean downBlockLiquid = FromMetaData<BlockLiquidBean>(downBlockData.meta);
+                    BlockMetaLiquid downBlockLiquid = FromMetaData<BlockMetaLiquid>(downBlockData.meta);
                     if (downBlockLiquid != null && downBlockLiquid.level == 1)
                     {
                         downChunk.SetBlockForWorld(downWorldPosition, blockType);
@@ -90,7 +90,7 @@ public class BlockBaseLiquid : Block
                 if (blockData != null)
                 {
                     //如果有数据 需要判断是几级水流
-                    BlockLiquidBean blockLiquid = FromMetaData<BlockLiquidBean>(blockData.meta);
+                    BlockMetaLiquid blockLiquid = FromMetaData<BlockMetaLiquid>(blockData.meta);
                     if (blockLiquid != null)
                     {
                         //如果是1子级 则不再向外扩散
@@ -142,7 +142,7 @@ public class BlockBaseLiquid : Block
         {
             if (closeBlock == null || closeBlock.blockType == BlockTypeEnum.None)
             {
-                BlockLiquidBean blockLiquid = new BlockLiquidBean();
+                BlockMetaLiquid blockLiquid = new BlockMetaLiquid();
                 blockLiquid.level = 1;
                 //如果没有方块 则漏水
                 closeChunk.SetBlockForWorld(worldPosition, blockType, BlockDirectionEnum.UpForward, ToMetaData(blockLiquid));
@@ -153,7 +153,7 @@ public class BlockBaseLiquid : Block
                 //如果是重量为1的 则冲散
                 if (closeBlock.blockInfo.weight == 1)
                 {
-                    BlockLiquidBean blockLiquid = new BlockLiquidBean();
+                    BlockMetaLiquid blockLiquid = new BlockMetaLiquid();
                     blockLiquid.level = 1;
 
                     closeChunk.SetBlockForWorld(worldPosition, blockType, BlockDirectionEnum.UpForward, ToMetaData(blockLiquid));
@@ -181,7 +181,7 @@ public class BlockBaseLiquid : Block
         {
             return (number + 1);
         }
-        BlockLiquidBean blockLiquid = FromMetaData<BlockLiquidBean>(blockData.meta);
+        BlockMetaLiquid blockLiquid = FromMetaData<BlockMetaLiquid>(blockData.meta);
         if (blockLiquid == null || blockLiquid.level == 0)
         {
             return (number + 1);

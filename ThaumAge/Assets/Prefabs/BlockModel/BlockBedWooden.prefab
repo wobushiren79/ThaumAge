@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 6674328761132877979}
   - component: {fileID: 7440260600626804467}
   m_Layer: 0
-  m_Name: BlockBed
+  m_Name: BlockBedWooden
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

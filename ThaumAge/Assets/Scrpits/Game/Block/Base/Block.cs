@@ -365,26 +365,51 @@ public class Block
         }
     }
 
-    public Vector3Int GetClosePositionByDirection(DirectionEnum getDirection, Vector3Int localPosition)
+    /// <summary>
+    /// 获取靠近坐标
+    /// </summary>
+    public Vector3Int GetClosePositionByDirection(DirectionEnum getDirection, Vector3Int position)
     {
         switch (getDirection)
         {
             case DirectionEnum.UP:
-                return localPosition.AddY(1);
+                return position.AddY(1);
             case DirectionEnum.Down:
-                return localPosition.AddY(-1);
+                return position.AddY(-1);
             case DirectionEnum.Left:
-                return localPosition.AddX(-1);
+                return position.AddX(-1);
             case DirectionEnum.Right:
-                return localPosition.AddX(1);
+                return position.AddX(1);
             case DirectionEnum.Forward:
-                return localPosition.AddZ(-1);
+                return position.AddZ(-1);
             case DirectionEnum.Back:
-                return localPosition.AddZ(1);
+                return position.AddZ(1);
             default:
-                return localPosition;
+                return position;
         }
     }
+
+    public Vector3Int GetCloseOffsetByDirection(DirectionEnum getDirection)
+    {
+        switch (getDirection)
+        {
+            case DirectionEnum.UP:
+                return Vector3Int.up;
+            case DirectionEnum.Down:
+                return Vector3Int.down;
+            case DirectionEnum.Left:
+                return Vector3Int.left;
+            case DirectionEnum.Right:
+                return Vector3Int.right;
+            case DirectionEnum.Forward:
+                return Vector3Int.back;
+            case DirectionEnum.Back:
+                return Vector3Int.forward;
+            default:
+                return Vector3Int.zero;
+        }
+    }
+
     /// <summary>
     /// 获取不同方向的方块
     /// </summary>
@@ -469,7 +494,7 @@ public class Block
         BlockBean blockData = chunk.GetBlockData(localPosition);
         if (blockData != null)
         {
-            BlockDoorBean blockDoorData = FromMetaData<BlockDoorBean>(blockData.meta);
+            BlockMetaDoor blockDoorData = FromMetaData<BlockMetaDoor>(blockData.meta);
             if (blockDoorData != null)
             {
                 //如果是子级 则不生成
@@ -503,7 +528,7 @@ public class Block
             {
                 Vector3Int linkPosition = listLink[i];
                 Vector3Int closeWorldPosition = localPosition + chunk.chunkData.positionForWorld + linkPosition;
-                BlockDoorBean blockDoor = new BlockDoorBean();
+                BlockMetaDoor blockDoor = new BlockMetaDoor();
                 blockDoor.level = 1;
                 blockDoor.linkBasePosition = new Vector3IntBean(localPosition + chunk.chunkData.positionForWorld);
                 BlockDirectionEnum blockDirection = chunk.chunkData.GetBlockDirection(localPosition.x, localPosition.y, localPosition.z);
@@ -529,7 +554,7 @@ public class Block
         {
             if (blockData != null)
             {
-                BlockDoorBean blockDoorData = FromMetaData<BlockDoorBean>(blockData.meta);
+                BlockMetaDoor blockDoorData = FromMetaData<BlockMetaDoor>(blockData.meta);
                 if (blockDoorData != null)
                 {
                     //如果是子级 则不生成
@@ -560,7 +585,7 @@ public class Block
     /// <param name="baseWorldPosition"></param>
     /// <param name="listLinkPosition"></param>
     /// <param name="data"></param>
-    public void SaveLinkBaseBlockData<T>(Vector3Int baseWorldPosition, T data) where T : BlockBaseLinkBean
+    public void SaveLinkBaseBlockData<T>(Vector3Int baseWorldPosition, T data) where T : BlockMetaBaseLink
     {
         WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(baseWorldPosition, out Block baseBlock, out Chunk baseChunk);
         BlockBean baseBlockData = baseChunk.GetBlockDataForWorldPosition(baseWorldPosition);
@@ -571,7 +596,7 @@ public class Block
     /// <summary>
     /// 获取连接的基础方块数据
     /// </summary>
-    public T GetLinkBaseBlockData<T>(string meta) where T : BlockBaseLinkBean
+    public T GetLinkBaseBlockData<T>(string meta) where T : BlockMetaBaseLink
     {
         //获取link数据
         T blockLink = FromMetaData<T>(meta);

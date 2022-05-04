@@ -66,10 +66,10 @@ public enum BlockTypeEnum
     Box = 6201,//箱子
     SwitchesWooden = 6301,//木制开关
     TorchWooden = 6311, //木制火把
-
     LanternStone = 6322,//石制灯笼
     SignWooden = 6341,//木制牌子
-    Bed = 6901,//床
+    FenceWooden = 6351,//木制栅栏
+    BedWooden = 6901,//床
 
     BookshelfOak = 8001, //书架-橡树           
     BookshelfSilver = 8002, //书架-银树

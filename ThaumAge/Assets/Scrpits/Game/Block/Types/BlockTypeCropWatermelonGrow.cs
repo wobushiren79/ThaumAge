@@ -8,7 +8,7 @@ public class BlockTypeCropWatermelonGrow : BlockBaseCrop
         base.RefreshCrop(chunk, localPosition, blockInfo);
         BlockBean blockData = chunk.GetBlockData(localPosition);
         //获取成长周期
-        BlockCropBean blockCropData = FromMetaData<BlockCropBean>(blockData.meta);
+        BlockMetaCrop blockCropData = FromMetaData<BlockMetaCrop>(blockData.meta);
         //如果是等级大于0的子集 则不继续往上生长
         if (blockCropData.uvIndex > 0)
         {

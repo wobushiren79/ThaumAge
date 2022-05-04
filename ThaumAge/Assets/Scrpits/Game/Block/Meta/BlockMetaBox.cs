@@ -1,11 +1,11 @@
 ﻿using UnityEditor;
 using UnityEngine;
 
-public class BlockBoxBean : BlockBaseBean
+public class BlockMetaBox : BlockMetaBase
 {
     public ItemsBean[] items;
 
-    public BlockBoxBean(int number)
+    public BlockMetaBox(int number)
     {
         items = new ItemsBean[number];
         for (int i = 0; i < items.Length; i++)

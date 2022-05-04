@@ -3,7 +3,7 @@ using UnityEngine;
 using System;
 
 [Serializable]
-public class BlockLiquidBean : BlockBaseLinkBean
+public class BlockMetaLiquid : BlockMetaBase
 {
-
+    public int level;
 }

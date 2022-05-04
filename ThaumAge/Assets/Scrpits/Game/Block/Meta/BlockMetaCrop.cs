@@ -3,7 +3,7 @@ using UnityEngine;
 using System;
 
 [Serializable]
-public class BlockCropBean : BlockBaseBean
+public class BlockMetaCrop : BlockMetaBase
 {
     public int growPro;
     public bool isStartGrow;

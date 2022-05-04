@@ -22,7 +22,7 @@ public class BlockShapeCropCross : BlockShapeCross
     public virtual Vector2[] GetUVsAddForCrop(Chunk chunk, Vector3Int localPosition, BlockInfoBean blockInfo)
     {
         BlockBean blockData = chunk.GetBlockData(localPosition);
-        BlockCropBean blockCropData = BlockBaseCrop.FromMetaData<BlockCropBean>(blockData.meta);
+        BlockMetaCrop blockCropData = BlockBaseCrop.FromMetaData<BlockMetaCrop>(blockData.meta);
 
         Vector2 uvStartPosition = GetUVStartPosition(blockInfo, blockCropData);
         Vector2[] uvsAdd = new Vector2[]
@@ -43,7 +43,7 @@ public class BlockShapeCropCross : BlockShapeCross
     /// <summary>
     /// 获取生长UV
     /// </summary>
-    public virtual Vector2 GetUVStartPosition(BlockInfoBean blockInfo, BlockCropBean blockCropData)
+    public virtual Vector2 GetUVStartPosition(BlockInfoBean blockInfo, BlockMetaCrop blockCropData)
     {
         BlockBaseCrop blockCrop = block as BlockBaseCrop;
         List<Vector2Int[]> listUVData = blockCrop.GetListGrowUV();

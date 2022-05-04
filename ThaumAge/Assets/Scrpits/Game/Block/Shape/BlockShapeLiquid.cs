@@ -41,7 +41,7 @@ public class BlockShapeLiquid : BlockShapeCube
         BlockBean blockData = chunk.GetBlockData(localPosition);
         if (blockData != null)
         {
-            BlockLiquidBean blockLiquid = Block.FromMetaData<BlockLiquidBean>(blockData.meta);
+            BlockMetaLiquid blockLiquid = Block.FromMetaData<BlockMetaLiquid>(blockData.meta);
             if (blockLiquid != null)
             {
                 if (blockLiquid.level == 1)
@@ -139,7 +139,7 @@ public class BlockShapeLiquid : BlockShapeCube
             }
             else
             {
-                BlockLiquidBean closeLiquid = Block.FromMetaData<BlockLiquidBean>(closeBlockData.meta);
+                BlockMetaLiquid closeLiquid = Block.FromMetaData<BlockMetaLiquid>(closeBlockData.meta);
                 if (closeLiquid == null || closeLiquid.level == 0)
                 {
                     vertsAddNew[index1] = vertsAdd[index1];
@@ -164,7 +164,7 @@ public class BlockShapeLiquid : BlockShapeCube
             }
             else
             {
-                BlockLiquidBean closeLiquid = Block.FromMetaData<BlockLiquidBean>(closeBlockData.meta);
+                BlockMetaLiquid closeLiquid = Block.FromMetaData<BlockMetaLiquid>(closeBlockData.meta);
                 if (closeLiquid == null || closeLiquid.level == 0)
                 {
                     vertsAddNew[indexPosition] = vertsAdd[indexPosition];

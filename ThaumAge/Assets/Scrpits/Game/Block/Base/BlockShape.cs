@@ -231,16 +231,16 @@ public class BlockShape
                         targetDirection = getDirection;
                         break;
                     case DirectionEnum.Left:
-                        targetDirection = DirectionEnum.Forward;
-                        break;
-                    case DirectionEnum.Right:
                         targetDirection = DirectionEnum.Back;
                         break;
+                    case DirectionEnum.Right:
+                        targetDirection = DirectionEnum.Forward;
+                        break;
                     case DirectionEnum.Forward:
-                        targetDirection = DirectionEnum.Right;
+                        targetDirection = DirectionEnum.Left;
                         break;
                     case DirectionEnum.Back:
-                        targetDirection = DirectionEnum.Left;
+                        targetDirection = DirectionEnum.Right;
                         break;
                 }
                 break;
@@ -252,16 +252,16 @@ public class BlockShape
                         targetDirection = getDirection;
                         break;
                     case DirectionEnum.Left:
-                        targetDirection = DirectionEnum.Back;
-                        break;
-                    case DirectionEnum.Right:
                         targetDirection = DirectionEnum.Forward;
                         break;
+                    case DirectionEnum.Right:
+                        targetDirection = DirectionEnum.Back;
+                        break;
                     case DirectionEnum.Forward:
-                        targetDirection = DirectionEnum.Left;
+                        targetDirection = DirectionEnum.Right;
                         break;
                     case DirectionEnum.Back:
-                        targetDirection = DirectionEnum.Right;
+                        targetDirection = DirectionEnum.Left;
                         break;
                 }
                 break;
@@ -415,16 +415,16 @@ public class BlockShape
                         targetDirection = DirectionEnum.Right;
                         break;
                     case DirectionEnum.Left:
-                        targetDirection = DirectionEnum.Forward;
-                        break;
-                    case DirectionEnum.Right:
                         targetDirection = DirectionEnum.Back;
                         break;
+                    case DirectionEnum.Right:
+                        targetDirection = DirectionEnum.Forward;
+                        break;
                     case DirectionEnum.Forward:
-                        targetDirection = DirectionEnum.UP;
+                        targetDirection = DirectionEnum.Down;
                         break;
                     case DirectionEnum.Back:
-                        targetDirection = DirectionEnum.Down;
+                        targetDirection = DirectionEnum.UP;
                         break;
                 }
                 break;
@@ -438,16 +438,16 @@ public class BlockShape
                         targetDirection = DirectionEnum.Right;
                         break;
                     case DirectionEnum.Left:
-                        targetDirection = DirectionEnum.Back;
-                        break;
-                    case DirectionEnum.Right:
                         targetDirection = DirectionEnum.Forward;
                         break;
+                    case DirectionEnum.Right:
+                        targetDirection = DirectionEnum.Back;
+                        break;
                     case DirectionEnum.Forward:
-                        targetDirection = DirectionEnum.Down;
+                        targetDirection = DirectionEnum.UP;
                         break;
                     case DirectionEnum.Back:
-                        targetDirection = DirectionEnum.UP;
+                        targetDirection = DirectionEnum.Down;
                         break;
                 }
                 break;
@@ -509,16 +509,16 @@ public class BlockShape
                         targetDirection = DirectionEnum.Left;
                         break;
                     case DirectionEnum.Left:
-                        targetDirection = DirectionEnum.Forward;
-                        break;
-                    case DirectionEnum.Right:
                         targetDirection = DirectionEnum.Back;
                         break;
+                    case DirectionEnum.Right:
+                        targetDirection = DirectionEnum.Forward;
+                        break;
                     case DirectionEnum.Forward:
-                        targetDirection = DirectionEnum.Down;
+                        targetDirection = DirectionEnum.UP;
                         break;
                     case DirectionEnum.Back:
-                        targetDirection = DirectionEnum.UP;
+                        targetDirection = DirectionEnum.Down;
                         break;
                 }
                 break;
@@ -532,16 +532,16 @@ public class BlockShape
                         targetDirection = DirectionEnum.Left;
                         break;
                     case DirectionEnum.Left:
-                        targetDirection = DirectionEnum.Back;
-                        break;
-                    case DirectionEnum.Right:
                         targetDirection = DirectionEnum.Forward;
                         break;
+                    case DirectionEnum.Right:
+                        targetDirection = DirectionEnum.Back;
+                        break;
                     case DirectionEnum.Forward:
-                        targetDirection = DirectionEnum.UP;
+                        targetDirection = DirectionEnum.Down;
                         break;
                     case DirectionEnum.Back:
-                        targetDirection = DirectionEnum.Down;
+                        targetDirection = DirectionEnum.UP;
                         break;
                 }
                 break;
@@ -769,10 +769,10 @@ public class BlockShape
                 angles = new Vector3(0, 0, 0);
                 break;
             case BlockDirectionEnum.UpLeft:
-                angles = new Vector3(0, -90, 0);
+                angles = new Vector3(0, 90, 0);
                 break;
             case BlockDirectionEnum.UpRight:
-                angles = new Vector3(0, 90, 0);
+                angles = new Vector3(0, -90, 0);
                 break;
             case BlockDirectionEnum.UpBack:
                 angles = new Vector3(0, 180, 0);
@@ -795,10 +795,10 @@ public class BlockShape
                 angles = new Vector3(0, 0, 90);
                 break;
             case BlockDirectionEnum.LeftLeft:
-                angles = new Vector3(90, -90, 0);
+                angles = new Vector3(-90, 90, 0);
                 break;
             case BlockDirectionEnum.LeftRight:
-                angles = new Vector3(-90, 90, 0);
+                angles = new Vector3(90, -90, 0);
                 break;
             case BlockDirectionEnum.LeftBack:
                 angles = new Vector3(0, 180, -90);
@@ -808,10 +808,10 @@ public class BlockShape
                 angles = new Vector3(0, 0, -90);
                 break;
             case BlockDirectionEnum.RightLeft:
-                angles = new Vector3(-90, -90, 0);
+                angles = new Vector3(90, 90, 0);
                 break;
             case BlockDirectionEnum.RightRight:
-                angles = new Vector3(90, 90, 0);
+                angles = new Vector3(-90, -90, 0);
                 break;
             case BlockDirectionEnum.RightBack:
                 angles = new Vector3(0, 180, 90);

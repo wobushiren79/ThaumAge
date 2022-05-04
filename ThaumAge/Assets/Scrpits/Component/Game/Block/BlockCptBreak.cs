@@ -97,33 +97,29 @@ public class BlockCptBreak : BaseMonoBehaviour
         }
 
         WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(worldPosition, out Block targetBlock, out BlockDirectionEnum targetDirection, out Chunk targetChunk);
+        Vector3Int localPosition = worldPosition - targetChunk.chunkData.positionForWorld;
         //设置破坏的形状
-        Mesh newMeshData = block.blockShape.GetCompleteMeshData(targetChunk, worldPosition - targetChunk.chunkData.positionForWorld, targetDirection);
-        if (block.blockShape is BlockShapeCustom blockShapeCustom)
+        Mesh newMeshData = block.blockShape.GetCompleteMeshData(targetChunk, localPosition, targetDirection);
+        Vector2[] newUVS = new Vector2[newMeshData.vertices.Length];
+        for (int i = 0; i < newMeshData.vertices.Length; i++)
         {
-            Vector2[] newUVS = new Vector2[newMeshData.vertices.Length];
-            for (int i = 0; i < newMeshData.vertices.Length; i++)
-            {
-                int indexUV = i % 4;
-                newUVS[i] = uvList[indexUV];
-            }
-            newMeshData.SetUVs(0, newUVS);
+            int indexUV = i % 4;
+            newUVS[i] = uvList[indexUV];
         }
-        else
-        {
-            Vector2[] newUVS = new Vector2[newMeshData.vertices.Length];
-            for (int i = 0; i < newMeshData.vertices.Length; i++)
-            {
-                int indexUV = i % 4;
-                newUVS[i] = uvList[indexUV];
-            }
-            newMeshData.SetUVs(0, newUVS);
-        }
+        newMeshData.SetUVs(0, newUVS);
         mfBlockBreak.mesh = newMeshData;
 
         //设置方向
         tfCenter.eulerAngles = targetBlock.GetRotateAngles(targetDirection);
         tfCenter.localScale = new Vector3(1.001f, 1.001f, 1.001f);
+
+        //如果是link类型，
+        if (targetBlock.blockInfo.GetBlockShape() == BlockShapeEnum.CustomLink)
+        {
+            BlockBean blockData = targetChunk.GetBlockData(localPosition.x, localPosition.y, localPosition.z);
+            BlockMetaBaseLink blockMetaBaseLink = Block.FromMetaData<BlockMetaBaseLink>(blockData.meta);
+            transform.position = blockMetaBaseLink.GetBasePosition();
+        }
     }
 
     /// <summary>
@@ -182,10 +178,7 @@ public class BlockCptBreak : BaseMonoBehaviour
             Color colorStart;
             Color colorEnd;
 
-            if (block.blockInfo.GetBlockShape() == BlockShapeEnum.Custom
-                || block.blockInfo.GetBlockShape() == BlockShapeEnum.CustomDirection
-                || block.blockInfo.GetBlockShape() == BlockShapeEnum.CustomDirectionUpDown
-                || block.blockInfo.GetBlockShape() == BlockShapeEnum.CustomLinkAround)
+            if ((int)block.blockInfo.GetBlockShape() > 90000)
             {
                 //如果是自定义模型的方块 则直接随机获取颜色
                 //colorStart = new Color(Random.Range(0f,1f), Random.Range(0f, 1f), Random.Range(0f, 1f));

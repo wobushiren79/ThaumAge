@@ -58,7 +58,7 @@ public class BlockBaseCrop : BlockBasePlant
             listData.Add(new ItemsBean(itemsInfo.id, 1));
             return listData;
         }
-        BlockCropBean blockCrop = FromMetaData<BlockCropBean>(blockData.meta);
+        BlockMetaCrop blockCrop = FromMetaData<BlockMetaCrop>(blockData.meta);
         Vector2Int[] uvPosition = blockInfo.GetUVPosition();
         if (blockCrop.growPro >= uvPosition.Length - 1)
         {
@@ -92,10 +92,10 @@ public class BlockBaseCrop : BlockBasePlant
         chunk.chunkData.GetBlockForLocal(localPosition, out Block block, out BlockDirectionEnum direction);
 
         BlockBean blockData = chunk.GetBlockData(localPosition);
-        BlockCropBean blockCrop;
+        BlockMetaCrop blockCrop;
         if (blockData == null)
         {
-            blockCrop = new BlockCropBean();
+            blockCrop = new BlockMetaCrop();
             blockCrop.growPro = 0;
             blockCrop.isStartGrow = false;
 
@@ -104,7 +104,7 @@ public class BlockBaseCrop : BlockBasePlant
             chunk.SetBlockData(blockData, false);
         }
         //获取成长周期
-        blockCrop = FromMetaData<BlockCropBean>(blockData.meta);
+        blockCrop = FromMetaData<BlockMetaCrop>(blockData.meta);
         //成长周期+1
         if (blockCrop.isStartGrow)
         {

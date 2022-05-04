@@ -18,7 +18,7 @@ public class BlockTypeDoor : Block
 
     public override string ItemUseMetaData(Vector3Int worldPosition, BlockTypeEnum blockType, BlockDirectionEnum direction, string curMeta)
     {
-        BlockDoorBean blockDoor = new BlockDoorBean();
+        BlockMetaDoor blockDoor = new BlockMetaDoor();
         blockDoor.level = 0;
         blockDoor.linkBasePosition = new Vector3IntBean(worldPosition);
         return ToMetaData(blockDoor);
@@ -48,7 +48,7 @@ public class BlockTypeDoor : Block
             BlockBean blockData = chunk.GetBlockData(localPosition);
             if (blockData != null)
             {
-                BlockDoorBean blockDoorData = FromMetaData<BlockDoorBean>(blockData.meta);
+                BlockMetaDoor blockDoorData = FromMetaData<BlockMetaDoor>(blockData.meta);
                 if (blockDoorData != null)
                 {
                     if (blockDoorData.level == 1)
@@ -76,10 +76,10 @@ public class BlockTypeDoor : Block
         //获取数据
         BlockBean blockData = chunk.GetBlockData(worldPosition - chunk.chunkData.positionForWorld);
 
-        BlockDoorBean blockDoorData = GetLinkBaseBlockData<BlockDoorBean>(blockData.meta);
+        BlockMetaDoor blockDoorData = GetLinkBaseBlockData<BlockMetaDoor>(blockData.meta);
         if (blockDoorData == null)
         {
-            blockDoorData = new BlockDoorBean();
+            blockDoorData = new BlockMetaDoor();
             blockDoorData.state = 0;
             blockDoorData.linkBasePosition = new Vector3IntBean(worldPosition);
         }

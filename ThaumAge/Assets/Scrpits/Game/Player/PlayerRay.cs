@@ -88,11 +88,11 @@ public class PlayerRay : PlayerBase
         {
             if (face.x >= 0)
             {
-                rotateDirection = 1;
+                rotateDirection = 2;
             }
             else
             {
-                rotateDirection = 2;
+                rotateDirection = 1;
             }
         }
         else

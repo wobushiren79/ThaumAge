@@ -36,7 +36,7 @@ public class ItemTypeSeed : Item
                 ItemsInfoBean itemsInfo = GetItemsInfo(itemData.itemId);
                 BlockTypeEnum plantBlockType = (BlockTypeEnum)itemsInfo.type_id;
                 //初始化meta数据
-                BlockCropBean blockCropData = new BlockCropBean();
+                BlockMetaCrop blockCropData = new BlockMetaCrop();
                 blockCropData.isStartGrow = false;
                 blockCropData.growPro = 0;
                 string metaData = BlockBaseCrop.ToMetaData(blockCropData);
