@@ -77,7 +77,7 @@ public class WorldCreateManager : BaseManager
     {
         foreach (var itemChunk in dicChunk)
         {
-            Destroy(itemChunk.Value.chunkComponent.gameObject);
+            Destroy(itemChunk.Value.chunkComponent?.gameObject);
         }
         dicChunk.Clear();
     }

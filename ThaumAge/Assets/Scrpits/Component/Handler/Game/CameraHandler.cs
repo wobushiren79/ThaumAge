@@ -149,6 +149,28 @@ public class CameraHandler : BaseHandler<CameraHandler, CameraManager>
     }
 
     /// <summary>
+    /// 设置摄像头角度
+    /// </summary>
+    /// <param name="vAxis"></param>
+    /// <param name="hAxis"></param>
+    public void SetCameraAxis(float vAxis,float hAxis)
+    {
+        CinemachineVirtualCamera cameraForFirst = manager.cameraForFirst;
+        //第一人称
+        CinemachinePOV cinemachinePOV = cameraForFirst.GetCinemachineComponent<CinemachinePOV>();
+        if (cinemachinePOV != null)
+        {
+            cinemachinePOV.m_VerticalAxis.Value = vAxis;
+            cinemachinePOV.m_HorizontalAxis.Value = hAxis;
+        }
+
+        CinemachineFreeLook cameraForThree = manager.cameraForThree;
+        //第三人称
+        cameraForThree.m_XAxis.Value = vAxis;
+        cameraForThree.m_YAxis.Value = hAxis;
+    }
+
+    /// <summary>
     /// 旋转镜头
     /// </summary>
     /// <param name="aroundPosition"></param>

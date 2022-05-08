@@ -7,7 +7,8 @@ public class Player : BaseMonoBehaviour
     public PlayerPickUp playerPickUp;
     public PlayerRay playerRay;
 
-    protected CreatureCptCharacter character;
+    [HideInInspector]
+    public CreatureCptCharacter character;
 
     public GameObject objFirstLook;
     public GameObject objThirdLook;
@@ -44,6 +45,17 @@ public class Player : BaseMonoBehaviour
     public void InitPosition()
     {
         int maxHeight = WorldCreateHandler.Instance.manager.GetMaxHeightForWorldPosition(Mathf.RoundToInt(transform.position.x), Mathf.RoundToInt(transform.position.z));
+        UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();
+        userData.userPosition.GetWorldPosition(out WorldTypeEnum worldType, out Vector3 position);
+        SetPosition(new Vector3(position.x, maxHeight + 2, position.z));
+    }
+
+    /// <summary>
+    /// 超出边界位置处理
+    /// </summary>
+    public void BeyondBorderPosition()
+    {
+        int maxHeight = WorldCreateHandler.Instance.manager.GetMaxHeightForWorldPosition(Mathf.RoundToInt(transform.position.x), Mathf.RoundToInt(transform.position.z));
         SetPosition(new Vector3(transform.position.x, maxHeight + 2, transform.position.z));
     }
 
@@ -63,7 +75,7 @@ public class Player : BaseMonoBehaviour
     {
         if (transform.position.y <= -1)
         {
-            InitPosition();
+            BeyondBorderPosition();
         }
     }
 

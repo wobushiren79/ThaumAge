@@ -69,6 +69,10 @@ MonoBehaviour:
     m_Address: Assets/Prefabs/Block/BlockLantern.prefab
     m_ReadOnly: 0
     m_SerializedLabels: []
+  - m_GUID: 23a07a5a27eeafd43a4eb3abd58e9a0a
+    m_Address: Assets/Prefabs/Block/BlockBedWooden.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: fd6114d87f1af534fbf270c47c0f10bf, type: 2}
   m_SchemaSet:

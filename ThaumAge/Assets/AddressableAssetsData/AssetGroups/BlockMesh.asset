@@ -58,6 +58,7 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels:
     - BlockMeshData
+    - BlockMesh
   - m_GUID: 38cfe02b93595694c9773426b1f8cb03
     m_Address: Assets/Prefabs/BlockMeshData/BlockSign.txt
     m_ReadOnly: 0
