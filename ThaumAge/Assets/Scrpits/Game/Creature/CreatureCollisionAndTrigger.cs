@@ -25,14 +25,14 @@ public class CreatureCollisionAndTrigger : CreatureBase
             targetBlock.OnCollision(creature.gameObject, targetBlockPosition, DirectionEnum.None);
         }
         //检测正前方的碰撞
-        int layerMask = 1 << LayerInfo.Chunk | 1 << LayerInfo.ChunkTrigger | 1 << LayerInfo.ChunkCollider;
-        if (RayUtil.RayToCast(creaturePoint + Vector3.up * 0.5f, creature.transform.forward, 0.4f, layerMask, out RaycastHit hitForward))
+        int layerMask =  1 << LayerInfo.Obstacles;
+        if (RayUtil.RayToCast(creaturePoint + Vector3.up * 0.5f, creature.transform.forward, 0.6f, layerMask, out RaycastHit hitForward))
         {
             GetHitPositionAndDirection(hitForward, creature.gameObject, out Vector3Int forwardBlockPosition);
             WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(forwardBlockPosition, out Block forwardBlock, out Chunk forwardChunk);
             if (forwardBlock != null)
             {
-                forwardBlock.OnCollision(creature.gameObject, targetBlockPosition,DirectionEnum.Forward);
+                forwardBlock.OnCollisionForward(creature.gameObject, targetBlockPosition, hitForward);
             }
         }
     }

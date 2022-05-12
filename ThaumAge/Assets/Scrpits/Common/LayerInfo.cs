@@ -12,4 +12,5 @@ public class LayerInfo
     public static int Items = LayerMask.NameToLayer("Items");
     public static int Creature = LayerMask.NameToLayer("Creature");
     public static int RenderCamera = LayerMask.NameToLayer("RenderCamera");
+    public static int Obstacles = LayerMask.NameToLayer("Obstacles");
 }

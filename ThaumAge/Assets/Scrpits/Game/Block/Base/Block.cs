@@ -181,6 +181,18 @@ public class Block
     }
 
     /// <summary>
+    /// 正前方碰撞
+    /// </summary>
+    /// <param name="user"></param>
+    /// <param name="worldPosition"></param>
+    /// <param name="direction"></param>
+    /// <param name="raycastHit"></param>
+    public virtual void OnCollisionForward(GameObject user, Vector3Int worldPosition, RaycastHit raycastHit)
+    {
+
+    }
+
+    /// <summary>
     /// 构建方块
     /// </summary>
     /// <param name="verts"></param>

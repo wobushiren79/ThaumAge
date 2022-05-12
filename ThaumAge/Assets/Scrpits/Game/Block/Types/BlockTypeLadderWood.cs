@@ -3,10 +3,10 @@ using UnityEngine;
 
 public class BlockTypeLadderWood : Block
 {
-    public override void OnCollision(GameObject user, Vector3Int worldPosition, DirectionEnum direction)
+    public override void OnCollisionForward(GameObject user, Vector3Int worldPosition, RaycastHit raycastHit)
     {
-        base.OnCollision(user, worldPosition, direction);
-        if (direction == DirectionEnum.Forward)
+        base.OnCollisionForward(user, worldPosition, raycastHit);
+        if (raycastHit.collider.gameObject.layer == LayerInfo.Obstacles)
         {
             ControlForPlayer controlForPlayer = user.transform.GetComponentInParent<ControlForPlayer>();
             if (controlForPlayer != null)
@@ -15,4 +15,5 @@ public class BlockTypeLadderWood : Block
             }
         }
     }
+
 }
