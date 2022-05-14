@@ -2,6 +2,8 @@ public enum BlockTypeEnum
 {
     None = 0,    //空
     Foundation = 1,    //地基
+    LinkChild = 2,//链接子方块
+
     Sand = 3,    //沙子
     Dirt = 4,    //泥土
     Stone = 5,    //石头

@@ -3,41 +3,14 @@ using UnityEditor;
 using UnityEngine;
 using DG.Tweening;
 
-public class BlockTypeDoor : Block
+public class BlockTypeDoor : BlockBaseLink
 {
 
     public override void InitBlock(Chunk chunk, Vector3Int localPosition, int state)
     {
         base.InitBlock(chunk, localPosition, state);
-        //如果是放置
-        if (state == 1)
-        {
-
-        }
+        listLinkPosition = new List<Vector3Int>() { Vector3Int.up };
     }
-
-    public override string ItemUseMetaData(Vector3Int worldPosition, BlockTypeEnum blockType, BlockDirectionEnum direction, string curMeta)
-    {
-        BlockMetaDoor blockDoor = new BlockMetaDoor();
-        blockDoor.level = 0;
-        blockDoor.linkBasePosition = new Vector3IntBean(worldPosition);
-        return ToMetaData(blockDoor);
-    }
-
-    /// <summary>
-    /// 道具放置
-    /// </summary>
-    public override void ItemUse(
-        Vector3Int targetWorldPosition, BlockDirectionEnum targetBlockDirection, Block targetBlock, Chunk targetChunk, 
-        Vector3Int closeWorldPosition, BlockDirectionEnum closeBlockDirection, Block closeBlock, Chunk closeChunk, 
-        BlockDirectionEnum direction, string metaData)
-    {
-        base.ItemUse(targetWorldPosition, targetBlockDirection, targetBlock, targetChunk, closeWorldPosition, closeBlockDirection, closeBlock, closeChunk, direction, metaData);
-
-        CreateLinkBlock(closeChunk, closeWorldPosition - closeChunk.chunkData.positionForWorld, new List<Vector3Int>() { Vector3Int.up });
-    }
-
-
 
     public override void CreateBlockModel(Chunk chunk, Vector3Int localPosition)
     {
@@ -57,12 +30,6 @@ public class BlockTypeDoor : Block
             }
             chunk.listBlockModelUpdate.Enqueue(localPosition);
         }
-    }
-
-    public override void DestoryBlock(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction)
-    {
-        base.DestoryBlock(chunk, localPosition, direction);
-        DestoryLinkBlock(chunk, localPosition, direction, new List<Vector3Int>() { Vector3Int.up });
     }
 
     /// <summary>

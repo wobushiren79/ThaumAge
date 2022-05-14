@@ -24,7 +24,9 @@ public enum BlockShapeEnum
 
     Plough = 401,//耕地
 
-    CustomAroundLRFB = 90001,//四周链接
+    LinkChild = 80001,//链接子方块（用于填充）
+
+    CustomAroundLRFB = 90001,//四周链接(例子：栅栏)
 
     CustomDirectionUpDown = 99996,//自定义 上下
     CustomDirection = 99997,//自定义 5面方向放置 下左右前后
