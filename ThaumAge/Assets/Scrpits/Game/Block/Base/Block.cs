@@ -506,11 +506,11 @@ public class Block
         BlockBean blockData = chunk.GetBlockData(localPosition);
         if (blockData != null)
         {
-            BlockMetaDoor blockDoorData = FromMetaData<BlockMetaDoor>(blockData.meta);
-            if (blockDoorData != null)
+            BlockMetaBaseLink blockMetaLinkData = FromMetaData<BlockMetaBaseLink>(blockData.meta);
+            if (blockMetaLinkData != null)
             {
                 //如果是子级 则不生成
-                if (blockDoorData.level > 0)
+                if (blockMetaLinkData.level > 0)
                     return;
             }
         }
@@ -540,11 +540,11 @@ public class Block
             {
                 Vector3Int linkPosition = listLink[i];
                 Vector3Int closeWorldPosition = localPosition + chunk.chunkData.positionForWorld + linkPosition;
-                BlockMetaDoor blockDoor = new BlockMetaDoor();
-                blockDoor.level = 1;
-                blockDoor.linkBasePosition = new Vector3IntBean(localPosition + chunk.chunkData.positionForWorld);
+                BlockMetaBaseLink blockMetaLinkData = new BlockMetaBaseLink();
+                blockMetaLinkData.level = 1;
+                blockMetaLinkData.linkBasePosition = new Vector3IntBean(localPosition + chunk.chunkData.positionForWorld);
                 BlockDirectionEnum blockDirection = chunk.chunkData.GetBlockDirection(localPosition.x, localPosition.y, localPosition.z);
-                chunk.SetBlockForWorld(closeWorldPosition, blockType, blockDirection, ToMetaData(blockDoor));
+                chunk.SetBlockForWorld(closeWorldPosition, BlockTypeEnum.LinkChild, blockDirection, ToMetaData(blockMetaLinkData));
             }
         }
     }

@@ -7,7 +7,7 @@ public class BlockShapeLinkChild : BlockShapeCube
 
     public override void BuildBlock(Chunk chunk, Vector3Int localPosition)
     {
-        BuildFace(chunk, localPosition, BlockDirectionEnum.UpForward, DirectionEnum.Left, vertsAddLeft, uvsAddLeft, colorsAdd, trisAdd);
+        BuildFace(chunk, localPosition, BlockDirectionEnum.UpForward, DirectionEnum.Left, vertsColliderAdd, uvsAddLeft, colorsAdd, trisColliderAdd);
     }
 
     public override void BaseAddTris(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction, DirectionEnum face, int[] trisAdd)
