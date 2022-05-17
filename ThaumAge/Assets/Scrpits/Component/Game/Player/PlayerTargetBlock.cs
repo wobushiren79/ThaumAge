@@ -19,7 +19,6 @@ public class PlayerTargetBlock : BaseMonoBehaviour
     }
     public void Show(Vector3Int worldPosition, Block block, bool isInteractive)
     {
-
         gameObject.SetActive(true);
         //展示文本互动提示
         objInteractive.ShowObj(isInteractive);
@@ -54,13 +53,6 @@ public class PlayerTargetBlock : BaseMonoBehaviour
         }
         meshFilter.mesh = newMeshData;
         transform.position = worldPosition;
-        //如果是link类型，
-        if (targetBlock.blockInfo.GetBlockShape() == BlockShapeEnum.CustomLink)
-        {
-            BlockBean blockData = targetChunk.GetBlockData(localPosition.x, localPosition.y, localPosition.z);
-            BlockMetaBaseLink blockMetaBaseLink = Block.FromMetaData<BlockMetaBaseLink>(blockData.meta);
-            transform.position = blockMetaBaseLink.GetBasePosition();
-        }
     }
 
     public void Hide()

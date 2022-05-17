@@ -93,4 +93,28 @@ public class ItemsInfoBean : BaseBean
         rotate = new Vector3(rotateData[0], rotateData[1], rotateData[2]);
         return true;
     }
+
+    /// <summary>
+    /// 获取烧制的物品
+    /// </summary>
+    public void GetFireItems(out int[] fireItemsId, out int[] fireItemsNum, out int[] fireTime)
+    {
+        fireItemsId = null;
+        fireItemsNum = null;
+        fireTime = null;
+        if (fire_items.IsNull())
+            return;
+        string[] itemsDataStr = fire_items.SplitForArrayStr('|');
+        fireItemsId = new int[itemsDataStr.Length];
+        fireItemsNum = new int[itemsDataStr.Length];
+        fireTime = new int[itemsDataStr.Length];
+
+        for (int i = 0; i < itemsDataStr.Length; i++)
+        {
+            int[] itemData = itemsDataStr[i].SplitForArrayInt(',');
+            fireItemsId[i] = itemData[0];
+            fireItemsNum[i] = itemData[1];
+            fireTime[i] = itemData[2];
+        }
+    }
 }

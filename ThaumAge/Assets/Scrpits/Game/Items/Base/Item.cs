@@ -54,7 +54,7 @@ public class Item
         if (player)
         {
             //如果是F键交互
-            if (itemUseType ==  ItemUseTypeEnum.E)
+            if (itemUseType == ItemUseTypeEnum.E)
             {
                 UseForInteractive(player);
                 return;
@@ -104,9 +104,9 @@ public class Item
                 //获取位置和方向
                 player.playerRay.GetHitPositionAndDirection(hit, out Vector3Int targetPosition, out Vector3Int closePosition, out BlockDirectionEnum direction);
                 //挖掘
-                if (itemUseType ==  ItemUseTypeEnum.Left)
+                if (itemUseType == ItemUseTypeEnum.Left)
                 {
-                    TargetBreak(itemsData, targetPosition);         
+                    TargetBreak(itemsData, targetPosition);
                 }
                 else
                 {
@@ -150,7 +150,7 @@ public class Item
         else
         {
             //展示目标位置
-            if(GameHandler.Instance.manager.playerTargetBlock)
+            if (GameHandler.Instance.manager.playerTargetBlock)
                 GameHandler.Instance.manager.playerTargetBlock.Hide();
         }
     }
@@ -184,12 +184,20 @@ public class Item
     public virtual void TargetBreak(ItemsBean itemsData, Vector3Int targetPosition)
     {
         //获取原位置方块
-        WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(targetPosition, out Block oldBlock, out BlockDirectionEnum oldBlockDirection, out Chunk targetChunk);
+        WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(targetPosition, out Block oldBlock, out Chunk targetChunk);
         if (targetChunk == null)
             return;
         //如果原位置是空则不做处理
         if (oldBlock == null || oldBlock.blockType == BlockTypeEnum.None)
             return;
+        //如果是链接方块 则用链接方块的基础方块代替
+        if (oldBlock.blockType == BlockTypeEnum.LinkChild)
+        {
+            BlockBean oldBlockData = targetChunk.GetBlockData(targetPosition - targetChunk.chunkData.positionForWorld);
+            BlockMetaBaseLink oldeBlockMetaLinkData = oldBlock.GetLinkBaseBlockData<BlockMetaBaseLink>(oldBlockData.meta);
+            WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(oldeBlockMetaLinkData.GetBasePosition(), out oldBlock, out targetChunk);
+        }
+
         //获取破坏值
         int breakDamage = GetBreakDamage(itemsData, oldBlock);
         //扣除道具耐久

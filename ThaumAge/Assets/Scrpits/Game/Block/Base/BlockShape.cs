@@ -93,7 +93,7 @@ public class BlockShape
     /// <param name="verts"></param>
     /// <param name="uvs"></param>
     /// <param name="tris"></param>
-    public virtual void BuildFace(Chunk chunk, Vector3Int localPosition, Vector3[] vertsAdd, Vector2[] uvsAdd, Color[] colorsAdd,int[] trisAdd)
+    public virtual void BuildFace(Chunk chunk, Vector3Int localPosition, Vector3[] vertsAdd, Vector2[] uvsAdd, Color[] colorsAdd, int[] trisAdd)
     {
         BlockDirectionEnum direction = BlockDirectionEnum.UpForward;
         if (block.blockInfo.rotate_state != 0)
@@ -156,7 +156,8 @@ public class BlockShape
     public virtual bool CheckNeedBuildFace(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction, DirectionEnum closeDirection)
     {
         if (localPosition.y == 0) return false;
-        GetCloseRotateBlockByDirection(chunk, localPosition, direction, closeDirection, out Block closeBlock, out Chunk closeBlockChunk, out Vector3Int closeLocalPosition);
+        GetCloseRotateBlockByDirection(chunk, localPosition, direction, closeDirection,
+            out Block closeBlock, out Chunk closeBlockChunk, out Vector3Int closeLocalPosition);
         if (closeBlockChunk != null && closeBlockChunk.isInit)
         {
             if (closeBlock == null || closeBlock.blockType == BlockTypeEnum.None)
@@ -166,11 +167,15 @@ public class BlockShape
             }
         }
         else
-        {          
+        {
             //还没有生成chunk
             return false;
         }
+        return CheckNeedBuildFaceDef(closeBlock, closeBlockChunk, closeLocalPosition);
+    }
 
+    protected virtual bool CheckNeedBuildFaceDef(Block closeBlock, Chunk closeBlockChunk, Vector3Int closeLocalPosition)
+    {
         BlockShapeEnum blockShape = closeBlock.blockInfo.GetBlockShape();
         switch (blockShape)
         {
@@ -191,13 +196,13 @@ public class BlockShape
     /// <param name="closeBlock"></param>
     /// <param name="blockChunk"></param>
     public virtual void GetCloseRotateBlockByDirection(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction, DirectionEnum getDirection,
-        out Block closeBlock, out Chunk closeBlockChunk,out Vector3Int closeLocalPosition)
+        out Block closeBlock, out Chunk closeBlockChunk, out Vector3Int closeLocalPosition)
     {
         switch (block.blockInfo.rotate_state)
         {
             case 0:
                 //不旋转
-                block.GetCloseBlockByDirection(chunk, localPosition, getDirection, out closeBlock, out closeBlockChunk,out closeLocalPosition);
+                block.GetCloseBlockByDirection(chunk, localPosition, getDirection, out closeBlock, out closeBlockChunk, out closeLocalPosition);
                 break;
             case 1:
             case 2:
@@ -893,7 +898,7 @@ public class BlockShape
     /// <param name="listVerts"></param>
     public virtual void AddVertsUVsColors(Vector3Int localPosition, BlockDirectionEnum direction,
         List<Vector3> listVerts, List<Vector2> listUVs, List<Color> listColors,
-        Vector3[] vertsAdd, Vector2[] uvsAdd,Color[] colorsAdd)
+        Vector3[] vertsAdd, Vector2[] uvsAdd, Color[] colorsAdd)
     {
         for (int i = 0; i < vertsAdd.Length; i++)
         {
@@ -910,7 +915,7 @@ public class BlockShape
     /// <param name="direction"></param>
     /// <param name="listVerts"></param>
     /// <param name="vertsAdd"></param>
-    public virtual void AddVerts(Vector3Int localPosition, BlockDirectionEnum direction, List<Vector3> listVerts,Vector3[] vertsAdd)
+    public virtual void AddVerts(Vector3Int localPosition, BlockDirectionEnum direction, List<Vector3> listVerts, Vector3[] vertsAdd)
     {
         for (int i = 0; i < vertsAdd.Length; i++)
         {

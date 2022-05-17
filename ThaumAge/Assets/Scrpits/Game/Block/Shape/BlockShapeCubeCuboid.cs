@@ -98,23 +98,8 @@ public class BlockShapeCubeCuboid : BlockShapeCube
     /// 检测是否需要构建面
     /// </summary>
     /// <returns></returns>
-    public override bool CheckNeedBuildFace(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction, DirectionEnum closeDirection)
+    protected override bool CheckNeedBuildFaceDef(Block closeBlock, Chunk closeBlockChunk, Vector3Int closeLocalPosition)
     {
-        if (localPosition.y == 0) return false;
-        GetCloseRotateBlockByDirection(chunk, localPosition, direction, closeDirection, out Block closeBlock, out Chunk closeBlockChunk, out Vector3Int closeLocalPosition);
-        if (closeBlock == null || closeBlock.blockType == BlockTypeEnum.None)
-        {
-            if (closeBlockChunk != null && closeBlockChunk.isInit)
-            {
-                //只是空气方块
-                return true;
-            }
-            else
-            {
-                //还没有生成chunk
-                return false;
-            }
-        }
         BlockShapeEnum blockShape = closeBlock.blockInfo.GetBlockShape();
         switch (blockShape)
         {

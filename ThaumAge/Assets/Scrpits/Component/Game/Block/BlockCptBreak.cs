@@ -114,7 +114,7 @@ public class BlockCptBreak : BaseMonoBehaviour
         tfCenter.localScale = new Vector3(1.001f, 1.001f, 1.001f);
 
         //如果是link类型，
-        if (targetBlock.blockInfo.GetBlockShape() == BlockShapeEnum.CustomLink)
+        if (targetBlock.blockInfo.GetBlockShape() == BlockShapeEnum.LinkChild)
         {
             BlockBean blockData = targetChunk.GetBlockData(localPosition.x, localPosition.y, localPosition.z);
             BlockMetaBaseLink blockMetaBaseLink = Block.FromMetaData<BlockMetaBaseLink>(blockData.meta);

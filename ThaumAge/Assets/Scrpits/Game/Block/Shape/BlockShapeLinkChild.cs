@@ -34,4 +34,22 @@ public class BlockShapeLinkChild : BlockShapeCube
         if (block.blockInfo.trigger_state == 1)
             AddVerts(localPosition, direction, chunk.chunkMeshData.vertsTrigger, vertsAdd);
     }
+
+    public override Mesh GetCompleteMeshData(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction)
+    {
+        BlockBean blockData = chunk.GetBlockData(localPosition);
+        BlockMetaBaseLink blockMetaLinkData = block.GetLinkBaseBlockData<BlockMetaBaseLink>(blockData.meta);
+        Vector3Int baseBlockWorldPosition = blockMetaLinkData.GetBasePosition();
+        if (blockMetaLinkData.level == 0)
+        {
+            //如果自己是基础方块
+            return base.GetCompleteMeshData(chunk, localPosition, direction);
+        }
+        else
+        {
+            //获取基础方块
+            WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(baseBlockWorldPosition, out Block baseBlock, out BlockDirectionEnum baseBlockDirection, out Chunk baseChunk);
+            return baseBlock.blockShape.GetCompleteMeshData(baseChunk, baseBlockWorldPosition - baseChunk.chunkData.positionForWorld, baseBlockDirection);
+        }
+    }
 }
