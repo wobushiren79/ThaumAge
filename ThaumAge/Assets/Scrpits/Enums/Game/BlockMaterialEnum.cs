@@ -10,5 +10,5 @@ public enum BlockMaterialEnum
     BothFaceSwingUniform = 4,//双面 规则的摇曳
     Water = 5,//水流
     Magma = 6,//岩浆
-
+    Transparent = 9,//透明
 }

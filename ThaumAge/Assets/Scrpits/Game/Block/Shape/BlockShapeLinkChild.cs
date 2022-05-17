@@ -38,7 +38,7 @@ public class BlockShapeLinkChild : BlockShapeCube
     public override Mesh GetCompleteMeshData(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction)
     {
         BlockBean blockData = chunk.GetBlockData(localPosition);
-        BlockMetaBaseLink blockMetaLinkData = block.GetLinkBaseBlockData<BlockMetaBaseLink>(blockData.meta);
+        BlockMetaBaseLink blockMetaLinkData = Block.FromMetaData<BlockMetaBaseLink>(blockData.meta);
         Vector3Int baseBlockWorldPosition = blockMetaLinkData.GetBasePosition();
         if (blockMetaLinkData.level == 0)
         {

@@ -194,7 +194,7 @@ public class Item
         if (oldBlock.blockType == BlockTypeEnum.LinkChild)
         {
             BlockBean oldBlockData = targetChunk.GetBlockData(targetPosition - targetChunk.chunkData.positionForWorld);
-            BlockMetaBaseLink oldeBlockMetaLinkData = oldBlock.GetLinkBaseBlockData<BlockMetaBaseLink>(oldBlockData.meta);
+            BlockMetaBaseLink oldeBlockMetaLinkData = Block.FromMetaData<BlockMetaBaseLink>(oldBlockData.meta);
             WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(oldeBlockMetaLinkData.GetBasePosition(), out oldBlock, out targetChunk);
         }
 

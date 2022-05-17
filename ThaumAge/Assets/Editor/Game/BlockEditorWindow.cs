@@ -230,11 +230,13 @@ public class BlockEditorWindow : EditorWindow
         string nameBothFaceSwing = BlockMaterialEnum.BothFaceSwing.GetEnumName();
         string nameBothFace = BlockMaterialEnum.BothFace.GetEnumName();
         string nameNormal = BlockMaterialEnum.Normal.GetEnumName();
+        string nameTransparent = BlockMaterialEnum.Transparent.GetEnumName();
 
         EditorUI.GUIPic($"{Path_BlockTexturesMat}/Block{nameNormal}_0.png", 2048, 2048);
         EditorUI.GUIPic($"{Path_BlockTexturesMat}/Block{nameBothFace}_0.png", 2048, 2048);
         EditorUI.GUIPic($"{Path_BlockTexturesMat}/Block{nameBothFaceSwing}_0.png", 2048, 2048);
         EditorUI.GUIPic($"{Path_BlockTexturesMat}/Block{nameBothFaceSwingUniform}_0.png", 2048, 2048);
+        EditorUI.GUIPic($"{Path_BlockTexturesMat}/Block{nameTransparent}_0.png", 2048, 2048);
     }
 
     /// <summary>

@@ -49,7 +49,13 @@ public class ResourcesRefresh : Editor
                 2048,
                 BlockAnimFrameNumber + 1,
                 BlockEditorWindow.Path_Block_Textures,
-                new List<string>() { "Block" + BlockMaterialEnum.Normal.GetEnumName(), "Block" + BlockMaterialEnum.BothFace.GetEnumName(), "Block" + BlockMaterialEnum.BothFaceSwing.GetEnumName(), "Block" + BlockMaterialEnum.BothFaceSwingUniform.GetEnumName() }
+                new List<string>() { 
+                    "Block" + BlockMaterialEnum.Normal.GetEnumName(), 
+                    "Block" + BlockMaterialEnum.BothFace.GetEnumName(), 
+                    "Block" + BlockMaterialEnum.BothFaceSwing.GetEnumName(), 
+                    "Block" + BlockMaterialEnum.BothFaceSwingUniform.GetEnumName(),
+                    "Block" + BlockMaterialEnum.Transparent.GetEnumName(),
+                }
                 );
         }
         finally
@@ -68,7 +74,12 @@ public class ResourcesRefresh : Editor
                 (
                 2048,
                 BlockAnimFrameNumber + 1,
-                new List<string>() { "Block"+ BlockMaterialEnum.Normal.GetEnumName(), "Block" + BlockMaterialEnum.BothFace.GetEnumName(), "Block" + BlockMaterialEnum.BothFaceSwing.GetEnumName(), "Block" + BlockMaterialEnum.BothFaceSwingUniform.GetEnumName() }
+                new List<string>() { 
+                    "Block"+ BlockMaterialEnum.Normal.GetEnumName(), 
+                    "Block" + BlockMaterialEnum.BothFace.GetEnumName(), 
+                    "Block" + BlockMaterialEnum.BothFaceSwing.GetEnumName(), 
+                    "Block" + BlockMaterialEnum.BothFaceSwingUniform.GetEnumName(),
+                    "Block" + BlockMaterialEnum.Transparent.GetEnumName()}
                 );
         }
         finally
@@ -80,7 +91,14 @@ public class ResourcesRefresh : Editor
     [MenuItem("工具/资源/刷新设置方块材质")]
     public static void RefreshBlockMat()
     {
-        List<BlockMaterialEnum> listBlockMat = new List<BlockMaterialEnum>() { BlockMaterialEnum.Custom, BlockMaterialEnum.Normal, BlockMaterialEnum.BothFace, BlockMaterialEnum.BothFaceSwing, BlockMaterialEnum.BothFaceSwingUniform };
+        List<BlockMaterialEnum> listBlockMat = new List<BlockMaterialEnum>() {
+            BlockMaterialEnum.Custom, 
+            BlockMaterialEnum.Normal, 
+            BlockMaterialEnum.BothFace, 
+            BlockMaterialEnum.BothFaceSwing, 
+            BlockMaterialEnum.BothFaceSwingUniform,
+            BlockMaterialEnum.Transparent
+        };
         for (int i = 0; i < listBlockMat.Count; i++)
         {
             string matOfName = "Block" + listBlockMat[i].GetEnumName();

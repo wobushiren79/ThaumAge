@@ -43,7 +43,7 @@ public class BlockTypeDoor : BlockBaseLink
         //获取数据
         BlockBean blockData = chunk.GetBlockData(worldPosition - chunk.chunkData.positionForWorld);
 
-        BlockMetaDoor blockDoorData = GetLinkBaseBlockData<BlockMetaDoor>(blockData.meta);
+        BlockMetaDoor blockDoorData = FromMetaData<BlockMetaDoor>(blockData.meta);
         if (blockDoorData == null)
         {
             blockDoorData = new BlockMetaDoor();
