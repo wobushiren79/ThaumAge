@@ -27,6 +27,12 @@ public class ItemsInfoBean : BaseBean
     public string hold_data;//拿住道具的数据（位置旋转等）
     public string link_class;//关联的类（针对有对应类 需要单独处理的特殊道具）
     public string fire_items;//道具被火烧之后的数据（道具ID,数量,时间）
+
+    public int elemental_metal;    //元素
+    public int elemental_wood;
+    public int elemental_water;
+    public int elemental_fire;
+    public int elemental_earth;
     public ItemsTypeEnum GetItemsType()
     {
         return (ItemsTypeEnum)items_type;

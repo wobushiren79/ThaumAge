@@ -51,10 +51,12 @@ SpriteAtlas:
     cachedData: {fileID: 0}
   m_MasterAtlas: {fileID: 0}
   m_PackedSprites:
+  - {fileID: 21300000, guid: e1e38a40effe82c438cc516d2ba45a65, type: 3}
   - {fileID: 21300000, guid: 0b870650ae9c5d647acde60169e842e7, type: 3}
   - {fileID: 21300000, guid: 1e19b9c0f6eb4944b9320ccb689e7e2b, type: 3}
   - {fileID: 21300000, guid: 0943e8d01dde5f643a9b0c4612e3c404, type: 3}
   - {fileID: 21300000, guid: c5ae54f05c595ad45b9ce8dd58d38490, type: 3}
+  - {fileID: 21300000, guid: a33e5a0145a178a49aff45921d2717fa, type: 3}
   - {fileID: 21300000, guid: 952e32118bc1c3b42846645edf449e75, type: 3}
   - {fileID: 21300000, guid: ccb10e71a87b54b40a840bf4feffbe99, type: 3}
   - {fileID: 21300000, guid: 2f3c1cb23246d2544a705acb645da20e, type: 3}
@@ -84,16 +86,21 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 95b0aacc382bdb04bb6df9dfe28309f5, type: 3}
   - {fileID: 21300000, guid: 7c98dedc483501449be7f803d291c7ab, type: 3}
   - {fileID: 21300000, guid: 9867261d27f17154098f9062eb60d6a7, type: 3}
+  - {fileID: 21300000, guid: 82bb7e6d9419d7a449b2f7e11736a7e2, type: 3}
   - {fileID: 21300000, guid: b96908cd8371a9643af457b91c98e7b7, type: 3}
   - {fileID: 21300000, guid: caebe32e177c41746a65e73b97f4d8bc, type: 3}
   - {fileID: 21300000, guid: 469fbe4e437b0554eb0ccac0f865788d, type: 3}
+  - {fileID: 21300000, guid: e9b0355ed701d0b4c814f1bb28ff5403, type: 3}
+  - {fileID: 21300000, guid: 781fd57ff1b82604cb9784e817cd160d, type: 3}
   - {fileID: 21300000, guid: cc3c70afd9e974d46ab9cb1ac5f8cd89, type: 3}
   - {fileID: 21300000, guid: 6ad3aaef769a62f4a879c2b6cd4b515f, type: 3}
   m_PackedSpriteNamesToIndex:
+  - ui_slider_4
   - ui_rotate_1
   - ui_slider_1
   - ui_label_2
   - ui_border_11
+  - ui_slider_3
   - ui_sky_3
   - ui_cancel_3
   - ui_backpack_1
@@ -123,9 +130,12 @@ SpriteAtlas:
   - ui_cancel_2
   - ui_button_2
   - ui_border_4
+  - ui_fire_1
   - ui_slider_2
   - ui_border_10
   - ui_border_3
+  - ui_slider_5
+  - ui_slider_6
   - ui_border_5
   - ui_cancel_1
   m_RenderDataMap: {}

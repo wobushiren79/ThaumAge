@@ -81,10 +81,6 @@ public class Chunk
     /// <summary>
     /// 设置数据
     /// </summary>
-    /// <param name="mapForBlock"></param>
-    /// <param name="width"></param>
-    /// <param name="height"></param>
-    /// <param name="minHeight"></param>
     public void SetData(Vector3Int worldPosition, int width, int height)
     {
         chunkData = new ChunkData(worldPosition, width, height);

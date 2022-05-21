@@ -210,7 +210,7 @@ public class Block
 
 
     /// <summary>
-    /// 初始化方块
+    /// 初始化方块 异步的
     /// </summary>
     /// <param name="chunk"></param>
     /// <param name="localPosition"></param>
@@ -263,7 +263,7 @@ public class Block
     /// </summary>
     public virtual void CreateBlockModelSuccess(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum blockDirection, GameObject obj)
     {
-
+        RefreshObjModel(chunk, localPosition);
     }
 
     /// <summary>
@@ -273,6 +273,16 @@ public class Block
     {
         //摧毁模型
         chunk.listBlockModelDestroy.Enqueue(localPosition);
+    }
+
+    /// <summary>
+    /// 刷新方块模型
+    /// </summary>
+    /// <param name="chunk"></param>
+    /// <param name="localPosition"></param>
+    public virtual void RefreshObjModel(Chunk chunk, Vector3Int localPosition)
+    {
+
     }
 
     /// <summary>
