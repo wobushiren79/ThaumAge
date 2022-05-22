@@ -85,6 +85,11 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels:
     - BlockMesh
+  - m_GUID: ea34d6c5d19a7f042808f4c2717e8ff9
+    m_Address: Assets/Prefabs/BlockMeshData/BlockFrameItem.txt
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - BlockMesh
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: fd6114d87f1af534fbf270c47c0f10bf, type: 2}
   m_SchemaSet:

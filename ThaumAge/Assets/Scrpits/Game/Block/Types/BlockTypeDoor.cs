@@ -5,7 +5,6 @@ using DG.Tweening;
 
 public class BlockTypeDoor : BlockBaseLink
 {
-
     public override void InitBlock(Chunk chunk, Vector3Int localPosition, int state)
     {
         base.InitBlock(chunk, localPosition, state);

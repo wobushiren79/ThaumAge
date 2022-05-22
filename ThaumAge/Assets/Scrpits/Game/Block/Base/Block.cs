@@ -388,6 +388,15 @@ public class Block
     }
 
     /// <summary>
+    /// 道具-指向
+    /// </summary>
+    public virtual void ItemUseForSightTarget(Vector3Int targetWorldPosition)
+    {
+        //展示目标位置
+        GameHandler.Instance.manager.playerTargetBlock.Show(targetWorldPosition, this, blockInfo.interactive_state == 1);
+    }
+
+    /// <summary>
     /// 获取靠近坐标
     /// </summary>
     public Vector3Int GetClosePositionByDirection(DirectionEnum getDirection, Vector3Int position)

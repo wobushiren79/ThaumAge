@@ -144,7 +144,7 @@ public class Item
                 if (tagetBlock == null)
                     return;
                 //展示目标位置
-                GameHandler.Instance.manager.playerTargetBlock.Show(targetBlockPosition, tagetBlock, tagetBlock.blockInfo.interactive_state == 1);
+                tagetBlock.ItemUseForSightTarget(targetBlockPosition);
             }
         }
         else
