@@ -535,10 +535,14 @@ public class Block
         }
         //判断是否在指定的link坐标上有其他方块，如果有则生成道具
         bool hasBlock = false;
+        BlockDirectionEnum blockDirection = chunk.chunkData.GetBlockDirection(localPosition.x, localPosition.y, localPosition.z);
+        Vector3 blockAngleRotate = GetRotateAngles(blockDirection);
         for (int i = 0; i < listLink.Count; i++)
         {
             Vector3Int linkPosition = listLink[i];
-            Vector3Int closeWorldPosition = localPosition + chunk.chunkData.positionForWorld + linkPosition;
+            Vector3 linkPositionRotate = VectorUtil.GetRotatedPosition(Vector3.zero, linkPosition, blockAngleRotate);     
+            Vector3Int closeWorldPosition = localPosition + chunk.chunkData.positionForWorld + Vector3Int.RoundToInt(linkPositionRotate);
+
             chunk.GetBlockForWorld(closeWorldPosition, out Block closeBlock, out BlockDirectionEnum closeDirection, out Chunk closeChunk);
             if (closeBlock != null && closeBlock.blockType != BlockTypeEnum.None)
             {
@@ -558,11 +562,11 @@ public class Block
             for (int i = 0; i < listLink.Count; i++)
             {
                 Vector3Int linkPosition = listLink[i];
-                Vector3Int closeWorldPosition = localPosition + chunk.chunkData.positionForWorld + linkPosition;
+                Vector3 linkPositionRotate = VectorUtil.GetRotatedPosition(Vector3.zero, linkPosition, blockAngleRotate);
+                Vector3Int closeWorldPosition = localPosition + chunk.chunkData.positionForWorld + Vector3Int.RoundToInt(linkPositionRotate);
                 BlockMetaBaseLink blockMetaLinkData = new BlockMetaBaseLink();
                 blockMetaLinkData.level = 1;
                 blockMetaLinkData.linkBasePosition = new Vector3IntBean(localPosition + chunk.chunkData.positionForWorld);
-                BlockDirectionEnum blockDirection = chunk.chunkData.GetBlockDirection(localPosition.x, localPosition.y, localPosition.z);
                 chunk.SetBlockForWorld(closeWorldPosition, BlockTypeEnum.LinkChild, blockDirection, ToMetaData(blockMetaLinkData));
             }
         }

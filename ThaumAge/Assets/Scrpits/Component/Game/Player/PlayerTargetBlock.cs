@@ -51,8 +51,21 @@ public class PlayerTargetBlock : BaseMonoBehaviour
             }
             newMeshData.SetUVs(0, newUVS);
         }
+
         meshFilter.mesh = newMeshData;
         transform.position = worldPosition;
+
+        //如果是linkchild 则outline位置位base位置
+        if (block.blockShape is BlockShapeLinkChild blockShapeLinkChild)
+        {
+            BlockBean oldBlockData = targetChunk.GetBlockData(localPosition);
+            BlockMetaBaseLink oldeBlockMetaLinkData = Block.FromMetaData<BlockMetaBaseLink>(oldBlockData.meta);
+            objTargetCenterBlock.transform.position = oldeBlockMetaLinkData.GetBasePosition() + new Vector3(0.5f, 0.5f, 0.5f);
+        }
+        else
+        {
+            objTargetCenterBlock.transform.localPosition = new Vector3(0.5f, 0.5f, 0.5f);
+        }
     }
 
     public void Hide()
