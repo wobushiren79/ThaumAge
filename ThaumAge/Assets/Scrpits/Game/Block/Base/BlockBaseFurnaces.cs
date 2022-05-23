@@ -23,6 +23,14 @@ public class BlockBaseFurnaces : Block
         chunk.RegisterEventUpdate(localPosition, TimeUpdateEventTypeEnum.Sec);
     }
 
+    public void SetFurnacesData(Chunk chunk, Vector3Int localPosition,BlockMetaFurnaces blockMetaFurnacesData)
+    {
+        //获取数据
+        BlockBean blockData = chunk.GetBlockData(localPosition);
+        //保存数据
+        blockData.meta = ToMetaData(blockMetaFurnacesData);
+
+    }
 
     /// <summary>
     /// 每秒刷新
