@@ -204,8 +204,6 @@ public class BlockShape
                 //不旋转
                 block.GetCloseBlockByDirection(chunk, localPosition, getDirection, out closeBlock, out closeBlockChunk, out closeLocalPosition);
                 break;
-            case 1:
-            case 2:
             default:
                 //旋转
                 DirectionEnum rotateDirection = GetRotateDirection(direction, getDirection);

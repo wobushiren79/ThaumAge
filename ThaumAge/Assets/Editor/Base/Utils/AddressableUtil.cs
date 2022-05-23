@@ -73,8 +73,8 @@ public class AddressableUtil
         if (entry == null)
         {
             entry = Settings.CreateOrMoveEntry(guid, group);
+            return AddAssetEntry(group, assetPath, address);
         }
-
         entry.address = address;
         entry.SetLabel(group.Name, true, false, false);
         return entry;

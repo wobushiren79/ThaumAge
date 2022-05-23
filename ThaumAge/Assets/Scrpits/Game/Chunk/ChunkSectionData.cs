@@ -7,9 +7,9 @@ public class ChunkSectionData
     //基础高度
     public int yBase;
     //所有的方块合集
-    public int[] arrayBlock;
+    protected int[] arrayBlock;
     //所有方块的方向集合
-    public byte[] arrayBlockDirection;
+    protected byte[] arrayBlockDirection;
     //小区块大小
     public int sectionSize;
 
@@ -22,8 +22,6 @@ public class ChunkSectionData
     {
         this.sectionSize = sectionSize;
         this.yBase = yBase;
-        arrayBlock = new int[sectionSize * sectionSize * sectionSize];
-        arrayBlockDirection = new byte[sectionSize * sectionSize * sectionSize];
 
         airBlockNumber = sectionSize * sectionSize * sectionSize;
         cubeBlockNumber = 0;
@@ -58,7 +56,11 @@ public class ChunkSectionData
     /// </summary>
     public void SetBlock(int x, int y, int z, Block block, byte direction)
     {
-        SetBlock(x, y, z, block);
+        SetBlock(x, y, z, block); 
+
+        if (arrayBlockDirection == null)
+            arrayBlockDirection = new byte[sectionSize * sectionSize * sectionSize];
+
         arrayBlockDirection[GetSectionIndex(x, y, z)] = direction;
     }
 
@@ -77,6 +79,9 @@ public class ChunkSectionData
             cubeBlockNumber--;
         }
 
+        if (arrayBlock == null)
+            arrayBlock = new int[sectionSize * sectionSize * sectionSize];
+
         arrayBlock[GetSectionIndex(x, y, z)] = (int)block.blockType;
         if (block == null || block.blockType == BlockTypeEnum.None)
         {
@@ -88,15 +93,21 @@ public class ChunkSectionData
         }
     }
 
-
     /// <summary>
     /// 获取方块
     /// </summary>
     public void GetBlock(int x, int y, int z, out int block, out byte direction)
     {
         int blockIndex = GetSectionIndex(x, y, z);
-        block = arrayBlock[blockIndex];
-        direction = arrayBlockDirection[blockIndex];
+        if (arrayBlock == null)
+            block = 0;
+        else
+            block = arrayBlock[blockIndex];
+
+        if (arrayBlockDirection==null)
+            direction =(int)BlockDirectionEnum.UpForward;
+        else 
+            direction = arrayBlockDirection[blockIndex];
     }
 
     /// <summary>
@@ -104,6 +115,10 @@ public class ChunkSectionData
     /// </summary>
     public int GetBlock(int x, int y, int z)
     {
+        if (arrayBlock == null)
+        {
+            return 0;
+        }
         return arrayBlock[GetSectionIndex(x, y, z)];
     }
 
@@ -112,6 +127,10 @@ public class ChunkSectionData
     /// </summary>
     public int GetBlockDirection(int x, int y, int z)
     {
+        if (arrayBlockDirection == null)
+        {
+            return (int)BlockDirectionEnum.UpForward;
+        }
         return arrayBlockDirection[GetSectionIndex( x,  y,  z)];
     }
 
@@ -123,4 +142,5 @@ public class ChunkSectionData
     {
         return x * sectionSize * sectionSize + y * sectionSize + z;
     }
+
 }

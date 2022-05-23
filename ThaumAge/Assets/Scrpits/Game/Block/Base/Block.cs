@@ -210,7 +210,7 @@ public class Block
 
 
     /// <summary>
-    /// 初始化方块
+    /// 初始化方块 异步的
     /// </summary>
     /// <param name="chunk"></param>
     /// <param name="localPosition"></param>
@@ -263,7 +263,7 @@ public class Block
     /// </summary>
     public virtual void CreateBlockModelSuccess(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum blockDirection, GameObject obj)
     {
-
+        RefreshObjModel(chunk, localPosition);
     }
 
     /// <summary>
@@ -273,6 +273,16 @@ public class Block
     {
         //摧毁模型
         chunk.listBlockModelDestroy.Enqueue(localPosition);
+    }
+
+    /// <summary>
+    /// 刷新方块模型
+    /// </summary>
+    /// <param name="chunk"></param>
+    /// <param name="localPosition"></param>
+    public virtual void RefreshObjModel(Chunk chunk, Vector3Int localPosition)
+    {
+
     }
 
     /// <summary>
@@ -375,6 +385,15 @@ public class Block
                 closeChunk.SetBlockForWorld(closeWorldPosition, blockType, direction, metaData);
                 break;
         }
+    }
+
+    /// <summary>
+    /// 道具-指向
+    /// </summary>
+    public virtual void ItemUseForSightTarget(Vector3Int targetWorldPosition)
+    {
+        //展示目标位置
+        GameHandler.Instance.manager.playerTargetBlock.Show(targetWorldPosition, this, blockInfo.interactive_state == 1);
     }
 
     /// <summary>
@@ -516,10 +535,14 @@ public class Block
         }
         //判断是否在指定的link坐标上有其他方块，如果有则生成道具
         bool hasBlock = false;
+        BlockDirectionEnum blockDirection = chunk.chunkData.GetBlockDirection(localPosition.x, localPosition.y, localPosition.z);
+        Vector3 blockAngleRotate = GetRotateAngles(blockDirection);
         for (int i = 0; i < listLink.Count; i++)
         {
             Vector3Int linkPosition = listLink[i];
-            Vector3Int closeWorldPosition = localPosition + chunk.chunkData.positionForWorld + linkPosition;
+            Vector3 linkPositionRotate = VectorUtil.GetRotatedPosition(Vector3.zero, linkPosition, blockAngleRotate);     
+            Vector3Int closeWorldPosition = localPosition + chunk.chunkData.positionForWorld + Vector3Int.RoundToInt(linkPositionRotate);
+
             chunk.GetBlockForWorld(closeWorldPosition, out Block closeBlock, out BlockDirectionEnum closeDirection, out Chunk closeChunk);
             if (closeBlock != null && closeBlock.blockType != BlockTypeEnum.None)
             {
@@ -539,11 +562,11 @@ public class Block
             for (int i = 0; i < listLink.Count; i++)
             {
                 Vector3Int linkPosition = listLink[i];
-                Vector3Int closeWorldPosition = localPosition + chunk.chunkData.positionForWorld + linkPosition;
+                Vector3 linkPositionRotate = VectorUtil.GetRotatedPosition(Vector3.zero, linkPosition, blockAngleRotate);
+                Vector3Int closeWorldPosition = localPosition + chunk.chunkData.positionForWorld + Vector3Int.RoundToInt(linkPositionRotate);
                 BlockMetaBaseLink blockMetaLinkData = new BlockMetaBaseLink();
                 blockMetaLinkData.level = 1;
                 blockMetaLinkData.linkBasePosition = new Vector3IntBean(localPosition + chunk.chunkData.positionForWorld);
-                BlockDirectionEnum blockDirection = chunk.chunkData.GetBlockDirection(localPosition.x, localPosition.y, localPosition.z);
                 chunk.SetBlockForWorld(closeWorldPosition, BlockTypeEnum.LinkChild, blockDirection, ToMetaData(blockMetaLinkData));
             }
         }

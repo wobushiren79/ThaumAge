@@ -83,7 +83,7 @@ public partial class UIViewCharacterEquip : BaseUIView
     /// </summary>
     /// <param name="changeContainer"></param>
     /// <param name="itemId"></param>
-    public void CallBackForSetEquip(UIViewItemContainer changeContainer, long itemId)
+    public void CallBackForSetEquip(UIViewItemContainer changeContainer, ItemsBean changeItemData)
     {
         foreach (var itemContainer in dicEquip)
         {
@@ -92,7 +92,7 @@ public partial class UIViewCharacterEquip : BaseUIView
                 //更换装备
                 Player player = GameHandler.Instance.manager.player;
                 CreatureCptCharacter character = player.GetCharacter();
-                character.characterEquip.ChangeEquip(itemContainer.Key, itemId);
+                character.characterEquip.ChangeEquip(itemContainer.Key, changeItemData.itemId);
 
                 //设置渲染摄像头
                 Action<GameObject> callBack = (objModel) =>
@@ -101,7 +101,7 @@ public partial class UIViewCharacterEquip : BaseUIView
                 };
 
                 //UI显示也修改
-                showCharacter.characterEquip.ChangeEquip(itemContainer.Key, itemId, callBack);
+                showCharacter.characterEquip.ChangeEquip(itemContainer.Key, changeItemData.itemId, callBack);
             }
         }
     }

@@ -193,6 +193,7 @@ public partial class UIViewItem : BaseUIView,
                 //如果是背包或者上帝模式
                 case UIViewItemContainer.ContainerType.Backpack:
                 case UIViewItemContainer.ContainerType.God:
+ 
                     //首先检测是否有箱子 优先放进箱子
                     boxList = currentUI.GetComponentInChildren<UIViewBoxList>();
                     if (boxList != null)
@@ -222,6 +223,7 @@ public partial class UIViewItem : BaseUIView,
                     break;
                 //如果是箱子里的东西
                 case UIViewItemContainer.ContainerType.Box:
+                case UIViewItemContainer.ContainerType.Furnaces:
                     //首先放进快捷栏
                     shortcutsUI = currentUI.GetComponentInChildren<UIViewShortcuts>();
                     if (shortcutsUI != null)

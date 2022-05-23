@@ -59,11 +59,6 @@ MonoBehaviour:
     m_SerializedLabels:
     - BlockMeshData
     - BlockMesh
-  - m_GUID: 38cfe02b93595694c9773426b1f8cb03
-    m_Address: Assets/Prefabs/BlockMeshData/BlockSign.txt
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - BlockMesh
   - m_GUID: 45bc797d554f3e044b4abb1ee6d9cd2d
     m_Address: Assets/Prefabs/BlockMeshData/BlockTorchWooden.txt
     m_ReadOnly: 0
@@ -82,6 +77,16 @@ MonoBehaviour:
     - BlockMesh
   - m_GUID: fcd4885d50d6a35449b0c71a34fb1deb
     m_Address: Assets/Prefabs/BlockMeshData/BlockFenceWooden.txt
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - BlockMesh
+  - m_GUID: ea34d6c5d19a7f042808f4c2717e8ff9
+    m_Address: Assets/Prefabs/BlockMeshData/BlockFrameItem.txt
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - BlockMesh
+  - m_GUID: e4a5184a94ef8b24a9fd0c0f02b5e72e
+    m_Address: Assets/Prefabs/BlockMeshData/BlockSignWooden.txt
     m_ReadOnly: 0
     m_SerializedLabels:
     - BlockMesh

@@ -15,6 +15,8 @@ public enum UIEnum
     GameUserDetails = 2002,//游戏-用户详情
     GameBook = 2003,//游戏-书籍
     GameBox = 2101,//游戏-箱子
+    GameFurnacesSimple = 2102,//游戏-简易熔炉
+
     GameSetting = 2999,//游戏-设置
 
     GodMain = 9001,//GM-主界面

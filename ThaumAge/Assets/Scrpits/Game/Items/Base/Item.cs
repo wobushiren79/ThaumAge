@@ -144,7 +144,7 @@ public class Item
                 if (tagetBlock == null)
                     return;
                 //展示目标位置
-                GameHandler.Instance.manager.playerTargetBlock.Show(targetBlockPosition, tagetBlock, tagetBlock.blockInfo.interactive_state == 1);
+                tagetBlock.ItemUseForSightTarget(targetBlockPosition);
             }
         }
         else
@@ -196,6 +196,7 @@ public class Item
             BlockBean oldBlockData = targetChunk.GetBlockData(targetPosition - targetChunk.chunkData.positionForWorld);
             BlockMetaBaseLink oldeBlockMetaLinkData = Block.FromMetaData<BlockMetaBaseLink>(oldBlockData.meta);
             WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(oldeBlockMetaLinkData.GetBasePosition(), out oldBlock, out targetChunk);
+            targetPosition = oldeBlockMetaLinkData.GetBasePosition();
         }
 
         //获取破坏值

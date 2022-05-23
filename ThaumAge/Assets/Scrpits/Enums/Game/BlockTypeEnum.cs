@@ -69,6 +69,8 @@ public enum BlockTypeEnum
     SwitchesWooden = 6301,//木制开关
     TorchWooden = 6311, //木制火把
     LanternStone = 6322,//石制灯笼
+    FrameItem = 6331,//物品展示框
+
     SignWooden = 6341,//木制牌子
     FenceWooden = 6351,//木制栅栏
     BedWooden = 6901,//床

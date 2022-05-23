@@ -17,6 +17,7 @@ public partial class UIViewItemContainer : BaseUIView
         Backpack,//背包
         Box,//箱子
         God,//列表 GOD模式
+        Furnaces,//熔炉
     }
 
     [Header("限制的物品类型")]
@@ -32,7 +33,7 @@ public partial class UIViewItemContainer : BaseUIView
     protected ItemsBean itemsData;
 
     //放置新道具回调
-    protected Action<UIViewItemContainer, long> callBackForSetViewItem;
+    protected Action<UIViewItemContainer, ItemsBean> callBackForSetViewItem;
 
     protected float timeForAddViewItem = 0.2f;
     protected float timeForRemoveViewItem = 0.2f;
@@ -129,7 +130,7 @@ public partial class UIViewItemContainer : BaseUIView
     /// 设置新道具回调
     /// </summary>
     /// <param name="callBackForSetViewItem"></param>
-    public void SetCallBackForSetViewItem(Action<UIViewItemContainer, long> callBackForSetViewItem)
+    public void SetCallBackForSetViewItem(Action<UIViewItemContainer, ItemsBean> callBackForSetViewItem)
     {
         this.callBackForSetViewItem = callBackForSetViewItem;
     }
@@ -204,7 +205,7 @@ public partial class UIViewItemContainer : BaseUIView
         //设置展示信息
         ui_ViewItemContainer.SetItemId(itemsData.itemId);
         //设置回调
-        callBackForSetViewItem?.Invoke(this, itemsData.itemId);
+        callBackForSetViewItem?.Invoke(this, itemsData);
         this.TriggerEvent(EventsInfo.UIViewItemContainer_ItemChange, this, itemsData.itemId);
     }
 
@@ -231,7 +232,7 @@ public partial class UIViewItemContainer : BaseUIView
         itemsData.number = uiView.itemNumber;
         itemsData.meta = uiView.meta;
 
-        callBackForSetViewItem?.Invoke(this, itemsData.itemId);
+        callBackForSetViewItem?.Invoke(this, itemsData);
         this.TriggerEvent(EventsInfo.UIViewItemContainer_ItemChange, this, itemsData.itemId);
         //设置展示信息
         ui_ViewItemContainer.SetItemId(itemsData.itemId);
@@ -271,7 +272,7 @@ public partial class UIViewItemContainer : BaseUIView
         }
         currentViewItem.SetData(itemsData.itemId, itemsData.number, itemsData.meta);
 
-        callBackForSetViewItem?.Invoke(this, itemsData.itemId);
+        callBackForSetViewItem?.Invoke(this, itemsData);
         this.TriggerEvent(EventsInfo.UIViewItemContainer_ItemChange, this, itemsData.itemId);
     }
 
