@@ -16,6 +16,7 @@ public enum UIEnum
     GameBook = 2003,//游戏-书籍
     GameBox = 2101,//游戏-箱子
     GameFurnacesSimple = 2102,//游戏-简易熔炉
+    GameSign = 2103,//游戏-牌子
 
     GameSetting = 2999,//游戏-设置
 

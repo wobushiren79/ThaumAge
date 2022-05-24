@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 460961023696485286}
   - component: {fileID: 8037324586268278326}
   m_Layer: 5
-  m_Name: TextContent
+  m_Name: TextInput
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -226,7 +226,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 
+  m_Text: "\u8F93\u5165"
 --- !u!1 &5851314731992454111
 GameObject:
   m_ObjectHideFlags: 0
@@ -237,7 +237,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5851314731992454110}
   - component: {fileID: 5851314731992454104}
-  - component: {fileID: 5589340197710857624}
+  - component: {fileID: 2902064260243382586}
   m_Layer: 5
   m_Name: GameSign
   m_TagString: Untagged
@@ -276,7 +276,7 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5851314731992454111}
   m_CullTransparentMesh: 1
---- !u!114 &5589340197710857624
+--- !u!114 &2902064260243382586
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -285,15 +285,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 5851314731992454111}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 91d29e4190e02724081126024b8e9d94, type: 3}
+  m_Script: {fileID: 11500000, guid: 7e6bd79b29c44a3438b20b333eb786e2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   uiManager: {fileID: 0}
   remarkData: 
   ui_Exit: {fileID: 452167115202649237}
-  ui_ViewBackPack: {fileID: 0}
-  ui_Shortcuts: {fileID: 0}
-  ui_ViewBoxList: {fileID: 0}
+  ui_ViewSelectColorChange: {fileID: 2581256766564000222}
+  ui_TextInput: {fileID: 8037324586268278326}
+  ui_TextContent: {fileID: 8193505618408870029}
 --- !u!1 &6158330245232344100
 GameObject:
   m_ObjectHideFlags: 0
@@ -306,7 +306,7 @@ GameObject:
   - component: {fileID: 7625160259996773593}
   - component: {fileID: 8193505618408870029}
   m_Layer: 5
-  m_Name: Text (Legacy)
+  m_Name: TextContent
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -684,6 +684,17 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bb64077feb44a704c836c7c0892637eb, type: 3}
+--- !u!114 &2581256766564000222 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3549402108308519924, guid: bb64077feb44a704c836c7c0892637eb, type: 3}
+  m_PrefabInstance: {fileID: 1337697951566174762}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 60e64d770d187ec44a2297b92f2ae8b5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!224 &4845105477926479706 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 5885414103660756336, guid: bb64077feb44a704c836c7c0892637eb, type: 3}

@@ -8,8 +8,13 @@ public class BlockBaseSign : Block
     {
         base.Interactive(user, worldPosition, direction);
         //打开UI
+        UIGameSign uiGameSign = UIHandler.Instance.OpenUIAndCloseOther<UIGameSign>(UIEnum.GameSign);
+        uiGameSign.SetData(worldPosition);
     }
 
+    /// <summary>
+    /// 刷新方块
+    /// </summary>
     public override void RefreshObjModel(Chunk chunk, Vector3Int localPosition)
     {
         BlockBean blockData = chunk.GetBlockData(localPosition);
@@ -35,8 +40,6 @@ public class BlockBaseSign : Block
     /// <summary>
     /// 设置数据
     /// </summary>
-    /// <param name="texContent"></param>
-    /// <param name="texColor"></param>
     public void SetData(Chunk chunk, Vector3Int localPosition, string texContent, Color texColor)
     {
         BlockBean blockData = chunk.GetBlockData(localPosition);
