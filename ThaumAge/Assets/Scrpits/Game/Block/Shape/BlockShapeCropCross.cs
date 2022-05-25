@@ -52,17 +52,17 @@ public class BlockShapeCropCross : BlockShapeCross
         {
             uvStartPosition = Vector2.zero;
         }
-        else if (blockCropData.growPro >= blockCrop.GetCropLifeCycle())
+        else if (blockCropData.growPro >= blockCrop.GetCropLifeCycle(blockInfo))
         {
             //如果生长周期大于UV长度 则取最后一个
             Vector2Int[] itemUVData = listUVData[listUVData.Count - 1];
-            uvStartPosition = new Vector2(uvWidth * itemUVData[blockCropData.uvIndex].y, uvWidth * itemUVData[blockCropData.uvIndex].x);
+            uvStartPosition = new Vector2(uvWidth * itemUVData[blockCropData.level].y, uvWidth * itemUVData[blockCropData.level].x);
         }
         else
         {
             Vector2Int[] itemUVData = listUVData[blockCropData.growPro];
             //按生长周期取UV
-            uvStartPosition = new Vector2(uvWidth * itemUVData[blockCropData.uvIndex].y, uvWidth * itemUVData[blockCropData.uvIndex].x);
+            uvStartPosition = new Vector2(uvWidth * itemUVData[blockCropData.level].y, uvWidth * itemUVData[blockCropData.level].x);
         }
         return uvStartPosition;
     }

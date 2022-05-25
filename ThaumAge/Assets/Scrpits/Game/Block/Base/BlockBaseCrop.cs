@@ -89,56 +89,87 @@ public class BlockBaseCrop : BlockBasePlant
     /// <typeparam name="T"></typeparam>
     public virtual void RefreshCrop(Chunk chunk, Vector3Int localPosition, BlockInfoBean blockInfo)
     {
+        StartGrow(chunk, localPosition, blockInfo, out bool isGrowAdd);
+    }
+
+    /// <summary>
+    /// 开始生长
+    /// </summary>
+    public virtual void StartGrow(Chunk chunk, Vector3Int localPosition, BlockInfoBean blockInfo,
+        out bool isGrowAdd)
+    {
         chunk.chunkData.GetBlockForLocal(localPosition, out Block block, out BlockDirectionEnum direction);
 
         BlockBean blockData = chunk.GetBlockData(localPosition);
-        BlockMetaCrop blockCrop;
+        BlockMetaCrop blockMetaCrop;
+        isGrowAdd = false;
         if (blockData == null)
         {
-            blockCrop = new BlockMetaCrop();
-            blockCrop.growPro = 0;
-            blockCrop.isStartGrow = false;
+            blockMetaCrop = new BlockMetaCrop();
+            blockMetaCrop.growPro = 0;
+            blockMetaCrop.isStartGrow = false;
 
-            string meta = ToMetaData(blockCrop);
+            string meta = ToMetaData(blockMetaCrop);
             blockData = new BlockBean(localPosition, blockInfo.GetBlockType(), direction, meta);
             chunk.SetBlockData(blockData, false);
         }
-        //获取成长周期
-        blockCrop = FromMetaData<BlockMetaCrop>(blockData.meta);
-        //成长周期+1
-        if (blockCrop.isStartGrow)
-        {
-            //是否开始生长
-            blockCrop.growPro++;
-        }
         else
         {
-            blockCrop.isStartGrow = true;
+            blockMetaCrop = FromMetaData<BlockMetaCrop>(blockData.meta);
         }
-
-        //设置新数据
-        string newMeta = ToMetaData(blockCrop);
-        blockData.meta = newMeta;
-        chunk.SetBlockData(blockData);
-        //刷新
-        WorldCreateHandler.Instance.manager.AddUpdateChunk(chunk, 1);
-
-        //判断是否已经是最大生长周期
-        int lifeCycle = GetCropLifeCycle();
-        if (blockCrop.growPro >= lifeCycle - 1)
+        //获取下方方块，如果下方方块时耕地
+        GetCloseBlockByDirection(chunk, localPosition, DirectionEnum.Down, out Block blockDown, out Chunk blockChunkDown, out Vector3Int blockDownLocalPosition);
+        if (blockDown is BlockBasePlough)
         {
-            chunk.UnRegisterEventUpdate(localPosition, TimeUpdateEventTypeEnum.Min);
+            BlockBean blockDownData = blockChunkDown.GetBlockData(blockDownLocalPosition.x, blockDownLocalPosition.y, blockDownLocalPosition.z);
+            if (blockDownData != null)
+            {
+                BlockMetaPlough blockMetaPlough = FromMetaData<BlockMetaPlough>(blockDownData.meta);
+                //并且已经浇水 才能生长
+                if (blockMetaPlough != null && blockMetaPlough.waterState == 1)
+                {
+                    //成长周期+1
+                    if (blockMetaCrop.isStartGrow)
+                    {
+                        //是否开始生长
+                        blockMetaCrop.growPro++;
+                        isGrowAdd = true;
+
+                        //浇水的土地干了
+                        blockMetaPlough.waterState = 0;
+                        blockDownData.meta = ToMetaData(blockMetaPlough);
+                    }
+                    else
+                    {
+                        blockMetaCrop.isStartGrow = true;
+                    }
+
+                    //判断是否已经是最大生长周期
+                    int lifeCycle = GetCropLifeCycle(blockInfo);
+                    if (blockMetaCrop.growPro >= lifeCycle)
+                    {
+                        chunk.UnRegisterEventUpdate(localPosition, TimeUpdateEventTypeEnum.Min);
+                    }
+
+                    //设置新数据
+                    string newMeta = ToMetaData(blockMetaCrop);
+                    blockData.meta = newMeta;
+                    chunk.SetBlockData(blockData);
+                    //刷新
+                    WorldCreateHandler.Instance.manager.AddUpdateChunk(chunk, 1);
+                }
+            }
         }
     }
+
 
     /// <summary>
     /// 获取作物的生长周期
     /// </summary>
     /// <returns></returns>
-    public virtual int GetCropLifeCycle()
+    public virtual int GetCropLifeCycle(BlockInfoBean blockInfo)
     {
-        List<Vector2Int[]> listGrowUV = GetListGrowUV();
-        return listGrowUV.Count;
+        return blockInfo.remark_int;
     }
 
     /// <summary>
