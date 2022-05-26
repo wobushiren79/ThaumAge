@@ -1,24 +1,26 @@
-#pragma kernel CSMain
+ï»¿#pragma kernel CSMain
 
 struct PerlinData
-{
-    float3 position;
+{    
+    //æ•°æ®
     float perlinData;
+    //å½“å‰åæ ‡
+    float2 position;
+    //é¢‘ç‡ï¼ˆå®½åº¦ï¼‰
+    float perlinFrequency;
+    //æŒ¯å¹…(é«˜åº¦) 
+    float perlinAmplitude;
+    //å¾ªç¯å¤§å° æœ€å¥½å¤§äº512
+    float perlinSize;    
+    //è¿­ä»£æ¬¡æ•°ï¼ˆè¶Šå¤šåœ°å›¾è¶Šå¤æ‚ï¼‰
+    int perlinIterateNumber;
 };
 
-//ÆµÂÊ£¨¿í¶È£©
-float perlinFrequency;
-//Õñ·ù(¸ß¶È) 
-float perlinAmplitude;
-//Ñ­»·´óĞ¡ ×îºÃ´óÓÚ512
-float perlinSize;
-//ÖÖ×ÓÆ«ÒÆ
+//ç§å­åç§»
 float2 randomOffset;
-//µü´ú´ÎÊı£¨Ô½¶àµØÍ¼Ô½¸´ÔÓ£©
-int perlinIterateNumber;
-
 RWStructuredBuffer<PerlinData> BufferPerlinData;
 
+//unity noisemapç”Ÿæˆç®—æ³•
 float2 unity_gradientNoise_dir(float2 p)
 {
     p = p % 289;
@@ -28,6 +30,7 @@ float2 unity_gradientNoise_dir(float2 p)
     return normalize(float2(x - floor(x + 0.5), abs(x) - 0.5));
 }
 
+//unity noisemapç”Ÿæˆç®—æ³•
 float unity_gradientNoise(float2 p)
 {
     float2 ip = floor(p);
@@ -47,15 +50,16 @@ void CSMain (uint3 id : SV_DispatchThreadID,uint3 gid:SV_GROUPID,uint index:SV_G
     PerlinData itemPerlinData = BufferPerlinData[dataIndex];
 
     int iterateNumber = 0;
-    float curFrequency = perlinFrequency;
-    float curAmplitude = perlinAmplitude;
+    float curFrequency = itemPerlinData.perlinFrequency;
+    float curAmplitude = itemPerlinData.perlinAmplitude;
     float finalnoise = 0;
-    while(perlinIterateNumber > iterateNumber)
+    //å¾ªç¯ç§å­æ¬¡æ•°
+    while(itemPerlinData.perlinIterateNumber > iterateNumber)
     {
-        float x0 = (itemPerlinData.position.x / perlinSize) * curFrequency;
-        float z0 = (itemPerlinData.position.z / perlinSize) * curFrequency;
+        float x0 = (itemPerlinData.position.x / itemPerlinData.perlinSize) * curFrequency;
+        float y0 = (itemPerlinData.position.y / itemPerlinData.perlinSize) * curFrequency;
 
-        float noise0 = unity_gradientNoise(float2(x0 + randomOffset.x , z0 + randomOffset.y)) * curAmplitude;
+        float noise0 = unity_gradientNoise(float2(x0 + randomOffset.x , y0 + randomOffset.y)) * curAmplitude;
 
         finalnoise = finalnoise + noise0;
         iterateNumber = iterateNumber + 1;
