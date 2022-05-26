@@ -146,6 +146,18 @@ public class BlockShape
     }
 
     /// <summary>
+    /// 获取选择的方块mesh数据（默认用默认的）
+    /// </summary>
+    /// <param name="chunk"></param>
+    /// <param name="localPosition"></param>
+    /// <param name="direction"></param>
+    /// <returns></returns>
+    public virtual Mesh GetSelectMeshData(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction)
+    {
+        return GetCompleteMeshData(chunk, localPosition, direction);
+    }
+
+    /// <summary>
     /// 检测是否需要构建面
     /// </summary>
     /// <param name="chunk"></param>

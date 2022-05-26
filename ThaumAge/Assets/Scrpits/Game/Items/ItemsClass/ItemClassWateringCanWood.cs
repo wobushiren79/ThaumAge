@@ -7,8 +7,15 @@ public class ItemClassWateringCanWood : ItemBaseTool
     {
         if (targetBlock == null)
             return;
-        if (targetBlock.blockInfo.GetBlockShape() != BlockShapeEnum.Plough)
+        if (targetBlock.blockInfo.GetBlockShape() == BlockShapeEnum.Plough
+            || targetBlock is BlockBaseCrop)
+        {
+
+        }
+        else
+        {
             return;
+        }
         ItemsDetailsToolBean itemsDetailsTool = itemsData.GetMetaData<ItemsDetailsToolBean>();
         //如果没有耐久了 则不执行
         if (itemsDetailsTool.life <= 0)
@@ -22,8 +29,20 @@ public class ItemClassWateringCanWood : ItemBaseTool
         //回调
         EventHandler.Instance.TriggerEvent(EventsInfo.ItemsBean_MetaChange, itemsData);
 
+        Vector3Int ploughLocalPosition = targetPosition - targetChunk.chunkData.positionForWorld;
         //修改耕地的状态
-        BlockBean blockData = targetChunk.GetBlockData(targetPosition - targetChunk.chunkData.positionForWorld);
+        if (targetBlock.blockInfo.GetBlockShape() == BlockShapeEnum.Plough)
+        {
+
+        }
+        else if (targetBlock is BlockBaseCrop)
+        {
+            //如果是植物 则获取他下方的一个方块 
+            targetBlock.GetCloseBlockByDirection(targetChunk, ploughLocalPosition,DirectionEnum.Down,out Block blockDown,out Chunk blockChunkDown,out Vector3Int localPositionDown);
+            ploughLocalPosition = localPositionDown;
+        }
+
+        BlockBean blockData = targetChunk.GetBlockData(ploughLocalPosition);
         BlockMetaPlough blockMetaPlough = Block.FromMetaData<BlockMetaPlough>(blockData.meta);
         if (blockMetaPlough == null)
             blockMetaPlough = new BlockMetaPlough();

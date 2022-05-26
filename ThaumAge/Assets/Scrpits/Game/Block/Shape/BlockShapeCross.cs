@@ -115,4 +115,21 @@ public class BlockShapeCross : BlockShape
         }
         return uvStartPosition;
     }
+
+    /// <summary>
+    /// 重新选中的方块预览 方块
+    /// </summary>
+    /// <param name="chunk"></param>
+    /// <param name="localPosition"></param>
+    /// <param name="direction"></param>
+    /// <returns></returns>
+    public override Mesh GetSelectMeshData(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction)
+    {
+        Mesh mesh = new Mesh();
+        mesh.vertices = vertsColliderAdd;
+        mesh.triangles = trisColliderAdd;
+        mesh.RecalculateBounds();
+        mesh.RecalculateNormals();
+        return mesh;
+    }
 }

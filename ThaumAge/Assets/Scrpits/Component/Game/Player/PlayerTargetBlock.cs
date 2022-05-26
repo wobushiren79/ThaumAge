@@ -36,7 +36,7 @@ public class PlayerTargetBlock : BaseMonoBehaviour
         objTargetCenterBlock.transform.eulerAngles = targetBlock.GetRotateAngles(targetDirection);
         Vector3Int localPosition = worldPosition - targetChunk.chunkData.positionForWorld;
         //如果和上一个时同一个
-        Mesh newMeshData = block.blockShape.GetCompleteMeshData(targetChunk, localPosition, targetDirection);
+        Mesh newMeshData = block.blockShape.GetSelectMeshData(targetChunk, localPosition, targetDirection);
         //设置形状
         if (block.blockShape is BlockShapeCustom blockShapeCustom)
         {
