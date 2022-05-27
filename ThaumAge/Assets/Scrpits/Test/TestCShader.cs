@@ -30,6 +30,8 @@ public class TestCShader : BaseMonoBehaviour
         public float perlinSize;
         //迭代次数（越多地图越复杂）
         public int perlinIterateNumber;
+
+        public float offsetDis;
     }
 
     protected int kernelId;
@@ -59,6 +61,7 @@ public class TestCShader : BaseMonoBehaviour
     public void HandleForTest()
     {
         Perlin2DData[] arrayData = new Perlin2DData[objNumber * objNumber];
+        float[] arrayBiomeCenterPosition = new float[]{ 1,2,3,0,4,5,6,0 };
         for (int x = 0; x < objNumber; x++)
         {
             for (int z = 0; z < objNumber; z++)
@@ -74,10 +77,11 @@ public class TestCShader : BaseMonoBehaviour
                 arrayData[x * objNumber + z] = perlin2DData;
             }
         }
-        ComputeBuffer buffer = new ComputeBuffer(arrayData.Length, 28);
+        ComputeBuffer buffer = new ComputeBuffer(arrayData.Length, 32);
         buffer.SetData(arrayData);
-        computeShader.SetFloats("randomOffset", randomOffset.x, randomOffset.y);
-        computeShader.SetBuffer(kernelId, "BufferPerlinData", buffer);
+        computeShader.SetFloats("RandomOffset", randomOffset.x, randomOffset.y);
+        computeShader.SetBuffer(kernelId, "BufferTerraninData", buffer);
+        computeShader.SetFloats("ArrayBiomeCenterPosition", arrayBiomeCenterPosition);
         computeShader.Dispatch(kernelId, arrayData.Length, 1, 1);
 
         buffer.GetData(arrayData);
@@ -86,8 +90,9 @@ public class TestCShader : BaseMonoBehaviour
             for (int z = 0; z < objNumber; z++)
             {
                 Perlin2DData itemData= arrayData[x * objNumber + z];
-               GameObject objItem= objs[x, z];
+                GameObject objItem = objs[x, z];
                 objItem.transform.position = new Vector3(x, itemData.perlinData, z);
+                LogUtil.Log("itemData:"+ itemData.offsetDis);
             }
         }
         buffer.Dispose();
