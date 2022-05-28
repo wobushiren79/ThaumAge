@@ -16,6 +16,14 @@ public class BiomeManager : BaseManager
     //世界生态字典
     public Dictionary<int, Biome[]> dicWorldBiome = new Dictionary<int, Biome[]>();
 
+    //缓存的地形数据
+    public Dictionary<string, BiomeMapData> dicWorldChunkTerrainDataPool = new Dictionary<string , BiomeMapData>();
+
+    //地形生成计算shader
+    public ComputeShader terrainCShader;
+    //路径-地形生成计算shader （使用标签）
+    public static string pathForTerrainCShader = "Assets/ComputeShader/TerrainCShader.compute";
+
     protected object lockForBiome = new object();
     public virtual void Awake()
     {
@@ -23,6 +31,21 @@ public class BiomeManager : BaseManager
         controllerForBiome.GetAllBiomeInfoData(InitBiomeInfo);
         controllerForBuilding = new BuildingInfoController(this, this);
         controllerForBuilding.GetAllBuildingInfoData(InitBuildingInfo);
+    }
+
+    public virtual void LoadResources(Action loadComplete)
+    {
+        if (terrainCShader != null)
+        {
+            loadComplete?.Invoke();
+            return;
+        }
+        //加载所有方块材质球
+        LoadAddressablesUtil.LoadAssetAsync<ComputeShader>(pathForTerrainCShader, (data) =>
+        {
+            terrainCShader = data.Result;
+            loadComplete?.Invoke();
+        });
     }
 
     /// <summary>

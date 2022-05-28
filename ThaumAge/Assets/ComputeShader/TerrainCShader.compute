@@ -14,7 +14,8 @@ struct TerraninData
     int perlinIterateNumber;
     //最低高度
     float minHeight;
-
+    //生态下标
+    int biomeIndex;
     //距离该方块最近的生态点距离
     float minBiomeDis;
     //距离该方块第二近的生态点距离
@@ -25,13 +26,13 @@ struct TerraninData
     float maxHeight;
 };
 
-
 //种子偏移
 float2 RandomOffset;
 //地形数据
 RWStructuredBuffer<TerraninData> BufferTerraninData;
-//生态中心方块坐标
-float4 ArrayBiomeCenterPosition[1023];
+
+////生态中心方块坐标
+//float3 ArrayBiomeCenterPosition[100];
 
 //unity noisemap生成算法
 float2 unity_gradientNoise_dir(float2 p)
@@ -54,6 +55,12 @@ float unity_gradientNoise(float2 p)
     float d11 = dot(unity_gradientNoise_dir(ip + float2(1, 1)), fp - float2(1, 1));
     fp = fp * fp * fp * (fp * (fp * 6 - 15) + 10);
     return lerp(lerp(d00, d01, fp.y), lerp(d10, d11, fp.y), fp.x);
+}
+
+//计算距离
+float Unity_Distance_float3(float3 A, float3 B)
+{
+    return distance(A, B);
 }
 
 [numthreads(1024,1,1)]
@@ -80,13 +87,46 @@ void CSMain (uint3 id : SV_DispatchThreadID,uint3 gid:SV_GROUPID,uint index:SV_G
         curFrequency = curFrequency * 2;
         curAmplitude = curAmplitude / 2;
     }
-    //itemTerraninData.maxHeight = finalNoise + itemTerraninData.minHeight;
-    //itemTerraninData.offsetDis = itemTerraninData.secondMinBiomeDis - itemTerraninData.minBiomeDis;
-    itemTerraninData.offsetDis = ArrayBiomeCenterPosition[1].x; 
-    itemTerraninData.secondMinBiomeDis = 1;
-    itemTerraninData.minBiomeDis = 1;
-    itemTerraninData.maxHeight = dataIndex;
-    itemTerraninData.minHeight = 1;
+
+    ////距离该方块最近的生态点距离
+    //float minBiomeDis = 3.40282e+038;
+    ////距离该方块第二近的生态点距离
+    //float secondMinBiomeDis = 3.40282e+038;
+    ////最靠近的生态点
+    //float3 minBiomePosition = float3(0,0,0);
+
+    //int biomeCenterNumber = 0;
+    // //遍历中心点，寻找最靠近的生态点（维诺图）
+    //while(biomeCenterNumber < 100)
+    //{
+    //    float3 itemCenterPosition = ArrayBiomeCenterPosition[biomeCenterNumber];
+    //    //如果有这个中心点
+    //    if(itemCenterPosition.x != 0 && itemCenterPosition.y != 0 && itemCenterPosition.z != 0)
+    //    {
+    //        float3 itemPosition3 = float3(itemTerraninData.position.x , itemTerraninData.position.y , 0);
+    //        float tempDis = Unity_Distance_float3(itemPosition3, itemCenterPosition);
+
+    //        //如果小于最小距离
+    //        if (tempDis <= minBiomeDis)
+    //        {
+    //            minBiomePosition = itemCenterPosition;
+    //            minBiomeDis = tempDis;
+    //        }
+    //        //如果大于最小距离 并且小于第二小距离
+    //        else if (tempDis > minBiomeDis && tempDis <= secondMinBiomeDis)
+    //        {
+    //            secondMinBiomeDis = tempDis;
+    //        }
+    //    }
+    //    biomeCenterNumber++;
+    //}
+       
+    //itemTerraninData.minBiomeDis = minBiomeDis;
+    //itemTerraninData.secondMinBiomeDis = secondMinBiomeDis;
+
+    itemTerraninData.offsetDis = itemTerraninData.secondMinBiomeDis - itemTerraninData.minBiomeDis;
+    itemTerraninData.maxHeight =  itemTerraninData.minHeight + finalNoise;
+
     BufferTerraninData[dataIndex] = itemTerraninData;
 
 }

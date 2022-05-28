@@ -44,6 +44,11 @@ public class BlockManager : BaseManager, IBlockInfoView
     /// </summary>
     public void LoadResources(Action callBack)
     {
+        if (arrayBlockMat.IsNull())
+        {
+            callBack?.Invoke();
+            return;
+        }
         //加载所有方块材质球
         LoadAddressablesUtil.LoadAssetsAsync<Material>(pathForBlockMats, (data) =>
         {

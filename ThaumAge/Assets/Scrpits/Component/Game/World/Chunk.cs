@@ -35,6 +35,8 @@ public class Chunk
     //是否绘制
     public bool isDrawMesh = false;
 
+    //该区块的生态
+    public Biome biome;
     //包含Chunk内的所有信息
     public ChunkData chunkData;
     //渲染数据
@@ -42,7 +44,7 @@ public class Chunk
     //存储数据
     protected ChunkSaveBean chunkSaveData;
 
-    protected  object lockForBlcok = new object();
+    protected object lockForBlcok = new object();
 
     //事件更新事件
     protected float eventUpdateTimeForSec = 0;
@@ -132,7 +134,7 @@ public class Chunk
     /// <returns></returns>
     public BlockBean GetBlockDataForWorldPosition(Vector3Int worldPosition)
     {
-       return GetBlockData(worldPosition - chunkData.positionForWorld);
+        return GetBlockData(worldPosition - chunkData.positionForWorld);
     }
 
     /// <summary>
@@ -270,7 +272,7 @@ public class Chunk
                         ChunkSectionData chunkSection = chunkData.chunkSectionDatas[i];
                         if (!chunkSection.IsRender())
                             continue;
-          
+
                         for (int x = 0; x < chunkSection.sectionSize; x++)
                         {
                             for (int y = 0; y < chunkSection.sectionSize; y++)
@@ -386,7 +388,7 @@ public class Chunk
         //刷新blockMesh
         if (isRefreshMesh)
         {
-            WorldCreateHandler.Instance.manager.AddUpdateChunk(this,1);
+            WorldCreateHandler.Instance.manager.AddUpdateChunk(this, 1);
         }
         //初始化方块(放再这里是等处理完数据和mesh之后再初始化)
         newBlock.InitBlock(this, localPosition, 1);
@@ -405,26 +407,25 @@ public class Chunk
     public void HandleForBaseBlock()
     {
         //获取地图数据
-        BiomeMapData[,] mapData = BiomeHandler.Instance.GetBiomeMapData(this);
-        //遍历map，生成其中每个Block的信息 
-        //生成基础地形数据
+        BiomeMapData biomeMapData = BiomeHandler.Instance.GetBiomeMapData(this);
+
         for (int x = 0; x < chunkData.chunkWidth; x++)
         {
             for (int z = 0; z < chunkData.chunkWidth; z++)
             {
-                BiomeMapData biomeMapData = mapData[x, z];
+                ChunkTerrainData itemTerrainData = biomeMapData.arrayChunkTerrainData[x * chunkData.chunkWidth + z];
                 for (int y = 0; y < chunkData.chunkHeight; y++)
                 {
                     Vector3Int position = new Vector3Int(x, y, z);
                     //获取方块类型
-                    BlockTypeEnum blockType = BiomeHandler.Instance.CreateBiomeBlockType(this, biomeMapData, position);
+                    BlockTypeEnum blockType = BiomeHandler.Instance.CreateBiomeBlockType(this, position, biomeMapData.biome, itemTerrainData);
                     //如果是空 则跳过
                     if (blockType == BlockTypeEnum.None)
                         continue;
                     Block block = BlockHandler.Instance.manager.GetRegisterBlock(blockType);
                     //添加方块
                     chunkData.SetBlockForLocal(x, y, z, block, BlockDirectionEnum.UpForward);
-                }    
+                }
             }
         }
         //生成洞穴 不放在每一个方块里去检测 提升效率
@@ -531,7 +532,7 @@ public class Chunk
         Vector3 rotateAngles = block.GetRotateAngles(direction);
         objBlockModel.transform.localEulerAngles = rotateAngles;
         //回调
-        block.CreateBlockModelSuccess(this,localPosition, direction, objBlockModel);
+        block.CreateBlockModelSuccess(this, localPosition, direction, objBlockModel);
     }
 
     /// <summary>

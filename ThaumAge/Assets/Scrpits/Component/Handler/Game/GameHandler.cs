@@ -20,13 +20,21 @@ public class GameHandler : BaseHandler<GameHandler, GameManager>
         //禁用SRP 启用gpu实例化
         //GraphicsSettings.useScriptableRenderPipelineBatching = false;
         //加载世界资源
-        WorldCreateHandler.Instance.manager.LoadResources(() => 
+        WorldCreateHandler.Instance.manager.LoadResources(() =>
         {
-            //加载方块资源
-            BlockHandler.Instance.manager.LoadResources(() => 
+            Action completeForLoadBiomeResources = () =>
             {
                 callBack?.Invoke();
-            });
+            };
+            Action completeForLoadBlockResources = () =>
+            {
+                completeForLoadBiomeResources.Invoke();
+            };
+
+            //加载方块资源
+            BlockHandler.Instance.manager.LoadResources(completeForLoadBlockResources);
+            //加载生态资源
+            BiomeHandler.Instance.manager.LoadResources(completeForLoadBiomeResources);
         });
     }
 

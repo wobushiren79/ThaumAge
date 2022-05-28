@@ -20,6 +20,8 @@ public class BiomeInfoBean : BaseBean
     public int min_height;
     //大小
     public float scale;
+    //迭代次数
+    public int iterate_number;
     //水平面高度
     public int water_height;
 

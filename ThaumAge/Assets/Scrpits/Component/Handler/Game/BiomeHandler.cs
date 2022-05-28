@@ -34,26 +34,21 @@ public class BiomeHandler : BaseHandler<BiomeHandler, BiomeManager>
         fastNoise = new FastNoise(seed);
     }
 
-    public BiomeMapData[,] GetBiomeMapData(Chunk chunk)
+    public BiomeMapData GetBiomeMapData(Chunk chunk)
     {
-        WorldTypeEnum worldType = WorldCreateHandler.Instance.manager.worldType;
-        //获取该世界的所有生态
-        Biome[] listBiome = manager.GetBiomeListByWorldType(worldType);
-        //获取一定范围内的生态点
-        Vector3Int[] listBiomeCenter = GetBiomeCenterPosition(chunk, 5, 10);
-
-        //添加新的数据
-        BiomeMapData[,] mapData = new BiomeMapData[chunk.chunkData.chunkWidth, chunk.chunkData.chunkHeight];
-        for (int x = 0; x < chunk.chunkData.chunkWidth; x++)
+        if (manager.dicWorldChunkTerrainDataPool.TryGetValue($"{chunk.chunkData.positionForWorld.x}|{chunk.chunkData.positionForWorld.z}", out BiomeMapData biomeMapData))
         {
-            for (int z = 0; z < chunk.chunkData.chunkWidth; z++)
-            {
-                BiomeMapData biomeMap = new BiomeMapData();
-                biomeMap.InitData(new Vector3Int(x + chunk.chunkData.positionForWorld.x, chunk.chunkData.positionForWorld.y, chunk.chunkData.positionForWorld.z + z), listBiomeCenter, listBiome);
-                mapData[x, z] = biomeMap;
-            }
+            return biomeMapData;
         }
-        return mapData;
+        else
+        {
+            biomeMapData = new BiomeMapData(chunk);
+            //添加到缓存中
+            if (manager.dicWorldChunkTerrainDataPool.Count > 1023)
+                manager.dicWorldChunkTerrainDataPool.Clear();
+            manager.dicWorldChunkTerrainDataPool.Add($"{chunk.chunkData.positionForWorld.x}|{chunk.chunkData.positionForWorld.z}", biomeMapData);
+            return biomeMapData;
+        }
     }
 
     /// <summary>
@@ -64,12 +59,12 @@ public class BiomeHandler : BaseHandler<BiomeHandler, BiomeManager>
     /// <param name="width"></param>
     /// <param name="height"></param>
     /// <returns></returns>
-    public BlockTypeEnum CreateBiomeBlockType(Chunk chunk, BiomeMapData biomeMapData, Vector3Int blockLocalPosition)
+    public BlockTypeEnum CreateBiomeBlockType(Chunk chunk, Vector3Int blockLocalPosition, Biome biome, ChunkTerrainData chunkTerrainData)
     {
         //当前方块位置高于随机生成的高度值时，当前方块类型为空
-        if (blockLocalPosition.y > biomeMapData.maxHeight)
+        if (blockLocalPosition.y > chunkTerrainData.maxHeight)
         {
-            if (blockLocalPosition.y <= biomeMapData.biome.biomeInfo.GetWaterPlaneHeight())
+            if (blockLocalPosition.y <= biome.biomeInfo.GetWaterPlaneHeight())
             {
                 return BlockTypeEnum.Water;
             }
@@ -79,13 +74,12 @@ public class BiomeHandler : BaseHandler<BiomeHandler, BiomeManager>
             }
         }
 
-        int maxHeight = biomeMapData.maxHeight;
-        Biome biome = biomeMapData.biome;
+        int maxHeight = (int)chunkTerrainData.maxHeight;
         //边缘处理 逐渐减缓到最低高度
         if (blockLocalPosition.y > maxHeight// 在基础高度-4以上
-            && biomeMapData.offsetDis <= 20) //在20范围以内
+            && chunkTerrainData.offsetDis <= 20) //在20范围以内
         {
-            maxHeight = Mathf.CeilToInt((biomeMapData.maxHeight - biome.biomeInfo.min_height) / 20f) * Mathf.CeilToInt(biomeMapData.offsetDis) + maxHeight;
+            maxHeight = Mathf.CeilToInt((chunkTerrainData.maxHeight - biome.biomeInfo.min_height) / 20f) * Mathf.CeilToInt(chunkTerrainData.offsetDis) + maxHeight;
 
             //当前方块位置高于随机生成的高度值时，当前方块类型为空
             if (blockLocalPosition.y > maxHeight)
@@ -97,42 +91,6 @@ public class BiomeHandler : BaseHandler<BiomeHandler, BiomeManager>
         BlockTypeEnum blockType = biome.GetBlockType(chunk, biome.biomeInfo, maxHeight, blockLocalPosition, wPos);
         //获取方块
         return blockType;
-    }
-
-    /// <summary>
-    /// 获取高度信息
-    /// </summary>
-    /// <param name="wPos"></param>
-    /// <param name="biomeInfo"></param>
-    /// <returns></returns>
-    public int GetHeightData(Vector3Int wPos, BiomeInfoBean biomeInfo)
-    {
-        if (biomeInfo == null)
-            return 10;
-        return GetHeightData(wPos, biomeInfo.frequency, biomeInfo.amplitude, biomeInfo.min_height);
-    }
-
-    public int GetHeightData(Vector3Int wPos, float frequency, float amplitude, int minHeight)
-    {
-        ////让随机种子，振幅，频率，应用于我们的噪音采样结果
-        float x0 = (wPos.x + offset0.x) * frequency;
-        float y0 = (wPos.y + offset0.y) * frequency;
-        float z0 = (wPos.z + offset0.z) * frequency;
-
-        float x1 = (wPos.x + offset1.x) * frequency * 2;
-        float y1 = (wPos.y + offset1.y) * frequency * 2;
-        float z1 = (wPos.z + offset1.z) * frequency * 2;
-
-        float x2 = (wPos.x + offset2.x) * frequency / 4;
-        float y2 = (wPos.y + offset2.y) * frequency / 4;
-        float z2 = (wPos.z + offset2.z) * frequency / 4;
-
-        float noise0 = SimplexNoiseUtil.Generate(x0, y0, z0) * amplitude;
-        float noise1 = SimplexNoiseUtil.Generate(x1, y1, z1) * amplitude / 2;
-        float noise2 = SimplexNoiseUtil.Generate(x2, y2, z2) * amplitude / 4;
-
-        ////在采样结果上，叠加上baseHeight，限制随机生成的高度下限
-        return Mathf.FloorToInt(noise0 + noise1 + noise2 + minHeight);
     }
 
     /// <summary>

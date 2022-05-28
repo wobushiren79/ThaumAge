@@ -15,7 +15,7 @@ public class BiomeCreateCaveTool : ScriptableObject
     /// </summary>
     /// <param name="startPosition"></param>
     /// <param name="caveData"></param>
-    public static void AddCave(Chunk chunk, BiomeMapData[,] mapData, BiomeForCaveData caveData)
+    public static void AddCave(Chunk chunk, BiomeMapData mapData, BiomeForCaveData caveData)
     {
         float frequency = 2;
         float amplitude = 1;
@@ -26,8 +26,8 @@ public class BiomeCreateCaveTool : ScriptableObject
         {
             int positionX = WorldRandTools.Range(1, chunk.chunkData.chunkWidth);
             int positionZ = WorldRandTools.Range(1, chunk.chunkData.chunkWidth);
-            BiomeMapData biomeMapData = mapData[positionX, positionZ];
-            int positionY = WorldRandTools.Range(1, biomeMapData.maxHeight);
+            ChunkTerrainData chunkTerrainData = mapData.arrayChunkTerrainData[positionX * chunk.chunkData.chunkWidth + positionZ];
+            int positionY = WorldRandTools.Range(1, (int)chunkTerrainData.maxHeight);
             Vector3Int startPosition = new Vector3Int(positionX, positionY, positionZ) + chunk.chunkData.positionForWorld;
 
             int caveDepth = WorldRandTools.Range(caveData.minDepth, caveData.maxDepth);
@@ -49,7 +49,7 @@ public class BiomeCreateCaveTool : ScriptableObject
                 Vector3Int offsetInt = new Vector3Int(GetCaveDirection(offset.x), GetCaveDirection(offset.y), GetCaveDirection(offset.z));
                 startPosition += offsetInt;
 
-                if (startPosition.y <= 3 || startPosition.y > biomeMapData.maxHeight)
+                if (startPosition.y <= 3 || startPosition.y > chunkTerrainData.maxHeight)
                     break;
 
                 float absOffsetX = Mathf.Abs(offsetX);

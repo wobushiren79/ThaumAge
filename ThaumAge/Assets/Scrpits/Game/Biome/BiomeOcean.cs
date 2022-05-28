@@ -15,7 +15,7 @@ public class BiomeOcean : Biome
     public override BlockTypeEnum GetBlockType(Chunk chunk, BiomeInfoBean biomeInfo, int genHeight, Vector3Int localPos, Vector3Int wPos)
     {
         base.GetBlockType(chunk, biomeInfo, genHeight, localPos, wPos);
-        int trueHeight = BiomeHandler.Instance.GetHeightData(wPos, 0.025f, 30f, 30);
+        int trueHeight = 10;
         if (wPos.y == trueHeight)
         {
             AddFlower(wPos);
