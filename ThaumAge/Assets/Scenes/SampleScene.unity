@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.056215078, g: 0.0781735, b: 0.1108849, a: 1}
+  m_IndirectSpecularColor: {r: 0.055912368, g: 0.07186273, b: 0.08199659, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -642,7 +642,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   computeShader: {fileID: 7200000, guid: e4f153e2f12c853468828189881b901c, type: 3}
-  objNumber: 10
+  objNumber: 50
   perlinFrequency: 1
   perlinAmplitude: 1
   perlinSize: 1024

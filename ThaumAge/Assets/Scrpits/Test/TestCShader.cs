@@ -18,8 +18,6 @@ public class TestCShader : BaseMonoBehaviour
     GameObject[,] objs;
     struct Perlin2DData
     {     
-        //数据
-        public float perlinData;
         //当前坐标
         public Vector2 position;
         //频率（宽度）
@@ -30,8 +28,12 @@ public class TestCShader : BaseMonoBehaviour
         public float perlinSize;
         //迭代次数（越多地图越复杂）
         public int perlinIterateNumber;
+        public float minHeight;
 
+        public float minBiomeDis;
+        public float secondMinBiomeDis;
         public float offsetDis;
+        public float maxHeight;
     }
 
     protected int kernelId;
@@ -77,7 +79,7 @@ public class TestCShader : BaseMonoBehaviour
                 arrayData[x * objNumber + z] = perlin2DData;
             }
         }
-        ComputeBuffer buffer = new ComputeBuffer(arrayData.Length, 32);
+        ComputeBuffer buffer = new ComputeBuffer(arrayData.Length, 44);
         buffer.SetData(arrayData);
         computeShader.SetFloats("RandomOffset", randomOffset.x, randomOffset.y);
         computeShader.SetBuffer(kernelId, "BufferTerraninData", buffer);
@@ -91,8 +93,8 @@ public class TestCShader : BaseMonoBehaviour
             {
                 Perlin2DData itemData= arrayData[x * objNumber + z];
                 GameObject objItem = objs[x, z];
-                objItem.transform.position = new Vector3(x, itemData.perlinData, z);
-                LogUtil.Log("itemData:"+ itemData.offsetDis);
+                objItem.transform.position = new Vector3(x, itemData.maxHeight, z);
+                LogUtil.Log("itemData:"+ itemData.offsetDis+" " + itemData.maxHeight);
             }
         }
         buffer.Dispose();

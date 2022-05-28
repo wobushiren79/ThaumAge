@@ -16,13 +16,13 @@ struct TerraninData
     float minHeight;
 
     //距离该方块最近的生态点距离
-    //float minBiomeDis;
+    float minBiomeDis;
     //距离该方块第二近的生态点距离
-    //float secondMinBiomeDis;
+    float secondMinBiomeDis;
     //距离最近和第二进的距离差
     float offsetDis;
     //地形最大高度
-    //float maxHeight;
+    float maxHeight;
 };
 
 
@@ -81,10 +81,12 @@ void CSMain (uint3 id : SV_DispatchThreadID,uint3 gid:SV_GROUPID,uint index:SV_G
         curAmplitude = curAmplitude / 2;
     }
     //itemTerraninData.maxHeight = finalNoise + itemTerraninData.minHeight;
-
-        //itemTerraninData.offsetDis = itemTerraninData.secondMinBiomeDis - itemTerraninData.minBiomeDis;
+    //itemTerraninData.offsetDis = itemTerraninData.secondMinBiomeDis - itemTerraninData.minBiomeDis;
     itemTerraninData.offsetDis = ArrayBiomeCenterPosition[1].x; 
-
+    itemTerraninData.secondMinBiomeDis = 1;
+    itemTerraninData.minBiomeDis = 1;
+    itemTerraninData.maxHeight = dataIndex;
+    itemTerraninData.minHeight = 1;
     BufferTerraninData[dataIndex] = itemTerraninData;
 
 }
