@@ -62,7 +62,6 @@ public class BiomeMapData
                     perlinSize = biome.biomeInfo.scale,
                     perlinIterateNumber = biome.biomeInfo.iterate_number,
                     minHeight = biome.biomeInfo.min_height,
-                    biomeIndex = biomeIndex,
                     minBiomeDis = minBiomeDis,
                     secondMinBiomeDis = secondMinBiomeDis
                 };

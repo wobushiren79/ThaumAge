@@ -7,10 +7,6 @@ public class BiomeHandler : BaseHandler<BiomeHandler, BiomeManager>
 {
     protected static object lockWorldCreate = new object();
     public FastNoise fastNoise;
-
-    public Vector3 offset0;
-    public Vector3 offset1;
-    public Vector3 offset2;
     public float offsetBiome;
 
     public override void Awake()
@@ -28,9 +24,6 @@ public class BiomeHandler : BaseHandler<BiomeHandler, BiomeManager>
     {
         int seed = WorldCreateHandler.Instance.manager.GetWorldSeed();
         offsetBiome = Random.value * 1000;
-        offset0 = new Vector3(Random.value * 1000, Random.value * 1000, Random.value * 1000);
-        offset1 = new Vector3(Random.value * 1000, Random.value * 1000, Random.value * 1000);
-        offset2 = new Vector3(Random.value * 1000, Random.value * 1000, Random.value * 1000);
         fastNoise = new FastNoise(seed);
     }
 
@@ -73,22 +66,13 @@ public class BiomeHandler : BaseHandler<BiomeHandler, BiomeManager>
                 return BlockTypeEnum.None;
             }
         }
-
-        int maxHeight = (int)chunkTerrainData.maxHeight;
-        //边缘处理 逐渐减缓到最低高度
-        if (blockLocalPosition.y > maxHeight// 在基础高度-4以上
-            && chunkTerrainData.offsetDis <= 20) //在20范围以内
+        //当前方块位置高于随机生成的高度值时，当前方块类型为空
+        if (blockLocalPosition.y > chunkTerrainData.maxHeight)
         {
-            maxHeight = Mathf.CeilToInt((chunkTerrainData.maxHeight - biome.biomeInfo.min_height) / 20f) * Mathf.CeilToInt(chunkTerrainData.offsetDis) + maxHeight;
-
-            //当前方块位置高于随机生成的高度值时，当前方块类型为空
-            if (blockLocalPosition.y > maxHeight)
-            {
-                return BlockTypeEnum.None;
-            }
+            return BlockTypeEnum.None;
         }
         Vector3Int wPos = blockLocalPosition + chunk.chunkData.positionForWorld;
-        BlockTypeEnum blockType = biome.GetBlockType(chunk, biome.biomeInfo, maxHeight, blockLocalPosition, wPos);
+        BlockTypeEnum blockType = biome.GetBlockType(chunk, biome.biomeInfo, (int)chunkTerrainData.maxHeight, blockLocalPosition, wPos);
         //获取方块
         return blockType;
     }

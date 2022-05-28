@@ -15,8 +15,7 @@ public struct ChunkTerrainData
     public int perlinIterateNumber;
     //最低高度
     public float minHeight;
-    //生态下标
-    public int biomeIndex;
+
     //距离该方块最近的生态点距离
     public float minBiomeDis;
     //距离该方块第二近的生态点距离

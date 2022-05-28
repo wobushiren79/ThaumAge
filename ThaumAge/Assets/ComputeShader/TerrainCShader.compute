@@ -14,8 +14,7 @@ struct TerraninData
     int perlinIterateNumber;
     //最低高度
     float minHeight;
-    //生态下标
-    int biomeIndex;
+
     //距离该方块最近的生态点距离
     float minBiomeDis;
     //距离该方块第二近的生态点距离
@@ -126,6 +125,11 @@ void CSMain (uint3 id : SV_DispatchThreadID,uint3 gid:SV_GROUPID,uint index:SV_G
 
     itemTerraninData.offsetDis = itemTerraninData.secondMinBiomeDis - itemTerraninData.minBiomeDis;
     itemTerraninData.maxHeight =  itemTerraninData.minHeight + finalNoise;
+    //边缘处理 逐渐减缓到最低高度
+    if (itemTerraninData.offsetDis <= 10) //在20范围以内
+    {
+        itemTerraninData.maxHeight = ceil((itemTerraninData.maxHeight - itemTerraninData.minHeight) /10) * ceil(itemTerraninData.offsetDis) + itemTerraninData.maxHeight;
+    }
 
     BufferTerraninData[dataIndex] = itemTerraninData;
 
