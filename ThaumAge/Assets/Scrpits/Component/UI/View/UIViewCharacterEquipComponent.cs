@@ -24,5 +24,9 @@ public partial class UIViewCharacterEquip
 
     public UIViewItemContainer ui_Equip_Cape;
 
+    public RectTransform ui_StatusContent;
+
+    public UIViewItemCharacterStatus ui_ViewItemCharacterStatus;
+
 
 }

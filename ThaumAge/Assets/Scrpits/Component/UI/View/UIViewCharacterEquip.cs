@@ -24,6 +24,9 @@ public partial class UIViewCharacterEquip : BaseUIView
 
         ui_RotateLeft.AddLongClickListener(OnLongClickForRoateR);
         ui_RotateRight.AddLongClickListener(OnLongClickForRoateL);
+
+        InitEquip();
+        InitCharacterStatus();
     }
 
     public override void OnDestroy()
@@ -50,7 +53,10 @@ public partial class UIViewCharacterEquip : BaseUIView
             objRender.ShowObj(false);
     }
 
-    public void Start()
+    /// <summary>
+    /// 初始化装备
+    /// </summary>
+    public void InitEquip()
     {
         UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();
         dicEquip.Clear();
@@ -73,9 +79,28 @@ public partial class UIViewCharacterEquip : BaseUIView
         }
     }
 
-    public override void RefreshUI()
+    /// <summary>
+    /// 初始化角色状态
+    /// </summary>
+    public void InitCharacterStatus()
     {
-        base.RefreshUI();
+        UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();
+        CharacterStatusBean characterStatusData = userData.characterData.GetCharacterStatus();
+        CreateCharacterStatusItem("ui_life_1", characterStatusData.health, "生命值");
+        CreateCharacterStatusItem("ui_life_2", characterStatusData.stamina, "耐力值");
+        CreateCharacterStatusItem("ui_life_4", characterStatusData.magic, "魔力值");
+        CreateCharacterStatusItem("ui_life_3", characterStatusData.saturation, "饱食值");
+    }
+
+    /// <summary>
+    ///  创建角色状态Item
+    /// </summary>
+    public void CreateCharacterStatusItem(string iconKey, int statusData, string popupShowStr)
+    {
+        ui_ViewItemCharacterStatus.ShowObj(false);
+        GameObject objItemStatus = Instantiate(ui_StatusContent.gameObject, ui_ViewItemCharacterStatus.gameObject);
+        UIViewItemCharacterStatus itemStatus = objItemStatus.GetComponent<UIViewItemCharacterStatus>();
+        itemStatus.SetData(iconKey, $"{statusData}",popupShowStr);
     }
 
     /// <summary>
@@ -118,7 +143,7 @@ public partial class UIViewCharacterEquip : BaseUIView
         }
         else
         {
-            showCharacter.transform.localEulerAngles += new Vector3(0, 100* Time.deltaTime, 0);
+            showCharacter.transform.localEulerAngles += new Vector3(0, 100 * Time.deltaTime, 0);
         }
     }
 

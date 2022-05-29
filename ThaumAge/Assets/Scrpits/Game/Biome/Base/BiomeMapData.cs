@@ -56,7 +56,7 @@ public class BiomeMapData
             {
                 ChunkTerrainData itemTerrainData = new ChunkTerrainData
                 {
-                    position = new Vector2(x, z),
+                    position = new Vector2(x + chunk.chunkData.positionForWorld.x, z + chunk.chunkData.positionForWorld.z),
                     perlinFrequency = biome.biomeInfo.frequency,
                     perlinAmplitude = biome.biomeInfo.amplitude,
                     perlinSize = biome.biomeInfo.scale,

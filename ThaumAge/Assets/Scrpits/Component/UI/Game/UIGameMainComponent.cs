@@ -12,5 +12,7 @@ public partial class UIGameMain
 
     public Button ui_Book;
 
+    public UIViewCharacterStatusShow ui_ViewCharacterStatus;
+
 
 }

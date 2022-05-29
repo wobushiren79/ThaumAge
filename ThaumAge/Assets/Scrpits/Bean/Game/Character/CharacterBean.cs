@@ -5,6 +5,8 @@ using System;
 [Serializable]
 public class CharacterBean : CreatureBean
 {
+    //角色状态
+    public CharacterStatusBean characterStatus;
     //角色姓名
     public string characterName;
     //角色性别
@@ -76,5 +78,15 @@ public class CharacterBean : CreatureBean
     public SexTypeEnum GetSex()
     {
         return (SexTypeEnum)characterSex;
+    }
+
+    /// <summary>
+    /// 获取角色状态
+    /// </summary>
+    public CharacterStatusBean GetCharacterStatus()
+    {
+        if (characterStatus == null)
+            characterStatus = new CharacterStatusBean();
+        return characterStatus;
     }
 }

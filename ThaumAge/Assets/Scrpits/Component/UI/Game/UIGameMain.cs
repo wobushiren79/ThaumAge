@@ -7,12 +7,22 @@ using static UnityEngine.InputSystem.InputAction;
 
 public partial class UIGameMain : BaseUIComponent
 {
-    protected InputAction inputGodMain;
+    public override void OpenUI()
+    {
+        //设置对应数据
+        UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();
+        ui_ViewCharacterStatus.SetData(userData.characterData.GetCharacterStatus());
+
+        base.OpenUI();
+    }
 
     public override void RefreshUI()
     {
         base.RefreshUI();
+        //道具刷新
         ui_Shortcuts.RefreshUI();
+        //状态刷新
+        ui_ViewCharacterStatus.RefreshUI();
     }
 
     public override void OnClickForButton(Button viewButton)
