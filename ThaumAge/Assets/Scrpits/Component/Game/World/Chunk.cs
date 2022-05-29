@@ -207,6 +207,9 @@ public class Chunk
         BlockManager blockManager = BlockHandler.Instance.manager;
         GameDataManager gameDataManager = GameDataHandler.Instance.manager;
 
+        //获取地图数据
+        BiomeMapData biomeMapData = BiomeHandler.Instance.GetBiomeMapData(this);
+
         await Task.Run(() =>
         {
             try
@@ -217,7 +220,7 @@ public class Chunk
                     Stopwatch stopwatch = TimeUtil.GetMethodTimeStart();
 #endif
                     //生成基础地形数据      
-                    HandleForBaseBlock();
+                    HandleForBaseBlock(biomeMapData);
                     //处理存档方块 优先使用存档方块
                     HandleForLoadBlock();
                     //初始化完成
@@ -404,11 +407,8 @@ public class Chunk
     /// 处理-基础地形方块
     /// </summary>
     /// <param name="chunk"></param>
-    public void HandleForBaseBlock()
+    public void HandleForBaseBlock(BiomeMapData biomeMapData)
     {
-        //获取地图数据
-        BiomeMapData biomeMapData = BiomeHandler.Instance.GetBiomeMapData(this);
-
         for (int x = 0; x < chunkData.chunkWidth; x++)
         {
             for (int z = 0; z < chunkData.chunkWidth; z++)

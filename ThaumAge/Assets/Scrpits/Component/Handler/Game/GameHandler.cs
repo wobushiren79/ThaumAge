@@ -28,13 +28,12 @@ public class GameHandler : BaseHandler<GameHandler, GameManager>
             };
             Action completeForLoadBlockResources = () =>
             {
-                completeForLoadBiomeResources.Invoke();
+                //加载生态资源
+                BiomeHandler.Instance.manager.LoadResources(completeForLoadBiomeResources);
             };
 
             //加载方块资源
             BlockHandler.Instance.manager.LoadResources(completeForLoadBlockResources);
-            //加载生态资源
-            BiomeHandler.Instance.manager.LoadResources(completeForLoadBiomeResources);
         });
     }
 

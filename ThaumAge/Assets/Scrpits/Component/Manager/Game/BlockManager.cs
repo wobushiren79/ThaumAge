@@ -44,7 +44,7 @@ public class BlockManager : BaseManager, IBlockInfoView
     /// </summary>
     public void LoadResources(Action callBack)
     {
-        if (arrayBlockMat.IsNull())
+        if (!arrayBlockMat.IsNull())
         {
             callBack?.Invoke();
             return;
