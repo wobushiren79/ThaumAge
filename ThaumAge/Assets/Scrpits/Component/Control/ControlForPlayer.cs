@@ -167,7 +167,7 @@ public class ControlForPlayer : ControlForBase
                 //时间到了就还原了
                 character.characterAnim.creatureAnim.SetClimbSpeed(0);
                 character.characterAnim.creatureAnim.PlayAnim("idle");
-            }       
+            }
             return;
         }
         //播放动画
@@ -213,7 +213,7 @@ public class ControlForPlayer : ControlForBase
     {
         timeClimbEnd = 0.25f;
     }
-        
+
     /// <summary>
     /// 开始跳跃处理
     /// </summary>
@@ -349,19 +349,21 @@ public class ControlForPlayer : ControlForBase
         //多按键组合
         //如果按住了shift 则速度提升20% 并且持续消耗耐力
         float shiftInput = inputActionShift.ReadValue<float>();
-        if (shiftInput != 0 && moveOffset.x!=0 && moveOffset.y != 0)
+        if (shiftInput != 0 && (moveOffset.x != 0 || moveOffset.y != 0))
         {
             //加速消耗耐力
             UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();
             CharacterStatusBean characterStatus = userData.characterData.GetCharacterStatus();
             //判断是否成功消耗耐力
-            bool isExpendStamina = characterStatus.StaminaExpend(Time.deltaTime);
-            moveSpeed = isExpendStamina? moveSpeed * 1.5f : moveSpeed;
+            bool isExpendStamina = characterStatus.StaminaChange(-Time.deltaTime * 2);
+            moveSpeed = isExpendStamina ? moveSpeed * 1.5f : moveSpeed;
         }
         //如果按住了ctrl 则速度减慢50%
         float ctrlInput = inputActionCtrl.ReadValue<float>();
-        if (ctrlInput != 0 && moveOffset.x != 0 && moveOffset.y != 0)
+        if (ctrlInput != 0 && (moveOffset.x != 0 || moveOffset.y != 0))
+        {
             moveSpeed = moveSpeed * 0.5f;
+        }
         //朝摄像头方向移动
         playerVelocity = (Vector3.Normalize(forward) * moveOffset.y + Vector3.Normalize(right) * moveOffset.x) * Time.unscaledDeltaTime * moveSpeed * 5;
     }

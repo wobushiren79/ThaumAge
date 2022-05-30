@@ -17,6 +17,8 @@ public class Player : BaseMonoBehaviour
     //角色数据更新时间
     protected float timeUpdateForPlayerData = 0;
     protected float timeUpdateMaxForPlayerData = 1f;
+
+
     public void Awake()
     {
         character = GetComponentInChildren<CreatureCptCharacter>();
@@ -49,6 +51,8 @@ public class Player : BaseMonoBehaviour
         playerPickUp.UpdatePick();
         //角色边界处理
         HandleForBeyondBorder();
+        //角色状态处理
+        HandleForUserData();
     }
 
     /// <summary>
@@ -99,7 +103,7 @@ public class Player : BaseMonoBehaviour
         UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();
         CharacterStatusBean characterStatus= userData.characterData.GetCharacterStatus();
         //增加耐力
-        characterStatus.StaminaChange(1);
+        characterStatus.StaminaChange(0.5f);
     }
 
     /// <summary>

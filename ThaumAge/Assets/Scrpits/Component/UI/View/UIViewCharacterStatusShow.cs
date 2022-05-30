@@ -5,6 +5,12 @@ public partial class UIViewCharacterStatusShow : BaseUIView
 {
     protected CharacterStatusBean characterStatus;
 
+    public override void Awake()
+    {
+        base.Awake();
+        EventHandler.Instance.RegisterEvent(EventsInfo.CharacterStatus_StatusChange, RefreshUI);
+    }
+
     /// <summary>
     /// 设置数据
     /// </summary>
@@ -19,7 +25,7 @@ public partial class UIViewCharacterStatusShow : BaseUIView
         if (characterStatus == null)
             return;
         SetHealth(characterStatus.health, characterStatus.maxHealth);
-        SetStamina(characterStatus.stamina, characterStatus.maxStamina);
+        SetStamina(Mathf.RoundToInt(characterStatus.stamina), characterStatus.maxStamina);
         SetMagic(characterStatus.magic, characterStatus.maxMagic);
         SetSaturation(characterStatus.saturation, characterStatus.maxSaturation);
     }

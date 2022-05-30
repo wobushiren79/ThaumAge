@@ -10,7 +10,7 @@ public class CharacterStatusBean
     public int maxHealth = 10;
 
     //耐力值
-    public int stamina = 10;
+    public float stamina = 10f;
     public int maxStamina = 10;
 
     //魔力值
@@ -21,36 +21,26 @@ public class CharacterStatusBean
     public int saturation = 10;
     public int maxSaturation = 10;
 
-    //耐力消耗
-    protected float staminaExpend = 0;
-
-    /// <summary>
-    /// 耐力消耗
-    /// </summary>
-    /// <param name="subData"></param>
-    public bool StaminaExpend(float subData)
-    {
-        if (stamina <= 0)
-            return false;
-        staminaExpend += subData;
-        if (staminaExpend > 1)
-        {
-            staminaExpend = 0;
-            StaminaChange(-1);
-        }
-        return true;
-    }
-
     /// <summary>
     /// 耐力修改
     /// </summary>
     /// <param name="changeData">修改的值</param>
-    public void StaminaChange(int changeData)
+    public bool StaminaChange(float changeData)
     {
+        if (changeData > 0 && stamina >= maxStamina)
+        {
+            return false;
+        }
+        if (changeData < 0 && stamina <= 0)
+        {
+            return false;
+        }
         stamina += changeData;
         if (stamina > maxStamina)
             stamina = maxStamina;
         if (stamina < 0)
             stamina = 0;
+        EventHandler.Instance.TriggerEvent(EventsInfo.CharacterStatus_StatusChange);
+        return true;
     }
 }

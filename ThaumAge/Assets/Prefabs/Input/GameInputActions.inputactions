@@ -88,21 +88,21 @@
                 },
                 {
                     "name": "Shift",
-                    "type": "Button",
+                    "type": "Value",
                     "id": "a3f17048-6d17-4086-8cf8-ee169c62f0ca",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "Integer",
                     "processors": "",
                     "interactions": "",
-                    "initialStateCheck": false
+                    "initialStateCheck": true
                 },
                 {
                     "name": "Ctrl",
-                    "type": "Button",
+                    "type": "Value",
                     "id": "6cef51ec-0a92-4752-99b3-0830033ce416",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "Integer",
                     "processors": "",
                     "interactions": "",
-                    "initialStateCheck": false
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [

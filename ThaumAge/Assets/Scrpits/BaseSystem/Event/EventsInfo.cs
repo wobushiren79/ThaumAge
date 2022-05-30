@@ -14,4 +14,6 @@ public static class EventsInfo
 
     public static readonly string UIGameBook_MapItemChange = "UIGameBook_MapItemChange";//模块描述改变
 
+    public static readonly string CharacterStatus_StatusChange = "CharacterStatus_StatusChange";//角色状态修改
+
 }
