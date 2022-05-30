@@ -107,6 +107,24 @@ public partial class @GameInputActions : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Shift"",
+                    ""type"": ""Button"",
+                    ""id"": ""a3f17048-6d17-4086-8cf8-ee169c62f0ca"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Ctrl"",
+                    ""type"": ""Button"",
+                    ""id"": ""6cef51ec-0a92-4752-99b3-0830033ce416"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -404,6 +422,28 @@ public partial class @GameInputActions : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": ""Keyboard&Mouse"",
                     ""action"": ""UseE"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""916042f5-18f2-4dd5-87fc-67f5cff80896"",
+                    ""path"": ""<Keyboard>/shift"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Shift"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""154122f9-1c7c-44b2-93eb-2f3a30a59e63"",
+                    ""path"": ""<Keyboard>/ctrl"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Ctrl"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -1384,6 +1424,8 @@ public partial class @GameInputActions : IInputActionCollection2, IDisposable
         m_Player_CameraDistance = m_Player.FindAction("CameraDistance", throwIfNotFound: true);
         m_Player_UserDetails = m_Player.FindAction("UserDetails", throwIfNotFound: true);
         m_Player_Drop = m_Player.FindAction("Drop", throwIfNotFound: true);
+        m_Player_Shift = m_Player.FindAction("Shift", throwIfNotFound: true);
+        m_Player_Ctrl = m_Player.FindAction("Ctrl", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -1481,6 +1523,8 @@ public partial class @GameInputActions : IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_CameraDistance;
     private readonly InputAction m_Player_UserDetails;
     private readonly InputAction m_Player_Drop;
+    private readonly InputAction m_Player_Shift;
+    private readonly InputAction m_Player_Ctrl;
     public struct PlayerActions
     {
         private @GameInputActions m_Wrapper;
@@ -1494,6 +1538,8 @@ public partial class @GameInputActions : IInputActionCollection2, IDisposable
         public InputAction @CameraDistance => m_Wrapper.m_Player_CameraDistance;
         public InputAction @UserDetails => m_Wrapper.m_Player_UserDetails;
         public InputAction @Drop => m_Wrapper.m_Player_Drop;
+        public InputAction @Shift => m_Wrapper.m_Player_Shift;
+        public InputAction @Ctrl => m_Wrapper.m_Player_Ctrl;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1530,6 +1576,12 @@ public partial class @GameInputActions : IInputActionCollection2, IDisposable
                 @Drop.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnDrop;
                 @Drop.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnDrop;
                 @Drop.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnDrop;
+                @Shift.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnShift;
+                @Shift.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnShift;
+                @Shift.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnShift;
+                @Ctrl.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnCtrl;
+                @Ctrl.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnCtrl;
+                @Ctrl.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnCtrl;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -1561,6 +1613,12 @@ public partial class @GameInputActions : IInputActionCollection2, IDisposable
                 @Drop.started += instance.OnDrop;
                 @Drop.performed += instance.OnDrop;
                 @Drop.canceled += instance.OnDrop;
+                @Shift.started += instance.OnShift;
+                @Shift.performed += instance.OnShift;
+                @Shift.canceled += instance.OnShift;
+                @Ctrl.started += instance.OnCtrl;
+                @Ctrl.performed += instance.OnCtrl;
+                @Ctrl.canceled += instance.OnCtrl;
             }
         }
     }
@@ -1862,6 +1920,8 @@ public partial class @GameInputActions : IInputActionCollection2, IDisposable
         void OnCameraDistance(InputAction.CallbackContext context);
         void OnUserDetails(InputAction.CallbackContext context);
         void OnDrop(InputAction.CallbackContext context);
+        void OnShift(InputAction.CallbackContext context);
+        void OnCtrl(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {

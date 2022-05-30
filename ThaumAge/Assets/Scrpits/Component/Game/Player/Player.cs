@@ -14,14 +14,25 @@ public class Player : BaseMonoBehaviour
     public GameObject objThirdLook;
     public GameObject objThirdFollow;
 
+    //角色数据更新时间
+    protected float timeUpdateForPlayerData = 0;
+    protected float timeUpdateMaxForPlayerData = 1f;
     public void Awake()
     {
         character = GetComponentInChildren<CreatureCptCharacter>();
 
         playerPickUp = new PlayerPickUp(this);
         playerRay = new PlayerRay(this);
+    }
 
-        InvokeRepeating("UpdatePlayerData", 0.2f, 0.2f);
+    public void Update()
+    {
+        timeUpdateForPlayerData += Time.deltaTime;
+        if (timeUpdateForPlayerData> timeUpdateMaxForPlayerData)
+        {
+            UpdatePlayerData();
+            timeUpdateForPlayerData = 0;
+        }
     }
 
     public void OnDestroy()
@@ -34,8 +45,9 @@ public class Player : BaseMonoBehaviour
     /// </summary>
     public void UpdatePlayerData()
     {
+        //角色拾取处理
         playerPickUp.UpdatePick();
-
+        //角色边界处理
         HandleForBeyondBorder();
     }
 
@@ -77,6 +89,17 @@ public class Player : BaseMonoBehaviour
         {
             BeyondBorderPosition();
         }
+    }
+
+    /// <summary>
+    /// 处理-用户数据
+    /// </summary>
+    public void HandleForUserData()
+    {
+        UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();
+        CharacterStatusBean characterStatus= userData.characterData.GetCharacterStatus();
+        //增加耐力
+        characterStatus.StaminaChange(1);
     }
 
     /// <summary>

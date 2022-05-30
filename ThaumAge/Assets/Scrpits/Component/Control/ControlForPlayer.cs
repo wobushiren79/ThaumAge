@@ -10,7 +10,7 @@ public class ControlForPlayer : ControlForBase
     private CreatureCptCharacter character;
 
     //移动速度
-    public float moveSpeed = 1f;
+    public float moveSpeed = 0.8f;
     //重力
     public float gravityValue = 10f;
 
@@ -33,13 +33,21 @@ public class ControlForPlayer : ControlForBase
 
     private InputAction inputActionJump;
     private InputAction inputActionMove;
-    private InputAction inputActionuserDetailsData;
+    private InputAction inputActionUserDetailsData;
     private InputAction inputActionUseDrop;
+    private InputAction inputActionShift;
+    private InputAction inputActionCtrl;
 
     //是否正在使用道具
     private bool isUseItem = false;
     //正在使用道具的时间
-    private float timeForUseItem;
+    protected float timeUpdateForUseItem = 0;
+    protected float timeUpdateMaxForUseItem = 0.25f;
+
+    //目标选择更新间隔
+    protected float timeUpdateForUseItemSightTarget = 0;
+    protected float timeUpdateMaxForUseItemSightTarget = 0.1f;
+
     private void Awake()
     {
         characterController = GetComponent<CharacterController>();
@@ -62,11 +70,12 @@ public class ControlForPlayer : ControlForBase
         inputActionUseDrop = InputHandler.Instance.manager.GetInputPlayerData("Drop");
         inputActionUseDrop.started += HandleForDrop;
 
-        inputActionuserDetailsData = InputHandler.Instance.manager.GetInputPlayerData("UserDetails");
-        inputActionuserDetailsData.started += HandleForUserDetails;
+        inputActionUserDetailsData = InputHandler.Instance.manager.GetInputPlayerData("UserDetails");
+        inputActionUserDetailsData.started += HandleForUserDetails;
         inputActionMove = InputHandler.Instance.manager.GetInputPlayerData("Move");
 
-        InvokeRepeating("HandlerForUseItemSightTarget", 0.1f, 0.1f);
+        inputActionShift = InputHandler.Instance.manager.GetInputPlayerData("Shift");
+        inputActionCtrl = InputHandler.Instance.manager.GetInputPlayerData("Ctrl");
     }
 
     public void Update()
@@ -75,6 +84,13 @@ public class ControlForPlayer : ControlForBase
         {
             HandlerForMoveAndJumpUpdate();
             HandleForUseUpdate();
+
+            timeUpdateForUseItemSightTarget += Time.deltaTime;
+            if (timeUpdateForUseItemSightTarget >= timeUpdateMaxForUseItemSightTarget)
+            {
+                timeUpdateForUseItemSightTarget = 0;
+                HandlerForUseItemSightTarget();
+            }
         }
     }
 
@@ -87,7 +103,7 @@ public class ControlForPlayer : ControlForBase
         inputActionUseR.started -= HandleForUseR;
         inputActionUseR.canceled -= HandleForUseEnd;
         inputActionUseFace.started -= HandleForUseE;
-        inputActionuserDetailsData.started -= HandleForUserDetails;
+        inputActionUserDetailsData.started -= HandleForUserDetails;
         inputActionUseDrop.started -= HandleForDrop;
     }
 
@@ -228,8 +244,8 @@ public class ControlForPlayer : ControlForBase
     {
         if (isUseItem)
         {
-            timeForUseItem += Time.deltaTime;
-            if (timeForUseItem > 0.25f)
+            timeUpdateForUseItem += Time.deltaTime;
+            if (timeUpdateForUseItem > timeUpdateMaxForUseItem)
             {
                 HandleForUseL(new CallbackContext());
             }
@@ -287,6 +303,12 @@ public class ControlForPlayer : ControlForBase
         UIHandler.Instance.RefreshUI();
     }
 
+    /// <summary>
+    /// 使用处理
+    /// </summary>
+    /// <param name="callback"></param>
+    /// <param name="useType"></param>
+    /// <param name="isUserItem"></param>
     public void HandleForUse(CallbackContext callback, ItemUseTypeEnum useType, bool isUserItem = true)
     {
         if (!isActiveAndEnabled)
@@ -294,7 +316,7 @@ public class ControlForPlayer : ControlForBase
         if (UGUIUtil.IsPointerUI())
             return;
         this.isUseItem = isUserItem;
-        timeForUseItem = 0;
+        timeUpdateForUseItem = 0;
         //获取道具栏上的物品
         UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();
         ItemsBean itemsData = userData.GetItemsFromShortcut();
@@ -312,7 +334,6 @@ public class ControlForPlayer : ControlForBase
         character.characterAnim.creatureAnim.PlayUse(false);
     }
 
-
     /// <summary>
     /// 角色移动
     /// </summary>
@@ -325,6 +346,22 @@ public class ControlForPlayer : ControlForBase
         //获取摄像机方向 高度为0
         forward.y = 0;
         right.y = 0;
+        //多按键组合
+        //如果按住了shift 则速度提升20% 并且持续消耗耐力
+        float shiftInput = inputActionShift.ReadValue<float>();
+        if (shiftInput != 0 && moveOffset.x!=0 && moveOffset.y != 0)
+        {
+            //加速消耗耐力
+            UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();
+            CharacterStatusBean characterStatus = userData.characterData.GetCharacterStatus();
+            //判断是否成功消耗耐力
+            bool isExpendStamina = characterStatus.StaminaExpend(Time.deltaTime);
+            moveSpeed = isExpendStamina? moveSpeed * 1.5f : moveSpeed;
+        }
+        //如果按住了ctrl 则速度减慢50%
+        float ctrlInput = inputActionCtrl.ReadValue<float>();
+        if (ctrlInput != 0 && moveOffset.x != 0 && moveOffset.y != 0)
+            moveSpeed = moveSpeed * 0.5f;
         //朝摄像头方向移动
         playerVelocity = (Vector3.Normalize(forward) * moveOffset.y + Vector3.Normalize(right) * moveOffset.x) * Time.unscaledDeltaTime * moveSpeed * 5;
     }
