@@ -13,9 +13,9 @@ public class BiomeTest : Biome
 
     }
 
-    public override BlockTypeEnum GetBlockType(Chunk chunk, BiomeInfoBean biomeInfo, int genHeight, Vector3Int localPos, Vector3Int wPos)
+    public override BlockTypeEnum GetBlockType(Chunk chunk, Vector3Int localPos, ChunkTerrainData terrainData)
     {
-        if (wPos.y == genHeight)
+        if (localPos.y == terrainData.maxHeight)
         {
             //AddWeed(wPos);
             //AddBigTree(wPos);
@@ -27,12 +27,12 @@ public class BiomeTest : Biome
             //草
             return BlockTypeEnum.Grass;
         }
-        else if (wPos.y == 0)
+        else if (localPos.y == 0)
         {
             //基础
             return BlockTypeEnum.Foundation;
         }
-        else if (wPos.y < genHeight&& wPos.y >= genHeight-5)
+        else if (localPos.y < terrainData.maxHeight && localPos.y >= terrainData.maxHeight - 5)
         {
             //其他土
             return BlockTypeEnum.Dirt;
