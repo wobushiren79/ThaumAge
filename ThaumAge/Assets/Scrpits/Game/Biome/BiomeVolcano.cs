@@ -11,17 +11,17 @@ public class BiomeVolcano : Biome
     {
     }
 
-    public override BlockTypeEnum GetBlockType(Chunk chunk, BiomeInfoBean biomeInfo, int genHeight, Vector3Int localPos, Vector3Int wPos)
+    public override BlockTypeEnum GetBlockType(Chunk chunk, Vector3Int localPos, ChunkTerrainData terrainData)
     {
-        base.GetBlockType(chunk,biomeInfo, genHeight, localPos, wPos);
-        float noise = (genHeight - biomeInfo.min_height) / biomeInfo.amplitude;
+        base.GetBlockType(chunk, localPos, terrainData);
+        float noise = (terrainData.maxHeight - biomeInfo.min_height) / biomeInfo.amplitude;
         if (noise >= 0.9f)
         {
-            if (localPos.y >= genHeight - 3)
+            if (localPos.y >= terrainData.maxHeight - 3)
             {
                 return BlockTypeEnum.None;
             }
-            else if (localPos.y > 20 && localPos.y < genHeight - 1)
+            else if (localPos.y > 20 && localPos.y < terrainData.maxHeight - 1)
             {
                 return BlockTypeEnum.Magma;
             }
@@ -30,8 +30,9 @@ public class BiomeVolcano : Biome
                 return BlockTypeEnum.StoneVolcanic;
             }
         }
-        if (genHeight == localPos.y)
+        if (terrainData.maxHeight == localPos.y)
         {
+            Vector3Int wPos = localPos + chunk.chunkData.positionForWorld;
             AddDeadwood(wPos);
             AddFireFlower(wPos);
         }

@@ -15,7 +15,6 @@ public class BiomeCreateTreeTool
         public int leavesRange;//树叶范围
     }
 
-
     /// <summary>
     ///  增加仙人掌
     /// </summary>
@@ -43,6 +42,26 @@ public class BiomeCreateTreeTool
         }
     }
 
+    /// <summary>
+    /// 增加倒下的树干
+    /// </summary>
+    public static void AddTreeForFallDown(uint randomData, Vector3Int startPosition, BiomeForTreeData treeData)
+    {
+        //生成概率
+        float addRate = WorldRandTools.GetValue(startPosition, randomData);
+
+        if (addRate < treeData.addRate)
+        {
+            GetRandomBlockDirection(out BlockDirectionEnum randomBlockDirection, out Vector3Int randomAddPosition);
+            //长度
+            int treeHeight = WorldRandTools.Range(treeData.minHeight, treeData.maxHeight);
+            for (int i = 0; i < treeHeight; i++)
+            {
+                Vector3Int treeTrunkPosition = startPosition + i * randomAddPosition;
+                WorldCreateHandler.Instance.manager.AddUpdateBlock(treeTrunkPosition, treeData.treeTrunk, randomBlockDirection);
+            }
+        }
+    }
 
     /// <summary>
     /// 增加普通的树
@@ -67,6 +86,66 @@ public class BiomeCreateTreeTool
                     WorldCreateHandler.Instance.manager.AddUpdateBlock(treeTrunkPosition, treeData.treeTrunk);
                 }
                 if (i > 2)
+                {
+                    //最大范围
+                    int range = treeData.leavesRange;
+                    if (i >= treeHeight)
+                    {
+                        //叶子在最顶层递减
+                        range -= (i - treeHeight);
+                        if (range < 0)
+                            range = 0;
+                    }
+
+                    //生成叶子
+                    for (int x = -range; x <= range; x++)
+                    {
+                        for (int z = -range; z <= range; z++)
+                        {
+                            if (x == startPosition.x && z == startPosition.z)
+                                continue;
+                            if (Math.Abs(x) == range || Math.Abs(z) == range)
+                            {
+                                //如果是边界 则有几率不生成
+                                int randomLeaves = WorldRandTools.Range(0, 3);
+                                if (randomLeaves == 0)
+                                    continue;
+                            }
+                            WorldCreateHandler.Instance.manager.AddUpdateBlock(treeTrunkPosition.x + x, treeTrunkPosition.y, treeTrunkPosition.z + z, treeData.treeLeaves);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// 增加高树树 高度最低不能小于6
+    /// </summary>
+    public static void AddTreeForTall(uint randomData, Vector3Int startPosition, BiomeForTreeData treeData)
+    {
+        //生成概率
+        float addRate = WorldRandTools.GetValue(startPosition, randomData);
+
+        if (addRate < treeData.addRate)
+        {
+            //高度
+            int treeHeight = WorldRandTools.Range(treeData.minHeight, treeData.maxHeight);
+            for (int i = 0; i < treeHeight + 2; i++)
+            {
+                Vector3Int treeTrunkPosition = new(startPosition.x, startPosition.y + (i + 1), startPosition.z);
+                //生成树干
+                if (i < treeHeight)
+                {
+                    WorldCreateHandler.Instance.manager.AddUpdateBlock(treeTrunkPosition, treeData.treeTrunk);
+                }
+                //再靠近树叶的地方随机生成一个树枝
+                if (i == treeHeight - 6)
+                {
+                    GetRandomBlockDirection(out BlockDirectionEnum randomBlockDirection, out Vector3Int randomAddPosition);
+                    WorldCreateHandler.Instance.manager.AddUpdateBlock(treeTrunkPosition + randomAddPosition, treeData.treeTrunk, randomBlockDirection);
+                }
+                if (i > treeHeight - 4)
                 {
                     //最大范围
                     int range = treeData.leavesRange;
@@ -478,4 +557,98 @@ public class BiomeCreateTreeTool
         }
     }
 
+    /// <summary>
+    /// 增加倾斜的树（例如椰子树）
+    /// </summary>
+    public static void AddTreeForOblique(uint randomData, Vector3Int startPosition, BiomeForTreeData treeData)
+    {
+        //生成概率
+        float addRate = WorldRandTools.GetValue(startPosition, randomData);
+
+        if (addRate < treeData.addRate)
+        {
+            GetRandomBlockDirection(out BlockDirectionEnum randomBlockDirection, out Vector3Int randomAddPosition);
+            //高度
+            int treeHeight = WorldRandTools.Range(treeData.minHeight, treeData.maxHeight);
+            //树偏移点（每次一半偏移）
+            int treeHalfHeight = Mathf.FloorToInt(treeHeight / 2f);
+            //偏移量
+            int offsetIndex = 0;
+            for (int i = 0; i < treeHeight + 1; i++)
+            {
+                if (i >= treeHalfHeight)
+                {
+                    treeHalfHeight += Mathf.FloorToInt((treeHeight - treeHalfHeight) / 2f);
+                    offsetIndex++;
+                }
+                Vector3Int treeTrunkPosition = new
+                    (startPosition.x + offsetIndex * randomAddPosition.x, startPosition.y + (i + 1), startPosition.z + offsetIndex * randomAddPosition.z);
+                //生成树干
+                if (i < treeHeight)
+                {
+                    WorldCreateHandler.Instance.manager.AddUpdateBlock(treeTrunkPosition, treeData.treeTrunk);
+                }
+                if (i >= treeHeight)
+                {
+                    //最大范围
+                    int range = treeData.leavesRange;
+                    if (i >= treeHeight)
+                    {
+                        //叶子在最顶层递减
+                        range -= (i - treeHeight);
+                        if (range < 0)
+                            range = 0;
+                    }
+
+                    //生成叶子
+                    for (int x = -range; x <= range; x++)
+                    {
+                        for (int z = -range; z <= range; z++)
+                        {
+                            if (x == startPosition.x && z == startPosition.z)
+                                continue;
+                            //有几率不生成
+                            int randomLeaves = WorldRandTools.Range(0, 3);
+                            if (randomLeaves == 0)
+                                continue;
+                            WorldCreateHandler.Instance.manager.AddUpdateBlock(treeTrunkPosition.x + x, treeTrunkPosition.y, treeTrunkPosition.z + z, treeData.treeLeaves);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// 获取随机四个方向
+    /// </summary>
+    /// <param name="randomBlockDirection"></param>
+    /// <param name="randomAddPosition"></param>
+    protected static void GetRandomBlockDirection(out BlockDirectionEnum randomBlockDirection, out Vector3Int randomAddPosition)
+    {
+        int randomAdd = WorldRandTools.Range(1, 5);
+        switch (randomAdd)
+        {
+            case 1:
+                randomAddPosition = new Vector3Int(-1, 0, 0);
+                randomBlockDirection = BlockDirectionEnum.LeftForward;
+                break;
+            case 2:
+                randomAddPosition = new Vector3Int(1, 0, 0);
+                randomBlockDirection = BlockDirectionEnum.RightForward;
+                break;
+            case 3:
+                randomAddPosition = new Vector3Int(0, 0, -1);
+                randomBlockDirection = BlockDirectionEnum.ForwardForward;
+                break;
+            case 4:
+                randomAddPosition = new Vector3Int(0, 0, 1);
+                randomBlockDirection = BlockDirectionEnum.BackForward;
+                break;
+            default:
+                randomAddPosition = Vector3Int.zero;
+                randomBlockDirection = BlockDirectionEnum.UpForward;
+                break;
+        }
+    }
 }

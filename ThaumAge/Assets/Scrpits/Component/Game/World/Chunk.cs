@@ -428,13 +428,8 @@ public class Chunk
                 }
             }
         }
-        //生成洞穴 不放在每一个方块里去检测 提升效率
-        //BiomeCreateTool.BiomeForCaveData caveData = new BiomeCreateTool.BiomeForCaveData();
-        //caveData.minDepth = 100;
-        //caveData.maxDepth = 200;
-        //caveData.minSize = 3;
-        //caveData.maxSize = 5;
-        //BiomeCreateTool.AddCave(this, mapData, caveData);
+        //生成区块的对应方块（洞穴 大物体之类）
+        BiomeHandler.Instance.CreateBiomeBlockTypeForChunk(this, biomeMapData);
     }
 
     /// <summary>

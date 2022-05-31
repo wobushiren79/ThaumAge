@@ -71,11 +71,21 @@ public class BiomeHandler : BaseHandler<BiomeHandler, BiomeManager>
         {
             return BlockTypeEnum.None;
         }
-        Vector3Int wPos = blockLocalPosition + chunk.chunkData.positionForWorld;
-        BlockTypeEnum blockType = biome.GetBlockType(chunk, biome.biomeInfo, (int)chunkTerrainData.maxHeight, blockLocalPosition, wPos);
+        BlockTypeEnum blockType = biome.GetBlockType(chunk, blockLocalPosition, chunkTerrainData);
         //获取方块
         return blockType;
     }
+
+    /// <summary>
+    /// 根据生物生态 创建区块方块
+    /// </summary>
+    /// <param name="chunk"></param>
+    /// <param name="biome"></param>
+    public void CreateBiomeBlockTypeForChunk(Chunk chunk, BiomeMapData biomeMapData)
+    {
+        biomeMapData.biome.GetBlockTypeForChunk(chunk,biomeMapData);
+    }
+
 
     /// <summary>
     /// 获取生态中心点

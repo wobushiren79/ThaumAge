@@ -12,24 +12,25 @@ public class BiomeDesert : Biome
     {
     }
 
-    public override BlockTypeEnum GetBlockType(Chunk chunk, BiomeInfoBean biomeInfo, int genHeight, Vector3Int localPos, Vector3Int wPos)
+    public override BlockTypeEnum GetBlockType(Chunk chunk, Vector3Int localPos, ChunkTerrainData terrainData)
     {
-        base.GetBlockType(chunk, biomeInfo, genHeight, localPos, wPos);
-        if (wPos.y == genHeight)
+        base.GetBlockType(chunk, localPos, terrainData);
+        if (localPos.y == terrainData.maxHeight)
         {
+            Vector3Int wPos = localPos + chunk.chunkData.positionForWorld;
             AddCactus(wPos);
             AddWeed(wPos);
             AddFlower(wPos);
         }
-        if (wPos.y <= genHeight && wPos.y > genHeight - 30)
+        if (localPos.y <= terrainData.maxHeight && localPos.y > terrainData.maxHeight - 30)
         {
             return BlockTypeEnum.Sand;
         }
-        if (wPos.y <= genHeight - 30 && wPos.y > genHeight - 35)
+        if (localPos.y <= terrainData.maxHeight - 30 && localPos.y > terrainData.maxHeight - 35)
         {
             return BlockTypeEnum.Dirt;
         }
-        else if (wPos.y == 0)
+        else if (localPos.y == 0)
         {
             //基础
             return BlockTypeEnum.Foundation;

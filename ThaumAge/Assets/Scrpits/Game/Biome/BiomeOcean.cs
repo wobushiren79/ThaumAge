@@ -12,26 +12,27 @@ public class BiomeOcean : Biome
 
     }
 
-    public override BlockTypeEnum GetBlockType(Chunk chunk, BiomeInfoBean biomeInfo, int genHeight, Vector3Int localPos, Vector3Int wPos)
+    public override BlockTypeEnum GetBlockType(Chunk chunk, Vector3Int localPos, ChunkTerrainData terrainData)
     {
-        base.GetBlockType(chunk, biomeInfo, genHeight, localPos, wPos);
+        base.GetBlockType(chunk, localPos, terrainData);
         int trueHeight = 10;
-        if (wPos.y == trueHeight)
+        if (localPos.y == trueHeight)
         {
+            Vector3Int wPos = localPos + chunk.chunkData.positionForWorld;
             AddFlower(wPos);
             return BlockTypeEnum.Dirt;
         }
-        if (wPos.y < trueHeight && wPos.y > trueHeight - 2)
+        if (localPos.y < trueHeight && localPos.y > trueHeight - 2)
         {
             //中使用泥土
             return BlockTypeEnum.Dirt;
         }
-        else if (wPos.y == 0)
+        else if (localPos.y == 0)
         {
             //基础
             return BlockTypeEnum.Foundation;
         }
-        else if (wPos.y <= trueHeight - 2)
+        else if (localPos.y <= trueHeight - 2)
         {
             //石头
             return BlockTypeEnum.Stone;

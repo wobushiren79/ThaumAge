@@ -14,11 +14,12 @@ public class BiomeMain : Biome
     }
 
 
-    public override BlockTypeEnum GetBlockType(Chunk chunk, BiomeInfoBean biomeInfo, int genHeight, Vector3Int localPos, Vector3Int wPos)
+    public override BlockTypeEnum GetBlockType(Chunk chunk, Vector3Int localPos, ChunkTerrainData terrainData)
     {
-        base.GetBlockType(chunk, biomeInfo, genHeight, localPos, wPos);
-        if (wPos.y == genHeight)
+        base.GetBlockType(chunk, localPos, terrainData);
+        if (localPos.y == terrainData.maxHeight)
         {
+            Vector3Int wPos = localPos + chunk.chunkData.positionForWorld;
             if (wPos.x <= 3 && wPos.x >= -3 && wPos.z <= 4 && wPos.z >= -10)
             {
 

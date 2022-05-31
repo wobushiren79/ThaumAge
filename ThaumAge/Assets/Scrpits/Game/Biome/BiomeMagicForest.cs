@@ -14,13 +14,14 @@ public class BiomeMagicForest : Biome
     {
     }
 
-    public override BlockTypeEnum GetBlockType(Chunk chunk, BiomeInfoBean biomeInfo, int genHeight, Vector3Int localPos, Vector3Int wPos)
+    public override BlockTypeEnum GetBlockType(Chunk chunk, Vector3Int localPos, ChunkTerrainData terrainData)
     {
-        base.GetBlockType(chunk, biomeInfo, genHeight, localPos, wPos);
-        if (wPos.y == genHeight)
+        base.GetBlockType(chunk, localPos, terrainData);
+        if (localPos.y == terrainData.maxHeight)
         {
-            if (wPos.y >= biomeInfo.GetWaterPlaneHeight())
+            if (localPos.y >= biomeInfo.GetWaterPlaneHeight())
             {
+                Vector3Int wPos = localPos + chunk.chunkData.positionForWorld;
                 AddWeed(wPos);
                 AddBigTree(wPos);
                 AddWorldTree(wPos);
@@ -29,7 +30,7 @@ public class BiomeMagicForest : Biome
                 AddFlower(wPos);
                 AddDeadwood(wPos);
             }
-            if (wPos.y == biomeInfo.GetWaterPlaneHeight()|| wPos.y == biomeInfo.GetWaterPlaneHeight()+1)
+            if (localPos.y == biomeInfo.GetWaterPlaneHeight() || localPos.y == biomeInfo.GetWaterPlaneHeight() + 1)
             {
                 // 地表，使用草
                 return BlockTypeEnum.Sand;
@@ -40,12 +41,12 @@ public class BiomeMagicForest : Biome
                 return BlockTypeEnum.GrassMagic;
             }
         }
-        if (wPos.y < genHeight && wPos.y > genHeight - 10)
+        if (localPos.y < terrainData.maxHeight && localPos.y > terrainData.maxHeight - 10)
         {
             //中使用泥土
             return BlockTypeEnum.Dirt;
         }
-        else if (wPos.y == 0)
+        else if (localPos.y == 0)
         {
             //基础
             return BlockTypeEnum.Foundation;
@@ -55,6 +56,21 @@ public class BiomeMagicForest : Biome
             //其他石头
             return BlockTypeEnum.Stone;
         }
+    }
+
+    public override void GetBlockTypeForChunk(Chunk chunk, BiomeMapData biomeMapData)
+    {
+        base.GetBlockTypeForChunk(chunk, biomeMapData);
+
+        //获取中心点的地形数据
+        Vector3Int centerPosition = new Vector3Int(8,0,8);
+        Vector3Int chunkPosition = chunk.chunkData.positionForWorld;
+        //获取地形数据
+        ChunkTerrainData centerPositionTerrainData = GetTerrainData(chunk, biomeMapData, centerPosition.x, centerPosition.z);
+
+        Vector3Int bigTreeWorldPosition = new Vector3Int
+            (chunkPosition.x + centerPosition.x, Mathf.RoundToInt(centerPositionTerrainData.maxHeight), chunkPosition.z + centerPosition.z);
+        AddBigTree(bigTreeWorldPosition);
     }
 
     protected void AddMushroomTree(Vector3Int wPos)
@@ -115,7 +131,7 @@ public class BiomeMagicForest : Biome
             addRate = 0.3f,
             listPlantType = new List<BlockTypeEnum> { BlockTypeEnum.WeedLong, BlockTypeEnum.WeedNormal, BlockTypeEnum.WeedShort }
         };
-        BiomeCreatePlantTool.AddPlant(601,wPos, weedData);
+        BiomeCreatePlantTool.AddPlant(601, wPos, weedData);
     }
 
     public void AddFlower(Vector3Int wPos)
