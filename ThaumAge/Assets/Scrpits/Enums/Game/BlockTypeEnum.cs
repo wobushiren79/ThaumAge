@@ -29,11 +29,17 @@ public enum BlockTypeEnum
     TreeOak = 1001,//橡木
     TreeSilver = 1002,//银树
     TreeWorld = 1003,//世界树
+    TreeCherry = 1004,//樱花树木
+    TreePalm = 1005,//棕榈树木
+    TreeBirch = 1006,//桦树木
     TreeMushroom = 1101,//蘑菇树
 
-    LeavesOak = 2001, //橡木叶子
-    LeavesSilver = 2002,//银树叶子
-    LeavesWorld = 2003,//世界树叶子
+    LeavesOak = 2001, //橡木叶
+    LeavesSilver = 2002,//银树叶
+    LeavesWorld = 2003,//世界树叶
+    LeavesCherry = 2004,//樱花叶
+    LeavesPalm = 2005,//棕榈叶
+    LeavesBirch = 2006,//桦树叶
     LeavesMushroom = 2101,//磨菇树叶子
 
     WeedLong = 3001,    //杂草长
@@ -82,6 +88,9 @@ public enum BlockTypeEnum
     StairsOak = 8101,//橡木楼梯
     StairsSilver = 8102, //银树楼梯
     StairsWorld = 8103, //世界树楼梯
+    StairsCherry = 8104,//樱花楼梯
+    StairsPalm = 8105,//棕榈楼梯
+    StairsBirch = 8106,//桦树楼梯
 
     Glass = 8151,//玻璃
 
@@ -98,10 +107,16 @@ public enum BlockTypeEnum
     HalfFloorOak = 7101,//橡树地板-半
     HalfFloorSilver = 7102, //银树地板-半
     HalfFloorWorld = 7103, //世界树地板-半
+    HalfFloorCherry = 7104,//樱花地板-半
+    HalfFloorPalm = 7105,//棕榈地板-半
+    HalfFloorBirch = 7106,//桦树地板-半
 
     FloorOak = 8051,//橡木地板
     FloorSilver = 8052,//银树地板
     FloorWorld = 8053,//世界树地板
+    FloorCherry = 8054,//樱花地板
+    FloorPalm = 8055,//棕榈地板
+    FloorBirch = 8056,//桦树地板
 
     Water = 9001,//水
     Magma = 9002,//岩浆

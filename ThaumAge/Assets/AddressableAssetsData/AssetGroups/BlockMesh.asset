@@ -23,73 +23,92 @@ MonoBehaviour:
     m_SerializedLabels:
     - BlockMeshData
     - BlockMesh
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: f78a7992a8887de46be8bb1a3b1d2aec
     m_Address: Assets/Prefabs/BlockMeshData/BlockCraftingTableSimple.txt
     m_ReadOnly: 0
     m_SerializedLabels:
     - BlockMeshData
     - BlockMesh
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 486f531502941f84da7d391da5ce0e4b
     m_Address: Assets/Prefabs/BlockMeshData/BlockCropWatermelon.txt
     m_ReadOnly: 0
     m_SerializedLabels:
     - BlockMeshData
     - BlockMesh
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: a0c35ab674a3e8046a75d80b5ace1a50
     m_Address: Assets/Prefabs/BlockMeshData/BlockDoor.txt
     m_ReadOnly: 0
     m_SerializedLabels:
     - BlockMeshData
     - BlockMesh
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 7dba8aa21ba23a34c8d9433694bdf350
     m_Address: Assets/Prefabs/BlockMeshData/BlockLadderWood.txt
     m_ReadOnly: 0
     m_SerializedLabels:
     - BlockMeshData
     - BlockMesh
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 701016fd885390a47a15b3d4ffa2ce87
     m_Address: Assets/Prefabs/BlockMeshData/BlockSwitchesWooden.txt
     m_ReadOnly: 0
     m_SerializedLabels:
     - BlockMeshData
     - BlockMesh
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: bb703c0f11c556c478e98177d63b4d40
     m_Address: Assets/Prefabs/BlockMeshData/BlockBedWooden.txt
     m_ReadOnly: 0
     m_SerializedLabels:
     - BlockMeshData
     - BlockMesh
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 45bc797d554f3e044b4abb1ee6d9cd2d
     m_Address: Assets/Prefabs/BlockMeshData/BlockTorchWooden.txt
     m_ReadOnly: 0
     m_SerializedLabels:
     - BlockMesh
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: c76e00e2e48519940942c16d5d7e220c
     m_Address: Assets/Prefabs/BlockMeshData/BlockFurnacesSimple.txt
     m_ReadOnly: 0
     m_SerializedLabels:
     - BlockMesh
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 6f4b865de55e77a4c87c5ed9b2e55a54
     m_Address: Assets/Prefabs/BlockMeshData/BlockLanternStone.txt
     m_ReadOnly: 0
     m_SerializedLabels:
     - BlockMeshData
     - BlockMesh
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: fcd4885d50d6a35449b0c71a34fb1deb
     m_Address: Assets/Prefabs/BlockMeshData/BlockFenceWooden.txt
     m_ReadOnly: 0
     m_SerializedLabels:
     - BlockMesh
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: ea34d6c5d19a7f042808f4c2717e8ff9
     m_Address: Assets/Prefabs/BlockMeshData/BlockFrameItem.txt
     m_ReadOnly: 0
     m_SerializedLabels:
     - BlockMesh
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: e4a5184a94ef8b24a9fd0c0f02b5e72e
     m_Address: Assets/Prefabs/BlockMeshData/BlockSignWooden.txt
     m_ReadOnly: 0
     m_SerializedLabels:
     - BlockMesh
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 38cfe02b93595694c9773426b1f8cb03
+    m_Address: Assets/Prefabs/BlockMeshData/BlockSign.txt
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - BlockMesh
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: fd6114d87f1af534fbf270c47c0f10bf, type: 2}
   m_SchemaSet:
