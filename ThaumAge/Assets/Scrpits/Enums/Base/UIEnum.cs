@@ -4,6 +4,8 @@ using UnityEditor;
 public enum UIEnum
 {
     Loading = 1,
+    BuildingEditorMain = 10,
+    BuildingEditorCreate = 11,
 
     MainStart = 1001, //主界面-开始
     MainCreate = 1002,//主界面-创建游戏

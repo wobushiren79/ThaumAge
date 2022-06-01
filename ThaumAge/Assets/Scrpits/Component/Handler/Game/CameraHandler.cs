@@ -110,28 +110,45 @@ public class CameraHandler : BaseHandler<CameraHandler, CameraManager>
         userData.userSetting.cameraDistance = distance;
     }
 
+
     /// <summary>
     /// 是否开启摄像头移动
     /// </summary>
     /// <param name="enabled"></param>
-    public void EnabledCameraMove(bool enabled)
+    /// <param name="type">0:玩家 1:建筑编辑</param>
+    public void EnabledCameraMove(bool enabled,int type = 0)
     {
+        float xSpeed;
+        float ySpeed;
+
         if (enabled)
         {
             GameConfigBean gameConfig = GameDataHandler.Instance.manager.GetGameConfig();
-            ChangeCameraSpeed(gameConfig.speedForPlayerCameraMoveX, gameConfig.speedForPlayerCameraMoveY);
+            xSpeed = gameConfig.speedForPlayerCameraMoveX;
+            ySpeed = gameConfig.speedForPlayerCameraMoveY;
         }
         else
         {
-            ChangeCameraSpeed(0, 0);
+            xSpeed = 0;
+            ySpeed = 0;
+        }
+
+        switch (type)
+        {
+            case 0:
+                ChangeCameraSpeedForPlayer(xSpeed, ySpeed);
+                break;
+            case 1:
+                ChangeCameraSpeedForBuildingEditor(xSpeed, ySpeed);
+                break;
         }
     }
 
     /// <summary>
-    /// 修改摄像头速度
+    /// 修改摄像头速度-玩家
     /// </summary>
     /// <param name="speed"></param>
-    public void ChangeCameraSpeed(float xSpeed, float ySpeed)
+    public void ChangeCameraSpeedForPlayer(float xSpeed, float ySpeed)
     {
         CinemachineVirtualCamera cameraForFirst = manager.cameraForFirst;
         //第一人称
@@ -142,10 +159,29 @@ public class CameraHandler : BaseHandler<CameraHandler, CameraManager>
             cinemachinePOV.m_HorizontalAxis.m_MaxSpeed = xSpeed / timeScale;
         }
 
-        CinemachineFreeLook cameraForThree = manager.cameraForThree;
         //第三人称
-        cameraForThree.m_XAxis.m_MaxSpeed = xSpeed / timeScale;
-        cameraForThree.m_YAxis.m_MaxSpeed = ySpeed / 100 / timeScale;
+        CinemachineFreeLook cameraForThree = manager.cameraForThree;
+        if (cameraForThree != null)
+        {
+            cameraForThree.m_XAxis.m_MaxSpeed = xSpeed / timeScale;
+            cameraForThree.m_YAxis.m_MaxSpeed = ySpeed / 100 / timeScale;
+        }
+    }
+
+    /// <summary>
+    /// 修改摄像头速度-建筑编辑
+    /// </summary>
+    /// <param name="xSpeed"></param>
+    /// <param name="ySpeed"></param>
+    public void ChangeCameraSpeedForBuildingEditor(float xSpeed, float ySpeed)
+    {
+        //建筑编辑摄像头
+        CinemachineFreeLook cameraForBuildingEditor = manager.cameraForBuildingEditor;
+        if (cameraForBuildingEditor != null)
+        {
+            cameraForBuildingEditor.m_XAxis.m_MaxSpeed = xSpeed / timeScale;
+            cameraForBuildingEditor.m_YAxis.m_MaxSpeed = ySpeed / 100 / timeScale;
+        }
     }
 
     /// <summary>

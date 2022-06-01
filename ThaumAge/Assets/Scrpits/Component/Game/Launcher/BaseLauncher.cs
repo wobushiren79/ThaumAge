@@ -9,6 +9,9 @@ public class BaseLauncher : BaseMonoBehaviour
         Launch();
     }
 
+    /// <summary>
+    /// 启动
+    /// </summary>
     public virtual void Launch()
     {
         //先清理一下内存
@@ -19,4 +22,5 @@ public class BaseLauncher : BaseMonoBehaviour
         GameHandler.Instance.launcher = this;
         GameHandler.Instance.actionForLauncher?.Invoke();
     }
+
 }

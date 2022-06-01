@@ -96,7 +96,7 @@ public class BaseMonoBehaviour : MonoBehaviour
         }
     }
 
-    public T FindWithTag<T>(string tag)
+    public T FindWithTag<T>(string tag, string name = null)
     {
         GameObject[] objArray = GameObject.FindGameObjectsWithTag(tag);
         if (objArray.IsNull())
@@ -106,6 +106,8 @@ public class BaseMonoBehaviour : MonoBehaviour
         for (int i = 0; i < objArray.Length; i++)
         {
             GameObject itemObj = objArray[i];
+            if (name != null && !itemObj.name.Equals(name))
+                continue;
             T data = itemObj.GetComponent<T>();
             if (data != null)
                 return data;

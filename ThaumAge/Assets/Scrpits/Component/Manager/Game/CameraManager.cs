@@ -9,17 +9,35 @@ public class CameraManager : BaseManager
 {
     //主摄像头
     protected Camera _mainCamera;
+    public Camera mainCamera
+    {
+        get
+        {
+            if (_mainCamera == null)
+            {
+                _mainCamera = Camera.main;
+            }
+            return _mainCamera;
+        }
+    }
+
     //ui摄像头
     protected Camera _uiCamera;
+    public Camera uiCamera
+    {
+        get
+        {
+            if (_uiCamera == null)
+            {
+                //_uiCamera = FindWithTag<Camera>(TagInfo.Tag_UICamera);
+                _uiCamera = Camera.main;
+            }
+            return _uiCamera;
+        }
+    }
 
     //第一人称摄像头
     private CinemachineVirtualCamera _cameraForFirst;
-    //第三人称摄像头
-    private CinemachineFreeLook _cameraForThree;
-
-    //第三人称摄像头初始数据
-    public CinemachineFreeLook.Orbit[] threeFreeLookOriginalOrbits;
-
     public CinemachineVirtualCamera cameraForFirst
     {
         get
@@ -31,6 +49,9 @@ public class CameraManager : BaseManager
             return _cameraForFirst;
         }
     }
+
+    //第三人称摄像头
+    private CinemachineFreeLook _cameraForThree;
 
     public CinemachineFreeLook cameraForThree
     {
@@ -48,34 +69,27 @@ public class CameraManager : BaseManager
                         threeFreeLookOriginalOrbits[i].m_Height = _cameraForThree.m_Orbits[i].m_Height;
                         threeFreeLookOriginalOrbits[i].m_Radius = _cameraForThree.m_Orbits[i].m_Radius;
                     }
-                }        
+                }
             }
             return _cameraForThree;
         }
     }
 
-    public Camera mainCamera
-    {
-        get
-        {
-            if (_mainCamera == null)
-            {
-                _mainCamera = Camera.main;
-            }
-            return _mainCamera;
-        }
-    }
+    //第三人称摄像头初始数据
+    public CinemachineFreeLook.Orbit[] threeFreeLookOriginalOrbits;
 
-    public Camera uiCamera
+    //编辑建筑的摄像头
+    private CinemachineFreeLook _cameraForBuildingEditor;
+
+    public CinemachineFreeLook cameraForBuildingEditor
     {
         get
         {
-            if (_uiCamera == null)
+            if (_cameraForBuildingEditor == null)
             {
-                //_uiCamera = FindWithTag<Camera>(TagInfo.Tag_UICamera);
-                _uiCamera = Camera.main;
+                _cameraForBuildingEditor = FindWithTag<CinemachineFreeLook>(TagInfo.Tag_CameraCinemachine);
             }
-            return _uiCamera;
+            return _cameraForBuildingEditor;
         }
     }
 }

@@ -99,7 +99,7 @@ public class BiomeMagicForest : Biome
     {
         BiomeForTreeData treeData = new BiomeForTreeData
         {
-            addRate = 0.005f,
+            addRate = 0.01f,
             minHeight = 6,
             maxHeight = 10,
             treeTrunk = BlockTypeEnum.TreeSilver,
