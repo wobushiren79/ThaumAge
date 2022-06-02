@@ -89,6 +89,7 @@ Canvas:
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 0
+  m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: -256525939
   m_SortingOrder: 0
   m_TargetDisplay: 0
@@ -189,6 +190,7 @@ Canvas:
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 0
+  m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: -56550503
   m_SortingOrder: 0
   m_TargetDisplay: 0
@@ -241,6 +243,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8352431568704299414}
+  - component: {fileID: 7579253307684396390}
+  - component: {fileID: 6832603273544897300}
   m_Layer: 5
   m_Name: UIContainer
   m_TagString: UICamera
@@ -269,6 +273,49 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7579253307684396390
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8352431568704299415}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 76c392e42b5098c458856cdf6ecaaaa1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_FirstSelected: {fileID: 0}
+  m_sendNavigationEvents: 1
+  m_DragThreshold: 10
+--- !u!114 &6832603273544897300
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8352431568704299415}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 01614664b831546d2ae94a42149d80ac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_MoveRepeatDelay: 0.5
+  m_MoveRepeatRate: 0.1
+  m_XRTrackingOrigin: {fileID: 0}
+  m_ActionsAsset: {fileID: -944628639613478452, guid: a99670d5999484b4996a8e5262cf734c, type: 3}
+  m_PointAction: {fileID: -329464634314474117, guid: a99670d5999484b4996a8e5262cf734c, type: 3}
+  m_MoveAction: {fileID: 7964726320957715130, guid: a99670d5999484b4996a8e5262cf734c, type: 3}
+  m_SubmitAction: {fileID: -1405664532843072550, guid: a99670d5999484b4996a8e5262cf734c, type: 3}
+  m_CancelAction: {fileID: -8794002174519716291, guid: a99670d5999484b4996a8e5262cf734c, type: 3}
+  m_LeftClickAction: {fileID: -5543071537820293572, guid: a99670d5999484b4996a8e5262cf734c, type: 3}
+  m_MiddleClickAction: {fileID: 711437931302047415, guid: a99670d5999484b4996a8e5262cf734c, type: 3}
+  m_RightClickAction: {fileID: 419695913778813639, guid: a99670d5999484b4996a8e5262cf734c, type: 3}
+  m_ScrollWheelAction: {fileID: -5218445318529390543, guid: a99670d5999484b4996a8e5262cf734c, type: 3}
+  m_TrackedDevicePositionAction: {fileID: -1728942720869145626, guid: a99670d5999484b4996a8e5262cf734c, type: 3}
+  m_TrackedDeviceOrientationAction: {fileID: -8121692360697341290, guid: a99670d5999484b4996a8e5262cf734c, type: 3}
+  m_DeselectOnBackgroundClick: 1
+  m_PointerBehavior: 0
 --- !u!1 &8352431568882598561
 GameObject:
   m_ObjectHideFlags: 0
@@ -326,6 +373,7 @@ Canvas:
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 0
+  m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 1942347407
   m_SortingOrder: 0
   m_TargetDisplay: 0
@@ -426,6 +474,7 @@ Canvas:
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 0
+  m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: -56550503
   m_SortingOrder: 0
   m_TargetDisplay: 0
@@ -526,6 +575,7 @@ Canvas:
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 0
+  m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: -224501079
   m_SortingOrder: 0
   m_TargetDisplay: 0
@@ -574,6 +624,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 2
     m_TransformParent: {fileID: 8352431568030820753}
     m_Modifications:
     - target: {fileID: 5851314731992454110, guid: 34c67037ac271074aa4adceef66fb85c, type: 3}
@@ -665,6 +716,7 @@ PrefabInstance:
       value: ToastList
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_AddedGameObjects: []
   m_SourcePrefab: {fileID: 100100000, guid: 34c67037ac271074aa4adceef66fb85c, type: 3}
 --- !u!224 &284676876480262062 stripped
 RectTransform:

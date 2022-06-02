@@ -11,7 +11,7 @@ public class GameLauncher : BaseLauncher
     public override void Launch()
     {
         base.Launch();
-        IconHandler.Instance.InitData();
+        IconHandler.Instance.InitData(null);
         //打开主UI
         UIHandler.Instance.OpenUIAndCloseOther<UILoading>(UIEnum.Loading);
         //加载资源

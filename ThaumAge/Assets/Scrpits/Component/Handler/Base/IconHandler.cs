@@ -6,13 +6,21 @@ using UnityEngine.U2D;
 
 public class IconHandler : BaseHandler<IconHandler, IconManager>
 {
+    //是否初始化图集
+    protected bool isInitAtlas = false;
+    //初始化回调
+    protected Action initCompleteCallBack;
     public override void Awake()
     {
         base.Awake();
     }
 
-    public void InitData()
+    public void InitData(Action initCompleteCallBack)
     {
+        this.initCompleteCallBack = initCompleteCallBack;
+        if (isInitAtlas)
+            return;
+        isInitAtlas = true;
         SpriteAtlasManager.atlasRequested += RequestAtlas;
     }
 
@@ -26,6 +34,7 @@ public class IconHandler : BaseHandler<IconHandler, IconManager>
                 if (spriteAtlas != null)
                     callback?.Invoke(spriteAtlas);
             }
+            initCompleteCallBack?.Invoke();
         };
         LoadAddressablesUtil.LoadAssetAsync(manager.PathSpriteAtlasForUI, loadCallBack);
         LoadAddressablesUtil.LoadAssetAsync(manager.PathSpriteAtlasForItems, loadCallBack);

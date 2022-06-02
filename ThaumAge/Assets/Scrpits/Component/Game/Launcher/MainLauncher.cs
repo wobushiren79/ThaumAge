@@ -12,8 +12,10 @@ public class MainLauncher : BaseLauncher
     public override void Launch()
     {
         base.Launch();
+        IconHandler.Instance.InitData(null);
+
         UIHandler.Instance.OpenUIAndCloseOther<UILoading>(UIEnum.Loading);
-        IconHandler.Instance.InitData();
+
         GameHandler.Instance.LoadGameResources(() =>
         {
             //设置游戏状态
