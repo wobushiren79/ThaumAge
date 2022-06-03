@@ -357,6 +357,8 @@ public class ControlForPlayer : ControlForBase
             //判断是否成功消耗耐力
             bool isExpendStamina = characterStatus.StaminaChange(-Time.deltaTime * 2);
             moveSpeed = isExpendStamina ? moveSpeed * 1.5f : moveSpeed;
+            //刷新UI
+            EventHandler.Instance.TriggerEvent(EventsInfo.CharacterStatus_StatusChange);
         }
         //如果按住了ctrl 则速度减慢50%
         float ctrlInput = inputActionCtrl.ReadValue<float>();

@@ -18,7 +18,7 @@ public class CharacterStatusBean
     public int maxMagic = 0;
 
     //饥饿值
-    public int saturation = 10;
+    public float saturation = 10;
     public int maxSaturation = 10;
 
     /// <summary>
@@ -40,7 +40,43 @@ public class CharacterStatusBean
             stamina = maxStamina;
         if (stamina < 0)
             stamina = 0;
-        EventHandler.Instance.TriggerEvent(EventsInfo.CharacterStatus_StatusChange);
         return true;
+    }
+
+    /// <summary>
+    /// 减少饥饿值
+    /// </summary>
+    /// <returns></returns>
+    public float SaturationChange(float changeData)
+    {
+        this.saturation += changeData;
+        if (saturation > maxSaturation)
+        {
+            saturation = maxSaturation;
+        }
+        if (saturation < 0)
+        {
+            saturation = 0;
+        }
+        return saturation;
+    }
+
+    /// <summary>
+    /// 减少生命值
+    /// </summary>
+    /// <param name="changeData"></param>
+    /// <returns></returns>
+    public int HealthChange(int changeData)
+    {
+        this.health += changeData;
+        if (health > maxHealth)
+        {
+            health = maxHealth;
+        }
+        if (health < 0)
+        {
+            health = 0;
+        }
+        return health;
     }
 }

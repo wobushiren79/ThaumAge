@@ -30,7 +30,7 @@ public class Player : BaseMonoBehaviour
     public void Update()
     {
         timeUpdateForPlayerData += Time.deltaTime;
-        if (timeUpdateForPlayerData> timeUpdateMaxForPlayerData)
+        if (timeUpdateForPlayerData > timeUpdateMaxForPlayerData)
         {
             UpdatePlayerData();
             timeUpdateForPlayerData = 0;
@@ -101,9 +101,19 @@ public class Player : BaseMonoBehaviour
     public void HandleForUserData()
     {
         UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();
-        CharacterStatusBean characterStatus= userData.characterData.GetCharacterStatus();
+        CharacterStatusBean characterStatus = userData.characterData.GetCharacterStatus();
         //增加耐力
         characterStatus.StaminaChange(0.5f);
+        //减少饥饿度
+        float saturation = characterStatus.SaturationChange(-0.001f);
+        //如果没有饥饿度了则减少生命值
+        if (saturation <= 0)
+        {
+            //按比例减少
+            characterStatus.HealthChange(Mathf.RoundToInt(-characterStatus.maxHealth * 0.1f));
+        }
+        //刷新UI
+        EventHandler.Instance.TriggerEvent(EventsInfo.CharacterStatus_StatusChange);
     }
 
     /// <summary>
