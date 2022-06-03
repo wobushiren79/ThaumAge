@@ -11,6 +11,7 @@ public enum BlockShapeEnum
     CubeHalf = 5,//一半
 
     Stairs = 11,//楼梯
+    Face = 21,//一个面
 
     Cross = 101,// 正交叉
     CrossOblique = 102,//斜交叉

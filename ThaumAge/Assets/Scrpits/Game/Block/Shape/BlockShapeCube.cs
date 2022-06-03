@@ -142,8 +142,6 @@ public class BlockShapeCube : BlockShape
     /// <param name="tris"></param>
     public override void BuildBlock(Chunk chunk, Vector3Int localPosition)
     {
-        base.BuildBlock(chunk, localPosition);
-
         if (block.blockType != BlockTypeEnum.None)
         {
             //只有在能旋转的时候才去查询旋转方向

@@ -442,6 +442,10 @@ public class BlockEditorWindow : EditorWindow
                     offsetPosition += (tfModel.localPosition - new Vector3(0.5f, 0.5f, 0.5f));
                     offsetPosition += meshFilterModel.transform.localPosition + new Vector3(0f, 0.5f, 0f);
                 }
+                if (meshFilterModel.sharedMesh == null)
+                {
+                    Debug.Log("meshFilterModel:"+ meshFilterModel.name);
+                }
                 meshData = new MeshDataCustom(colliderModel, meshFilterModel.sharedMesh, 0.03125f, offsetPosition, meshFilterModel.transform.localEulerAngles);
             }
             else

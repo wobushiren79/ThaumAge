@@ -28,14 +28,6 @@ public class BlockShapeCustom : BlockShape
             trisColliderAddCustom = blockMeshData.trianglesCollider;
     }
 
-    public override void BuildBlock(Chunk chunk, Vector3Int localPosition)
-    {
-        if (block.blockType != BlockTypeEnum.None)
-        {
-            BuildFace(chunk, localPosition, vertsAdd, uvsAdd, colorsAdd, trisAdd);
-        }
-    }
-
     #region 增加三角
     public override void BaseAddTris(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum blockDirection, int[] trisAdd)
     {

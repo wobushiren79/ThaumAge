@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?><COLLADA xmlns="http://www.collada.org/2005/11/COLLADASchema" version="1.4.1">
+<asset>
+<contributor>
+<author>VoxelShop User</author>
+<authoring_tool>VoxelShop V1.8.22
+</authoring_tool>
+</contributor>
+<created>2022-06-03T23:20:41</created>
+<modified>2022-06-03T23:20:41</modified>
+<unit meter="1" name="meter"/>
+<up_axis>Y_UP</up_axis>
+</asset>
+<library_images>
+<image id="BlockFenceDoorWoodenOther_texture0-image" name="BlockFenceDoorWoodenOther_texture0-image">
+<init_from>file://BlockFenceDoorWoodenOther_texture0.png</init_from>
+</image>
+</library_images>
+<library_effects>
+<effect id="lambert0-fx">
+<profile_COMMON>
+<newparam sid="BlockFenceDoorWoodenOther_texture0-surface">
+<surface type="2D">
+<init_from>BlockFenceDoorWoodenOther_texture0-image</init_from>
+</surface>
+</newparam>
+<newparam sid="BlockFenceDoorWoodenOther_texture0-sampler">
+<sampler2D>
+<source>BlockFenceDoorWoodenOther_texture0-surface</source>
+<wrap_s>WRAP</wrap_s>
+<wrap_t>WRAP</wrap_t>
+<minfilter>NEAREST</minfilter>
+<magfilter>NEAREST</magfilter>
+</sampler2D>
+</newparam>
+<technique sid="common">
+<lambert>
+<emission>
+<color>0 0 0 1</color>
+</emission>
+<ambient>
+<color>0 0 0 1</color>
+</ambient>
+<diffuse>
+<texture texcoord="TEX0" texture="BlockFenceDoorWoodenOther_texture0-sampler"/>
+</diffuse>
+</lambert>
+</technique>
+</profile_COMMON>
+</effect>
+</library_effects>
+<library_materials>
+<material id="lambert0-material" name="lambert0">
+<instance_effect url="#lambert0-fx"/>
+</material>
+</library_materials>
+<library_geometries>
+<geometry id="Plane-tex-mesh-0" name="Plane-tex">
+<mesh>
+<source id="Plane-tex-mesh-0-positions">
+<float_array count="144" id="Plane-tex-mesh-0-positions-array">-2 22 2 -2 20 -2 -2 20 2 -2 22 -2 -2 18 2 -2 16 -2 -2 16 2 -2 18 -2 -2 14 2 -2 12 -2 -2 12 2 -2 14 -2 -2 10 2 -2 8 -2 -2 8 2 -2 10 -2 -12 26 2 -12 4 -2 -12 4 2 -12 26 -2 0 24 2 0 6 -2 0 6 2 0 24 -2 -2 26 2 -2 24 -2 -2 24 2 -2 26 -2 -2 6 2 -2 4 -2 -2 4 2 -2 6 -2 -10 22 2 -10 20 -2 -10 20 2 -10 22 -2 -10 18 2 -10 16 -2 -10 16 2 -10 18 -2 -10 14 2 -10 12 -2 -10 12 2 -10 14 -2 -10 10 2 -10 8 -2 -10 8 2 -10 10 -2</float_array>
+<technique_common>
+<accessor count="48" source="#Plane-tex-mesh-0-positions-array" stride="3">
+<param name="X" type="float"/>
+<param name="Y" type="float"/>
+<param name="Z" type="float"/>
+</accessor>
+</technique_common>
+</source>
+<source id="Plane-tex-mesh-0-uvs">
+<float_array count="30" id="Plane-tex-mesh-0-uvs-array">0.1250884 0.7499116 0.24982323 0.7499116 0.1250884 0.6251768 0.5000884 0.8749116 0.6248232 0.8749116 0.5000884 0.7501768 0.500125 0.5002813 0.500125 0.625 0.62475 0.7497187 0.4998875 0.5001 0.3750375 0.7498 0.343825 0.5001 0.50025 0.7497187 0.624875 0.625 0.624875 0.5002813</float_array>
+<technique_common>
+<accessor count="15" source="#Plane-tex-mesh-0-uvs-array" stride="2">
+<param name="S" type="float"/>
+<param name="T" type="float"/>
+</accessor>
+</technique_common>
+</source>
+<source id="Plane-tex-mesh-0-normals">
+<float_array count="18" id="Plane-tex-mesh-0-normals-array">-1 0 0 1 0 0 0 -1 0 0 1 0 0 0 1 0 0 -1 </float_array>
+<technique_common>
+<accessor count="6" source="#Plane-tex-mesh-0-normals-array" stride="3">
+<param name="X" type="float"/>
+<param name="Y" type="float"/>
+<param name="Z" type="float"/>
+</accessor>
+</technique_common>
+</source>
+<vertices id="Plane-tex-mesh-0-vertices">
+<input semantic="POSITION" source="#Plane-tex-mesh-0-positions"/>
+</vertices>
+<triangles count="108" material="Plane-tex-mesh-0-lambert0-material">
+<input offset="0" semantic="VERTEX" source="#Plane-tex-mesh-0-vertices"/>
+<input offset="1" semantic="TEXCOORD" set="0" source="#Plane-tex-mesh-0-uvs"/>
+<input offset="2" semantic="NORMAL" source="#Plane-tex-mesh-0-normals"/>
+<p>0 0 0 1 1 0 2 2 0 0 0 0 3 1 0 1 2 0 4 0 0 5 1 0 6 2 0 4 0 0 7 1 0 5 2 0 8 0 0 9 1 0 10 2 0 8 0 0 11 1 0 9 2 0 12 0 0 13 1 0 14 2 0 12 0 0 15 1 0 13 2 0 16 0 0 17 1 0 18 2 0 16 0 0 19 1 0 17 2 0 21 1 1 20 0 1 22 2 1 23 1 1 20 0 1 21 2 1 25 1 1 24 0 1 26 2 1 27 1 1 24 0 1 25 2 1 29 1 1 28 0 1 30 2 1 31 1 1 28 0 1 29 2 1 33 1 1 32 0 1 34 2 1 35 1 1 32 0 1 33 2 1 37 1 1 36 0 1 38 2 1 39 1 1 36 0 1 37 2 1 41 1 1 40 0 1 42 2 1 43 1 1 40 0 1 41 2 1 45 1 1 44 0 1 46 2 1 47 1 1 44 0 1 45 2 1 17 1 2 30 0 2 18 2 2 29 1 2 30 0 2 17 2 2 31 1 2 22 0 2 28 2 2 21 1 2 22 0 2 31 2 2 47 4 2 12 3 2 44 5 2 15 4 2 12 3 2 47 5 2 43 4 2 8 3 2 40 5 2 11 4 2 8 3 2 43 5 2 39 4 2 4 3 2 36 5 2 7 4 2 4 3 2 39 5 2 35 4 2 0 3 2 32 5 2 3 4 2 0 3 2 35 5 2 14 3 3 45 4 3 46 5 3 14 3 3 13 4 3 45 5 3 10 3 3 41 4 3 42 5 3 10 3 3 9 4 3 41 5 3 6 3 3 37 4 3 38 5 3 6 3 3 5 4 3 37 5 3 2 3 3 33 4 3 34 5 3 2 3 3 1 4 3 33 5 3 20 0 3 25 1 3 26 2 3 20 0 3 23 1 3 25 2 3 24 0 3 19 1 3 16 2 3 24 0 3 27 1 3 19 2 3 22 0 4 14 1 4 28 2 4 28 3 4 14 4 4 46 5 4 14 0 4 22 1 4 12 2 4 30 6 4 28 7 4 46 8 4 12 0 4 22 1 4 10 2 4 30 9 4 46 10 4 18 11 4 10 0 4 22 1 4 8 2 4 12 3 4 10 4 4 42 5 4 18 0 4 46 1 4 44 2 4 22 0 4 20 1 4 8 2 4 12 3 4 42 4 4 44 5 4 18 0 4 44 1 4 42 2 4 20 0 4 6 1 4 8 2 4 18 0 4 42 1 4 40 2 4 8 3 4 6 4 4 38 5 4 20 0 4 4 1 4 6 2 4 38 0 4 18 1 4 40 2 4 8 3 4 38 4 4 40 5 4 20 0 4 2 1 4 4 2 4 38 0 4 16 1 4 18 2 4 4 3 4 2 4 4 34 5 4 20 0 4 0 1 4 2 2 4 38 0 4 36 1 4 16 2 4 4 3 4 34 4 4 36 5 4 20 0 4 26 1 4 0 2 4 36 0 4 34 1 4 16 2 4 32 3 4 0 4 4 26 5 4 34 0 4 32 1 4 16 2 4 32 12 4 26 13 4 24 14 4 24 9 4 16 11 4 32 10 4 13 1 5 21 0 5 31 2 5 13 4 5 31 3 5 45 5 5 21 1 5 13 0 5 15 2 5 31 7 5 29 6 5 45 8 5 21 1 5 15 0 5 9 2 5 45 10 5 29 9 5 17 11 5 21 1 5 9 0 5 11 2 5 9 4 5 15 3 5 41 5 5 45 1 5 17 0 5 47 2 5 23 1 5 21 0 5 11 2 5 41 4 5 15 3 5 47 5 5 47 1 5 17 0 5 41 2 5 5 1 5 23 0 5 11 2 5 41 1 5 17 0 5 43 2 5 5 4 5 11 3 5 37 5 5 7 1 5 23 0 5 5 2 5 17 1 5 37 0 5 43 2 5 37 4 5 11 3 5 43 5 5 1 1 5 23 0 5 7 2 5 19 1 5 37 0 5 17 2 5 1 4 5 7 3 5 33 5 5 3 1 5 23 0 5 1 2 5 39 1 5 37 0 5 19 2 5 33 4 5 7 3 5 39 5 5 25 1 5 23 0 5 3 2 5 33 1 5 39 0 5 19 2 5 3 4 5 35 3 5 25 5 5 35 1 5 33 0 5 19 2 5 25 13 5 35 12 5 27 14 5 19 11 5 27 9 5 35 10 5</p>
+</triangles>
+</mesh>
+</geometry>
+</library_geometries>
+<library_visual_scenes>
+<visual_scene id="Scene" name="Scene">
+<node id="blockfencedoorwoodenother.merged" name="BlockFenceDoorWoodenOther.Merged" type="NODE">
+<translate sid="location">6.0 -0.0 0.0</translate>
+<rotate sid="rotationZ">0 0 1 0</rotate>
+<rotate sid="rotationY">0 1 0 0</rotate>
+<rotate sid="rotationX">1 0 0 0</rotate>
+<scale sid="scale">1.0 1.0 1.0</scale>
+<instance_geometry name="Merged" sid="blockfencedoorwoodenother.merged" url="#Plane-tex-mesh-0">
+<bind_material>
+<technique_common>
+<instance_material symbol="lambert0-material" target="#lambert0-material">
+<bind_vertex_input input_semantic="TEXCOORD" input_set="0" semantic="TEX0"/>
+</instance_material>
+</technique_common>
+</bind_material>
+</instance_geometry>
+</node>
+</visual_scene>
+</library_visual_scenes>
+<scene>
+<instance_visual_scene url="#Scene"/>
+</scene>
+</COLLADA>
