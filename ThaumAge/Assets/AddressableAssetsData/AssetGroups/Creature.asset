@@ -21,6 +21,12 @@ MonoBehaviour:
     m_Address: Assets/Prefabs/Model/Creature/Skeleton.prefab
     m_ReadOnly: 0
     m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: bfc0588c376dd1b4b85d59766cda22c4
+    m_Address: Assets/Prefabs/Model/Creature/Cow.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: fd6114d87f1af534fbf270c47c0f10bf, type: 2}
   m_SchemaSet:
