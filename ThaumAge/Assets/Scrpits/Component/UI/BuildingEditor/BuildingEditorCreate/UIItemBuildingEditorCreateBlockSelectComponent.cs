@@ -8,5 +8,7 @@ public partial class UIItemBuildingEditorCreateBlockSelect
 
     public Image ui_Icon;
 
+    public Button ui_ItemBuildingEditorCreateBlockSelect;
+
 
 }
