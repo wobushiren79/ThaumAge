@@ -5,6 +5,10 @@ using UnityEngine;
 public partial class UIBuildingEditorCreate : BaseUIComponent
 {
     protected List<BlockInfoBean> listBlockInfo;
+
+    //选中的下标
+    protected int indexSelect = 0;
+
     public override void Awake()
     {
         base.Awake();
@@ -15,6 +19,7 @@ public partial class UIBuildingEditorCreate : BaseUIComponent
     {
         base.OpenUI();
         InitData();
+        RegisterEvent<int>(EventsInfo.UIBuildingEditorCreate_SelectChange, CallBackForSelectChange);
     }
 
     public void InitData()
@@ -40,6 +45,16 @@ public partial class UIBuildingEditorCreate : BaseUIComponent
     public void OnCellChangeForBlockSelect(ScrollGridCell itemCell)
     {
         UIItemBuildingEditorCreateBlockSelect itemView = itemCell.GetComponent<UIItemBuildingEditorCreateBlockSelect>();
-        itemView.SetData(listBlockInfo[itemCell.index]);
+        itemView.SetData(listBlockInfo[itemCell.index], itemCell.index, indexSelect);
+    }
+
+    /// <summary>
+    /// 选择不同方块的回调
+    /// </summary>
+    public void CallBackForSelectChange(int changeIndex)
+    {
+        this.indexSelect = changeIndex;
+        //刷新所有
+        ui_BlockList.RefreshAllCells();
     }
 }

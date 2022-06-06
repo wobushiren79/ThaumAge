@@ -16,4 +16,7 @@ public static class EventsInfo
 
     public static readonly string CharacterStatus_StatusChange = "CharacterStatus_StatusChange";//角色状态修改
 
+
+    public static readonly string UIBuildingEditorCreate_SelectChange = "UIBuildingEditorCreate_SelectChange";//建造模式 选择方块
+
 }

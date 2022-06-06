@@ -3,7 +3,7 @@ using UnityEditor;
 using UnityEngine;
 
 [ExecuteInEditMode]
-public class BuildingEditor : BaseMonoBehaviour
+public class BuildingEditorModel : BaseMonoBehaviour
 {
     public Mesh mesh;
     public MeshFilter meshFilter;
@@ -11,13 +11,16 @@ public class BuildingEditor : BaseMonoBehaviour
 
     public BlockTypeEnum blockType;
     public DirectionEnum direction;
-    public float randomRate = 1;
 
     public void Awake()
     {
         meshFilter = GetComponent<MeshFilter>();
         meshRenderer = GetComponent<MeshRenderer>();
-        OnValidate();
+    }
+
+    public void SetData(BlockInfoBean blockInfo)
+    {
+
     }
 
     public void OnValidate()
