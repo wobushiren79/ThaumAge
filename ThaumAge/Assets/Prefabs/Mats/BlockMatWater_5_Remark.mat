@@ -18,21 +18,15 @@ MonoBehaviour:
     m_Values: 
 --- !u!21 &2100000
 Material:
-  serializedVersion: 8
+  serializedVersion: 6
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: BlockMatWater_5
-  m_Shader: {fileID: -6465566751694194690, guid: 2a498d952a8640647b4e423b6284c979, type: 3}
-  m_Parent: {fileID: 0}
-  m_ModifiedSerializedProperties: 0
-  m_ValidKeywords:
-  - _DISABLE_SSR_TRANSPARENT
-  - _DOUBLESIDED_ON
-  - _ENABLE_FOG_ON_TRANSPARENT
-  - _SURFACE_TYPE_TRANSPARENT
-  m_InvalidKeywords: []
+  m_Name: BlockMatWater_5_Remark
+  m_Shader: {fileID: -6465566751694194690, guid: 3cff44f010becb441aac1722d2147c0b, type: 3}
+  m_ShaderKeywords: _DISABLE_SSR_TRANSPARENT _DOUBLESIDED_ON _ENABLE_FOG_ON_TRANSPARENT
+    _SURFACE_TYPE_TRANSPARENT
   m_LightmapFlags: 2
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 1
@@ -45,7 +39,6 @@ Material:
   - TransparentBackface
   - RayTracingPrepass
   - MOTIONVECTORS
-  m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
@@ -200,7 +193,6 @@ Material:
     - _AlphaSrcBlend: 1
     - _AlphaToMask: 0
     - _AlphaToMaskInspectorValue: 0
-    - _AmbientOcclusion: 1
     - _Blend: 0
     - _BlendMode: 0
     - _BumpScale: 1
@@ -217,15 +209,11 @@ Material:
     - _DiffusionProfileHash: 0
     - _DoubleSidedEnable: 1
     - _DoubleSidedGIMode: 0
-    - _DoubleSidedNormalMode: 2
+    - _DoubleSidedNormalMode: 1
     - _DstBlend: 10
     - _EnableBlendModePreserveSpecularLighting: 1
     - _EnableFogOnTransparent: 1
     - _EnvironmentReflections: 1
-    - _FoamAmount: 0.1
-    - _FoamCutOff: 1
-    - _FoamScale: 0
-    - _FoamSpeed: 0
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
@@ -240,12 +228,9 @@ Material:
     - _ReceivesSSR: 1
     - _ReceivesSSRTransparent: 0
     - _RefractionModel: 0
-    - _RefractionScale: 0.1
-    - _RefractionSpeed: 0.5
-    - _RefractionStrength: 0.1
     - _RenderQueueType: 4
     - _RequireSplitLighting: 0
-    - _Smoothness: 1
+    - _Smoothness: 0
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
@@ -271,7 +256,6 @@ Material:
     - _TransparentZWrite: 0
     - _UVSec: 0
     - _UseShadowThreshold: 0
-    - _WaterDeep: 0.2
     - _WorkflowMode: 1
     - _ZTestDepthEqualForOpaque: 4
     - _ZTestGBuffer: 4
@@ -297,12 +281,9 @@ Material:
     - WaterColor: {r: 0, g: 0.7347222, b: 0.99215686, a: 0.5882353}
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
-    - _DeepWaterColor: {r: 0, g: 0.5205526, b: 0.8490566, a: 0.5882353}
     - _DiffusionProfileAsset: {r: 0, g: 0, b: 0, a: 0}
-    - _DoubleSidedConstants: {r: 1, g: 1, b: 1, a: 0}
+    - _DoubleSidedConstants: {r: 1, g: 1, b: -1, a: 0}
     - _EmissionColor: {r: 1, g: 1, b: 1, a: 1}
-    - _FoamColor: {r: 1, g: 1, b: 1, a: 0.7098039}
-    - _ShallowWaterColor: {r: 0, g: 1, b: 1, a: 0.039215688}
     - _SpecColor: {r: 0.2, g: 0.2, b: 0.2, a: 1}
   m_BuildTextureStacks: []
 --- !u!114 &1806920617612451250
