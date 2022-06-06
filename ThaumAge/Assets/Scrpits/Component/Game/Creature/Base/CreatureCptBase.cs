@@ -24,7 +24,7 @@ public class CreatureCptBase : BaseMonoBehaviour
     //检测-生物
     protected Collider colliderCreature;
 
-    public float timeUpdate = 0;
+    protected float timeUpdate = 0;
     public virtual void Awake()
     {
         animCreature = GetComponentInChildren<Animator>();
