@@ -80,6 +80,11 @@ public class BlockShapeCustomAroundLRFB : BlockShapeCustom
         {
             return true;
         }
+        //如果是栅栏门
+        if (blockClose is BlockBaseFenceDoor)
+        {
+            return true;
+        }
         return false;
     }
 }

@@ -16,19 +16,7 @@ MonoBehaviour:
   m_Data:
     m_SerializedData: []
   m_GUID: 1261beb35e7b46c4fbf9458f1cd39db6
-  m_SerializeEntries:
-  - m_GUID: 313e27eae5b12684594d5bb7a43b4993
-    m_Address: Assets/Prefabs/Block/BlockFlowerWood.prefab
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-  - m_GUID: 0da3026c130ad514ca68ea91d39d1f9a
-    m_Address: Assets/Prefabs/BlockMeshModel/BlockSignWooden.prefab
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-  - m_GUID: e4f153e2f12c853468828189881b901c
-    m_Address: Assets/ComputeShader/TerrainCShader.compute
-    m_ReadOnly: 0
-    m_SerializedLabels: []
+  m_SerializeEntries: []
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: fd6114d87f1af534fbf270c47c0f10bf, type: 2}
   m_SchemaSet:

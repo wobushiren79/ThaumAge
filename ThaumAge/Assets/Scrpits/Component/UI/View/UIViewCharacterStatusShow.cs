@@ -27,7 +27,7 @@ public partial class UIViewCharacterStatusShow : BaseUIView
         SetHealth(characterStatus.health, characterStatus.maxHealth);
         SetStamina(Mathf.RoundToInt(characterStatus.stamina), characterStatus.maxStamina);
         SetMagic(characterStatus.magic, characterStatus.maxMagic);
-        SetSaturation(characterStatus.saturation, characterStatus.maxSaturation);
+        SetSaturation(Mathf.RoundToInt(characterStatus.saturation), characterStatus.maxSaturation);
     }
 
     /// <summary>

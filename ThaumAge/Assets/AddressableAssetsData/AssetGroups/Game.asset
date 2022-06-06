@@ -21,18 +21,27 @@ MonoBehaviour:
     m_Address: Assets/Prefabs/Game/ItemDrop.prefab
     m_ReadOnly: 0
     m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: abaacac262aab894eaff5ddb571a447e
     m_Address: Assets/Prefabs/Game/BlockBreak.prefab
     m_ReadOnly: 0
     m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: d0610a3371524764982dc615be3d9255
     m_Address: Assets/Prefabs/Game/Chunk.prefab
     m_ReadOnly: 0
     m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 044ee504a931c2340b052440ca980c61
     m_Address: Assets/Prefabs/Game/LifeProgress.prefab
     m_ReadOnly: 0
     m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e4f153e2f12c853468828189881b901c
+    m_Address: Assets/ComputeShader/TerrainCShader.compute
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: fd6114d87f1af534fbf270c47c0f10bf, type: 2}
   m_SchemaSet:

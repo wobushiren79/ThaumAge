@@ -86,10 +86,10 @@ public partial class UIViewCharacterEquip : BaseUIView
     {
         UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();
         CharacterStatusBean characterStatusData = userData.characterData.GetCharacterStatus();
-        CreateCharacterStatusItem("ui_life_1", characterStatusData.health, "生命值");
-        CreateCharacterStatusItem("ui_life_2", Mathf.RoundToInt(characterStatusData.stamina), "耐力值");
-        CreateCharacterStatusItem("ui_life_4", characterStatusData.magic, "魔力值");
-        CreateCharacterStatusItem("ui_life_3", characterStatusData.saturation, "饱食值");
+        CreateCharacterStatusItem("ui_life_1", characterStatusData.maxHealth, "生命值");
+        CreateCharacterStatusItem("ui_life_2", Mathf.RoundToInt(characterStatusData.maxStamina), "耐力值");
+        CreateCharacterStatusItem("ui_life_4", characterStatusData.maxMagic, "魔力值");
+        CreateCharacterStatusItem("ui_life_3", Mathf.RoundToInt(characterStatusData.maxSaturation), "饱食值");
     }
 
     /// <summary>

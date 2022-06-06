@@ -42,6 +42,8 @@ public enum BlockTypeEnum
     LeavesBirch = 2006,//桦树叶
     LeavesMushroom = 2101,//磨菇树叶子
 
+    Vines = 2201,//藤蔓
+
     WeedLong = 3001,    //杂草长
     WeedNormal = 3002,    //杂草中等
     WeedShort = 3003,    //杂草短
@@ -79,6 +81,8 @@ public enum BlockTypeEnum
 
     SignWooden = 6341,//木制牌子
     FenceWooden = 6351,//木制栅栏
+    FenceDoorWooden = 6361,//木制栅栏门
+
     BedWooden = 6901,//床
 
     BookshelfOak = 8001, //书架-橡树           

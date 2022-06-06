@@ -79,7 +79,10 @@ public class BlockShape
     /// <param name="direction"></param>
     public virtual void BuildBlock(Chunk chunk, Vector3Int localPosition)
     {
-
+        if (block.blockType != BlockTypeEnum.None)
+        {
+            BuildFace(chunk, localPosition, vertsAdd, uvsAdd, colorsAdd, trisAdd);
+        }
     }
 
     /// <summary>
@@ -112,10 +115,18 @@ public class BlockShape
     /// <param name="right"></param>
     /// <param name="verts"></param>
     public virtual void BaseAddVertsUVsColors(
-        Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction,
+        Chunk chunk, Vector3Int localPosition, BlockDirectionEnum blockDirection,
         Vector3[] vertsAdd, Vector2[] uvsAdd, Color[] colorsAdd)
     {
+        AddVertsUVsColors(localPosition, 
+            blockDirection,chunk.chunkMeshData.verts, chunk.chunkMeshData.uvs, chunk.chunkMeshData.colors,
+            vertsAdd, uvsAdd, colorsAdd);
 
+        if (block.blockInfo.collider_state == 1)
+            AddVerts(localPosition, blockDirection, chunk.chunkMeshData.vertsCollider, vertsColliderAdd);
+
+        if (block.blockInfo.trigger_state == 1)
+            AddVerts(localPosition, blockDirection, chunk.chunkMeshData.vertsTrigger, vertsColliderAdd);
     }
 
     /// <summary>
@@ -127,7 +138,23 @@ public class BlockShape
     /// <param name="trisCollider"></param>
     public virtual void BaseAddTris(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction, int[] trisAdd)
     {
+        int index = chunk.chunkMeshData.verts.Count;
 
+        List<int> trisData = chunk.chunkMeshData.dicTris[block.blockInfo.material_type];
+        List<int> trisCollider = chunk.chunkMeshData.trisCollider;
+        List<int> trisTrigger = chunk.chunkMeshData.trisTrigger;
+
+        AddTris(index, trisData, trisAdd);
+        if (block.blockInfo.collider_state == 1)
+        {
+            int colliderIndex = chunk.chunkMeshData.vertsCollider.Count;
+            AddTris(colliderIndex, trisCollider, trisColliderAdd);
+        }
+        if (block.blockInfo.trigger_state == 1)
+        {
+            int triggerIndex = chunk.chunkMeshData.vertsTrigger.Count;
+            AddTris(triggerIndex, trisTrigger, trisColliderAdd);
+        }
     }
 
     /// <summary>

@@ -21,70 +21,97 @@ MonoBehaviour:
     m_Address: Assets/Prefabs/Block/BlockMushroomLuminous.prefab
     m_ReadOnly: 0
     m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 4c988ebef8231e14b85e8ac4eb1097d1
     m_Address: Assets/Prefabs/Block/BlockBonfire.prefab
     m_ReadOnly: 0
     m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 2cbf5d4ced2b25c409c1b8ab06976e8f
     m_Address: Assets/Prefabs/Block/BlockMagma.prefab
     m_ReadOnly: 0
     m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: ae576cb42165b1d419296421e30798fa
     m_Address: Assets/Prefabs/Block/BlockBox.prefab
     m_ReadOnly: 0
     m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: fd1b97a4579076b40a501ab9393fe245
     m_Address: Assets/Prefabs/Block/BlockDoor.prefab
     m_ReadOnly: 0
     m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 58f02310ae5fb86489d536bce37747ee
     m_Address: Assets/Prefabs/Block/BlockLadderWood.prefab
     m_ReadOnly: 0
     m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 48832c3eed09a8647a7e00f2ceb5a7d6
     m_Address: Assets/Prefabs/Block/BlockSwitchesWooden.prefab
     m_ReadOnly: 0
     m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 8111ab5149754f949a638f8d78c13bc6
     m_Address: Assets/Prefabs/Block/BlockFlowerMetal.prefab
     m_ReadOnly: 0
     m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: c017ad5f5df5eca43a6612e1c74dec3b
     m_Address: Assets/Prefabs/Block/BlockFlowerWater.prefab
     m_ReadOnly: 0
     m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 67fc7524100da504a9dd58441acc2e83
     m_Address: Assets/Prefabs/Block/BlockFlowerFire.prefab
     m_ReadOnly: 0
     m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 747fc01494cfae64f9f32b5aa39c3d84
     m_Address: Assets/Prefabs/Block/BlockFlowerEarth.prefab
     m_ReadOnly: 0
     m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 0f2c4be1267e3894c9dd451b481023dd
     m_Address: Assets/Prefabs/Block/BlockTorch.prefab
     m_ReadOnly: 0
     m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 7b6aafb9b8de6ba4d959f0cb21fc4527
     m_Address: Assets/Prefabs/Block/BlockLantern.prefab
     m_ReadOnly: 0
     m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 23a07a5a27eeafd43a4eb3abd58e9a0a
     m_Address: Assets/Prefabs/Block/BlockBedWooden.prefab
     m_ReadOnly: 0
     m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: b8e8098b097d2c84d850c3f9386871f5
     m_Address: Assets/Prefabs/Block/BlockFurnacesSimple.prefab
     m_ReadOnly: 0
     m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 3f5ea2366a729454197afdede4fce2cb
     m_Address: Assets/Prefabs/Block/BlockFrameItem.prefab
     m_ReadOnly: 0
     m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 1c2ca502385b5304a817d3fb31f14f5e
     m_Address: Assets/Prefabs/Block/BlockSignWooden.prefab
     m_ReadOnly: 0
     m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 313e27eae5b12684594d5bb7a43b4993
+    m_Address: Assets/Prefabs/Block/BlockFlowerWood.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ad895078b76c3f2478b4a459bc9085c8
+    m_Address: Assets/Prefabs/Block/BlockFenceDoorWooden.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: fd6114d87f1af534fbf270c47c0f10bf, type: 2}
   m_SchemaSet:

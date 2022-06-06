@@ -50,51 +50,6 @@ public class BlockShapeCross : BlockShape
         };
     }
 
-    public override void BuildBlock(Chunk chunk, Vector3Int localPosition)
-    {
-        base.BuildBlock(chunk, localPosition);
-        if (block.blockType != BlockTypeEnum.None)
-        {
-            BuildFace(chunk, localPosition, vertsAdd, uvsAdd, colorsAdd, trisAdd);
-        }
-    }
-
-    public override void BaseAddTris(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum blockDirection, int[] trisAdd)
-    {
-        base.BaseAddTris(chunk, localPosition, blockDirection, trisAdd);
-
-        int index = chunk.chunkMeshData.verts.Count;
-
-        List<int> trisData = chunk.chunkMeshData.dicTris[block.blockInfo.material_type];
-        List<int> trisCollider = chunk.chunkMeshData.trisCollider;
-        List<int> trisTrigger = chunk.chunkMeshData.trisTrigger;
-
-        AddTris(index, trisData, trisAdd);
-        if (block.blockInfo.collider_state == 1)
-        {
-            int colliderIndex = chunk.chunkMeshData.vertsCollider.Count;
-            AddTris(colliderIndex, trisCollider, trisColliderAdd);
-        }
-        if (block.blockInfo.trigger_state == 1)
-        {
-            int triggerIndex = chunk.chunkMeshData.vertsTrigger.Count;
-            AddTris(triggerIndex, trisTrigger, trisColliderAdd);
-        }
-    }
-
-    public override void BaseAddVertsUVsColors(
-        Chunk chunk, Vector3Int localPosition, BlockDirectionEnum blockDirection,
-        Vector3[] vertsAdd, Vector2[] uvsAdd, Color[] colorsAdd)
-    {
-        AddVertsUVsColors(localPosition, blockDirection,
-            chunk.chunkMeshData.verts, chunk.chunkMeshData.uvs, chunk.chunkMeshData.colors,
-            vertsAdd, uvsAdd, colorsAdd);
-        if (block.blockInfo.collider_state == 1)
-            AddVerts(localPosition, blockDirection, chunk.chunkMeshData.vertsCollider, vertsColliderAdd);
-        if (block.blockInfo.trigger_state == 1)
-            AddVerts(localPosition, blockDirection, chunk.chunkMeshData.vertsTrigger, vertsColliderAdd);
-    }
-
     public virtual Vector2 GetUVStartPosition(Block block)
     {
         Vector2Int[] arrayUVData = block.blockInfo.GetUVPosition();
