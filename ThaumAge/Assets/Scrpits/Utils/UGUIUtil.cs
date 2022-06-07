@@ -16,7 +16,6 @@ public class UGUIUtil
         return tfRoot.InverseTransformPoint(tfIcon.position);
     }
 
-
     /// <summary>
     /// 是否点击到了UI
     /// </summary>
@@ -24,7 +23,7 @@ public class UGUIUtil
     public static bool IsPointerUI()
     {
         //只有在电脑上有用 手机没用
-        if (EventSystem.current.IsPointerOverGameObject())
+        if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
         {
             //点击到了UI
             return true;

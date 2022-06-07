@@ -9,8 +9,7 @@ public class BuildingEditorModel : BaseMonoBehaviour
     public MeshFilter meshFilter;
     public MeshRenderer meshRenderer;
 
-    public BlockTypeEnum blockType;
-    public DirectionEnum direction;
+    public BlockInfoBean blockInfo;
 
     public void Awake()
     {
@@ -20,33 +19,25 @@ public class BuildingEditorModel : BaseMonoBehaviour
 
     public void SetData(BlockInfoBean blockInfo)
     {
+        this.blockInfo = blockInfo;
 
-    }
+        Block targetBlock = BlockHandler.Instance.manager.GetRegisterBlock(blockInfo.id);
+        Mesh targetMesh = targetBlock.blockShape.GetCompleteMeshData(null, Vector3Int.zero, BuildingEditorHandler.Instance.manager.curBlockDirection);
 
-    public void OnValidate()
-    {
-        //BlockHandler.Instance.manager.InitData();
+        //显示问题    //向下移动0.5个单位
+        Vector3[] verts = targetMesh.vertices;
+        Vector3 angleRotate = BlockShape.GetRotateAngles(BuildingEditorHandler.Instance.manager.curBlockDirection);
+        for (int i = 0; i < verts.Length; i++)
+        {
+            Vector3 itemPosition = verts[i];
+            Vector3 rotatePosition= VectorUtil.GetRotatedPosition(Vector3.zero, itemPosition, angleRotate);
+            rotatePosition -= new Vector3(0.5f, 0.5f, 0.5f);
+            verts[i] = rotatePosition;
+        }
+        targetMesh.SetVertices(verts);
 
-        //BlockShapeCube blockCube = new BlockShapeCube();
 
-        //ChunkMeshData chunkMeshData = new ChunkMeshData();
-
-        //blockCube.BuildBlockNoCheck(null,Vector3Int.zero, direction);
-
-        //mesh = new Mesh();
-
-        //List<Vector3> verts = chunkMeshData.verts;
-        //for (int i = 0; i < verts.Count; i++)
-        //{
-        //    Vector3 itemPosition = verts[i];
-        //    //向下移动0.5个单位
-        //    itemPosition -= new Vector3(0.5f, 0.5f, 0.5f);
-        //    verts[i] = itemPosition;
-        //}
-
-        //mesh.SetVertices(verts);
-        //mesh.SetTriangles(chunkMeshData.dicTris[(int)BlockMaterialEnum.Normal], 0);
-        //mesh.SetUVs(0, chunkMeshData.uvs);
-        //meshFilter.mesh = mesh;
+        meshFilter.mesh = targetMesh;
+        meshRenderer.material = BlockHandler.Instance.manager.GetBlockMaterial(blockInfo.GetBlockMaterialType());
     }
 }

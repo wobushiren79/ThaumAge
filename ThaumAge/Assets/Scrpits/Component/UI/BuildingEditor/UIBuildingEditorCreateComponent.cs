@@ -6,5 +6,7 @@ public partial class UIBuildingEditorCreate
 {
     public ScrollGridVertical ui_BlockList;
 
+    public Button ui_ClearAll;
+
 
 }

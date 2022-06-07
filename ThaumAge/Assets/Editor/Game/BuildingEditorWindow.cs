@@ -178,7 +178,6 @@ public class BuildingEditorWindow : EditorWindow
             buildingEditor.blockType = (BlockTypeEnum)buildingData.blockId;
             //buildingEditor.randomRate = buildingData.randomRate;
             buildingEditor.transform.position = buildingData.GetPosition();
-            buildingEditor.OnValidate();
         }
     }
 }

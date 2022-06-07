@@ -3,19 +3,9 @@ using UnityEngine;
 
 public class ControlForBuildingEditor : ControlForBase
 {
-    public GameObject objBlockContainer;
-    public GameObject objPlane;
     public GameObject objSelect;
-    public GameObject objBlockModel;
-
-    [HideInInspector]
-    public BlockInfoBean curSelectBlockInfo;
-
     //是否正在移动镜头
     protected bool isMoveCamera = false;
-    //建造高度
-    protected int curBuildHigh = 0;
-    //当前选中的方块信息
 
     public void Update()
     {
@@ -76,10 +66,8 @@ public class ControlForBuildingEditor : ControlForBase
     /// </summary>
     public void OnClickForBuild()
     {
-        GameObject objItem = Instantiate(objBlockContainer, objBlockModel.gameObject);
-        objItem.transform.position = objSelect.transform.position;
-        BuildingEditorModel itemBlock = objItem.GetComponent<BuildingEditorModel>();
-        itemBlock.SetData(curSelectBlockInfo);
+        BuildingEditorHandler.Instance.BuildBlock(objSelect.transform.position);
+
     }
 
     /// <summary>
@@ -87,9 +75,9 @@ public class ControlForBuildingEditor : ControlForBase
     /// </summary>
     public void ChangeBlockBuildHigh(int changeHigh)
     {
-        curBuildHigh += changeHigh;
-        if (curBuildHigh < 0)
-            curBuildHigh = 0;
-        objPlane.transform.position = objPlane.transform.position.SetY(curBuildHigh);
+        BuildingEditorHandler.Instance.manager.curBuildHigh += changeHigh;
+        if (BuildingEditorHandler.Instance.manager.curBuildHigh < 0)
+            BuildingEditorHandler.Instance.manager.curBuildHigh = 0;
+        BuildingEditorHandler.Instance.manager.objPlane.transform.position = BuildingEditorHandler.Instance.manager.objPlane.transform.position.SetY(BuildingEditorHandler.Instance.manager.curBuildHigh);
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.UI;
 
 public partial class UIBuildingEditorCreate : BaseUIComponent
 {
@@ -22,10 +23,19 @@ public partial class UIBuildingEditorCreate : BaseUIComponent
         RegisterEvent<int>(EventsInfo.UIBuildingEditorCreate_SelectChange, CallBackForSelectChange);
     }
 
+    public override void OnClickForButton(Button viewButton)
+    {
+        base.OnClickForButton(viewButton);
+        if (viewButton == ui_ClearAll)
+        {
+            OnClickForClearAll();
+        }
+    }
+
     public void InitData()
     {
         listBlockInfo = new List<BlockInfoBean>();
-        BlockInfoBean[] arrayBlockInfo = BlockHandler.Instance.manager.GetAllBackInfo();
+        BlockInfoBean[] arrayBlockInfo = BlockHandler.Instance.manager.GetAllBlockInfo();
         //添加不为NULL的数据
         for (int i = 0; i < arrayBlockInfo.Length; i++)
         {
@@ -54,7 +64,16 @@ public partial class UIBuildingEditorCreate : BaseUIComponent
     public void CallBackForSelectChange(int changeIndex)
     {
         this.indexSelect = changeIndex;
+        BuildingEditorHandler.Instance.manager.curSelectBlockInfo = listBlockInfo[indexSelect];
         //刷新所有
         ui_BlockList.RefreshAllCells();
+    }
+
+    /// <summary>
+    /// 清除所有方块
+    /// </summary>
+    public void OnClickForClearAll()
+    {
+        BuildingEditorHandler.Instance.ClearAllBlock();
     }
 }

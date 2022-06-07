@@ -194,7 +194,7 @@ public class BlockManager : BaseManager, IBlockInfoView
     /// 获取除空气外的所有方块信息
     /// </summary>
     /// <returns></returns>
-    public BlockInfoBean[] GetAllBackInfo()
+    public BlockInfoBean[] GetAllBlockInfo()
     {
         return arrayBlockInfo;
     }

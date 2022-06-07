@@ -8,7 +8,11 @@ public class BuildingEditorLauncher : BaseLauncher
         IconHandler.Instance.InitData(null);
         //关闭控制
         CameraHandler.Instance.EnabledCameraMove(false, 1);
-        //打开UI
-        UIHandler.Instance.OpenUIAndCloseOther<UIBuildingEditorMain>(UIEnum.BuildingEditorMain);
+        //加载资源
+        GameHandler.Instance.LoadGameResources(() =>
+        {
+            //打开UI
+            UIHandler.Instance.OpenUIAndCloseOther<UIBuildingEditorMain>(UIEnum.BuildingEditorMain);
+        });
     }
 }

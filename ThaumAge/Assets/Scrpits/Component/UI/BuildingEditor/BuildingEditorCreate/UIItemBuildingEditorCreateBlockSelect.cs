@@ -10,6 +10,10 @@ public partial class UIItemBuildingEditorCreateBlockSelect : BaseUIView
     public override void OnClickForButton(Button viewButton)
     {
         base.OnClickForButton(viewButton);
+        if (viewButton == ui_ItemBuildingEditorCreateBlockSelect)
+        {
+            OnClickForSelect();
+        }
     }
 
     /// <summary>

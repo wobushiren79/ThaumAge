@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.019141316, g: 0.034776956, b: 0.062477827, a: 1}
+  m_IndirectSpecularColor: {r: 0.019128298, g: 0.034723822, b: 0.062312834, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -371,7 +371,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 1.601227, y: 1}
+    m_SensorSize: {x: 2.0755286, y: 1}
     Iso: 200
     ShutterSpeed: 0.005
     Aperture: 16
@@ -394,7 +394,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 355915873}
-  m_LocalRotation: {x: 0.30463973, y: 0.0045180325, z: -0.0014450774, w: 0.9524559}
+  m_LocalRotation: {x: 0.30463976, y: 0.004517991, z: -0.0014450639, w: 0.9524559}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -706,7 +706,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 818527175}
-  m_LocalRotation: {x: 0.34368497, y: 0.0044545485, z: -0.0016302831, w: 0.9390731}
+  m_LocalRotation: {x: 0.34368497, y: 0.004454541, z: -0.0016302859, w: 0.9390731}
   m_LocalPosition: {x: -0.047434427, y: 4.5, z: -4.999775}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -961,7 +961,7 @@ GameObject:
   - component: {fileID: 1044535115}
   - component: {fileID: 1044535118}
   m_Layer: 31
-  m_Name: Model
+  m_Name: BlockModel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1306,7 +1306,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 1.601227, y: 1}
+    m_SensorSize: {x: 2.0755286, y: 1}
     Iso: 200
     ShutterSpeed: 0.005
     Aperture: 16
@@ -1417,32 +1417,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4bc67dba62b1cb4fa2cd9217a0f02fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  objBlockContainer: {fileID: 1022159650}
-  objPlane: {fileID: 343122943}
   objSelect: {fileID: 76534393}
-  objBlockModel: {fileID: 1044535113}
-  curSelectBlockInfo:
-    id: 0
-    valid: 0
-    name_cn: 
-    name_en: 
-    link_id: 0
-    model_name: 
-    shape: 0
-    uv_position: 
-    offset_border: 
-    weight: 0
-    rotate_state: 0
-    life: 0
-    material_type: 1
-    collider_state: 0
-    trigger_state: 0
-    plough_state: 0
-    plant_state: 0
-    items_drop: 
-    break_type: 
-    interactive_state: 0
-    remark_int: 0
 --- !u!1 &1567079437
 GameObject:
   m_ObjectHideFlags: 3
@@ -1967,7 +1942,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 1.601227, y: 1}
+    m_SensorSize: {x: 2.0755286, y: 1}
     Iso: 200
     ShutterSpeed: 0.005
     Aperture: 16
@@ -2052,7 +2027,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 1.601227, y: 1}
+    m_SensorSize: {x: 2.0755286, y: 1}
     Iso: 200
     ShutterSpeed: 0.005
     Aperture: 16
@@ -2075,7 +2050,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2125566480}
-  m_LocalRotation: {x: 0.3826791, y: 0.004382403, z: -0.0018152506, w: 0.9238692}
+  m_LocalRotation: {x: 0.3826791, y: 0.0043824348, z: -0.0018152638, w: 0.9238692}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
