@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
@@ -14,6 +15,7 @@ public class AIBaseEntity : BaseMonoBehaviour
 
     public virtual void Awake()
     {
+
     }
 
     public virtual void Start()
@@ -38,10 +40,19 @@ public class AIBaseEntity : BaseMonoBehaviour
     }
 
     /// <summary>
+    /// 初始化数据(每一个子类都必须重写该方法 并且指定枚举)
+    /// </summary>
+    /// <typeparam name="E"></typeparam>
+    public virtual void InitData<E>() where E : Enum
+    {
+        InitIntent<E>();
+    }
+
+    /// <summary>
     /// 初始化意图
     /// </summary>
     /// <typeparam name="I"></typeparam>
-    public virtual void InitIntent<E>()  where E : System.Enum
+    public virtual void InitIntent<E>()  where E : Enum
     {
         List<E> listIntent = EnumExtension.GetEnumValue<E>();
         for (int i = 0; i < listIntent.Count; i++)

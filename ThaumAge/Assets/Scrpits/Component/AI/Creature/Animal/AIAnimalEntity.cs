@@ -4,12 +4,15 @@ using UnityEngine;
 public class AIAnimalEntity : AIBaseEntity
 {
     public AINavigation aiNavigation;
+    public CreatureCptBase creatureCpt;
 
-    public override void Awake()
+    public void SetData(CreatureCptBase creatureCpt)
     {
-        base.Awake();
-        InitIntent<AIAnimalIntentEnum>();
+        this.creatureCpt = creatureCpt;
+        //初始化寻路
         aiNavigation = new AINavigation(this);
+        //初始化数据
+        InitData<AIAnimalIntentEnum>();
     }
 
 }

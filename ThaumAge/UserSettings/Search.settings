@@ -1,6 +1,6 @@
 trackSelection = true
 fetchPreview = true
-wantsMore = false
+defaultFlags = 0
 keepOpen = false
 queryFolder = "Assets"
 onBoardingDoNotAskAgain = true
@@ -18,6 +18,9 @@ scopes = {
 	"last_search.7BEC51F9" = ""
 	"OpenInspectorPreview.7BEC51F9" = "0"
 	"currentGroup.7BEC51F9" = "asset"
+	"last_search.7788661B" = "Simple"
+	"OpenInspectorPreview.7788661B" = "0"
+	"currentGroup.7788661B" = "asset"
 }
 providers = {
 	asset = {
@@ -66,7 +69,10 @@ providers = {
 		defaultAction = null
 	}
 }
+objectSelectors = {
+}
 recentSearches = [
+	"Simple"
 	"game"
 	"t:Scene"
 ]

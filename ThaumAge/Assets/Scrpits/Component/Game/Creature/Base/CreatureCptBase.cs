@@ -24,7 +24,7 @@ public class CreatureCptBase : BaseMonoBehaviour
     //检测-生物
     protected Collider colliderCreature;
 
-    protected float timeUpdate = 0;
+    protected float timeUpdateForCollisionAndTrigger = 0;
     public virtual void Awake()
     {
         animCreature = GetComponentInChildren<Animator>();
@@ -38,11 +38,11 @@ public class CreatureCptBase : BaseMonoBehaviour
 
     public virtual void Update()
     {
-        timeUpdate += Time.deltaTime;
-        if (timeUpdate > 0.2f)
+        timeUpdateForCollisionAndTrigger += Time.deltaTime;
+        if (timeUpdateForCollisionAndTrigger > 0.2f)
         {
             creatureCollisionAndTrigger.UpdateCollisionAndTrigger();
-            timeUpdate = 0;
+            timeUpdateForCollisionAndTrigger = 0;
         }
     }
 
