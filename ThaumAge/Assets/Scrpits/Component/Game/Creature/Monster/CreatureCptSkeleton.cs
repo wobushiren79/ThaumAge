@@ -9,5 +9,6 @@ public class CreatureCptSkeleton : CreatureCptBase
     {
         base.Awake();
         aiSkeleton = gameObject.AddComponentEX<AIAnimalEntity>();
+        aiSkeleton.SetData(this);
     }
 }

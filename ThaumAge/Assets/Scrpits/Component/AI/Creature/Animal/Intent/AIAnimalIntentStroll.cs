@@ -64,6 +64,7 @@ public class AIAnimalIntentStroll : AIBaseIntent
             //如果已经停止移动 则搜索新的路径
             if (!isMove)
             {
+                aiCreatureEntity.creatureCpt.creatureAnim.PlayBaseAnim(CharacterAnimBaseState.Idle);
                 isFindPath = false;
             }
         }

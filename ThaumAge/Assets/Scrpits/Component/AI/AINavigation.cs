@@ -20,14 +20,14 @@ public class AINavigation
     /// <returns></returns>
     public bool GetRandomRangeMovePosition(Vector3 currentPosition, float range, out Vector3 targetPosition)
     {
-        if (NavMesh.SamplePosition(currentPosition, out NavMeshHit navigationHit, range, aiAgent.areaMask))
+        targetPosition = new Vector3(Random.Range(-range,range), Random.Range(-range, range), Random.Range(-range, range));
+        if (NavMesh.SamplePosition(currentPosition + targetPosition, out NavMeshHit navigationHit, range, aiAgent.areaMask))
         {
             targetPosition = navigationHit.position;
             return true;
         }
         else
         {
-            targetPosition = Vector3.zero;
             return false;
         }
     }
@@ -69,11 +69,11 @@ public class AINavigation
             if (isUseRangePosition)
             {
                 //先搜索附近1m范围能到达的地点
-                bool isTargetPositionIn = GetRandomRangeMovePosition(position, rangePositionDis, out Vector3 targetPosition);
+                bool isTargetPositionIn = NavMesh.SamplePosition(position, out NavMeshHit navigationHit, rangePositionDis, aiAgent.areaMask);
                 if (isTargetPositionIn)
                 {
                     //使用附近的点
-                    aiAgent.SetDestination(targetPosition);
+                    aiAgent.SetDestination(navigationHit.position);
                     return true;
                 }
                 else

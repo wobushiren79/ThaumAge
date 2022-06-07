@@ -13,6 +13,8 @@ public class AIAnimalEntity : AIBaseEntity
         aiNavigation = new AINavigation(this);
         //初始化数据
         InitData<AIAnimalIntentEnum>();
+        //默认闲置
+        ChangeIntent(AIAnimalIntentEnum.Idle);
     }
 
 }

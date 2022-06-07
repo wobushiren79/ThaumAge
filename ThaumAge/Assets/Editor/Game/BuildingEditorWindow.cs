@@ -150,8 +150,8 @@ public class BuildingEditorWindow : EditorWindow
                 continue;
             BuildingBean buildingData = new BuildingBean();
             buildingData.position = Vector3Int.CeilToInt(tfChild.position);
-            buildingData.direction = (int)buildingEditor.direction;
-            buildingData.blockId = (int)buildingEditor.blockType;
+            //buildingData.direction = (int)buildingEditor.direction;
+            //buildingData.blockId = (int)buildingEditor.blockType;
             //buildingData.randomRate = buildingEditor.randomRate;
             listBuildingData.Add(buildingData);
         }
@@ -174,8 +174,8 @@ public class BuildingEditorWindow : EditorWindow
             objItem.transform.SetParent(objBuilding.transform);
 
             BuildingEditorModel buildingEditor = objItem.GetComponent<BuildingEditorModel>();
-            buildingEditor.direction = (DirectionEnum)buildingData.direction;
-            buildingEditor.blockType = (BlockTypeEnum)buildingData.blockId;
+            //buildingEditor.direction = (DirectionEnum)buildingData.direction;
+            //buildingEditor.blockType = (BlockTypeEnum)buildingData.blockId;
             //buildingEditor.randomRate = buildingData.randomRate;
             buildingEditor.transform.position = buildingData.GetPosition();
         }
