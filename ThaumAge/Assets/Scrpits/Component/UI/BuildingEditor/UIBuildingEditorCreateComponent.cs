@@ -8,5 +8,15 @@ public partial class UIBuildingEditorCreate
 
     public Button ui_ClearAll;
 
+    public ToggleGroup ui_CreateType;
+
+    public Toggle ui_CreateSelect;
+
+    public Toggle ui_DestorySelect;
+
+    public InputField ui_BuildingIdEdit;
+
+    public Button ui_CreateBuilding;
+
 
 }

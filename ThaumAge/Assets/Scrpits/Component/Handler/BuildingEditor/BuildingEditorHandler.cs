@@ -8,12 +8,34 @@ public class BuildingEditorHandler : BaseHandler<BuildingEditorHandler, Building
     /// 建造方块
     /// </summary>
     /// <param name="blockPosition"></param>
-    public void BuildBlock(Vector3 blockPosition)
+    public void BuildBlock(Vector3Int blockPosition)
     {
-        GameObject objItem = Instantiate(manager.objBlockContainer, manager.objBlockModel.gameObject);
-        objItem.transform.position = blockPosition;
-        BuildingEditorModel itemBlock = objItem.GetComponent<BuildingEditorModel>();
-        itemBlock.SetData(manager.curSelectBlockInfo);
+        if (manager.curCreateTyp == 0)
+        {
+            //建造
+            //先删除有的
+            if (manager.dicBlockBuild.TryGetValue(blockPosition, out BuildingEditorModel blockEditor))
+            {
+                Destroy(blockEditor.gameObject);
+                manager.dicBlockBuild.Remove(blockPosition);
+            }
+
+            GameObject objItem = Instantiate(manager.objBlockContainer, manager.objBlockModel.gameObject);
+            objItem.transform.position = blockPosition;
+            BuildingEditorModel itemBlock = objItem.GetComponent<BuildingEditorModel>();
+            itemBlock.SetData(manager.curSelectBlockInfo);
+            manager.dicBlockBuild.Add(blockPosition, itemBlock);
+        }
+        else if (manager.curCreateTyp == 1)
+        {
+            //删除
+            if (manager.dicBlockBuild.TryGetValue(blockPosition, out BuildingEditorModel blockEditor))
+            {
+                Destroy(blockEditor.gameObject);
+                manager.dicBlockBuild.Remove(blockPosition);
+            }
+        }
+
     }
 
     /// <summary>

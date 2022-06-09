@@ -14,6 +14,14 @@ public partial class UIBuildingEditorCreate : BaseUIComponent
     {
         base.Awake();
         ui_BlockList.AddCellListener(OnCellChangeForBlockSelect);
+        ui_CreateSelect.onValueChanged.AddListener((value)=> 
+        {
+            CallBackForToggleSelect(ui_CreateSelect,value);
+        });
+        ui_DestorySelect.onValueChanged.AddListener((value) =>
+        {
+            CallBackForToggleSelect(ui_DestorySelect, value);
+        });
     }
 
     public override void OpenUI()
@@ -29,6 +37,10 @@ public partial class UIBuildingEditorCreate : BaseUIComponent
         if (viewButton == ui_ClearAll)
         {
             OnClickForClearAll();
+        }
+        else if (viewButton == ui_CreateBuilding)
+        {
+            OnClickForCreateBuilding();
         }
     }
 
@@ -70,10 +82,42 @@ public partial class UIBuildingEditorCreate : BaseUIComponent
     }
 
     /// <summary>
-    /// 清除所有方块
+    /// 建造模式选择
+    /// </summary>
+    /// <param name="view"></param>
+    /// <param name="value"></param>
+    public void CallBackForToggleSelect(Toggle view, bool value)
+    {
+        if (view == ui_DestorySelect && value == true)
+        {
+            BuildingEditorHandler.Instance.manager.curCreateTyp = 1;
+        }
+        else if (view == ui_CreateSelect && value == true)
+        {
+            BuildingEditorHandler.Instance.manager.curCreateTyp = 0;
+        }
+    }
+
+    /// <summary>
+    /// 点击-清除所有方块
     /// </summary>
     public void OnClickForClearAll()
     {
         BuildingEditorHandler.Instance.ClearAllBlock();
     }
+
+    /// <summary>
+    /// 点击-创建建筑
+    /// </summary>
+    public void OnClickForCreateBuilding()
+    {
+        DialogBean dialogData = new DialogBean();
+        dialogData.content = $"是否要创建ID为 {ui_BuildingIdEdit.text} 的建筑";
+        dialogData.actionSubmit = (view, data) =>
+        {
+
+        };
+;       UIDialogNormal uiDialog = UIHandler.Instance.ShowDialog<UIDialogNormal>(dialogData);
+    }
+
 }

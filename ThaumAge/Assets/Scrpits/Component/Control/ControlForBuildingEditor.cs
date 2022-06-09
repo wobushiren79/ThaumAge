@@ -66,8 +66,7 @@ public class ControlForBuildingEditor : ControlForBase
     /// </summary>
     public void OnClickForBuild()
     {
-        BuildingEditorHandler.Instance.BuildBlock(objSelect.transform.position);
-
+        BuildingEditorHandler.Instance.BuildBlock(Vector3Int.RoundToInt(objSelect.transform.position));
     }
 
     /// <summary>
