@@ -1,7 +1,7 @@
 ﻿using UnityEditor;
 using UnityEngine;
 
-public abstract class AIBaseIntent
+public class AIBaseIntent
 {
     public AIBaseEntity aiEntity;
     public System.Enum aiIntent;

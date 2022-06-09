@@ -3,6 +3,17 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
+
+public class AIBaseEntity<IntentType> : AIBaseEntity 
+    where IntentType : Enum
+{
+    public override void Awake()
+    {
+        base.Awake();
+        InitData<IntentType>();
+    }
+} 
+
 public class AIBaseEntity : BaseMonoBehaviour
 {
     //意图列表
