@@ -115,7 +115,7 @@ public partial class UIBuildingEditorCreate : BaseUIComponent
         dialogData.content = $"是否要创建ID为 {ui_BuildingIdEdit.text} 的建筑";
         dialogData.actionSubmit = (view, data) =>
         {
-
+            BuildingEditorHandler.Instance.SaveBuildingData();
         };
 ;       UIDialogNormal uiDialog = UIHandler.Instance.ShowDialog<UIDialogNormal>(dialogData);
     }

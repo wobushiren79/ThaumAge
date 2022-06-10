@@ -10,6 +10,9 @@ public class BuildingEditorModel : BaseMonoBehaviour
     public MeshRenderer meshRenderer;
 
     public BlockInfoBean blockInfo;
+    public BlockDirectionEnum blockDirection;
+    //创建概率
+    public float randomRate = 1;
 
     public void Awake()
     {
@@ -17,8 +20,9 @@ public class BuildingEditorModel : BaseMonoBehaviour
         meshRenderer = GetComponent<MeshRenderer>();
     }
 
-    public void SetData(BlockInfoBean blockInfo)
+    public void SetData(BlockInfoBean blockInfo, BlockDirectionEnum blockDirection)
     {
+        this.blockDirection = blockDirection;
         this.blockInfo = blockInfo;
 
         Block targetBlock = BlockHandler.Instance.manager.GetRegisterBlock(blockInfo.id);

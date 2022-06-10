@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
@@ -23,7 +24,7 @@ public class BuildingEditorHandler : BaseHandler<BuildingEditorHandler, Building
             GameObject objItem = Instantiate(manager.objBlockContainer, manager.objBlockModel.gameObject);
             objItem.transform.position = blockPosition;
             BuildingEditorModel itemBlock = objItem.GetComponent<BuildingEditorModel>();
-            itemBlock.SetData(manager.curSelectBlockInfo);
+            itemBlock.SetData(manager.curSelectBlockInfo, manager.curBlockDirection);
             manager.dicBlockBuild.Add(blockPosition, itemBlock);
         }
         else if (manager.curCreateTyp == 1)
@@ -44,5 +45,26 @@ public class BuildingEditorHandler : BaseHandler<BuildingEditorHandler, Building
     public void ClearAllBlock()
     {
         manager.objBlockContainer.transform.DestroyAllChild();
+    }
+
+    /// <summary>
+    /// 保存建筑数据
+    /// </summary>
+    /// <param name="buildingInfo"></param>
+    public void SaveBuildingData()
+    {
+        //获取场中的方块数据 设置
+        List<BuildingBean> listBlockData = new List<BuildingBean>();
+        foreach (var itemData in manager.dicBlockBuild)
+        {
+            BuildingEditorModel blockEditor = itemData.Value;
+            BuildingBean itemBlockData = new BuildingBean();
+            itemBlockData.blockId = blockEditor.blockInfo.id;
+            itemBlockData.direction = (int)blockEditor.blockDirection;
+            itemBlockData.position = itemData.Key;
+            itemBlockData.randomRate = blockEditor.randomRate;
+        }
+        manager.curBuildingInfo.SetListBuildingData(listBlockData);
+        manager.controllerForBuildingInfo.SetBuildingInfoData(manager.curBuildingInfo);
     }
 }

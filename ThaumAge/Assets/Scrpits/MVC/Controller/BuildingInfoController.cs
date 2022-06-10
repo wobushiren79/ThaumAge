@@ -23,6 +23,15 @@ public class BuildingInfoController : BaseMVCController<BuildingInfoModel, IBuil
     }
 
     /// <summary>
+    /// 保存建筑数据
+    /// </summary>
+    /// <param name="buildingInfo"></param>
+    public void SetBuildingInfoData(BuildingInfoBean buildingInfo)
+    {
+        GetModel().SetBuildingInfoData(buildingInfo);
+    }
+
+    /// <summary>
     /// 获取数据
     /// </summary>
     /// <param name="action"></param>
