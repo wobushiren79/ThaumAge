@@ -14,4 +14,12 @@ using System;
 		///基础生命值
 		/// </summary>
 		public int life;
+		/// <summary>
+		///掉落
+		/// </summary>
+		public string drop;
+		/// <summary>
+		///产出
+		/// </summary>
+		public string output;
 	}

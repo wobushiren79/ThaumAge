@@ -1,14 +1,7 @@
 ﻿using UnityEditor;
 using UnityEngine;
 
-public class CreatureCptCow : CreatureCptBase
+public class CreatureCptCow : CreatureCptBaseAnimal
 {
-    protected AIAnimalEntity aiCow;
 
-    public override void Awake()
-    {
-        base.Awake();
-        aiCow = gameObject.AddComponentEX<AIAnimalEntity>();
-        aiCow.SetData(this);
-    }
 }

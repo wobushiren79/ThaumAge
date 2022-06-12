@@ -21,7 +21,7 @@ public class BlockBasePlant : Block
             //移除方块
             chunk.RemoveBlockForLocal(localPosition);
             //创建道具
-            List<ItemsBean> listDropItems = blockInfo.GetItemsDrop();
+            List<ItemsBean> listDropItems = ItemsHandler.Instance.GetItemsDrop(blockInfo.items_drop);
             ItemsHandler.Instance.CreateItemCptDropList(listDropItems, chunk.chunkData.positionForWorld + localPosition, ItemDropStateEnum.DropPick);
         }
     }

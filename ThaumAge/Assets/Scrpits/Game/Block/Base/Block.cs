@@ -328,7 +328,7 @@ public class Block
     /// <returns></returns>
     public virtual List<ItemsBean> GetDropItems(BlockBean blockData)
     {
-        return blockInfo.GetItemsDrop();
+        return ItemsHandler.Instance.GetItemsDrop(blockInfo.items_drop);
     }
 
     /// <summary>

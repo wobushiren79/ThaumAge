@@ -208,4 +208,43 @@ public class ItemsHandler : BaseHandler<ItemsHandler, ItemsManager>
             }
         });
     }
+
+
+
+    /// <summary>
+    /// 获取道具掉落
+    /// </summary>
+    /// <returns></returns>
+    public List<ItemsBean> GetItemsDrop(string dropData)
+    {
+        List<ItemsBean> itemsData = new List<ItemsBean>();
+        string[] itemListStr = dropData.SplitForArrayStr('|');
+        for (int i = 0; i < itemListStr.Length; i++)
+        {
+            string[] itemDetailsListStr = itemListStr[i].SplitForArrayStr(',');
+            long itemsId = long.Parse(itemDetailsListStr[0]);
+            int itemsNumber = 1;
+            float getRandomRate = 1;
+            if (itemDetailsListStr.Length == 1)
+            {
+
+            }
+            else if (itemDetailsListStr.Length == 2)
+            {
+                itemsNumber = int.Parse(itemDetailsListStr[1]);
+            }
+            else if (itemDetailsListStr.Length == 3)
+            {
+                itemsNumber = int.Parse(itemDetailsListStr[1]);
+                getRandomRate = float.Parse(itemDetailsListStr[2]);
+                if (UnityEngine.Random.Range(0f, 1f) > getRandomRate)
+                {
+                    //这里设置0，而不是直接不返回 是因为如果返回的list没有数据的话，会生成本体的掉落。设置成0则直接不掉落物品
+                    itemsId = 0;
+                }
+            }
+            itemsData.Add(new ItemsBean(itemsId, itemsNumber));
+        }
+        return itemsData;
+    }
 }

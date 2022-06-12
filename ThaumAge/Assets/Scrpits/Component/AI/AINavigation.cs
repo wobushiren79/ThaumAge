@@ -10,17 +10,23 @@ public class AINavigation
     {
         this.aiEntity = aiEntity;
         aiAgent = aiEntity.GetComponent<NavMeshAgent>();
+        aiAgent.enabled = true;
     }
 
     /// <summary>
     /// 随机获取附近范围内可以行走的点
     /// </summary>
-    /// <param name="currentPosition"></param>
-    /// <param name="range"></param>
     /// <returns></returns>
-    public bool GetRandomRangeMovePosition(Vector3 currentPosition, float range, out Vector3 targetPosition)
+    public bool GetRandomRangeMovePosition(Vector3 currentPosition, float range, out Vector3 targetPosition, bool isMaxDis = false)
     {
-        targetPosition = new Vector3(Random.Range(-range,range), Random.Range(-range, range), Random.Range(-range, range));
+        if (isMaxDis)
+        {  
+            targetPosition = RandomUtil.GetRandomPositionForSphere(currentPosition, range, 1);
+        }
+        else
+        {
+            targetPosition = new Vector3(Random.Range(-range, range), Random.Range(-range, range), Random.Range(-range, range));
+        }
         if (NavMesh.SamplePosition(currentPosition + targetPosition, out NavMeshHit navigationHit, range, aiAgent.areaMask))
         {
             targetPosition = navigationHit.position;
@@ -51,8 +57,12 @@ public class AINavigation
         //如果依旧不在寻路面上则设置路径失败
         if (!aiAgent.isOnNavMesh)
         {
-            LogUtil.LogError("设置路径失败，代理不在寻路面上");
-            return false;
+            //纠正位置
+            if (!aiAgent.Warp(position))
+            {
+                LogUtil.LogError("设置路径失败，代理不在寻路面上");
+                return false;
+            }
         }
         aiAgent.isStopped = false;
         //检测目标点是否能到达

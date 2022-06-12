@@ -250,5 +250,33 @@ public class RandomUtil
         return chineseWords;
     }
 
+    /// <summary>
+    /// 获取圆上任意一点
+    /// </summary>
+    /// <param name="centerPosition"></param>
+    /// <param name="radius"></param>
+    /// <returns></returns>
+    public static Vector2 GetRandomPositionForCircle(Vector2 centerPosition, float radius)
+    {
+        return Random.insideUnitCircle.normalized * radius + centerPosition;
+    }
 
+    /// <summary>
+    /// 获取球型上随机一点
+    /// </summary>
+    /// <param name="centerPosition"></param>
+    /// <param name="radius"></param>
+    /// <param name="type">0内部 1边界上</param>
+    /// <returns></returns>
+    public static Vector3 GetRandomPositionForSphere(Vector3 centerPosition, float radius,int type = 0)
+    {
+        if (type == 0)
+        {
+            return Random.insideUnitSphere.normalized * radius+centerPosition;
+        }
+        else
+        {
+            return Random.onUnitSphere.normalized * radius + centerPosition;
+        }
+    }
 }

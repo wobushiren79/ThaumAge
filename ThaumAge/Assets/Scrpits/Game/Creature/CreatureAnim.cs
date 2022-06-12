@@ -27,6 +27,16 @@ public class CreatureAnim : CreatureBase
     public void PlayBaseAnim(CharacterAnimBaseState animType)
     {
         animator.SetInteger("state", (int)animType);
+
+    }
+
+    /// <summary>
+    /// 设置动画速度
+    /// </summary>
+    /// <param name="animSpeed"></param>
+    public void SetAnimSpeed(float animSpeed = 1)
+    {
+        animator.speed = animSpeed;
     }
 
     /// <summary>

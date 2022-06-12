@@ -8,7 +8,7 @@ public class CreatureCptBase : BaseMonoBehaviour
     //生物基础动画
     public CreatureAnim creatureAnim;
     //生物基础战斗
-    public CreatureBattle creatureBattle;
+    protected CreatureBattle creatureBattle;
     //生物碰撞和触发
     public CreatureCollisionAndTrigger creatureCollisionAndTrigger;
 
@@ -17,22 +17,20 @@ public class CreatureCptBase : BaseMonoBehaviour
     //生物数据
     public CreatureBean creatureData;
 
-    //刚体-生物
-    protected Rigidbody rbCreature;
     //动画-生物
     protected Animator animCreature;
     //检测-生物
     protected Collider colliderCreature;
 
     protected float timeUpdateForCollisionAndTrigger = 0;
+
     public virtual void Awake()
     {
         animCreature = GetComponentInChildren<Animator>();
-        rbCreature = GetComponentInChildren<Rigidbody>();
-        colliderCreature = rbCreature?.GetComponent<Collider>();
+        colliderCreature = transform.GetComponent<Collider>();
 
         creatureAnim = new CreatureAnim(this, animCreature);
-        creatureBattle = new CreatureBattle(this, rbCreature);
+        creatureBattle = new CreatureBattle(this);
         creatureCollisionAndTrigger = new CreatureCollisionAndTrigger(this);
     }
 
@@ -49,7 +47,7 @@ public class CreatureCptBase : BaseMonoBehaviour
     /// <summary>
     /// 设置数据
     /// </summary>
-    public void SetData(CreatureInfoBean creatureInfo)
+    public virtual void SetData(CreatureInfoBean creatureInfo)
     {
         this.creatureInfo = creatureInfo;
         creatureData = new CreatureBean();
@@ -58,9 +56,19 @@ public class CreatureCptBase : BaseMonoBehaviour
     }
 
     /// <summary>
+    /// 受到攻击
+    /// </summary>
+    /// <param name="atkObj"></param>
+    /// <param name="damage"></param>
+    public virtual void UnderAttack(GameObject atkObj, int damage)
+    {
+        creatureBattle.UnderAttack(atkObj, damage);
+    }
+
+    /// <summary>
     /// 死亡
     /// </summary>
-    public void Dead()
+    public virtual void Dead()
     {
         //获取所有的骨骼节点
         //List<Transform> listObjBone = CptUtil.GetAllCptInChildrenByContainName<Transform>(gameObject, "Bone");
@@ -108,11 +116,29 @@ public class CreatureCptBase : BaseMonoBehaviour
             });
         //关闭动画
         creatureAnim.EnabledAnim(false);
-        //关闭刚体
-        if (rbCreature != null)
-            rbCreature.isKinematic = true;
         //关闭检测
         if (colliderCreature != null)
             colliderCreature.enabled = false;
+        //创建掉落物
+        CreateDropItems();
+    }
+
+    /// <summary>
+    /// 创建掉落物
+    /// </summary>
+    public void CreateDropItems()
+    {
+        //创建道具
+        List<ItemsBean> listDropItems = ItemsHandler.Instance.GetItemsDrop(creatureInfo.drop);
+        ItemsHandler.Instance.CreateItemCptDropList(listDropItems, transform.position + Vector3.up * 0.5f, ItemDropStateEnum.DropPick);
+    }
+
+    /// <summary>
+    /// 创建产出
+    /// </summary>
+    public void CreateOutputItems()
+    {
+        List<ItemsBean> listDropItems = ItemsHandler.Instance.GetItemsDrop(creatureInfo.output);
+        ItemsHandler.Instance.CreateItemCptDropList(listDropItems, transform.position + Vector3.up * 0.5f, ItemDropStateEnum.DropPick);
     }
 }

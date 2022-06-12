@@ -37,7 +37,7 @@ public class CreatureHandler : BaseHandler<CreatureHandler, CreatureManager>
         //获取控件
         CreatureCptLifeProgress creatureCptLife = objLifeProgress.GetComponent<CreatureCptLifeProgress>();
         //设置位置
-        objLifeProgress.transform.localPosition = new Vector3(0,2,0);
+        objLifeProgress.transform.localPosition = new Vector3(0,1.5f,0);
         return creatureCptLife;
     }
 }

@@ -9,6 +9,8 @@ public class CreatureBean
     public int maxLife;
     //当前生命值
     public int currentLife;
+    //数据
+    public string meta;
 
     /// <summary>
     /// 增加生命值
@@ -27,5 +29,17 @@ public class CreatureBean
             currentLife = maxLife;
         }
         return currentLife;
+
     }
+
+    public T GetMetaData<T>() where T : CreatureMetaBase
+    {
+        return JsonUtil.FromJson<T>(meta);
+    }
+
+    public void SetMetaData<T>(T data) where T : CreatureMetaBase
+    {
+        meta = JsonUtil.ToJson(data);
+    }
+
 }

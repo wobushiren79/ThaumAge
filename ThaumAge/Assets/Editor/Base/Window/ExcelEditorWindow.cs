@@ -26,6 +26,12 @@ public class ExcelEditorWindow : EditorWindow
         //jsonFolderPath = Application.streamingAssetsPath + "/JsonText";
         jsonFolderPath = Application.dataPath + "/Resources/JsonText";
     }
+
+    private void OnDestroy()
+    {
+        DestroyImmediate(GameDataHandler.Instance.gameObject);
+    }
+
     private void OnGUI()
     {
         GUILayout.BeginHorizontal();

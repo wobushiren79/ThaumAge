@@ -110,12 +110,12 @@ public static class ComponentExtension
     /// <param name="name"></param>
     /// <param name="includeInactive"></param>
     /// <returns></returns>
-    public static T GetComponentInChildren<T>(this T selfComponent, string name, bool includeInactive = false) where T : Component
+    public static C GetComponentInChildren<T,C>(this C selfComponent, string name, bool includeInactive = false) where T : Component where C : Component
     {
-        T[] cptList = selfComponent.GetComponentsInChildren<T>(includeInactive);
+        C[] cptList = selfComponent.GetComponentsInChildren<C>(includeInactive);
         for (int i = 0; i < cptList.Length; i++)
         {
-            T item = cptList[i];
+            C item = cptList[i];
             if (item.name.Equals(name))
             {
                 return item;

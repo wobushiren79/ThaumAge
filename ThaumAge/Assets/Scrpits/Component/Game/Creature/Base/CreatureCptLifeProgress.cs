@@ -19,7 +19,21 @@ public class CreatureCptLifeProgress : BaseMonoBehaviour
     {
         this.StopAllCoroutines();
         this.ShowObj(true);
+        RefreshData(maxLife, currentLife);
+        //设置10s时间隐藏
+        this.WaitExecuteSeconds(10, () =>
+        {
+            this.ShowObj(false);
+        });
+    }
 
+    /// <summary>
+    /// 刷新数据
+    /// </summary>
+    /// <param name="maxLife"></param>
+    /// <param name="currentLife"></param>
+    public void RefreshData(int maxLife, int currentLife)
+    {
         this.maxLife = maxLife;
         this.currentLife = currentLife;
         this.lifePro = currentLife / (float)maxLife;
@@ -27,12 +41,6 @@ public class CreatureCptLifeProgress : BaseMonoBehaviour
         AnimForLifeChange(lifePro);
         //设置文字显示
         tvLife.text = $"{currentLife}/{maxLife}";
-
-        //设置10s时间隐藏
-        this.WaitExecuteSeconds(10, () =>
-        {
-            this.ShowObj(false);
-        });
     }
 
     /// <summary>

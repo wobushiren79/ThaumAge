@@ -23,7 +23,19 @@ public class AIAnimalIntentIdle : AIBaseIntent
         if (timeUpdateForIdle >= timeForIdle)
         {
             //闲置结束 开始闲逛
-            aiEntity.ChangeIntent(AIAnimalIntentEnum.Stroll);
+            //获取游戏时间
+            TimeBean timeData = GameTimeHandler.Instance.manager.GetGameTime();
+            //如果0-6点就休息
+            if (timeData.hour >= 0 && timeData.hour < 6)
+            {
+                //开始休息
+                aiEntity.ChangeIntent(AIAnimalIntentEnum.Rest);
+            }
+            else
+            {
+                //开始闲逛
+                aiEntity.ChangeIntent(AIAnimalIntentEnum.Stroll);
+            }
         }
     }
 

@@ -54,7 +54,7 @@ public class ItemBaseWeapon : ItemBaseTool
                 continue;
             if (creatureCpt == selfCreature)
                 continue;
-            creatureCpt.creatureBattle.UnderAttack(user, itemsInfo.atk);
+            creatureCpt.UnderAttack(user, itemsInfo.atk);
         }
     }
 }

@@ -50,6 +50,7 @@ public class AIAnimalIntentStroll : AIBaseIntent
                 {
                     //设置移动点
                     aiCreatureEntity.aiNavigation.SetMovePosition(targetPosition);
+                    aiCreatureEntity.aiNavigation.SetMoveSpeed(1f);
                     //播放移动动画
                     aiCreatureEntity.creatureCpt.creatureAnim.PlayBaseAnim(CharacterAnimBaseState.Walk);
                 }

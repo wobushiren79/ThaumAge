@@ -4,17 +4,15 @@ using DG.Tweening;
 
 public class CreatureBattle : CreatureBase
 {
-    //刚体-生物
-    protected Rigidbody rbCreature;
     //生物生命条
     protected CreatureCptLifeProgress lifeProgress;
 
     //被击飞的冷却时间
     protected float timeCDForHitFly = 1;
     protected bool isHitFly = false;
-    public CreatureBattle(CreatureCptBase creature, Rigidbody rbCreature) : base(creature)
+    public CreatureBattle(CreatureCptBase creature) : base(creature)
     {
-        this.rbCreature = rbCreature;
+
     }
 
 
@@ -93,12 +91,12 @@ public class CreatureBattle : CreatureBase
         if (atkObj == null)
         {
             //击退
-            rbCreature.AddForce(new Vector3(0, 100, 0));
+            //rbCreature.AddForce(new Vector3(0, 100, 0));
         }
         else
         {
             Vector3 hitDirection = (creature.transform.position - atkObj.transform.position).normalized + Vector3.up;
-            rbCreature.AddForce(hitDirection * 100);
+            //rbCreature.AddForce(hitDirection * 100);
         }
     }
 
@@ -112,7 +110,7 @@ public class CreatureBattle : CreatureBase
     }
 
     /// <summary>
-    /// 展示血条
+    /// 显示血条
     /// </summary>
     public void ShowLifeProgress()
     {
@@ -131,6 +129,15 @@ public class CreatureBattle : CreatureBase
         }
         if (lifeProgress != null)
             lifeProgress.SetData(creature.creatureData.maxLife, creature.creatureData.currentLife);
+    }
+
+    /// <summary>
+    /// 刷新血条
+    /// </summary>
+    public void RefreshLifeProgress()
+    {
+        if (lifeProgress != null)
+            lifeProgress.RefreshData(creature.creatureData.maxLife, creature.creatureData.currentLife);
     }
 
     /// <summary>

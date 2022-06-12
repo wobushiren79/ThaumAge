@@ -27,6 +27,26 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 4cdb9ceed11cf5b41ba356f4dbe8a360
+    m_Address: Assets/Prefabs/Model/Creature/Sheep.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: d000d7414d1c9604b83df8f405d59e97
+    m_Address: Assets/Prefabs/Model/Creature/Pig.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 587f0000a83188c4c84adafec588049c
+    m_Address: Assets/Prefabs/Model/Creature/ChickenSmall.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a605915e5bbc59847af51390a7da2705
+    m_Address: Assets/Prefabs/Model/Creature/ChickenBig.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: fd6114d87f1af534fbf270c47c0f10bf, type: 2}
   m_SchemaSet:

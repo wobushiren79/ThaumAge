@@ -62,7 +62,7 @@ public class CharacterStatusBean
     }
 
     /// <summary>
-    /// 减少生命值
+    /// 改变生命值
     /// </summary>
     /// <param name="changeData"></param>
     /// <returns></returns>

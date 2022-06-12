@@ -78,7 +78,7 @@ public class NavigationPathFinding : BaseMonoBehaviour
             navMeshSources.Add(chunk.chunkData.positionForWorld, sourceNew);
         }
         worldBounds.Encapsulate(chunk.chunkComponent.meshRenderer.bounds);
-        worldBounds.Expand(0.1f);
+        worldBounds.Expand(0.01f);
         navMeshHasNewData = true;
     }
 

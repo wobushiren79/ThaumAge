@@ -22,7 +22,7 @@ public class ItemsInfoBean : BaseBean
     public int life;//耐久度
     public float cd_use;//使用间隔
     public int atk;//攻击力
-    public string range_damage;//伤害范围 长宽高
+    public string range_damage;//伤害范围 长(距离目标的距离) 宽（攻击宽度）高（攻击高度）
     public string anim_use;//使用动画
     public string hold_data;//拿住道具的数据（位置旋转等）
     public string link_class;//关联的类（针对有对应类 需要单独处理的特殊道具）
