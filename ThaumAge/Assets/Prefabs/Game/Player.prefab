@@ -89,7 +89,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2521288577852740309}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.4, z: 0.2}
+  m_LocalPosition: {x: 0, y: 1.5, z: 0.2}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -175,6 +175,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6f4571f17635af04fb22f21dd03a54f4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  character: {fileID: 0}
   objFirstLook: {fileID: 2521288577852740309}
   objThirdLook: {fileID: 1064983307241888274}
   objThirdFollow: {fileID: 5836331868964678075}
@@ -215,6 +216,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 2
     m_TransformParent: {fileID: 8533266650839486888}
     m_Modifications:
     - target: {fileID: 3451163580735803116, guid: ee005192853d9d04c88b7de87f578c94, type: 3}
@@ -266,6 +268,7 @@ PrefabInstance:
       value: CharacterBase
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_AddedGameObjects: []
   m_SourcePrefab: {fileID: 100100000, guid: ee005192853d9d04c88b7de87f578c94, type: 3}
 --- !u!4 &6783873828600734402 stripped
 Transform:
