@@ -576,7 +576,7 @@ RectTransform:
   - {fileID: 8270190703749080561}
   - {fileID: 2066379204668084723}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -741,6 +741,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 2
     m_TransformParent: {fileID: 1410983258920508303}
     m_Modifications:
     - target: {fileID: 683733200488704005, guid: 8bdd947da708b394c95659cf1655148d, type: 3}
@@ -1072,6 +1073,7 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_AddedGameObjects: []
   m_SourcePrefab: {fileID: 100100000, guid: 8bdd947da708b394c95659cf1655148d, type: 3}
 --- !u!224 &1572410814538359613 stripped
 RectTransform:
@@ -1094,6 +1096,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 2
     m_TransformParent: {fileID: 7542836650794477470}
     m_Modifications:
     - target: {fileID: 1427713010127964591, guid: aa500d4ee24a0e143941769f7e8d1089, type: 3}
@@ -1193,6 +1196,7 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_AddedGameObjects: []
   m_SourcePrefab: {fileID: 100100000, guid: aa500d4ee24a0e143941769f7e8d1089, type: 3}
 --- !u!114 &5578163771255997075 stripped
 MonoBehaviour:
@@ -1215,6 +1219,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 2
     m_TransformParent: {fileID: 5851314731992454110}
     m_Modifications:
     - target: {fileID: 591880955363998584, guid: 441335aec5d7c3e48a3afaaaad67ab6d, type: 3}
@@ -1314,6 +1319,7 @@ PrefabInstance:
       value: Exit
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_AddedGameObjects: []
   m_SourcePrefab: {fileID: 100100000, guid: 441335aec5d7c3e48a3afaaaad67ab6d, type: 3}
 --- !u!114 &452167115202649237 stripped
 MonoBehaviour:

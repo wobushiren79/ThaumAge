@@ -69,7 +69,7 @@ public class UIChildGameSettingBaseContent
     /// <returns></returns>
     protected GameObject LoadItem(string itemName)
     {
-        GameObject objItemModel = LoadResourcesUtil.SyncLoadData<GameObject>($"UI/GameSetting/{itemName}");
+        GameObject objItemModel = LoadResourcesUtil.SyncLoadData<GameObject>($"UI/Game/GameSetting/{itemName}");
         GameObject objItem = UIHandler.Instance.Instantiate(objListContainer, objItemModel);
         return objItem;
     }
