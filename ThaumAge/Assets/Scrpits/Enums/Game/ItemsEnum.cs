@@ -16,10 +16,11 @@ public enum ItemsTypeEnum
     Clothes = 12,//衣服
     Gloves = 13,//手套
     Shoes = 14,//鞋子
+    Trousers = 15,//裤子
 
-    Headwear = 15,//头饰
-    Ring = 16,//戒指
-    Cape = 17,//披风
+    Headwear = 16,//头饰
+    Ring = 17,//戒指
+    Cape = 18,//披风
 
     Hoe = 21,//锄头
     Pickaxe = 22,//镐子

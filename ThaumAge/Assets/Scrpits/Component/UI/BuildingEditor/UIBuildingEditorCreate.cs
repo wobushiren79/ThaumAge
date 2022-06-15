@@ -14,14 +14,16 @@ public partial class UIBuildingEditorCreate : BaseUIComponent
     {
         base.Awake();
         ui_BlockList.AddCellListener(OnCellChangeForBlockSelect);
-        ui_CreateSelect.onValueChanged.AddListener((value)=> 
+        ui_CreateSelect.onValueChanged.AddListener((value) =>
         {
-            CallBackForToggleSelect(ui_CreateSelect,value);
+            CallBackForToggleSelect(ui_CreateSelect, value);
         });
         ui_DestorySelect.onValueChanged.AddListener((value) =>
         {
             CallBackForToggleSelect(ui_DestorySelect, value);
         });
+        InitCreateType();
+        InitBlockDirection();
     }
 
     public override void OpenUI()
@@ -51,13 +53,49 @@ public partial class UIBuildingEditorCreate : BaseUIComponent
         //添加不为NULL的数据
         for (int i = 0; i < arrayBlockInfo.Length; i++)
         {
-            var itemInfo =  arrayBlockInfo[i];
+            var itemInfo = arrayBlockInfo[i];
             if (itemInfo != null)
             {
                 listBlockInfo.Add(itemInfo);
             }
         }
         ui_BlockList.SetCellCount(listBlockInfo.Count);
+    }
+
+    /// <summary>
+    /// 初始化建筑选择
+    /// </summary>
+    public void InitCreateType()
+    {
+        int type = BuildingEditorHandler.Instance.manager.curCreateType;
+        if (type == 0)
+        {
+            ui_CreateSelect.isOn = true;
+        }
+        else
+        {
+            ui_DestorySelect.isOn = true;
+        }
+    }
+
+    /// <summary>
+    /// 初始化方块方向
+    /// </summary>
+    public void InitBlockDirection()
+    {
+        List<Dropdown.OptionData> listBlockDirection = new List<Dropdown.OptionData>();
+        List<BlockDirectionEnum> listDirection = EnumExtension.GetEnumValue<BlockDirectionEnum>();
+        for (int i = 0; i < listDirection.Count; i++)
+        {
+            BlockDirectionEnum itemDirection = listDirection[i];
+            listBlockDirection.Add(new Dropdown.OptionData(itemDirection.ToString()));
+        }
+        ui_BlockDirection.options = listBlockDirection;
+        ui_BlockDirection.onValueChanged.AddListener((index) =>
+        {
+            CallBackForDropDown(ui_BlockDirection, index);
+        });
+        ui_BlockDirection.value = 0;
     }
 
     /// <summary>
@@ -77,6 +115,8 @@ public partial class UIBuildingEditorCreate : BaseUIComponent
     {
         this.indexSelect = changeIndex;
         BuildingEditorHandler.Instance.manager.curSelectBlockInfo = listBlockInfo[indexSelect];
+        BuildingEditorHandler.Instance.manager.curBlockDirection = BlockDirectionEnum.UpForward;
+        ui_BlockDirection.value = 3;
         //刷新所有
         ui_BlockList.RefreshAllCells();
     }
@@ -90,11 +130,24 @@ public partial class UIBuildingEditorCreate : BaseUIComponent
     {
         if (view == ui_DestorySelect && value == true)
         {
-            BuildingEditorHandler.Instance.manager.curCreateTyp = 1;
+            BuildingEditorHandler.Instance.manager.curCreateType = 1;
         }
         else if (view == ui_CreateSelect && value == true)
         {
-            BuildingEditorHandler.Instance.manager.curCreateTyp = 0;
+            BuildingEditorHandler.Instance.manager.curCreateType = 0;
+        }
+    }
+
+    /// <summary>
+    /// 下拉菜单监听
+    /// </summary>
+    public void CallBackForDropDown(Dropdown dropdownView, int index)
+    {
+        //方块方向选择
+        if (dropdownView == ui_BlockDirection)
+        {
+            List<BlockDirectionEnum> listDirection = EnumExtension.GetEnumValue<BlockDirectionEnum>();
+            BuildingEditorHandler.Instance.manager.curBlockDirection = listDirection[index];
         }
     }
 
@@ -117,7 +170,7 @@ public partial class UIBuildingEditorCreate : BaseUIComponent
         {
             BuildingEditorHandler.Instance.SaveBuildingData();
         };
-;       UIDialogNormal uiDialog = UIHandler.Instance.ShowDialog<UIDialogNormal>(dialogData);
+        ; UIDialogNormal uiDialog = UIHandler.Instance.ShowDialog<UIDialogNormal>(dialogData);
     }
 
 }

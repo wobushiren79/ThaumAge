@@ -63,7 +63,9 @@ public partial class UIViewCharacterEquip : BaseUIView
         dicEquip.Add(EquipTypeEnum.Hats, ui_Equip_Hats);
         dicEquip.Add(EquipTypeEnum.Gloves, ui_Equip_Gloves);
         dicEquip.Add(EquipTypeEnum.Clothes, ui_Equip_Clothes);
+        dicEquip.Add(EquipTypeEnum.Trousers, ui_Equip_Trousers);
         dicEquip.Add(EquipTypeEnum.Shoes, ui_Equip_Shoes);
+
         dicEquip.Add(EquipTypeEnum.Headwear, ui_Equip_Headwear);
         dicEquip.Add(EquipTypeEnum.LeftRing, ui_Equip_LeftRing);
         dicEquip.Add(EquipTypeEnum.RightRing, ui_Equip_RightRing);

@@ -20,7 +20,7 @@ public class BuildingEditorManager : BaseManager,IBuildingInfoView
     //当前方块的方向
     public BlockDirectionEnum curBlockDirection = BlockDirectionEnum.UpForward;
     //当前建造模式 0创建 1删除
-    public int curCreateTyp = 0;
+    public int curCreateType = 0;
     //当前的建筑信息
     public BuildingInfoBean curBuildingInfo;
 

@@ -13,6 +13,8 @@ public class UserEquipBean
     public ItemsBean clothes;
     //鞋子
     public ItemsBean shoes;
+    //裤子
+    public ItemsBean trousers;
     //头饰
     public ItemsBean headwear;
     //左手戒指
@@ -46,6 +48,9 @@ public class UserEquipBean
             case EquipTypeEnum.Shoes:
                 targetItem = shoes;
                 break;
+            case EquipTypeEnum.Trousers:
+                targetItem = trousers;
+                break;
             case EquipTypeEnum.Headwear:
                 targetItem = headwear;
                 break;
@@ -56,6 +61,7 @@ public class UserEquipBean
                 targetItem = rightRing;
                 break;
             case EquipTypeEnum.Cape:
+                targetItem = cape;
                 break;
         }
         if (targetItem == null)
@@ -75,6 +81,8 @@ public class UserEquipBean
                 return ItemsTypeEnum.Clothes;
             case EquipTypeEnum.Shoes:
                 return ItemsTypeEnum.Shoes;
+            case EquipTypeEnum.Trousers:
+                return ItemsTypeEnum.Trousers;
             case EquipTypeEnum.Headwear:
                 return ItemsTypeEnum.Headwear;
             case EquipTypeEnum.LeftRing:
@@ -102,6 +110,9 @@ public class UserEquipBean
                 break;
             case EquipTypeEnum.Shoes:
                 textId = 404;
+                break;
+            case EquipTypeEnum.Trousers:
+                textId = 409;
                 break;
             case EquipTypeEnum.Headwear:
                 textId = 405;

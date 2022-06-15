@@ -18,5 +18,7 @@ public partial class UIBuildingEditorCreate
 
     public Button ui_CreateBuilding;
 
+    public Dropdown ui_BlockDirection;
+
 
 }

@@ -11,7 +11,7 @@ public class BuildingEditorHandler : BaseHandler<BuildingEditorHandler, Building
     /// <param name="blockPosition"></param>
     public void BuildBlock(Vector3Int blockPosition)
     {
-        if (manager.curCreateTyp == 0)
+        if (manager.curCreateType == 0)
         {
             //建造
             //先删除有的
@@ -27,7 +27,7 @@ public class BuildingEditorHandler : BaseHandler<BuildingEditorHandler, Building
             itemBlock.SetData(manager.curSelectBlockInfo, manager.curBlockDirection);
             manager.dicBlockBuild.Add(blockPosition, itemBlock);
         }
-        else if (manager.curCreateTyp == 1)
+        else if (manager.curCreateType == 1)
         {
             //删除
             if (manager.dicBlockBuild.TryGetValue(blockPosition, out BuildingEditorModel blockEditor))
