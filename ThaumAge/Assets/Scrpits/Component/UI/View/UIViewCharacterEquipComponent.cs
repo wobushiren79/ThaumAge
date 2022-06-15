@@ -28,5 +28,7 @@ public partial class UIViewCharacterEquip
 
     public UIViewItemCharacterStatus ui_ViewItemCharacterStatus;
 
+    public UIViewItemContainer ui_Equip_Trousers;
+
 
 }

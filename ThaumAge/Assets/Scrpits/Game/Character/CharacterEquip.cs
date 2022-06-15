@@ -46,6 +46,8 @@ public class CharacterEquip : CharacterBase
                 return;//手套
             case EquipTypeEnum.Shoes:
                 return;//鞋子
+            case EquipTypeEnum.Trousers:
+                return;//裤子
             case EquipTypeEnum.Headwear:
                 return;//头饰
             case EquipTypeEnum.LeftRing:

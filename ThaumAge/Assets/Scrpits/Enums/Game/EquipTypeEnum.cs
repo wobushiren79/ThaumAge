@@ -8,9 +8,10 @@ public enum EquipTypeEnum
     Clothes = 2,//衣服
     Gloves = 3,//手套
     Shoes = 4,//鞋子
+    Trousers = 5,//裤子
 
-    Headwear = 5,//头饰
-    LeftRing = 6,//戒指
-    RightRing = 7,//戒指
-    Cape = 8,//披风
+    Headwear = 11,//头饰
+    LeftRing = 12,//戒指
+    RightRing = 13,//戒指
+    Cape = 19,//披风
 }
