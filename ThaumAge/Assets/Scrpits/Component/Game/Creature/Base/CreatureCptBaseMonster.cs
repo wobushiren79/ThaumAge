@@ -1,16 +1,16 @@
 ﻿using UnityEditor;
 using UnityEngine;
 
-public class CreatureCptBaseAnimal : CreatureCptBase
+public class CreatureCptBaseMonster : CreatureCptBase
 {
-    protected AIAnimalEntity aiEntity;
+    protected AIMonsterEntity aiEntity;
 
     protected float timeUpdateForData = 0;
     protected float timeForData = 10;
     public override void Awake()
     {
         base.Awake();
-        aiEntity = gameObject.AddComponentEX<AIAnimalEntity>();
+        aiEntity = gameObject.AddComponentEX<AIMonsterEntity>();
         aiEntity.SetData(this);
     }
 
@@ -34,17 +34,5 @@ public class CreatureCptBaseAnimal : CreatureCptBase
         timeUpdateForData = 0;
         //刷新血条
         creatureBattle.RefreshLifeProgress();
-    }
-
-    /// <summary>
-    /// 被攻击
-    /// </summary>
-    /// <param name="atkObj"></param>
-    /// <param name="damage"></param>
-    public override void UnderAttack(GameObject atkObj, int damage)
-    {
-        base.UnderAttack(atkObj, damage);
-        //逃跑
-        aiEntity.ChangeIntent(AIIntentEnum.AnimalEscape);
     }
 }

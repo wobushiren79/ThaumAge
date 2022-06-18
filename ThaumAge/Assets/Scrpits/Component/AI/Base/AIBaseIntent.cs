@@ -4,7 +4,7 @@ using UnityEngine;
 public class AIBaseIntent
 {
     public AIBaseEntity aiEntity;
-    public System.Enum aiIntent;
+    public AIIntentEnum aiIntent;
 
     public AIBaseIntent()
     {
@@ -16,7 +16,7 @@ public class AIBaseIntent
     /// </summary>
     /// <param name="aiIntent"></param>
     /// <param name="aiEntity"></param>
-    public void InitData(System.Enum aiIntent, AIBaseEntity aiEntity)
+    public void InitData(AIIntentEnum aiIntent, AIBaseEntity aiEntity)
     {
         this.aiIntent = aiIntent;
         this.aiEntity = aiEntity;

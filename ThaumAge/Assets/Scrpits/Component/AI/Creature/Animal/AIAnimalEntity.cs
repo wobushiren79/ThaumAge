@@ -1,27 +1,26 @@
-﻿using UnityEditor;
+﻿using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
-public class AIAnimalEntity : AIBaseEntity<AIAnimalIntentEnum>
+public class AIAnimalEntity : AICreateEntity
 {
-    public AINavigation aiNavigation;
-    public CreatureCptBase creatureCpt;
-
     /// <summary>
-    /// 设置数据
+    ///  初始化意图枚举
     /// </summary>
-    /// <param name="creatureCpt"></param>
-    public void SetData(CreatureCptBase creatureCpt)
+    /// <param name="listIntentEnum"></param>
+    protected override void InitIntentEnum(List<AIIntentEnum> listIntentEnum)
     {
-        this.creatureCpt = creatureCpt;
-        //初始化寻路
-        aiNavigation = new AINavigation(this);
-        //默认闲置
-        ChangeIntent(AIAnimalIntentEnum.Idle);
-        //下一帧 初始化寻一次路，到当前点，防止模型下陷
-        this.WaitExecuteEndOfFrame(1, () => 
-        {
-            aiNavigation.SetMovePosition(transform.position, true, 5);
-        });
+        listIntentEnum.Add(AIIntentEnum.AnimalIdle);
+        listIntentEnum.Add(AIIntentEnum.AnimalStroll);
+        listIntentEnum.Add(AIIntentEnum.AnimalRest);
+        listIntentEnum.Add(AIIntentEnum.AnimalEscape);
+        listIntentEnum.Add(AIIntentEnum.AnimalDead);
     }
 
+    public override void SetData(CreatureCptBase creatureCpt)
+    {
+        base.SetData(creatureCpt);
+        //默认闲置
+        ChangeIntent(AIIntentEnum.AnimalIdle);
+    }
 }

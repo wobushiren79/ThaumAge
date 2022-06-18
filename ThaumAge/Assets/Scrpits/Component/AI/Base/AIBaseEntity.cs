@@ -3,30 +3,20 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-
-public class AIBaseEntity<IntentType> : AIBaseEntity 
-    where IntentType : Enum
-{
-    public override void Awake()
-    {
-        base.Awake();
-        InitData<IntentType>();
-    }
-} 
-
-public class AIBaseEntity : BaseMonoBehaviour
+public abstract class AIBaseEntity : BaseMonoBehaviour
 {
     //意图列表
-    public List<AIBaseIntent> listIntent = new List<AIBaseIntent>();
+    public List<AIIntentEnum> listIntentEnum = new List<AIIntentEnum>();
+
     //当前意图
     public AIBaseIntent currentIntent;
 
     //意图池
-    public static Dictionary<string, AIBaseIntent> dicIntentPool = new Dictionary<string, AIBaseIntent>();
+    public static Dictionary<AIIntentEnum, AIBaseIntent> dicIntentPool = new Dictionary<AIIntentEnum, AIBaseIntent>();
 
     public virtual void Awake()
     {
-
+        InitIntentEntity();
     }
 
     public virtual void Start()
@@ -51,85 +41,92 @@ public class AIBaseEntity : BaseMonoBehaviour
     }
 
     /// <summary>
-    /// 初始化数据(每一个子类都必须重写该方法 并且指定枚举)
+    /// 增加意图
     /// </summary>
-    /// <typeparam name="E"></typeparam>
-    public virtual void InitData<E>() where E : Enum
+    public void AddIntent(AIBaseIntent intent)
     {
-        InitIntent<E>();
-    }
-
-    /// <summary>
-    /// 初始化意图
-    /// </summary>
-    /// <typeparam name="I"></typeparam>
-    public virtual void InitIntent<E>()  where E : Enum
-    {
-        List<E> listIntent = EnumExtension.GetEnumValue<E>();
-        for (int i = 0; i < listIntent.Count; i++)
+        if (!dicIntentPool.ContainsKey(intent.aiIntent))
         {
-            E itemIntent = listIntent[i];
-            string intentName = itemIntent.GetEnumName();
-            string classNameTitle = itemIntent.GetType().Name.Replace("Enum", "");
-            string className = $"{classNameTitle}{intentName}";
-            //首先获取类池里面是否有这个意图
-            if (!dicIntentPool.TryGetValue(className,out AIBaseIntent intentClass))
-            {
-                intentClass = ReflexUtil.CreateInstance<AIBaseIntent>(className);
-            }
-            if (intentClass != null)
-            {
-                intentClass.InitData(itemIntent,this);
-                AddIntent(intentClass);
-            }
+            dicIntentPool.Add(intent.aiIntent, intent);
         }
     }
 
     /// <summary>
-    /// 增加意图
+    /// 获取意图
     /// </summary>
-    /// <param name="intent"></param>
-    public void AddIntent(AIBaseIntent intent)
+    public T GetIntent<T>(AIIntentEnum aIIntent) where T : AIBaseIntent
     {
-        listIntent.Add(intent);
+        if (dicIntentPool.TryGetValue(aIIntent, out AIBaseIntent value))
+        {
+            return value as T;
+        }
+        return null;
     }
 
     /// <summary>
     /// 移除意图
     /// </summary>
-    /// <param name="intent"></param>
     public void RemoveIntent(AIBaseIntent intent)
     {
-        if (listIntent.Contains(intent))
-            listIntent.Remove(intent);
+        if (dicIntentPool.ContainsKey(intent.aiIntent))
+        {
+            dicIntentPool.Remove(intent.aiIntent);
+        }
     }
 
     /// <summary>
     /// 改变意图
     /// </summary>
     /// <param name="aiIntent"></param>
-    public void ChangeIntent<E>(E aiIntent) where E : System.Enum
+    public void ChangeIntent(AIIntentEnum aiIntent)
     {
-        if (listIntent.IsNull())
+        if (dicIntentPool.IsNull())
         {
-            LogUtil.LogWarning("转换AI意图" + aiIntent.ToString() + "失败，还没有初始化相关AI意图");
+            LogUtil.LogError("转换AI意图" + aiIntent.ToString() + "失败，还没有初始化相关AI意图");
             return;
         }
         if (currentIntent != null)
         {
             currentIntent.IntentLeaving(this);
         }
-        for (int i = 0; i < listIntent.Count; i++)
+        AIBaseIntent changeIntent = GetIntent<AIBaseIntent>(aiIntent);
+        if (changeIntent == null)
         {
-            AIBaseIntent aiBaseIntent = listIntent[i];
-            if (Equals(aiBaseIntent.aiIntent, aiIntent))
-            {
-                currentIntent = aiBaseIntent;
-                currentIntent.IntentEntering(this);
-                return;
-            }
+            LogUtil.LogError("转换AI意图" + aiIntent.ToString() + "失败，意图池里没有此意图");
+            return;
         }
-        LogUtil.LogWarning("转换AI意图" + aiIntent.ToString() + "失败,没有相关AI意图");
+        currentIntent = changeIntent;
+        currentIntent.IntentEntering(this);
     }
 
+    /// <summary>
+    /// 初始化意图
+    /// </summary>
+    /// <typeparam name="I"></typeparam>
+    protected virtual void InitIntentEntity()
+    {
+        listIntentEnum.Clear();
+        dicIntentPool.Clear();
+
+        InitIntentEnum(listIntentEnum);
+        for (int i = 0; i < listIntentEnum.Count; i++)
+        {
+            AIIntentEnum itemIntent = listIntentEnum[i];
+            string intentName = itemIntent.GetEnumName();
+            string className = $"AIIntent{intentName}";
+            //首先获取类池里面是否有这个意图
+
+            if (!dicIntentPool.TryGetValue(itemIntent, out AIBaseIntent intentClass))
+            {
+                intentClass = ReflexUtil.CreateInstance<AIBaseIntent>(className);
+            }
+            if (intentClass != null)
+            {
+                intentClass.InitData(itemIntent, this);
+                AddIntent(intentClass);
+            }
+        }
+    }
+
+    protected abstract void InitIntentEnum(List<AIIntentEnum> listIntentEnum);
 }
