@@ -91,13 +91,14 @@ public class CharacterEquip : CharacterBase
                      objModel.transform.localPosition = Vector3.zero;
                      objModel.transform.localEulerAngles = Vector3.zero;
 
-                     ItemsHandler.Instance.manager.GetItemsTexById(itemsInfo.id, (itemTex) =>
-                     {
-                         if (objModel == null)
-                             return;
-                         MeshRenderer meshRebderer = objModel.GetComponent<MeshRenderer>();
-                         meshRebderer.material.mainTexture = itemTex;
-                     });
+                     //暂时取消实施加载贴图
+                     //ItemsHandler.Instance.manager.GetItemsTexById(itemsInfo.id, (itemTex) =>
+                     //{
+                     //    if (objModel == null)
+                     //        return;
+                     //    MeshRenderer meshRebderer = objModel.GetComponent<MeshRenderer>();
+                     //    meshRebderer.material.mainTexture = itemTex;
+                     //});
 
                      callBack?.Invoke(objModel);
                  }
