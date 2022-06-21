@@ -49,10 +49,10 @@ public class ResourcesRefresh : Editor
                 2048,
                 BlockAnimFrameNumber + 1,
                 BlockEditorWindow.Path_Block_Textures,
-                new List<string>() { 
-                    "Block" + BlockMaterialEnum.Normal.GetEnumName(), 
-                    "Block" + BlockMaterialEnum.BothFace.GetEnumName(), 
-                    "Block" + BlockMaterialEnum.BothFaceSwing.GetEnumName(), 
+                new List<string>() {
+                    "Block" + BlockMaterialEnum.Normal.GetEnumName(),
+                    "Block" + BlockMaterialEnum.BothFace.GetEnumName(),
+                    "Block" + BlockMaterialEnum.BothFaceSwing.GetEnumName(),
                     "Block" + BlockMaterialEnum.BothFaceSwingUniform.GetEnumName(),
                     "Block" + BlockMaterialEnum.Transparent.GetEnumName(),
                 }
@@ -74,10 +74,10 @@ public class ResourcesRefresh : Editor
                 (
                 2048,
                 BlockAnimFrameNumber + 1,
-                new List<string>() { 
-                    "Block"+ BlockMaterialEnum.Normal.GetEnumName(), 
-                    "Block" + BlockMaterialEnum.BothFace.GetEnumName(), 
-                    "Block" + BlockMaterialEnum.BothFaceSwing.GetEnumName(), 
+                new List<string>() {
+                    "Block"+ BlockMaterialEnum.Normal.GetEnumName(),
+                    "Block" + BlockMaterialEnum.BothFace.GetEnumName(),
+                    "Block" + BlockMaterialEnum.BothFaceSwing.GetEnumName(),
                     "Block" + BlockMaterialEnum.BothFaceSwingUniform.GetEnumName(),
                     "Block" + BlockMaterialEnum.Transparent.GetEnumName()}
                 );
@@ -92,10 +92,10 @@ public class ResourcesRefresh : Editor
     public static void RefreshBlockMat()
     {
         List<BlockMaterialEnum> listBlockMat = new List<BlockMaterialEnum>() {
-            BlockMaterialEnum.Custom, 
-            BlockMaterialEnum.Normal, 
-            BlockMaterialEnum.BothFace, 
-            BlockMaterialEnum.BothFaceSwing, 
+            BlockMaterialEnum.Custom,
+            BlockMaterialEnum.Normal,
+            BlockMaterialEnum.BothFace,
+            BlockMaterialEnum.BothFaceSwing,
             BlockMaterialEnum.BothFaceSwingUniform,
             BlockMaterialEnum.Transparent
         };
@@ -126,5 +126,50 @@ public class ResourcesRefresh : Editor
     {
         //注： 如果是超过2048的图片 需要选用其他的压缩格式
         BlockEditorWindow.CreateBlockModel(2048, BlockEditorWindow.Path_FBX_BlockModelCommon, $"{BlockEditorWindow.Path_BlockTexturesMat}", "BlockCommon", BlockEditorWindow.Path_BlockMatCommon);
+    }
+
+    [MenuItem("工具/资源/刷新FBX资源（装备）")]
+    public static void RefreshFBXForEquip()
+    {
+        string equipPath = "Assets/Art/FBX/Equip";
+        CreateFBXMatAndSet(equipPath);
+    }
+
+    [MenuItem("工具/资源/刷新FBX资源（生物）")]
+    public static void RefreshFBXForCreature()
+    {
+        string creaturePath = "Assets/Art/FBX/Creature";
+        CreateFBXMatAndSet(creaturePath);
+    }
+
+    protected static void CreateFBXMatAndSet(string fbxFilesPath)
+    {
+        //获取文件价目录下的所有文件
+        FileInfo[] fileInfos = FileUtil.GetFilesByPath(fbxFilesPath);
+        for (int i = 0; i < fileInfos.Length; i++)
+        {
+            FileInfo file = fileInfos[i];
+            if (file.Name.Contains(".meta"))
+                continue;
+            if (file.Name.Contains("_texture0"))
+                continue;
+            if (file.Name.Contains("_Mat"))
+                continue;
+            //GameObject obj = EditorUtil.GetAssetByPath<GameObject>($"{equipPath}/{file.Name}");
+
+            string fileName = file.Name.Replace(".dae", "");
+            string texturePath = $"{fbxFilesPath}/{fileName}_texture0.png";
+            string matCreatePath = $"{fbxFilesPath}/{fileName}_Mat";
+            string matCreateAllPath = $"{matCreatePath}.mat";
+
+            //判断是否有对应的材质
+            Material objMat = EditorUtil.GetAssetByPath<Material>($"{matCreateAllPath}");
+            if (objMat == null)
+            {
+                EditorUtil.CreateMaterial(texturePath, "HDRP/Lit", matCreatePath);
+            }
+
+            FBXEditor.ChangeMaterial($"{fbxFilesPath}/{file.Name}", $"{matCreateAllPath}");
+        }
     }
 }

@@ -15,7 +15,7 @@ public static class EditorUtil
     /// </summary>
     /// <param name="asset"></param>
     /// <param name="path">Assets/TexArray.asset</param>
-    public static void CreateAsset(UnityEngine.Object asset,string path)
+    public static void CreateAsset(UnityEngine.Object asset, string path)
     {
         AssetDatabase.CreateAsset(asset, path);
     }
@@ -233,10 +233,28 @@ public static class EditorUtil
     }
 
     /// <summary>
+    /// 创建一个材质球
+    /// </summary>
+    public static void CreateMaterial(string texPath, string shaderName, string matCreatePath,
+        float metallic = -1f, float smoothness = -1f)
+    {
+        //获取贴图
+        Texture2D texMat = GetAssetByPath<Texture2D>(texPath);
+        Material mat = new Material(Shader.Find(shaderName));
+        mat.mainTexture = texMat;
+        if (metallic != -1)
+            mat.SetFloat("_Metallic", metallic);
+        if (smoothness != -1)
+            mat.SetFloat("_Smoothness", smoothness);
+        CreateAsset(mat, $"{matCreatePath}.mat");
+        RefreshAsset();
+    }
+
+    /// <summary>
     /// 设置贴图数据
     /// </summary>
     public static void SetTextureData(string texturePath,
-        TextureImporterType textureImporterType　= TextureImporterType.Default,
+        TextureImporterType textureImporterType = TextureImporterType.Default,
         int spritePixelsPerUnit = 16,
         bool isReadable = true,//是否可读
         bool mipmapEnabled = false,//是否开启mipmap
