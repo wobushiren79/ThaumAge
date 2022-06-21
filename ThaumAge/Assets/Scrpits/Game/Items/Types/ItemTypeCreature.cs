@@ -28,6 +28,12 @@ public class ItemTypeCreature : Item
 
                 ItemsInfoBean itemsInfo = GetItemsInfo(itemData.itemId);
                 CreatureHandler.Instance.CreateCreature(itemsInfo.type_id, targetPosition + Vector3Int.up);
+
+                //扣除道具
+                UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();
+                userData.AddItems(itemData, -1);
+                //刷新UI
+                UIHandler.Instance.RefreshUI();
             }
         }
     }

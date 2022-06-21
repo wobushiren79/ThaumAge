@@ -32,6 +32,9 @@ public class AIIntentAnimalStroll : AIBaseIntent
         timeUpdateForStroll += Time.deltaTime;
         if (timeUpdateForStroll >= timeForStroll)
         {
+            AIAnimalEntity aiCreatureEntity = aiEntity as AIAnimalEntity;
+            //停止移动
+            aiCreatureEntity.aiNavigation.StopMove();
             //如果闲逛时间结束
             aiEntity.ChangeIntent(AIIntentEnum.AnimalIdle);
             timeUpdateForStroll = 0;
@@ -52,7 +55,7 @@ public class AIIntentAnimalStroll : AIBaseIntent
                     aiCreatureEntity.aiNavigation.SetMovePosition(targetPosition);
                     aiCreatureEntity.aiNavigation.SetMoveSpeed(1f);
                     //播放移动动画
-                    aiCreatureEntity.creatureCpt.creatureAnim.PlayBaseAnim(CharacterAnimBaseState.Walk);
+                    aiCreatureEntity.creatureCpt.creatureAnim.PlayBaseAnim(CreatureAnimBaseState.Walk);
                 }
                 timeUpdateForFindPath = 0;
             }
@@ -65,7 +68,7 @@ public class AIIntentAnimalStroll : AIBaseIntent
             //如果已经停止移动 则搜索新的路径
             if (!isMove)
             {
-                aiCreatureEntity.creatureCpt.creatureAnim.PlayBaseAnim(CharacterAnimBaseState.Idle);
+                aiCreatureEntity.creatureCpt.creatureAnim.PlayBaseAnim(CreatureAnimBaseState.Idle);
                 isFindPath = false;
             }
         }

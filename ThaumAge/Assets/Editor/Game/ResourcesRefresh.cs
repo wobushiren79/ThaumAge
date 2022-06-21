@@ -142,6 +142,15 @@ public class ResourcesRefresh : Editor
         CreateFBXMatAndSet(creaturePath);
     }
 
+    [MenuItem("工具/资源/Test")]
+    public static void Test()
+    {
+        string createPath = "Assets/Prefabs/Model/Character/Equip";
+        GameObject objNew = new GameObject("Test");
+        EditorUtil.CreatePrefab(objNew, createPath+"/Test");
+        DestroyImmediate(objNew);
+    }
+
     protected static void CreateFBXMatAndSet(string fbxFilesPath)
     {
         //获取文件价目录下的所有文件
@@ -149,18 +158,25 @@ public class ResourcesRefresh : Editor
         for (int i = 0; i < fileInfos.Length; i++)
         {
             FileInfo file = fileInfos[i];
+
             if (file.Name.Contains(".meta"))
                 continue;
             if (file.Name.Contains("_texture0"))
+            {
+                //设置贴图        
+                EditorUtil.SetTextureData($"{fbxFilesPath}/{file.Name}",isReadable:true,mipmapEnabled:true,textureImporterCompression : TextureImporterCompression.Uncompressed);
                 continue;
+            }
+         
             if (file.Name.Contains("_Mat"))
                 continue;
-            //GameObject obj = EditorUtil.GetAssetByPath<GameObject>($"{equipPath}/{file.Name}");
 
-            string fileName = file.Name.Replace(".dae", "");
+            string fileName = file.Name.Replace(".dae", "").Replace(".fbx", "");
             string texturePath = $"{fbxFilesPath}/{fileName}_texture0.png";
             string matCreatePath = $"{fbxFilesPath}/{fileName}_Mat";
             string matCreateAllPath = $"{matCreatePath}.mat";
+
+            //GameObject obj = EditorUtil.GetAssetByPath<GameObject>($"{equipPath}/{file.Name}");
 
             //判断是否有对应的材质
             Material objMat = EditorUtil.GetAssetByPath<Material>($"{matCreateAllPath}");

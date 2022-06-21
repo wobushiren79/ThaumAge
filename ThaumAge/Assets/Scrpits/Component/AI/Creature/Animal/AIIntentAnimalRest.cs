@@ -10,7 +10,7 @@ public class AIIntentAnimalRest : AIBaseIntent
         //获取游戏时间
         timeData = GameTimeHandler.Instance.manager.GetGameTime();
         //播放闲置动画
-        aiCreatureEntity.creatureCpt.creatureAnim.PlayBaseAnim(CharacterAnimBaseState.Seat);
+        aiCreatureEntity.creatureCpt.creatureAnim.PlayBaseAnim(CreatureAnimBaseState.Seat);
     }
 
     public override void IntentUpdate(AIBaseEntity aiEntity)

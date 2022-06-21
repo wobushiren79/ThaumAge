@@ -24,7 +24,7 @@ public class CreatureAnim : CreatureBase
     /// 修改角色的基础动画
     /// </summary>
     /// <param name="animType"></param>
-    public void PlayBaseAnim(CharacterAnimBaseState animType)
+    public void PlayBaseAnim(CreatureAnimBaseState animType)
     {
         animator.SetInteger("state", (int)animType);
 

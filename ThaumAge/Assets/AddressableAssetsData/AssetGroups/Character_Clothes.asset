@@ -16,19 +16,7 @@ MonoBehaviour:
   m_Data:
     m_SerializedData: []
   m_GUID: 6e1592aea31b8bd46b9bae5af65bc147
-  m_SerializeEntries:
-  - m_GUID: f152ecf71b5f01d4b8894ef5a0d5a018
-    m_Address: Assets/Prefabs/Model/Character/Clothes/character_clothes_1.fbx
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-  - m_GUID: 0cc795f71ccde0b4a94a596c5219ed63
-    m_Address: Assets/Prefabs/Model/Character/Clothes/character_clothes_tex_1.png
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-  - m_GUID: a0526703c59640c42b922e4b3445ce95
-    m_Address: Assets/Prefabs/Model/Character/Clothes/character_clothes_2.fbx
-    m_ReadOnly: 0
-    m_SerializedLabels: []
+  m_SerializeEntries: []
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: fd6114d87f1af534fbf270c47c0f10bf, type: 2}
   m_SchemaSet:

@@ -634,7 +634,7 @@ public class BlockEditorWindow : EditorWindow
                 //设置材质
                 objNewMeshRenderer.material = matUse;
 
-                EditorUtil.CreatePrefab(objNew, $"{Path_Block_Model_Save}/{itemCreateData.nameBlock}.prefab");
+                EditorUtil.CreatePrefab(objNew, $"{Path_Block_Model_Save}/{itemCreateData.nameBlock}");
                 //EditorUtil.RefreshAsset(objNew);
                 DestroyImmediate(objNew);
             }

@@ -1,14 +1,14 @@
 fileFormatVersion: 2
 guid: b0b7944539a5c7c45b53048f062e3006
 ModelImporter:
-  serializedVersion: 22102
+  serializedVersion: 22103
   internalIDToNameTable: []
   externalObjects:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: lambert0
-    second: {fileID: 2100000, guid: 258a185774136a54fafa9f1e54a0835c, type: 2}
+    second: {fileID: 2100000, guid: b877032d74747254fa2d7f3bfb0f0b79, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
@@ -106,6 +106,7 @@ ModelImporter:
   avatarSetup: 0
   addHumanoidExtraRootOnlyWhenUsingAvatar: 1
   importBlendShapeDeformPercent: 1
+  remapMaterialsIfMaterialImportModeIsNone: 1
   additionalBone: 0
   userData: 
   assetBundleName: 

@@ -12,7 +12,7 @@ public class AIIntentAnimalIdle : AIBaseIntent
     {
         AIAnimalEntity aiCreatureEntity = aiEntity as AIAnimalEntity;
         //播放闲置动画
-        aiCreatureEntity.creatureCpt.creatureAnim.PlayBaseAnim(CharacterAnimBaseState.Idle);
+        aiCreatureEntity.creatureCpt.creatureAnim.PlayBaseAnim(CreatureAnimBaseState.Idle);
         //随机设置闲置时间
         timeForIdle = Random.Range(5f, 10f);
     }

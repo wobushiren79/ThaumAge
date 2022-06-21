@@ -27,7 +27,7 @@ public static class EditorUtil
     /// <param name="path"></param>
     public static void CreatePrefab(GameObject obj, string path)
     {
-        PrefabUtility.SaveAsPrefabAsset(obj, path);
+        PrefabUtility.SaveAsPrefabAsset(obj, $"{path}.prefab");
     }
 
     /// <summary>

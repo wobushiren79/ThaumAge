@@ -159,7 +159,7 @@ public class ControlForPlayer : ControlForBase
                 {
                     character.characterAnim.creatureAnim.SetClimbSpeed(1);
                 }
-                character.characterAnim.creatureAnim.PlayBaseAnim(CharacterAnimBaseState.Climb);
+                character.characterAnim.creatureAnim.PlayBaseAnim(CreatureAnimBaseState.Climb);
                 character.characterAnim.creatureAnim.PlayJump(isJump);
             }
             else
@@ -173,11 +173,11 @@ public class ControlForPlayer : ControlForBase
         //播放动画
         if (moveData.x == 0 && moveData.y == 0)
         {
-            character.characterAnim.creatureAnim.PlayBaseAnim(CharacterAnimBaseState.Idle);
+            character.characterAnim.creatureAnim.PlayBaseAnim(CreatureAnimBaseState.Idle);
         }
         else
         {
-            character.characterAnim.creatureAnim.PlayBaseAnim(CharacterAnimBaseState.Walk);
+            character.characterAnim.creatureAnim.PlayBaseAnim(CreatureAnimBaseState.Walk);
         }
         //跳跃处理
         if (isJump)

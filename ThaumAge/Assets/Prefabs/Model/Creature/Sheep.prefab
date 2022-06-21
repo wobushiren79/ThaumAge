@@ -62,7 +62,7 @@ MeshRenderer:
   m_RenderingLayerMask: 257
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 503074f0acaba054ba847214a76e7c34, type: 2}
+  - {fileID: 2100000, guid: 6844974f3f1fe3a44984e0e012a25602, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -287,7 +287,7 @@ MeshRenderer:
   m_RenderingLayerMask: 257
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 503074f0acaba054ba847214a76e7c34, type: 2}
+  - {fileID: 2100000, guid: 6844974f3f1fe3a44984e0e012a25602, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -386,10 +386,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: -3628661016888456418, guid: 6318c703dbe027244aa25abf82d07c79, type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: dd5c4f64f29a81445973cffe819bbead, type: 2}
     - target: {fileID: 919132149155446097, guid: 6318c703dbe027244aa25abf82d07c79, type: 3}
       propertyPath: m_Name
       value: Sheep

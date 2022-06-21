@@ -192,10 +192,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: -985158439599623189, guid: e95e674b1fdf2004d9b3e62ba7a8eb5f, type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: 006e00eaaf4690c4bba3526bf430c408, type: 2}
     - target: {fileID: 919132149155446097, guid: e95e674b1fdf2004d9b3e62ba7a8eb5f, type: 3}
       propertyPath: m_Name
       value: Chicken_Big

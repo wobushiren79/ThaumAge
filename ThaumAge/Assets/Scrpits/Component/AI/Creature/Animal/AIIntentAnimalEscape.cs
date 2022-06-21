@@ -13,7 +13,7 @@ public class AIIntentAnimalEscape : AIBaseIntent
             aiCreatureEntity.aiNavigation.SetMovePosition(targetPosition);
             aiCreatureEntity.aiNavigation.SetMoveSpeed(5f);
             //播放移动动画
-            aiCreatureEntity.creatureCpt.creatureAnim.PlayBaseAnim(CharacterAnimBaseState.Walk);
+            aiCreatureEntity.creatureCpt.creatureAnim.PlayBaseAnim(CreatureAnimBaseState.Walk);
             aiCreatureEntity.creatureCpt.creatureAnim.SetAnimSpeed(5);
         }
     }
