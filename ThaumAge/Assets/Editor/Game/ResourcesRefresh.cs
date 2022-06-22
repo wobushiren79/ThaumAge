@@ -132,7 +132,10 @@ public class ResourcesRefresh : Editor
     public static void RefreshFBXForEquip()
     {
         string equipPath = "Assets/Art/FBX/Equip";
+        string equipModelPath = "Assets/Prefabs/Model/Character/Equip";
         CreateFBXMatAndSet(equipPath);
+        CreateModelGameObject(equipPath, equipModelPath);
+        EditorUtil.RefreshAsset();
     }
 
     [MenuItem("工具/资源/刷新FBX资源（生物）")]
@@ -140,16 +143,29 @@ public class ResourcesRefresh : Editor
     {
         string creaturePath = "Assets/Art/FBX/Creature";
         CreateFBXMatAndSet(creaturePath);
+        EditorUtil.RefreshAsset();
     }
 
-    [MenuItem("工具/资源/Test")]
-    public static void Test()
+    [MenuItem("工具/资源/刷新动画资源（生物）")]
+    public static void RefreshFBXAnimForCreature()
     {
-        string createPath = "Assets/Prefabs/Model/Character/Equip";
-        GameObject objNew = new GameObject("Test");
-        EditorUtil.CreatePrefab(objNew, createPath+"/Test");
-        DestroyImmediate(objNew);
+        string creatureAnimPath = "Assets/Anim/Creature";
+        //获取文件价目录下的所有文件
+        FileInfo[] fileInfos = FileUtil.GetFilesByPath(creatureAnimPath);
+        for (int i = 0; i < fileInfos.Length; i++)
+        {
+            FileInfo file = fileInfos[i];
+
+            if (!file.Name.Contains(".fbx"))
+                continue;
+
+            string fbxPaht = $"{creatureAnimPath}/{file.Name}";
+            FBXEditor.ChangeAnim(fbxPaht, isLoop: true);
+        }
+        EditorUtil.RefreshAsset();
     }
+
+
 
     protected static void CreateFBXMatAndSet(string fbxFilesPath)
     {
@@ -164,10 +180,10 @@ public class ResourcesRefresh : Editor
             if (file.Name.Contains("_texture0"))
             {
                 //设置贴图        
-                EditorUtil.SetTextureData($"{fbxFilesPath}/{file.Name}",isReadable:true,mipmapEnabled:true,textureImporterCompression : TextureImporterCompression.Uncompressed);
+                EditorUtil.SetTextureData($"{fbxFilesPath}/{file.Name}", isReadable: true, mipmapEnabled: true, textureImporterCompression: TextureImporterCompression.Uncompressed);
                 continue;
             }
-         
+
             if (file.Name.Contains("_Mat"))
                 continue;
 
@@ -186,6 +202,30 @@ public class ResourcesRefresh : Editor
             }
 
             FBXEditor.ChangeMaterial($"{fbxFilesPath}/{file.Name}", $"{matCreateAllPath}");
+        }
+    }
+
+    protected static void CreateModelGameObject(string sourcePath, string createPath)
+    {
+
+        //获取文件价目录下的所有文件
+        FileInfo[] fileInfos = FileUtil.GetFilesByPath(sourcePath);
+        for (int i = 0; i < fileInfos.Length; i++)
+        {
+            FileInfo file = fileInfos[i];
+            if (!file.Name.Contains(".fbx"))
+                continue;
+            string createObjPath = $"{createPath}/{file.Name.Replace(".fbx", "")}.prefab";
+            //如果已经有该obj 则不创建了
+            if (Directory.Exists($"{createObjPath}"))
+                continue;
+
+            GameObject objNew = new GameObject(file.Name);
+            EditorUtil.CreatePrefab(objNew, $"{createPath}/{file.Name}");
+            
+            //TODO 加上Address
+
+            DestroyImmediate(objNew);
         }
     }
 }
