@@ -22,41 +22,49 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels:
     - BlockMats
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 817aa751700b1214ab736177d67b4ff4
     m_Address: Assets/Prefabs/Mats/BlockMatWater_5.mat
     m_ReadOnly: 0
     m_SerializedLabels:
     - BlockMats
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 8d068167d5d02e24bafe921fa7108554
     m_Address: Assets/Prefabs/Mats/BlockBothFace_2.mat
     m_ReadOnly: 0
     m_SerializedLabels:
     - BlockMats
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 7b948cee94643be41968d099a3719c21
     m_Address: Assets/Prefabs/Mats/BlockBothFaceSwing_3.mat
     m_ReadOnly: 0
     m_SerializedLabels:
     - BlockMats
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: c1fec38cff622ba4887434db18cb76fb
     m_Address: Assets/Prefabs/Mats/BlockBothFaceSwingUniform_4.mat
     m_ReadOnly: 0
     m_SerializedLabels:
     - BlockMats
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 322b0d973c0671a42b0ece0bb2a7d89e
     m_Address: Assets/Prefabs/Mats/BlockCustom_0.mat
     m_ReadOnly: 0
     m_SerializedLabels:
     - BlockMats
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: ac5859fddb68169459d01db1a38c0b51
     m_Address: Assets/Prefabs/Mats/BlockNormal_1.mat
     m_ReadOnly: 0
     m_SerializedLabels:
     - BlockMats
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 1d3608e9663861f49bf24ff63f51b665
     m_Address: Assets/Prefabs/Mats/BlockTransparent_9.mat
     m_ReadOnly: 0
     m_SerializedLabels:
     - BlockMats
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: fd6114d87f1af534fbf270c47c0f10bf, type: 2}
   m_SchemaSet:

@@ -1,0 +1,49 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: Equip
+  m_EditorClassIdentifier: 
+  m_GroupName: Equip
+  m_Data:
+    m_SerializedData: []
+  m_GUID: 4f6dde61bf45fa741bfd9b11498e1773
+  m_SerializeEntries:
+  - m_GUID: 0833d3e801a89bf4d85d8a1e0a05e964
+    m_Address: Assets/Prefabs/Model/Character/Equip/WitchClothes_1.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Equip
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: b8ffedd6b9a6e31419aa589919b5668e
+    m_Address: Assets/Prefabs/Model/Character/Equip/WitchClothes.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Equip
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 9ab13a685584d7e4088fcb9e91816ac0
+    m_Address: Assets/Prefabs/Model/Character/Equip/WitchShoes.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Equip
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: d65f616718710af49a9d5c79da36e89c
+    m_Address: Assets/Prefabs/Model/Character/Equip/WitchHead.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Equip
+    FlaggedDuringContentUpdateRestriction: 0
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: fd6114d87f1af534fbf270c47c0f10bf, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: ce9d1ca7c2e91a640acceb115b4a9d6e, type: 2}
+    - {fileID: 11400000, guid: cff81bb95a122ba41b62242e0469b187, type: 2}

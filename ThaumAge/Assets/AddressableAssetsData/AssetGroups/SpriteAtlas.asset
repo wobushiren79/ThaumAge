@@ -21,10 +21,12 @@ MonoBehaviour:
     m_Address: Assets/Texture/SpriteAtlas/SpriteAtlasForItems.spriteatlas
     m_ReadOnly: 0
     m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 76a5d38a8f30c0540ab9d2354a2634ca
     m_Address: Assets/Texture/SpriteAtlas/SpriteAtlasForUI.spriteatlas
     m_ReadOnly: 0
     m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: fd6114d87f1af534fbf270c47c0f10bf, type: 2}
   m_SchemaSet:

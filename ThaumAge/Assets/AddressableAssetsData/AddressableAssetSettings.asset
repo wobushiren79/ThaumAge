@@ -15,7 +15,7 @@ MonoBehaviour:
   m_DefaultGroup: 1261beb35e7b46c4fbf9458f1cd39db6
   m_CachedHash:
     serializedVersion: 2
-    Hash: 00000000000000000000000000000000
+    Hash: 40a35d633cc3becf717d01a78771bd80
   m_OptimizeCatalogSize: 0
   m_BuildRemoteCatalog: 0
   m_BundleLocalCatalog: 0
@@ -32,11 +32,14 @@ MonoBehaviour:
   m_ShaderBundleNaming: 0
   m_ShaderBundleCustomNaming: 
   m_MonoScriptBundleNaming: 0
+  m_CheckForContentUpdateRestrictionsOption: 0
   m_MonoScriptBundleCustomNaming: 
   m_RemoteCatalogBuildPath:
     m_Id: 
   m_RemoteCatalogLoadPath:
     m_Id: 
+  m_ContentStateBuildPathProfileVariableName: 
+  m_CustomContentStateBuildPath: 
   m_ContentStateBuildPath: 
   m_BuildAddressablesWithPlayerBuild: 2
   m_overridePlayerVersion: 
@@ -47,7 +50,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 59bfa155033dd574a856dfb824ddac18, type: 2}
   - {fileID: 11400000, guid: ff8704ff464d688479fa87a5ebb092a6, type: 2}
   - {fileID: 11400000, guid: 81c801f76f8b9f24fbfab050c2b698b9, type: 2}
-  - {fileID: 11400000, guid: c7b49e2820fa7d149ad6b048a804eee5, type: 2}
+  - {fileID: 11400000, guid: 6fca50d8aeaf2124fb40865e2a443b37, type: 2}
   - {fileID: 11400000, guid: 3b49403e585939e418932b939340f007, type: 2}
   - {fileID: 11400000, guid: d1fff4e9bf0031046a8e8af4cf2bbc3d, type: 2}
   - {fileID: 11400000, guid: 434be2a8dcc559b45ab0539e59027b3c, type: 2}

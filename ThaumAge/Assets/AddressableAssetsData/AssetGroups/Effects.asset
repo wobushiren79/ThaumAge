@@ -21,26 +21,32 @@ MonoBehaviour:
     m_Address: Assets/Prefabs/Effects/Effect_Test_1.prefab
     m_ReadOnly: 0
     m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 15c8f4a4bd39ffd4a96c7398785ad9e3
     m_Address: Assets/Prefabs/Effects/Effect_Test_2.prefab
     m_ReadOnly: 0
     m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: a95198ba0e9651d4ea1ac5f051dcbb7e
     m_Address: Assets/Prefabs/Effects/Effect_BlockBreak_1.prefab
     m_ReadOnly: 0
     m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 05a18a082666182449abedb0981807c0
     m_Address: Assets/Prefabs/Effects/Effect_DamageText_1.prefab
     m_ReadOnly: 0
     m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 4b50516df71f8b84bb93b9a0f04af532
     m_Address: Assets/Prefabs/Effects/Effect_Blood_1.prefab
     m_ReadOnly: 0
     m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: ff51808b2ae46154098e2f50dfcb04b8
     m_Address: Assets/Prefabs/Effects/Effect_Dead_1.prefab
     m_ReadOnly: 0
     m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: fd6114d87f1af534fbf270c47c0f10bf, type: 2}
   m_SchemaSet:

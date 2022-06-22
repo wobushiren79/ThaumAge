@@ -2,6 +2,7 @@
 using UnityEditor;
 using UnityEngine;
 using System.Collections.Generic;
+using UnityEditor.AddressableAssets.Settings;
 
 public class ResourcesRefresh : Editor
 {
@@ -155,10 +156,10 @@ public class ResourcesRefresh : Editor
         for (int i = 0; i < fileInfos.Length; i++)
         {
             FileInfo file = fileInfos[i];
-
+            if (file.Name.Contains(".meta"))
+                continue;
             if (!file.Name.Contains(".fbx"))
                 continue;
-
             string fbxPaht = $"{creatureAnimPath}/{file.Name}";
             FBXEditor.ChangeAnim(fbxPaht, isLoop: true);
         }
@@ -213,19 +214,39 @@ public class ResourcesRefresh : Editor
         for (int i = 0; i < fileInfos.Length; i++)
         {
             FileInfo file = fileInfos[i];
-            if (!file.Name.Contains(".fbx"))
+            if (file.Name.Contains(".meta"))
                 continue;
-            string createObjPath = $"{createPath}/{file.Name.Replace(".fbx", "")}.prefab";
+            if (!file.Name.Contains(".fbx") && !file.Name.Contains(".dae"))
+                continue;
+            string objName = file.Name.Replace(".fbx", "").Replace(".dae", "");
+            string createObjPath = $"{createPath}/{objName}.prefab";
             //如果已经有该obj 则不创建了
-            if (Directory.Exists($"{createObjPath}"))
+            GameObject objCreate = EditorUtil.GetAssetByPath<GameObject>(createObjPath);
+
+            if (objCreate != null)
                 continue;
 
-            GameObject objNew = new GameObject(file.Name);
-            EditorUtil.CreatePrefab(objNew, $"{createPath}/{file.Name}");
-            
-            //TODO 加上Address
+            //设置OBJ
+            objCreate = new GameObject(objName);
+            GameObject objModel = new GameObject("Model");
+            objModel.transform.parent = objCreate.transform;
 
-            DestroyImmediate(objNew);
+            GameObject objFBXModel = EditorUtil.GetAssetByPath<GameObject>($"{sourcePath}/{file.Name}");
+            GameObject objFBX = Instantiate(objFBXModel);
+            objFBX.name = $"{objName}FBX";
+            objFBX.transform.localEulerAngles = new Vector3(-90, 180, 0);
+            objFBX.transform.localScale = new Vector3(0.03125f, 0.03125f, 0.03125f);
+            objFBX.transform.localPosition = new Vector3(0, 0, 0);
+            objFBX.transform.parent = objModel.transform;
+
+            //创建预支体
+            EditorUtil.CreatePrefab(objCreate, $"{createPath}/{objName}");
+
+            //加上Address
+            AddressableAssetGroup addressableAssetGroup = AddressableUtil.FindOrCreateGroup("Equip");
+            AddressableUtil.AddAssetEntry(addressableAssetGroup, createObjPath, createObjPath);
+
+            DestroyImmediate(objCreate);
         }
     }
 }

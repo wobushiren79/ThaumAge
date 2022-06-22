@@ -21,18 +21,22 @@ MonoBehaviour:
     m_Address: Assets/Prefabs/Game/Element/Sky.prefab
     m_ReadOnly: 0
     m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: c35555a3bdf5179458159bb614b94bd7
     m_Address: Assets/Prefabs/Game/Element/Star.prefab
     m_ReadOnly: 0
     m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 7d417f399f19d8c4f88310b847b79c84
     m_Address: Assets/Prefabs/Game/Weather/Clouds.prefab
     m_ReadOnly: 0
     m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 1bd4a1882ea91684496b1ce6827f60b8
     m_Address: Assets/Prefabs/Game/Weather/Rain.prefab
     m_ReadOnly: 0
     m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: fd6114d87f1af534fbf270c47c0f10bf, type: 2}
   m_SchemaSet:
