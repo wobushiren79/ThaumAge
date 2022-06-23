@@ -11,10 +11,17 @@ public class CreatureCptCharacter : CreatureCptBase
     public GameObject characterHair;
     [Header("角色身体（需要指定）")]
     public GameObject characterBody;
-    [Header("角色身体（需要指定）")]
+
+    [Header("角色身体衣服（需要指定）")]
     public GameObject characterClothes;
     [Header("角色右手（需要指定）")]
     public GameObject characterRightHand;
+
+    [Header("角色右手衣服（需要指定）")]
+    public GameObject characterClothesRight;
+    [Header("角色左手衣服（需要指定）")]
+    public GameObject characterClothesLeft;
+
     [Header("角色鞋子左（需要指定）")]
     public GameObject characterShoesL;
     [Header("角色鞋子右（需要指定）")]

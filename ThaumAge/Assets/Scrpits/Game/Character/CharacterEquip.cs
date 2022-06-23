@@ -12,6 +12,9 @@ public class CharacterEquip : CharacterBase
     //鞋子容器
     public GameObject objShoesRContainer;
     public GameObject objShoesLContainer;
+    //衣服袖子容器
+    public GameObject objClothesRContainer;
+    public GameObject objClothesLContainer;
 
     public CharacterEquip(CreatureCptCharacter character) : base(character)
     {
@@ -26,6 +29,9 @@ public class CharacterEquip : CharacterBase
 
         objShoesRContainer = character.characterShoesR;
         objShoesLContainer = character.characterShoesL;
+
+        objClothesRContainer = character.characterClothesRight;
+        objClothesLContainer = character.characterClothesLeft;
     }
 
     /// <summary>
@@ -55,7 +61,7 @@ public class CharacterEquip : CharacterBase
                 return;
             case EquipTypeEnum.Clothes://衣服
                 this.characterData.clothesId = equipId;
-                ChangeEquipDetails(equipId, objClothesContainer, callBack: callBack, callBackModelRemark: callBackModelRemark);
+                ChangeEquipDetails(equipId, objClothesContainer, new List<GameObject>() { objClothesRContainer, objClothesLContainer }, callBack: callBack, callBackModelRemark: callBackModelRemark);
                 return;
             case EquipTypeEnum.Gloves://手套
                 return;
@@ -79,7 +85,14 @@ public class CharacterEquip : CharacterBase
     protected void ChangeEquipDetails(long equipId, GameObject objEquipContainer, List<GameObject> objEquipRemarkContainer = null,
         Action<GameObject> callBack = null, Action<IList<GameObject>> callBackModelRemark = null)
     {
+        //清空容器
         CptUtil.RemoveChild(objEquipContainer.transform);
+        if (objEquipRemarkContainer != null)
+            for (int i = 0; i < objEquipRemarkContainer.Count; i++)
+            {
+                var itemContainer = objEquipRemarkContainer[i];
+                CptUtil.RemoveChild(itemContainer.transform);
+            }
         if (equipId == 0)
         {
             //没有装备
@@ -115,13 +128,16 @@ public class CharacterEquip : CharacterBase
                     for (int i = 0; i < objEquipRemarkContainer.Count; i++)
                     {
                         GameObject objItemContainer = objEquipRemarkContainer[i];
+                        int indexRemark = 0;
                         if (listItemsRemarkObj.Count > i)
-                        {
-                            GameObject objEquipModel = listItemsRemarkObj[i];
-                            GameObject objModel = ItemsHandler.Instance.Instantiate(objItemContainer, objEquipModel);
-                            objModel.transform.localPosition = Vector3.zero;
-                            objModel.transform.localEulerAngles = Vector3.zero;
-                        }
+                            indexRemark = i;
+                        else
+                            indexRemark = listItemsRemarkObj.Count - 1;
+
+                        GameObject objEquipModel = listItemsRemarkObj[indexRemark];
+                        GameObject objModel = ItemsHandler.Instance.Instantiate(objItemContainer, objEquipModel);
+                        objModel.transform.localPosition = Vector3.zero;
+                        objModel.transform.localEulerAngles = Vector3.zero;
                     }
                     callBackModelRemark?.Invoke(listItemsRemarkObj);
                 });
