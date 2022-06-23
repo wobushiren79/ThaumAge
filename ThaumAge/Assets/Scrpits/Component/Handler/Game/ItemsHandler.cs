@@ -107,7 +107,7 @@ public class ItemsHandler : BaseHandler<ItemsHandler, ItemsManager>
     {
         if (itemData.itemId == 0)
             return;
-        manager.GetItemsObjById(-1, (objModel) =>
+        manager.GetItemsDropObj((objModel) =>
         {
             GameObject objCommon = Instantiate(gameObject, objModel);
             ItemCptDrop ItemCptDrop = objCommon.GetComponent<ItemCptDrop>();

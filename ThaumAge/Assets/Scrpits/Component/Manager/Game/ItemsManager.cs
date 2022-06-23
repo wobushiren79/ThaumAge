@@ -21,13 +21,19 @@ public class ItemsManager : BaseManager,
     //注册道具列表
     protected Item[] arrayItemRegister = new Item[EnumExtension.GetEnumMaxIndex<ItemsTypeEnum>() + 1];
     protected Dictionary<long, Item> dicItemRegisterForId = new Dictionary<long, Item>();
+
     //道具模型列表
     protected Dictionary<long, GameObject> dicItemsObj = new();
+    //道具备用模型列表(用于衣服或者裤子的延长部分)
+    protected Dictionary<long, IList<GameObject>> dicItemsRemarkObj = new();
     //道具模型贴图
     protected Dictionary<long, Texture> dicItemsTex = new();
 
     //路径-道具丢弃模型
-    public static string pathForItemDrop = "Assets/Prefabs/Game/ItemDrop.prefab";
+    public static string PathForItemDrop = "Assets/Prefabs/Game/ItemDrop.prefab";
+    //路径-装备模型
+    public static string PathEquipModel = "Assets/Prefabs/Model/Character/Equip";
+
     protected void Awake()
     {
         controllerForItems = new ItemsInfoController(this, this);
@@ -186,32 +192,39 @@ public class ItemsManager : BaseManager,
     }
 
     /// <summary>
+    /// 获取道具掉落的模型
+    /// </summary>
+    /// <param name="callBack"></param>
+    public void GetItemsDropObj(Action<GameObject> callBack)
+    {
+        //添加道具掉落模型
+        GetModelForAddressables(dicItemsObj, -1, PathForItemDrop, callBack);
+    }
+
+    /// <summary>
     /// 获取物品模型(衣服 武器之类的)
     /// </summary>
     /// <param name="id"></param>
     /// <param name="callBack"></param>
-    public void GetItemsObjById(long id, Action<GameObject> callBack)
+    public void GetItemsObjById(long id, Action<GameObject> callBack, Action<IList<GameObject>> callBackForRemark)
     {
         ItemsInfoBean itemsInfo = GetItemsInfoById(id);
         if (itemsInfo == null)
         {
             if (dicItemsObj.TryGetValue(id, out GameObject value))
             {
-                callBack?.Invoke(value);
+                callBack.Invoke(value);
             }
-            else
+            if (dicItemsRemarkObj.TryGetValue(id, out IList<GameObject> valueRemark))
             {
-                //如果找不到该模型
-                if (id == -1)
-                {
-                    //添加道具掉落模型
-                    GetModelForAddressables(dicItemsObj, -1, pathForItemDrop, callBack);
-                }
+                callBackForRemark.Invoke(valueRemark);
             }
         }
         else
         {
-            GetModelForAddressables(dicItemsObj, id, itemsInfo.model_name, callBack);
+            GetModelForAddressables(dicItemsObj, id, $"{PathEquipModel}/{itemsInfo.model_name}.prefab", callBack);
+            List<string> listModelRemarkName = itemsInfo.GetModelRemarkName(PathEquipModel);
+            GetModelsForAddressables(dicItemsRemarkObj, id, listModelRemarkName, callBackForRemark);
         }
     }
 
@@ -253,7 +266,7 @@ public class ItemsManager : BaseManager,
         {
             return item;
         }
-        if(itemsType != ItemsTypeEnum.None)
+        if (itemsType != ItemsTypeEnum.None)
         {
             return GetRegisterItem(itemsType);
         }

@@ -17,7 +17,10 @@ public class ItemsInfoBean : BaseBean
     public int items_type;
     public int type_id; //关联类型的ID
     public int max_number;  //最大格子数量
+
     public string model_name;//模型名字
+    public string model_remark_name;//备用模型名字
+
     public string tex_name;//贴图名字
     public int life;//耐久度
     public float cd_use;//使用间隔
@@ -122,5 +125,23 @@ public class ItemsInfoBean : BaseBean
             fireItemsNum[i] = itemData[1];
             fireTime[i] = itemData[2];
         }
+    }
+
+    /// <summary>
+    /// 获取备用模型名字
+    /// </summary>
+    /// <param name="path"></param>
+    public List<string> GetModelRemarkName(string path)
+    {
+        List<string> listName = new List<string>();
+        if (model_remark_name.IsNull())
+            return listName;
+        string[] arrayName = model_remark_name.Split("|");
+        for (int i = 0; i < arrayName.Length; i++)
+        {
+            var itemData = arrayName[i];
+            listName.Add($"{path}/{itemData}.prefab");
+        }
+        return listName;
     }
 }

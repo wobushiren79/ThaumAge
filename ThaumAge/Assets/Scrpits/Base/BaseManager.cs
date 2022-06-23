@@ -203,7 +203,7 @@ public class BaseManager : BaseMonoBehaviour
         {
             if (data.Result != null)
             {
-                if (listModel.TryGetValue(id,out T result))
+                if (listModel.TryGetValue(id, out T result))
                 {
                     callBack?.Invoke(result);
                 }
@@ -216,7 +216,38 @@ public class BaseManager : BaseMonoBehaviour
         });
     }
 
-    protected void GetModelForAddressables<T>(List<string> listKeyName, Action<IList<T>> callBack) where T : UnityEngine.Object
+    protected void GetModelsForAddressables<T>(Dictionary<long, IList<T>> listModel, long id, List<string> listKeyName, Action<IList<T>> callBack) where T : UnityEngine.Object
+    {
+        if (listKeyName.IsNull())
+        {
+            callBack?.Invoke(null);
+            return;
+        }
+
+        if (listModel.TryGetValue(id, out IList<T> value))
+        {
+            callBack?.Invoke(value);
+            return;
+        }
+
+        LoadAddressablesUtil.LoadAssetsAsync<T>(listKeyName, data =>
+        {
+            if (data.Result != null)
+            {
+                if (listModel.TryGetValue(id, out IList<T> result))
+                {
+                    callBack?.Invoke(result);
+                }
+                else
+                {
+                    listModel.Add(id, data.Result);
+                    callBack?.Invoke(data.Result);
+                }
+            }
+        });
+    }
+
+    protected void GetModelsForAddressables<T>(List<string> listKeyName, Action<IList<T>> callBack) where T : UnityEngine.Object
     {
         if (listKeyName == null)
         {
@@ -229,7 +260,7 @@ public class BaseManager : BaseMonoBehaviour
         });
     }
 
-    protected void GetSpriteByName(Dictionary<string, Sprite> dicIcon,SpriteAtlas spriteAtlas, string resName, string name,Action<SpriteAtlas> callBackForSpriteAtlas, Action<Sprite> callBackForSprite)
+    protected void GetSpriteByName(Dictionary<string, Sprite> dicIcon, SpriteAtlas spriteAtlas, string resName, string name, Action<SpriteAtlas> callBackForSpriteAtlas, Action<Sprite> callBackForSprite)
     {
         if (name == null)
             return;

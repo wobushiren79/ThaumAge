@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
@@ -24,8 +25,8 @@ public class CharacterEquip : CharacterBase
     public override void SetCharacterData(CharacterBean characterData)
     {
         base.SetCharacterData(characterData);
-
-        ChangeClothes(this.characterData.clothesId);
+        //初始化设置衣服
+        ChangeEquip(EquipTypeEnum.Clothes, this.characterData.clothesId);
     }
 
     /// <summary>
@@ -33,14 +34,15 @@ public class CharacterEquip : CharacterBase
     /// </summary>
     /// <param name="equipType"></param>
     /// <param name="clothesId"></param>
-    public void ChangeEquip(EquipTypeEnum equipType, long clothesId, Action<GameObject> callBack = null)
+    public void ChangeEquip(EquipTypeEnum equipType, long clothesId, Action<GameObject> callBack = null, Action<IList<GameObject>> callBackModelRemark = null)
     {
         switch (equipType)
         {
             case EquipTypeEnum.Hats:
                 return;//帽子
             case EquipTypeEnum.Clothes:
-                ChangeClothes(clothesId, callBack);
+                this.characterData.clothesId = clothesId;
+                ChangeEquipDetails(clothesId, objClothesContainer, callBack, callBackModelRemark);
                 return;//衣服
             case EquipTypeEnum.Gloves:
                 return;//手套
@@ -59,50 +61,41 @@ public class CharacterEquip : CharacterBase
         }
     }
 
-    /// <summary>
-    /// 改变衣服
-    /// </summary>
-    /// <param name="clothesId"></param>
-    public void ChangeClothes(long clothesId, Action<GameObject> callBack = null)
+    protected void ChangeEquipDetails(long equipId, GameObject objEquipContainer, Action<GameObject> callBack = null, Action<IList<GameObject>> callBackModelRemark = null)
     {
-        this.characterData.clothesId = clothesId;
-        CptUtil.RemoveChild(objClothesContainer.transform);
-        if (clothesId == 0)
+        CptUtil.RemoveChild(objEquipContainer.transform);
+        if (equipId == 0)
         {
-            //没有衣服
+            //没有装备
             return;
         }
-        ItemsInfoBean itemsInfo = ItemsHandler.Instance.manager.GetItemsInfoById(clothesId);
+        ItemsInfoBean itemsInfo = ItemsHandler.Instance.manager.GetItemsInfoById(equipId);
         if (itemsInfo == null)
         {
-            LogUtil.LogError($"查询道具数据失败，没有ID为 {clothesId} 的服装数据");
+            LogUtil.LogError($"查询道具数据失败，没有ID为 {equipId} 的装备数据");
         }
         else
         {
-            ItemsHandler.Instance.manager.GetItemsObjById(clothesId, (itemsObj) =>
-             {
-                 if (itemsObj == null)
-                 {
-                     LogUtil.LogError($"查询道具模型失败，没有ID为 {clothesId} 的道具模型");
-                 }
-                 else
-                 {
-                     GameObject objModel = ItemsHandler.Instance.Instantiate(objClothesContainer, itemsObj);
-                     objModel.transform.localPosition = Vector3.zero;
-                     objModel.transform.localEulerAngles = Vector3.zero;
+            ItemsHandler.Instance.manager.GetItemsObjById(equipId,
+                (itemsObj) =>
+                {
+                    if (itemsObj == null)
+                    {
+                        LogUtil.LogError($"查询道具模型失败，没有ID为 {equipId} 的道具模型");
+                        return;
+                    }
+                    GameObject objModel = ItemsHandler.Instance.Instantiate(objEquipContainer, itemsObj);
+                    objModel.transform.localPosition = Vector3.zero;
+                    objModel.transform.localEulerAngles = Vector3.zero;
 
-                     //暂时取消实施加载贴图
-                     //ItemsHandler.Instance.manager.GetItemsTexById(itemsInfo.id, (itemTex) =>
-                     //{
-                     //    if (objModel == null)
-                     //        return;
-                     //    MeshRenderer meshRebderer = objModel.GetComponent<MeshRenderer>();
-                     //    meshRebderer.material.mainTexture = itemTex;
-                     //});
-
-                     callBack?.Invoke(objModel);
-                 }
-             });
+                    callBack?.Invoke(objModel);
+                },
+                (listItemsRemarkObj) =>
+                {
+                    if (listItemsRemarkObj == null || listItemsRemarkObj.Count == 0)
+                        return;
+                    callBackModelRemark?.Invoke(listItemsRemarkObj);
+                });
         }
     }
 }

@@ -13,6 +13,10 @@ public class CreatureCptCharacter : CreatureCptBase
     public GameObject characterClothes;
     [Header("角色右手（需要指定）")]
     public GameObject characterRightHand;
+    [Header("角色鞋子左（需要指定）")]
+    public GameObject characterShoesL;
+    [Header("角色鞋子右（需要指定）")]
+    public GameObject characterShoesR;
 
     [HideInInspector]
     public CharacterSkin characterSkin;

@@ -126,9 +126,12 @@ public partial class UIViewCharacterEquip : BaseUIView
                 {
                     showCharacter.SetLayerAllChild(LayerInfo.RenderCamera);
                 };
-
+                Action<IList<GameObject>> callBackModelRemark = (objModelRemark) =>
+                {
+                    showCharacter.SetLayerAllChild(LayerInfo.RenderCamera);
+                };
                 //UI显示也修改
-                showCharacter.characterEquip.ChangeEquip(itemContainer.Key, changeItemData.itemId, callBack);
+                showCharacter.characterEquip.ChangeEquip(itemContainer.Key, changeItemData.itemId, callBack, callBackModelRemark);
             }
         }
     }
