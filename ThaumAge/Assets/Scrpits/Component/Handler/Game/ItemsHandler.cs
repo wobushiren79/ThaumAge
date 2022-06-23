@@ -119,9 +119,6 @@ public class ItemsHandler : BaseHandler<ItemsHandler, ItemsManager>
     /// <summary>
     /// 创建道具掉落
     /// </summary>
-    /// <param name="oldBlock"></param>
-    /// <param name="targetChunk"></param>
-    /// <param name="targetPosition"></param>
     public void CreateItemCptDrop(Block targetBlock, Chunk targetChunk, Vector3Int targetWorldPosition)
     {
         BlockBean blockData = targetChunk.GetBlockData(targetWorldPosition - targetChunk.chunkData.positionForWorld);

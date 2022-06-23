@@ -7,6 +7,11 @@ public class CharacterEquip : CharacterBase
 {
     //衣服容器
     public GameObject objClothesContainer;
+    //帽子容器
+    public GameObject objHatContainer;
+    //鞋子容器
+    public GameObject objShoesRContainer;
+    public GameObject objShoesLContainer;
 
     public CharacterEquip(CreatureCptCharacter character) : base(character)
     {
@@ -15,7 +20,12 @@ public class CharacterEquip : CharacterBase
             LogUtil.LogError($"初始化角色失败，{character.gameObject.name}的角色 缺少 Clothes 部件");
             return;
         }
+
         objClothesContainer = character.characterClothes;
+        objHatContainer = character.characterHat;
+
+        objShoesRContainer = character.characterShoesR;
+        objShoesLContainer = character.characterShoesL;
     }
 
     /// <summary>
@@ -27,6 +37,7 @@ public class CharacterEquip : CharacterBase
         base.SetCharacterData(characterData);
         //初始化设置衣服
         ChangeEquip(EquipTypeEnum.Clothes, this.characterData.clothesId);
+        ChangeEquip(EquipTypeEnum.Shoes, this.characterData.shoesId);
     }
 
     /// <summary>
@@ -34,34 +45,39 @@ public class CharacterEquip : CharacterBase
     /// </summary>
     /// <param name="equipType"></param>
     /// <param name="clothesId"></param>
-    public void ChangeEquip(EquipTypeEnum equipType, long clothesId, Action<GameObject> callBack = null, Action<IList<GameObject>> callBackModelRemark = null)
+    public void ChangeEquip(EquipTypeEnum equipType, long equipId, Action<GameObject> callBack = null, Action<IList<GameObject>> callBackModelRemark = null)
     {
         switch (equipType)
         {
-            case EquipTypeEnum.Hats:
-                return;//帽子
-            case EquipTypeEnum.Clothes:
-                this.characterData.clothesId = clothesId;
-                ChangeEquipDetails(clothesId, objClothesContainer, callBack, callBackModelRemark);
-                return;//衣服
-            case EquipTypeEnum.Gloves:
-                return;//手套
-            case EquipTypeEnum.Shoes:
-                return;//鞋子
-            case EquipTypeEnum.Trousers:
-                return;//裤子
-            case EquipTypeEnum.Headwear:
-                return;//头饰
-            case EquipTypeEnum.LeftRing:
-                return;//戒指
-            case EquipTypeEnum.RightRing:
-                return;//戒指
-            case EquipTypeEnum.Cape:
-                return;//披风
+            case EquipTypeEnum.Hats://帽子
+                this.characterData.headId = equipId;
+                ChangeEquipDetails(equipId, objHatContainer, callBack: callBack, callBackModelRemark: callBackModelRemark);
+                return;
+            case EquipTypeEnum.Clothes://衣服
+                this.characterData.clothesId = equipId;
+                ChangeEquipDetails(equipId, objClothesContainer, callBack: callBack, callBackModelRemark: callBackModelRemark);
+                return;
+            case EquipTypeEnum.Gloves://手套
+                return;
+            case EquipTypeEnum.Shoes://鞋子
+                this.characterData.shoesId = equipId;
+                ChangeEquipDetails(equipId, objShoesLContainer, new List<GameObject>() { objShoesRContainer }, callBack: callBack, callBackModelRemark: callBackModelRemark);
+                return;
+            case EquipTypeEnum.Trousers://裤子
+                return;
+            case EquipTypeEnum.Headwear://头饰
+                return;
+            case EquipTypeEnum.LeftRing://戒指
+                return;
+            case EquipTypeEnum.RightRing://戒指
+                return;
+            case EquipTypeEnum.Cape://披风
+                return;
         }
     }
 
-    protected void ChangeEquipDetails(long equipId, GameObject objEquipContainer, Action<GameObject> callBack = null, Action<IList<GameObject>> callBackModelRemark = null)
+    protected void ChangeEquipDetails(long equipId, GameObject objEquipContainer, List<GameObject> objEquipRemarkContainer = null,
+        Action<GameObject> callBack = null, Action<IList<GameObject>> callBackModelRemark = null)
     {
         CptUtil.RemoveChild(objEquipContainer.transform);
         if (equipId == 0)
@@ -94,6 +110,19 @@ public class CharacterEquip : CharacterBase
                 {
                     if (listItemsRemarkObj == null || listItemsRemarkObj.Count == 0)
                         return;
+                    if (objEquipRemarkContainer == null)
+                        return;
+                    for (int i = 0; i < objEquipRemarkContainer.Count; i++)
+                    {
+                        GameObject objItemContainer = objEquipRemarkContainer[i];
+                        if (listItemsRemarkObj.Count > i)
+                        {
+                            GameObject objEquipModel = listItemsRemarkObj[i];
+                            GameObject objModel = ItemsHandler.Instance.Instantiate(objItemContainer, objEquipModel);
+                            objModel.transform.localPosition = Vector3.zero;
+                            objModel.transform.localEulerAngles = Vector3.zero;
+                        }
+                    }
                     callBackModelRemark?.Invoke(listItemsRemarkObj);
                 });
         }

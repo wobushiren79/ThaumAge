@@ -141,9 +141,9 @@ public class BaseManager : BaseMonoBehaviour
 
     protected T GetModelForResources<T>(Dictionary<string, T> listModel, string resPath) where T : UnityEngine.Object
     {
-        if (name == null)
+        if (resPath == null)
             return null;
-        if (listModel.TryGetValue(name, out T value))
+        if (listModel.TryGetValue(resPath, out T value))
         {
             return value;
         }
@@ -152,7 +152,7 @@ public class BaseManager : BaseMonoBehaviour
 
         if (model != null)
         {
-            listModel.Add(name, model);
+            listModel.Add(resPath, model);
         }
         return model;
     }

@@ -274,7 +274,7 @@ public partial class UIMainCreate : BaseUIComponent,
         else if (selectView == ui_ViewSelectChange_Clothes)
         {
             ItemsInfoBean itemsInfo = listClotehsInfoData[position];
-            character.characterEquip.ChangeClothes(itemsInfo.id);
+            character.characterEquip.ChangeEquip(EquipTypeEnum.Clothes, itemsInfo.id);
         }
     }
 

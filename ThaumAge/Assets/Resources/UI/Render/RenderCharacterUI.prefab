@@ -59,10 +59,10 @@ Camera:
     width: 1
     height: 1
   near clip plane: 0.3
-  far clip plane: 3
-  field of view: 60
-  orthographic: 0
-  orthographic size: 5
+  far clip plane: 5
+  field of view: 80
+  orthographic: 1
+  orthographic size: 1.5
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
@@ -424,6 +424,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 2
     m_TransformParent: {fileID: 8906223975471277694}
     m_Modifications:
     - target: {fileID: 217960571567019678, guid: ee005192853d9d04c88b7de87f578c94, type: 3}
@@ -535,6 +536,7 @@ PrefabInstance:
       value: 12
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_AddedGameObjects: []
   m_SourcePrefab: {fileID: 100100000, guid: ee005192853d9d04c88b7de87f578c94, type: 3}
 --- !u!4 &2369844458173271544 stripped
 Transform:

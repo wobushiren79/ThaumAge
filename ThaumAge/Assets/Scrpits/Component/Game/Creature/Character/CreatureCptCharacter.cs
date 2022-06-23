@@ -5,6 +5,8 @@ public class CreatureCptCharacter : CreatureCptBase
 {
     [Header("角色头部（需要指定）")]
     public GameObject characterHead;
+    [Header("角色帽子（需要指定）")]
+    public GameObject characterHat;
     [Header("角色发型（需要指定）")]
     public GameObject characterHair;
     [Header("角色身体（需要指定）")]

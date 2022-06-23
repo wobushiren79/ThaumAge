@@ -12,8 +12,12 @@ public class CharacterBean : CreatureBean
     //角色性别
     public int characterSex;
 
+    //帽子ID
+    public long headId;
     //衣服ID
     public long clothesId;
+    //鞋子ID
+    public long shoesId;
 
     public long hairId;
     public long eyeId;
