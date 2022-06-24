@@ -1,4 +1,5 @@
-﻿using UnityEditor;
+﻿using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 public class AIIntentMonsterStroll : AIBaseIntent
@@ -10,6 +11,10 @@ public class AIIntentMonsterStroll : AIBaseIntent
     public float timeForFindPath = 1;
     //路径搜索更新时间
     public float timeUpdateForFindPath = 0;
+    //敌人搜索间隔
+    public float timeForSearchEnemy = 1;
+    //敌人搜索更新时间
+    public float timeUpdateForSearchEnemy = 0;
 
     //是否寻找到路径
     public bool isFindPath = false;
@@ -21,6 +26,22 @@ public class AIIntentMonsterStroll : AIBaseIntent
     }
 
     public override void IntentUpdate(AIBaseEntity aiEntity)
+    {
+        HandleForFindPath();
+        HandleForSearchEnemy();
+    }
+
+    public override void IntentLeaving(AIBaseEntity aiEntity)
+    {
+        timeUpdateForFindPath = 0;
+        timeUpdateForSearchEnemy = 0;
+        isFindPath = false;
+    }
+
+    /// <summary>
+    /// 处理-路径
+    /// </summary>
+    public void HandleForFindPath()
     {
         //判断是否找到想要前往的地点
         if (!isFindPath)
@@ -57,9 +78,19 @@ public class AIIntentMonsterStroll : AIBaseIntent
         }
     }
 
-    public override void IntentLeaving(AIBaseEntity aiEntity)
+    /// <summary>
+    /// 处理-搜索敌人
+    /// </summary>
+    public void HandleForSearchEnemy()
     {
-        timeUpdateForFindPath = 0;
-        isFindPath = false;
+        timeUpdateForSearchEnemy += Time.deltaTime;
+        if (timeUpdateForSearchEnemy >= timeForSearchEnemy)
+        {
+            //开始搜索一次范围内的敌人
+            List<Collider> listSearchTarget = AIBaseCommon.SightSearchCircle(aiEntity.transform.position + new Vector3(0, 0.5f, 0), 5, 1 << LayerInfo.Character, 1 << LayerInfo.ChunkCollider);
+            
+        }
     }
+
+
 }
