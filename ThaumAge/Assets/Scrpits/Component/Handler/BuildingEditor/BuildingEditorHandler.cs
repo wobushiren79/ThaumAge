@@ -9,7 +9,7 @@ public class BuildingEditorHandler : BaseHandler<BuildingEditorHandler, Building
     /// 建造方块
     /// </summary>
     /// <param name="blockPosition"></param>
-    public void BuildBlock(Vector3Int blockPosition)
+    public void BuildBlock(Vector3Int blockPosition,int blockId,BlockDirectionEnum blockDirection)
     {
         if (manager.curCreateType == 0)
         {
@@ -24,7 +24,8 @@ public class BuildingEditorHandler : BaseHandler<BuildingEditorHandler, Building
             GameObject objItem = Instantiate(manager.objBlockContainer, manager.objBlockModel.gameObject);
             objItem.transform.position = blockPosition;
             BuildingEditorModel itemBlock = objItem.GetComponent<BuildingEditorModel>();
-            itemBlock.SetData(manager.curSelectBlockInfo, manager.curBlockDirection);
+            BlockInfoBean blockInfo = BlockHandler.Instance.manager.GetBlockInfo(blockId);
+            itemBlock.SetData(blockInfo, blockDirection);
             manager.dicBlockBuild.Add(blockPosition, itemBlock);
         }
         else if (manager.curCreateType == 1)
@@ -37,6 +38,24 @@ public class BuildingEditorHandler : BaseHandler<BuildingEditorHandler, Building
             }
         }
 
+    }
+
+    /// <summary>
+    /// 建造建筑
+    /// </summary>
+    public void BuildBuilding(BuildingInfoBean buildingInfo)
+    {
+        List<BuildingBean> buildingBeans = buildingInfo.listBuildingData;
+        for (int i = 0; i < buildingBeans.Count; i++)
+        {
+            BuildingBean itemData = buildingBeans[i];
+            //纠错处理
+            if (itemData.direction < 10)
+            {
+                itemData.direction = (int)BlockDirectionEnum.UpForward;
+            }
+            BuildBlock(itemData.position, itemData.blockId, (BlockDirectionEnum)itemData.direction);
+        }
     }
 
     /// <summary>
@@ -66,5 +85,17 @@ public class BuildingEditorHandler : BaseHandler<BuildingEditorHandler, Building
         }
         manager.curBuildingInfo.SetListBuildingData(listBlockData);
         manager.controllerForBuildingInfo.SetBuildingInfoData(manager.curBuildingInfo);
+    }
+
+    /// <summary>
+    /// 加载建筑
+    /// </summary>
+    public void LoadBuilding(long buildingId)
+    {
+        manager.controllerForBuildingInfo.GetBuildingInfoDataById(buildingId, (data) =>
+        {
+            manager.curBuildingInfo = data;
+            BuildBuilding(data);
+        });
     }
 }

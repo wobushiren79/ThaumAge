@@ -121,7 +121,7 @@ public class SQLiteHandle
         List<T> listData = new List<T>();
         try
         {
-            List<String> dataNameList = ReflexUtil.GetAllName<T>();
+            List<string> dataNameList = ReflexUtil.GetAllName<T>();
             reader = sql.ReadTable(mainTable, leftTableName, mainKey, leftKey, mainColNames, mainOperations, mainColValues);
             while (reader.Read())
             {

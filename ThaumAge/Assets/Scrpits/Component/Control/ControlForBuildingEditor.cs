@@ -9,6 +9,11 @@ public class ControlForBuildingEditor : ControlForBase
 
     public void Update()
     {
+        if (!BuildingEditorHandler.Instance.manager.isStartBuild)
+        {
+            return;
+        }
+        
         if (UGUIUtil.IsPointerUI())
         {
             return;
@@ -66,7 +71,8 @@ public class ControlForBuildingEditor : ControlForBase
     /// </summary>
     public void OnClickForBuild()
     {
-        BuildingEditorHandler.Instance.BuildBlock(Vector3Int.RoundToInt(objSelect.transform.position));
+        BuildingEditorHandler.Instance.BuildBlock
+            (Vector3Int.RoundToInt(objSelect.transform.position),BuildingEditorHandler.Instance.manager.curSelectBlockInfo.id, BuildingEditorHandler.Instance.manager.curBlockDirection);
     }
 
     /// <summary>

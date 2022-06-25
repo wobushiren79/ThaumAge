@@ -41,7 +41,7 @@ public class BuildingInfoService : BaseMVCService
     /// <returns></returns>
     public List<BuildingInfoBean> QueryDataById(long id)
     {
-        return BaseQueryData<BuildingInfoBean>("link_id", "id", $"{id}");
+        return BaseQueryData<BuildingInfoBean>("id", $"{id}");
     }
 
     /// <summary>
