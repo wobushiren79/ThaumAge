@@ -5,6 +5,8 @@ using System;
 [Serializable]
 public class CreatureBean
 {
+    //生物类型
+    public int creatureType;
     //最大生命值
     public int maxLife;
     //当前生命值
@@ -42,4 +44,17 @@ public class CreatureBean
         meta = JsonUtil.ToJson(data);
     }
 
+    /// <summary>
+    /// 获取生物类型
+    /// </summary>
+    /// <returns></returns>
+    public CreatureTypeEnum GetCreatureType()
+    {
+        return (CreatureTypeEnum)creatureType;
+    }
+
+    public void SetCreatureType(CreatureTypeEnum creatureType) 
+    {
+        this.creatureType = (int)creatureType;
+    }
 }

@@ -53,6 +53,7 @@ public class CreatureCptBase : BaseMonoBehaviour
         creatureData = new CreatureBean();
         creatureData.maxLife = creatureInfo.life;
         creatureData.currentLife = creatureInfo.life;
+        creatureData.creatureType = creatureInfo.creature_type;
     }
 
     /// <summary>

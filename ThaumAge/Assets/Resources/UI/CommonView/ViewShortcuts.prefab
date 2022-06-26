@@ -43,7 +43,7 @@ RectTransform:
   - {fileID: 3530737246217090221}
   - {fileID: 4648973959720318515}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
@@ -62,6 +62,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a26739c52c9a3594789c7243337f251e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  rectTransform: {fileID: 0}
   ui_ShortcutItem_1: {fileID: 0}
   ui_ShortcutItem_2: {fileID: 0}
   ui_ShortcutItem_3: {fileID: 0}
@@ -72,6 +73,7 @@ MonoBehaviour:
   ui_ShortcutItem_8: {fileID: 0}
   ui_ShortcutItem_9: {fileID: 0}
   ui_ShortcutItem_10: {fileID: 0}
+  listShortcut: []
 --- !u!114 &8657635833734107505
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -141,8 +143,21 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 2
     m_TransformParent: {fileID: 6174833269688138843}
     m_Modifications:
+    - target: {fileID: 1053522020116350194, guid: b1fdb84f8db90d248903c3725d56f926, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1053522020116350194, guid: b1fdb84f8db90d248903c3725d56f926, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1053522020116350194, guid: b1fdb84f8db90d248903c3725d56f926, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2677102780424032982, guid: b1fdb84f8db90d248903c3725d56f926, type: 3}
       propertyPath: m_Name
       value: ShortcutItem_9
@@ -231,7 +246,16 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7287463460803750543, guid: b1fdb84f8db90d248903c3725d56f926, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7287463460803750543, guid: b1fdb84f8db90d248903c3725d56f926, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_AddedGameObjects: []
   m_SourcePrefab: {fileID: 100100000, guid: b1fdb84f8db90d248903c3725d56f926, type: 3}
 --- !u!224 &3530737246217090221 stripped
 RectTransform:
@@ -243,8 +267,21 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 2
     m_TransformParent: {fileID: 6174833269688138843}
     m_Modifications:
+    - target: {fileID: 1053522020116350194, guid: b1fdb84f8db90d248903c3725d56f926, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1053522020116350194, guid: b1fdb84f8db90d248903c3725d56f926, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1053522020116350194, guid: b1fdb84f8db90d248903c3725d56f926, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2677102780424032982, guid: b1fdb84f8db90d248903c3725d56f926, type: 3}
       propertyPath: m_Name
       value: ShortcutItem_8
@@ -333,7 +370,16 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7287463460803750543, guid: b1fdb84f8db90d248903c3725d56f926, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7287463460803750543, guid: b1fdb84f8db90d248903c3725d56f926, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_AddedGameObjects: []
   m_SourcePrefab: {fileID: 100100000, guid: b1fdb84f8db90d248903c3725d56f926, type: 3}
 --- !u!224 &500123397177103349 stripped
 RectTransform:
@@ -345,8 +391,21 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 2
     m_TransformParent: {fileID: 6174833269688138843}
     m_Modifications:
+    - target: {fileID: 1053522020116350194, guid: b1fdb84f8db90d248903c3725d56f926, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1053522020116350194, guid: b1fdb84f8db90d248903c3725d56f926, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1053522020116350194, guid: b1fdb84f8db90d248903c3725d56f926, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2677102780424032982, guid: b1fdb84f8db90d248903c3725d56f926, type: 3}
       propertyPath: m_Name
       value: ShortcutItem_2
@@ -435,7 +494,16 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7287463460803750543, guid: b1fdb84f8db90d248903c3725d56f926, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7287463460803750543, guid: b1fdb84f8db90d248903c3725d56f926, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_AddedGameObjects: []
   m_SourcePrefab: {fileID: 100100000, guid: b1fdb84f8db90d248903c3725d56f926, type: 3}
 --- !u!224 &7658541786493624704 stripped
 RectTransform:
@@ -447,8 +515,21 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 2
     m_TransformParent: {fileID: 6174833269688138843}
     m_Modifications:
+    - target: {fileID: 1053522020116350194, guid: b1fdb84f8db90d248903c3725d56f926, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1053522020116350194, guid: b1fdb84f8db90d248903c3725d56f926, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1053522020116350194, guid: b1fdb84f8db90d248903c3725d56f926, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2677102780424032982, guid: b1fdb84f8db90d248903c3725d56f926, type: 3}
       propertyPath: m_Name
       value: ShortcutItem_5
@@ -537,7 +618,16 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7287463460803750543, guid: b1fdb84f8db90d248903c3725d56f926, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7287463460803750543, guid: b1fdb84f8db90d248903c3725d56f926, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_AddedGameObjects: []
   m_SourcePrefab: {fileID: 100100000, guid: b1fdb84f8db90d248903c3725d56f926, type: 3}
 --- !u!224 &7214914884846471805 stripped
 RectTransform:
@@ -549,8 +639,21 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 2
     m_TransformParent: {fileID: 6174833269688138843}
     m_Modifications:
+    - target: {fileID: 1053522020116350194, guid: b1fdb84f8db90d248903c3725d56f926, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1053522020116350194, guid: b1fdb84f8db90d248903c3725d56f926, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1053522020116350194, guid: b1fdb84f8db90d248903c3725d56f926, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2677102780424032982, guid: b1fdb84f8db90d248903c3725d56f926, type: 3}
       propertyPath: m_Name
       value: ShortcutItem_4
@@ -639,7 +742,16 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7287463460803750543, guid: b1fdb84f8db90d248903c3725d56f926, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7287463460803750543, guid: b1fdb84f8db90d248903c3725d56f926, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_AddedGameObjects: []
   m_SourcePrefab: {fileID: 100100000, guid: b1fdb84f8db90d248903c3725d56f926, type: 3}
 --- !u!224 &8241080983843658133 stripped
 RectTransform:
@@ -651,8 +763,21 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 2
     m_TransformParent: {fileID: 6174833269688138843}
     m_Modifications:
+    - target: {fileID: 1053522020116350194, guid: b1fdb84f8db90d248903c3725d56f926, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1053522020116350194, guid: b1fdb84f8db90d248903c3725d56f926, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1053522020116350194, guid: b1fdb84f8db90d248903c3725d56f926, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2677102780424032982, guid: b1fdb84f8db90d248903c3725d56f926, type: 3}
       propertyPath: m_Name
       value: ShortcutItem_3
@@ -741,7 +866,16 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7287463460803750543, guid: b1fdb84f8db90d248903c3725d56f926, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7287463460803750543, guid: b1fdb84f8db90d248903c3725d56f926, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_AddedGameObjects: []
   m_SourcePrefab: {fileID: 100100000, guid: b1fdb84f8db90d248903c3725d56f926, type: 3}
 --- !u!224 &5315868624849426503 stripped
 RectTransform:
@@ -753,8 +887,21 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 2
     m_TransformParent: {fileID: 6174833269688138843}
     m_Modifications:
+    - target: {fileID: 1053522020116350194, guid: b1fdb84f8db90d248903c3725d56f926, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1053522020116350194, guid: b1fdb84f8db90d248903c3725d56f926, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1053522020116350194, guid: b1fdb84f8db90d248903c3725d56f926, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2677102780424032982, guid: b1fdb84f8db90d248903c3725d56f926, type: 3}
       propertyPath: m_Name
       value: ShortcutItem_10
@@ -843,7 +990,16 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7287463460803750543, guid: b1fdb84f8db90d248903c3725d56f926, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7287463460803750543, guid: b1fdb84f8db90d248903c3725d56f926, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_AddedGameObjects: []
   m_SourcePrefab: {fileID: 100100000, guid: b1fdb84f8db90d248903c3725d56f926, type: 3}
 --- !u!224 &4648973959720318515 stripped
 RectTransform:
@@ -855,8 +1011,21 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 2
     m_TransformParent: {fileID: 6174833269688138843}
     m_Modifications:
+    - target: {fileID: 1053522020116350194, guid: b1fdb84f8db90d248903c3725d56f926, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1053522020116350194, guid: b1fdb84f8db90d248903c3725d56f926, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1053522020116350194, guid: b1fdb84f8db90d248903c3725d56f926, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2677102780424032982, guid: b1fdb84f8db90d248903c3725d56f926, type: 3}
       propertyPath: m_Name
       value: ShortcutItem_1
@@ -945,7 +1114,16 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7287463460803750543, guid: b1fdb84f8db90d248903c3725d56f926, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7287463460803750543, guid: b1fdb84f8db90d248903c3725d56f926, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_AddedGameObjects: []
   m_SourcePrefab: {fileID: 100100000, guid: b1fdb84f8db90d248903c3725d56f926, type: 3}
 --- !u!224 &6581843384838779507 stripped
 RectTransform:
@@ -957,8 +1135,21 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 2
     m_TransformParent: {fileID: 6174833269688138843}
     m_Modifications:
+    - target: {fileID: 1053522020116350194, guid: b1fdb84f8db90d248903c3725d56f926, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1053522020116350194, guid: b1fdb84f8db90d248903c3725d56f926, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1053522020116350194, guid: b1fdb84f8db90d248903c3725d56f926, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2677102780424032982, guid: b1fdb84f8db90d248903c3725d56f926, type: 3}
       propertyPath: m_Name
       value: ShortcutItem_6
@@ -1047,7 +1238,16 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7287463460803750543, guid: b1fdb84f8db90d248903c3725d56f926, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7287463460803750543, guid: b1fdb84f8db90d248903c3725d56f926, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_AddedGameObjects: []
   m_SourcePrefab: {fileID: 100100000, guid: b1fdb84f8db90d248903c3725d56f926, type: 3}
 --- !u!224 &6061805897953634493 stripped
 RectTransform:
@@ -1059,8 +1259,21 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 2
     m_TransformParent: {fileID: 6174833269688138843}
     m_Modifications:
+    - target: {fileID: 1053522020116350194, guid: b1fdb84f8db90d248903c3725d56f926, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1053522020116350194, guid: b1fdb84f8db90d248903c3725d56f926, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1053522020116350194, guid: b1fdb84f8db90d248903c3725d56f926, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2677102780424032982, guid: b1fdb84f8db90d248903c3725d56f926, type: 3}
       propertyPath: m_Name
       value: ShortcutItem_7
@@ -1149,7 +1362,16 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7287463460803750543, guid: b1fdb84f8db90d248903c3725d56f926, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7287463460803750543, guid: b1fdb84f8db90d248903c3725d56f926, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_AddedGameObjects: []
   m_SourcePrefab: {fileID: 100100000, guid: b1fdb84f8db90d248903c3725d56f926, type: 3}
 --- !u!224 &5816570884676988204 stripped
 RectTransform:

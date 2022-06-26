@@ -11,6 +11,10 @@ using System;
 		/// </summary>
 		public string remark;
 		/// <summary>
+		///生物类型
+		/// </summary>
+		public int creature_type;
+		/// <summary>
 		///基础生命值
 		/// </summary>
 		public int life;

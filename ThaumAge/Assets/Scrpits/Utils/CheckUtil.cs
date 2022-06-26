@@ -1,5 +1,5 @@
 ﻿
-using Pathfinding;
+//using Pathfinding;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -17,18 +17,19 @@ public class CheckUtil {
     /// <returns></returns>
     public static bool CheckPath(Vector3 startPosition, Vector3 endPosition)
     {
-        ABPath path = ABPath.Construct(startPosition, endPosition);
-        path.calculatePartial = true;
-        AstarPath.StartPath(path);
-        AstarPath.BlockUntilCalculated(path);
-        if (path.originalEndPoint == path.endPoint)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
+        //ABPath path = ABPath.Construct(startPosition, endPosition);
+        //path.calculatePartial = true;
+        //AstarPath.StartPath(path);
+        //AstarPath.BlockUntilCalculated(path);
+        //if (path.originalEndPoint == path.endPoint)
+        //{
+        //    return true;
+        //}
+        //else
+        //{
+        //    return false;
+        //}
+        return true;
     }
 
     /// <summary>

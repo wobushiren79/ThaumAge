@@ -7,6 +7,7 @@ public class CreatureCptBaseMonster : CreatureCptBase
 
     protected float timeUpdateForData = 0;
     protected float timeForData = 10;
+
     public override void Awake()
     {
         base.Awake();
@@ -40,8 +41,11 @@ public class CreatureCptBaseMonster : CreatureCptBase
     /// 近战攻击
     /// </summary>
     public void AttackMelee()
-    {
-        Debug.LogError("AttackMelee");
+    {        
+        //获取打中的目标
+        Collider[] targetArray = CombatCommon.TargetCheck(gameObject, 2, 2, 2, 1 << LayerInfo.Character);
+        //伤害打中的目标
+        CombatCommon.DamageTarget(gameObject, 2, targetArray);
     }
 
     /// <summary>

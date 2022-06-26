@@ -15,7 +15,6 @@ public class CreatureBattle : CreatureBase
 
     }
 
-
     /// <summary>
     /// 遭到攻击
     /// </summary>
@@ -24,9 +23,46 @@ public class CreatureBattle : CreatureBase
     {
         if (CheckIsDead())
             return;
-         
+        //如果是玩家
+        CreatureTypeEnum creatureType = creature.creatureData.GetCreatureType();
+        switch (creatureType)
+        {
+            case CreatureTypeEnum.Player:
+                UnderAttackForPlayer(atkObj, damage);
+                break;
+            default:
+                UnderAttackForCreature(atkObj, damage);
+                break;
+        }
+    }
+    protected void UnderAttackForPlayer(GameObject atkObj,int damage)
+    {
+        //扣除伤害
+        UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();
+        CharacterStatusBean characterStatus = userData.characterData.GetCharacterStatus();
+        characterStatus.HealthChange(-damage);
+        if (damage > 0)
+        {
+            //击飞
+            HitFly(atkObj);
+            //颤抖
+            ShakeBody();
+        }
+        //刷新UI
+        EventHandler.Instance.TriggerEvent(EventsInfo.CharacterStatus_StatusChange);
+
+        //检测是否死亡
+        if (CheckIsDead())
+        {
+
+        }
+    }
+
+    protected void UnderAttackForCreature(GameObject atkObj, int damage)
+    {
         //扣除伤害
         creature.creatureData.AddLife(-damage);
+
         //展示伤害数值特效
         EffectBean effectData = new();
         effectData.effectName = EffectInfo.DamageText_1;
@@ -67,9 +103,21 @@ public class CreatureBattle : CreatureBase
     /// </summary>
     public bool CheckIsDead()
     {
-        if (creature.creatureData.currentLife <= 0)
+        if (creature.creatureData.GetCreatureType() == CreatureTypeEnum.Player)
         {
-            return true;
+            UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();
+            CharacterStatusBean characterStatus = userData.characterData.GetCharacterStatus();
+            if (characterStatus.health <= 0)
+            {
+                return true;
+            }
+        }
+        else
+        {
+            if (creature.creatureData.currentLife <= 0)
+            {
+                return true;
+            }
         }
         return false;
     }
@@ -83,10 +131,10 @@ public class CreatureBattle : CreatureBase
         if (isHitFly)
             return;
         isHitFly = true;
-        creature.WaitExecuteSeconds(timeCDForHitFly,()=> 
-        {
-            isHitFly = false;
-        });
+        creature.WaitExecuteSeconds(timeCDForHitFly, () =>
+         {
+             isHitFly = false;
+         });
         //如果有攻击的物体
         if (atkObj == null)
         {
@@ -150,9 +198,9 @@ public class CreatureBattle : CreatureBase
         effectData.effectName = EffectInfo.Effect_Blood_1;
         effectData.effectPosition = creature.transform.position + Vector3.up;
         effectData.timeForShow = 0.5f;
-        EffectHandler.Instance.ShowEffect(effectData,(effect)=> 
-        {
-            effect.PlayEffect();
-        });
+        EffectHandler.Instance.ShowEffect(effectData, (effect) =>
+         {
+             effect.PlayEffect();
+         });
     }
 }

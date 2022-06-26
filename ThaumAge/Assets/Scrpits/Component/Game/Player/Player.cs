@@ -22,6 +22,7 @@ public class Player : BaseMonoBehaviour
     public void Awake()
     {
         character = GetComponentInChildren<CreatureCptCharacter>();
+        character.creatureData.SetCreatureType(CreatureTypeEnum.Player);
 
         playerPickUp = new PlayerPickUp(this);
         playerRay = new PlayerRay(this);

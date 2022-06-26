@@ -47,7 +47,7 @@ public class PathFindingManager : BaseManager
                 navigationPathFinding.RefreshNavMeshSource(chunk);
                 break;
             case PathFindingEnum.Astar:
-                astarPathFinding.RefreshGraph();
+                //astarPathFinding.RefreshGraph();
                 break;
         }
     }
