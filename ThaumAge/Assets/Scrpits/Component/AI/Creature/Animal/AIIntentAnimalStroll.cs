@@ -53,9 +53,10 @@ public class AIIntentAnimalStroll : AIBaseIntent
                 {
                     //设置移动点
                     aiCreatureEntity.aiNavigation.SetMovePosition(targetPosition);
-                    aiCreatureEntity.aiNavigation.SetMoveSpeed(1f);
+                    aiCreatureEntity.aiNavigation.SetMoveSpeed(aiCreatureEntity.creatureCpt.creatureInfo.speed_move);
                     //播放移动动画
                     aiCreatureEntity.creatureCpt.creatureAnim.PlayBaseAnim(CreatureAnimBaseState.Walk);
+                    aiCreatureEntity.creatureCpt.creatureAnim.SetAnimSpeed(1);
                 }
                 timeUpdateForFindPath = 0;
             }
@@ -80,5 +81,8 @@ public class AIIntentAnimalStroll : AIBaseIntent
         timeUpdateForStroll = 0;
         timeUpdateForFindPath = 0;
         isFindPath = false;
+
+        AIMonsterEntity aiCreatureEntity = aiEntity as AIMonsterEntity;
+        aiCreatureEntity.aiNavigation.StopMove();
     }
 }

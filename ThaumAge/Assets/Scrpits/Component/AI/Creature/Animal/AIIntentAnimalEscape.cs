@@ -11,10 +11,10 @@ public class AIIntentAnimalEscape : AIBaseIntent
         {
             //设置移动点
             aiCreatureEntity.aiNavigation.SetMovePosition(targetPosition);
-            aiCreatureEntity.aiNavigation.SetMoveSpeed(5f);
+            aiCreatureEntity.aiNavigation.SetMoveSpeed(aiCreatureEntity.creatureCpt.creatureInfo.speed_move * 5f);
             //播放移动动画
             aiCreatureEntity.creatureCpt.creatureAnim.PlayBaseAnim(CreatureAnimBaseState.Walk);
-            aiCreatureEntity.creatureCpt.creatureAnim.SetAnimSpeed(5);
+            aiCreatureEntity.creatureCpt.creatureAnim.SetAnimSpeed(3);
         }
     }
 
@@ -33,7 +33,9 @@ public class AIIntentAnimalEscape : AIBaseIntent
     public override void IntentLeaving(AIBaseEntity aiEntity)
     {
         AIAnimalEntity aiCreatureEntity = aiEntity as AIAnimalEntity;
-        aiCreatureEntity.aiNavigation.SetMoveSpeed(1f);
+        aiCreatureEntity.aiNavigation.SetMoveSpeed(aiCreatureEntity.creatureCpt.creatureInfo.speed_move);
         aiCreatureEntity.creatureCpt.creatureAnim.SetAnimSpeed(1);
+
+        aiCreatureEntity.aiNavigation.StopMove();
     }
 }

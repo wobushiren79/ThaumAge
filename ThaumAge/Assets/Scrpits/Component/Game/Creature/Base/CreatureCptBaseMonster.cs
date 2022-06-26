@@ -35,4 +35,20 @@ public class CreatureCptBaseMonster : CreatureCptBase
         //刷新血条
         creatureBattle.RefreshLifeProgress();
     }
+
+    /// <summary>
+    /// 近战攻击
+    /// </summary>
+    public void AttackMelee()
+    {
+        Debug.LogError("AttackMelee");
+    }
+
+    /// <summary>
+    /// 远程攻击
+    /// </summary>
+    public void AttackRemote()
+    {
+        Debug.LogError("AttackRemote");
+    }
 }

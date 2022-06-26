@@ -23,10 +23,12 @@ public static class AIBaseCommon
         for (int i = 0; i < searchTarget.Length; i++)
         {
             Collider itemTargetCollider = searchTarget[i];
+            //修正一下目标位置
+            Vector3 fixTargetPosition = itemTargetCollider.transform.position + new Vector3(0, 0.5f, 0);
             //获取目标距离
-            float disTarget = Vector3.Distance(sourcePosition, itemTargetCollider.transform.position);
-            //发射一条射线 检测是否有视野遮挡
-            bool hasObstacles = RayUtil.RayToCast(sourcePosition, itemTargetCollider.transform.position, disTarget, layerObstacles);
+            float disTarget = Vector3.Distance(sourcePosition, fixTargetPosition);
+            //发射一条射线 检测是否有视野遮挡（距离-0.5 防止射到地面）
+            bool hasObstacles = RayUtil.RayToCast(sourcePosition, fixTargetPosition - sourcePosition, disTarget - 0.5f, layerObstacles);
             if (!hasObstacles)
             {
                 listData.Add(itemTargetCollider);

@@ -12,6 +12,7 @@ public enum AIIntentEnum
     MonsterIdle ,//闲置
     MonsterStroll,//闲逛
     MonsterChase,//追逐
-    MonsterAttack,//攻击
+    MonsterAttackMelee,//近战攻击
+    MonsterAttackRemote,//远程攻击
     MonsterDead,//死亡
 }

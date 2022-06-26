@@ -6,6 +6,8 @@ public class AIIntentMonsterStroll : AIBaseIntent
 {
     //路径寻找范围
     public float disFindPath = 5;
+    //搜索半径
+    public float disSearchRange = 10;
 
     //路径搜索间隔
     public float timeForFindPath = 1;
@@ -19,8 +21,12 @@ public class AIIntentMonsterStroll : AIBaseIntent
     //是否寻找到路径
     public bool isFindPath = false;
 
+
     public override void IntentEntering(AIBaseEntity aiEntity)
     {
+        AIMonsterEntity aiCreatureEntity = aiEntity as AIMonsterEntity;
+        //设置视野距离
+        disSearchRange = aiCreatureEntity.creatureCpt.creatureInfo.sight_range;
         //默认一开始就搜索一次
         timeUpdateForFindPath = timeForFindPath;
     }
@@ -36,6 +42,9 @@ public class AIIntentMonsterStroll : AIBaseIntent
         timeUpdateForFindPath = 0;
         timeUpdateForSearchEnemy = 0;
         isFindPath = false;
+
+        AIMonsterEntity aiCreatureEntity = aiEntity as AIMonsterEntity;
+        aiCreatureEntity.aiNavigation.StopMove();
     }
 
     /// <summary>
@@ -56,10 +65,10 @@ public class AIIntentMonsterStroll : AIBaseIntent
                 {
                     //设置移动点
                     aiCreatureEntity.aiNavigation.SetMovePosition(targetPosition);
-                    aiCreatureEntity.aiNavigation.SetMoveSpeed(1f);
+                    aiCreatureEntity.aiNavigation.SetMoveSpeed(aiCreatureEntity.creatureCpt.creatureInfo.speed_move);
                     //播放移动动画
                     aiCreatureEntity.creatureCpt.creatureAnim.PlayBaseAnim(CreatureAnimBaseState.Walk);
-                    aiCreatureEntity.creatureCpt.creatureAnim.SetAnimSpeed(0.7f);
+                    aiCreatureEntity.creatureCpt.creatureAnim.SetAnimSpeed(1);
                 }
                 timeUpdateForFindPath = 0;
             }
@@ -86,9 +95,14 @@ public class AIIntentMonsterStroll : AIBaseIntent
         timeUpdateForSearchEnemy += Time.deltaTime;
         if (timeUpdateForSearchEnemy >= timeForSearchEnemy)
         {
+            timeUpdateForSearchEnemy = 0;
             //开始搜索一次范围内的敌人
-            List<Collider> listSearchTarget = AIBaseCommon.SightSearchCircle(aiEntity.transform.position + new Vector3(0, 0.5f, 0), 5, 1 << LayerInfo.Character, 1 << LayerInfo.ChunkCollider);
-            
+            List<Collider> listSearchTarget = AIBaseCommon.SightSearchCircle(aiEntity.transform.position + new Vector3(0, 0.5f, 0), disSearchRange, 1 << LayerInfo.Character, 1 << LayerInfo.ChunkCollider);
+            if (listSearchTarget.IsNull())
+                return;
+            AIMonsterEntity aiCreatureEntity = aiEntity as AIMonsterEntity;
+            aiCreatureEntity.objChaseTarget = listSearchTarget[0].gameObject;
+            aiEntity.ChangeIntent(AIIntentEnum.MonsterChase);
         }
     }
 

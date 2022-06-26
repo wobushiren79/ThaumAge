@@ -8,32 +8,39 @@ public class ItemTypeCreature : Item
         //检测玩家前方是否有方块
         if (player.playerRay.RayToChunkBlock(out RaycastHit hit, out Vector3Int targetBlockPosition))
         {
-            ChunkComponent chunkForHit = hit.collider.GetComponentInParent<ChunkComponent>();
-            if (chunkForHit != null)
+            if (useType == ItemUseTypeEnum.Right)
             {
-                //获取位置和方向
-                player.playerRay.GetHitPositionAndDirection(hit, out Vector3Int targetPosition, out Vector3Int closePosition, out BlockDirectionEnum direction);
+                ChunkComponent chunkForHit = hit.collider.GetComponentInParent<ChunkComponent>();
+                if (chunkForHit != null)
+                {
+                    //获取位置和方向
+                    player.playerRay.GetHitPositionAndDirection(hit, out Vector3Int targetPosition, out Vector3Int closePosition, out BlockDirectionEnum direction);
 
-                Vector3Int localPosition = targetPosition - chunkForHit.chunk.chunkData.positionForWorld;
+                    Vector3Int localPosition = targetPosition - chunkForHit.chunk.chunkData.positionForWorld;
 
-                //放置位置
-                Vector3Int upLocalPosition = localPosition + Vector3Int.up;
+                    //放置位置
+                    Vector3Int upLocalPosition = localPosition + Vector3Int.up;
 
-                //获取上方方块
-                Block upBlock = chunkForHit.chunk.chunkData.GetBlockForLocal(upLocalPosition);
+                    //获取上方方块
+                    Block upBlock = chunkForHit.chunk.chunkData.GetBlockForLocal(upLocalPosition);
 
-                //如果上方有方块 则无法放置
-                if (upBlock != null && upBlock.blockType != BlockTypeEnum.None)
-                    return;
+                    //如果上方有方块 则无法放置
+                    if (upBlock != null && upBlock.blockType != BlockTypeEnum.None)
+                        return;
 
-                ItemsInfoBean itemsInfo = GetItemsInfo(itemData.itemId);
-                CreatureHandler.Instance.CreateCreature(itemsInfo.type_id, targetPosition + Vector3Int.up);
+                    ItemsInfoBean itemsInfo = GetItemsInfo(itemData.itemId);
+                    CreatureHandler.Instance.CreateCreature(itemsInfo.type_id, targetPosition + Vector3Int.up);
 
-                //扣除道具
-                UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();
-                userData.AddItems(itemData, -1);
-                //刷新UI
-                UIHandler.Instance.RefreshUI();
+                    //扣除道具
+                    UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();
+                    userData.AddItems(itemData, -1);
+                    //刷新UI
+                    UIHandler.Instance.RefreshUI();
+                }
+            }
+            else
+            {
+                TargetBreak(itemData, targetBlockPosition);
             }
         }
     }

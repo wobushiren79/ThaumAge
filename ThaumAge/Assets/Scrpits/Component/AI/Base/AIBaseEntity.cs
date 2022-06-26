@@ -78,12 +78,12 @@ public abstract class AIBaseEntity : BaseMonoBehaviour
     /// 改变意图
     /// </summary>
     /// <param name="aiIntent"></param>
-    public void ChangeIntent(AIIntentEnum aiIntent)
+    public AIBaseIntent ChangeIntent(AIIntentEnum aiIntent)
     {
         if (dicIntentPool.IsNull())
         {
             LogUtil.LogError("转换AI意图" + aiIntent.ToString() + "失败，还没有初始化相关AI意图");
-            return;
+            return currentIntent;
         }
         if (currentIntent != null)
         {
@@ -93,10 +93,11 @@ public abstract class AIBaseEntity : BaseMonoBehaviour
         if (changeIntent == null)
         {
             LogUtil.LogError("转换AI意图" + aiIntent.ToString() + "失败，意图池里没有此意图");
-            return;
+            return currentIntent;
         }
         currentIntent = changeIntent;
         currentIntent.IntentEntering(this);
+        return currentIntent;
     }
 
     /// <summary>

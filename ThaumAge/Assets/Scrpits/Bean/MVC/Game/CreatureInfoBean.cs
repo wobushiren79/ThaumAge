@@ -19,7 +19,35 @@ using System;
 		/// </summary>
 		public string drop;
 		/// <summary>
-		///产出
+		///资源产出（牛奶 羽毛之类的）
 		/// </summary>
-		public string output;
+		public string output_res;
+		/// <summary>
+		///视野距离
+		/// </summary>
+		public float sight_range;
+		/// <summary>
+		///移动速度
+		/// </summary>
+		public float speed_move;
+		/// <summary>
+		///目标丢失距离
+		/// </summary>
+		public float dis_loss;
+		/// <summary>
+		///近战攻击距离
+		/// </summary>
+		public float dis_attack_melee;
+		/// <summary>
+		///远程攻击距离
+		/// </summary>
+		public float dis_attack_remote;
+		/// <summary>
+		///近战攻击间隔
+		/// </summary>
+		public float time_interval_attack_melee;
+		/// <summary>
+		///远程攻击间隔
+		/// </summary>
+		public float time_interval_attack_remote;
 	}
