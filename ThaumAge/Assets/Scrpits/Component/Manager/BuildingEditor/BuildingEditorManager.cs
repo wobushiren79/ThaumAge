@@ -23,8 +23,8 @@ public class BuildingEditorManager : BaseManager,IBuildingInfoView
     public int curCreateType = 0;
     //当前的建筑信息
     public BuildingInfoBean curBuildingInfo;
-
-
+    //是否开始建筑
+    public bool isStartBuild = false;
     public void Awake()
     {
         objBlockContainer = GameObject.Find("BlockContainer");
@@ -41,7 +41,7 @@ public class BuildingEditorManager : BaseManager,IBuildingInfoView
 
     public void GetBuildingInfoSuccess<T>(T data, Action<T> action)
     {
-
+        action?.Invoke(data);
     }
     #endregion
 }

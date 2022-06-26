@@ -31,6 +31,13 @@ public partial class UIBuildingEditorCreate : BaseUIComponent
         base.OpenUI();
         InitData();
         RegisterEvent<int>(EventsInfo.UIBuildingEditorCreate_SelectChange, CallBackForSelectChange);
+        BuildingEditorHandler.Instance.manager.isStartBuild = true;
+    }
+
+    public override void CloseUI()
+    {
+        base.CloseUI(); 
+        BuildingEditorHandler.Instance.manager.isStartBuild = false;
     }
 
     public override void OnClickForButton(Button viewButton)
@@ -43,6 +50,10 @@ public partial class UIBuildingEditorCreate : BaseUIComponent
         else if (viewButton == ui_CreateBuilding)
         {
             OnClickForCreateBuilding();
+        }
+        else if (viewButton== ui_LoadBuilding)
+        {
+            OnClickForLoadBuilding();
         }
     }
 
@@ -170,7 +181,18 @@ public partial class UIBuildingEditorCreate : BaseUIComponent
         {
             BuildingEditorHandler.Instance.SaveBuildingData();
         };
-        ; UIDialogNormal uiDialog = UIHandler.Instance.ShowDialog<UIDialogNormal>(dialogData);
+        UIDialogNormal uiDialog = UIHandler.Instance.ShowDialog<UIDialogNormal>(dialogData);
     }
 
+    /// <summary>
+    /// 点击-加载建筑
+    /// </summary>
+    public void OnClickForLoadBuilding()
+    {
+        //清空所有方块
+        BuildingEditorHandler.Instance.ClearAllBlock();
+        //加载建筑
+        BuildingEditorHandler.Instance.LoadBuilding(long.Parse(ui_BuildingIdEdit.text));
+
+    }
 }

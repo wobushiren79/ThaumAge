@@ -70,8 +70,6 @@ public class BaseMVCService
     /// <returns></returns>
     public List<T> BaseQueryData<T>(string key, string value)
     {
-        string[] leftTable = new string[] { tableNameForLeft };
-        string[] mainKey = new string[] { "id" };
         string[] colName = new string[] { key };
         string[] operations = new string[] { "=" };
         string[] colValue = new string[] { value };
