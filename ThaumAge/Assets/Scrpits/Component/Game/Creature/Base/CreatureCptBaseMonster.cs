@@ -41,11 +41,15 @@ public class CreatureCptBaseMonster : CreatureCptBase
     /// 近战攻击
     /// </summary>
     public void AttackMelee()
-    {        
+    {
+        //获取攻击范围
+        CombatCommon.GetRangeDamage(creatureInfo.range_damage, out float lengthRangeDamage, out float widthRangeDamage, out float heightRangeDamage);
         //获取打中的目标
-        Collider[] targetArray = CombatCommon.TargetCheck(gameObject, 2, 2, 2, 1 << LayerInfo.Character);
+        Collider[] targetArray = CombatCommon.TargetCheck(gameObject, lengthRangeDamage, widthRangeDamage, heightRangeDamage, 1 << LayerInfo.Character);
         //伤害打中的目标
         CombatCommon.DamageTarget(gameObject, 2, targetArray);
+        //调整身体角度
+        LookTarget();
     }
 
     /// <summary>
@@ -54,5 +58,19 @@ public class CreatureCptBaseMonster : CreatureCptBase
     public void AttackRemote()
     {
         Debug.LogError("AttackRemote");
+        MathUtil.GetBezierPoints(20,transform.position, aiEntity.objChaseTarget.transform.position,10);
+        //调整身体角度
+        LookTarget();
+    }
+
+    /// <summary>
+    /// 调整身体角度
+    /// </summary>
+    public void LookTarget()
+    {
+        Vector3 lookAngle =  GameUtil.GetLookAtEuler(transform.position, aiEntity.objChaseTarget.transform.position);
+        Quaternion rotate = Quaternion.Euler(new Vector3(0, lookAngle.y, 0));
+        //朝摄像头方向移动
+        transform.rotation = Quaternion.Slerp(transform.rotation, rotate, Time.unscaledDeltaTime);
     }
 }

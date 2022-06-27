@@ -59,34 +59,6 @@ public class ItemsInfoBean : BaseBean
         return listName;
     }
 
-
-    /// <summary>
-    /// 获取伤害范围
-    /// </summary>
-    /// <param name="length"></param>
-    /// <param name="width"></param>
-    /// <param name="height"></param>
-    public void GetRangeDamage(out float length, out float width, out float height)
-    {
-        length = 0;
-        width = 0;
-        height = 0;
-
-        float[] data = range_damage.SplitForArrayFloat(',');
-        if (data.Length >= 1)
-        {
-            length = data[0];
-        }
-        if (data.Length >= 2)
-        {
-            width = data[1];
-        }
-        if (data.Length >= 3)
-        {
-            height = data[2];
-        }
-    }
-
     /// <summary>
     /// 获取握住数据
     /// </summary>

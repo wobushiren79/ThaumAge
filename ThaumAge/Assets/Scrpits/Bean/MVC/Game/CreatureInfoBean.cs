@@ -27,6 +27,10 @@ using System;
 		/// </summary>
 		public string output_res;
 		/// <summary>
+		///攻击范围（近战）
+		/// </summary>
+		public string range_damage;
+		/// <summary>
 		///视野距离
 		/// </summary>
 		public float sight_range;

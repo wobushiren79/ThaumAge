@@ -84,34 +84,6 @@ public class GameUtil
         }
     }
 
-    /// <summary>
-    /// 刷新UI控件高
-    /// </summary>
-    /// <param name="itemRTF"></param>
-    /// <param name="isWithFitter">宽是否自适应大小</param>
-    public static void RefreshRectViewHight(RectTransform itemRTF, bool isWithFitter)
-    {
-        if (itemRTF == null)
-            return;
-        float itemWith = itemRTF.rect.width;
-        if (isWithFitter)
-        {
-            itemWith = 0;
-        }
-        float itemHight = itemRTF.rect.height;
-        RectTransform[] childTFList = itemRTF.GetComponentsInChildren<RectTransform>();
-        if (childTFList == null)
-            return;
-        itemHight = 0;
-        foreach (RectTransform itemTF in childTFList)
-        {
-            itemHight += itemTF.rect.height;
-        }
-        //设置大小
-        if (itemRTF != null)
-            itemRTF.sizeDelta = new Vector2(itemWith, itemHight);
-
-    }
 
     /// <summary>
     /// 世界坐标转换为本地UI坐标
@@ -132,8 +104,6 @@ public class GameUtil
         uiTarget.anchoredPosition = WorldPointToUILocalPoint(uiParent, worldPositon);
     }
 
-
-
     /// <summary>
     /// 鼠标位置转为屏幕UGUI位置
     /// </summary>
@@ -144,6 +114,23 @@ public class GameUtil
     {
         RectTransformUtility.ScreenPointToLocalPointInRectangle(uiParent, Input.mousePosition, camera, out Vector2 vecMouse);
         return vecMouse;
+    }
+
+    /// <summary>
+    /// 获取物体LookAt后的旋转值
+    /// </summary>
+    /// <param name="originalObj"></param>
+    /// <param name="targetPoint"></param>
+    /// <returns></returns>
+    public static Vector3 GetLookAtEuler(Vector3 originalPoint, Vector3 targetPoint)
+    {
+        //计算物体在朝向某个向量后的正前方
+        Vector3 forwardDir = targetPoint - originalPoint;
+        //计算朝向这个正前方时的物体四元数值
+        Quaternion lookAtRot = Quaternion.LookRotation(forwardDir);
+        //把四元数值转换成角度
+        Vector3 resultEuler = lookAtRot.eulerAngles;
+        return resultEuler;
     }
 
     /// <summary>
