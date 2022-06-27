@@ -6,51 +6,39 @@ using Unity.Mathematics;
 using UnityEngine;
 using Unity.Burst;
 using System.Collections.Generic;
-
+using DG.Tweening;
 public class Test : BaseMonoBehaviour
 {
-
+    public Transform tfTest;
+    public Vector3 punch;
+    public float punchTime;
+    public int vibrato;//震动次
+    public float elascity;//
     public void Start()
     {
-        //开关角色控制
-        //GameControlHandler.Instance.SetPlayerControlEnabled(true);
-        //GameHandler.Instance.manager.SetGameState(GameStateEnum.Gaming);
-        MeshFilter meshFilter = GetComponent<MeshFilter>();
-
-        TextAsset textAsset = LoadAddressablesUtil.LoadAssetSync<TextAsset>($"Assets/Prefabs/BlockMeshData/BlockCraftingTableSimple.txt");
-        MeshDataCustom meshDataCustom= JsonUtil.FromJson<MeshDataCustom>(textAsset.text);
-        Mesh mesh = meshFilter.mesh;
-        mesh.vertices = meshDataCustom.mainMeshData.vertices;
-        mesh.uv = meshDataCustom.mainMeshData.uv;
-        mesh.triangles = meshDataCustom.mainMeshData.triangles;
-        mesh.RecalculateNormals();
-        mesh.RecalculateTangents();
-        mesh.RecalculateBounds();
-
-
-        meshFilter.mesh = mesh;
-
 
     }
 
     private void OnGUI()
     {
+        if (GUILayout.Button("Test"))
+        {
+            float timeCount = 0;
+            DOTween.To(
+                () => { return timeCount; },
+                (data)=> { timeCount = data; },
+                1,10).OnUpdate(()=> {
+                    tfTest.transform.position += (punch * Time.deltaTime);
+                });
+            //tfTest.DOPunchPosition(punch, punchTime, vibrato, elascity);
+        }
 
-
+        if (GUILayout.Button("Test2"))
+        {
+            tfTest.transform.position -= new Vector3(0,0.1f,0);
+        }
     }
 
 
-
-}
-
-
-
-[BurstCompile]
-public struct MyParallelJob : IJobParallelFor
-{
-    public void Execute(int index)
-    {
-
-    }
 
 }

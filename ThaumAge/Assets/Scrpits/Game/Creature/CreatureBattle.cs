@@ -35,7 +35,7 @@ public class CreatureBattle : CreatureBase
                 break;
         }
     }
-    protected void UnderAttackForPlayer(GameObject atkObj,int damage)
+    protected void UnderAttackForPlayer(GameObject atkObj, int damage)
     {
         //扣除伤害
         UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();
@@ -43,8 +43,9 @@ public class CreatureBattle : CreatureBase
         characterStatus.HealthChange(-damage);
         if (damage > 0)
         {
+            Player player = GameHandler.Instance.manager.player;
             //击飞
-            HitFly(atkObj);
+            HitFly(player.gameObject, atkObj);
             //颤抖
             ShakeBody();
         }
@@ -81,7 +82,7 @@ public class CreatureBattle : CreatureBase
         if (damage > 0)
         {
             //击飞
-            HitFly(atkObj);
+            HitFly(creature.gameObject, atkObj);
             //颤抖
             ShakeBody();
             //飙血
@@ -125,16 +126,11 @@ public class CreatureBattle : CreatureBase
     /// <summary>
     /// 击飞
     /// </summary>
-    public void HitFly(GameObject atkObj)
+    public void HitFly(GameObject flyObj, GameObject atkObj)
     {
         //如果进入了击飞的CD则无法被击飞
         if (isHitFly)
             return;
-        isHitFly = true;
-        creature.WaitExecuteSeconds(timeCDForHitFly, () =>
-         {
-             isHitFly = false;
-         });
         //如果有攻击的物体
         if (atkObj == null)
         {
@@ -143,7 +139,20 @@ public class CreatureBattle : CreatureBase
         }
         else
         {
+            isHitFly = true;
             Vector3 hitDirection = (creature.transform.position - atkObj.transform.position).normalized + Vector3.up;
+            float timeCount = 0;
+            //击退
+            DOTween
+                .To(() => { return timeCount; }, (data) => { timeCount = data; }, 1, timeCDForHitFly)
+                .OnUpdate(() =>
+                {
+                    flyObj.transform.position += (hitDirection * Time.deltaTime);
+                })
+                .OnComplete(() =>
+                {
+                    isHitFly = false;
+                });
             //rbCreature.AddForce(hitDirection * 100);
         }
     }
@@ -196,7 +205,7 @@ public class CreatureBattle : CreatureBase
         EffectBean effectData = new EffectBean();
         effectData.effectType = EffectTypeEnum.Visual;
         effectData.effectName = EffectInfo.Effect_Blood_1;
-        effectData.effectPosition = creature.transform.position + Vector3.up;
+        effectData.effectPosition = creature.transform.position;
         effectData.timeForShow = 0.5f;
         EffectHandler.Instance.ShowEffect(effectData, (effect) =>
          {
