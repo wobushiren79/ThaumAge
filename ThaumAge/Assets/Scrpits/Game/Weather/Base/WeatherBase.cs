@@ -19,9 +19,4 @@ public class WeatherBase
     {
 
     }
-
-    public virtual void ChangeAllCloudsColor(Color colorCloud,float changeTime)
-    {
-        SceneElementHandler.Instance.manager.clouds.ChangeCloudsColor(colorCloud, changeTime);
-    }
 }
