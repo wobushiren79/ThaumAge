@@ -17,7 +17,7 @@ MonoBehaviour:
   m_RenderingPathDefaultCameraFrameSettings:
     bitDatas:
       data1: 72198125334298445
-      data2: 13763000478424039448
+      data2: 13763000478424072216
     lodBias: 1
     lodBiasMode: 0
     lodBiasQualityLevel: 0
@@ -84,6 +84,7 @@ MonoBehaviour:
   decalLayerName7: Decal Layer 7
   shaderVariantLogLevel: 0
   lensAttenuationMode: 0
+  colorGradingSpace: 0
   diffusionProfileSettingsList:
   - {fileID: 11400000, guid: ad519751d9b770e459a0bd40fe639d34, type: 2}
   rendererListCulling: 0
