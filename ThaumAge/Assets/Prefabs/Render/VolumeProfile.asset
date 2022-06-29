@@ -700,8 +700,8 @@ MonoBehaviour:
     m_OverrideState: 1
     m_Value: 400
   cloudThickness:
-    m_OverrideState: 0
-    m_Value: 8000
+    m_OverrideState: 1
+    m_Value: 5000
   fadeInMode:
     m_OverrideState: 0
     m_Value: 0
@@ -886,7 +886,7 @@ MonoBehaviour:
       m_PostInfinity: 2
       m_RotationOrder: 4
   scatteringTint:
-    m_OverrideState: 1
+    m_OverrideState: 0
     m_Value: {r: 0, g: 0, b: 0, a: 1}
   powderEffectIntensity:
     m_OverrideState: 0
@@ -916,10 +916,10 @@ MonoBehaviour:
     m_OverrideState: 0
     m_Value: 1
   ambientLightProbeDimmer:
-    m_OverrideState: 1
+    m_OverrideState: 0
     m_Value: 1
   sunLightDimmer:
-    m_OverrideState: 1
+    m_OverrideState: 0
     m_Value: 1
   erosionOcclusion:
     m_OverrideState: 0
@@ -963,7 +963,7 @@ MonoBehaviour:
     m_OverrideState: 0
     m_Value: 0
   shadows:
-    m_OverrideState: 1
+    m_OverrideState: 0
     m_Value: 1
   shadowResolution:
     m_OverrideState: 0

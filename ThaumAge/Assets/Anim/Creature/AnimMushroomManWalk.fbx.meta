@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 1739869220ca9ab45b5539781501cf4f
+guid: 8e8a48dc85e9c4345baee704f0a936fb
 ModelImporter:
   serializedVersion: 22103
   internalIDToNameTable:
@@ -7,8 +7,8 @@ ModelImporter:
       74: 1827226128182048838
     second: Take 001
   - first:
-      74: -1507558974459522366
-    second: AnimSlimeAttack
+      74: 2664515143444569579
+    second: AnimMushroomManWalk
   externalObjects: {}
   materials:
     materialImportMode: 2
@@ -39,7 +39,7 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: AnimSlimeAttack
+      name: AnimMushroomManWalk
       takeName: Take 001
       internalID: 0
       firstFrame: 0

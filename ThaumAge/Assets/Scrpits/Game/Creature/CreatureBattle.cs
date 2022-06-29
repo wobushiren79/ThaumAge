@@ -143,8 +143,9 @@ public class CreatureBattle : CreatureBase
             Vector3 hitDirection = (creature.transform.position - atkObj.transform.position).normalized + Vector3.up;
             float timeCount = 0;
             //击退
+            hitDirection *= 5;
             DOTween
-                .To(() => { return timeCount; }, (data) => { timeCount = data; }, 1, timeCDForHitFly)
+                .To(() => { return timeCount; }, (data) => { timeCount = data; }, 0.5f, timeCDForHitFly)
                 .OnUpdate(() =>
                 {
                     flyObj.transform.position += (hitDirection * Time.deltaTime);
