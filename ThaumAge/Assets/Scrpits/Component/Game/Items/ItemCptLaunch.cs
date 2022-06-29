@@ -41,6 +41,9 @@ public class ItemCptLaunch : BaseMonoBehaviour
         itemLaunchData.launchState = 1;
     }
 
+    /// <summary>
+    /// 数据更新
+    /// </summary>
     void FixedUpdate()
     {
         HandleForDestory();
