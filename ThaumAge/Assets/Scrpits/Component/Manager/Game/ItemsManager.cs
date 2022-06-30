@@ -31,6 +31,8 @@ public class ItemsManager : BaseManager,
 
     //路径-道具丢弃模型
     public static string PathForItemDrop = "Assets/Prefabs/Game/ItemDrop.prefab";
+    //路径-道具发射模型
+    public static string PathForItemLaunch = "Assets/Prefabs/Game/ItemLaunch.prefab";
     //路径-装备模型
     public static string PathEquipModel = "Assets/Prefabs/Model/Character/Equip";
 
@@ -199,6 +201,16 @@ public class ItemsManager : BaseManager,
     {
         //添加道具掉落模型
         GetModelForAddressables(dicItemsObj, -1, PathForItemDrop, callBack);
+    }
+
+    /// <summary>
+    /// 获取道具发射模型
+    /// </summary>
+    /// <param name="callBack"></param>
+    public void GetItemsLaunchObj(Action<GameObject> callBack)
+    {
+        //添加道具掉落模型
+        GetModelForAddressables(dicItemsObj, -2, PathForItemLaunch, callBack);
     }
 
     /// <summary>

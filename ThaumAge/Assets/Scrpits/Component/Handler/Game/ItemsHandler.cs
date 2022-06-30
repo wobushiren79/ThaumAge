@@ -61,58 +61,48 @@ public class ItemsHandler : BaseHandler<ItemsHandler, ItemsManager>
     }
 
     /// <summary>
+    /// 创建道具发射
+    /// </summary>
+    public void CreateItemLaunch(ItemLaunchBean itemLaunchData)
+    {
+        if (itemLaunchData.itemId == 0)
+            return;
+        manager.GetItemsLaunchObj((objModel) =>
+        {
+            GameObject objCommon = Instantiate(gameObject, objModel);
+            ItemCptLaunch itemLaunch = objCommon.GetComponent<ItemCptLaunch>();
+            itemLaunch.SetData(itemLaunchData);
+        });
+    }
+
+    /// <summary>
     /// 创建掉落道具实例
     /// </summary>
-    public void CreateItemCptDropList(List<ItemsBean> itemDatas, Vector3 position, ItemDropStateEnum itemDropState)
+    public void CreateItemCptDropList(List<ItemsBean> itemDatas, ItemDropStateEnum itemDropState, Vector3 dropPosition)
     {
-        CreateItemCptDropList(itemDatas, position, itemDropState, Vector3.zero);
+        CreateItemCptDropList(itemDatas, itemDropState, dropPosition, Vector3.zero);
     }
-    public void CreateItemCptDropList(List<ItemsBean> itemDatas, Vector3 position, ItemDropStateEnum ItemCptDropState, Vector3 dropDirection)
+    public void CreateItemCptDropList(List<ItemsBean> itemDatas, ItemDropStateEnum itemCptDropState, Vector3 dropPosition, Vector3 dropDirection)
     {
         for (int i = 0; i < itemDatas.Count; i++)
         {
-            CreateItemCptDrop(itemDatas[i], position, ItemCptDropState, dropDirection);
+            ItemDropBean itemDropData = new ItemDropBean(itemDatas[i], itemCptDropState, dropPosition, dropDirection);
+            CreateItemCptDrop(itemDropData);
         }
     }
 
     /// <summary>
     ///  创建掉落道具实例
     /// </summary>
-    public void CreateItemCptDrop(long itemId, int itemsNumber, string meta, Vector3 position, ItemDropStateEnum ItemCptDropState, Vector3 dropDirection)
+    public void CreateItemCptDrop(ItemDropBean itemDropData)
     {
-        CreateItemCptDrop(new ItemsBean(itemId, itemsNumber, meta), position, ItemCptDropState, dropDirection);
-    }
-    public void CreateItemCptDrop(long itemId, int itemsNumber, string meta, Vector3 position, ItemDropStateEnum ItemCptDropState)
-    {
-        CreateItemCptDrop(new ItemsBean(itemId, itemsNumber, meta), position, ItemCptDropState, Vector3.zero);
-    }
-
-    /// <summary>
-    ///  创建掉落道具实例
-    /// </summary>
-    public void CreateItemCptDrop(BlockTypeEnum blockType, int itemsNumber, string meta, Vector3 position, ItemDropStateEnum ItemCptDropState, Vector3 dropDirection)
-    {
-        ItemsInfoBean itemsInfo = manager.GetItemsInfoByBlockType(blockType);
-        CreateItemCptDrop(itemsInfo.id, itemsNumber, meta, position, ItemCptDropState, dropDirection);
-    }
-    public void CreateItemCptDrop(BlockTypeEnum blockType, int itemsNumber, string meta, Vector3 position, ItemDropStateEnum ItemCptDropState)
-    {
-        CreateItemCptDrop(blockType, itemsNumber, meta, position, ItemCptDropState, Vector3.zero);
-    }
-
-    /// <summary>
-    ///  创建掉落道具实例
-    /// </summary>
-    public void CreateItemCptDrop(ItemsBean itemData, Vector3 position, ItemDropStateEnum ItemCptDropState, Vector3 dropDirection)
-    {
-        if (itemData.itemId == 0)
+        if (itemDropData.itemData == null || itemDropData.itemData.itemId == 0)
             return;
         manager.GetItemsDropObj((objModel) =>
         {
             GameObject objCommon = Instantiate(gameObject, objModel);
             ItemCptDrop ItemCptDrop = objCommon.GetComponent<ItemCptDrop>();
-            ItemCptDrop.SetData(itemData, position, dropDirection);
-            ItemCptDrop.SetItemDropState(ItemCptDropState);
+            ItemCptDrop.SetData(itemDropData);
         });
     }
 
@@ -132,7 +122,7 @@ public class ItemsHandler : BaseHandler<ItemsHandler, ItemsManager>
             //获取种植收货
             List<ItemsBean> listHarvest = targetBlock.GetDropItems(blockData);
             //创建掉落物
-            CreateItemCptDropList(listHarvest, targetWorldPosition + Vector3.one * 0.5f, ItemDropStateEnum.DropPick);
+            CreateItemCptDropList(listHarvest, ItemDropStateEnum.DropPick, targetWorldPosition + Vector3.one * 0.5f);
         }
         else
         {
@@ -143,12 +133,13 @@ public class ItemsHandler : BaseHandler<ItemsHandler, ItemsManager>
             {
                 //创建掉落物
                 string blockMeta = blockData == null ? null : blockData.meta;
-                CreateItemCptDrop(targetBlock.blockType, 1, blockMeta, targetWorldPosition + Vector3.one * 0.5f, ItemDropStateEnum.DropPick);
+                ItemDropBean itemDropData = new ItemDropBean(targetBlock.blockType, targetWorldPosition + Vector3.one * 0.5f, 1, blockMeta, ItemDropStateEnum.DropPick);
+                CreateItemCptDrop(itemDropData);
             }
             else
             {
                 //创建掉落物
-                CreateItemCptDropList(listDrop, targetWorldPosition + Vector3.one * 0.5f, ItemDropStateEnum.DropPick);
+                CreateItemCptDropList(listDrop, ItemDropStateEnum.DropPick, targetWorldPosition + Vector3.one * 0.5f);
             }
         }
     }

@@ -131,7 +131,7 @@ public class CreatureCptBase : BaseMonoBehaviour
     {
         //创建道具
         List<ItemsBean> listDropItems = ItemsHandler.Instance.GetItemsDrop(creatureInfo.drop);
-        ItemsHandler.Instance.CreateItemCptDropList(listDropItems, transform.position + Vector3.up * 0.5f, ItemDropStateEnum.DropPick);
+        ItemsHandler.Instance.CreateItemCptDropList(listDropItems, ItemDropStateEnum.DropPick, transform.position + Vector3.up * 0.5f);
     }
 
     /// <summary>
@@ -140,6 +140,6 @@ public class CreatureCptBase : BaseMonoBehaviour
     public void CreateOutputItems()
     {
         List<ItemsBean> listDropItems = ItemsHandler.Instance.GetItemsDrop(creatureInfo.output_res);
-        ItemsHandler.Instance.CreateItemCptDropList(listDropItems, transform.position + Vector3.up * 0.5f, ItemDropStateEnum.DropPick);
+        ItemsHandler.Instance.CreateItemCptDropList(listDropItems, ItemDropStateEnum.DropPick, transform.position + Vector3.up * 0.5f);
     }
 }
