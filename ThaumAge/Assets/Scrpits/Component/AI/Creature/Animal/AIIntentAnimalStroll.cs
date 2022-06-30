@@ -82,7 +82,7 @@ public class AIIntentAnimalStroll : AIBaseIntent
         timeUpdateForFindPath = 0;
         isFindPath = false;
 
-        AIMonsterEntity aiCreatureEntity = aiEntity as AIMonsterEntity;
+        AIAnimalEntity aiCreatureEntity = aiEntity as AIAnimalEntity;
         aiCreatureEntity.aiNavigation.StopMove();
     }
 }
