@@ -193,6 +193,14 @@ public class Block
     }
 
     /// <summary>
+    /// 角色的视角摄像头
+    /// </summary>
+    public virtual void OnCollisionForPlayerCamera(Camera camera, Vector3Int worldPosition)
+    {
+
+    }
+
+    /// <summary>
     /// 构建方块
     /// </summary>
     /// <param name="verts"></param>

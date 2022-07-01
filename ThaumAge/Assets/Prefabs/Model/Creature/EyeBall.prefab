@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4684583473109468147}
   - component: {fileID: 4771011618661506564}
   - component: {fileID: 9157027711096691724}
-  - component: {fileID: 3513901524406818151}
+  - component: {fileID: 5544252741905709073}
   m_Layer: 11
   m_Name: EyeBall
   m_TagString: Untagged
@@ -70,7 +70,7 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 0.4
   m_Center: {x: 0, y: 0.4, z: 0}
---- !u!114 &3513901524406818151
+--- !u!114 &5544252741905709073
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -79,7 +79,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 5017534814905673492}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7774611cbeb55c6489483d02530526f2, type: 3}
+  m_Script: {fileID: 11500000, guid: 1fbed567a0d28b041833938a4fc84dd4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   creatureInfo:

@@ -63,7 +63,7 @@ public class ItemsHandler : BaseHandler<ItemsHandler, ItemsManager>
     /// <summary>
     /// 创建道具发射
     /// </summary>
-    public void CreateItemLaunch(ItemLaunchBean itemLaunchData)
+    public void CreateItemLaunch(ItemLaunchBean itemLaunchData,Action<ItemCptLaunch> callBackForComplete = null)
     {
         if (itemLaunchData.itemId == 0)
             return;
@@ -72,6 +72,7 @@ public class ItemsHandler : BaseHandler<ItemsHandler, ItemsManager>
             GameObject objCommon = Instantiate(gameObject, objModel);
             ItemCptLaunch itemLaunch = objCommon.GetComponent<ItemCptLaunch>();
             itemLaunch.SetData(itemLaunchData);
+            callBackForComplete?.Invoke(itemLaunch);
         });
     }
 
@@ -94,7 +95,7 @@ public class ItemsHandler : BaseHandler<ItemsHandler, ItemsManager>
     /// <summary>
     ///  创建掉落道具实例
     /// </summary>
-    public void CreateItemCptDrop(ItemDropBean itemDropData)
+    public void CreateItemCptDrop(ItemDropBean itemDropData, Action<ItemCptDrop> callBackForComplete = null)
     {
         if (itemDropData.itemData == null || itemDropData.itemData.itemId == 0)
             return;
@@ -103,6 +104,7 @@ public class ItemsHandler : BaseHandler<ItemsHandler, ItemsManager>
             GameObject objCommon = Instantiate(gameObject, objModel);
             ItemCptDrop ItemCptDrop = objCommon.GetComponent<ItemCptDrop>();
             ItemCptDrop.SetData(itemDropData);
+            callBackForComplete?.Invoke(ItemCptDrop);
         });
     }
 

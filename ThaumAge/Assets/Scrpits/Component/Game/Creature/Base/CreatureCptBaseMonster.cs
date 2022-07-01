@@ -40,7 +40,7 @@ public class CreatureCptBaseMonster : CreatureCptBase
     /// <summary>
     /// 近战攻击
     /// </summary>
-    public void AttackMelee()
+    public virtual void AttackMelee()
     {
         //获取攻击范围
         CombatCommon.GetRangeDamage(creatureInfo.range_damage, out float lengthRangeDamage, out float widthRangeDamage, out float heightRangeDamage);
@@ -50,17 +50,44 @@ public class CreatureCptBaseMonster : CreatureCptBase
         CombatCommon.DamageTarget(gameObject, 2, targetArray);
         //调整身体角度
         LookTarget();
+
+        PlayAnimForAttackMelee();
     }
+
 
     /// <summary>
     /// 远程攻击
     /// </summary>
-    public void AttackRemote()
+    public virtual void AttackRemote()
     {
         Debug.LogError("AttackRemote");
-        MathUtil.GetBezierPoints(20,transform.position, aiEntity.objChaseTarget.transform.position,10);
+        //MathUtil.GetBezierPoints(20,transform.position, aiEntity.objChaseTarget.transform.position,10);
         //调整身体角度
         LookTarget();
+
+        //ItemLaunchBean itemLaunchData = new ItemLaunchBean();
+        //ItemsHandler.Instance.CreateItemLaunch(itemLaunchData,(itemCptLaunch) => 
+        //{
+        //    itemCptLaunch.Launch();
+        //});
+
+        PlayAnimForAttackRemote();
+    }
+
+    /// <summary>
+    /// 播放近战攻击动画
+    /// </summary>
+    public virtual void PlayAnimForAttackMelee()
+    {
+        creatureAnim.PlayBaseAnim(CreatureAnimBaseState.AttackMelee);
+    }
+
+    /// <summary>
+    /// 播放远程攻击动画
+    /// </summary>
+    public virtual void PlayAnimForAttackRemote()
+    {
+        creatureAnim.PlayBaseAnim(CreatureAnimBaseState.AttackRemote);
     }
 
     /// <summary>

@@ -8,7 +8,6 @@ public class CreatureCollisionAndTrigger : CreatureBase
 
     }
 
-
     /// <summary>
     /// 更新碰撞和触发
     /// </summary>
@@ -16,7 +15,12 @@ public class CreatureCollisionAndTrigger : CreatureBase
     {
         //检测当前所在方块是什么
         Vector3 creaturePoint = creature.transform.position;
-        Vector3Int targetBlockPosition = new Vector3Int(Mathf.FloorToInt(creaturePoint.x), Mathf.FloorToInt(creaturePoint.y + 0.5f), Mathf.FloorToInt(creaturePoint.z));
+        Vector3Int targetBlockPosition = new Vector3Int
+            (
+            Mathf.FloorToInt(creaturePoint.x), 
+            Mathf.FloorToInt(creaturePoint.y + 0.5f), 
+            Mathf.FloorToInt(creaturePoint.z)
+            );
         if (targetBlockPosition.y < 0 || targetBlockPosition.y >= WorldCreateHandler.Instance.manager.heightChunk)
             return;
         WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(targetBlockPosition, out Block targetBlock, out Chunk targetChunk);
@@ -35,6 +39,21 @@ public class CreatureCollisionAndTrigger : CreatureBase
                 forwardBlock.OnCollisionForward(creature.gameObject, targetBlockPosition, hitForward);
             }
         }
+        //检测摄像头的碰撞
+        Camera mainCamera = CameraHandler.Instance.manager.mainCamera;
+        Vector3 positionMainCamera = mainCamera.transform.position;
+        Vector3Int targetBlockForCameraPosition = new Vector3Int
+            (
+            Mathf.FloorToInt(positionMainCamera.x), 
+            Mathf.FloorToInt(positionMainCamera.y), 
+            Mathf.FloorToInt(positionMainCamera.z)
+            );
+        WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(targetBlockForCameraPosition, out Block targetCameraBlock, out Chunk targetCameraChunk);
+        if (targetCameraBlock != null)
+        {
+            targetCameraBlock.OnCollisionForPlayerCamera(mainCamera, targetBlockForCameraPosition);
+        }
+        
     }
 
     /// <summary>
