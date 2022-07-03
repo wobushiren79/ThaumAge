@@ -8,7 +8,7 @@ public class CreatureBattle : CreatureBase
     protected CreatureCptLifeProgress lifeProgress;
 
     //被击飞的冷却时间
-    protected float timeCDForHitFly = 1;
+    protected float timeCDForHitFly = 0.25f;
     protected bool isHitFly = false;
     public CreatureBattle(CreatureCptBase creature) : base(creature)
     {
@@ -140,12 +140,18 @@ public class CreatureBattle : CreatureBase
         else
         {
             isHitFly = true;
-            Vector3 hitDirection = (creature.transform.position - atkObj.transform.position).normalized + Vector3.up;
+            Vector3 hitDirection = (creature.transform.position - atkObj.transform.position).normalized + Vector3.up * 0.1f;
             float timeCount = 0;
             //击退
-            hitDirection *= 5;
+            hitDirection *= 2;
+
+            //如果是玩家 展示关闭控制
+            if (flyObj == GameHandler.Instance.manager.player.gameObject)
+            {
+
+            }
             DOTween
-                .To(() => { return timeCount; }, (data) => { timeCount = data; }, 0.5f, timeCDForHitFly)
+                .To(() => { return timeCount; }, (data) => { timeCount = data; }, timeCDForHitFly, timeCDForHitFly)
                 .OnUpdate(() =>
                 {
                     flyObj.transform.position += (hitDirection * Time.deltaTime);

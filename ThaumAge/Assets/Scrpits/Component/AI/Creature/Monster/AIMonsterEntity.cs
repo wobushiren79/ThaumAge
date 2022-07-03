@@ -4,7 +4,7 @@ using UnityEngine;
 public class AIMonsterEntity : AICreateEntity
 {
     //追逐目标
-    public GameObject objChaseTarget;
+    protected GameObject objChaseTarget;
 
     protected override void InitIntentEnum(List<AIIntentEnum> listIntentEnum)
     {
@@ -40,4 +40,23 @@ public class AIMonsterEntity : AICreateEntity
         CreatureCptBaseMonster creatureCptMonster = creatureCpt as CreatureCptBaseMonster;
         creatureCptMonster.AttackRemote();
     }
+
+    /// <summary>
+    /// 获取追逐目标
+    /// </summary>
+    /// <returns></returns>
+    public GameObject GetChaseTarget()
+    {
+        return objChaseTarget;
+    }
+
+    /// <summary>
+    /// 设置追逐莫表
+    /// </summary>
+    /// <param name="objChaseTarget"></param>
+    public void SetChaseTarget(GameObject objChaseTarget)
+    {
+        this.objChaseTarget = objChaseTarget;
+    }
+
 }

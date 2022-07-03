@@ -12,7 +12,7 @@ public abstract class AIBaseEntity : BaseMonoBehaviour
     public AIBaseIntent currentIntent;
 
     //意图池
-    public static Dictionary<AIIntentEnum, AIBaseIntent> dicIntentPool = new Dictionary<AIIntentEnum, AIBaseIntent>();
+    public Dictionary<AIIntentEnum, AIBaseIntent> dicIntentPool = new Dictionary<AIIntentEnum, AIBaseIntent>();
 
     public virtual void Awake()
     {

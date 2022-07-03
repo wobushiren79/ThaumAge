@@ -24,8 +24,13 @@ public class AIIntentMonsterAttackMelee : AIBaseIntent
         {
             timeUpdateForAttack = 0;
             AIMonsterEntity aiCreatureEntity = aiEntity as AIMonsterEntity;
-
-            float disTarget = Vector3.Distance(aiEntity.transform.position, aiCreatureEntity.objChaseTarget.transform.position);
+            GameObject objTarget = aiCreatureEntity.GetChaseTarget();
+            if (objTarget == null)
+            {
+                aiCreatureEntity.ChangeIntent(AIIntentEnum.MonsterStroll);
+                return;
+            }
+            float disTarget = Vector3.Distance(aiEntity.transform.position, objTarget.transform.position);
             //如果超出攻击范围 就开始追逐
             if (disTarget > aiCreatureEntity.creatureCpt.creatureInfo.dis_attack_melee)
             {

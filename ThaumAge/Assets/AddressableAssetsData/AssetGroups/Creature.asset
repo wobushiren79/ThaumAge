@@ -17,8 +17,8 @@ MonoBehaviour:
     m_SerializedData: []
   m_GUID: 063e60493891e2447aab31c0fddb3247
   m_SerializeEntries:
-  - m_GUID: a99c1200b84e5514b9e09a02361e3224
-    m_Address: Assets/Prefabs/Model/Creature/Skeleton.prefab
+  - m_GUID: 93e5d3bfa3a50534d86f4a509e9618a7
+    m_Address: Assets/Prefabs/Model/Creature/Slime.prefab
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
@@ -44,6 +44,26 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: a605915e5bbc59847af51390a7da2705
     m_Address: Assets/Prefabs/Model/Creature/ChickenBig.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: bb1720d188a6a9c41bb4d114903a3814
+    m_Address: Assets/Prefabs/Model/Creature/Witch.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e34993df67a30bb47a6cb1912d41372d
+    m_Address: Assets/Prefabs/Model/Creature/MushroomMan.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 04248b5664d8d504c8d1e63957576212
+    m_Address: Assets/Prefabs/Model/Creature/EyeBall.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a99c1200b84e5514b9e09a02361e3224
+    m_Address: Assets/Prefabs/Model/Creature/Skeleton.prefab
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0

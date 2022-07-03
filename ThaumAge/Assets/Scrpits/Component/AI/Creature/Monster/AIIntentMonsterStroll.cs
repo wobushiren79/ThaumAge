@@ -101,7 +101,7 @@ public class AIIntentMonsterStroll : AIBaseIntent
             if (listSearchTarget.IsNull())
                 return;
             AIMonsterEntity aiCreatureEntity = aiEntity as AIMonsterEntity;
-            aiCreatureEntity.objChaseTarget = listSearchTarget[0].gameObject;
+            aiCreatureEntity.SetChaseTarget(listSearchTarget[0].gameObject);
             aiEntity.ChangeIntent(AIIntentEnum.MonsterChase);
         }
     }

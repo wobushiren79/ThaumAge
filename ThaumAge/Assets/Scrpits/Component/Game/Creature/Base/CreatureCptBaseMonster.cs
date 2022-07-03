@@ -1,6 +1,6 @@
 ﻿using UnityEditor;
 using UnityEngine;
-
+using DG.Tweening;
 public class CreatureCptBaseMonster : CreatureCptBase
 {
     protected AIMonsterEntity aiEntity;
@@ -36,6 +36,18 @@ public class CreatureCptBaseMonster : CreatureCptBase
         //刷新血条
         creatureBattle.RefreshLifeProgress();
     }
+    
+    /// <summary>
+    /// 被攻击
+    /// </summary>
+    /// <param name="atkObj"></param>
+    /// <param name="damage"></param>
+    public override void UnderAttack(GameObject atkObj, int damage)
+    {
+        base.UnderAttack(atkObj, damage);
+        aiEntity.SetChaseTarget(atkObj);
+        aiEntity.ChangeIntent(AIIntentEnum.MonsterChase);
+    }
 
     /// <summary>
     /// 近战攻击
@@ -50,7 +62,7 @@ public class CreatureCptBaseMonster : CreatureCptBase
         CombatCommon.DamageTarget(gameObject, 2, targetArray);
         //调整身体角度
         LookTarget();
-
+        //播放攻击动画
         PlayAnimForAttackMelee();
     }
 
@@ -61,7 +73,6 @@ public class CreatureCptBaseMonster : CreatureCptBase
     public virtual void AttackRemote()
     {
         Debug.LogError("AttackRemote");
-        //MathUtil.GetBezierPoints(20,transform.position, aiEntity.objChaseTarget.transform.position,10);
         //调整身体角度
         LookTarget();
 
@@ -70,7 +81,7 @@ public class CreatureCptBaseMonster : CreatureCptBase
         //{
         //    itemCptLaunch.Launch();
         //});
-
+        //播放攻击动画
         PlayAnimForAttackRemote();
     }
 
@@ -95,9 +106,10 @@ public class CreatureCptBaseMonster : CreatureCptBase
     /// </summary>
     public void LookTarget()
     {
-        Vector3 lookAngle =  GameUtil.GetLookAtEuler(transform.position, aiEntity.objChaseTarget.transform.position);
-        Quaternion rotate = Quaternion.Euler(new Vector3(0, lookAngle.y, 0));
+        //Vector3 lookAngle =  GameUtil.GetLookAtEuler(transform.position, aiEntity.objChaseTarget.transform.position);
+        GameObject objTarget = aiEntity.GetChaseTarget();
+        Vector3 targetPosition = objTarget.transform.position;
         //朝摄像头方向移动
-        transform.rotation = Quaternion.Slerp(transform.rotation, rotate, Time.unscaledDeltaTime);
+        transform.DOLookAt(new Vector3(targetPosition.x, transform.position.y, targetPosition.z), 0.5f);
     }
 }

@@ -49,11 +49,17 @@ public class AIIntentMonsterChase : AIBaseIntent
         if (timeUpdateForFindPath >= timeForFindPath)
         {
             AIMonsterEntity aiCreatureEntity = aiEntity as AIMonsterEntity;
-            float disTarget = Vector3.Distance(aiEntity.transform.position, aiCreatureEntity.objChaseTarget.transform.position);
+            GameObject objTarget = aiCreatureEntity.GetChaseTarget();
+            if (objTarget == null)
+            {
+                aiCreatureEntity.ChangeIntent(AIIntentEnum.MonsterStroll);
+                return;
+            }
+            float disTarget = Vector3.Distance(aiEntity.transform.position, objTarget.transform.position);
             //如果距离大于丢失距离 则不再追逐
             if (disTarget >= aiCreatureEntity.creatureCpt.creatureInfo.dis_loss)
             {
-                aiCreatureEntity.objChaseTarget = null;
+                aiCreatureEntity.SetChaseTarget(null);
                 aiEntity.ChangeIntent(AIIntentEnum.MonsterStroll);
                 return;
             }
@@ -84,7 +90,7 @@ public class AIIntentMonsterChase : AIBaseIntent
 
 
             //移动到目标身边 或者身边2米的距离
-            isFindPath = aiCreatureEntity.aiNavigation.SetMovePosition(aiCreatureEntity.objChaseTarget.transform.position, true, 5);
+            isFindPath = aiCreatureEntity.aiNavigation.SetMovePosition(objTarget.transform.position, true, 5);
             if (isFindPath)
             {
                 //设置移动速度
