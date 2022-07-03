@@ -10,7 +10,7 @@ public class PlayerRay : PlayerBase
 
 
     /// <summary>
-    /// 检测已摄像头未起点的角色前方的方块
+    /// 检测以摄像头为起点的角色前方的方块
     /// </summary>
     /// <param name="hit"></param>
     /// <param name="targetBlockPosition"></param>

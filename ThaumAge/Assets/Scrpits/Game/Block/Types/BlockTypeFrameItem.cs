@@ -34,7 +34,9 @@ public class BlockTypeFrameItem : Block
         //如果有物品 则掉落
         else
         {
-            ItemsHandler.Instance.CreateItemCptDrop(frameItemData.itemId, frameItemData.itemNum, frameItemData.itemMeta, worldPosition + Vector3.one * 0.5f, ItemDropStateEnum.DropPick);
+            ItemDropBean itemDropData = new ItemDropBean(frameItemData.itemId, worldPosition + Vector3.one * 0.5f, frameItemData.itemNum, frameItemData.itemMeta, ItemDropStateEnum.DropPick);
+            ItemsHandler.Instance.CreateItemCptDrop(itemDropData);
+
             frameItemData = new BlockMetaFrameItem();
             blockData.meta = ToMetaData(frameItemData);
             chunk.isSaveData = true;

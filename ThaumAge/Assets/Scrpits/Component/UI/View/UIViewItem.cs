@@ -356,7 +356,16 @@ public partial class UIViewItem : BaseUIView,
         //如果什么都没有检测到，说明是把物体丢到场景中
         Player player = GameHandler.Instance.manager.player;
         Vector3 randomFroce = new Vector3(UnityEngine.Random.Range(-0.5f, 0.5f), UnityEngine.Random.Range(0f, 0.5f), UnityEngine.Random.Range(-0.5f, 0.5f));
-        ItemsHandler.Instance.CreateItemCptDrop(itemId, itemNumber, meta, player.transform.position + Vector3.up, ItemDropStateEnum.DropNoPick, player.transform.forward + randomFroce);
+        ItemDropBean itemDropData = new ItemDropBean
+            (
+            itemId, 
+            player.transform.position + Vector3.up, 
+            player.transform.forward + randomFroce, 
+            itemNumber,
+            meta,
+            ItemDropStateEnum.DropNoPick
+            );
+        ItemsHandler.Instance.CreateItemCptDrop(itemDropData);
         DestroyImmediate(gameObject);
         if (originalParent != null)
         {

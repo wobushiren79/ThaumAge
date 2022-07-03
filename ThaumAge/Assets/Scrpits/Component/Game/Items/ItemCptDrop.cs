@@ -8,10 +8,7 @@ public class ItemCptDrop : BaseMonoBehaviour
     protected Collider colliderItem;
 
     public ItemsInfoBean itemsInfo;
-    public ItemsBean itemData;
-
-    //掉落状态 0：掉落不可拾取 1：掉落可拾取 2：拾取中
-    public ItemDropStateEnum itemDrapState = ItemDropStateEnum.DropPick;
+    public ItemDropBean itemDropData;
 
     //删除的时间
     public float timeForItemsDestory = 0;
@@ -30,14 +27,6 @@ public class ItemCptDrop : BaseMonoBehaviour
         InvokeRepeating("UpdateItemData", 1, 1);
     }
 
-    private void FixedUpdate()
-    {
-        if (itemDrapState == ItemDropStateEnum.Picking)
-        {
-
-        }
-    }
-
     public void OnDestroy()
     {
         CancelInvoke();
@@ -51,16 +40,16 @@ public class ItemCptDrop : BaseMonoBehaviour
         //每隔1秒检测一次
         timeForCreate++;
         //如果正在捡取中 则不做处理
-        if (itemDrapState == ItemDropStateEnum.Picking)
+        if (itemDropData.itemDrapState == ItemDropStateEnum.Picking)
             return;
         Player player = GameHandler.Instance.manager.player;
         if (player == null) return;
 
         float dis = Vector3.Distance(player.transform.position, transform.position);
         //如果超过可拾取距离 则变为可拾取
-        if (itemDrapState == ItemDropStateEnum.DropNoPick && dis > disForDropNoPick)
+        if (itemDropData.itemDrapState == ItemDropStateEnum.DropNoPick && dis > disForDropNoPick)
         {
-            SetItemDropState(ItemDropStateEnum.DropPick);
+            itemDropData.itemDrapState = ItemDropStateEnum.DropPick;
         }
         //如果玩家距离物体过远，或者超过存在时间，则删除物体
         if (dis > disForItemsDestory || timeForCreate > timeForItemsDestory)
@@ -75,35 +64,22 @@ public class ItemCptDrop : BaseMonoBehaviour
     /// <returns></returns>
     public ItemDropStateEnum GetItemCptDropState()
     {
-        return itemDrapState;
-    }
-
-    /// <summary>
-    /// 设置道具状态
-    /// </summary>
-    /// <param name="ItemCptDropState"></param>
-    public void SetItemDropState(ItemDropStateEnum ItemCptDropState)
-    {
-        this.itemDrapState = ItemCptDropState;
+        return itemDropData.itemDrapState;
     }
 
     /// <summary>
     /// 设置数据
     /// </summary>
-    public void SetData(ItemsBean itemData, Vector3 position)
+    public void SetData(ItemDropBean itemDropData)
     {
-        SetData(itemData, position, Vector3.zero);
-    }
-    public void SetData(ItemsBean itemData, Vector3 position, Vector3 dropdirection)
-    {
-        this.itemData = itemData;
-        itemsInfo = ItemsHandler.Instance.manager.GetItemsInfoById(itemData.itemId);
-        transform.position = position;
+        this.itemDropData = itemDropData;
+        itemsInfo = ItemsHandler.Instance.manager.GetItemsInfoById(itemDropData.itemData.itemId);
+        transform.position = itemDropData.dropPosition;
         //设置头像
-        SetIcon(itemData.itemId);
+        SetIcon(itemDropData.itemData.itemId);
         //增加一个跳动的力
         //随机方向
-        if(dropdirection == Vector3.zero)
+        if(itemDropData.dropDirection == Vector3.zero)
         {
             System.Random random = new System.Random();
             rbItem.AddForce(random.Next(-100, 100), random.Next(-100, 100), random.Next(-100, 100));
@@ -111,7 +87,7 @@ public class ItemCptDrop : BaseMonoBehaviour
         //指定方向
         else
         {
-            rbItem.AddForce(dropdirection.x * 100, dropdirection.y * 100, dropdirection.z * 100);
+            rbItem.AddForce(itemDropData.dropDirection.x * 100, itemDropData.dropDirection.y * 100, itemDropData.dropDirection.z * 100);
         }
         //初始化数据
         SOGameInitBean gameInitData = GameHandler.Instance.manager.gameInitData;
@@ -138,7 +114,7 @@ public class ItemCptDrop : BaseMonoBehaviour
     public void PickItem(Transform targetTF, float pickSpeed)
     {
         //修改状态
-        SetItemDropState(ItemDropStateEnum.Picking);
+        itemDropData.itemDrapState = ItemDropStateEnum.Picking;
         //关闭碰撞
         EnablePhysic(false);
 
@@ -159,7 +135,7 @@ public class ItemCptDrop : BaseMonoBehaviour
             .OnComplete(() =>
             {
                 UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();
-                int number = userData.AddItems(itemData.itemId, itemData.number, itemData.meta);
+                int number = userData.AddItems(itemDropData.itemData.itemId, itemDropData.itemData.number, itemDropData.itemData.meta);
                 if (number == 0)
                 {
                     //如果都加完了 则删除
@@ -168,8 +144,8 @@ public class ItemCptDrop : BaseMonoBehaviour
                 else
                 {
                     //如果还有剩余
-                    itemData.number = number;
-                    SetItemDropState(ItemDropStateEnum.DropNoPick);
+                    itemDropData.itemData.number = number;
+                    itemDropData.itemDrapState = ItemDropStateEnum.DropNoPick;
                     EnablePhysic(true);
                     //随机散开
                     System.Random random = new System.Random();

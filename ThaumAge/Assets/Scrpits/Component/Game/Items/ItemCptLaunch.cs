@@ -31,6 +31,17 @@ public class ItemCptLaunch : BaseMonoBehaviour
         //角度*力度
         launchMoveSpeed = itemLaunchData.launchDirection.normalized * itemLaunchData.launchPower;
         timeForLaunch = 0;
+
+        ItemsHandler.Instance.manager.GetItemsIconById(itemLaunchData.itemId, (data) =>
+        {
+            Texture2D itemTex = TextureUtil.SpriteToTexture2D(data);
+            //设置材质的贴图
+            meshRenderer.material.mainTexture = itemTex;
+            //获取道具的mesh
+            MeshUtil.MeshUtilData meshUtilData = new MeshUtil.MeshUtilData(itemTex);
+            Mesh picMesh = MeshUtil.GenerateMeshPicture(meshUtilData);
+            meshFilter.mesh = picMesh;
+        });
     }
 
     /// <summary>
