@@ -16,7 +16,7 @@ public static class AIBaseCommon
     {
         List<Collider> listData = new List<Collider>();
         //搜索圆形范围内的目标物体
-        Collider[] searchTarget = RayUtil.RayToSphere(sourcePosition, searchRadius, layerSearchTarget);
+        Collider[] searchTarget = RayUtil.OverlapToSphere(sourcePosition, searchRadius, layerSearchTarget);
         if (searchTarget.IsNull())
             return listData;
 

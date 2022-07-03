@@ -26,7 +26,7 @@ public class PlayerPickUp : PlayerBase
     /// </summary>
     public void HandleForCheckItemCptDrop()
     {
-        Collider[] colliderArray = RayUtil.RayToSphere(player.transform.position, rangePickUp, 1 << LayerInfo.Items);
+        Collider[] colliderArray = RayUtil.OverlapToSphere(player.transform.position, rangePickUp, 1 << LayerInfo.Items);
         if (!colliderArray.IsNull())
         {
             for (int i = 0; i < colliderArray.Length; i++)

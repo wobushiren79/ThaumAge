@@ -30,9 +30,9 @@ public class ItemsManager : BaseManager,
     protected Dictionary<long, Texture> dicItemsTex = new();
 
     //路径-道具丢弃模型
-    public static string PathForItemDrop = "Assets/Prefabs/Game/ItemDrop.prefab";
+    public static string PathForItemDrop = "Assets/Prefabs/Game/Item/ItemDrop.prefab";
     //路径-道具发射模型
-    public static string PathForItemLaunch = "Assets/Prefabs/Game/ItemLaunch.prefab";
+    public static string PathForItemLaunch = "Assets/Prefabs/Game/Item/ItemLaunch.prefab";
     //路径-装备模型
     public static string PathEquipModel = "Assets/Prefabs/Model/Character/Equip";
 

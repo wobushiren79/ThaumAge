@@ -17,11 +17,6 @@ MonoBehaviour:
     m_SerializedData: []
   m_GUID: 2f822e2f9a1934043a30d93f5c23bcdd
   m_SerializeEntries:
-  - m_GUID: 6c8d8b233888fb647a0f19e26e0cb311
-    m_Address: Assets/Prefabs/Game/ItemDrop.prefab
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: abaacac262aab894eaff5ddb571a447e
     m_Address: Assets/Prefabs/Game/BlockBreak.prefab
     m_ReadOnly: 0
@@ -39,6 +34,16 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: e4f153e2f12c853468828189881b901c
     m_Address: Assets/ComputeShader/TerrainCShader.compute
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: c4a52135f793a7342b43895f6ba2f1ae
+    m_Address: Assets/Prefabs/Game/Item/ItemLaunch.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 6c8d8b233888fb647a0f19e26e0cb311
+    m_Address: Assets/Prefabs/Game/Item/ItemDrop.prefab
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0

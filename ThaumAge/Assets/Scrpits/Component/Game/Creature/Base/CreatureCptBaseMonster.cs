@@ -72,15 +72,8 @@ public class CreatureCptBaseMonster : CreatureCptBase
     /// </summary>
     public virtual void AttackRemote()
     {
-        Debug.LogError("AttackRemote");
         //调整身体角度
         LookTarget();
-
-        //ItemLaunchBean itemLaunchData = new ItemLaunchBean();
-        //ItemsHandler.Instance.CreateItemLaunch(itemLaunchData,(itemCptLaunch) => 
-        //{
-        //    itemCptLaunch.Launch();
-        //});
         //播放攻击动画
         PlayAnimForAttackRemote();
     }

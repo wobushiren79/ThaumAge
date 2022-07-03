@@ -60,17 +60,28 @@ public class RayUtil
         arrayHit = Physics.RaycastAll(ray, maxDistance, layerMask);
     }
 
-
     /// <summary>
-    /// 射线-球体
+    /// 球体-球体范围内
     /// </summary>
     /// <param name="centerPosition"></param>
     /// <param name="radius"></param>
     /// <param name="layer"></param>
     /// <returns></returns>
-    public static Collider[] RayToSphere(Vector3 centerPosition, float radius, int layer)
+    public static Collider[] OverlapToSphere(Vector3 centerPosition, float radius, int layer)
     {
         return Physics.OverlapSphere(centerPosition, radius, layer);
+    }
+
+    /// <summary>
+    /// 球体-球体范围内
+    /// </summary>
+    /// <param name="centerPosition"></param>
+    /// <param name="radius"></param>
+    /// <param name="layer"></param>
+    /// <returns></returns>
+    public static bool CheckToSphere(Vector3 centerPosition, float radius, int layer)
+    {
+        return Physics.CheckSphere(centerPosition, radius, layer);
     }
 
     /// <summary>

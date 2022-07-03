@@ -6,6 +6,9 @@ public class ItemLaunchBean
     //发射的道具ID
     public int itemId;
 
+    //开始发射点
+    public Vector3 launchStartPosition;
+
     //发射的向量
     public Vector3 launchDirection = Vector3.zero;
 
