@@ -13,7 +13,7 @@ public partial class CreatureInfoBean
     {
         if (damageData == null)
         {
-            damageData= CombatCommon.GetDamageData("");
+            damageData = CombatCommon.GetDamageData(damage_data);
         }
         return damageData;
     }

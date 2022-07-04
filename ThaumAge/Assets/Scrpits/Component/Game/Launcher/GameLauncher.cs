@@ -14,6 +14,8 @@ public class GameLauncher : BaseLauncher
         IconHandler.Instance.InitData(null);
         //打开主UI
         UIHandler.Instance.OpenUIAndCloseOther<UILoading>(UIEnum.Loading);
+        //初始化摄像头数据
+        CameraHandler.Instance.InitGameCameraData();
         //加载资源
         GameHandler.Instance.LoadGameResources(() =>
         {

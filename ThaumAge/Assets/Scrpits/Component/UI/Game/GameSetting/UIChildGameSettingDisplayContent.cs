@@ -130,11 +130,11 @@ public class UIChildGameSettingDisplayContent : UIChildGameSettingBaseContent
 
         //帧数
         settingFrame = CreateItemForRange(TextHandler.Instance.GetTextById(104), HandleForFrame);
-        settingFOV.SetMinMax(20, 120);
+        settingFrame.SetMinMax(20, 120);
         settingFrame.SetPro(gameConfig.frames);
 
         //视野
-        settingFOV = CreateItemForRange(TextHandler.Instance.GetTextById(116), HandleForFOV);
+        settingFOV = CreateItemForRange(TextHandler.Instance.GetTextById(118), HandleForFOV);
         settingFOV.SetMinMax(20, 120);
         settingFOV.SetPro(gameConfig.cameraFOV);
 
@@ -246,7 +246,7 @@ public class UIChildGameSettingDisplayContent : UIChildGameSettingBaseContent
     public void HandleForFOV(float value)
     {
         gameConfig.cameraFOV = Mathf.RoundToInt(value);
-        settingFrame.SetContent($"{gameConfig.cameraFOV}");
+        settingFOV.SetContent($"{gameConfig.cameraFOV}");
         CameraHandler.Instance.SetCameraFieldOfView(gameConfig.cameraFOV);
     }
 

@@ -1403,7 +1403,7 @@ public partial class @GameInputActions : IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""542e1373-72b3-44e4-8893-06d04af85eae"",
-                    ""path"": ""<Keyboard>/numpadEquals"",
+                    ""path"": ""<Keyboard>/numpadPlus"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Keyboard&Mouse"",

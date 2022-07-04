@@ -51,7 +51,7 @@ public class CreatureBattle : CreatureBase
             //颤抖
             ShakeBody();
             //摄像头抖动
-            CameraHandler.Instance.ShakeCamera(0.1f);
+            CameraHandler.Instance.ShakeCamera(0.25f);
         }
         //刷新UI
         EventHandler.Instance.TriggerEvent(EventsInfo.CharacterStatus_StatusChange);
@@ -150,7 +150,7 @@ public class CreatureBattle : CreatureBase
             //击退
             hitDirection *= 2;
 
-            //如果是玩家 展示关闭控制
+            //如果是玩家
             if (flyObj == GameHandler.Instance.manager.player.gameObject)
             {
 
@@ -159,7 +159,7 @@ public class CreatureBattle : CreatureBase
                 .To(() => { return timeCount; }, (data) => { timeCount = data; }, timeCDForHitFly, timeCDForHitFly)
                 .OnUpdate(() =>
                 {
-                    flyObj.transform.position += (hitDirection * Time.deltaTime);
+                    flyObj.transform.position += (hitDirection * Time.fixedDeltaTime);
                 })
                 .OnComplete(() =>
                 {
@@ -174,7 +174,7 @@ public class CreatureBattle : CreatureBase
     /// </summary>
     public void ShakeBody()
     {
-        creature.transform.DOKill();
+        creature.transform.DOKill(true);
         creature.transform.DOShakeScale(0.1f, 0.1f);
     }
 

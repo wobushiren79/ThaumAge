@@ -18,6 +18,8 @@ public class ProgressView : BaseMonoBehaviour
     public Slider sliderPro;
     public string completeContent;
 
+    //是否正在初始化
+    protected bool isInit = false;
 
     protected ICallBack callBack;
 
@@ -79,8 +81,10 @@ public class ProgressView : BaseMonoBehaviour
     /// <param name="max"></param>
     public void SetProMinMax(float min, float max)
     {
+        isInit = true;
         sliderPro.minValue = min;
         sliderPro.maxValue = max;
+        isInit = false;
     }
 
     /// <summary>
@@ -135,6 +139,8 @@ public class ProgressView : BaseMonoBehaviour
 
     public void OnSliderValueChange(float value)
     {
+        if (isInit)
+            return;
         //是否可互动，如果是可互动的 则按百分比显示
         if (sliderPro.IsInteractable())
         {

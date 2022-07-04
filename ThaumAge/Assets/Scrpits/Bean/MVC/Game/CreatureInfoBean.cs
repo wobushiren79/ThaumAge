@@ -58,4 +58,8 @@ using System;
 		///远程攻击间隔
 		/// </summary>
 		public float time_interval_attack_remote;
+		/// <summary>
+		///伤害数据
+		/// </summary>
+		public string damage_data;
 	}

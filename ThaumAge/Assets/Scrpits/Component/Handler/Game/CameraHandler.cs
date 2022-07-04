@@ -7,17 +7,25 @@ using UnityEngine.Rendering.HighDefinition;
 
 public class CameraHandler : BaseHandler<CameraHandler, CameraManager>
 {
-    protected float maxAroundY = 90;
-    protected float minAroundY = -60;
-
     protected float maxOrthographicSize = 120;
     protected float minOrthographicSize = 20;
 
-    protected float maxCameraDis = 10;
-    protected float minCameraDis = 0;
-
     public float timeScale = 1;
 
+    /// <summary>
+    /// 初始化游戏摄像头数据
+    /// </summary>
+    public void InitGameCameraData()
+    {
+        //初始化视野
+        GameConfigBean gameConfig = GameDataHandler.Instance.manager.GetGameConfig();
+        SetCameraFieldOfView(gameConfig.cameraFOV);
+    }
+
+    protected Tween animForShakeCameraFirst;
+    protected Tween animForShakeCameraThree_1;
+    protected Tween animForShakeCameraThree_2;
+    protected Tween animForShakeCameraThree_3;
     /// <summary>
     /// 抖动摄像头
     /// </summary>
@@ -33,6 +41,8 @@ public class CameraHandler : BaseHandler<CameraHandler, CameraManager>
         {
             basicMultiChannelPerlin.m_AmplitudeGain = amplitude;
             basicMultiChannelPerlin.m_FrequencyGain = frequency;
+            //初始化位置
+            cameraForFirst.transform.position = GameHandler.Instance.manager.player.objFirstLook.transform.position;
             //执行抖动减缓动画
             DOTween.To(() => basicMultiChannelPerlin.m_AmplitudeGain, x => basicMultiChannelPerlin.m_AmplitudeGain = x, 0, time);
         }
@@ -43,12 +53,14 @@ public class CameraHandler : BaseHandler<CameraHandler, CameraManager>
         {
             CinemachineVirtualCamera itemVirtualCamera = cameraForThree.GetRig(i);
             CinemachineBasicMultiChannelPerlin itemBasicMultiChannelPerlin = itemVirtualCamera.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
+            //初始化位置
+            cameraForThree.transform.position = GameHandler.Instance.manager.player.objThirdLook.transform.position;
             if (itemBasicMultiChannelPerlin != null)
             {
                 itemBasicMultiChannelPerlin.m_AmplitudeGain = amplitude;
                 itemBasicMultiChannelPerlin.m_FrequencyGain = frequency;
                 //执行抖动减缓动画
-                DOTween.To(() => basicMultiChannelPerlin.m_AmplitudeGain, x => basicMultiChannelPerlin.m_AmplitudeGain = x, 0, time);
+                DOTween.To(() => itemBasicMultiChannelPerlin.m_AmplitudeGain, x => itemBasicMultiChannelPerlin.m_AmplitudeGain = x, 0, time);
             }
         }
     }
@@ -243,46 +255,6 @@ public class CameraHandler : BaseHandler<CameraHandler, CameraManager>
     }
 
     /// <summary>
-    /// 旋转镜头
-    /// </summary>
-    /// <param name="aroundPosition"></param>
-    /// <param name="rotateOffset"></param>
-    /// <param name="speedForMove"></param>
-    public void RotateCameraAroundXZ(Vector3 aroundPosition, float rotateOffset, float speedForMove)
-    {
-        manager.mainCamera.transform.RotateAround(aroundPosition, Vector3.up, rotateOffset * Time.unscaledDeltaTime * speedForMove);
-    }
-
-    /// <summary>
-    /// 旋转镜头
-    /// </summary>
-    /// <param name="aroundPosition"></param>
-    /// <param name="rotateOffset"></param>
-    /// <param name="speedForMove"></param>
-    public void RotateCameraAroundY(Vector3 aroundPosition, float rotateOffset, float speedForMove)
-    {
-        Vector3 eulerAngles = manager.mainCamera.transform.rotation.eulerAngles;
-        float tempAngles = rotateOffset * Time.unscaledDeltaTime * speedForMove;
-        float afterAngles = eulerAngles.x + tempAngles;
-        if (afterAngles > 180)
-        {
-            afterAngles -= 360;
-        }
-        if (afterAngles > 0)
-        {
-            if (afterAngles >= maxAroundY)
-                return;
-        }
-        else
-        {
-            if (afterAngles <= minAroundY)
-                return;
-        }
-        manager.mainCamera.transform.RotateAround(aroundPosition, manager.mainCamera.transform.right, tempAngles);
-    }
-
-
-    /// <summary>
     /// 设置镜头视距
     /// </summary>
     /// <param name="fieldOfView"></param>
@@ -305,26 +277,5 @@ public class CameraHandler : BaseHandler<CameraHandler, CameraManager>
         CinemachineFreeLook cameraForThree = manager.cameraForThree;
         if (cameraForThree != null)
             cameraForThree.m_Lens.FieldOfView = fieldOfView;
-    }
-
-
-    /// <summary>
-    /// 设置摄像头距离
-    /// </summary>
-    public void SetCameraDistance(Vector3 targetPosition, int data, float Speed)
-    {
-        Vector3 oldPosition = manager.mainCamera.transform.position;
-        float distance = Vector3.Distance(targetPosition, oldPosition);
-        if (data > 0 && distance <= minCameraDis)
-            return;
-        if (data < 0 && distance >= maxCameraDis)
-            return;
-
-        manager.mainCamera.transform.position = Vector3.MoveTowards(oldPosition, targetPosition, data * Speed);
-        //如果点重合了 则回到原来的点
-        if (Vector3.Distance(targetPosition, manager.mainCamera.transform.position) <= minCameraDis)
-        {
-            manager.mainCamera.transform.position = Vector3.MoveTowards(oldPosition, targetPosition, -maxCameraDis * data);
-        }
     }
 }
