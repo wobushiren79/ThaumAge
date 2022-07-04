@@ -1160,11 +1160,33 @@
                 },
                 {
                     "name": "",
+                    "id": "1b031565-643d-417f-a454-33a1391f53a9",
+                    "path": "<Keyboard>/numpad0",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "N0",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "9cff9d81-d972-43af-a066-6ec66241eb43",
                     "path": "<Keyboard>/1",
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard&Mouse",
+                    "action": "N1",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "d96ec6ca-8e48-496c-a5d1-1b1a30a703d8",
+                    "path": "<Keyboard>/numpad1",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
                     "action": "N1",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -1182,11 +1204,33 @@
                 },
                 {
                     "name": "",
+                    "id": "f9d54dd3-6461-49f1-8964-068d27cc292f",
+                    "path": "<Keyboard>/numpad2",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "N2",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "8b763a12-687d-4973-a4ca-e11a1874546e",
                     "path": "<Keyboard>/3",
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard&Mouse",
+                    "action": "N3",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "e6321564-a322-4853-a4e8-fcbf043d0610",
+                    "path": "<Keyboard>/numpad3",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
                     "action": "N3",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -1204,11 +1248,33 @@
                 },
                 {
                     "name": "",
+                    "id": "92fdcf90-69d2-4d09-9391-3fb477fc6a6c",
+                    "path": "<Keyboard>/numpad4",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "N4",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "9f71c1f9-ca87-4882-9d9d-aa50957ce573",
                     "path": "<Keyboard>/5",
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard&Mouse",
+                    "action": "N5",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "62a902e3-92af-4a53-af80-6c957c8382ce",
+                    "path": "<Keyboard>/numpad5",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
                     "action": "N5",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -1226,11 +1292,33 @@
                 },
                 {
                     "name": "",
+                    "id": "20794955-adf5-4b51-bc97-e718114f3423",
+                    "path": "<Keyboard>/numpad6",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "N6",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "7eeb6f61-d297-42e8-b08e-fc10fe4ce9e0",
                     "path": "<Keyboard>/7",
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard&Mouse",
+                    "action": "N7",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "8ad21197-a700-40a7-a03c-a955f9fe1985",
+                    "path": "<Keyboard>/numpad7",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
                     "action": "N7",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -1248,11 +1336,33 @@
                 },
                 {
                     "name": "",
+                    "id": "a1721a08-3dad-4a01-a81e-d851171ec4a4",
+                    "path": "<Keyboard>/numpad8",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "N8",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "4aaf008a-231d-4fa3-b252-ec2fcafd0052",
                     "path": "<Keyboard>/9",
                     "interactions": "",
                     "processors": "",
                     "groups": "Gamepad;Keyboard&Mouse",
+                    "action": "N9",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "dced94c3-5c05-469d-bea8-c57fe6d16f72",
+                    "path": "<Keyboard>/numpad9",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
                     "action": "N9",
                     "isComposite": false,
                     "isPartOfComposite": false
