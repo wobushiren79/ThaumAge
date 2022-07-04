@@ -19,7 +19,7 @@ public class CreatureBattle : CreatureBase
     /// 遭到攻击
     /// </summary>
     /// <param name="damage"></param>
-    public void UnderAttack(GameObject atkObj, int damage)
+    public void UnderAttack(GameObject atkObj, DamageBean damageData)
     {
         if (CheckIsDead())
             return;
@@ -28,18 +28,20 @@ public class CreatureBattle : CreatureBase
         switch (creatureType)
         {
             case CreatureTypeEnum.Player:
-                UnderAttackForPlayer(atkObj, damage);
+                UnderAttackForPlayer(atkObj, damageData);
                 break;
             default:
-                UnderAttackForCreature(atkObj, damage);
+                UnderAttackForCreature(atkObj, damageData);
                 break;
         }
     }
-    protected void UnderAttackForPlayer(GameObject atkObj, int damage)
+
+    protected void UnderAttackForPlayer(GameObject atkObj, DamageBean damageData)
     {
         //扣除伤害
         UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();
         CharacterStatusBean characterStatus = userData.characterData.GetCharacterStatus();
+        int damage = damageData.GetDamage();
         characterStatus.HealthChange(-damage);
         if (damage > 0)
         {
@@ -61,8 +63,9 @@ public class CreatureBattle : CreatureBase
         }
     }
 
-    protected void UnderAttackForCreature(GameObject atkObj, int damage)
+    protected void UnderAttackForCreature(GameObject atkObj, DamageBean damageData)
     {
+        int damage = damageData.GetDamage();
         //扣除伤害
         creature.creatureData.AddLife(-damage);
 

@@ -13,7 +13,7 @@ public class CombatCommon
     /// <param name="widthRangeDamage"></param>
     /// <param name="heightRangeDamage"></param>
     /// <returns></returns>
-    public static Collider[] TargetCheck(GameObject user,float lengthRangeDamage, float widthRangeDamage, float heightRangeDamage,int targetLayer)
+    public static Collider[] TargetCheck(GameObject user, float lengthRangeDamage, float widthRangeDamage, float heightRangeDamage, int targetLayer)
     {
         //设置检测范围
         Vector3 centerPosition = user.transform.position + user.transform.forward * (lengthRangeDamage / 2f) + new Vector3(0, 1, 0);
@@ -35,7 +35,7 @@ public class CombatCommon
     /// <param name="user"></param>
     /// <param name="damage"></param>
     /// <param name="targetArray"></param>
-    public static void DamageTarget(GameObject user, int damage, Collider[] targetArray)
+    public static void DamageTarget(GameObject user, DamageBean damageData, Collider[] targetArray)
     {
         if (targetArray.IsNull())
             return;
@@ -50,7 +50,7 @@ public class CombatCommon
                 continue;
             if (creatureCpt == selfCreature)
                 continue;
-            creatureCpt.UnderAttack(user, damage);
+            creatureCpt.UnderAttack(user, damageData);
         }
     }
 
@@ -79,5 +79,23 @@ public class CombatCommon
         {
             height = data[2];
         }
+    }
+
+    /// <summary>
+    /// 获取伤害数据
+    /// </summary>
+    /// <param name="damageDataStr"></param>
+    /// <returns></returns>
+    public static DamageBean GetDamageData(string damageDataStr)
+    {
+        DamageBean damageData = new DamageBean();
+        string[] itemDataStr = damageDataStr.SplitForArrayStr('|');
+        for (int i = 0; i < itemDataStr.Length; i++)
+        {
+            string[] itemDetailsDataStr = itemDataStr[i].SplitForArrayStr(':');
+            DamageAdditionEnum damageAdditionEnum = EnumExtension.GetEnum<DamageAdditionEnum>(itemDetailsDataStr[0]);
+            damageData.dicDamageData.Add(damageAdditionEnum, itemDetailsDataStr[1]);
+        }
+        return damageData;
     }
 }

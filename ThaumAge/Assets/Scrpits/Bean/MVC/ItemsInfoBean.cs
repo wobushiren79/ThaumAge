@@ -24,7 +24,8 @@ public class ItemsInfoBean : BaseBean
     public string tex_name;//贴图名字
     public int life;//耐久度
     public float cd_use;//使用间隔
-    public int atk;//攻击力
+
+    public string damage_data;//伤害数据
     public string range_damage;//伤害范围 长(距离目标的距离) 宽（攻击宽度）高（攻击高度）
     public string anim_use;//使用动画
     public string hold_data;//拿住道具的数据（位置旋转等）
@@ -36,6 +37,10 @@ public class ItemsInfoBean : BaseBean
     public int elemental_water;
     public int elemental_fire;
     public int elemental_earth;
+
+
+    protected DamageBean damageData;//伤害数据
+
     public ItemsTypeEnum GetItemsType()
     {
         return (ItemsTypeEnum)items_type;
@@ -115,5 +120,18 @@ public class ItemsInfoBean : BaseBean
             listName.Add($"{path}/{itemData}.prefab");
         }
         return listName;
+    }
+
+    /// <summary>
+    /// 获取伤害数据
+    /// </summary>
+    /// <returns></returns>
+    public DamageBean GetDamageData()
+    {
+        if (damageData == null)
+        {
+            damageData = CombatCommon.GetDamageData(damage_data);
+        }
+        return damageData;
     }
 }

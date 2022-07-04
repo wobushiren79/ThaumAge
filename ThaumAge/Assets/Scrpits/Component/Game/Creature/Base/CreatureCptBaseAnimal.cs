@@ -41,9 +41,9 @@ public class CreatureCptBaseAnimal : CreatureCptBase
     /// </summary>
     /// <param name="atkObj"></param>
     /// <param name="damage"></param>
-    public override void UnderAttack(GameObject atkObj, int damage)
+    public override void UnderAttack(GameObject atkObj, DamageBean damageData)
     {
-        base.UnderAttack(atkObj, damage);
+        base.UnderAttack(atkObj, damageData);
         //逃跑
         aiEntity.ChangeIntent(AIIntentEnum.AnimalEscape);
     }

@@ -13,6 +13,7 @@ public class ItemBaseWeapon : ItemBaseTool
         //获取打中的目标
         Collider[] targetArray = CombatCommon.TargetCheck(user, lengthRangeDamage, widthRangeDamage, heightRangeDamage, 1 << LayerInfo.Creature);
         //伤害打中的目标
-        CombatCommon.DamageTarget(user, itemsInfo.atk, targetArray);
+        DamageBean damageData = itemsInfo.GetDamageData();
+        CombatCommon.DamageTarget(user, damageData, targetArray);
     }
 }

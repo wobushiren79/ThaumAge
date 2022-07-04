@@ -42,9 +42,9 @@ public class CreatureCptBaseMonster : CreatureCptBase
     /// </summary>
     /// <param name="atkObj"></param>
     /// <param name="damage"></param>
-    public override void UnderAttack(GameObject atkObj, int damage)
+    public override void UnderAttack(GameObject atkObj, DamageBean damageData)
     {
-        base.UnderAttack(atkObj, damage);
+        base.UnderAttack(atkObj, damageData);
         aiEntity.SetChaseTarget(atkObj);
         aiEntity.ChangeIntent(AIIntentEnum.MonsterChase);
     }
@@ -59,7 +59,8 @@ public class CreatureCptBaseMonster : CreatureCptBase
         //获取打中的目标
         Collider[] targetArray = CombatCommon.TargetCheck(gameObject, lengthRangeDamage, widthRangeDamage, heightRangeDamage, 1 << LayerInfo.Character);
         //伤害打中的目标
-        CombatCommon.DamageTarget(gameObject, 2, targetArray);
+        DamageBean damageData = creatureInfo.GetDamageData();
+        CombatCommon.DamageTarget(gameObject, damageData, targetArray);
         //调整身体角度
         LookTarget();
         //播放攻击动画

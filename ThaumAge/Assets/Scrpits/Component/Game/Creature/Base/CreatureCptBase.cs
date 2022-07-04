@@ -61,9 +61,9 @@ public class CreatureCptBase : BaseMonoBehaviour
     /// </summary>
     /// <param name="atkObj"></param>
     /// <param name="damage"></param>
-    public virtual void UnderAttack(GameObject atkObj, int damage)
+    public virtual void UnderAttack(GameObject atkObj, DamageBean damageData)
     {
-        creatureBattle.UnderAttack(atkObj, damage);
+        creatureBattle.UnderAttack(atkObj, damageData);
     }
 
     /// <summary>

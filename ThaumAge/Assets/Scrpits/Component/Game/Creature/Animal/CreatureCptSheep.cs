@@ -55,7 +55,7 @@ public class CreatureCptSheep : CreatureCptBaseAnimal
     }
 
     //受到攻击
-    public override void UnderAttack(GameObject atkObj, int damage)
+    public override void UnderAttack(GameObject atkObj, DamageBean damageData)
     {
         //如果有羊毛
         if (creatureMetaSheep != null && creatureMetaSheep.stateWool == 1)
@@ -72,7 +72,7 @@ public class CreatureCptSheep : CreatureCptBaseAnimal
         //如果没有羊毛
         else
         {
-            base.UnderAttack(atkObj, damage);
+            base.UnderAttack(atkObj, damageData);
         }
     }
 
