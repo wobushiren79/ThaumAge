@@ -46,7 +46,6 @@ public class UIViewShortcuts : BaseUIView
         UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();
         int indexForShortcutsBefore = userData.indexForShortcuts;
         int indexForShortcuts;
-        bool isRefreshUI = true;
 
         switch (inputType)
         {
@@ -81,32 +80,16 @@ public class UIViewShortcuts : BaseUIView
                 indexForShortcuts = 8;
                 break;
             case InputActionUIEnum.NAdd:
-                indexForShortcuts = userData.indexForShortcuts + 1;
+                indexForShortcuts = indexForShortcutsBefore + 1;
                 break;
             case InputActionUIEnum.NSub:
-                indexForShortcuts = userData.indexForShortcuts - 1;
+                indexForShortcuts = indexForShortcutsBefore - 1;
                 break;
             default:
                 return;
         }
-        //如果没有改变 则不处理
-        if (indexForShortcutsBefore == indexForShortcuts)
-        {
-            return;
-        }
-        if (indexForShortcuts > 9)
-        {
-            indexForShortcuts = 0;
-        }
-        else if (indexForShortcuts < 0)
-        {
-            indexForShortcuts = 9;
-        }
         userData.SetShortcuts(indexForShortcuts);
-        if (isRefreshUI)
-        {
-            RefreshUI();
-        }
+        RefreshUI();
     }
 
 

@@ -48,6 +48,8 @@ public class CreatureBattle : CreatureBase
             HitFly(player.gameObject, atkObj);
             //颤抖
             ShakeBody();
+            //摄像头抖动
+            CameraHandler.Instance.ShakeCamera(0.1f);
         }
         //刷新UI
         EventHandler.Instance.TriggerEvent(EventsInfo.CharacterStatus_StatusChange);

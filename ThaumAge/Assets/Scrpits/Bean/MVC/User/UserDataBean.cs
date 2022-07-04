@@ -164,9 +164,21 @@ public class UserDataBean
     /// 改变快捷栏
     /// </summary>
     /// <param name="indexForShortcuts"></param>
-    public void SetShortcuts(int indexForShortcuts)
-    {
+    public int SetShortcuts(int indexForShortcuts)
+    {       
+        //如果没有改变 则不处理
+        if (this.indexForShortcuts == indexForShortcuts)
+            return indexForShortcuts;
         this.indexForShortcuts = indexForShortcuts;
+        if (this.indexForShortcuts > 9)
+        {
+            this.indexForShortcuts = 0;
+        }
+        else if (this.indexForShortcuts < 0)
+        {
+            this.indexForShortcuts = 9;
+        }
+
         //改变手中的物品
         Player player = GameHandler.Instance.manager.player;
         if (player != null)
@@ -175,6 +187,7 @@ public class UserDataBean
             ItemsBean itemsData = GetItemsFromShortcut();
             character.CharacterItems.ChangeRightHandItem(itemsData.itemId);
         }
+        return this.indexForShortcuts;
     }
 
     /// <summary>

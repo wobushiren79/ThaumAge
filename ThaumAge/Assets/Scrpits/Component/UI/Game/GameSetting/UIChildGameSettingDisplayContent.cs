@@ -15,6 +15,8 @@ public class UIChildGameSettingDisplayContent : UIChildGameSettingBaseContent
     protected UIListItemGameSettingRB settingLockFrame;
     //帧数
     protected UIListItemGameSettingRange settingFrame;
+    //视野
+    protected UIListItemGameSettingRange settingFOV;
     //UI大小
     protected UIListItemGameSettingSelect settingUISize;
     //阴影质量
@@ -128,7 +130,13 @@ public class UIChildGameSettingDisplayContent : UIChildGameSettingBaseContent
 
         //帧数
         settingFrame = CreateItemForRange(TextHandler.Instance.GetTextById(104), HandleForFrame);
-        settingFrame.SetPro((gameConfig.frames - 20) / 100f);
+        settingFOV.SetMinMax(20, 120);
+        settingFrame.SetPro(gameConfig.frames);
+
+        //视野
+        settingFOV = CreateItemForRange(TextHandler.Instance.GetTextById(116), HandleForFOV);
+        settingFOV.SetMinMax(20, 120);
+        settingFOV.SetPro(gameConfig.cameraFOV);
 
         //UI大小
         settingUISize = CreateItemForSelect(TextHandler.Instance.GetTextById(113), listUISizeData, HandleForUISize);
@@ -227,9 +235,19 @@ public class UIChildGameSettingDisplayContent : UIChildGameSettingBaseContent
     /// </summary>
     public void HandleForFrame(float value)
     {
-        gameConfig.frames = 20 + (int)(value * 100);
+        gameConfig.frames = Mathf.RoundToInt(value);
         settingFrame.SetContent($"{gameConfig.frames}");
         FPSHandler.Instance.SetData(gameConfig.stateForFrames, gameConfig.frames);
+    }
+
+    /// <summary>
+    /// 处理-视野
+    /// </summary>
+    public void HandleForFOV(float value)
+    {
+        gameConfig.cameraFOV = Mathf.RoundToInt(value);
+        settingFrame.SetContent($"{gameConfig.cameraFOV}");
+        CameraHandler.Instance.SetCameraFieldOfView(gameConfig.cameraFOV);
     }
 
     /// <summary>

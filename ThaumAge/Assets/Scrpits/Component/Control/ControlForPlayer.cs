@@ -41,6 +41,7 @@ public class ControlForPlayer : ControlForBase
     private InputAction inputActionUseDrop;
     private InputAction inputActionShift;
     private InputAction inputActionCtrl;
+    private InputAction inputActionShortcutsSelect;
 
     //是否正在使用道具
     private bool isUseItem = false;
@@ -82,7 +83,11 @@ public class ControlForPlayer : ControlForBase
 
         inputActionShift = InputHandler.Instance.manager.GetInputPlayerData("Shift");
         inputActionCtrl = InputHandler.Instance.manager.GetInputPlayerData("Ctrl");
+
+        inputActionShortcutsSelect = InputHandler.Instance.manager.GetInputPlayerData("ShortcutsSelect");
+        inputActionShortcutsSelect.started += HandleForShortcutsSelect;
     }
+
 
     public void Update()
     {
@@ -355,6 +360,30 @@ public class ControlForPlayer : ControlForBase
     {
         isUseItem = false;
         character.characterAnim.creatureAnim.PlayUse(false);
+    }
+
+    /// <summary>
+    /// 处理-道具切换
+    /// </summary>
+    /// <param name="callBack"></param>
+    public void HandleForShortcutsSelect(CallbackContext callBack)
+    {
+        if (!isActiveAndEnabled)
+            return;
+        float data = callBack.ReadValue<float>();
+        int changIndex = 0;
+        if (data > 0)
+        {
+            changIndex = 1;
+        }
+        else if (data < 0)
+        {
+            changIndex = -1;
+        }
+        UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();
+        userData.SetShortcuts(userData.indexForShortcuts + changIndex);
+        //刷新UI
+        UIHandler.Instance.GetOpenUI().RefreshUI();
     }
 
     /// <summary>

@@ -1,6 +1,7 @@
 ﻿using Cinemachine;
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.Rendering.HighDefinition;
 
@@ -9,13 +10,81 @@ public class CameraHandler : BaseHandler<CameraHandler, CameraManager>
     protected float maxAroundY = 90;
     protected float minAroundY = -60;
 
-    protected float maxOrthographicSize = 100;
+    protected float maxOrthographicSize = 120;
     protected float minOrthographicSize = 20;
 
     protected float maxCameraDis = 10;
     protected float minCameraDis = 0;
 
     public float timeScale = 1;
+
+    /// <summary>
+    /// 抖动摄像头
+    /// </summary>
+    /// <param name="time">时间</param>
+    /// <param name="amplitude">强度</param>
+    /// <param name="frequency">频率</param>
+    public void ShakeCamera(float time, float amplitude = 5f, float frequency = 5f)
+    {
+        CinemachineVirtualCamera cameraForFirst = manager.cameraForFirst;
+        //第一人称
+        CinemachineBasicMultiChannelPerlin basicMultiChannelPerlin = cameraForFirst.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
+        if (basicMultiChannelPerlin != null)
+        {
+            basicMultiChannelPerlin.m_AmplitudeGain = amplitude;
+            basicMultiChannelPerlin.m_FrequencyGain = frequency;
+            //执行抖动减缓动画
+            DOTween.To(() => basicMultiChannelPerlin.m_AmplitudeGain, x => basicMultiChannelPerlin.m_AmplitudeGain = x, 0, time);
+        }
+
+        //第三人称
+        CinemachineFreeLook cameraForThree = manager.cameraForThree;
+        for (int i = 0; i < cameraForThree.m_Orbits.Length; i++)
+        {
+            CinemachineVirtualCamera itemVirtualCamera = cameraForThree.GetRig(i);
+            CinemachineBasicMultiChannelPerlin itemBasicMultiChannelPerlin = itemVirtualCamera.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
+            if (itemBasicMultiChannelPerlin != null)
+            {
+                itemBasicMultiChannelPerlin.m_AmplitudeGain = amplitude;
+                itemBasicMultiChannelPerlin.m_FrequencyGain = frequency;
+                //执行抖动减缓动画
+                DOTween.To(() => basicMultiChannelPerlin.m_AmplitudeGain, x => basicMultiChannelPerlin.m_AmplitudeGain = x, 0, time);
+            }
+        }
+    }
+
+    /// <summary>
+    /// 是否开启摄像头移动
+    /// </summary>
+    /// <param name="enabled"></param>
+    /// <param name="type">0:玩家 1:建筑编辑</param>
+    public void EnabledCameraMove(bool enabled, int type = 0)
+    {
+        float xSpeed;
+        float ySpeed;
+
+        if (enabled)
+        {
+            GameConfigBean gameConfig = GameDataHandler.Instance.manager.GetGameConfig();
+            xSpeed = gameConfig.speedForPlayerCameraMoveX;
+            ySpeed = gameConfig.speedForPlayerCameraMoveY;
+        }
+        else
+        {
+            xSpeed = 0;
+            ySpeed = 0;
+        }
+
+        switch (type)
+        {
+            case 0:
+                ChangeCameraSpeedForPlayer(xSpeed, ySpeed);
+                break;
+            case 1:
+                ChangeCameraSpeedForBuildingEditor(xSpeed, ySpeed);
+                break;
+        }
+    }
 
     /// <summary>
     /// 修改摄像头抗锯齿
@@ -112,39 +181,6 @@ public class CameraHandler : BaseHandler<CameraHandler, CameraManager>
 
 
     /// <summary>
-    /// 是否开启摄像头移动
-    /// </summary>
-    /// <param name="enabled"></param>
-    /// <param name="type">0:玩家 1:建筑编辑</param>
-    public void EnabledCameraMove(bool enabled,int type = 0)
-    {
-        float xSpeed;
-        float ySpeed;
-
-        if (enabled)
-        {
-            GameConfigBean gameConfig = GameDataHandler.Instance.manager.GetGameConfig();
-            xSpeed = gameConfig.speedForPlayerCameraMoveX;
-            ySpeed = gameConfig.speedForPlayerCameraMoveY;
-        }
-        else
-        {
-            xSpeed = 0;
-            ySpeed = 0;
-        }
-
-        switch (type)
-        {
-            case 0:
-                ChangeCameraSpeedForPlayer(xSpeed, ySpeed);
-                break;
-            case 1:
-                ChangeCameraSpeedForBuildingEditor(xSpeed, ySpeed);
-                break;
-        }
-    }
-
-    /// <summary>
     /// 修改摄像头速度-玩家
     /// </summary>
     /// <param name="speed"></param>
@@ -189,7 +225,7 @@ public class CameraHandler : BaseHandler<CameraHandler, CameraManager>
     /// </summary>
     /// <param name="vAxis"></param>
     /// <param name="hAxis"></param>
-    public void SetCameraAxis(float vAxis,float hAxis)
+    public void SetCameraAxis(float vAxis, float hAxis)
     {
         CinemachineVirtualCamera cameraForFirst = manager.cameraForFirst;
         //第一人称
@@ -245,15 +281,6 @@ public class CameraHandler : BaseHandler<CameraHandler, CameraManager>
         manager.mainCamera.transform.RotateAround(aroundPosition, manager.mainCamera.transform.right, tempAngles);
     }
 
-    /// <summary>
-    /// 缩放镜头
-    /// </summary>
-    /// <param name="size"></param>
-    public void ZoomCamera(float zoomOffset, float speedForZoom)
-    {
-        SetCameraFieldOfView(zoomOffset * Time.unscaledDeltaTime * speedForZoom + manager.mainCamera.fieldOfView);
-    }
-
 
     /// <summary>
     /// 设置镜头视距
@@ -269,7 +296,15 @@ public class CameraHandler : BaseHandler<CameraHandler, CameraManager>
         {
             fieldOfView = minOrthographicSize;
         }
-        manager.mainCamera.fieldOfView = fieldOfView;
+        CinemachineVirtualCamera cameraForFirst = manager.cameraForFirst;
+        //第一人称
+        if (cameraForFirst != null)
+            cameraForFirst.m_Lens.FieldOfView = fieldOfView;
+
+        //第三人称
+        CinemachineFreeLook cameraForThree = manager.cameraForThree;
+        if (cameraForThree != null)
+            cameraForThree.m_Lens.FieldOfView = fieldOfView;
     }
 
 

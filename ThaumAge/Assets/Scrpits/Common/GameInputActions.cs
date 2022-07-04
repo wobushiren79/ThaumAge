@@ -82,15 +82,6 @@ public partial class @GameInputActions : IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""CameraDistance"",
-                    ""type"": ""Value"",
-                    ""id"": ""72564c59-2722-4f89-bee1-c0c27039924d"",
-                    ""expectedControlType"": ""Axis"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": true
-                },
-                {
                     ""name"": ""UserDetails"",
                     ""type"": ""Button"",
                     ""id"": ""b3e0f2ef-4b70-463b-95e8-a6f00c39d08e"",
@@ -122,6 +113,24 @@ public partial class @GameInputActions : IInputActionCollection2, IDisposable
                     ""type"": ""Value"",
                     ""id"": ""6cef51ec-0a92-4752-99b3-0830033ce416"",
                     ""expectedControlType"": ""Integer"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""ShortcutsSelect"",
+                    ""type"": ""Value"",
+                    ""id"": ""3d3f0b0e-f9da-4d9e-bb41-165773bf45ef"",
+                    ""expectedControlType"": ""Axis"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""CameraDistance"",
+                    ""type"": ""Value"",
+                    ""id"": ""72564c59-2722-4f89-bee1-c0c27039924d"",
+                    ""expectedControlType"": ""Axis"",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
@@ -339,28 +348,6 @@ public partial class @GameInputActions : IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""28d67b38-33e4-4c13-90f4-6941f69e4672"",
-                    ""path"": ""<Mouse>/scroll/y"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard&Mouse"",
-                    ""action"": ""CameraDistance"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""d970fe4d-ec25-4dee-a690-e2c7bc14cb12"",
-                    ""path"": ""<Gamepad>/select"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Gamepad"",
-                    ""action"": ""CameraDistance"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
                     ""id"": ""6b1d9c76-abdc-4832-a90f-99cd8d5f16db"",
                     ""path"": ""<Gamepad>/start"",
                     ""interactions"": """",
@@ -444,6 +431,50 @@ public partial class @GameInputActions : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": ""Keyboard&Mouse"",
                     ""action"": ""Ctrl"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""795e5b66-0ee9-4254-bfc3-16eb0fa03541"",
+                    ""path"": ""<Mouse>/scroll/y"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""ShortcutsSelect"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""d970fe4d-ec25-4dee-a690-e2c7bc14cb12"",
+                    ""path"": ""<Gamepad>/select"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""CameraDistance"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""75e329dd-7368-4c06-8293-d1ef6e899365"",
+                    ""path"": ""<Keyboard>/comma"",
+                    ""interactions"": """",
+                    ""processors"": ""Clamp(min=-1,max=-1)"",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""CameraDistance"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""5cd4ea7a-4fbc-4953-99be-b9b57f56770b"",
+                    ""path"": ""<Keyboard>/period"",
+                    ""interactions"": """",
+                    ""processors"": ""Clamp(min=1,max=1)"",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""CameraDistance"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -1421,11 +1452,12 @@ public partial class @GameInputActions : IInputActionCollection2, IDisposable
         m_Player_UseR = m_Player.FindAction("UseR", throwIfNotFound: true);
         m_Player_UseE = m_Player.FindAction("UseE", throwIfNotFound: true);
         m_Player_Jump = m_Player.FindAction("Jump", throwIfNotFound: true);
-        m_Player_CameraDistance = m_Player.FindAction("CameraDistance", throwIfNotFound: true);
         m_Player_UserDetails = m_Player.FindAction("UserDetails", throwIfNotFound: true);
         m_Player_Drop = m_Player.FindAction("Drop", throwIfNotFound: true);
         m_Player_Shift = m_Player.FindAction("Shift", throwIfNotFound: true);
         m_Player_Ctrl = m_Player.FindAction("Ctrl", throwIfNotFound: true);
+        m_Player_ShortcutsSelect = m_Player.FindAction("ShortcutsSelect", throwIfNotFound: true);
+        m_Player_CameraDistance = m_Player.FindAction("CameraDistance", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -1520,11 +1552,12 @@ public partial class @GameInputActions : IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_UseR;
     private readonly InputAction m_Player_UseE;
     private readonly InputAction m_Player_Jump;
-    private readonly InputAction m_Player_CameraDistance;
     private readonly InputAction m_Player_UserDetails;
     private readonly InputAction m_Player_Drop;
     private readonly InputAction m_Player_Shift;
     private readonly InputAction m_Player_Ctrl;
+    private readonly InputAction m_Player_ShortcutsSelect;
+    private readonly InputAction m_Player_CameraDistance;
     public struct PlayerActions
     {
         private @GameInputActions m_Wrapper;
@@ -1535,11 +1568,12 @@ public partial class @GameInputActions : IInputActionCollection2, IDisposable
         public InputAction @UseR => m_Wrapper.m_Player_UseR;
         public InputAction @UseE => m_Wrapper.m_Player_UseE;
         public InputAction @Jump => m_Wrapper.m_Player_Jump;
-        public InputAction @CameraDistance => m_Wrapper.m_Player_CameraDistance;
         public InputAction @UserDetails => m_Wrapper.m_Player_UserDetails;
         public InputAction @Drop => m_Wrapper.m_Player_Drop;
         public InputAction @Shift => m_Wrapper.m_Player_Shift;
         public InputAction @Ctrl => m_Wrapper.m_Player_Ctrl;
+        public InputAction @ShortcutsSelect => m_Wrapper.m_Player_ShortcutsSelect;
+        public InputAction @CameraDistance => m_Wrapper.m_Player_CameraDistance;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1567,9 +1601,6 @@ public partial class @GameInputActions : IInputActionCollection2, IDisposable
                 @Jump.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnJump;
                 @Jump.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnJump;
                 @Jump.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnJump;
-                @CameraDistance.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnCameraDistance;
-                @CameraDistance.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnCameraDistance;
-                @CameraDistance.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnCameraDistance;
                 @UserDetails.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnUserDetails;
                 @UserDetails.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnUserDetails;
                 @UserDetails.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnUserDetails;
@@ -1582,6 +1613,12 @@ public partial class @GameInputActions : IInputActionCollection2, IDisposable
                 @Ctrl.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnCtrl;
                 @Ctrl.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnCtrl;
                 @Ctrl.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnCtrl;
+                @ShortcutsSelect.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnShortcutsSelect;
+                @ShortcutsSelect.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnShortcutsSelect;
+                @ShortcutsSelect.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnShortcutsSelect;
+                @CameraDistance.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnCameraDistance;
+                @CameraDistance.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnCameraDistance;
+                @CameraDistance.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnCameraDistance;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -1604,9 +1641,6 @@ public partial class @GameInputActions : IInputActionCollection2, IDisposable
                 @Jump.started += instance.OnJump;
                 @Jump.performed += instance.OnJump;
                 @Jump.canceled += instance.OnJump;
-                @CameraDistance.started += instance.OnCameraDistance;
-                @CameraDistance.performed += instance.OnCameraDistance;
-                @CameraDistance.canceled += instance.OnCameraDistance;
                 @UserDetails.started += instance.OnUserDetails;
                 @UserDetails.performed += instance.OnUserDetails;
                 @UserDetails.canceled += instance.OnUserDetails;
@@ -1619,6 +1653,12 @@ public partial class @GameInputActions : IInputActionCollection2, IDisposable
                 @Ctrl.started += instance.OnCtrl;
                 @Ctrl.performed += instance.OnCtrl;
                 @Ctrl.canceled += instance.OnCtrl;
+                @ShortcutsSelect.started += instance.OnShortcutsSelect;
+                @ShortcutsSelect.performed += instance.OnShortcutsSelect;
+                @ShortcutsSelect.canceled += instance.OnShortcutsSelect;
+                @CameraDistance.started += instance.OnCameraDistance;
+                @CameraDistance.performed += instance.OnCameraDistance;
+                @CameraDistance.canceled += instance.OnCameraDistance;
             }
         }
     }
@@ -1917,11 +1957,12 @@ public partial class @GameInputActions : IInputActionCollection2, IDisposable
         void OnUseR(InputAction.CallbackContext context);
         void OnUseE(InputAction.CallbackContext context);
         void OnJump(InputAction.CallbackContext context);
-        void OnCameraDistance(InputAction.CallbackContext context);
         void OnUserDetails(InputAction.CallbackContext context);
         void OnDrop(InputAction.CallbackContext context);
         void OnShift(InputAction.CallbackContext context);
         void OnCtrl(InputAction.CallbackContext context);
+        void OnShortcutsSelect(InputAction.CallbackContext context);
+        void OnCameraDistance(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {

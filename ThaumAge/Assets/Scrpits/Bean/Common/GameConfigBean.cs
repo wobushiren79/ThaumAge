@@ -26,6 +26,9 @@ public class GameConfigBean
     //帧数限制开启 1开启 0关闭
     public int stateForFrames = 1;
     public int frames = 120;
+    //视野
+    public int cameraFOV = 60;
+
     //是否展示帧数
     public bool framesShow = false;
     //阴影距离
