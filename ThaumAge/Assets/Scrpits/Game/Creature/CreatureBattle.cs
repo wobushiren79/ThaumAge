@@ -126,8 +126,17 @@ public class CreatureBattle : CreatureBase
     /// </summary>
     public void ShakeBody()
     {
-        creature.transform.DOKill(true);
-        creature.transform.DOShakeScale(0.1f, 0.1f);
+        if (creature.creatureData.GetCreatureType() == CreatureTypeEnum.Player)
+        {
+            Player player = GameHandler.Instance.manager.player;
+            player.transform.DOKill(true);
+            player.transform.DOShakeScale(0.1f, 0.1f);
+        }
+        else
+        {
+            creature.transform.DOKill(true);
+            creature.transform.DOShakeScale(0.1f, 0.1f);
+        }
     }
 
     /// <summary>

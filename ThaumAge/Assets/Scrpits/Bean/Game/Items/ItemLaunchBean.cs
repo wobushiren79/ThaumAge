@@ -23,13 +23,13 @@ public class ItemLaunchBean
     public Vector3 grity = new Vector3(0, -1, 0);
 
     //延迟删除时间
-    public float timeForDestroy = 60;
+    public float timeForDestroy = 30;
 
     //检测的层级
     public int checkShotLayer = 1 << LayerInfo.ChunkCollider | 1 << LayerInfo.ChunkTrigger | 1 << LayerInfo.Creature | 1 << LayerInfo.Character;
 
     //检测半径范围
-    public float checkShotRange = 0.25f;
+    public float checkShotRange = 0.1f;
 
     //射中目标的回调
     public Action<Collider> actionShotTarget;

@@ -121,6 +121,7 @@ public class ItemCptLaunch : BaseMonoBehaviour
         //设置位移和朝向
         transform.position += launchDirection;
         transform.forward = launchDirection;
+        transform.eulerAngles += new Vector3(90,0,0);
         //检测是否射中
         if (timeUpdateForCheckShot >= timeForCheckShot)
         {

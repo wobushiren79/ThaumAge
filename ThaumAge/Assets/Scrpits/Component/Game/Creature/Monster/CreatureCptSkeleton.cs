@@ -7,7 +7,8 @@ public class CreatureCptSkeleton : CreatureCptBaseMonster
     {
         base.AttackRemote();
         GameObject objTarget = aiEntity.GetChaseTarget();
-        Vector3 targetShotPosition = objTarget.transform.position + Vector3.up * 1.5f;
+        Vector3 randomTargetPositionOffset = new Vector3(Random.Range(-1f, 1f), Random.Range(-1f, 1f) + 1.5f, Random.Range(-1f, 1f));
+        Vector3 targetShotPosition = objTarget.transform.position + randomTargetPositionOffset;
         //发射物体
         ItemLaunchBean itemLaunchData = new ItemLaunchBean();
         itemLaunchData.itemId = 900001;

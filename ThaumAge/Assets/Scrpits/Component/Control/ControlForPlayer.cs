@@ -163,8 +163,7 @@ public class ControlForPlayer : ControlForBase
             rbPlayer.useGravity = false;
             float climbSpeed = Mathf.Abs(playerVelocity.x) > Mathf.Abs(playerVelocity.z) ? Mathf.Abs(playerVelocity.x) : Mathf.Abs(playerVelocity.z);
             playerVelocity.y = climbSpeed;
-            //rbPlayer.MovePosition(rbPlayer.transform.position + playerVelocity);
-            rbPlayer.velocity = playerVelocity;
+            rbPlayer.MovePosition(rbPlayer.transform.position + playerVelocity);
             timeClimbEnd -= Time.deltaTime;
             if (timeClimbEnd > 0)
             {
@@ -193,13 +192,13 @@ public class ControlForPlayer : ControlForBase
         if (moveData.x == 0 && moveData.y == 0)
         {
             character.characterAnim.creatureAnim.PlayBaseAnim(CreatureAnimBaseState.Idle);
+            return;
         }
         else
         {
             character.characterAnim.creatureAnim.PlayBaseAnim(CreatureAnimBaseState.Walk);
+            rbPlayer.MovePosition(rbPlayer.transform.position + playerVelocity);
         }
-        //rbPlayer.MovePosition(rbPlayer.transform.position + playerVelocity);
-        rbPlayer.velocity = playerVelocity;
     }
 
     /// <summary>
@@ -236,7 +235,7 @@ public class ControlForPlayer : ControlForBase
         isJump = true;
         //播放跳跃动画
         character.characterAnim.creatureAnim.PlayJump(isJump);
-        rbPlayer.AddForce(new Vector3(0, 4.5f * speedJump, 0), ForceMode.Impulse);
+        rbPlayer.AddForce(new Vector3(0, 5f * speedJump, 0), ForceMode.Impulse);
         //开启跳跃检测
         this.WaitExecuteSeconds(0.25f, () =>
         {
@@ -500,6 +499,7 @@ public class ControlForPlayer : ControlForBase
     /// </summary>
     public void AddForce(Vector3 force, ForceMode forceMode)
     {
-        rbPlayer.AddForce(force, forceMode);
+        //rbPlayer.AddForce(force, forceMode);
+        rbPlayer.velocity = force * 5;
     }
 }
