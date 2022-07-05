@@ -6,15 +6,20 @@ using DG.Tweening;
 public class CreatureCptBase : BaseMonoBehaviour
 {
     //生物基础动画
+    [HideInInspector]
     public CreatureAnim creatureAnim;
     //生物基础战斗
-    protected CreatureBattle creatureBattle;
+    [HideInInspector]
+    public CreatureBattle creatureBattle;
     //生物碰撞和触发
+    [HideInInspector]
     public CreatureCollisionAndTrigger creatureCollisionAndTrigger;
 
     //生物信息
+    [HideInInspector]
     public CreatureInfoBean creatureInfo;
     //生物数据
+    [HideInInspector]
     public CreatureBean creatureData;
 
     //动画-生物

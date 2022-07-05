@@ -1,4 +1,5 @@
-﻿using UnityEditor;
+﻿using System;
+using UnityEditor;
 using UnityEngine;
 
 public class ItemCptLaunch : BaseMonoBehaviour
@@ -12,18 +13,22 @@ public class ItemCptLaunch : BaseMonoBehaviour
     protected Vector3 gritySpeed;//当前重力速度
 
     protected bool isCheckShot = false;
+
     protected float timeForCheckShot = 0.02f;
+    protected float timeForCheckShotEnd = 0.5f;
+
     protected float timeUpdateForCheckShot = 0;
 
     private float timeUpdateForLaunch;//已经过去的时间
 
     protected Collider shotCollder;//射中的物体
+
     public void Awake()
     {
         meshFilter = GetComponent<MeshFilter>();
         meshRenderer = GetComponent<MeshRenderer>();
     }
-    
+
     /// <summary>
     /// 清除数据
     /// </summary>
@@ -108,6 +113,8 @@ public class ItemCptLaunch : BaseMonoBehaviour
         //计算物体的重力速度
         //v = at ;
         timeUpdateForLaunch += Time.deltaTime;
+        timeUpdateForCheckShot += Time.deltaTime;
+
         gritySpeed = itemLaunchData.grity * (timeUpdateForLaunch += Time.fixedDeltaTime);
         //位移模拟轨迹
         Vector3 launchDirection = (launchMoveSpeed + gritySpeed) * Time.fixedDeltaTime;
@@ -115,15 +122,15 @@ public class ItemCptLaunch : BaseMonoBehaviour
         transform.position += launchDirection;
         transform.forward = launchDirection;
         //检测是否射中
-        timeUpdateForCheckShot += Time.deltaTime;
         if (timeUpdateForCheckShot >= timeForCheckShot)
         {
             timeUpdateForCheckShot = 0;
-            Collider[] collider = RayUtil.OverlapToSphere(transform.position, 0.25f, 1 << LayerInfo.ChunkCollider | 1 << LayerInfo.ChunkTrigger | 1 << LayerInfo.Creature | 1 << LayerInfo.Character);
+            Collider[] collider = RayUtil.OverlapToSphere(transform.position, itemLaunchData.checkShotRange, itemLaunchData.checkShotLayer);
             if (isCheckShot && !collider.IsNull())
             {
                 itemLaunchData.launchState = 2;
                 shotCollder = collider[0];
+                LaunchShotTarget(shotCollder);
                 transform.SetParent(shotCollder.transform);
             }
         }
@@ -134,7 +141,18 @@ public class ItemCptLaunch : BaseMonoBehaviour
     /// </summary>
     public void HandleForLaunchEnd()
     {
-
+        timeUpdateForLaunch += Time.deltaTime;
+        timeUpdateForCheckShot += Time.deltaTime;
+        //每隔一段时间检测一下
+        if (timeUpdateForCheckShot >= timeForCheckShotEnd)
+        {
+            timeUpdateForCheckShot = 0;
+            bool hasParent = RayUtil.CheckToSphere(transform.position, itemLaunchData.checkShotRange, itemLaunchData.checkShotLayer);
+            if (hasParent == false || shotCollder.gameObject.activeSelf == false)
+            {
+                LaunchDestory();
+            }
+        }
     }
 
     /// <summary>
@@ -145,9 +163,26 @@ public class ItemCptLaunch : BaseMonoBehaviour
         Player player = GameHandler.Instance.manager.player;
         float dis = Vector3.Distance(player.transform.position, transform.position);
         //如果和玩家的距离大于最大渲染距离 或者存在时间大于60s
-        if (dis >= 512 || timeUpdateForLaunch > 60)
+        if (dis >= 512 || timeUpdateForLaunch > itemLaunchData.timeForDestroy)
         {
-            Destroy(gameObject);
+            LaunchDestory();
         }
     }
+
+    /// <summary>
+    /// 伤害处理
+    /// </summary>
+    public void LaunchShotTarget(Collider targetCollider)
+    {
+        itemLaunchData.actionShotTarget?.Invoke(targetCollider);
+    }
+
+    /// <summary>
+    /// 删除发射物
+    /// </summary>
+    public void LaunchDestory()
+    {
+        Destroy(gameObject);
+    }
+
 }

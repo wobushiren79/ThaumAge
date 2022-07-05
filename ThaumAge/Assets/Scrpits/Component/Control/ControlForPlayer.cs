@@ -17,7 +17,6 @@ public class ControlForPlayer : ControlForBase
     //角色旋转速度
     private float speedCharacterRotate = 10;
 
-
     //重力
     public float gravityValue = 10f;
     //移动向量
@@ -164,7 +163,8 @@ public class ControlForPlayer : ControlForBase
             rbPlayer.useGravity = false;
             float climbSpeed = Mathf.Abs(playerVelocity.x) > Mathf.Abs(playerVelocity.z) ? Mathf.Abs(playerVelocity.x) : Mathf.Abs(playerVelocity.z);
             playerVelocity.y = climbSpeed;
-            rbPlayer.MovePosition(rbPlayer.transform.position + playerVelocity);
+            //rbPlayer.MovePosition(rbPlayer.transform.position + playerVelocity);
+            rbPlayer.velocity = playerVelocity;
             timeClimbEnd -= Time.deltaTime;
             if (timeClimbEnd > 0)
             {
@@ -198,7 +198,8 @@ public class ControlForPlayer : ControlForBase
         {
             character.characterAnim.creatureAnim.PlayBaseAnim(CreatureAnimBaseState.Walk);
         }
-        rbPlayer.MovePosition(rbPlayer.transform.position + playerVelocity);
+        //rbPlayer.MovePosition(rbPlayer.transform.position + playerVelocity);
+        rbPlayer.velocity = playerVelocity;
     }
 
     /// <summary>
@@ -493,4 +494,12 @@ public class ControlForPlayer : ControlForBase
         }
     }
 
+
+    /// <summary>
+    /// 添加一个理
+    /// </summary>
+    public void AddForce(Vector3 force, ForceMode forceMode)
+    {
+        rbPlayer.AddForce(force, forceMode);
+    }
 }

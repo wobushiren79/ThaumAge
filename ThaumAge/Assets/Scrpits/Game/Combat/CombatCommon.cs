@@ -53,6 +53,10 @@ public class CombatCommon
             creatureCpt.UnderAttack(user, damageData);
         }
     }
+    public static void DamageTarget(GameObject user, DamageBean damageData, Collider target)
+    {
+        DamageTarget(user, damageData, new Collider[] { target });
+    }
 
     /// <summary>
     /// 获取近战伤害范围
