@@ -11,10 +11,11 @@ public class CreatureCptSkeleton : CreatureCptBaseMonster
         Vector3 targetShotPosition = objTarget.transform.position + randomTargetPositionOffset;
         //发射物体
         ItemLaunchBean itemLaunchData = new ItemLaunchBean();
-        itemLaunchData.itemId = 900001;
+        itemLaunchData.itemId = 3400001;
         itemLaunchData.launchStartPosition = transform.position +  Vector3.up * 1.5f;
         itemLaunchData.launchDirection = targetShotPosition - itemLaunchData.launchStartPosition;
         itemLaunchData.launchPower = 20;
+        itemLaunchData.checkShotRange = 0.1f;
         itemLaunchData.actionShotTarget = (shotTarget) =>
         {
             //伤害打中的目标

@@ -20,7 +20,7 @@ public class ItemLaunchBean
     public int launchState = 0;
 
     //重力
-    public Vector3 grity = new Vector3(0, -1, 0);
+    public Vector3 grity = new Vector3(0, -2, 0);
 
     //延迟删除时间
     public float timeForDestroy = 30;

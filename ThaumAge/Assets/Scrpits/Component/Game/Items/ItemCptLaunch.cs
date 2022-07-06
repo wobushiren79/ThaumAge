@@ -126,7 +126,8 @@ public class ItemCptLaunch : BaseMonoBehaviour
         if (timeUpdateForCheckShot >= timeForCheckShot)
         {
             timeUpdateForCheckShot = 0;
-            Collider[] collider = RayUtil.OverlapToSphere(transform.position, itemLaunchData.checkShotRange, itemLaunchData.checkShotLayer);
+            Vector3 checkCenterPosition = transform.position;
+            Collider[] collider = RayUtil.OverlapToSphere(checkCenterPosition, itemLaunchData.checkShotRange, itemLaunchData.checkShotLayer);
             if (isCheckShot && !collider.IsNull())
             {
                 itemLaunchData.launchState = 2;
@@ -148,7 +149,8 @@ public class ItemCptLaunch : BaseMonoBehaviour
         if (timeUpdateForCheckShot >= timeForCheckShotEnd)
         {
             timeUpdateForCheckShot = 0;
-            bool hasParent = RayUtil.CheckToSphere(transform.position, itemLaunchData.checkShotRange, itemLaunchData.checkShotLayer);
+            Vector3 checkCenterPosition = transform.position;
+            bool hasParent = RayUtil.CheckToSphere(checkCenterPosition, itemLaunchData.checkShotRange, itemLaunchData.checkShotLayer);
             if (hasParent == false || shotCollder.gameObject.activeSelf == false)
             {
                 LaunchDestory();

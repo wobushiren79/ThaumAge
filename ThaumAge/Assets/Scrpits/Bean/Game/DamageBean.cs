@@ -116,7 +116,7 @@ public class DamageBean
             if (creatureType == CreatureTypeEnum.Player)
             {
                 //使用刚体位移
-                GameControlHandler.Instance.manager.controlForPlayer.AddForce(hitDirection * 2, ForceMode.Impulse);
+                GameControlHandler.Instance.manager.controlForPlayer.AddForce(hitDirection, ForceMode.Impulse);
                 beAtkCreature.creatureBattle.isHitFly = false;
             }
             //其他生物被攻击
