@@ -1,9 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
-using static BiomeCreatePlantTool;
-using static BiomeCreateTool;
-using static BiomeCreateTreeTool;
 
 public class BiomeForest : Biome
 {
@@ -19,10 +16,21 @@ public class BiomeForest : Biome
         if (localPos.y == terrainData.maxHeight)
         {
             Vector3Int wPos = localPos + chunk.chunkData.positionForWorld;
+            int waterHeight = biomeInfo.GetWaterPlaneHeight();
+            if(localPos.y == waterHeight)
+            {
+                AddStoneMoss(wPos);
+                return BlockTypeEnum.Sand;
+            }
+            else if (localPos.y < waterHeight)
+            {
+                return BlockTypeEnum.Dirt;
+            }
+
             AddWeed(wPos);
-            AddFlower(wPos);
-            AddTree(wPos);
-            AddBigTree(wPos);
+            AddFlowerAndDeadWood(wPos);
+            //AddTree(wPos);
+            //AddBigTree(wPos);
             // 地表，使用草
             return BlockTypeEnum.Grass;
         }
@@ -43,20 +51,26 @@ public class BiomeForest : Biome
         }
     }
 
-
-    protected void AddFlower(Vector3Int wPos)
+    /// <summary>
+    /// 添加花花
+    /// </summary>
+    /// <param name="wPos"></param>
+    protected void AddFlowerAndDeadWood(Vector3Int wPos)
     {
-        BiomeForPlantData flowersData = new BiomeForPlantData
+        //增加花
+        BiomeCreatePlantTool.BiomeForPlantData flowersData = new BiomeCreatePlantTool.BiomeForPlantData
         {
             addRate = 0.01f,
-            listPlantType = new List<BlockTypeEnum> { BlockTypeEnum.FlowerSun, BlockTypeEnum.FlowerRose, BlockTypeEnum.FlowerChrysanthemum ,BlockTypeEnum.FlowerWood}
+            listPlantType = new List<BlockTypeEnum> { BlockTypeEnum.FlowerSun, BlockTypeEnum.FlowerRose, BlockTypeEnum.FlowerChrysanthemum}
         };
         BiomeCreatePlantTool.AddFlower(101,wPos, flowersData);
+        //增加枯木
+        BiomeCreatePlantTool.AddDeadwood(102,0.001f, wPos);
     }
 
     protected void AddTree(Vector3Int wPos)
     {
-        BiomeForTreeData treeData = new BiomeForTreeData
+        BiomeCreateTreeTool.BiomeForTreeData treeData = new BiomeCreateTreeTool.BiomeForTreeData
         {
             addRate = 0.05f,
             minHeight = 3,
@@ -70,7 +84,7 @@ public class BiomeForest : Biome
 
     protected void AddBigTree(Vector3Int wPos)
     {
-        BiomeForTreeData treeData = new BiomeForTreeData
+        BiomeCreateTreeTool.BiomeForTreeData treeData = new BiomeCreateTreeTool.BiomeForTreeData
         {
             addRate = 0.01f,
             minHeight = 6,
@@ -83,16 +97,27 @@ public class BiomeForest : Biome
     }
 
 
-
+    /// <summary>
+    /// 添加杂草
+    /// </summary>
+    /// <param name="wPos"></param>
     protected void AddWeed(Vector3Int wPos)
     {
-        BiomeForPlantData weedData = new BiomeForPlantData
+        BiomeCreatePlantTool.BiomeForPlantData weedData = new BiomeCreatePlantTool.BiomeForPlantData
         {
-            addRate = 0.3f,
+            addRate = 0.5f,
             listPlantType = new List<BlockTypeEnum> { BlockTypeEnum.WeedLong, BlockTypeEnum.WeedNormal, BlockTypeEnum.WeedShort }
         };
         BiomeCreatePlantTool.AddPlant(333,wPos, weedData);
     }
 
-
+    /// <summary>
+    /// 增加苔石
+    /// </summary>
+    /// <param name="wPos"></param>
+    protected void AddStoneMoss(Vector3Int wPos)
+    {
+        Vector3Int startPosition = wPos + Vector3Int.up;
+        BiomeCreateTool.AddBuilding(0.01f, 801, startPosition, BuildingTypeEnum.StoneMoss);
+    }
 }

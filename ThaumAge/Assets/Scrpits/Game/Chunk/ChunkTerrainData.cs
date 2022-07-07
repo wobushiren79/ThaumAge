@@ -23,6 +23,6 @@ public struct ChunkTerrainData
     //距离最近和第二进的距离差
     public float offsetDis;
     //地形最大高度
-    public float maxHeight;
+    public int maxHeight;
 
 }

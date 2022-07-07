@@ -48,6 +48,8 @@ public class CreatureCollisionAndTrigger : CreatureBase
             Mathf.FloorToInt(positionMainCamera.y), 
             Mathf.FloorToInt(positionMainCamera.z)
             );
+        if (targetBlockForCameraPosition.y <= 0)
+            return;
         WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(targetBlockForCameraPosition, out Block targetCameraBlock, out Chunk targetCameraChunk);
         if (targetCameraBlock != null)
         {

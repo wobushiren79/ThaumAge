@@ -27,7 +27,7 @@ public class BiomeCreateCaveTool : ScriptableObject
             int positionX = WorldRandTools.Range(1, chunk.chunkData.chunkWidth);
             int positionZ = WorldRandTools.Range(1, chunk.chunkData.chunkWidth);
             ChunkTerrainData chunkTerrainData = mapData.arrayChunkTerrainData[positionX * chunk.chunkData.chunkWidth + positionZ];
-            int positionY = WorldRandTools.Range(1, (int)chunkTerrainData.maxHeight);
+            int positionY = WorldRandTools.Range(1, chunkTerrainData.maxHeight);
             Vector3Int startPosition = new Vector3Int(positionX, positionY, positionZ) + chunk.chunkData.positionForWorld;
 
             int caveDepth = WorldRandTools.Range(caveData.minDepth, caveData.maxDepth);

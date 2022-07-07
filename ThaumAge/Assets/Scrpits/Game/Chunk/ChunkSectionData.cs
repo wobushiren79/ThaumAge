@@ -15,8 +15,6 @@ public class ChunkSectionData
 
     //空气方块数量
     public int airBlockNumber;
-    //正方形方块数量
-    public int cubeBlockNumber;
 
     public ChunkSectionData(int sectionSize, int yBase)
     {
@@ -24,7 +22,6 @@ public class ChunkSectionData
         this.yBase = yBase;
 
         airBlockNumber = sectionSize * sectionSize * sectionSize;
-        cubeBlockNumber = 0;
     }
 
     /// <summary>
@@ -36,7 +33,6 @@ public class ChunkSectionData
         Array.Clear(arrayBlockDirection, 0, arrayBlockDirection.Length);
 
         airBlockNumber = sectionSize * sectionSize * sectionSize;
-        cubeBlockNumber = 0;
     }
 
     /// <summary>
@@ -44,7 +40,7 @@ public class ChunkSectionData
     /// </summary>
     public bool IsRender()
     {
-        if (airBlockNumber == sectionSize * sectionSize * sectionSize || cubeBlockNumber == sectionSize * sectionSize * sectionSize)
+        if (airBlockNumber == sectionSize * sectionSize * sectionSize)
         {
             return false;
         }
@@ -74,10 +70,6 @@ public class ChunkSectionData
         {
             airBlockNumber--;
         }
-        else if (oldBlock.blockInfo.GetBlockShape() == BlockShapeEnum.Cube)
-        {
-            cubeBlockNumber--;
-        }
 
         if (arrayBlock == null)
             arrayBlock = new int[sectionSize * sectionSize * sectionSize];
@@ -86,10 +78,6 @@ public class ChunkSectionData
         if (block == null || block.blockType == BlockTypeEnum.None)
         {
             airBlockNumber++;
-        }
-        else if (block.blockInfo.GetBlockShape() == BlockShapeEnum.Cube)
-        {
-            cubeBlockNumber++;
         }
     }
 

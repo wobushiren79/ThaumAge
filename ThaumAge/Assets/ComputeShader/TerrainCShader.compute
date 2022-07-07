@@ -22,7 +22,7 @@ struct TerraninData
     //距离最近和第二进的距离差
     float offsetDis;
     //地形最大高度
-    float maxHeight;
+    int maxHeight;
 };
 
 //种子偏移
@@ -124,7 +124,7 @@ void CSMain (uint3 id : SV_DispatchThreadID,uint3 gid:SV_GROUPID,uint index:SV_G
     //itemTerraninData.secondMinBiomeDis = secondMinBiomeDis;
 
     itemTerraninData.offsetDis = itemTerraninData.secondMinBiomeDis - itemTerraninData.minBiomeDis;
-    itemTerraninData.maxHeight =  itemTerraninData.minHeight + finalNoise;
+    itemTerraninData.maxHeight =  (int)(itemTerraninData.minHeight + finalNoise);
     //边缘处理 逐渐减缓到最低高度
     if (itemTerraninData.offsetDis <= 10) //在20范围以内
     {
