@@ -200,7 +200,7 @@ Material:
     - _AlphaSrcBlend: 1
     - _AlphaToMask: 0
     - _AlphaToMaskInspectorValue: 0
-    - _AmbientOcclusion: 1
+    - _AmbientOcclusion: 0.2
     - _Blend: 0
     - _BlendMode: 0
     - _BumpScale: 1
