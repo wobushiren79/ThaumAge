@@ -132,4 +132,21 @@ public class VectorUtil
         }
         return newArray;
     }
+
+    /// <summary>
+    /// 获取某向量的垂直向量
+    /// </summary>
+    public static Vector3 GetVerticalDir2D(Vector3 _dir)
+    {
+        ///垂线 = b(y,-x) 
+        ///垂线2 = b(-y, x)
+        return new Vector3(_dir.y, -_dir.x, 0);
+        //return new Vector3(_dir.y / _dir.x, -1);
+        //return new Vector3(-_dir.y / _dir.x, 1);
+    }
+
+    public static Vector2 GetVerticalDir2D(Vector2 _dir)
+    {
+        return new Vector2(_dir.y, -_dir.x);
+    }
 }
