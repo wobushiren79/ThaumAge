@@ -9,7 +9,8 @@ public enum BiomeTypeEnum
     Mountain = 4,//高山
     Volcano = 5,//火山
     Ocean = 6,//海洋
-    MagicForest = 11,//魔法森林
+    ForestMagic = 11,//魔法森林
+    ForestBirch = 12,//桦树森林
 
     Test = 998,//测试
     Main = 999,//登录

@@ -57,7 +57,7 @@ public class BlockShapeCubeTransparent : BlockShapeCube
     /// 检测是否生成面
     /// </summary>
     /// <returns></returns>
-    protected override bool CheckNeedBuildFaceDef(Block closeBlock, Chunk closeBlockChunk, Vector3Int closeLocalPosition)
+    protected override bool CheckNeedBuildFaceDef(Block closeBlock, Chunk closeBlockChunk, Vector3Int closeLocalPosition, DirectionEnum closeDirection)
     {
         BlockShapeEnum blockShape = closeBlock.blockInfo.GetBlockShape();
         switch (blockShape)

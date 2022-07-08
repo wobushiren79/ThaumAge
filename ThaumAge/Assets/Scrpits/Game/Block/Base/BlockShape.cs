@@ -210,10 +210,10 @@ public class BlockShape
             //还没有生成chunk
             return false;
         }
-        return CheckNeedBuildFaceDef(closeBlock, closeBlockChunk, closeLocalPosition);
+        return CheckNeedBuildFaceDef(closeBlock, closeBlockChunk, closeLocalPosition, closeDirection);
     }
 
-    protected virtual bool CheckNeedBuildFaceDef(Block closeBlock, Chunk closeBlockChunk, Vector3Int closeLocalPosition)
+    protected virtual bool CheckNeedBuildFaceDef(Block closeBlock, Chunk closeBlockChunk, Vector3Int closeLocalPosition, DirectionEnum closeDirection)
     {
         BlockShapeEnum blockShape = closeBlock.blockInfo.GetBlockShape();
         switch (blockShape)

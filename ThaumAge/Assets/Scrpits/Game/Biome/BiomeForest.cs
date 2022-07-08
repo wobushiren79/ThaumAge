@@ -58,17 +58,18 @@ public class BiomeForest : Biome
         ChunkTerrainData startTerrainData = GetTerrainData(chunk, biomeMapData, 0, 0);
 
         int waterHeight = biomeInfo.GetWaterPlaneHeight();
+        Vector3Int flowerPosition = new Vector3Int(chunk.chunkData.positionForWorld.x, startTerrainData.maxHeight, chunk.chunkData.positionForWorld.z);
         if (startTerrainData.maxHeight == waterHeight)
         {
 
         }
         else if (startTerrainData.maxHeight < waterHeight)
         {
-
+            AddFlowerWater(flowerPosition);
         }
         else
         {
-            AddFlowerWood(new Vector3Int(chunk.chunkData.positionForWorld.x, startTerrainData.maxHeight, chunk.chunkData.positionForWorld.z));
+            AddFlowerWood(flowerPosition);
         }
     }
 
@@ -85,6 +86,16 @@ public class BiomeForest : Biome
             listPlantType = new List<BlockTypeEnum> { BlockTypeEnum.FlowerWood }
         };
         BiomeCreatePlantTool.AddFlower(110, wPos, flowersData);
+    }
+    protected void AddFlowerWater(Vector3Int wPos)
+    {
+        //增加花
+        BiomeCreatePlantTool.BiomeForPlantData flowersData = new BiomeCreatePlantTool.BiomeForPlantData
+        {
+            addRate = 0.1f,
+            listPlantType = new List<BlockTypeEnum> { BlockTypeEnum.FlowerWater }
+        };
+        BiomeCreatePlantTool.AddFlower(111, wPos, flowersData);
     }
 
     /// <summary>

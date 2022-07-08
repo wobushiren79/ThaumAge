@@ -20,7 +20,7 @@ public class BlockShapeLiquid : BlockShapeCube
     {
         //检测上方 如果上方
         chunk.GetBlockForLocal(localPosition + Vector3Int.up, out Block upBlock, out BlockDirectionEnum upDirection, out Chunk upChunk);
-        if (upBlock == null || upBlock.blockType == BlockTypeEnum.None)
+        if (upBlock == null || upBlock.blockType == BlockTypeEnum.None||upBlock.blockInfo.GetBlockShape() != BlockShapeEnum.Liquid)
         {
             Vector3[] vertsAddLiquid = new Vector3[vertsAdd.Length];
             for (int i = 0; i < vertsAdd.Length; i++)
@@ -176,12 +176,16 @@ public class BlockShapeLiquid : BlockShapeCube
     /// <summary>
     /// 检测是否需要构建面
     /// </summary>
-    protected override bool CheckNeedBuildFaceDef(Block closeBlock, Chunk closeBlockChunk, Vector3Int closeLocalPosition)
+    protected override bool CheckNeedBuildFaceDef(Block closeBlock, Chunk closeBlockChunk, Vector3Int closeLocalPosition,DirectionEnum closeDirection)
     {
         BlockShapeEnum blockShape = closeBlock.blockInfo.GetBlockShape();
         switch (blockShape)
         {
             case BlockShapeEnum.Cube:
+                if(closeDirection == DirectionEnum.UP)
+                {
+                    return true;
+                }
                 return false;
             case BlockShapeEnum.Liquid:
                 if (closeBlock.blockType == block.blockType)
@@ -193,6 +197,10 @@ public class BlockShapeLiquid : BlockShapeCube
                     return true;
                 }
             default:
+                if (closeBlock.blockType == BlockTypeEnum.FlowerWater)
+                {
+                    return false;
+                }
                 return true;
         }
     }

@@ -125,11 +125,11 @@ public class BiomeManager : BaseManager
                     case WorldTypeEnum.Test:
                         arrayBiome = new Biome[1];
                         //arrayBiome[0] = new BiomeTest();
-                        arrayBiome[0] = new BiomeForest();
+                        arrayBiome[0] = new BiomeForestBirch();
                         break;
                     case WorldTypeEnum.Main:
                         arrayBiome = new Biome[1];
-                        arrayBiome[0] = new BiomeMagicForest();
+                        arrayBiome[0] = new BiomeForestMagic();
                         //arrayBiome = new Biome[7];
                         //arrayBiome[0] = new BiomePrairie();
                         //arrayBiome[1] = new BiomeForest();

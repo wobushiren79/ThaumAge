@@ -7,7 +7,7 @@ public class BlockShapeCubeLeaves : BlockShapeCube
     /// <summary>
     /// 检测是否需要构建面
     /// </summary>
-    protected override bool CheckNeedBuildFaceDef(Block closeBlock, Chunk closeBlockChunk, Vector3Int closeLocalPosition)
+    protected override bool CheckNeedBuildFaceDef(Block closeBlock, Chunk closeBlockChunk, Vector3Int closeLocalPosition, DirectionEnum closeDirection)
     {
         BlockShapeEnum blockShape = closeBlock.blockInfo.GetBlockShape();
         switch (blockShape)

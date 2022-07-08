@@ -222,8 +222,8 @@ Material:
     - _EnableBlendModePreserveSpecularLighting: 1
     - _EnableFogOnTransparent: 1
     - _EnvironmentReflections: 1
-    - _FoamAmount: 0.1
-    - _FoamCutOff: 1
+    - _FoamAmount: 0
+    - _FoamCutOff: 1000
     - _FoamScale: 0
     - _FoamSpeed: 0
     - _GlossMapScale: 1
@@ -240,8 +240,8 @@ Material:
     - _ReceivesSSR: 1
     - _ReceivesSSRTransparent: 0
     - _RefractionModel: 0
-    - _RefractionScale: 0.1
-    - _RefractionSpeed: 0.5
+    - _RefractionScale: 3
+    - _RefractionSpeed: 0.2
     - _RefractionStrength: 0.1
     - _RenderQueueType: 4
     - _RequireSplitLighting: 0
@@ -297,7 +297,7 @@ Material:
     - WaterColor: {r: 0, g: 0.7347222, b: 0.99215686, a: 0.5882353}
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
-    - _DeepWaterColor: {r: 0, g: 0.5205526, b: 0.8490566, a: 0.5882353}
+    - _DeepWaterColor: {r: 0, g: 0.6970329, b: 1, a: 0.5882353}
     - _DiffusionProfileAsset: {r: 0, g: 0, b: 0, a: 0}
     - _DoubleSidedConstants: {r: 1, g: 1, b: 1, a: 0}
     - _EmissionColor: {r: 1, g: 1, b: 1, a: 1}

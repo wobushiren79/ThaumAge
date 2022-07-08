@@ -1317,12 +1317,12 @@ MonoBehaviour:
   active: 0
   quality:
     m_OverrideState: 1
-    m_Value: 0
+    m_Value: 3
   enabled:
     m_OverrideState: 1
-    m_Value: 0
+    m_Value: 1
   enabledTransparent:
-    m_OverrideState: 0
+    m_OverrideState: 1
     m_Value: 1
   tracing:
     m_OverrideState: 0
@@ -1350,7 +1350,7 @@ MonoBehaviour:
     m_Value: 0.75
   m_RayMaxIterations:
     m_OverrideState: 1
-    m_Value: 16
+    m_Value: 64
   rayMiss:
     m_OverrideState: 0
     m_Value: 3
