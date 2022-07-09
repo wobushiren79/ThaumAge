@@ -35,8 +35,6 @@ public class GameLauncher : BaseLauncher
             GameControlHandler.Instance.SetPlayerControlEnabled(false);
             //设置世界类型
             WorldCreateHandler.Instance.SetWorldType(worldType);
-            //设置远景模糊
-            VolumeHandler.Instance.SetDepthOfField(worldType);
             //刷新周围区块
             GameConfigBean gameConfig = GameDataHandler.Instance.manager.GetGameConfig();
             WorldCreateHandler.Instance.CreateChunkRangeForCenterPosition(Vector3Int.zero, gameConfig.worldRefreshRange, true, CompleteForUpdateChunk);

@@ -15,6 +15,10 @@ using System;
 		/// </summary>
 		public string map_position;
 		/// <summary>
+		///展示前置
+		/// </summary>
+		public string show_pre;
+		/// <summary>
 		///标题
 		/// </summary>
 		public string title_cn;

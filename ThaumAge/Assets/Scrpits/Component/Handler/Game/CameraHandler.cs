@@ -12,6 +12,23 @@ public class CameraHandler : BaseHandler<CameraHandler, CameraManager>
 
     public float timeScale = 1;
 
+    public float timeForCamerData = 0.2f;
+    public float timeUpdateForCameraData = 0;
+    public void Update()
+    {
+        timeUpdateForCameraData += Time.deltaTime;
+        if(timeUpdateForCameraData> timeForCamerData)
+        {
+            timeUpdateForCameraData = 0;
+            GameStateEnum gameState = GameHandler.Instance.manager.GetGameState();
+            if (gameState == GameStateEnum.Gaming)
+            {
+                //设置远景模糊
+                VolumeHandler.Instance.SetDepthOfField(gameState);
+            }
+        }
+    }
+
     /// <summary>
     /// 初始化游戏摄像头数据
     /// </summary>
@@ -22,10 +39,6 @@ public class CameraHandler : BaseHandler<CameraHandler, CameraManager>
         SetCameraFieldOfView(gameConfig.cameraFOV);
     }
 
-    protected Tween animForShakeCameraFirst;
-    protected Tween animForShakeCameraThree_1;
-    protected Tween animForShakeCameraThree_2;
-    protected Tween animForShakeCameraThree_3;
     /// <summary>
     /// 抖动摄像头
     /// </summary>

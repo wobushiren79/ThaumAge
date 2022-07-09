@@ -14,11 +14,17 @@ public class RayUtil
     /// <param name="camera"></param>
     public static void RayToScreenPointForScreenCenter(float maxDistance, int layerMask, out bool isCollider, out RaycastHit hit, Camera camera = null)
     {
-        RayToScreenPoint(new Vector3(Screen.width / 2, Screen.height / 2, 0), maxDistance, layerMask, out isCollider, out hit);
+        RayToScreenPoint(new Vector3(Screen.width / 2, Screen.height / 2, 0), maxDistance, layerMask, out isCollider, out hit, camera);
     }
+
     public static void RayAllToScreenPointForScreenCenter(float maxDistance, int layerMask, out RaycastHit[] arrayHit, Camera camera = null)
     {
-        RayAllToScreenPoint(new Vector3(Screen.width / 2, Screen.height / 2, 0), maxDistance, layerMask, out arrayHit);
+        RayAllToScreenPoint(new Vector3(Screen.width / 2, Screen.height / 2, 0), maxDistance, layerMask, out arrayHit, camera);
+    }
+
+    public static bool RayCheckToScreenPointForScreenCenter(float maxDistance, int layerMask, Camera camera = null)
+    {
+        return RayCheckToScreenPoint(new Vector3(Screen.width / 2, Screen.height / 2, 0), maxDistance, layerMask, camera);
     }
 
     /// <summary>
@@ -53,11 +59,18 @@ public class RayUtil
         Ray ray = camera.ScreenPointToRay(screenPoint);
         isCollider = Physics.Raycast(ray, out hit, maxDistance, layerMask);
     }
+
     public static void RayAllToScreenPoint(Vector3 screenPoint, float maxDistance, int layerMask, out RaycastHit[] arrayHit, Camera camera = null)
     {
         if (camera == null) camera = Camera.main;
         Ray ray = camera.ScreenPointToRay(screenPoint);
         arrayHit = Physics.RaycastAll(ray, maxDistance, layerMask);
+    }
+    public static bool RayCheckToScreenPoint(Vector3 screenPoint, float maxDistance, int layerMask, Camera camera = null)
+    {
+        if (camera == null) camera = Camera.main;
+        Ray ray = camera.ScreenPointToRay(screenPoint);
+        return Physics.Raycast(ray, maxDistance, layerMask);
     }
 
     /// <summary>

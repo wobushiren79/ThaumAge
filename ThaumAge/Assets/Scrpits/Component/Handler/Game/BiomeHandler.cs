@@ -9,12 +9,6 @@ public class BiomeHandler : BaseHandler<BiomeHandler, BiomeManager>
     public FastNoise fastNoise;
     public float offsetBiome;
 
-    public override void Awake()
-    {
-        base.Awake();
-
-    }
-
     public void InitWorldBiomeData()
     {
 

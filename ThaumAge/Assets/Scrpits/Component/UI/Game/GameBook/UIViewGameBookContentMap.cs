@@ -4,9 +4,12 @@ using UnityEngine;
 
 public partial class UIViewGameBookContentMap : BaseUIView
 {
-    protected List<BookModelDetailsInfoBean> listBookModelInfoDetails;
-    protected BookModelInfoBean bookModelInfo;
-    protected float uiSize = 2;
+    [HideInInspector]
+    public Dictionary<int, BookModelDetailsInfoBean> dicBookModelInfoDetails;
+    [HideInInspector]
+    public BookModelInfoBean bookModelInfo;
+    [HideInInspector]
+    public float uiSize = 2;
 
     public override void Awake()
     {
@@ -52,16 +55,30 @@ public partial class UIViewGameBookContentMap : BaseUIView
     {
         if (bookModelInfo == null)
             return;
-        listBookModelInfoDetails = GameInfoHandler.Instance.manager.GetBookModelDetailsById(bookModelInfo.id);
+        //清除数据
+        dicBookModelInfoDetails.Clear();
         ui_ContentBG.transform.DestroyAllChild(true, 1);
-        if (listBookModelInfoDetails == null || listBookModelInfoDetails.Count == 0)
-            return;
+        //获取数据
+        var listBookModelInfoDetails = GameInfoHandler.Instance.manager.GetBookModelDetailsById(bookModelInfo.id);
         for (int i = 0; i < listBookModelInfoDetails.Count; i++)
         {
+            var itemData = listBookModelInfoDetails[i];
+            dicBookModelInfoDetails.Add(itemData.id, itemData);
+        }
+
+        if (listBookModelInfoDetails == null || listBookModelInfoDetails.Count == 0)
+            return;
+
+        for (int i = 0; i < listBookModelInfoDetails.Count; i++)
+        {
+            //生成地图的点位
             BookModelDetailsInfoBean itemData = listBookModelInfoDetails[i];
+            bool isPreShow = itemData.CheckPreShow();
+            if (!isPreShow)
+                continue;
             GameObject objItem = Instantiate(ui_ContentBG.gameObject, ui_ViewGameBookMapItem.gameObject);
             UIViewGameBookMapItem mapItem = objItem.GetComponent<UIViewGameBookMapItem>();
-            mapItem.SetData(itemData);
+            mapItem.SetData(itemData, this);
         }
     }
 

@@ -8,11 +8,11 @@ public class LineView : MaskableGraphic
     [Header("线粗细")]
     public float lineThickness;
     [Header("线上点 颜色")]
-    public List<Color> listPositionColor;
+    public List<Color> listPositionColor = new List<Color>();
     [Header("线上点 位置")]
-    public List<Vector3> listPosition;
+    public List<Vector3> listPosition = new List<Vector3>();
     [Header("线上点 渲染方向 0：自动 1：左右 2：上下 ")]
-    public int linePositionDirection;
+    public int linePositionDirection = 0;
 
     protected override void OnPopulateMesh(VertexHelper vh)
     {
