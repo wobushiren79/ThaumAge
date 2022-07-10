@@ -55,7 +55,7 @@ public class BiomeMountain : Biome
         BiomeForPlantData weedData = new BiomeForPlantData
         {
             addRate = 0.05f,
-            listPlantType = new List<BlockTypeEnum> { BlockTypeEnum.WeedLong, BlockTypeEnum.WeedNormal, BlockTypeEnum.WeedShort }
+            listPlantType = new List<BlockTypeEnum> { BlockTypeEnum.WeedGrassLong, BlockTypeEnum.WeedGrassNormal, BlockTypeEnum.WeedGrassShort }
         };
         BiomeCreatePlantTool.AddPlant(201, wPos, weedData);
     }

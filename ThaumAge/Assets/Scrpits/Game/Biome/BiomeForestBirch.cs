@@ -29,7 +29,7 @@ public class BiomeForestBirch : Biome
             AddFlowerAndDeadWood(wPos);
             AddTreeForFallDown(wPos);
             AddTreeForTall(wPos);
-            //AddWeed(wPos);
+            AddWeed(wPos);
             // 地表，使用草
             return BlockTypeEnum.GrassWild;
         }
@@ -58,7 +58,7 @@ public class BiomeForestBirch : Biome
 
         int waterHeight = biomeInfo.GetWaterPlaneHeight();
         Vector3Int flowerPosition = new Vector3Int(chunk.chunkData.positionForWorld.x, startTerrainData.maxHeight, chunk.chunkData.positionForWorld.z);
-        if (startTerrainData.maxHeight == waterHeight)
+        if (startTerrainData.maxHeight == waterHeight - 1)
         {
 
         }
@@ -149,27 +149,13 @@ public class BiomeForestBirch : Biome
         BiomeCreateTreeTool.AddTreeForFallDown(211, wPos + new Vector3Int(0, 1, 0), treeData);
     }
 
-    /// <summary>
-    /// 添加杂草
-    /// </summary>
-    /// <param name="wPos"></param>
     protected void AddWeed(Vector3Int wPos)
     {
         BiomeCreatePlantTool.BiomeForPlantData weedData = new BiomeCreatePlantTool.BiomeForPlantData
         {
-            addRate = 0.1f,
-            listPlantType = new List<BlockTypeEnum> { BlockTypeEnum.WeedLong, BlockTypeEnum.WeedNormal, BlockTypeEnum.WeedShort }
+            addRate = 0.02f,
+            listPlantType = new List<BlockTypeEnum> { BlockTypeEnum.WeedWildLong, BlockTypeEnum.WeedWildNormal, BlockTypeEnum.WeedWildShort }
         };
-        BiomeCreatePlantTool.AddPlant(333, wPos, weedData);
-    }
-
-    /// <summary>
-    /// 增加苔石
-    /// </summary>
-    /// <param name="wPos"></param>
-    protected void AddStoneMoss(Vector3Int wPos)
-    {
-        Vector3Int startPosition = wPos + Vector3Int.up;
-        BiomeCreateTool.AddBuilding(0.01f, 801, startPosition, BuildingTypeEnum.StoneMoss);
+        BiomeCreatePlantTool.AddPlant(222, wPos, weedData);
     }
 }

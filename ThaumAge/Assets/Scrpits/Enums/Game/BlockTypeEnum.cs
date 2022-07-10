@@ -42,25 +42,34 @@ public enum BlockTypeEnum
     LeavesBirch = 2006,//桦树叶
     LeavesMushroom = 2101,//磨菇树叶子
 
+    Wicker = 2211,//柳条
     Vines = 2201,//藤蔓
 
-    WeedLong = 3001,    //杂草长
-    WeedNormal = 3002,    //杂草中等
-    WeedShort = 3003,    //杂草短
+    WeedGrassLong = 3001,    //杂草长
+    WeedGrassNormal = 3002,    //杂草中等
+    WeedGrassShort = 3003,    //杂草短
+    WeedWildLong = 3011,    //杂草长
+    WeedWildNormal = 3012,    //杂草中等
+    WeedWildShort = 3013,    //杂草短
+    WeedSnowLong = 3021,    //杂草长
+    WeedSnowNormal = 3022,    //杂草中等
+    WeedSnowShort = 3023,    //杂草短
+    WeedMagicLong = 3031,    //杂草长
+    WeedMagicNormal = 3032,    //杂草中等
+    WeedMagicShort = 3033,    //杂草短
 
-    FlowerSun = 3011,    //向日葵
-    FlowerRose = 3012,    //玫瑰花
-    FlowerChrysanthemum = 3013,    //菊花
+    FlowerSun = 3111,    //向日葵
+    FlowerRose = 3112,    //玫瑰花
+    FlowerChrysanthemum = 3113,    //菊花
 
-    WoodDead = 3101,//枯木
+    FlowerMetal = 3121,//金耀花
+    FlowerWood = 3122,//木植花
+    FlowerWater = 3123,//水悦花
+    FlowerFire = 3124,//火焰花
+    FlowerEarth = 3125,//土岩花
 
-    FlowerMetal = 3021,//金耀花
-    FlowerWood = 3022,//木植花
-    FlowerWater = 3023,//水悦花
-    FlowerFire = 3024,//火焰花
-    FlowerEarth = 3025,//土岩花
-
-    MushroomLuminous = 3031,//夜光蘑菇
+    MushroomLuminous = 3201,//夜光蘑菇
+    WoodDead = 3301,//枯木
 
     Cactus = 4001,    //仙人掌
 

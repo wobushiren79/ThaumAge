@@ -9,6 +9,8 @@ public enum BiomeTypeEnum
     Mountain = 4,//高山
     Volcano = 5,//火山
     Ocean = 6,//海洋
+    Swamp = 7,//沼泽
+    Snowland = 8,//雪原
     ForestMagic = 11,//魔法森林
     ForestBirch = 12,//桦树森林
 

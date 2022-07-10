@@ -34,9 +34,11 @@ public class BlockShapeCubeCuboid : BlockShapeCube
         backOffsetBorder = offsetBorder[5];
 
         vertsAddLeftOffset = vertsAddLeft.AddX(leftOffsetBorder);
-        vertsAddRightOffset = vertsAddLeft.AddX(rightOffsetBorder);
-        vertsAddDownOffset = vertsAddDown.AddY(downOffsetBorder);
+        vertsAddRightOffset = vertsAddRight.AddX(rightOffsetBorder);
+
         vertsAddUpOffset = vertsAddUp.AddY(upOffsetBorder);
+        vertsAddDownOffset = vertsAddDown.AddY(downOffsetBorder);
+
         vertsAddForwardOffset = vertsAddForward.AddZ(forwardOffsetBorder);
         vertsAddBackOffset = vertsAddBack.AddZ(backOffsetBorder);
     }

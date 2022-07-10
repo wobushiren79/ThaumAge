@@ -14,6 +14,8 @@ public class CameraHandler : BaseHandler<CameraHandler, CameraManager>
 
     public float timeForCamerData = 0.2f;
     public float timeUpdateForCameraData = 0;
+
+
     public void Update()
     {
         timeUpdateForCameraData += Time.deltaTime;

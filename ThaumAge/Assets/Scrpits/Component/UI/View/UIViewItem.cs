@@ -63,7 +63,7 @@ public partial class UIViewItem : BaseUIView,
         base.RefreshUI();
         if (itemsInfo != null && itemId != 0)
         {
-            SetIcon(itemsInfo.icon_key);
+            SetIcon(itemsInfo.icon_key, itemsInfo.icon_color);
             SetNumber(itemNumber, itemsInfo.max_number);
             SetLife();
         }
@@ -136,8 +136,7 @@ public partial class UIViewItem : BaseUIView,
     /// <summary>
     /// 设置图标
     /// </summary>
-    /// <param name="iconKey"></param>
-    public void SetIcon(string iconKey)
+    public void SetIcon(string iconKey, string iconColor)
     {
         IconHandler.Instance.manager.GetItemsSpriteByName(iconKey, (spIcon) =>
          {
@@ -156,7 +155,15 @@ public partial class UIViewItem : BaseUIView,
                  ui_IVIcon.sprite = spIcon;
              }
          });
-
+        if (!iconColor.IsNull())
+        {
+            ColorUtility.TryParseHtmlString(iconColor, out Color colorSp);
+            ui_IVIcon.color = colorSp;
+        }
+        else
+        {
+            ui_IVIcon.color = Color.white;
+        }
     }
 
     /// <summary>
@@ -193,7 +200,7 @@ public partial class UIViewItem : BaseUIView,
                 //如果是背包或者上帝模式
                 case UIViewItemContainer.ContainerType.Backpack:
                 case UIViewItemContainer.ContainerType.God:
- 
+
                     //首先检测是否有箱子 优先放进箱子
                     boxList = currentUI.GetComponentInChildren<UIViewBoxList>();
                     if (boxList != null)
@@ -358,9 +365,9 @@ public partial class UIViewItem : BaseUIView,
         Vector3 randomFroce = new Vector3(UnityEngine.Random.Range(-0.5f, 0.5f), UnityEngine.Random.Range(0f, 0.5f), UnityEngine.Random.Range(-0.5f, 0.5f));
         ItemDropBean itemDropData = new ItemDropBean
             (
-            itemId, 
-            player.transform.position + Vector3.up, 
-            player.transform.forward + randomFroce, 
+            itemId,
+            player.transform.position + Vector3.up,
+            player.transform.forward + randomFroce,
             itemNumber,
             meta,
             ItemDropStateEnum.DropNoPick

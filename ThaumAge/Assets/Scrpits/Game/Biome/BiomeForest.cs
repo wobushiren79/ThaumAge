@@ -159,7 +159,7 @@ public class BiomeForest : Biome
         BiomeCreatePlantTool.BiomeForPlantData weedData = new BiomeCreatePlantTool.BiomeForPlantData
         {
             addRate = 0.5f,
-            listPlantType = new List<BlockTypeEnum> { BlockTypeEnum.WeedLong, BlockTypeEnum.WeedNormal, BlockTypeEnum.WeedShort }
+            listPlantType = new List<BlockTypeEnum> { BlockTypeEnum.WeedGrassLong, BlockTypeEnum.WeedGrassNormal, BlockTypeEnum.WeedGrassShort }
         };
         BiomeCreatePlantTool.AddPlant(333, wPos, weedData);
     }

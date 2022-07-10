@@ -37,7 +37,7 @@ RectTransform:
   - {fileID: 2197209671298058528}
   - {fileID: 7725272493190017}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
@@ -114,6 +114,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 2
     m_TransformParent: {fileID: 4630748975718498971}
     m_Modifications:
     - target: {fileID: 925747784038686262, guid: b63a0843dedbb1b47bf6cd065cdf8e6a, type: 3}
@@ -237,6 +238,7 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_AddedGameObjects: []
   m_SourcePrefab: {fileID: 100100000, guid: b63a0843dedbb1b47bf6cd065cdf8e6a, type: 3}
 --- !u!114 &2024278033958264405 stripped
 MonoBehaviour:
@@ -259,6 +261,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 2
     m_TransformParent: {fileID: 4630748975718498971}
     m_Modifications:
     - target: {fileID: 925747784038686262, guid: b63a0843dedbb1b47bf6cd065cdf8e6a, type: 3}
@@ -276,18 +279,6 @@ PrefabInstance:
     - target: {fileID: 6083251082036901382, guid: b63a0843dedbb1b47bf6cd065cdf8e6a, type: 3}
       propertyPath: m_Name
       value: ViewCharacterStatusPro_Stamina
-      objectReference: {fileID: 0}
-    - target: {fileID: 7411613655105427233, guid: b63a0843dedbb1b47bf6cd065cdf8e6a, type: 3}
-      propertyPath: m_Color.b
-      value: 0.1764706
-      objectReference: {fileID: 0}
-    - target: {fileID: 7411613655105427233, guid: b63a0843dedbb1b47bf6cd065cdf8e6a, type: 3}
-      propertyPath: m_Color.g
-      value: 0.7568628
-      objectReference: {fileID: 0}
-    - target: {fileID: 7411613655105427233, guid: b63a0843dedbb1b47bf6cd065cdf8e6a, type: 3}
-      propertyPath: m_Color.r
-      value: 0.98823535
       objectReference: {fileID: 0}
     - target: {fileID: 7723010628401765281, guid: b63a0843dedbb1b47bf6cd065cdf8e6a, type: 3}
       propertyPath: m_Pivot.x
@@ -398,6 +389,7 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_AddedGameObjects: []
   m_SourcePrefab: {fileID: 100100000, guid: b63a0843dedbb1b47bf6cd065cdf8e6a, type: 3}
 --- !u!114 &1862921695645785254 stripped
 MonoBehaviour:
@@ -420,6 +412,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 2
     m_TransformParent: {fileID: 4630748975718498971}
     m_Modifications:
     - target: {fileID: 925747784038686262, guid: b63a0843dedbb1b47bf6cd065cdf8e6a, type: 3}
@@ -437,18 +430,6 @@ PrefabInstance:
     - target: {fileID: 6083251082036901382, guid: b63a0843dedbb1b47bf6cd065cdf8e6a, type: 3}
       propertyPath: m_Name
       value: ViewCharacterStatusPro_Saturation
-      objectReference: {fileID: 0}
-    - target: {fileID: 7411613655105427233, guid: b63a0843dedbb1b47bf6cd065cdf8e6a, type: 3}
-      propertyPath: m_Color.b
-      value: 0.16862746
-      objectReference: {fileID: 0}
-    - target: {fileID: 7411613655105427233, guid: b63a0843dedbb1b47bf6cd065cdf8e6a, type: 3}
-      propertyPath: m_Color.g
-      value: 0.19607845
-      objectReference: {fileID: 0}
-    - target: {fileID: 7411613655105427233, guid: b63a0843dedbb1b47bf6cd065cdf8e6a, type: 3}
-      propertyPath: m_Color.r
-      value: 0.37254903
       objectReference: {fileID: 0}
     - target: {fileID: 7723010628401765281, guid: b63a0843dedbb1b47bf6cd065cdf8e6a, type: 3}
       propertyPath: m_Pivot.x
@@ -559,6 +540,7 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_AddedGameObjects: []
   m_SourcePrefab: {fileID: 100100000, guid: b63a0843dedbb1b47bf6cd065cdf8e6a, type: 3}
 --- !u!224 &7725272493190017 stripped
 RectTransform:
@@ -581,6 +563,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 2
     m_TransformParent: {fileID: 4630748975718498971}
     m_Modifications:
     - target: {fileID: 925747784038686262, guid: b63a0843dedbb1b47bf6cd065cdf8e6a, type: 3}
@@ -598,18 +581,6 @@ PrefabInstance:
     - target: {fileID: 6083251082036901382, guid: b63a0843dedbb1b47bf6cd065cdf8e6a, type: 3}
       propertyPath: m_Name
       value: ViewCharacterStatusPro_Magic
-      objectReference: {fileID: 0}
-    - target: {fileID: 7411613655105427233, guid: b63a0843dedbb1b47bf6cd065cdf8e6a, type: 3}
-      propertyPath: m_Color.b
-      value: 0.7372549
-      objectReference: {fileID: 0}
-    - target: {fileID: 7411613655105427233, guid: b63a0843dedbb1b47bf6cd065cdf8e6a, type: 3}
-      propertyPath: m_Color.g
-      value: 0.4666667
-      objectReference: {fileID: 0}
-    - target: {fileID: 7411613655105427233, guid: b63a0843dedbb1b47bf6cd065cdf8e6a, type: 3}
-      propertyPath: m_Color.r
-      value: 0.003921569
       objectReference: {fileID: 0}
     - target: {fileID: 7723010628401765281, guid: b63a0843dedbb1b47bf6cd065cdf8e6a, type: 3}
       propertyPath: m_Pivot.x
@@ -720,6 +691,7 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_AddedGameObjects: []
   m_SourcePrefab: {fileID: 100100000, guid: b63a0843dedbb1b47bf6cd065cdf8e6a, type: 3}
 --- !u!224 &2197209671298058528 stripped
 RectTransform:

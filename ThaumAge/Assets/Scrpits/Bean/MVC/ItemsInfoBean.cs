@@ -13,6 +13,7 @@ using System.Collections.Generic;
 public class ItemsInfoBean : BaseBean
 {
     public string icon_key;
+    public string icon_color;
 
     public int items_type;
     public int type_id; //关联类型的ID

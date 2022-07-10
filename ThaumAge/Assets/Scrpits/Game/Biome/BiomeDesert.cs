@@ -1,10 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
-using static BiomeCreatePlantTool;
-using static BiomeCreateTool;
-using static BiomeCreateTreeTool;
-
 public class BiomeDesert : Biome
 {
     //沙漠
@@ -18,9 +14,12 @@ public class BiomeDesert : Biome
         if (localPos.y == terrainData.maxHeight)
         {
             Vector3Int wPos = localPos + chunk.chunkData.positionForWorld;
-            AddCactus(wPos);
+
             AddWeed(wPos);
-            AddFlower(wPos);
+            //AddFlower(wPos);        
+            //增加枯木
+            AddCactus(wPos);
+            BiomeCreatePlantTool.AddDeadwood(102, 0.0005f, wPos);
         }
         if (localPos.y <= terrainData.maxHeight && localPos.y > terrainData.maxHeight - 30)
         {
@@ -41,33 +40,59 @@ public class BiomeDesert : Biome
         }
     }
 
-    public void AddCactus(Vector3Int startPosition)
+    public override void GetBlockTypeForChunk(Chunk chunk, BiomeMapData biomeMapData)
     {
-        BiomeForTreeData cactusData = new BiomeForTreeData();
-        cactusData.addRate = 0.1f;
-        cactusData.minHeight = 1;
-        cactusData.maxHeight = 5;
-        cactusData.treeTrunk = BlockTypeEnum.Cactus;
-        BiomeCreateTreeTool.AddCactus(1, startPosition, cactusData);
+        base.GetBlockTypeForChunk(chunk, biomeMapData);
+        //获取地形数据
+        ChunkTerrainData startTerrainData = GetTerrainData(chunk, biomeMapData, 0, 0);
+
+        Vector3Int flowerPosition = new Vector3Int(chunk.chunkData.positionForWorld.x, startTerrainData.maxHeight, chunk.chunkData.positionForWorld.z);
+
+        AddFlowerFire(flowerPosition);
     }
 
-    protected void AddFlower(Vector3Int wPos)
+    /// <summary>
+    /// 增加元素花
+    /// </summary>
+    /// <param name="wPos"></param>
+    protected void AddFlowerFire(Vector3Int wPos)
     {
-        BiomeForPlantData flowersData = new BiomeForPlantData
+        //增加花
+        BiomeCreatePlantTool.BiomeForPlantData flowersData = new BiomeCreatePlantTool.BiomeForPlantData
         {
-            addRate = 0.01f,
+            addRate = 0.1f,
             listPlantType = new List<BlockTypeEnum> { BlockTypeEnum.FlowerFire }
         };
-        BiomeCreatePlantTool.AddFlower(101, wPos, flowersData);
+        BiomeCreatePlantTool.AddFlower(110, wPos, flowersData);
     }
 
+    /// <summary>
+    /// 增加杂草
+    /// </summary>
+    /// <param name="wPos"></param>
     protected void AddWeed(Vector3Int wPos)
     {
-        BiomeForPlantData weedData = new BiomeForPlantData
+        BiomeCreatePlantTool.BiomeForPlantData weedData = new BiomeCreatePlantTool.BiomeForPlantData
         {
-            addRate = 0.02f,
-            listPlantType = new List<BlockTypeEnum> { BlockTypeEnum.WeedLong, BlockTypeEnum.WeedNormal, BlockTypeEnum.WeedShort }
+            addRate = 0.005f,
+            listPlantType = new List<BlockTypeEnum> { BlockTypeEnum.WeedGrassLong, BlockTypeEnum.WeedGrassNormal, BlockTypeEnum.WeedGrassShort }
         };
         BiomeCreatePlantTool.AddPlant(201, wPos, weedData);
+    }
+
+    /// <summary>
+    /// 增加仙人掌
+    /// </summary>
+    /// <param name="wPos"></param>
+    protected void AddCactus(Vector3Int wPos)
+    {
+        BiomeCreateTreeTool.BiomeForTreeData cactusData = new BiomeCreateTreeTool.BiomeForTreeData
+        {
+            addRate = 0.001f,
+            minHeight = 2,
+            maxHeight = 5,
+            treeTrunk = BlockTypeEnum.Cactus
+        };
+        BiomeCreateTreeTool.AddCactus(201, wPos, cactusData);
     }
 }

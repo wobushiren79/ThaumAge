@@ -53,17 +53,17 @@ public class BiomeHandler : BaseHandler<BiomeHandler, BiomeManager>
         {
             if (blockLocalPosition.y <= biome.biomeInfo.GetWaterPlaneHeight())
             {
-                return BlockTypeEnum.Water;
+                Block tagetBlock = chunk.chunkData.GetBlockForLocal(blockLocalPosition);
+                if (tagetBlock == null || tagetBlock.blockType == BlockTypeEnum.None)
+                {
+                    return BlockTypeEnum.Water;
+                }
+                return BlockTypeEnum.None;
             }
             else
             {
                 return BlockTypeEnum.None;
             }
-        }
-        //当前方块位置高于随机生成的高度值时，当前方块类型为空
-        if (blockLocalPosition.y > chunkTerrainData.maxHeight)
-        {
-            return BlockTypeEnum.None;
         }
         BlockTypeEnum blockType = biome.GetBlockType(chunk, blockLocalPosition, chunkTerrainData);
         //获取方块

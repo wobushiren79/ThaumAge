@@ -102,7 +102,7 @@ public class BiomeTest : Biome
         BiomeForPlantData weedData = new BiomeForPlantData
         {
             addRate = 0.3f,
-            listPlantType = new List<BlockTypeEnum> { BlockTypeEnum.WeedLong, BlockTypeEnum.WeedNormal, BlockTypeEnum.WeedShort }
+            listPlantType = new List<BlockTypeEnum> { BlockTypeEnum.WeedGrassLong, BlockTypeEnum.WeedGrassNormal, BlockTypeEnum.WeedGrassShort }
         };
         BiomeCreatePlantTool.AddPlant(601, wPos, weedData);
     }

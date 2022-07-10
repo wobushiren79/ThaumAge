@@ -241,7 +241,7 @@ Material:
     - _ReceivesSSRTransparent: 0
     - _RefractionModel: 0
     - _RefractionScale: 3
-    - _RefractionSpeed: 0.2
+    - _RefractionSpeed: 0.3
     - _RefractionStrength: 0.1
     - _RenderQueueType: 4
     - _RequireSplitLighting: 0

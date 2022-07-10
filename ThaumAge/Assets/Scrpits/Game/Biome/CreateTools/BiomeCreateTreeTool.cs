@@ -13,6 +13,9 @@ public class BiomeCreateTreeTool
         public BlockTypeEnum treeLeaves;//树叶
         public int trunkRange;//躯干范围
         public int leavesRange;//树叶范围
+
+        public int minLeavesHeight;//树叶高度 用于柳条
+        public int maxLeavesHeight;//树叶高度 用于柳条
     }
 
     /// <summary>
@@ -25,11 +28,11 @@ public class BiomeCreateTreeTool
     {
         //生成概率
         float addRate = WorldRandTools.GetValue(startPosition, randomData);
-        //高度
-        int treeHeight = WorldRandTools.Range(cactusData.minHeight, cactusData.maxHeight);
 
         if (addRate < cactusData.addRate)
         {
+            //高度
+            int treeHeight = WorldRandTools.Range(cactusData.minHeight, cactusData.maxHeight);
             for (int i = 0; i < treeHeight; i++)
             {
                 Vector3Int treeTrunkPosition = startPosition + Vector3Int.up * (i + 1);
@@ -617,6 +620,105 @@ public class BiomeCreateTreeTool
                 }
             }
         }
+    }
+
+    /// <summary>
+    /// 增加柳树
+    /// </summary>
+    public static bool AddTreeForSalix(uint randomData, Vector3Int startPosition, BiomeForTreeData treeData)
+    {
+        //生成概率
+        float addRate = WorldRandTools.GetValue(startPosition, randomData);
+
+        if (addRate < treeData.addRate)
+        {
+            //高度
+            int treeHeight = WorldRandTools.Range(treeData.minHeight, treeData.maxHeight);
+            for (int i = treeHeight - 3; i < treeHeight + 2; i++)
+            {
+                //生成树叶
+                Vector3Int treeTrunkPosition = startPosition + Vector3Int.up * (i + 1);
+                int range = treeData.leavesRange;
+                if (i == treeHeight + 1)
+                {
+                    range -= 1;
+                }
+                else if (i == treeHeight - 3)
+                {
+                    range -= 1;
+                }
+
+                for (int x = -range; x <= range; x++)
+                {
+                    for (int z = -range; z <= range; z++)
+                    {
+                        //生成概率
+                        if (x == -range || x == range || z == -range || z == range)
+                        {
+                            int leavesRate = WorldRandTools.Range(0, 4);
+                            if (leavesRate == 0)
+                                continue;
+                        }
+
+                        //生成柳条
+                        if (i == treeHeight - 2)
+                        {
+                            int randomCreate = WorldRandTools.Range(0, 6);
+                            if (randomCreate == 0)
+                            {
+                                int wickerLenth = WorldRandTools.Range(treeData.minLeavesHeight, treeData.maxLeavesHeight);
+                                for (int w = 0; w < wickerLenth; w++)
+                                {
+                                    WorldCreateHandler.Instance.manager.AddUpdateBlock(treeTrunkPosition.x + x, treeTrunkPosition.y - w, treeTrunkPosition.z + z, BlockTypeEnum.Wicker);
+                                }
+                                continue;
+                            }
+                        }
+                        WorldCreateHandler.Instance.manager.AddUpdateBlock(treeTrunkPosition.x + x, treeTrunkPosition.y, treeTrunkPosition.z + z, treeData.treeLeaves);
+                    }
+                }
+            }
+
+
+            //生成树干
+            for (int i = 0; i < treeHeight; i++)
+            {
+                Vector3Int treeTrunkPosition = startPosition + Vector3Int.up * (i + 1);
+
+                //枝干
+                int randomCreate = WorldRandTools.Range(0, 4);
+                if (randomCreate == 1)
+                {
+                    int createDirection = WorldRandTools.Range(0, 4);
+                    int createDirectionOffset = WorldRandTools.Range(0, 2);
+                    switch (createDirection)
+                    {
+                        case 0:
+                            WorldCreateHandler.Instance.manager.AddUpdateBlock(treeTrunkPosition.x - 1, treeTrunkPosition.y, treeTrunkPosition.z + createDirectionOffset, treeData.treeTrunk, BlockDirectionEnum.LeftForward);
+                            break;
+                        case 1:
+                            WorldCreateHandler.Instance.manager.AddUpdateBlock(treeTrunkPosition.x + 2, treeTrunkPosition.y, treeTrunkPosition.z + createDirectionOffset, treeData.treeTrunk, BlockDirectionEnum.RightForward);
+                            break;
+                        case 2:
+                            WorldCreateHandler.Instance.manager.AddUpdateBlock(treeTrunkPosition.x + createDirectionOffset, treeTrunkPosition.y, treeTrunkPosition.z - 1, treeData.treeTrunk, BlockDirectionEnum.ForwardForward);
+                            break;
+                        case 3:
+                            WorldCreateHandler.Instance.manager.AddUpdateBlock(treeTrunkPosition.x + createDirectionOffset, treeTrunkPosition.y, treeTrunkPosition.z + 2, treeData.treeTrunk, BlockDirectionEnum.BackForward);
+                            break;
+                    }
+                }
+
+
+
+                WorldCreateHandler.Instance.manager.AddUpdateBlock(treeTrunkPosition.x, treeTrunkPosition.y, treeTrunkPosition.z, treeData.treeTrunk);
+                WorldCreateHandler.Instance.manager.AddUpdateBlock(treeTrunkPosition.x + 1, treeTrunkPosition.y, treeTrunkPosition.z, treeData.treeTrunk);
+                WorldCreateHandler.Instance.manager.AddUpdateBlock(treeTrunkPosition.x, treeTrunkPosition.y, treeTrunkPosition.z + 1, treeData.treeTrunk);
+                WorldCreateHandler.Instance.manager.AddUpdateBlock(treeTrunkPosition.x + 1, treeTrunkPosition.y, treeTrunkPosition.z + 1, treeData.treeTrunk);
+            }
+
+            return true;
+        }
+        return false;
     }
 
     /// <summary>
