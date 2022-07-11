@@ -154,7 +154,7 @@ public class BiomeForestBirch : Biome
         BiomeCreatePlantTool.BiomeForPlantData weedData = new BiomeCreatePlantTool.BiomeForPlantData
         {
             addRate = 0.02f,
-            listPlantType = new List<BlockTypeEnum> { BlockTypeEnum.WeedWildLong, BlockTypeEnum.WeedWildNormal, BlockTypeEnum.WeedWildShort }
+            listPlantType = new List<BlockTypeEnum> { BlockTypeEnum.WeedWildLong, BlockTypeEnum.WeedWildNormal, BlockTypeEnum.WeedWildShort, BlockTypeEnum.WeedWildStart }
         };
         BiomeCreatePlantTool.AddPlant(222, wPos, weedData);
     }

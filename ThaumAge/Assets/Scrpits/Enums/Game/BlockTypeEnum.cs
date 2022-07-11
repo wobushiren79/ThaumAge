@@ -9,10 +9,12 @@ public enum BlockTypeEnum
     Stone = 5,    //石头
     StoneMoss = 6, //苔藓石
     StoneVolcanic = 7,//火山岩
+    StoneIcon = 8,//冰块
 
     Grass = 101,    //草地
     GrassMagic = 102,    //蕴魔草地
     GrassWild = 103,    //荒草地
+    GrassSnow = 104,    //雪草地
 
     PloughGrass = 201,//耕地
     PloughMagic = 202,//蕴魔耕地
@@ -42,21 +44,29 @@ public enum BlockTypeEnum
     LeavesBirch = 2006,//桦树叶
     LeavesMushroom = 2101,//磨菇树叶子
 
-    Wicker = 2211,//柳条
     Vines = 2201,//藤蔓
+    Wicker = 2211,//柳条
+    LotusLeaf = 2221,//荷叶
 
     WeedGrassLong = 3001,    //杂草长
     WeedGrassNormal = 3002,    //杂草中等
     WeedGrassShort = 3003,    //杂草短
+    WeedGrassStart = 3004, //杂草超短
+
     WeedWildLong = 3011,    //杂草长
     WeedWildNormal = 3012,    //杂草中等
     WeedWildShort = 3013,    //杂草短
+    WeedWildStart = 3014, //杂草超短
+
     WeedSnowLong = 3021,    //杂草长
     WeedSnowNormal = 3022,    //杂草中等
     WeedSnowShort = 3023,    //杂草短
+    WeedSnowStart = 3024, //杂草超短
+
     WeedMagicLong = 3031,    //杂草长
     WeedMagicNormal = 3032,    //杂草中等
     WeedMagicShort = 3033,    //杂草短
+    WeedMagicStart = 3034, //杂草超短
 
     FlowerSun = 3111,    //向日葵
     FlowerRose = 3112,    //玫瑰花
