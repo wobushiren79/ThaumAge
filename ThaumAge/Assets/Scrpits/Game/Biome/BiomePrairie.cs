@@ -21,7 +21,7 @@ public class BiomePrairie : Biome
             Vector3Int wPos = localPos + chunk.chunkData.positionForWorld;
             AddWeed(wPos);
             AddFlower(wPos);
-            //AddTree(wPos);
+            AddTree(wPos);
             // 地表，使用草
             return BlockTypeEnum.GrassWild;
         }
@@ -93,11 +93,11 @@ public class BiomePrairie : Biome
     {
         BiomeForTreeData treeData = new BiomeForTreeData
         {
-            addRate = 0.01f,
-            minHeight = 4,
-            maxHeight = 7,
-            treeTrunk = BlockTypeEnum.TreeOak,
-            treeLeaves = BlockTypeEnum.LeavesOak,
+            addRate = 0.0001f,
+            minHeight = 6,
+            maxHeight = 10,
+            treeTrunk = BlockTypeEnum.TreeCherry,
+            treeLeaves = BlockTypeEnum.LeavesCherry,
             leavesRange = 2,
         };
         BiomeCreateTreeTool.AddTree(111, wPos, treeData);

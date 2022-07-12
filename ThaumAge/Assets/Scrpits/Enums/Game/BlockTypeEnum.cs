@@ -34,6 +34,7 @@ public enum BlockTypeEnum
     TreeCherry = 1004,//Ó£»¨Ê÷Ä¾
     TreePalm = 1005,//×ØéµÊ÷Ä¾
     TreeBirch = 1006,//èëÊ÷Ä¾
+    TreeWalnut = 1007,//ºúÌÒÊ÷Ä¾
     TreeMushroom = 1101,//Ä¢¹½Ê÷
 
     LeavesOak = 2001, //ÏğÄ¾Ò¶
@@ -42,6 +43,7 @@ public enum BlockTypeEnum
     LeavesCherry = 2004,//Ó£»¨Ò¶
     LeavesPalm = 2005,//×ØéµÒ¶
     LeavesBirch = 2006,//èëÊ÷Ò¶
+    LeavesWalnut = 2007,//ºúÌÒÊ÷Ò¶
     LeavesMushroom = 2101,//Ä¥¹½Ê÷Ò¶×Ó
 
     Vines = 2201,//ÌÙÂû
@@ -114,6 +116,7 @@ public enum BlockTypeEnum
     StairsCherry = 8104,//Ó£»¨Â¥Ìİ
     StairsPalm = 8105,//×ØéµÂ¥Ìİ
     StairsBirch = 8106,//èëÊ÷Â¥Ìİ
+    StairsWalnut = 8107,//ºúÌÒÂ¥Ìİ
 
     Glass = 8151,//²£Á§
 
@@ -133,6 +136,7 @@ public enum BlockTypeEnum
     HalfFloorCherry = 7104,//Ó£»¨µØ°å-°ë
     HalfFloorPalm = 7105,//×ØéµµØ°å-°ë
     HalfFloorBirch = 7106,//èëÊ÷µØ°å-°ë
+    HalfFloorWalnut = 7107,//ºúÌÒµØ°å-°ë
 
     FloorOak = 8051,//ÏğÄ¾µØ°å
     FloorSilver = 8052,//ÒøÊ÷µØ°å
@@ -140,6 +144,7 @@ public enum BlockTypeEnum
     FloorCherry = 8054,//Ó£»¨µØ°å
     FloorPalm = 8055,//×ØéµµØ°å
     FloorBirch = 8056,//èëÊ÷µØ°å
+    FloorWalnut = 8057,//ºúÌÒµØ°å
 
     Water = 9001,//Ë®
     Magma = 9002,//ÑÒ½¬

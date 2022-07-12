@@ -12,14 +12,13 @@ public class BiomeSnowland : Biome
     public override BlockTypeEnum GetBlockType(Chunk chunk, Vector3Int localPos, ChunkTerrainData terrainData)
     {
         base.GetBlockType(chunk, localPos, terrainData);
-        int trueHeight = 10;
-        if (localPos.y == trueHeight)
+        if (localPos.y == terrainData.maxHeight)
         {
             Vector3Int wPos = localPos + chunk.chunkData.positionForWorld;
-            AddFlower(wPos);
-            return BlockTypeEnum.Dirt;
+            // 地表，使用草
+            return BlockTypeEnum.GrassSnow;
         }
-        if (localPos.y < trueHeight && localPos.y > trueHeight - 2)
+        if (localPos.y < terrainData.maxHeight && localPos.y > terrainData.maxHeight - 5)
         {
             //中使用泥土
             return BlockTypeEnum.Dirt;
@@ -29,15 +28,10 @@ public class BiomeSnowland : Biome
             //基础
             return BlockTypeEnum.Foundation;
         }
-        else if (localPos.y <= trueHeight - 2)
-        {
-            //石头
-            return BlockTypeEnum.Stone;
-        }
         else
         {
-            //海水
-            return BlockTypeEnum.Water;
+            //其他石头
+            return BlockTypeEnum.Stone;
         }
     }
 
