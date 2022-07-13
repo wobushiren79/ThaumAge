@@ -14,9 +14,8 @@ public class BiomeForestMagic : Biome
     {
     }
 
-    public override BlockTypeEnum GetBlockType(Chunk chunk, Vector3Int localPos, ChunkTerrainData terrainData)
+    public override BlockTypeEnum GetBlockForMaxHeightDown(Chunk chunk, Vector3Int localPos, ChunkTerrainData terrainData)
     {
-        base.GetBlockType(chunk, localPos, terrainData);
         if (localPos.y == terrainData.maxHeight)
         {
             if (localPos.y >= biomeInfo.GetWaterPlaneHeight())
@@ -58,9 +57,9 @@ public class BiomeForestMagic : Biome
         }
     }
 
-    public override void GetBlockTypeForChunk(Chunk chunk, BiomeMapData biomeMapData)
+    public override void InitBiomeBlockForChunk(Chunk chunk, BiomeMapData biomeMapData)
     {
-        base.GetBlockTypeForChunk(chunk, biomeMapData);
+        base.InitBiomeBlockForChunk(chunk, biomeMapData);
 
         //获取中心点的地形数据
         Vector3Int centerPosition = new Vector3Int(8,0,8);

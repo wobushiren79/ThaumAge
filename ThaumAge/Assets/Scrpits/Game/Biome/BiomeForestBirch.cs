@@ -10,9 +10,8 @@ public class BiomeForestBirch : Biome
 
     }
 
-    public override BlockTypeEnum GetBlockType(Chunk chunk, Vector3Int localPos, ChunkTerrainData terrainData)
+    public override BlockTypeEnum GetBlockForMaxHeightDown(Chunk chunk, Vector3Int localPos, ChunkTerrainData terrainData)
     {
-        base.GetBlockType(chunk, localPos, terrainData);
         if (localPos.y == terrainData.maxHeight)
         {
             Vector3Int wPos = localPos + chunk.chunkData.positionForWorld;
@@ -50,9 +49,9 @@ public class BiomeForestBirch : Biome
         }
     }
 
-    public override void GetBlockTypeForChunk(Chunk chunk, BiomeMapData biomeMapData)
+    public override void InitBiomeBlockForChunk(Chunk chunk, BiomeMapData biomeMapData)
     {
-        base.GetBlockTypeForChunk(chunk, biomeMapData);
+        base.InitBiomeBlockForChunk(chunk, biomeMapData);
         //获取地形数据
         ChunkTerrainData startTerrainData = GetTerrainData(chunk, biomeMapData, 0, 0);
 

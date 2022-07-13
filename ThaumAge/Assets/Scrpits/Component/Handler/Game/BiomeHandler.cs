@@ -13,7 +13,6 @@ public class BiomeHandler : BaseHandler<BiomeHandler, BiomeManager>
     {
 
     }
-
     public void InitWorldBiomeSeed()
     {
         int seed = WorldCreateHandler.Instance.manager.GetWorldSeed();
@@ -48,26 +47,7 @@ public class BiomeHandler : BaseHandler<BiomeHandler, BiomeManager>
     /// <returns></returns>
     public BlockTypeEnum CreateBiomeBlockType(Chunk chunk, Vector3Int blockLocalPosition, Biome biome, ChunkTerrainData chunkTerrainData)
     {
-        //当前方块位置高于随机生成的高度值时，当前方块类型为空
-        if (blockLocalPosition.y > chunkTerrainData.maxHeight)
-        {
-            if (blockLocalPosition.y <= biome.biomeInfo.GetWaterPlaneHeight())
-            {
-                Block tagetBlock = chunk.chunkData.GetBlockForLocal(blockLocalPosition);
-                if (tagetBlock == null || tagetBlock.blockType == BlockTypeEnum.None)
-                {
-                    return BlockTypeEnum.Water;
-                }
-                return BlockTypeEnum.None;
-            }
-            else
-            {
-                return BlockTypeEnum.None;
-            }
-        }
-        BlockTypeEnum blockType = biome.GetBlockType(chunk, blockLocalPosition, chunkTerrainData);
-        //获取方块
-        return blockType;
+        return biome.InitBiomeBlock(chunk, blockLocalPosition, chunkTerrainData);
     }
 
     /// <summary>
@@ -77,9 +57,8 @@ public class BiomeHandler : BaseHandler<BiomeHandler, BiomeManager>
     /// <param name="biome"></param>
     public void CreateBiomeBlockTypeForChunk(Chunk chunk, BiomeMapData biomeMapData)
     {
-        biomeMapData.biome.GetBlockTypeForChunk(chunk,biomeMapData);
+        biomeMapData.biome.InitBiomeBlockForChunk(chunk, biomeMapData);
     }
-
 
     /// <summary>
     /// 获取生态中心点
@@ -111,8 +90,4 @@ public class BiomeHandler : BaseHandler<BiomeHandler, BiomeManager>
         }
         return listData.ToArray();
     }
-
-
-
-
 }

@@ -20,9 +20,9 @@ public class BiomeCreatePlantTool
     {
         //生成概率
         float addRate = WorldRandTools.GetValue(startPosition, randomData);
-        int weedTypeNumber = WorldRandTools.Range(0, plantData.listPlantType.Count);
         if (addRate < plantData.addRate)
         {
+            int weedTypeNumber = WorldRandTools.Range(0, plantData.listPlantType.Count);
             WorldCreateHandler.Instance.manager.AddUpdateBlock(startPosition.x, startPosition.y + 1, startPosition.z, plantData.listPlantType[weedTypeNumber]);
         }
     }

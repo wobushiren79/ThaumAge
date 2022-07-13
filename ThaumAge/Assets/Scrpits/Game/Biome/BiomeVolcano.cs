@@ -11,9 +11,8 @@ public class BiomeVolcano : Biome
     {
     }
 
-    public override BlockTypeEnum GetBlockType(Chunk chunk, Vector3Int localPos, ChunkTerrainData terrainData)
+    public override BlockTypeEnum GetBlockForMaxHeightDown(Chunk chunk, Vector3Int localPos, ChunkTerrainData terrainData)
     {
-        base.GetBlockType(chunk, localPos, terrainData);
         float noise = (terrainData.maxHeight - biomeInfo.min_height) / biomeInfo.amplitude;
         if (noise >= 0.9f)
         {

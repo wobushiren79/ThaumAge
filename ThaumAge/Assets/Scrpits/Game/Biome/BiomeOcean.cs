@@ -12,9 +12,8 @@ public class BiomeOcean : Biome
 
     }
 
-    public override BlockTypeEnum GetBlockType(Chunk chunk, Vector3Int localPos, ChunkTerrainData terrainData)
+    public override BlockTypeEnum GetBlockForMaxHeightDown(Chunk chunk, Vector3Int localPos, ChunkTerrainData terrainData)
     {
-        base.GetBlockType(chunk, localPos, terrainData);
         int trueHeight = 10;
         if (localPos.y == trueHeight)
         {

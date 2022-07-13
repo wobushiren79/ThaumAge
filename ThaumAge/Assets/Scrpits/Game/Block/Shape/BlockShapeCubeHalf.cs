@@ -190,6 +190,10 @@ public class BlockShapeCubeHalf : BlockShapeCube
                 direction = chunk.chunkData.GetBlockDirection(localPosition.x, localPosition.y, localPosition.z);
             }
             BlockBean blockData = chunk.GetBlockData(localPosition);
+            if (blockData == null)
+            {
+                blockData = new BlockBean(localPosition,block.blockType);
+            }
             BlockMetaCubeHalf blockMeta = blockData.GetBlockMeta<BlockMetaCubeHalf>();
             if (blockMeta == null)
             {
@@ -304,7 +308,16 @@ public class BlockShapeCubeHalf : BlockShapeCube
                 return CheckNeedBuildFaceForCube(closeDirection, blockMeta);
             case BlockShapeEnum.CubeHalf:
                 BlockBean blockData = closeBlockChunk.GetBlockData(closeLocalPosition);
-                BlockMetaCubeHalf blockMetaClose = blockData.GetBlockMeta<BlockMetaCubeHalf>();
+                BlockMetaCubeHalf blockMetaClose;
+                if (blockData == null)
+                {
+                    blockMetaClose = new BlockMetaCubeHalf();
+                    blockMetaClose.halfPosition = (int)DirectionEnum.Down;
+                }
+                else
+                {
+                    blockMetaClose = blockData.GetBlockMeta<BlockMetaCubeHalf>();
+                }
                 return CheckNeedBuilFaceForCubeHalf(closeDirection, blockMeta, blockMetaClose);
             default:
                 return true;

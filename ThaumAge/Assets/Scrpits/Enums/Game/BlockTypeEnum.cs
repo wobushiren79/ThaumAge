@@ -9,7 +9,8 @@ public enum BlockTypeEnum
     Stone = 5,    //石头
     StoneMoss = 6, //苔藓石
     StoneVolcanic = 7,//火山岩
-    StoneIcon = 8,//冰块
+    StoneIce = 8,//冰块
+    StoneSnow = 9,//雪块
 
     Grass = 101,    //草地
     GrassMagic = 102,    //蕴魔草地
@@ -130,6 +131,9 @@ public enum BlockTypeEnum
     HalfSand = 7003,//沙子-半
     HalfDirt = 7004,//泥土-半
     HalfStone = 7005,//石头-半
+    HalfStoneIce = 7008,//冰块-半
+    HalfStoneSnow = 7009,//雪块-半
+
     HalfFloorOak = 7101,//橡树地板-半
     HalfFloorSilver = 7102, //银树地板-半
     HalfFloorWorld = 7103, //世界树地板-半
