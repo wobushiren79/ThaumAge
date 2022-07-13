@@ -5,5 +5,6 @@ using System;
 [Serializable]
 public class BlockMetaLiquid : BlockMetaBase
 {
-    public int level;
+    //体积 最高为8次满
+    public int volume = 8;
 }

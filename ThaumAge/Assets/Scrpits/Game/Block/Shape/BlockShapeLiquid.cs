@@ -16,159 +16,27 @@ public class BlockShapeLiquid : BlockShapeCube
             new Vector2(1,0),
         };
     }
+
     public override void BaseAddVertsUVsColors(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction, DirectionEnum face, Vector3[] vertsAdd, Vector2[] uvsAdd, Color[] colorsAdd)
     {
-        //检测上方 如果上方
-        chunk.GetBlockForLocal(localPosition + Vector3Int.up, out Block upBlock, out BlockDirectionEnum upDirection, out Chunk upChunk);
-        if (upBlock == null || upBlock.blockType == BlockTypeEnum.None||upBlock.blockInfo.GetBlockShape() != BlockShapeEnum.Liquid)
-        {
-            Vector3[] vertsAddLiquid = new Vector3[vertsAdd.Length];
-            for (int i = 0; i < vertsAdd.Length; i++)
-            {
-                vertsAddLiquid[i] = new Vector3(vertsAdd[i].x, vertsAdd[i].y * (7f / 8f), vertsAdd[i].z);
-            }
-            BaseAddVertsUVsTrisDetails(chunk, localPosition, direction, face, vertsAddLiquid, uvsAdd, colorsAdd);
-        }
-        else
-        {
-            BaseAddVertsUVsTrisDetails(chunk, localPosition, direction, face, vertsAdd, uvsAdd, colorsAdd);
-        }
-    }
-
-    protected virtual void BaseAddVertsUVsTrisDetails(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction, DirectionEnum face,
-        Vector3[] vertsAdd, Vector2[] uvsAdd, Color[] colorsAdd)
-    {
         BlockBean blockData = chunk.GetBlockData(localPosition);
-        if (blockData != null)
+        //水是满的
+        if (blockData == null)
         {
-            BlockMetaLiquid blockLiquid = Block.FromMetaData<BlockMetaLiquid>(blockData.meta);
-            if (blockLiquid != null)
-            {
-                if (blockLiquid.level == 1)
-                {
-                    Vector3[] vertsAddNew = GetAddVertsNew(chunk, localPosition, face, vertsAdd);
-                    //获取四周的方块
-                    base.BaseAddVertsUVsColors(chunk, localPosition, direction, face, vertsAddNew, uvsAdd, colorsAdd);
-                    return;
-                }
-            }
-        }
-        base.BaseAddVertsUVsColors(chunk, localPosition, direction, face, vertsAdd, uvsAdd, colorsAdd);
-    }
-
-    /// <summary>
-    /// 获取新增加的点
-    /// </summary>
-    /// <param name="chunk"></param>
-    /// <param name="localPosition"></param>
-    /// <param name="face"></param>
-    /// <param name="vertsAdd"></param>
-    /// <returns></returns>
-    protected Vector3[] GetAddVertsNew(Chunk chunk, Vector3Int localPosition, DirectionEnum face, Vector3[] vertsAdd)
-    {
-        if (face == DirectionEnum.Left || face == DirectionEnum.Right)
-        {
-            Vector3[] vertsAddNew = new Vector3[vertsAdd.Length];
-            for (int i = 0; i < vertsAdd.Length; i++)
-            {
-                if (i == 1 || i == 2)
-                {
-                    vertsAddNew[i] = vertsAdd[i] - new Vector3(0, 1f, 0);
-                }
-                else
-                {
-                    vertsAddNew[i] = vertsAdd[i];
-                }
-            }
-
-            GetVertsAddNewForRange(chunk, DirectionEnum.Forward, localPosition, vertsAddNew, vertsAdd, 1);
-            GetVertsAddNewForRange(chunk, DirectionEnum.Back, localPosition, vertsAddNew, vertsAdd, 2);
-            return vertsAddNew;
-        }
-        else if (face == DirectionEnum.Forward || face == DirectionEnum.Back)
-        {
-            Vector3[] vertsAddNew = new Vector3[vertsAdd.Length];
-            for (int i = 0; i < vertsAdd.Length; i++)
-            {
-                if (i == 1 || i == 2)
-                {
-                    vertsAddNew[i] = vertsAdd[i] - new Vector3(0, 1f, 0);
-                }
-                else
-                {
-                    vertsAddNew[i] = vertsAdd[i];
-                }
-            }
-
-            GetVertsAddNewForRange(chunk, DirectionEnum.Left, localPosition, vertsAddNew, vertsAdd, 1);
-            GetVertsAddNewForRange(chunk, DirectionEnum.Right, localPosition, vertsAddNew, vertsAdd, 2);
-            return vertsAddNew;
-        }
-        else if (face == DirectionEnum.UP)
-        {
-            Vector3[] vertsAddNew = new Vector3[vertsAdd.Length];
-            for (int i = 0; i < vertsAdd.Length; i++)
-            {
-                vertsAddNew[i] = vertsAdd[i] - new Vector3(0, 1f, 0);
-            }
-
-            GetVertsAddNewForUpDown(chunk, DirectionEnum.Left, localPosition, vertsAddNew, vertsAdd, 0, 1);
-            GetVertsAddNewForUpDown(chunk, DirectionEnum.Right, localPosition, vertsAddNew, vertsAdd, 2, 3);
-            GetVertsAddNewForUpDown(chunk, DirectionEnum.Forward, localPosition, vertsAddNew, vertsAdd, 0, 3);
-            GetVertsAddNewForUpDown(chunk, DirectionEnum.Back, localPosition, vertsAddNew, vertsAdd, 1, 2);
-            return vertsAddNew;
+            base.BaseAddVertsUVsColors(chunk, localPosition, direction, face, vertsAdd, uvsAdd, colorsAdd);
         }
         else
         {
-            return vertsAdd;
-        }
-    }
-
-    protected void GetVertsAddNewForUpDown(Chunk chunk, DirectionEnum direction, Vector3Int localPosition, Vector3[] vertsAddNew, Vector3[] vertsAdd, int index1, int index2)
-    {
-        block.GetCloseBlockByDirection(chunk, localPosition, direction, out Block closeBlock, out Chunk closeChunk, out Vector3Int closeLocalPosition);
-        if (closeBlock != null && closeBlock.blockType == block.blockType)
-        {
-            Vector3Int tempPosition = block.GetClosePositionByDirection(direction, localPosition);
-            Vector3Int localPositionClose = tempPosition + chunk.chunkData.positionForWorld - closeChunk.chunkData.positionForWorld;
-            BlockBean closeBlockData = closeChunk.GetBlockData(localPositionClose);
-            if (closeBlockData == null)
+            //获取水的数据
+            BlockMetaLiquid blockMetaLiquid = blockData.GetBlockMeta<BlockMetaLiquid>();
+            //水是满的
+            if(blockMetaLiquid.volume == BlockBaseLiquid.maxLiquidVolume)
             {
-                vertsAddNew[index1] = vertsAdd[index1];
-                vertsAddNew[index2] = vertsAdd[index2];
+                base.BaseAddVertsUVsColors(chunk, localPosition, direction, face, vertsAdd, uvsAdd, colorsAdd);
             }
             else
             {
-                BlockMetaLiquid closeLiquid = Block.FromMetaData<BlockMetaLiquid>(closeBlockData.meta);
-                if (closeLiquid == null || closeLiquid.level == 0)
-                {
-                    vertsAddNew[index1] = vertsAdd[index1];
-                    vertsAddNew[index2] = vertsAdd[index2];
-                }
-            }
-        }
-    }
 
-    protected void GetVertsAddNewForRange(Chunk chunk, DirectionEnum direction, Vector3Int localPosition, Vector3[] vertsAddNew, Vector3[] vertsAdd, int indexPosition)
-    {
-        block.GetCloseBlockByDirection(chunk, localPosition, direction, out Block closeBlock, out Chunk closeChunk, out Vector3Int closeLocalPosition);
-
-        if (closeBlock != null && closeBlock.blockType == block.blockType)
-        {
-            Vector3Int tempPosition = block.GetClosePositionByDirection(direction, localPosition);
-            Vector3Int localPositionClose = tempPosition + chunk.chunkData.positionForWorld - closeChunk.chunkData.positionForWorld;
-            BlockBean closeBlockData = closeChunk.GetBlockData(localPositionClose);
-            if (closeBlockData == null)
-            {
-                vertsAddNew[indexPosition] = vertsAdd[indexPosition];
-            }
-            else
-            {
-                BlockMetaLiquid closeLiquid = Block.FromMetaData<BlockMetaLiquid>(closeBlockData.meta);
-                if (closeLiquid == null || closeLiquid.level == 0)
-                {
-                    vertsAddNew[indexPosition] = vertsAdd[indexPosition];
-                }
             }
         }
     }
