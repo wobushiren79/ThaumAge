@@ -5,6 +5,8 @@ using UnityEngine;
 public class BlockShapeLiquid : BlockShapeCube
 {
 
+    public static float itemVolumeHeight = 1f / BlockBaseLiquid.maxLiquidVolume;
+
     public override void InitData(Block block)
     {
         base.InitData(block);
@@ -17,59 +19,202 @@ public class BlockShapeLiquid : BlockShapeCube
         };
     }
 
-    public override void BaseAddVertsUVsColors(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction, DirectionEnum face, Vector3[] vertsAdd, Vector2[] uvsAdd, Color[] colorsAdd)
+    public override void BuildBlock(Chunk chunk, Vector3Int localPosition)
     {
-        BlockBean blockData = chunk.GetBlockData(localPosition);
-        //水是满的
-        if (blockData == null)
+        if (block.blockType != BlockTypeEnum.None)
         {
-            base.BaseAddVertsUVsColors(chunk, localPosition, direction, face, vertsAdd, uvsAdd, colorsAdd);
-        }
-        else
-        {
+            //只有在能旋转的时候才去查询旋转方向
+            BlockDirectionEnum direction = BlockDirectionEnum.UpForward;
+            BlockBean blockData = chunk.GetBlockData(localPosition);
             //获取水的数据
-            BlockMetaLiquid blockMetaLiquid = blockData.GetBlockMeta<BlockMetaLiquid>();
-            //水是满的
-            if(blockMetaLiquid.volume == BlockBaseLiquid.maxLiquidVolume)
+            BlockMetaLiquid blockMetaLiquid = null;
+            if (blockData != null)
             {
-                base.BaseAddVertsUVsColors(chunk, localPosition, direction, face, vertsAdd, uvsAdd, colorsAdd);
+                blockMetaLiquid = blockData.GetBlockMeta<BlockMetaLiquid>();
             }
-            else
-            {
 
-            }
+            CheckNeedBuildFaceAndBuild(chunk, localPosition, direction, DirectionEnum.Left, vertsAddLeft, uvsAddLeft, colorsAdd, trisAdd, blockMetaLiquid);
+
+            CheckNeedBuildFaceAndBuild(chunk, localPosition, direction, DirectionEnum.Right, vertsAddRight, uvsAddRight, colorsAdd, trisAdd, blockMetaLiquid);
+
+            CheckNeedBuildFaceAndBuild(chunk, localPosition, direction, DirectionEnum.Down, vertsAddDown, uvsAddDown, colorsAdd, trisAdd, blockMetaLiquid);
+
+            CheckNeedBuildFaceAndBuild(chunk, localPosition, direction, DirectionEnum.UP, vertsAddUp, uvsAddUp, colorsAdd, trisAdd, blockMetaLiquid);
+
+            CheckNeedBuildFaceAndBuild(chunk, localPosition, direction, DirectionEnum.Forward, vertsAddForward, uvsAddForward, colorsAdd, trisAdd, blockMetaLiquid);
+
+            CheckNeedBuildFaceAndBuild(chunk, localPosition, direction, DirectionEnum.Back, vertsAddBack, uvsAddBack, colorsAdd, trisAdd, blockMetaLiquid);
         }
     }
 
-    /// <summary>
-    /// 检测是否需要构建面
-    /// </summary>
-    protected override bool CheckNeedBuildFaceDef(Block closeBlock, Chunk closeBlockChunk, Vector3Int closeLocalPosition,DirectionEnum closeDirection)
+    public virtual void BuildFace(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction, DirectionEnum face,
+        Vector3[] vertsAdd, Vector2[] uvsAdd, Color[] colorsAdd, int[] trisAdd,
+        BlockMetaLiquid blockMetaLiquid)
     {
+        //如果是自己满水
+        if (blockMetaLiquid == null || blockMetaLiquid.volume == BlockBaseLiquid.maxLiquidVolume)
+        {
+            BaseAddTris(chunk, localPosition, direction, face, trisAdd);
+            BaseAddVertsUVsColors(chunk, localPosition, direction, face, vertsAdd, uvsAdd, colorsAdd);
+        }
+        else
+        {
+            Vector3[] vertsAddNew = GetVertsForYMove(vertsAdd, 0, (BlockBaseLiquid.maxLiquidVolume - blockMetaLiquid.volume) * itemVolumeHeight);
+            BaseAddTris(chunk, localPosition, direction, face, trisAdd);
+            BaseAddVertsUVsColors(chunk, localPosition, direction, face, vertsAddNew, uvsAdd, colorsAdd);
+        }
+    }
+
+    public virtual void BuildFace(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction, DirectionEnum face,
+        Vector3[] vertsAdd, Vector2[] uvsAdd, Color[] colorsAdd, int[] trisAdd,
+        BlockMetaLiquid blockMetaLiquid, BlockMetaLiquid closeBlockMetaLiquid)
+    {
+        //如果是自己满水
+        if (blockMetaLiquid == null || blockMetaLiquid.volume == BlockBaseLiquid.maxLiquidVolume)
+        {
+            //只需要往上移动旁边水的容积
+            Vector3[] vertsAddNew = GetVertsForYMove(vertsAdd, closeBlockMetaLiquid.volume * itemVolumeHeight, 0);
+            BaseAddTris(chunk, localPosition, direction, face, trisAdd);
+            BaseAddVertsUVsColors(chunk, localPosition, direction, face, vertsAddNew, uvsAdd, colorsAdd);
+        }
+        else
+        {
+            //需要往上移动旁边水的容积 再往下移动自己少了的容积
+            Vector3[] vertsAddNew = GetVertsForYMove(vertsAdd, closeBlockMetaLiquid.volume * itemVolumeHeight, (BlockBaseLiquid.maxLiquidVolume - blockMetaLiquid.volume) * itemVolumeHeight);
+            BaseAddTris(chunk, localPosition, direction, face, trisAdd);
+            BaseAddVertsUVsColors(chunk, localPosition, direction, face, vertsAddNew, uvsAdd, colorsAdd);
+        }
+    }
+
+    public virtual bool CheckNeedBuildFaceAndBuild(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction, DirectionEnum closeDirection,
+        Vector3[] vertsAdd, Vector2[] uvsAdd, Color[] colorsAdd, int[] trisAdd,
+        BlockMetaLiquid blockMetaLiquid)
+    {
+        if (localPosition.y == 0) return false;
+        GetCloseRotateBlockByDirection(chunk, localPosition, direction, closeDirection,
+            out Block closeBlock, out Chunk closeBlockChunk, out Vector3Int closeLocalPosition);
+        if (closeBlockChunk != null && closeBlockChunk.isInit)
+        {
+            if (closeBlock == null || closeBlock.blockType == BlockTypeEnum.None)
+            {
+                //只是空气方块
+                BuildFace(chunk, localPosition, direction, closeDirection, vertsAdd, uvsAdd, colorsAdd, trisAdd, blockMetaLiquid);
+                return true;
+            }
+        }
+        else
+        {
+            //还没有生成chunk
+            return false;
+        }
         BlockShapeEnum blockShape = closeBlock.blockInfo.GetBlockShape();
         switch (blockShape)
         {
             case BlockShapeEnum.Cube:
-                if(closeDirection == DirectionEnum.UP)
+                if (closeDirection == DirectionEnum.UP)
                 {
+                    //水是满的
+                    if (blockMetaLiquid == null || blockMetaLiquid.volume == 8)
+                    {
+                        return false;
+                    }
+                    BuildFace(chunk, localPosition, direction, closeDirection, vertsAdd, uvsAdd, colorsAdd, trisAdd, blockMetaLiquid);
                     return true;
                 }
                 return false;
             case BlockShapeEnum.Liquid:
                 if (closeBlock.blockType == block.blockType)
                 {
-                    return false;
+                    BlockBean closeBlockData = chunk.GetBlockData(closeLocalPosition);
+                    BlockMetaLiquid closeBlockMetaLiquid = null;
+                    if (closeBlockData != null)
+                    {
+                        closeBlockMetaLiquid = closeBlockData.GetBlockMeta<BlockMetaLiquid>();
+                    }
+
+                    if (closeDirection == DirectionEnum.UP)
+                    {
+                        //如果自己已经满了 则不渲染面
+                        if (blockMetaLiquid == null || blockMetaLiquid.volume == BlockBaseLiquid.maxLiquidVolume)
+                        {
+                            return false;
+                        }
+                        else
+                        {
+                            BuildFace(chunk, localPosition, direction, closeDirection, vertsAdd, uvsAdd, colorsAdd, trisAdd, blockMetaLiquid);
+                            return true;
+                        }
+                    }
+                    else if (closeDirection == DirectionEnum.Down)
+                    {
+                        //如果下方方块的水已经满了 则不渲染面
+                        if (closeBlockMetaLiquid == null || closeBlockMetaLiquid.volume == BlockBaseLiquid.maxLiquidVolume)
+                        {
+                            return false;
+                        }
+                        else
+                        {
+                            BuildFace(chunk, localPosition, direction, closeDirection, vertsAdd, uvsAdd, colorsAdd, trisAdd, blockMetaLiquid);
+                            return true;
+                        }
+                    }
+                    else
+                    {
+                        //如果旁边的水满了 则不渲染面
+                        if (closeBlockMetaLiquid == null || closeBlockMetaLiquid.volume == BlockBaseLiquid.maxLiquidVolume)
+                        {
+                            return false;
+                        }
+                        else
+                        {
+                            if (blockMetaLiquid == null)
+                            {
+                                //如果旁边的水容量大于等于自己的水容量 则不渲染面
+                                if (closeBlockMetaLiquid.volume >= BlockBaseLiquid.maxLiquidVolume)
+                                {
+                                    return false;
+                                }
+                            }
+                            else
+                            {
+                                //如果旁边的水容量大于等于自己的水容量 则不渲染面
+                                if (closeBlockMetaLiquid.volume >= blockMetaLiquid.volume)
+                                {
+                                    return false;
+                                }
+                            }
+                            BuildFace(chunk, localPosition, direction, closeDirection, vertsAdd, uvsAdd, colorsAdd, trisAdd, blockMetaLiquid, closeBlockMetaLiquid);
+                            return true;
+                        }
+                    }
                 }
                 else
                 {
+                    BuildFace(chunk, localPosition, direction, closeDirection, vertsAdd, uvsAdd, colorsAdd, trisAdd, blockMetaLiquid);
                     return true;
                 }
             default:
-                if (closeBlock.blockType == BlockTypeEnum.FlowerWater)
-                {
-                    return false;
-                }
+                BuildFace(chunk, localPosition, direction, closeDirection, vertsAdd, uvsAdd, colorsAdd, trisAdd, blockMetaLiquid);
                 return true;
         }
+    }
+
+
+    public Vector3[] GetVertsForYMove(Vector3[] oldData, float moveOffsetAdd, float moveOffsetSub)
+    {
+        Vector3[] newData = new Vector3[oldData.Length];
+        for (int i = 0; i < oldData.Length; i++)
+        {
+            Vector3 itemData = oldData[i];
+            if (itemData.y == 1 && moveOffsetSub > 0)
+            {
+                newData[i] = itemData.AddY(-moveOffsetSub);
+            }
+            else if (itemData.y == 0 && moveOffsetAdd > 0)
+            {
+                newData[i] = itemData.AddY(moveOffsetAdd);
+            }
+        }
+        return newData;
     }
 }
