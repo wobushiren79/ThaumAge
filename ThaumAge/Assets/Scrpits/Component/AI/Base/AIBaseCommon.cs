@@ -28,7 +28,7 @@ public static class AIBaseCommon
             //获取目标距离
             float disTarget = Vector3.Distance(sourcePosition, fixTargetPosition);
             //发射一条射线 检测是否有视野遮挡（距离-0.5 防止射到地面）
-            bool hasObstacles = RayUtil.RayToCast(sourcePosition, fixTargetPosition - sourcePosition, disTarget - 0.5f, layerObstacles);
+            bool hasObstacles = RayUtil.CheckToCast(sourcePosition, fixTargetPosition - sourcePosition, disTarget - 0.5f, layerObstacles);
             if (!hasObstacles)
             {
                 listData.Add(itemTargetCollider);

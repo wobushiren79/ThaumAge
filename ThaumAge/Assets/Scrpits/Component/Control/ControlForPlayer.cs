@@ -10,6 +10,11 @@ public class ControlForPlayer : ControlForBase
     private CapsuleCollider colliderPlayer;
     private CreatureCptCharacter character;
 
+    //攀爬高度
+    public float stepHeigh = 0.6f;
+    //攀爬过度
+    public float stepSmooth = 0.1f;
+
     //移动速度
     public float speedMove = 0.6f;
     //跳跃速度
@@ -198,6 +203,27 @@ public class ControlForPlayer : ControlForBase
         {
             character.characterAnim.creatureAnim.PlayBaseAnim(CreatureAnimBaseState.Walk);
             rbPlayer.MovePosition(rbPlayer.transform.position + playerVelocity);
+            //高度翻越处理
+            HandleForStepClimb();
+        }
+    }
+
+    /// <summary>
+    /// 高度翻越处理
+    /// </summary>
+    public void HandleForStepClimb()
+    {
+        Vector3 stepLowerPosition = transform.position.AddY(0.05f);
+        Vector3 stepUpperPosition = stepLowerPosition.AddY(stepHeigh);
+
+        if (RayUtil.CheckToCast(stepLowerPosition, playerVelocity, 0.1f, 1 << LayerInfo.ChunkCollider))
+        {
+            Debug.DrawLine(stepLowerPosition, transform.position + playerVelocity * 0.1f, Color.red);
+            if (!RayUtil.CheckToCast(stepUpperPosition, playerVelocity, 0.2f, 1 << LayerInfo.ChunkCollider))
+            {
+                Debug.DrawLine(stepUpperPosition, transform.position + playerVelocity * 0.2f, Color.red);
+                rbPlayer.position += new Vector3(0, stepSmooth, 0);
+            }
         }
     }
 
@@ -208,14 +234,13 @@ public class ControlForPlayer : ControlForBase
     {
         if (isJump && isJumpCheck)
         {
-            Debug.DrawRay(rbPlayer.transform.position + new Vector3(0, 0.1f, 0), Vector3.down * 0.2f, Color.red);
             //发射射线检测
-            if (RayUtil.RayToCast
+            if (RayUtil.CheckToCast
                 (
-                rbPlayer.transform.position + new Vector3(0, 0.1f, 0),
-                Vector3.down,
-                0.2f,
-                1 << LayerInfo.ChunkTrigger | 1 << LayerInfo.ChunkCollider | 1 << LayerInfo.Character | 1 << LayerInfo.Creature)
+                    rbPlayer.transform.position + new Vector3(0, 0.1f, 0),
+                    Vector3.down,
+                    0.2f,
+                    1 << LayerInfo.ChunkTrigger | 1 << LayerInfo.ChunkCollider | 1 << LayerInfo.Character | 1 << LayerInfo.Creature)
                 )
             {
                 isJumpCheck = false;
