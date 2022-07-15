@@ -13,7 +13,7 @@ public class BiomeVolcano : Biome
 
     public override BlockTypeEnum GetBlockForMaxHeightDown(Chunk chunk, Vector3Int localPos, ChunkTerrainData terrainData)
     {
-        float noise = (terrainData.maxHeight - biomeInfo.min_height) / biomeInfo.amplitude;
+        float noise = (terrainData.maxHeight - biomeInfo.min_height) / biomeInfo.amplitude0;
         if (noise >= 0.9f)
         {
             if (localPos.y >= terrainData.maxHeight - 3)

@@ -57,10 +57,22 @@ public class BiomeMapData
                 ChunkTerrainData itemTerrainData = new ChunkTerrainData
                 {
                     position = new Vector2(x + chunk.chunkData.positionForWorld.x, z + chunk.chunkData.positionForWorld.z),
-                    perlinFrequency = biome.biomeInfo.frequency,
-                    perlinAmplitude = biome.biomeInfo.amplitude,
-                    perlinSize = biome.biomeInfo.scale,
-                    perlinIterateNumber = biome.biomeInfo.iterate_number,
+                    perlinFrequency0 = biome.biomeInfo.frequency0,
+                    perlinFrequency1 = biome.biomeInfo.frequency1,
+                    perlinFrequency2 = biome.biomeInfo.frequency2,
+
+                    perlinAmplitude0 = biome.biomeInfo.amplitude0,
+                    perlinAmplitude1 = biome.biomeInfo.amplitude1,
+                    perlinAmplitude2 = biome.biomeInfo.amplitude2,
+
+                    perlinSize0 = biome.biomeInfo.scale0,
+                    perlinSize1 = biome.biomeInfo.scale1,
+                    perlinSize2 = biome.biomeInfo.scale2,
+
+                    perlinIterateNumber0 = biome.biomeInfo.iterate_number0,
+                    perlinIterateNumber1 = biome.biomeInfo.iterate_number1,
+                    perlinIterateNumber2 = biome.biomeInfo.iterate_number2,
+
                     minHeight = biome.biomeInfo.min_height,
                     minBiomeDis = minBiomeDis,
                     secondMinBiomeDis = secondMinBiomeDis

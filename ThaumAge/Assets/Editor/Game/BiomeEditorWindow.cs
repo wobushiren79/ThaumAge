@@ -163,13 +163,13 @@ public class BiomeEditorWindow : EditorWindow
         biomeInfo.name_en = EditorUI.GUIEditorText(biomeInfo.name_en);
         biomeInfo.id = (int)EditorUI.GUIEnum<BiomeTypeEnum>("生态类型：", (int)biomeInfo.id);
         EditorUI.GUIText("频率", 50);
-        biomeInfo.frequency = EditorUI.GUIEditorText(biomeInfo.frequency);
+        biomeInfo.frequency0 = EditorUI.GUIEditorText(biomeInfo.frequency0);
         EditorUI.GUIText("振幅", 50);
-        biomeInfo.amplitude = EditorUI.GUIEditorText(biomeInfo.amplitude);
+        biomeInfo.amplitude0 = EditorUI.GUIEditorText(biomeInfo.amplitude0);
         EditorUI.GUIText("最小高度（默认50）", 150);
         biomeInfo.min_height = EditorUI.GUIEditorText(biomeInfo.min_height);
         EditorUI.GUIText("大小", 50);
-        biomeInfo.scale = EditorUI.GUIEditorText(biomeInfo.scale);
+        biomeInfo.scale0 = EditorUI.GUIEditorText(biomeInfo.scale0);
         GUILayout.EndHorizontal();
     }
 }
