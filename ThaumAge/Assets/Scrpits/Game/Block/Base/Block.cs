@@ -235,10 +235,18 @@ public class Block
     {
         DestoryBlockModel(chunk, localPosition);
         //取消注册
+        chunk.UnRegisterEventUpdate(localPosition, TimeUpdateEventTypeEnum.SecTiny);
         chunk.UnRegisterEventUpdate(localPosition, TimeUpdateEventTypeEnum.Sec);
         chunk.UnRegisterEventUpdate(localPosition, TimeUpdateEventTypeEnum.Min);
     }
 
+    /// <summary>
+    /// 事件方块更新_0.2秒
+    /// </summary>
+    public virtual void EventBlockUpdateForSecTiny(Chunk chunk, Vector3Int localPosition)
+    {
+
+    }
     /// <summary>
     /// 事件方块更新_1秒
     /// </summary>

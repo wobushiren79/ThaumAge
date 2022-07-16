@@ -125,7 +125,7 @@ public class BlockShapeLiquid : BlockShapeCube
             case BlockShapeEnum.Liquid:
                 if (closeBlock.blockType == block.blockType)
                 {
-                    BlockBean closeBlockData = chunk.GetBlockData(closeLocalPosition);
+                    BlockBean closeBlockData = closeBlockChunk.GetBlockData(closeLocalPosition);
                     BlockMetaLiquid closeBlockMetaLiquid = null;
                     if (closeBlockData != null)
                     {
@@ -205,14 +205,18 @@ public class BlockShapeLiquid : BlockShapeCube
         Vector3[] newData = new Vector3[oldData.Length];
         for (int i = 0; i < oldData.Length; i++)
         {
-            Vector3 itemData = oldData[i];
-            if (itemData.y == 1 && moveOffsetSub > 0)
+            Vector3 itemOldData = oldData[i];
+            if (itemOldData.y == 1 && moveOffsetSub > 0)
             {
-                newData[i] = itemData.AddY(-moveOffsetSub);
+                newData[i] = itemOldData.AddY(-moveOffsetSub);
             }
-            else if (itemData.y == 0 && moveOffsetAdd > 0)
+            else if (itemOldData.y == 0 && moveOffsetAdd > 0)
             {
-                newData[i] = itemData.AddY(moveOffsetAdd);
+                newData[i] = itemOldData.AddY(moveOffsetAdd);
+            }
+            else
+            {
+                newData[i] = itemOldData;
             }
         }
         return newData;

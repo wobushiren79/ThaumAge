@@ -9,11 +9,7 @@ public class BlockBaseLiquid : Block
         base.InitBlock(chunk, localPosition, state);
         if (state == 1)
         {
-            //注册事件 
-            chunk.chunkComponent.WaitExecuteEndOfFrame(1, () =>
-            {
-                chunk.RegisterEventUpdate(localPosition, TimeUpdateEventTypeEnum.Sec);
-            });
+            RegisterEventUpdate(chunk, localPosition);
         }
     }
 
@@ -27,6 +23,16 @@ public class BlockBaseLiquid : Block
     {
         base.RefreshBlock(chunk, localPosition, direction);
         //刷新的时候注册事件 
+        RegisterEventUpdate(chunk, localPosition);
+    }
+
+    /// <summary>
+    /// 注册事件
+    /// </summary>
+    /// <param name="chunk"></param>
+    /// <param name="localPosition"></param>
+    public void RegisterEventUpdate(Chunk chunk, Vector3Int localPosition)
+    {    
         chunk.chunkComponent.WaitExecuteEndOfFrame(1, () =>
         {
             chunk.RegisterEventUpdate(localPosition, TimeUpdateEventTypeEnum.Sec);
@@ -45,7 +51,7 @@ public class BlockBaseLiquid : Block
         Vector3Int worldPosition = localPosition + chunk.chunkData.positionForWorld;
         BlockBean blockData = chunk.GetBlockData(localPosition);
         BlockMetaLiquid blockMetaLiquid = GetBlockMetaLiquid(blockType, localPosition, ref blockData);
-
+        int oldVolume = blockMetaLiquid.volume;
         //设置下方的方块
         SetCloseBlockForDown(chunk, worldPosition, blockData, blockMetaLiquid);
 
@@ -58,8 +64,21 @@ public class BlockBaseLiquid : Block
         }
         else
         {
-            blockData.meta = ToMetaData(blockMetaLiquid);
-            chunk.SetBlockData(blockData);
+            if (oldVolume != blockMetaLiquid.volume)
+            {
+                blockData.meta = ToMetaData(blockMetaLiquid);
+                chunk.SetBlockData(blockData);
+
+                RefreshBlockRange(chunk, localPosition, blockData.GetDirection());
+                WorldCreateHandler.Instance.manager.AddUpdateChunk(chunk, 1);
+
+            }
+            else
+            {
+                //取消注册
+                chunk.UnRegisterEventUpdate(localPosition, TimeUpdateEventTypeEnum.Sec);
+                WorldCreateHandler.Instance.manager.AddUpdateChunk(chunk, 1);
+            }
         }
     }
 
@@ -96,7 +115,12 @@ public class BlockBaseLiquid : Block
                 {
                     blockMetaLiquid.volume--;
                     downBlockMetaLiquid.volume++;
+                    downBlockData.meta = ToMetaData(downBlockMetaLiquid);
                     downChunk.SetBlockData(downBlockData);
+                    //刷新
+                    RefreshBlock(downChunk, downWorldPosition - downChunk.chunkData.positionForWorld, downBlockDirection);
+                    RefreshBlockRange(downChunk, downWorldPosition - downChunk.chunkData.positionForWorld, downBlockDirection);
+                    WorldCreateHandler.Instance.manager.AddUpdateChunk(downChunk, 1);
                     return;
                 }
                 //如果下方的水满了 则开始检测四周
@@ -143,11 +167,8 @@ public class BlockBaseLiquid : Block
         {
             //只要有一个可以流动 则减少1份体积
             blockMetaLiquid.volume--;
-        }
-        else
-        {
-            //取消注册
-            chunk.UnRegisterEventUpdate(worldPosition - chunk.chunkData.positionForWorld, TimeUpdateEventTypeEnum.Sec);
+            //刷新
+            WorldCreateHandler.Instance.manager.AddUpdateChunk(chunk, 1);
         }
     }
 
@@ -163,10 +184,18 @@ public class BlockBaseLiquid : Block
         //如果方块是空气 则可以流动
         if (closeBlock == null || closeBlock.blockType == BlockTypeEnum.None)
         {
-            BlockMetaLiquid closeBlockMetaLiquid = new BlockMetaLiquid();
-            closeBlockMetaLiquid.volume = 1;
-            closeChunk.SetBlockForWorld(wPos, blockType, meta: ToMetaData(closeBlockMetaLiquid));
-            return true;
+            //如果是只有1格水 则不流动了
+            if(blockMetaLiquid.volume == 1)
+            {
+                return false;
+            }
+            else
+            {
+                BlockMetaLiquid closeBlockMetaLiquid = new BlockMetaLiquid();
+                closeBlockMetaLiquid.volume = 1;
+                closeChunk.SetBlockForWorld(wPos, blockType, meta: ToMetaData(closeBlockMetaLiquid));
+                return true;
+            }
         }
         else
         {
@@ -177,10 +206,15 @@ public class BlockBaseLiquid : Block
                 BlockBean closeBlockData = closeChunk.GetBlockData(closeLocalPosition);
                 BlockMetaLiquid closeBlockMetaLiquid = GetBlockMetaLiquid(blockType, closeLocalPosition, ref closeBlockData);
                 //如果靠近液体方块水量比本身的少2个 则把本身的水分给1份
-                if (closeBlockMetaLiquid.volume < blockMetaLiquid.volume - 1)
+                if (blockMetaLiquid.volume > closeBlockMetaLiquid.volume + 1)
                 {
                     closeBlockMetaLiquid.volume++;
+                    closeBlockData.meta = ToMetaData(closeBlockMetaLiquid);
                     closeChunk.SetBlockData(closeBlockData);
+                    //刷新
+                    RefreshBlock(closeChunk, wPos - closeChunk.chunkData.positionForWorld, closeDirection);
+                    RefreshBlockRange(closeChunk, wPos - closeChunk.chunkData.positionForWorld, closeDirection);
+                    WorldCreateHandler.Instance.manager.AddUpdateChunk(closeChunk, 1);
                     return true;
                 }
                 //如果旁边的水比本身多 则不转移
@@ -195,14 +229,22 @@ public class BlockBaseLiquid : Block
                 //首先判断是不是重量为1的
                 if (closeBlock.blockInfo.weight == 1)
                 {
-                    //如果方块的重量是1 则冲掉方块并且把水分给方块一份
-                    //创建掉落
-                    ItemsHandler.Instance.CreateItemCptDrop(closeBlock, closeChunk, wPos);
+                    //如果是只有1格水 则不流动了
+                    if (blockMetaLiquid.volume == 1)
+                    {
+                        return false;
+                    }
+                    else
+                    {
+                        //如果方块的重量是1 则冲掉方块并且把水分给方块一份
+                        //创建掉落
+                        ItemsHandler.Instance.CreateItemCptDrop(closeBlock, closeChunk, wPos);
 
-                    BlockMetaLiquid closeBlockMetaLiquid = new BlockMetaLiquid();
-                    closeBlockMetaLiquid.volume = 1;
-                    closeChunk.SetBlockForWorld(wPos, blockType, meta: ToMetaData(closeBlockMetaLiquid));
-                    return true;
+                        BlockMetaLiquid closeBlockMetaLiquid = new BlockMetaLiquid();
+                        closeBlockMetaLiquid.volume = 1;
+                        closeChunk.SetBlockForWorld(wPos, blockType, meta: ToMetaData(closeBlockMetaLiquid));
+                        return true;
+                    }
                 }
                 //开始检测四周
                 else
@@ -222,7 +264,7 @@ public class BlockBaseLiquid : Block
     public static BlockMetaLiquid GetBlockMetaLiquid(BlockTypeEnum blockType, Vector3Int localPosition, ref BlockBean blockData)
     {
         BlockMetaLiquid blockMetaLiquid;
-        if (blockData == null)
+        if (blockData == null || blockData.meta.IsNull())
         {
             //设置默认水的数据
             blockMetaLiquid = new BlockMetaLiquid();

@@ -14,6 +14,8 @@ public class Chunk
     //区块组件
     public ChunkComponent chunkComponent;
 
+    //需要更新事件的方块（频率每0.2秒一次）
+    public List<Vector3Int> listEventUpdateForSecTiny = new List<Vector3Int>();
     //需要更新事件的方块（频率每秒一次）
     public List<Vector3Int> listEventUpdateForSec = new List<Vector3Int>();
     //需要更新事件的方块（频率每秒一次）
@@ -47,6 +49,7 @@ public class Chunk
     protected object lockForBlcok = new object();
 
     //事件更新事件
+    protected float eventUpdateTimeForSecTiny = 0;
     protected float eventUpdateTimeForSec = 0;
     protected float eventUpdateTimeForMin = 0;
 
@@ -56,8 +59,14 @@ public class Chunk
     {
         if (!isInit)
             return;
+        //eventUpdateTimeForSecTiny += Time.deltaTime;
         eventUpdateTimeForSec += Time.deltaTime;
         eventUpdateTimeForMin += Time.deltaTime;
+        //if (eventUpdateTimeForSecTiny > 0.2f)
+        //{
+        //    eventUpdateTimeForSecTiny = 0;
+        //    HandleForEventUpdateForSecTiny();
+        //}
         if (eventUpdateTimeForSec > 1)
         {
             eventUpdateTimeForSec = 0;
@@ -469,6 +478,16 @@ public class Chunk
     /// <summary>
     /// 事件处理
     /// </summary>
+    public void HandleForEventUpdateForSecTiny()
+    {
+        for (int i = 0; i < listEventUpdateForSecTiny.Count; i++)
+        {
+            Vector3Int localPosition = listEventUpdateForSecTiny[i];
+            Block block = chunkData.GetBlockForLocal(localPosition);
+            block.EventBlockUpdateForSecTiny(this, localPosition);
+        }
+    }
+
     public void HandleForEventUpdateForSec()
     {
         for (int i = 0; i < listEventUpdateForSec.Count; i++)
@@ -558,15 +577,20 @@ public class Chunk
     /// <param name="updateTime">1,60</param>
     public void RegisterEventUpdate(Vector3Int position, TimeUpdateEventTypeEnum updateTimeType)
     {
-        if (updateTimeType == TimeUpdateEventTypeEnum.Sec)
+        switch (updateTimeType) 
         {
-            if (!listEventUpdateForSec.Contains(position))
-                listEventUpdateForSec.Add(position);
-        }
-        else if (updateTimeType == TimeUpdateEventTypeEnum.Min)
-        {
-            if (!listEventUpdateForMin.Contains(position))
-                listEventUpdateForMin.Add(position);
+            case TimeUpdateEventTypeEnum.SecTiny:
+                if (!listEventUpdateForSecTiny.Contains(position))
+                    listEventUpdateForSecTiny.Add(position);
+                break;
+            case TimeUpdateEventTypeEnum.Sec:
+                if (!listEventUpdateForSec.Contains(position))
+                    listEventUpdateForSec.Add(position);
+                break;
+            case TimeUpdateEventTypeEnum.Min:
+                if (!listEventUpdateForMin.Contains(position))
+                    listEventUpdateForMin.Add(position);
+                break;
         }
     }
 
@@ -577,15 +601,20 @@ public class Chunk
     /// <param name="updateTime"></param>
     public void UnRegisterEventUpdate(Vector3Int position, TimeUpdateEventTypeEnum updateTimeType)
     {
-        if (updateTimeType == TimeUpdateEventTypeEnum.Sec)
+        switch (updateTimeType)
         {
-            if (listEventUpdateForSec.Contains(position))
-                listEventUpdateForSec.Remove(position);
-        }
-        else if (updateTimeType == TimeUpdateEventTypeEnum.Min)
-        {
-            if (listEventUpdateForMin.Contains(position))
-                listEventUpdateForMin.Remove(position);
+            case TimeUpdateEventTypeEnum.SecTiny:
+                if (listEventUpdateForSecTiny.Contains(position))
+                    listEventUpdateForSecTiny.Remove(position);
+                break;
+            case TimeUpdateEventTypeEnum.Sec:
+                if (listEventUpdateForSec.Contains(position))
+                    listEventUpdateForSec.Remove(position);
+                break;
+            case TimeUpdateEventTypeEnum.Min:
+                if (listEventUpdateForMin.Contains(position))
+                    listEventUpdateForMin.Remove(position);
+                break;
         }
     }
     #endregion

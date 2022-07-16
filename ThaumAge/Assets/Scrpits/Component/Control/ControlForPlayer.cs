@@ -216,12 +216,12 @@ public class ControlForPlayer : ControlForBase
         Vector3 stepLowerPosition = transform.position.AddY(0.05f);
         Vector3 stepUpperPosition = stepLowerPosition.AddY(stepHeigh);
 
-        if (RayUtil.CheckToCast(stepLowerPosition, playerVelocity, 0.1f, 1 << LayerInfo.ChunkCollider))
+        //Debug.DrawRay(stepLowerPosition, playerVelocity.normalized * 0.5f, Color.red);
+        //Debug.DrawRay(stepUpperPosition, playerVelocity.normalized * 0.6f, Color.red);
+        if (RayUtil.CheckToCast(stepLowerPosition, playerVelocity, 0.5f, 1 << LayerInfo.ChunkCollider))
         {
-            Debug.DrawLine(stepLowerPosition, transform.position + playerVelocity * 0.1f, Color.red);
-            if (!RayUtil.CheckToCast(stepUpperPosition, playerVelocity, 0.2f, 1 << LayerInfo.ChunkCollider))
-            {
-                Debug.DrawLine(stepUpperPosition, transform.position + playerVelocity * 0.2f, Color.red);
+            if (!RayUtil.CheckToCast(stepUpperPosition, playerVelocity, 0.6f, 1 << LayerInfo.ChunkCollider))
+            {     
                 rbPlayer.position += new Vector3(0, stepSmooth, 0);
             }
         }

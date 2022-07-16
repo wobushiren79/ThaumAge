@@ -8,6 +8,15 @@ public class BiomeSwamp : Biome
     public BiomeSwamp() : base(BiomeTypeEnum.Swamp)
     {
     }
+    public override BlockTypeEnum GetBlockForMaxHeightUp(Chunk chunk, Vector3Int localPos, ChunkTerrainData terrainData)
+    {
+        int waterHeight = biomeInfo.GetWaterPlaneHeight();
+        if (localPos.y == waterHeight + 1 && localPos.y > terrainData.maxHeight + 1)
+        {
+            AddLotusLeaf(localPos + chunk.chunkData.positionForWorld);
+        }
+        return base.GetBlockForMaxHeightUp(chunk, localPos, terrainData);
+    }
 
     public override BlockTypeEnum GetBlockForMaxHeightDown(Chunk chunk, Vector3Int localPos, ChunkTerrainData terrainData)
     {
@@ -173,11 +182,21 @@ public class BiomeSwamp : Biome
         {
             baseTypeOut = BlockTypeEnum.Dirt;
         }
-        else 
+        else
         {
             baseTypeOut = BlockTypeEnum.Grass;
         }
         return offsetDis;
     }
 
+    protected void AddLotusLeaf(Vector3Int wPos)
+    {
+        //生成概率
+        float addRate = WorldRandTools.GetValue(wPos, 411);
+        if (addRate < 0.05)
+        {
+            int randomDiection = WorldRandTools.Range(11, 15);
+            WorldCreateHandler.Instance.manager.AddUpdateBlock(wPos.x, wPos.y, wPos.z, BlockTypeEnum.LotusLeaf, (BlockDirectionEnum)randomDiection);
+        }
+    }
 }

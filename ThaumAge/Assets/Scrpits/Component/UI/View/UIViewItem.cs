@@ -139,7 +139,7 @@ public partial class UIViewItem : BaseUIView,
     public void SetIcon(string iconKey, string iconColor)
     {
         IconHandler.Instance.manager.GetItemsSpriteByName(iconKey, (spIcon) =>
-         {
+        {
              if (spIcon == null)
              {
                  IconHandler.Instance.GetUnKnowSprite((spIcon) =>
@@ -154,15 +154,18 @@ public partial class UIViewItem : BaseUIView,
              {
                  ui_IVIcon.sprite = spIcon;
              }
-         });
-        if (!iconColor.IsNull())
+        });
+        if (ui_IVIcon != null) 
         {
-            ColorUtility.TryParseHtmlString(iconColor, out Color colorSp);
-            ui_IVIcon.color = colorSp;
-        }
-        else
-        {
-            ui_IVIcon.color = Color.white;
+            if (!iconColor.IsNull())
+            {
+                ColorUtility.TryParseHtmlString(iconColor, out Color colorSp);
+                ui_IVIcon.color = colorSp;
+            }
+            else
+            {
+                ui_IVIcon.color = Color.white;
+            }
         }
     }
 

@@ -67,11 +67,11 @@ public class BlockBean
         return (BlockTypeEnum)blockId;
     }
 
-    public DirectionEnum GetDirection()
+    public BlockDirectionEnum GetDirection()
     {
         if (direction == 0)
-            return DirectionEnum.UP;
-        return (DirectionEnum)direction;
+            return BlockDirectionEnum.UpForward;
+        return (BlockDirectionEnum)direction;
     }
 
 }

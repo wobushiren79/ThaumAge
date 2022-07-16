@@ -80,7 +80,7 @@ public class BiomeMapData
                 arrayChunkTerrainData[x * chunk.chunkData.chunkWidth + z] = itemTerrainData;
             }
         }
-        ComputeBuffer buffer = new ComputeBuffer(arrayChunkTerrainData.Length, 44);
+        ComputeBuffer buffer = new ComputeBuffer(arrayChunkTerrainData.Length, 76);
         buffer.SetData(arrayChunkTerrainData);
         int kernelId = biomeManager.terrainCShader.FindKernel("CSMain");
         biomeManager.terrainCShader.SetFloats("RandomOffset", worldSeed, worldSeed);

@@ -13,6 +13,7 @@ public class BlockShapeFace : BlockShape
             new Vector3(1f,0.001f,1f),
             new Vector3(1f,0.001f,0f)
         };
+
         trisAdd = new int[]
         {
             0,1,2, 0,2,3
@@ -21,6 +22,24 @@ public class BlockShapeFace : BlockShape
         colorsAdd = new Color[]
         {
             Color.white,Color.white,Color.white,Color.white
+        };
+
+        vertsColliderAdd = new Vector3[]
+        {
+            new Vector3(0f,0.001f,0f),
+            new Vector3(0f,0.001f,1f),
+            new Vector3(1f,0.001f,1f),
+            new Vector3(1f,0.001f,0f),
+
+            new Vector3(0f,0.001f,0f),
+            new Vector3(0f,0.001f,1f),
+            new Vector3(1f,0.001f,1f),
+            new Vector3(1f,0.001f,0f)
+        };
+
+        trisColliderAdd = new int[]
+        {
+            0,1,2, 0,2,3, 4,6,5, 4,7,6
         };
     }
 

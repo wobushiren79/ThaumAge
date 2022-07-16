@@ -123,9 +123,15 @@ void CSMain (uint3 id : SV_DispatchThreadID,uint3 gid:SV_GROUPID,uint index:SV_G
         itemTerraninData.perlinSize2,
         itemTerraninData.position.x,
         itemTerraninData.position.y);
-
-    float finalNoise = finalNoise0 > finalNoise1 ? finalNoise0 : finalNoise1;
-    finalNoise = finalNoise > finalNoise2 ? finalNoise : finalNoise2;
+    float finalNoise = finalNoise0;
+    if (itemTerraninData.perlinIterateNumber1 > 0) 
+    {
+        finalNoise = finalNoise0 > finalNoise1 ? finalNoise0 : finalNoise1;
+    }
+    if (itemTerraninData.perlinIterateNumber2 > 0)
+    {
+        finalNoise = finalNoise > finalNoise2 ? finalNoise : finalNoise2;
+    }
     ////距离该方块最近的生态点距离
     //float minBiomeDis = 3.40282e+038;
     ////距离该方块第二近的生态点距离
