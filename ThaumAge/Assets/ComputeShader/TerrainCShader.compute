@@ -5,13 +5,21 @@ struct TerraninData
     //当前坐标
     float2 position;
     //频率（宽度）
-    float perlinFrequency;
+    float perlinFrequency0;
+    float perlinFrequency1;
+    float perlinFrequency2;
     //振幅(高度) 
-    float perlinAmplitude;
+    float perlinAmplitude0;
+    float perlinAmplitude1;
+    float perlinAmplitude2;
     //循环大小 最好大于512
-    float perlinSize;    
+    float perlinSize0;
+    float perlinSize1;   
+    float perlinSize2;       
     //迭代次数（越多地图越复杂）
-    int perlinIterateNumber;
+    int perlinIterateNumber0;
+    int perlinIterateNumber1;
+    int perlinIterateNumber2;
     //最低高度
     float minHeight;
 
@@ -62,22 +70,18 @@ float Unity_Distance_float3(float3 A, float3 B)
     return distance(A, B);
 }
 
-[numthreads(1024,1,1)]
-void CSMain (uint3 id : SV_DispatchThreadID,uint3 gid:SV_GROUPID,uint index:SV_GROUPINDEX)
+//地形生成
+float TerraninCreate(int iterateNumberMax,float perlinFrequency,float perlinAmplitude,float perlinSize,float posX,float posY)
 {
-    //获取GPU运算线程的地形数据
-    int dataIndex = id.x;
-    TerraninData itemTerraninData = BufferTerraninData[dataIndex];
-
-    int iterateNumber = 0;
-    float curFrequency = itemTerraninData.perlinFrequency;
-    float curAmplitude = itemTerraninData.perlinAmplitude;
     float finalNoise = 0;
+    int iterateNumber = 0;
+    float curFrequency = perlinFrequency;
+    float curAmplitude = perlinAmplitude;
     //循环种子次数
-    while(itemTerraninData.perlinIterateNumber > iterateNumber)
+    while(iterateNumberMax > iterateNumber)
     {
-        float x0 = (itemTerraninData.position.x / itemTerraninData.perlinSize) * curFrequency;
-        float y0 = (itemTerraninData.position.y / itemTerraninData.perlinSize) * curFrequency;
+        float x0 = (posX / perlinSize) * curFrequency;
+        float y0 = (posY / perlinSize) * curFrequency;
 
         float noise0 = unity_gradientNoise(float2(x0 + RandomOffset.x , y0 + RandomOffset.y)) * curAmplitude;
 
@@ -86,7 +90,42 @@ void CSMain (uint3 id : SV_DispatchThreadID,uint3 gid:SV_GROUPID,uint index:SV_G
         curFrequency = curFrequency * 2;
         curAmplitude = curAmplitude / 2;
     }
+    return finalNoise;
+}
 
+[numthreads(1024,1,1)]
+void CSMain (uint3 id : SV_DispatchThreadID,uint3 gid:SV_GROUPID,uint index:SV_GROUPINDEX)
+{
+    //获取GPU运算线程的地形数据
+    int dataIndex = id.x;
+    TerraninData itemTerraninData = BufferTerraninData[dataIndex];
+
+    float finalNoise0 =  TerraninCreate(
+        itemTerraninData.perlinIterateNumber0,
+        itemTerraninData.perlinFrequency0,
+        itemTerraninData.perlinAmplitude0,
+        itemTerraninData.perlinSize0,
+        itemTerraninData.position.x,
+        itemTerraninData.position.y);
+
+    float finalNoise1 =  TerraninCreate(
+        itemTerraninData.perlinIterateNumber1,
+        itemTerraninData.perlinFrequency1,
+        itemTerraninData.perlinAmplitude1,
+        itemTerraninData.perlinSize1,
+        itemTerraninData.position.x,
+        itemTerraninData.position.y);
+
+    float finalNoise2 =  TerraninCreate(
+        itemTerraninData.perlinIterateNumber2,
+        itemTerraninData.perlinFrequency2,
+        itemTerraninData.perlinAmplitude2,
+        itemTerraninData.perlinSize2,
+        itemTerraninData.position.x,
+        itemTerraninData.position.y);
+
+    float finalNoise = finalNoise0 > finalNoise1 ? finalNoise0 : finalNoise1;
+    finalNoise = finalNoise > finalNoise2 ? finalNoise : finalNoise2;
     ////距离该方块最近的生态点距离
     //float minBiomeDis = 3.40282e+038;
     ////距离该方块第二近的生态点距离
