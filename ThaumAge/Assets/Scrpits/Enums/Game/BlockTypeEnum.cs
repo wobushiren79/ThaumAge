@@ -91,6 +91,11 @@ public enum BlockTypeEnum
     CropWatermelonGrow = 5101,//种植生长中 西瓜
     CropWatermelon = 5102,//种植 西瓜
 
+    BerryBushGrowRed = 5901,//红色浆果丛 - 生长
+    BerryBushRed = 5902,//红色浆果丛
+    BerryBushGrowBlue = 5903,//蓝色浆果丛 - 生长
+    BerryBushBlue = 5904,//蓝色浆果丛
+
     LadderWood = 6001,//木梯子
     Door = 6010,//门
     CraftingTableSimple = 6101,//简易制作台

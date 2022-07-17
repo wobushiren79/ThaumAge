@@ -57,6 +57,11 @@ public class Block
         blockShape.InitData(this);
     }
 
+    /// <summary>
+    /// 获取区块
+    /// </summary>
+    /// <param name="worldPosition"></param>
+    /// <returns></returns>
     public Chunk GetChunk(Vector3Int worldPosition)
     {
         return WorldCreateHandler.Instance.manager.GetChunkForWorldPosition(worldPosition);
@@ -71,7 +76,7 @@ public class Block
     {
         return BlockHandler.Instance.GetBlockObj(worldPosition); ;
     }
-    
+
     /// <summary>
     /// 获取方块的方位
     /// </summary>
@@ -101,13 +106,6 @@ public class Block
     /// <summary>
     /// 获取周围的方块
     /// </summary>
-    /// <param name="worldPosition"></param>
-    /// <param name="upBlock"></param>
-    /// <param name="downBlock"></param>
-    /// <param name="leftBlock"></param>
-    /// <param name="rightBlock"></param>
-    /// <param name="forwardBlock"></param>
-    /// <param name="backBlock"></param>
     public void GetRoundBlock(Vector3Int worldPosition, out Block upBlock, out Block downBlock, out Block leftBlock, out Block rightBlock, out Block forwardBlock, out Block backBlock)
     {
         //获取周围的方块 并触发互动
@@ -223,7 +221,7 @@ public class Block
     /// <param name="chunk"></param>
     /// <param name="localPosition"></param>
     /// <param name="state">0:创建地形 1：手动设置方块</param>
-    public virtual void InitBlock(Chunk chunk, Vector3Int localPosition,int state)
+    public virtual void InitBlock(Chunk chunk, Vector3Int localPosition, int state)
     {
         CreateBlockModel(chunk, localPosition);
     }
@@ -305,9 +303,9 @@ public class Block
     /// 刷新方块
     /// </summary>
     public virtual void RefreshBlock(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction)
-    {       
+    {
         //更新方块
-        WorldCreateHandler.Instance.manager.AddUpdateChunk(chunk,1);
+        WorldCreateHandler.Instance.manager.AddUpdateChunk(chunk, 1);
     }
 
     /// <summary>
@@ -342,7 +340,7 @@ public class Block
     /// 获取破坏掉落
     /// </summary>
     /// <returns></returns>
-    public virtual List<ItemsBean> GetDropItems(BlockBean blockData)
+    public virtual List<ItemsBean> GetDropItems(BlockBean blockData = null)
     {
         return ItemsHandler.Instance.GetItemsDrop(blockInfo.items_drop);
     }
@@ -356,22 +354,38 @@ public class Block
     }
 
     /// <summary>
-    /// 获取使用道具时的数据
+    /// 该方块被当成道具使用时 获取使用道具时的数据
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <returns></returns>
-    public virtual string ItemUseMetaData(Vector3Int worldPosition, BlockTypeEnum blockType, BlockDirectionEnum direction, string curMeta) 
+    public virtual string ItemUseMetaData(Vector3Int worldPosition, BlockTypeEnum blockType, BlockDirectionEnum direction, string curMeta)
     {
         return curMeta;
     }
 
     /// <summary>
-    /// 道具使用，用于方块的放置或者其他处理
+    /// 被使用
     /// </summary>
-    public virtual void ItemUse(
+    public virtual void TargetUseBlock(Chunk targetChunk, Vector3Int targetWorldPosition)
+    {
+
+    }
+
+    /// <summary>
+    /// 被破坏
+    /// </summary>
+    public virtual void TargetBreakBlock(Chunk targetChunk, Vector3Int worldPosition)
+    {
+
+    }
+
+    /// <summary>
+    /// 该方块被当成道具使用时，用于方块的放置或者其他处理
+    /// </summary>
+    public virtual void ItemUse(Item useItem, ItemsBean itemsData,
         Vector3Int targetWorldPosition, BlockDirectionEnum targetBlockDirection, Block targetBlock, Chunk targetChunk,
         Vector3Int closeWorldPosition, BlockDirectionEnum closeBlockDirection, Block closeBlock, Chunk closeChunk,
-        BlockDirectionEnum direction , string metaData)
+        BlockDirectionEnum direction, string metaData)
     {
         //更新方块并 添加更新区块
         switch (blockInfo.rotate_state)
@@ -390,7 +404,7 @@ public class Block
                 closeChunk.SetBlockForWorld(closeWorldPosition, blockType, direction, metaData);
                 break;
             case 3:
-                if ((int)direction > 20&& (int)direction < 30)
+                if ((int)direction > 20 && (int)direction < 30)
                 {
                     direction = BlockDirectionEnum.DownForward;
                 }
@@ -464,7 +478,7 @@ public class Block
     /// <param name="closeBlock"></param>
     /// <param name="hasChunk"></param>
     public virtual void GetCloseBlockByDirection(Chunk chunk, Vector3Int localPosition, DirectionEnum getDirection,
-        out Block block, out Chunk blockChunk,out Vector3Int closeLocalPosition)
+        out Block block, out Chunk blockChunk, out Vector3Int closeLocalPosition)
     {
         //获取目标的本地坐标
         block = null;
@@ -556,7 +570,7 @@ public class Block
         for (int i = 0; i < listLink.Count; i++)
         {
             Vector3Int linkPosition = listLink[i];
-            Vector3 linkPositionRotate = VectorUtil.GetRotatedPosition(Vector3.zero, linkPosition, blockAngleRotate);     
+            Vector3 linkPositionRotate = VectorUtil.GetRotatedPosition(Vector3.zero, linkPosition, blockAngleRotate);
             Vector3Int closeWorldPosition = localPosition + chunk.chunkData.positionForWorld + Vector3Int.RoundToInt(linkPositionRotate);
 
             chunk.GetBlockForWorld(closeWorldPosition, out Block closeBlock, out BlockDirectionEnum closeDirection, out Chunk closeChunk);

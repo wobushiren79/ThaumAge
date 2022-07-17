@@ -71,7 +71,6 @@ public class BlockBaseLiquid : Block
 
                 RefreshBlockRange(chunk, localPosition, blockData.GetDirection());
                 WorldCreateHandler.Instance.manager.AddUpdateChunk(chunk, 1);
-
             }
             else
             {

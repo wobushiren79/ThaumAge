@@ -20,12 +20,12 @@ public class BlockBaseLink : Block
     /// <summary>
     /// 道具放置
     /// </summary>
-    public override void ItemUse(
+    public override void ItemUse(Item useItem, ItemsBean itemsData,
         Vector3Int targetWorldPosition, BlockDirectionEnum targetBlockDirection, Block targetBlock, Chunk targetChunk,
         Vector3Int closeWorldPosition, BlockDirectionEnum closeBlockDirection, Block closeBlock, Chunk closeChunk,
         BlockDirectionEnum direction, string metaData)
     {
-        base.ItemUse(targetWorldPosition, targetBlockDirection, targetBlock, targetChunk, closeWorldPosition, closeBlockDirection, closeBlock, closeChunk, direction, metaData);
+        base.ItemUse(useItem, itemsData, targetWorldPosition, targetBlockDirection, targetBlock, targetChunk, closeWorldPosition, closeBlockDirection, closeBlock, closeChunk, direction, metaData);
 
         CreateLinkBlock(closeChunk, closeWorldPosition - closeChunk.chunkData.positionForWorld, listLinkPosition);
     }

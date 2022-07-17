@@ -18,7 +18,7 @@ public class ItemsHandler : BaseHandler<ItemsHandler, ItemsManager>
         if (itemsData == null || itemsData.itemId == 0)
         {
             //如果手上没有东西
-            item = manager.GetRegisterItem(itemsData.itemId, ItemsTypeEnum.Block);
+            item = manager.GetRegisterItem(itemsData.itemId, ItemsTypeEnum.Empty);
         }
         else
         {
@@ -122,14 +122,14 @@ public class ItemsHandler : BaseHandler<ItemsHandler, ItemsManager>
             //首先判断生长周期
 
             //获取种植收货
-            List<ItemsBean> listHarvest = targetBlock.GetDropItems(blockData);
+            List<ItemsBean> listHarvest = targetBlock.GetDropItems();
             //创建掉落物
             CreateItemCptDropList(listHarvest, ItemDropStateEnum.DropPick, targetWorldPosition + Vector3.one * 0.5f);
         }
         else
         {
             //获取掉落道具
-            List<ItemsBean> listDrop = targetBlock.GetDropItems(blockData);
+            List<ItemsBean> listDrop = targetBlock.GetDropItems();
             //如果没有掉落物，则默认掉落本体一个
             if (listDrop.IsNull())
             {

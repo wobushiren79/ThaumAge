@@ -110,7 +110,7 @@ public class Item
                 }
                 else
                 {
-                    TargetUse(itemsData, targetPosition);
+                    TargetUse(itemsData, targetPosition, closePosition, direction);
                 }
             }
         }
@@ -156,26 +156,36 @@ public class Item
     }
 
     /// <summary>
-    /// 使用道具 (默认是破坏)
+    /// 使用道具
     /// </summary>
-    public virtual void TargetUse(ItemsBean itemsData, Vector3Int targetPosition)
+    public virtual void TargetUse(ItemsBean itemData, Vector3Int targetPosition, Vector3Int closePosition, BlockDirectionEnum direction)
     {
-        //获取原位置方块
-        WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(targetPosition, out Block oldBlock, out BlockDirectionEnum oldBlockDirection, out Chunk targetChunk);
-        if (targetChunk == null)
-            return;
-        //如果原位置是空则不做处理
-        if (oldBlock == null || oldBlock.blockType == BlockTypeEnum.None)
-            return;
-        ItemUseHandle(itemsData, targetPosition, oldBlock, oldBlockDirection, targetChunk);
-    }
+        //获取目标方块
+        WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(targetPosition, out Block targetBlock, out BlockDirectionEnum targetBlockDirection, out Chunk targetChunk);
+        ////首先获取靠近方块
+        //WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(closePosition, out Block closeBlock, out BlockDirectionEnum closeBlockDirection, out Chunk closeChunk);
+        //if (targetChunk == null)
+        //    return;
+        ////如果原位置是空则不做处理
+        //if (targetBlock == null || targetBlock.blockType == BlockTypeEnum.None)
+        //    return;
 
-    /// <summary>
-    /// 道具使用处理
-    /// </summary>
-    public virtual void ItemUseHandle(ItemsBean itemsData, Vector3Int targetPosition, Block targetBlock, BlockDirectionEnum targetBlockDirection, Chunk targetChunk)
-    {
+        ////获取物品信息
+        //ItemsInfoBean itemsInfo = ItemsHandler.Instance.manager.GetItemsInfoById(itemData.itemId);
+        ////获取方块信息
+        //Block useBlock = BlockHandler.Instance.manager.GetRegisterBlock(itemsInfo.type_id);
+        //BlockInfoBean blockInfo = useBlock.blockInfo;
 
+        //BlockTypeEnum changeBlockType = blockInfo.GetBlockType();
+
+        ////获取meta数据
+        //string metaData = useBlock.ItemUseMetaData(closePosition, changeBlockType, closeBlockDirection, itemData.meta);
+        ////使用方块
+        //useBlock.ItemUse(this, itemData,
+        //    targetPosition, targetBlockDirection, targetBlock, targetChunk,
+        //    closePosition, closeBlockDirection, closeBlock, closeChunk,
+        //    direction, metaData);
+        targetBlock.TargetUseBlock(targetChunk , targetPosition);
     }
 
     /// <summary>
@@ -184,23 +194,23 @@ public class Item
     public virtual void TargetBreak(ItemsBean itemsData, Vector3Int targetPosition)
     {
         //获取原位置方块
-        WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(targetPosition, out Block oldBlock, out Chunk targetChunk);
+        WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(targetPosition, out Block targetBlock, out Chunk targetChunk);
         if (targetChunk == null)
             return;
         //如果原位置是空则不做处理
-        if (oldBlock == null || oldBlock.blockType == BlockTypeEnum.None)
+        if (targetBlock == null || targetBlock.blockType == BlockTypeEnum.None)
             return;
         //如果是链接方块 则用链接方块的基础方块代替
-        if (oldBlock.blockType == BlockTypeEnum.LinkChild)
+        if (targetBlock.blockType == BlockTypeEnum.LinkChild)
         {
             BlockBean oldBlockData = targetChunk.GetBlockData(targetPosition - targetChunk.chunkData.positionForWorld);
             BlockMetaBaseLink oldeBlockMetaLinkData = Block.FromMetaData<BlockMetaBaseLink>(oldBlockData.meta);
-            WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(oldeBlockMetaLinkData.GetBasePosition(), out oldBlock, out targetChunk);
+            WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(oldeBlockMetaLinkData.GetBasePosition(), out targetBlock, out targetChunk);
             targetPosition = oldeBlockMetaLinkData.GetBasePosition();
         }
 
         //获取破坏值
-        int breakDamage = GetBreakDamage(itemsData, oldBlock);
+        int breakDamage = GetBreakDamage(itemsData, targetBlock);
         //扣除道具耐久
         if (breakDamage > 0 && this is ItemBaseTool itemTool)
         {
@@ -216,14 +226,16 @@ public class Item
             //回调
             EventHandler.Instance.TriggerEvent(EventsInfo.ItemsBean_MetaChange, itemsData);
         }
+        //通知
+        targetBlock.TargetBreakBlock(targetChunk, targetPosition);
 
-        BlockCptBreak BlockCptBreak = BlockHandler.Instance.BreakBlock(targetPosition, oldBlock, breakDamage);
+        BlockCptBreak BlockCptBreak = BlockHandler.Instance.BreakBlock(targetPosition, targetBlock, breakDamage);
         if (BlockCptBreak.blockLife <= 0)
         {
             //移除破碎效果
             BlockHandler.Instance.DestroyBreakBlock(targetPosition);
             //创建掉落
-            ItemsHandler.Instance.CreateItemCptDrop(oldBlock, targetChunk, targetPosition);
+            ItemsHandler.Instance.CreateItemCptDrop(targetBlock, targetChunk, targetPosition);
             //移除该方块
             targetChunk.RemoveBlockForWorld(targetPosition);
         }

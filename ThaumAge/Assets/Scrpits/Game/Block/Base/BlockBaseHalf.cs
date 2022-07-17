@@ -33,7 +33,7 @@ public class BlockBaseHalf : Block
        return ToMetaData(blockMeta);
     }
 
-    public override void ItemUse(
+    public override void ItemUse(Item useItem, ItemsBean itemsData,
         Vector3Int targetWorldPosition, BlockDirectionEnum targetBlockDirection, Block targetBlock, Chunk targetChunk, 
         Vector3Int closeWorldPosition, BlockDirectionEnum closeBlockDirection, Block closeBlock, Chunk closeChunk, 
         BlockDirectionEnum direction, string metaData)
@@ -81,12 +81,12 @@ public class BlockBaseHalf : Block
             }
             else
             {
-                base.ItemUse(targetWorldPosition, targetBlockDirection, targetBlock, targetChunk, closeWorldPosition, closeBlockDirection, closeBlock, closeChunk, direction, metaData);
+                base.ItemUse(useItem, itemsData,targetWorldPosition, targetBlockDirection, targetBlock, targetChunk, closeWorldPosition, closeBlockDirection, closeBlock, closeChunk, direction, metaData);
             }
         }
         else
         {
-            base.ItemUse(targetWorldPosition, targetBlockDirection, targetBlock, targetChunk, closeWorldPosition, closeBlockDirection, closeBlock, closeChunk, direction, metaData);
+            base.ItemUse(useItem, itemsData, targetWorldPosition, targetBlockDirection, targetBlock, targetChunk, closeWorldPosition, closeBlockDirection, closeBlock, closeChunk, direction, metaData);
         }     
     }
 }

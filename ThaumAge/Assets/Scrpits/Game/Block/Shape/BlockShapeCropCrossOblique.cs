@@ -6,7 +6,7 @@ public class BlockShapeCropCrossOblique : BlockShapeCrossOblique
 {
     public BlockShapeCropCrossOblique() : base()
     {
-        BlockBaseCrop.InitCropVert(vertsAdd);
+
     }
 
 }

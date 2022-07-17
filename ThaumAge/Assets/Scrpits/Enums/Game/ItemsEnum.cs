@@ -32,6 +32,8 @@ public enum ItemsTypeEnum
     Bow = 33, //弓
 
     Creature = 101,//生物
+
+    Empty = 999,//空手
 }
 
 

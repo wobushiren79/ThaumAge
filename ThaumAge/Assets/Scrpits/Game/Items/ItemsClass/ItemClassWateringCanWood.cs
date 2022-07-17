@@ -3,8 +3,11 @@ using UnityEngine;
 
 public class ItemClassWateringCanWood : ItemBaseTool
 {
-    public override void ItemUseHandle(ItemsBean itemsData, Vector3Int targetPosition, Block targetBlock, BlockDirectionEnum targetBlockDirection, Chunk targetChunk)
-    {
+    public override void TargetUse(ItemsBean itemData, Vector3Int targetPosition, Vector3Int closePosition, BlockDirectionEnum direction)
+    {       
+        //获取目标方块
+        WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(targetPosition, out Block targetBlock, out BlockDirectionEnum targetBlockDirection, out Chunk targetChunk);
+
         if (targetBlock == null)
             return;
         if (targetBlock.blockInfo.GetBlockShape() == BlockShapeEnum.Plough
@@ -16,7 +19,7 @@ public class ItemClassWateringCanWood : ItemBaseTool
         {
             return;
         }
-        ItemsDetailsToolBean itemsDetailsTool = itemsData.GetMetaData<ItemsDetailsToolBean>();
+        ItemsDetailsToolBean itemsDetailsTool = itemData.GetMetaData<ItemsDetailsToolBean>();
         //如果没有耐久了 则不执行
         if (itemsDetailsTool.life <= 0)
         {
@@ -25,9 +28,9 @@ public class ItemClassWateringCanWood : ItemBaseTool
         //扣除耐久
         itemsDetailsTool.AddLife(-1);
         //保存数据 道具数据
-        itemsData.SetMetaData(itemsDetailsTool);
+        itemData.SetMetaData(itemsDetailsTool);
         //回调
-        EventHandler.Instance.TriggerEvent(EventsInfo.ItemsBean_MetaChange, itemsData);
+        EventHandler.Instance.TriggerEvent(EventsInfo.ItemsBean_MetaChange, itemData);
 
         Vector3Int ploughLocalPosition = targetPosition - targetChunk.chunkData.positionForWorld;
         //修改耕地的状态
