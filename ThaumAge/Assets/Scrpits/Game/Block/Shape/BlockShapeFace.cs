@@ -3,6 +3,8 @@ using UnityEditor;
 using UnityEngine;
 public class BlockShapeFace : BlockShape
 {
+    protected Vector3[] vertsColliderAddNew;
+    protected int[] trisColliderAddNew;
 
     public BlockShapeFace() : base()
     {
@@ -24,7 +26,7 @@ public class BlockShapeFace : BlockShape
             Color.white,Color.white,Color.white,Color.white
         };
 
-        vertsColliderAdd = new Vector3[]
+        vertsColliderAddNew = new Vector3[]
         {
             new Vector3(0f,0.001f,0f),
             new Vector3(0f,0.001f,1f),
@@ -37,10 +39,61 @@ public class BlockShapeFace : BlockShape
             new Vector3(1f,0.001f,0f)
         };
 
-        trisColliderAdd = new int[]
+        trisColliderAddNew = new int[]
         {
             0,1,2, 0,2,3, 4,6,5, 4,7,6
         };
+    }
+
+    /// <summary>
+    /// 添加坐标点
+    /// </summary>
+    /// <param name="corner"></param>
+    /// <param name="up"></param>
+    /// <param name="right"></param>
+    /// <param name="verts"></param>
+    public override void BaseAddVertsUVsColors(
+        Chunk chunk, Vector3Int localPosition, BlockDirectionEnum blockDirection,
+        Vector3[] vertsAdd, Vector2[] uvsAdd, Color[] colorsAdd)
+    {
+        
+        AddVertsUVsColors(localPosition,
+            blockDirection, chunk.chunkMeshData.verts, chunk.chunkMeshData.uvs, chunk.chunkMeshData.colors,
+            vertsAdd, uvsAdd, colorsAdd);
+
+        if (block.blockInfo.collider_state == 1)
+            AddVerts(localPosition, blockDirection, chunk.chunkMeshData.vertsCollider, vertsColliderAddNew);
+
+        if (block.blockInfo.trigger_state == 1)
+            AddVerts(localPosition, blockDirection, chunk.chunkMeshData.vertsTrigger, vertsColliderAdd);
+    }
+
+    /// <summary>
+    /// 添加索引
+    /// </summary>
+    /// <param name="index"></param>
+    /// <param name="tris"></param>
+    /// <param name="indexCollider"></param>
+    /// <param name="trisCollider"></param>
+    public override void BaseAddTris(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction, int[] trisAdd)
+    {
+        int index = chunk.chunkMeshData.verts.Count;
+
+        List<int> trisData = chunk.chunkMeshData.dicTris[block.blockInfo.material_type];
+        List<int> trisCollider = chunk.chunkMeshData.trisCollider;
+        List<int> trisTrigger = chunk.chunkMeshData.trisTrigger;
+
+        AddTris(index, trisData, trisAdd);
+        if (block.blockInfo.collider_state == 1)
+        {
+            int colliderIndex = chunk.chunkMeshData.vertsCollider.Count;
+            AddTris(colliderIndex, trisCollider, trisColliderAddNew);
+        }
+        if (block.blockInfo.trigger_state == 1)
+        {
+            int triggerIndex = chunk.chunkMeshData.vertsTrigger.Count;
+            AddTris(triggerIndex, trisTrigger, trisColliderAdd);
+        }
     }
 
     public override void InitData(Block block)

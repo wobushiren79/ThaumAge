@@ -82,6 +82,11 @@ public enum BlockTypeEnum
     FlowerEarth = 3125,//ÍÁÑÒ»¨
 
     MushroomLuminous = 3201,//Ò¹¹âÄ¢¹½
+    MushroomRed = 3202,//ºìÄ¢¹½
+    MushroomWhite1 = 3211,//°×Ä¢¹½1
+    MushroomWhite2 = 3212,//°×Ä¢¹½2
+    MushroomWhite3 = 3213,//°×Ä¢¹½3
+
     WoodDead = 3301,//¿İÄ¾
 
     Cactus = 4001,    //ÏÉÈËÕÆ
