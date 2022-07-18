@@ -98,18 +98,10 @@ MonoBehaviour:
     m_Address: Assets/Prefabs/BlockMeshData/BlockFrameItem.txt
     m_ReadOnly: 0
     m_SerializedLabels:
-    - BlockMeshData
     - BlockMesh
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: e4a5184a94ef8b24a9fd0c0f02b5e72e
     m_Address: Assets/Prefabs/BlockMeshData/BlockSignWooden.txt
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - BlockMeshData
-    - BlockMesh
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 38cfe02b93595694c9773426b1f8cb03
-    m_Address: Assets/Prefabs/BlockMeshData/BlockSign.txt
     m_ReadOnly: 0
     m_SerializedLabels:
     - BlockMeshData
@@ -122,10 +114,24 @@ MonoBehaviour:
     - BlockMeshData
     - BlockMesh
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 0da3026c130ad514ca68ea91d39d1f9a
-    m_Address: Assets/Prefabs/BlockMeshModel/BlockSignWooden.prefab
+  - m_GUID: 63022ce5131232a48b672a386d11f8b5
+    m_Address: Assets/Prefabs/BlockMeshData/BlockMushroomWhite1.txt
     m_ReadOnly: 0
-    m_SerializedLabels: []
+    m_SerializedLabels:
+    - BlockMeshData
+    - BlockMesh
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 3f4061a6772929b4ba394b8f57fe89e2
+    m_Address: Assets/Prefabs/BlockMeshData/BlockMushroomWhite2.txt
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - BlockMesh
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 4d57ae53335dcc049a7dbcc5dffa90e2
+    m_Address: Assets/Prefabs/BlockMeshData/BlockMushroomWhite3.txt
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - BlockMesh
     FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: fd6114d87f1af534fbf270c47c0f10bf, type: 2}

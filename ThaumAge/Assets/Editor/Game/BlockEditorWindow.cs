@@ -433,7 +433,7 @@ public class BlockEditorWindow : EditorWindow
             {
                 meshFilterModel = tfModel.GetComponentInChildren<MeshFilter>();
             }
-            MeshDataCustom meshData;
+            MeshDataCustom meshData = null;
             if (meshFilterModel != null)
             {
                 Vector3 offsetPosition = new Vector3(0.5f, 0f, 0.5f);
@@ -442,11 +442,18 @@ public class BlockEditorWindow : EditorWindow
                     offsetPosition += (tfModel.localPosition - new Vector3(0.5f, 0.5f, 0.5f));
                     offsetPosition += meshFilterModel.transform.localPosition + new Vector3(0f, 0.5f, 0f);
                 }
-                if (meshFilterModel.sharedMesh == null)
+                if (meshFilterModel.sharedMesh != null)
                 {
-                    Debug.Log("meshFilterModel:"+ meshFilterModel.name);
+                    meshData = new MeshDataCustom(colliderModel, meshFilterModel.sharedMesh, 0.03125f, offsetPosition, meshFilterModel.transform.localEulerAngles);
                 }
-                meshData = new MeshDataCustom(colliderModel, meshFilterModel.sharedMesh, 0.03125f, offsetPosition, meshFilterModel.transform.localEulerAngles);
+                else if (meshFilterModel.mesh != null)
+                {
+                    meshData = new MeshDataCustom(colliderModel, meshFilterModel.mesh, 0.03125f, offsetPosition, meshFilterModel.transform.localEulerAngles);
+                }
+                else
+                {
+                    Debug.LogError("生成数据失败 meshFilterModel:" + meshFilterModel.name);
+                }
             }
             else
             {
