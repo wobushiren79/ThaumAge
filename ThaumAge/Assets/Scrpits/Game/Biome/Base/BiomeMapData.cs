@@ -47,7 +47,7 @@ public class BiomeMapData
 
         //设置该区块的生态
         ChunkSaveBean chunkSaveData = chunk.GetChunkSaveData();
-        if (chunkSaveData.biomeType == -1)
+        if (chunkSaveData == null ||chunkSaveData.biomeType == -1)
         {
             //获取该世界的所有生态
             BiomeTypeEnum[] listBiome = BiomeHandler.Instance.manager.GetBiomeListByWorldType(worldType);

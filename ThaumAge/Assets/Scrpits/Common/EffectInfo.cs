@@ -10,4 +10,6 @@ public class EffectInfo
     public readonly static string Effect_Blood_1 = "Effect_Blood_1";
     //死亡特效
     public readonly static string Effect_Dead_1 = "Effect_Dead_1";
+    //死亡身体特效
+    public readonly static string Effect_DeadBody_1 = "Effect_DeadBody_1";
 }

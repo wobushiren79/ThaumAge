@@ -76,50 +76,77 @@ public class CreatureCptBase : BaseMonoBehaviour
     /// </summary>
     public virtual void Dead()
     {
-        //获取所有的骨骼节点
-        //List<Transform> listObjBone = CptUtil.GetAllCptInChildrenByContainName<Transform>(gameObject, "Bone");
-        //for (int i = 0; i < listObjBone.Count; i++)
-        //{
-        //    Transform itemBone = listObjBone[i];
-        //    Rigidbody boneRB = itemBone.AddComponentEX<Rigidbody>();
-        //}
-        Vector3 randomRotate;
-        int random = WorldRandTools.Range(0, 4);
-        switch (random)
+        //展示死亡特效
+        EffectBean effectDataForBody = new EffectBean();
+        effectDataForBody.effectName = EffectInfo.Effect_DeadBody_1;
+        effectDataForBody.effectType = EffectTypeEnum.Normal;
+        effectDataForBody.timeForShow = 5f;
+        effectDataForBody.effectPosition = transform.position+new Vector3(0,0.3f,0);
+
+        SkinnedMeshRenderer skinnedMeshRenderer = gameObject.GetComponentInChildren<SkinnedMeshRenderer>();
+        Mesh bodyMesh = skinnedMeshRenderer.sharedMesh;
+        Texture2D bodyTex = (Texture2D)skinnedMeshRenderer.material.mainTexture;
+        EffectHandler.Instance.ShowEffect(effectDataForBody, (effect) =>
         {
-            case 0:
-                randomRotate = new Vector3(90, 0, 0);
-                break;
-            case 1:
-                randomRotate = new Vector3(-90, 0, 0);
-                break;
-            case 2:
-                randomRotate = new Vector3(0, 0, 90);
-                break;
-            case 3:
-                randomRotate = new Vector3(0, 0, -90);
-                break;
-            default:
-                randomRotate = new Vector3(-90, 0, 0);
-                break;
-        }
-        //身体侧翻
-        transform
-            .DOLocalRotate(randomRotate, 0.5f, RotateMode.Fast)
-            .OnComplete(() =>
-            {
-                //查询身体位置
-                Transform bodyTF = CptUtil.GetCptInChildrenByName<Transform>(gameObject, "BoneBody");
-                //消失烟雾
-                EffectBean effectData = new EffectBean();
-                effectData.effectName = EffectInfo.Effect_Dead_1;
-                effectData.effectType = EffectTypeEnum.Visual;
-                effectData.timeForShow = 5;
-                effectData.effectPosition = bodyTF.position;
-                EffectHandler.Instance.ShowEffect(effectData, (effect) => { effect.PlayEffect(); });
-                //删除此物体
-                Destroy(gameObject);
-            });
+            EffectDeadBody deadBody = effect as EffectDeadBody;
+            deadBody.SetData(skinnedMeshRenderer.sharedMesh, bodyTex);
+
+            //删除此物体
+            Destroy(gameObject);
+        });
+
+        //查询身体位置
+        Transform bodyTF = CptUtil.GetCptInChildrenByName<Transform>(gameObject, "BoneBody");
+        //消失烟雾
+        EffectBean effectDataForSmoke = new EffectBean();
+        effectDataForSmoke.effectName = EffectInfo.Effect_Dead_1;
+        effectDataForSmoke.effectType = EffectTypeEnum.Visual;
+        effectDataForSmoke.timeForShow = 5;
+        effectDataForSmoke.effectPosition = bodyTF.position;
+        EffectHandler.Instance.ShowEffect(effectDataForSmoke, (effect) => 
+        { 
+            effect.PlayEffect(); 
+        });
+
+        ////身体侧翻
+        //Vector3 randomRotate;
+        //int random = WorldRandTools.Range(0, 4);
+        //switch (random)
+        //{
+        //    case 0:
+        //        randomRotate = new Vector3(90, 0, 0);
+        //        break;
+        //    case 1:
+        //        randomRotate = new Vector3(-90, 0, 0);
+        //        break;
+        //    case 2:
+        //        randomRotate = new Vector3(0, 0, 90);
+        //        break;
+        //    case 3:
+        //        randomRotate = new Vector3(0, 0, -90);
+        //        break;
+        //    default:
+        //        randomRotate = new Vector3(-90, 0, 0);
+        //        break;
+        //}
+        //transform
+        //    .DOLocalRotate(randomRotate, 0.5f, RotateMode.Fast)
+        //    .OnComplete(() =>
+        //    {
+        //        //查询身体位置
+        //        Transform bodyTF = CptUtil.GetCptInChildrenByName<Transform>(gameObject, "BoneBody");
+        //        //消失烟雾
+        //        EffectBean effectData = new EffectBean();
+        //        effectData.effectName = EffectInfo.Effect_Dead_1;
+        //        effectData.effectType = EffectTypeEnum.Visual;
+        //        effectData.timeForShow = 5;
+        //        effectData.effectPosition = bodyTF.position;
+        //        EffectHandler.Instance.ShowEffect(effectData, (effect) => { effect.PlayEffect(); });
+        //        //删除此物体
+        //        Destroy(gameObject);
+        //    });
+
+
         //关闭动画
         creatureAnim.EnabledAnim(false);
         //关闭检测
