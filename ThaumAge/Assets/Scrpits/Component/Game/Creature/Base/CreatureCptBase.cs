@@ -28,7 +28,7 @@ public class CreatureCptBase : BaseMonoBehaviour
     protected Collider colliderCreature;
 
     protected float timeUpdateForCollisionAndTrigger = 0;
-
+    protected float timeUpdateMaxForCollisionAndTrigger = 0.2f;
     public virtual void Awake()
     {
         animCreature = GetComponentInChildren<Animator>();
@@ -42,7 +42,7 @@ public class CreatureCptBase : BaseMonoBehaviour
     public virtual void Update()
     {
         timeUpdateForCollisionAndTrigger += Time.deltaTime;
-        if (timeUpdateForCollisionAndTrigger > 0.2f)
+        if (timeUpdateForCollisionAndTrigger >= timeUpdateMaxForCollisionAndTrigger)
         {
             creatureCollisionAndTrigger.UpdateCollisionAndTrigger();
             timeUpdateForCollisionAndTrigger = 0;

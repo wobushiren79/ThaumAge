@@ -7,15 +7,18 @@ public class BlockShapeWell : BlockShapeCross
     protected float rightOffsetBorder;
     protected float forwardOffsetBorder;
     protected float backOffsetBorder;
-    public BlockShapeWell() : base()
+
+    public int[] TrisAddWell= new int[]
     {
-        trisAdd = new int[]
-        {
-            0,1,2, 0,2,3, 
+            0,1,2, 0,2,3,
             4,5,6, 4,6,7,
             8,9,10, 8,10,11,
             12,13,14, 12,14,15
-        };
+    };
+
+    public BlockShapeWell() : base()
+    {
+        trisAdd = TrisAddWell;
     }
 
     public override void InitData(Block block)

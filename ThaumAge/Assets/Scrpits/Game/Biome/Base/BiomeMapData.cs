@@ -16,8 +16,7 @@ public class BiomeMapData
         //获取世界类型和种子
         WorldTypeEnum worldType = WorldCreateHandler.Instance.manager.worldType;
         int worldSeed = WorldCreateHandler.Instance.manager.GetWorldSeed();
-        //获取该世界的所有生态
-        Biome[] listBiome = BiomeHandler.Instance.manager.GetBiomeListByWorldType(worldType);
+
         //获取一定范围内的生态点
         Vector3Int[] listBiomeCenter = biomeHandler.GetBiomeCenterPosition(chunk, 5, 10);
 
@@ -45,9 +44,24 @@ public class BiomeMapData
                 secondMinBiomeDis = tempDis;
             }
         }
-        //查询生态
-        int biomeIndex = WorldRandTools.Range(listBiome.Length, minBiomePosition);
-        biome = listBiome[biomeIndex];
+
+        //设置该区块的生态
+        ChunkSaveBean chunkSaveData = chunk.GetChunkSaveData();
+        if (chunkSaveData.biomeType == -1)
+        {
+            //获取该世界的所有生态
+            BiomeTypeEnum[] listBiome = BiomeHandler.Instance.manager.GetBiomeListByWorldType(worldType);
+            //查询生态
+            int biomeIndex = WorldRandTools.Range(listBiome.Length, minBiomePosition);
+            biome = BiomeHandler.Instance.manager.GetBiome(listBiome[biomeIndex]);
+        }
+        else
+        {
+            biome = BiomeHandler.Instance.manager.GetBiome((BiomeTypeEnum)chunkSaveData.biomeType);
+        }
+
+
+
         arrayChunkTerrainData = new ChunkTerrainData[chunk.chunkData.chunkWidth * chunk.chunkData.chunkWidth];
 
         for (int x = 0; x < chunk.chunkData.chunkWidth; x++)

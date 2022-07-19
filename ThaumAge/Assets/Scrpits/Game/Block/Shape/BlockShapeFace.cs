@@ -3,31 +3,26 @@ using UnityEditor;
 using UnityEngine;
 public class BlockShapeFace : BlockShape
 {
-    protected Vector3[] vertsColliderAddNew;
-    protected int[] trisColliderAddNew;
-
-    public BlockShapeFace() : base()
+    public static Vector3[] VertsAddFace = new Vector3[]
     {
-        vertsAdd = new Vector3[]
-        {
             new Vector3(0f,0.001f,0f),
             new Vector3(0f,0.001f,1f),
             new Vector3(1f,0.001f,1f),
             new Vector3(1f,0.001f,0f)
-        };
+    };
 
-        trisAdd = new int[]
-        {
+    public static int[] TrisAddFace = new int[]
+    {
             0,1,2, 0,2,3
-        };
+    };
 
-        colorsAdd = new Color[]
-        {
+    public static Color[] ColorAddFace = new Color[]
+    {
             Color.white,Color.white,Color.white,Color.white
-        };
+    };
 
-        vertsColliderAddNew = new Vector3[]
-        {
+    public static Vector3[] VertsColliderAddFace = new Vector3[]
+    {
             new Vector3(0f,0.001f,0f),
             new Vector3(0f,0.001f,1f),
             new Vector3(1f,0.001f,1f),
@@ -37,12 +32,19 @@ public class BlockShapeFace : BlockShape
             new Vector3(0f,0.001f,1f),
             new Vector3(1f,0.001f,1f),
             new Vector3(1f,0.001f,0f)
-        };
+    };
 
-        trisColliderAddNew = new int[]
-        {
+    public static int[] TrisColliderAddFace = new int[]
+    {
             0,1,2, 0,2,3, 4,6,5, 4,7,6
-        };
+    };
+    public BlockShapeFace() : base()
+    {
+        vertsAdd = VertsAddFace;
+
+        trisAdd = TrisAddFace;
+
+        colorsAdd = ColorAddFace;
     }
 
     /// <summary>
@@ -56,13 +58,13 @@ public class BlockShapeFace : BlockShape
         Chunk chunk, Vector3Int localPosition, BlockDirectionEnum blockDirection,
         Vector3[] vertsAdd, Vector2[] uvsAdd, Color[] colorsAdd)
     {
-        
+
         AddVertsUVsColors(localPosition,
             blockDirection, chunk.chunkMeshData.verts, chunk.chunkMeshData.uvs, chunk.chunkMeshData.colors,
             vertsAdd, uvsAdd, colorsAdd);
 
         if (block.blockInfo.collider_state == 1)
-            AddVerts(localPosition, blockDirection, chunk.chunkMeshData.vertsCollider, vertsColliderAddNew);
+            AddVerts(localPosition, blockDirection, chunk.chunkMeshData.vertsCollider, VertsColliderAddFace);
 
         if (block.blockInfo.trigger_state == 1)
             AddVerts(localPosition, blockDirection, chunk.chunkMeshData.vertsTrigger, vertsColliderAdd);
@@ -87,7 +89,7 @@ public class BlockShapeFace : BlockShape
         if (block.blockInfo.collider_state == 1)
         {
             int colliderIndex = chunk.chunkMeshData.vertsCollider.Count;
-            AddTris(colliderIndex, trisCollider, trisColliderAddNew);
+            AddTris(colliderIndex, trisCollider, TrisColliderAddFace);
         }
         if (block.blockInfo.trigger_state == 1)
         {

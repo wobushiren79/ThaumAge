@@ -12,13 +12,15 @@ public enum BlockShapeEnum
 
     Stairs = 11,//楼梯
     Face = 21,//一个面
-    FaceBoth = 22,//一个面两面渲染
+    //FaceBoth = 22,//一个面两面渲染
 
     Cross = 101,// 正交叉
     CrossOblique = 102,//斜交叉
     Well = 111,//＃字型
 
     Liquid = 201,//液体
+    LiquidCross = 202,//液体正交叉
+    LiquidCrossOblique = 203,//液体斜交叉
 
     CropCross = 301,//种植，正交叉
     CropCrossOblique = 302,//种植，斜交叉

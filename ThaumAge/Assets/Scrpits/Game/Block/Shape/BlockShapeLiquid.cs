@@ -7,18 +7,6 @@ public class BlockShapeLiquid : BlockShapeCube
 
     public static float itemVolumeHeight = 1f / BlockBaseLiquid.maxLiquidVolume;
 
-    public override void InitData(Block block)
-    {
-        base.InitData(block);
-        uvsAdd = new Vector2[]
-        {
-            new Vector2(0,0),
-            new Vector2(0,1),
-            new Vector2(1,1),
-            new Vector2(1,0),
-        };
-    }
-
     public override void BuildBlock(Chunk chunk, Vector3Int localPosition)
     {
         if (block.blockType != BlockTypeEnum.None)

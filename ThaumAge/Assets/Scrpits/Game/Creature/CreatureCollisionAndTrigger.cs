@@ -28,8 +28,21 @@ public class CreatureCollisionAndTrigger : CreatureBase
         {
             targetBlock.OnCollision(creature.gameObject, targetBlockPosition, DirectionEnum.None);
         }
+
+        CreatureTypeEnum creatureType = creature.creatureData.GetCreatureType();
+        if (creatureType == CreatureTypeEnum.Player)
+        {
+            UpdateCollisionAndTriggerForPlayer(creaturePoint, targetBlockPosition);
+        }
+    }
+
+    /// <summary>
+    /// 玩家碰撞
+    /// </summary>
+    protected void UpdateCollisionAndTriggerForPlayer(Vector3 creaturePoint, Vector3Int targetBlockPosition)
+    {
         //检测正前方的碰撞
-        int layerMask =  1 << LayerInfo.Obstacles;
+        int layerMask = 1 << LayerInfo.Obstacles;
         if (RayUtil.RayToCast(creaturePoint + Vector3.up * 0.5f, creature.transform.forward, 0.6f, layerMask, out RaycastHit hitForward))
         {
             GetHitPositionAndDirection(hitForward, creature.gameObject, out Vector3Int forwardBlockPosition);
@@ -44,8 +57,8 @@ public class CreatureCollisionAndTrigger : CreatureBase
         Vector3 positionMainCamera = mainCamera.transform.position;
         Vector3Int targetBlockForCameraPosition = new Vector3Int
             (
-            Mathf.FloorToInt(positionMainCamera.x), 
-            Mathf.FloorToInt(positionMainCamera.y), 
+            Mathf.FloorToInt(positionMainCamera.x),
+            Mathf.FloorToInt(positionMainCamera.y),
             Mathf.FloorToInt(positionMainCamera.z)
             );
         if (targetBlockForCameraPosition.y <= 0)
@@ -55,7 +68,10 @@ public class CreatureCollisionAndTrigger : CreatureBase
         {
             targetCameraBlock.OnCollisionForPlayerCamera(mainCamera, targetBlockForCameraPosition);
         }
-        
+        else
+        {
+            CameraHandler.Instance.SetCameraUnderLiquid(0);
+        }
     }
 
     /// <summary>

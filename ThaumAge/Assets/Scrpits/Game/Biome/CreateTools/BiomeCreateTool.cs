@@ -140,9 +140,14 @@ public class BiomeCreateTool
             {
                 BuildingBean buildingData = listBuildingData[i];
                 Vector3Int targetPosition = startPosition + buildingData.GetPosition();
-                float createRate = WorldRandTools.GetValue(targetPosition);
 
-                if (buildingData.randomRate == 0 || createRate < buildingData.randomRate)
+                float createRate = 1;
+                if (buildingData.randomRate < 1)
+                {
+                     createRate = WorldRandTools.GetValue(targetPosition);
+                }
+
+                if (buildingData.randomRate == 0 || createRate <= buildingData.randomRate)
                 {
                     VectorUtil.GetRotatedPosition(startPosition, targetPosition, new Vector3(0, randomAngle, 0));
                     WorldCreateHandler.Instance.manager.AddUpdateBlock(targetPosition, buildingData.blockId, (BlockDirectionEnum)buildingData.direction);

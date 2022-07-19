@@ -30,7 +30,7 @@ public class BiomeHandler : BaseHandler<BiomeHandler, BiomeManager>
         {
             biomeMapData = new BiomeMapData(chunk);
             //添加到缓存中
-            if (manager.dicWorldChunkTerrainDataPool.Count > 1023)
+            if (manager.dicWorldChunkTerrainDataPool.Count > 2047)
                 manager.dicWorldChunkTerrainDataPool.Clear();
             manager.dicWorldChunkTerrainDataPool.Add($"{chunk.chunkData.positionForWorld.x}|{chunk.chunkData.positionForWorld.z}", biomeMapData);
             return biomeMapData;
@@ -79,8 +79,6 @@ public class BiomeHandler : BaseHandler<BiomeHandler, BiomeManager>
             for (int z = -range; z < range; z++)
             {
                 Vector3Int currentPosition = new Vector3Int(x * unitSize + startX, 0, z * unitSize + startZ);
-                //RandomTools random = RandomUtil.GetRandom(worldSeed, currentPosition.x, currentPosition.z);
-                //int addRate = random.NextInt(50);
                 int addRate = WorldRandTools.Range(50, currentPosition * worldSeed);
                 if (addRate <= 1)
                 {

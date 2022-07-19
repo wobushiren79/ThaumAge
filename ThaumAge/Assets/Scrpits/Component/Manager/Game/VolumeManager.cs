@@ -61,6 +61,19 @@ public class VolumeManager : BaseManager
         }
     }
 
+    //颜色调整
+    protected ColorAdjustments _colorAdjustments;
+    public ColorAdjustments colorAdjustments
+    {
+        get
+        {
+            if (_colorAdjustments == null)
+            {
+                volumeProfile.TryGet(out _colorAdjustments);
+            }
+            return _colorAdjustments;
+        }
+    }
 
     //基础设置
     protected Volume _volume;
@@ -147,5 +160,31 @@ public class VolumeManager : BaseManager
         depthOfField.farFocusStart.value = farStart;
         depthOfField.farFocusEnd.overrideState = true;
         depthOfField.farFocusEnd.value = farEnd;
+    }
+
+    /// <summary>
+    /// 颜色调整
+    /// </summary>
+    /// <param name="postExposure">曝光</param>
+    /// <param name="contrast">反差</param>
+    /// <param name="colorFilter">彩色滤光片</param>
+    /// <param name="hueShift">色相偏移</param>
+    /// <param name="saturation">饱和</param>
+    public void SetColorAdjustments(Color colorFilter, float postExposure,float contrast,float hueShift,float saturation)
+    {
+        colorAdjustments.postExposure.overrideState = true;
+        colorAdjustments.postExposure.value = postExposure;
+
+        colorAdjustments.contrast.overrideState = true;
+        colorAdjustments.contrast.value = contrast;
+
+        colorAdjustments.colorFilter.overrideState = true;
+        colorAdjustments.colorFilter.value = colorFilter;
+
+        colorAdjustments.hueShift.overrideState = true;
+        colorAdjustments.hueShift.value = postExposure;
+
+        colorAdjustments.saturation.overrideState = true;
+        colorAdjustments.saturation.value = postExposure;
     }
 }

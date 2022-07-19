@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class BlockShapeCropCross : BlockShapeCross
 {
-    public Dictionary<int, Vector2[]> dicUVGrowData = new Dictionary<int, Vector2[]>();
-
     public BlockShapeCropCross() : base()
     {
         BlockBaseCrop.InitCropVert(vertsAdd);

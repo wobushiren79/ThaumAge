@@ -13,7 +13,10 @@ public class ChunkSaveBean : BaseBean
     public Vector3Int position;
     //保存的方块数据
     public List<BlockBean> listBlockData = new List<BlockBean>();
+    //生态数据
+    public int biomeType = -1;
 
+    //方块数据 改变
     public Dictionary<int, BlockBean> dicBlockData = new Dictionary<int, BlockBean>();
 
 

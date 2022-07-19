@@ -4,11 +4,8 @@ using UnityEngine;
 
 public class BlockShapeCross : BlockShape
 {
-
-    public BlockShapeCross() : base()
+    public static Vector3[] VertsAddCross = new Vector3[]
     {
-        vertsAdd = new Vector3[]
-        {
             new Vector3(0.5f,0f,0f),
             new Vector3(0.5f,1f,0f),
             new Vector3(0.5f,1f,1f),
@@ -18,17 +15,23 @@ public class BlockShapeCross : BlockShape
             new Vector3(0f,1f,0.5f),
             new Vector3(1f,1f,0.5f),
             new Vector3(1f,0f,0.5f)
-        };
-        trisAdd = new int[]
-        {
+    };
+    public static int[] TrisAddCross = new int[]
+    {
             0,1,2, 0,2,3, 4,5,6, 4,6,7
-        };
+    };
 
-        colorsAdd = new Color[]
-        {
+    public static Color[] ColorsAddCross = new Color[]
+    {
             Color.white,Color.white,Color.white,Color.white,
             Color.white,Color.white,Color.white,Color.white
-        };
+    };
+
+    public BlockShapeCross() : base()
+    {
+        vertsAdd = VertsAddCross;
+        trisAdd = TrisAddCross;
+        colorsAdd = ColorsAddCross;
     }
 
     public override void InitData(Block block)
@@ -50,7 +53,7 @@ public class BlockShapeCross : BlockShape
         };
     }
 
-    public virtual Vector2 GetUVStartPosition(Block block)
+    public static Vector2 GetUVStartPosition(Block block)
     {
         Vector2Int[] arrayUVData = block.blockInfo.GetUVPosition();
         Vector2 uvStartPosition;

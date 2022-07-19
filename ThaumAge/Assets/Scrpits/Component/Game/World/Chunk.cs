@@ -37,8 +37,6 @@ public class Chunk
     //是否绘制
     public bool isDrawMesh = false;
 
-    //该区块的生态
-    public Biome biome;
     //包含Chunk内的所有信息
     public ChunkData chunkData;
     //渲染数据

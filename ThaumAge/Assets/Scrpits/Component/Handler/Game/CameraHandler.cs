@@ -293,4 +293,33 @@ public class CameraHandler : BaseHandler<CameraHandler, CameraManager>
         if (cameraForThree != null)
             cameraForThree.m_Lens.FieldOfView = fieldOfView;
     }
+
+    protected Color colorUnderLiquid0 = Color.white;
+    protected Color colorUnderLiquid1 = Color.white;
+    protected Color colorUnderLiquid2 = Color.white;
+    /// <summary>
+    /// 设置摄像头在液体之中
+    /// </summary>
+    /// <param name="liquidType">液体类型 0无 1水 2岩浆</param>
+    public void SetCameraUnderLiquid(int liquidType)
+    {
+        Color colorUnder;
+        switch (liquidType) 
+        {
+            case 0:
+                colorUnder = colorUnderLiquid0;
+                break;
+            case 1:
+                colorUnder = colorUnderLiquid1;
+                break;
+            case 2:
+                colorUnder = colorUnderLiquid2;
+                break;
+            default:
+                colorUnder = Color.white;
+                break;
+        }
+
+        VolumeHandler.Instance.SetColorAdjustments(colorUnder);
+    }
 }

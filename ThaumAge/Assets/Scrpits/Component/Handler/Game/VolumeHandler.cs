@@ -9,10 +9,10 @@ public class VolumeHandler : BaseHandler<VolumeHandler, VolumeManager>
     public override void Awake()
     {
         base.Awake();
-        layerDepthOfField = 
-            1 << LayerInfo.Character | 
-            1 << LayerInfo.Creature | 
-            1 << LayerInfo.ChunkCollider | 
+        layerDepthOfField =
+            1 << LayerInfo.Character |
+            1 << LayerInfo.Creature |
+            1 << LayerInfo.ChunkCollider |
             1 << LayerInfo.ChunkTrigger;
     }
 
@@ -37,7 +37,7 @@ public class VolumeHandler : BaseHandler<VolumeHandler, VolumeManager>
         {
             manager.SetDepthOfField(2, 3, 10, 20);
         }
-        else if(gameState == GameStateEnum.Gaming)
+        else if (gameState == GameStateEnum.Gaming)
         {
             float dis = 5000;
             //摄像头发射射线 检测距离
@@ -60,5 +60,13 @@ public class VolumeHandler : BaseHandler<VolumeHandler, VolumeManager>
             manager.SetDepthOfField(1f, 4f, dis + 10, dis + 30);
             lastDisDepthOfField = dis;
         }
+    }
+
+    /// <summary>
+    /// 设置颜色调整
+    /// </summary>
+    public void SetColorAdjustments(Color colorFilter, float postExposure = 0, float contrast = 0, float hueShift = 0, float saturation = 0)
+    {
+        manager.SetColorAdjustments(colorFilter, postExposure, contrast, hueShift, saturation);
     }
 }
