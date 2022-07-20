@@ -95,8 +95,8 @@ public class BlockShapeLiquid : BlockShapeCube
             //还没有生成chunk
             return false;
         }
-        BlockShapeEnum blockShape = closeBlock.blockInfo.GetBlockShape();
-        switch (blockShape)
+        BlockShapeEnum closeBlockShape = closeBlock.blockInfo.GetBlockShape();
+        switch (closeBlockShape)
         {
             case BlockShapeEnum.Cube:
                 if (closeDirection == DirectionEnum.UP)
@@ -111,7 +111,12 @@ public class BlockShapeLiquid : BlockShapeCube
                 }
                 return false;
             case BlockShapeEnum.Liquid:
-                if (closeBlock.blockType == block.blockType)
+            case BlockShapeEnum.LiquidCross:
+            case BlockShapeEnum.LiquidCrossOblique:
+                if (block.blockType == closeBlock.blockType 
+                    || (block is BlockBaseLiquid blockLiquid && blockLiquid.CheckNeedBuildFaceForSameType(closeBlockChunk, closeBlock))
+                    || (block is BlockBaseLiquidSame blockLiquidSame && blockLiquidSame.CheckNeedBuildFaceForSameType(closeBlockChunk, closeBlock))
+                    )
                 {
                     BlockBean closeBlockData = closeBlockChunk.GetBlockData(closeLocalPosition);
                     BlockMetaLiquid closeBlockMetaLiquid = null;

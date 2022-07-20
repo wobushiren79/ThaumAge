@@ -32,7 +32,7 @@ public class BlockBaseLiquid : Block
     /// <param name="chunk"></param>
     /// <param name="localPosition"></param>
     public void RegisterEventUpdate(Chunk chunk, Vector3Int localPosition)
-    {    
+    {
         chunk.chunkComponent.WaitExecuteEndOfFrame(1, () =>
         {
             chunk.RegisterEventUpdate(localPosition, TimeUpdateEventTypeEnum.Sec);
@@ -184,7 +184,7 @@ public class BlockBaseLiquid : Block
         if (closeBlock == null || closeBlock.blockType == BlockTypeEnum.None)
         {
             //如果是只有1格水 则不流动了
-            if(blockMetaLiquid.volume == 1)
+            if (blockMetaLiquid.volume == 1)
             {
                 return false;
             }
@@ -275,5 +275,13 @@ public class BlockBaseLiquid : Block
             blockMetaLiquid = FromMetaData<BlockMetaLiquid>(blockData.meta);
         }
         return blockMetaLiquid;
+    }
+
+    /// <summary>
+    /// 检测是否是同一种类型的方块 比如水草之类的
+    /// </summary>
+    public virtual bool CheckNeedBuildFaceForSameType(Chunk closeChunk, Block closeBlock)
+    {
+        return false;
     }
 }
