@@ -5,12 +5,20 @@ using System.Security.Cryptography;
 
 public class BlockTypeWater : BlockBaseLiquid
 {
-    public override bool CheckNeedBuildFaceForSameType(Chunk closeChunk,Block closeBlock)
+    public override bool CheckIsSameType(Chunk closeChunk, Block closeBlock)
     {
-        if (closeBlock.blockType == BlockTypeEnum.Water)
+        return CheckIsSameTypeCommon(closeChunk, closeBlock);
+    }
+
+    public static bool CheckIsSameTypeCommon(Chunk closeChunk, Block closeBlock)
+    {
+        switch (closeBlock.blockType)
         {
-            
+            case BlockTypeEnum.Water:
+            case BlockTypeEnum.Seaweed:
+                return true;
+            default:
+                return false;
         }
-        return false;
     }
 }

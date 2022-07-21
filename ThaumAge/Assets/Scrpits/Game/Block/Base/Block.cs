@@ -123,43 +123,6 @@ public class Block
         WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(backPosition, out backBlock, out Chunk backChunk);
     }
 
-    /// <summary>
-    /// 删除方块mesh
-    /// </summary>
-    public virtual void RemoveBlockMesh(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction, ChunkMeshIndexData meshIndexData)
-    {
-        //删除该条下标信息
-        //chunk.chunkMeshData.dicIndexData.Remove(localPosition);
-
-        //移除对应三角数据
-        List<int> tris = chunk.chunkMeshData.dicTris[blockInfo.material_type];
-        MeshTrisRemove(tris, meshIndexData.trisStartIndex, meshIndexData.trisCount);
-        //如果有碰撞 还需要删除碰撞
-        if (blockInfo.collider_state == 1)
-        {
-            //移除对应三角数据
-            List<int> trisCollider = chunk.chunkMeshData.trisCollider;
-            MeshTrisRemove(trisCollider, meshIndexData.trisColliderStartIndex, meshIndexData.trisColliderCount);
-        }
-        //如果有触发 还需要删除触发
-        if (blockInfo.trigger_state == 1)
-        {
-            //移除对应三角数据
-            List<int> trisTrigger = chunk.chunkMeshData.trisTrigger;
-            MeshTrisRemove(trisTrigger, meshIndexData.trisColliderStartIndex, meshIndexData.trisColliderCount);
-        }
-    }
-
-    /// <summary>
-    /// 三角形删除处理
-    /// </summary>
-    protected virtual void MeshTrisRemove(List<int> listTris, int trisStartIndex, int trisCount)
-    {
-        for (int i = 0; i < trisCount; i++)
-        {
-            listTris[trisStartIndex + i] = 0;
-        }
-    }
 
     /// <summary>
     /// 互动

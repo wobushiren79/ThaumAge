@@ -48,6 +48,19 @@ public class BlockShapeCube : BlockShape
             new Vector3(1,0,1)
     };
 
+    public static Color[] colorsAddCube = new Color[]
+    {
+            Color.white,
+            Color.white,
+            Color.white,
+            Color.white
+    };
+
+    public static int[] trisAddCube = new int[]
+    {
+         0,1,2, 0,2,3
+    };
+
     //正方形的方块 所用数据
     public Vector2[] uvsAddLeft;
     public Vector2[] uvsAddRight;
@@ -58,10 +71,8 @@ public class BlockShapeCube : BlockShape
 
     public BlockShapeCube() : base()
     {
-        trisAdd = new int[]
-        {
-            0,1,2, 0,2,3
-        };
+        trisAdd = trisAddCube;
+        colorsAdd = colorsAddCube;
     }
 
     public override void InitData(Block block)
@@ -70,7 +81,7 @@ public class BlockShapeCube : BlockShape
         Vector2 uvStart = GetUVStartPosition(block, DirectionEnum.Left);
 
         uvsAddLeft = new Vector2[]
-        {   
+        {
             new Vector2(uvStart.x ,uvStart.y + uvWidth),
             new Vector2(uvStart.x + uvWidth,uvStart.y + uvWidth),
             new Vector2(uvStart.x + uvWidth ,uvStart.y),
@@ -121,14 +132,6 @@ public class BlockShapeCube : BlockShape
             new Vector2(uvStart.x + uvWidth ,uvStart.y),
             new Vector2(uvStart.x ,uvStart.y)
         };
-
-        colorsAdd = new Color[]
-        {
-            Color.white,
-            Color.white,
-            Color.white,
-            Color.white
-        };
     }
 
     /// <summary>
@@ -153,37 +156,37 @@ public class BlockShapeCube : BlockShape
             //Left
             if (CheckNeedBuildFace(chunk, localPosition, direction, DirectionEnum.Left))
             {
-                BuildFace(chunk, localPosition, direction, DirectionEnum.Left, vertsAddLeft, uvsAddLeft, colorsAdd, trisAdd);
+                BuildFace(chunk, localPosition, direction, DirectionEnum.Left, vertsAddLeft, uvsAddLeft, colorsAddCube, trisAddCube);
             }
 
             //Right
             if (CheckNeedBuildFace(chunk, localPosition, direction, DirectionEnum.Right))
             {
-                BuildFace(chunk, localPosition, direction, DirectionEnum.Right, vertsAddRight, uvsAddRight, colorsAdd, trisAdd);
+                BuildFace(chunk, localPosition, direction, DirectionEnum.Right, vertsAddRight, uvsAddRight, colorsAddCube, trisAddCube);
             }
 
             //Bottom
             if (CheckNeedBuildFace(chunk, localPosition, direction, DirectionEnum.Down))
             {
-                BuildFace(chunk, localPosition, direction, DirectionEnum.Down, vertsAddDown, uvsAddDown, colorsAdd, trisAdd);
+                BuildFace(chunk, localPosition, direction, DirectionEnum.Down, vertsAddDown, uvsAddDown, colorsAddCube, trisAddCube);
             }
 
             //Top
             if (CheckNeedBuildFace(chunk, localPosition, direction, DirectionEnum.UP))
             {
-                BuildFace(chunk, localPosition, direction, DirectionEnum.UP, vertsAddUp, uvsAddUp, colorsAdd, trisAdd);
+                BuildFace(chunk, localPosition, direction, DirectionEnum.UP, vertsAddUp, uvsAddUp, colorsAddCube, trisAddCube);
             }
 
             //Forward
             if (CheckNeedBuildFace(chunk, localPosition, direction, DirectionEnum.Forward))
             {
-                BuildFace(chunk, localPosition, direction, DirectionEnum.Forward, vertsAddForward, uvsAddForward, colorsAdd, trisAdd);
+                BuildFace(chunk, localPosition, direction, DirectionEnum.Forward, vertsAddForward, uvsAddForward, colorsAddCube, trisAddCube);
             }
 
             //Back
             if (CheckNeedBuildFace(chunk, localPosition, direction, DirectionEnum.Back))
             {
-                BuildFace(chunk, localPosition, direction, DirectionEnum.Back, vertsAddBack, uvsAddBack, colorsAdd, trisAdd);
+                BuildFace(chunk, localPosition, direction, DirectionEnum.Back, vertsAddBack, uvsAddBack, colorsAddCube, trisAddCube);
             }
         }
     }
@@ -197,7 +200,7 @@ public class BlockShapeCube : BlockShape
         BaseAddVertsUVsColors(chunk, localPosition, direction, face, vertsAdd, uvsAdd, colorsAdd);
     }
 
-    public virtual void BaseAddTris(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction, DirectionEnum face,int[] trisAdd)
+    public virtual void BaseAddTris(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction, DirectionEnum face, int[] trisAdd)
     {
         int index = chunk.chunkMeshData.verts.Count;
 
