@@ -231,7 +231,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b3f86ef755432fc42beb635c70ec056b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  worldPos: {x: 0, y: 0}
+  worldPos: {x: 9, y: 9}
   objContainer: {fileID: 0}
 --- !u!1 &840339376
 GameObject:
