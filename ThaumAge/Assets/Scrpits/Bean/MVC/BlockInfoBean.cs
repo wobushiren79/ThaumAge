@@ -35,6 +35,7 @@ public class BlockInfoBean : BaseBean
     public int life;//生命值
 
     public int material_type = 1;//材质类型
+    public int material_type2 = 1;//材质类型
 
     public int collider_state;//是否碰撞 0没有碰撞 1有碰撞
 
@@ -77,6 +78,10 @@ public class BlockInfoBean : BaseBean
     public BlockMaterialEnum GetBlockMaterialType()
     {
         return (BlockMaterialEnum)material_type;
+    }
+    public BlockMaterialEnum GetBlockMaterialType2()
+    {
+        return (BlockMaterialEnum)material_type2;
     }
 
     protected Vector2Int[] arrayUVData;

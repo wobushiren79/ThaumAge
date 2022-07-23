@@ -21,17 +21,17 @@ public class BlockShapeLiquid : BlockShapeCube
                 blockMetaLiquid = blockData.GetBlockMeta<BlockMetaLiquid>();
             }
 
-            CheckNeedBuildFaceAndBuild(chunk, localPosition, direction, DirectionEnum.Left, vertsAddLeft, uvsAddLeft, colorsAdd, trisAdd, blockMetaLiquid);
+            CheckNeedBuildFaceAndBuild(chunk, localPosition, direction, DirectionEnum.Left, vertsAddLeft, uvsAddLeft, colorsAddCube, trisAddCube, blockMetaLiquid);
 
-            CheckNeedBuildFaceAndBuild(chunk, localPosition, direction, DirectionEnum.Right, vertsAddRight, uvsAddRight, colorsAdd, trisAdd, blockMetaLiquid);
+            CheckNeedBuildFaceAndBuild(chunk, localPosition, direction, DirectionEnum.Right, vertsAddRight, uvsAddRight, colorsAddCube, trisAddCube, blockMetaLiquid);
 
-            CheckNeedBuildFaceAndBuild(chunk, localPosition, direction, DirectionEnum.Down, vertsAddDown, uvsAddDown, colorsAdd, trisAdd, blockMetaLiquid);
+            CheckNeedBuildFaceAndBuild(chunk, localPosition, direction, DirectionEnum.Down, vertsAddDown, uvsAddDown, colorsAddCube, trisAddCube, blockMetaLiquid);
 
-            CheckNeedBuildFaceAndBuild(chunk, localPosition, direction, DirectionEnum.UP, vertsAddUp, uvsAddUp, colorsAdd, trisAdd, blockMetaLiquid);
+            CheckNeedBuildFaceAndBuild(chunk, localPosition, direction, DirectionEnum.UP, vertsAddUp, uvsAddUp, colorsAddCube, trisAddCube, blockMetaLiquid);
 
-            CheckNeedBuildFaceAndBuild(chunk, localPosition, direction, DirectionEnum.Forward, vertsAddForward, uvsAddForward, colorsAdd, trisAdd, blockMetaLiquid);
+            CheckNeedBuildFaceAndBuild(chunk, localPosition, direction, DirectionEnum.Forward, vertsAddForward, uvsAddForward, colorsAddCube, trisAddCube, blockMetaLiquid);
 
-            CheckNeedBuildFaceAndBuild(chunk, localPosition, direction, DirectionEnum.Back, vertsAddBack, uvsAddBack, colorsAdd, trisAdd, blockMetaLiquid);
+            CheckNeedBuildFaceAndBuild(chunk, localPosition, direction, DirectionEnum.Back, vertsAddBack, uvsAddBack, colorsAddCube, trisAddCube, blockMetaLiquid);
         }
     }
 
@@ -42,14 +42,14 @@ public class BlockShapeLiquid : BlockShapeCube
         //如果是自己满水
         if (blockMetaLiquid == null || blockMetaLiquid.volume == BlockBaseLiquid.maxLiquidVolume)
         {
-            BaseAddTris(chunk, localPosition, direction, face, trisAdd);
-            BaseAddVertsUVsColors(chunk, localPosition, direction, face, vertsAdd, uvsAdd, colorsAdd);
+            BaseAddTrisForLiquid(chunk, localPosition, direction, face, trisAdd);
+            BaseAddVertsUVsColorsForLiquid(chunk, localPosition, direction, face, vertsAdd, uvsAdd, colorsAdd);
         }
         else
         {
             Vector3[] vertsAddNew = GetVertsForYMove(vertsAdd, 0, (BlockBaseLiquid.maxLiquidVolume - blockMetaLiquid.volume) * itemVolumeHeight);
-            BaseAddTris(chunk, localPosition, direction, face, trisAdd);
-            BaseAddVertsUVsColors(chunk, localPosition, direction, face, vertsAddNew, uvsAdd, colorsAdd);
+            BaseAddTrisForLiquid(chunk, localPosition, direction, face, trisAdd);
+            BaseAddVertsUVsColorsForLiquid(chunk, localPosition, direction, face, vertsAddNew, uvsAdd, colorsAdd);
         }
     }
 
@@ -62,17 +62,32 @@ public class BlockShapeLiquid : BlockShapeCube
         {
             //只需要往上移动旁边水的容积
             Vector3[] vertsAddNew = GetVertsForYMove(vertsAdd, closeBlockMetaLiquid.volume * itemVolumeHeight, 0);
-            BaseAddTris(chunk, localPosition, direction, face, trisAdd);
-            BaseAddVertsUVsColors(chunk, localPosition, direction, face, vertsAddNew, uvsAdd, colorsAdd);
+            BaseAddTrisForLiquid(chunk, localPosition, direction, face, trisAdd);
+            BaseAddVertsUVsColorsForLiquid(chunk, localPosition, direction, face, vertsAddNew, uvsAdd, colorsAdd);
         }
         else
         {
             //需要往上移动旁边水的容积 再往下移动自己少了的容积
             Vector3[] vertsAddNew = GetVertsForYMove(vertsAdd, closeBlockMetaLiquid.volume * itemVolumeHeight, (BlockBaseLiquid.maxLiquidVolume - blockMetaLiquid.volume) * itemVolumeHeight);
-            BaseAddTris(chunk, localPosition, direction, face, trisAdd);
-            BaseAddVertsUVsColors(chunk, localPosition, direction, face, vertsAddNew, uvsAdd, colorsAdd);
+            BaseAddTrisForLiquid(chunk, localPosition, direction, face, trisAdd);
+            BaseAddVertsUVsColorsForLiquid(chunk, localPosition, direction, face, vertsAddNew, uvsAdd, colorsAdd);
         }
     }
+
+    public virtual void BaseAddTrisForLiquid(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction, DirectionEnum face, int[] trisAdd)
+    {
+        int index = chunk.chunkMeshData.verts.Count;
+        List<int> trisData = chunk.chunkMeshData.dicTris[block.blockInfo.material_type2];
+        AddTris(index, trisData, trisAdd);
+    }
+    public virtual void BaseAddVertsUVsColorsForLiquid(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction, DirectionEnum face,
+        Vector3[] vertsAdd, Vector2[] uvsAdd, Color[] colorsAdd)
+    {
+        AddVertsUVsColors(localPosition, direction,
+            chunk.chunkMeshData.verts, chunk.chunkMeshData.uvs, chunk.chunkMeshData.colors,
+            vertsAdd, uvsAdd, colorsAdd);
+    }
+
 
     public virtual bool CheckNeedBuildFaceAndBuild(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction, DirectionEnum closeDirection,
         Vector3[] vertsAdd, Vector2[] uvsAdd, Color[] colorsAdd, int[] trisAdd,
@@ -114,8 +129,8 @@ public class BlockShapeLiquid : BlockShapeCube
             case BlockShapeEnum.LiquidCross:
             case BlockShapeEnum.LiquidCrossOblique:
                 if (block.blockType == closeBlock.blockType 
-                    || (block is BlockBaseLiquid blockLiquid && blockLiquid.CheckNeedBuildFaceForSameType(closeBlockChunk, closeBlock))
-                    || (block is BlockBaseLiquidSame blockLiquidSame && blockLiquidSame.CheckNeedBuildFaceForSameType(closeBlockChunk, closeBlock))
+                    || (block is BlockBaseLiquid blockLiquid && blockLiquid.CheckIsSameType(closeBlockChunk, closeBlock))
+                    || (block is BlockBaseLiquidSame blockLiquidSame && blockLiquidSame.CheckIsSameType(closeBlockChunk, closeBlock))
                     )
                 {
                     BlockBean closeBlockData = closeBlockChunk.GetBlockData(closeLocalPosition);

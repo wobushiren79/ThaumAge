@@ -31,11 +31,10 @@ public class BlockShapeLiquidCross : BlockShapeLiquid
     public override void BuildBlock(Chunk chunk, Vector3Int localPosition)
     {
         base.BuildBlock(chunk, localPosition);
-        if (block.blockType != BlockTypeEnum.None)
-        {
-            BuildFace(chunk, localPosition, vertsAdd, uvsAdd, colorsAdd, trisAdd);
-        }
+        BuildFace(chunk, localPosition, vertsAdd, uvsAdd, colorsAdd, trisAdd);
     }
+
+
 
     /// <summary>
     /// 重新选中的方块预览 方块

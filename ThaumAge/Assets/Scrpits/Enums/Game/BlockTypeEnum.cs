@@ -70,7 +70,7 @@ public enum BlockTypeEnum
     WeedMagicNormal = 3032,    //‘”≤›÷–µ»
     WeedMagicShort = 3033,    //‘”≤›∂Ã
     WeedMagicStart = 3034, //‘”≤›≥¨∂Ã
-
+    Seaweed = 3101,//∫£≤›
     FlowerSun = 3111,    //œÚ»’ø˚
     FlowerRose = 3112,    //√µπÂª®
     FlowerChrysanthemum = 3113,    //æ’ª®
