@@ -9,9 +9,10 @@ using System.Collections.Generic;
 using DG.Tweening;
 public class Test : BaseMonoBehaviour
 {
+    public Vector2 worldPos;
     public GameObject objContainer;
-    public float _edgeLen = 1;
-    protected float _halfHeight = Mathf.Sqrt(3) * 0.5f;
+    protected float _edgeLen = 10;
+    protected float _halfHeight = (Mathf.Sqrt(3) * 0.5f) * 10;
     public Vector3 Origin { get; set; } = Vector3.zero;
 
     public void Start()
@@ -21,7 +22,7 @@ public class Test : BaseMonoBehaviour
 
     private void OnGUI()
     {
-        if (GUILayout.Button("Test"))
+        if (GUILayout.Button("Test2"))
         {
             objContainer.transform.DestroyAllChild();
             for (int x = 0; x < 10; x++)
@@ -35,6 +36,12 @@ public class Test : BaseMonoBehaviour
                 }
             }
         }
+
+        if (GUILayout.Button("Test3"))
+        {
+            Vector2Int pos = MathUtil.GetHexagonIndex(worldPos, Origin, _edgeLen, _halfHeight);
+            UnityEngine.Debug.Log("GetGridPos:"+ pos);
+        }
     }
 
 
@@ -43,15 +50,5 @@ public class Test : BaseMonoBehaviour
         float wx = x * _edgeLen * 1.5f;
         float wz = (y * 2 + x % 2) * _halfHeight;
         return Origin + new Vector3(wx, 0, wz);
-    }
-
-    public Vector2Int GetGridPos(float worldX, float worldY)
-    {
-        var tx = (worldX - Origin.x) / (_edgeLen * 1.5f);
-        int cx = Mathf.RoundToInt(tx);
-        var ty = ((worldY - Origin.z) / _halfHeight - cx % 2) / 2f;
-        int cy = Mathf.RoundToInt(ty);
-        return new Vector2Int(cx, cy);
-
     }
 }

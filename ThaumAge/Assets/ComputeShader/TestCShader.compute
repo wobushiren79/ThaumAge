@@ -1,0 +1,60 @@
+#pragma kernel CSMain
+
+struct TerraninData
+{    
+    float2 position;
+    int seed;
+    int maxBiomeNum;
+    float sideLength;
+    float sideHeight;
+    int randomData;
+};
+
+RWStructuredBuffer<TerraninData> BufferTerraninData;
+
+int RandomInt(int seed)
+{
+    seed = (seed ^ 61) ^ (seed >> 16);
+    seed *= 9;
+    seed = seed ^ (seed >> 4);
+    seed *= 0x27d4eb2d;
+    seed = seed ^ (seed >> 15);
+    return seed;
+}
+
+int RandomIntMinMax(int seed, int min, int max)
+{
+    int randomInt = RandomInt(seed);
+    int randomLimit = (max - min)/(2147483647/(float)randomInt);
+    return randomLimit;
+}
+
+int RandomInt(int seed,int x,int y)
+{
+    seed = seed + 76.897898 * 48.789789 *  cos(x) * sin(y) * 20.79797;
+    seed = (seed ^ 61) ^ (seed >> 16);
+    seed *= 9;
+    seed = seed ^ (seed >> 4);
+    seed *= 0x27d4eb2d;
+    seed = seed ^ (seed >> 15);
+    return seed;
+}
+int RandomIntMinMax(int seed,int x,int y, int min, int max)
+{
+    int randomInt = RandomInt(seed,x,y);
+    int randomLimit = (max - min)/(2147483647/(float)randomInt);
+    return randomLimit;
+}
+
+[numthreads(1024,1,1)]
+void CSMain (uint3 id : SV_DispatchThreadID)
+{
+    int dataIndex = id.x;
+    TerraninData itemTerraninData = BufferTerraninData[dataIndex];
+    
+
+    itemTerraninData.randomData = RandomIntMinMax(itemTerraninData.seed,itemTerraninData.position.x,itemTerraninData.position.y, 0,itemTerraninData.maxBiomeNum);
+
+    BufferTerraninData[dataIndex] = itemTerraninData;
+}
+

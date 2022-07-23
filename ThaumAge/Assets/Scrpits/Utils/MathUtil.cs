@@ -94,4 +94,83 @@ public class MathUtil
         Vector3 centerPoint = ((end - start) / 2) + new Vector3(0, hight, 0);
         return GetBezierPoints(number, start, end, centerPoint);
     }
+
+    /// <summary>
+    /// 获取六边形位置
+    /// </summary>
+    /// <param name="x">下标记数</param>
+    /// <param name="y">下标记数</param>
+    /// <param name="originPosition">起始点</param>
+    /// <param name="sideLength">边长</param>
+    /// <param name="sideHeight">高，如果是等边 则为(Mathf.Sqrt(3) / 2f) * sideLength;</param>
+    /// <returns></returns>
+    public static Vector3 GetHexagonWorldPos(int x, int y, Vector3 originPosition, float sideLength, float sideHeight)
+    {
+        float wx = x * (sideLength * 1.5f);
+        float wz = (x % 2) * sideHeight + y * sideHeight * 2;
+        return originPosition + new Vector3(wx, 0, wz);
+    }
+
+    /// <summary>
+    /// 获取六边形下标计数
+    /// </summary>
+    /// <param name="worldX"></param>
+    /// <param name="worldY"></param>
+    /// <param name="originPosition"></param>
+    /// <param name="sideLength"></param>
+    /// <param name="sideHeight"></param>
+    /// <returns></returns>
+    public static Vector2Int GetHexagonIndex(Vector3 targetPosition, Vector3 originPosition, float sideLength, float sideHeight)
+    {
+        float offsetPositionX = targetPosition.x - originPosition.x;
+        float offsetPositionY = targetPosition.y - originPosition.y;
+        int indexX;
+        int indexY;
+        int addIndexX;
+        int addIndexY;
+        if (offsetPositionX >= 0)
+        {
+            indexX = Mathf.FloorToInt(offsetPositionX / (sideLength * 1.5f));
+            addIndexX = 1;
+        }
+        else
+        {
+            indexX = Mathf.CeilToInt(offsetPositionX / (sideLength * 1.5f));
+            addIndexX = -1;
+        }
+        if (offsetPositionY >= 0)
+        {
+            indexY = Mathf.FloorToInt(offsetPositionY / (sideHeight * 2));
+            addIndexY = 1;
+        }
+        else
+        {
+            indexY = Mathf.CeilToInt(offsetPositionY / (sideHeight * 2));
+            addIndexY = -1;
+        }
+
+
+        //获取上下左右4个区块的位置
+        Vector3 worldPos1 = GetHexagonWorldPos(indexX, indexY, originPosition, sideLength, sideHeight);
+        Vector3 worldPos2 = GetHexagonWorldPos(indexX + addIndexX, indexY, originPosition, sideLength, sideHeight);
+        Vector3 worldPos3 = GetHexagonWorldPos(indexX, indexY + addIndexY, originPosition, sideLength, sideHeight);
+        Vector3 worldPos4 = GetHexagonWorldPos(indexX + addIndexX, indexY + addIndexY, originPosition, sideLength, sideHeight);
+
+        float disMin = float.MaxValue;
+        float disPos1 = Vector3.Distance(worldPos1, targetPosition);
+        disMin = disPos1 < disMin? disPos1: disMin;
+        float disPos2 = Vector3.Distance(worldPos2, targetPosition);
+        disMin = disPos2 < disMin ? disPos2 : disMin;
+        float disPos3 = Vector3.Distance(worldPos3, targetPosition);
+        disMin = disPos3 < disMin ? disPos3 : disMin;
+        float disPos4 = Vector3.Distance(worldPos4, targetPosition);
+        disMin = disPos4 < disMin ? disPos4 : disMin;
+
+        //var tx = (worldX - originPosition.x) / (sideLength * 1.5f);
+        //int cx = Mathf.RoundToInt(tx);
+        //var ty = ((worldY - originPosition.z) / sideHeight - cx % 2) / 2f;
+        //int cy = Mathf.RoundToInt(ty);
+        //return new Vector2Int(cx, cy);
+        return Vector2Int.zero;
+    }
 }
