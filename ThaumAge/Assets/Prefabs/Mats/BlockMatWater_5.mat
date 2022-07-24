@@ -133,17 +133,17 @@ Material:
     m_Ints: []
     m_Floats:
     - Vector1_17E53C12: 1
-    - Vector1_244B0600: 0.5
+    - Vector1_244B0600: 0.1
     - Vector1_36E8227: 0
     - Vector1_3D886DA1: 0
-    - Vector1_46E42935: 0.5
+    - Vector1_46E42935: 0.1
     - Vector1_47683D42: 0.85
     - Vector1_A0EAD698: 1
-    - Vector1_A6A0BC26: 0.1
-    - Vector1_B9F56378: 0.02
+    - Vector1_A6A0BC26: 0.01
+    - Vector1_B9F56378: 0
     - Vector1_C360A163: 0
-    - Vector1_E5C51606: 0
-    - Vector1_F38B44AA: 50
+    - Vector1_E5C51606: 1
+    - Vector1_F38B44AA: 1
     - _AORemapMax: 1
     - _AORemapMin: 0
     - _ATDistance: 1
@@ -262,8 +262,8 @@ Material:
     - _ZTestTransparent: 4
     - _ZWrite: 0
     m_Colors:
-    - Color_7D9A58EC: {r: 0.011747932, g: 0.6104765, b: 0.8301887, a: 1}
-    - Color_F01C36BF: {r: 0.2007832, g: 0.7367226, b: 0.9056604, a: 0.28235295}
+    - Color_7D9A58EC: {r: 0.15116581, g: 0.46830976, b: 0.745283, a: 0.5882353}
+    - Color_F01C36BF: {r: 0.20078316, g: 0.7367226, b: 0.9056604, a: 0.19607843}
     - Vector2_37B21477: {r: 1, g: 1, b: 0, a: 0}
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _BaseColorMap_MipInfo: {r: 0, g: 0, b: 0, a: 0}

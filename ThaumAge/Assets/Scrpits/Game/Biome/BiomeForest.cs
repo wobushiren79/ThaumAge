@@ -12,7 +12,7 @@ public class BiomeForest : Biome
 
     public override BlockTypeEnum GetBlockForMaxHeightDown(Chunk chunk, Vector3Int localPos, ChunkTerrainData terrainData)
     {
-        if (localPos.y == terrainData.maxHeight)
+        if (localPos.y == terrainData.maxHeight || localPos.y == terrainData.maxHeight - 1)
         {
             Vector3Int wPos = localPos + chunk.chunkData.positionForWorld;
             int waterHeight = biomeInfo.GetWaterPlaneHeight();

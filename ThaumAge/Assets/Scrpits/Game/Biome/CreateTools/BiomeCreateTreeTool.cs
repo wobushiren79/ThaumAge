@@ -282,8 +282,6 @@ public class BiomeCreateTreeTool
     /// <summary>
     /// 增加世界之树
     /// </summary>
-    /// <param name="startPosition"></param>
-    /// <param name="treeData"></param>
     public static void AddTreeForWorld(Vector3Int startPosition, BiomeForTreeData treeData)
     {
         //概率小于万分之一的用RandomTools
@@ -577,6 +575,10 @@ public class BiomeCreateTreeTool
             int treeHalfHeight = Mathf.FloorToInt(treeHeight / 2f);
             //偏移量
             int offsetIndex = 0;
+            //最大范围
+            int range = treeData.leavesRange;
+            int leavesHeightOffset = 0;
+            Vector3Int startLeavesPos = Vector3Int.zero;
             for (int i = 0; i < treeHeight + 1; i++)
             {
                 if (i >= treeHalfHeight)
@@ -586,21 +588,14 @@ public class BiomeCreateTreeTool
                 }
                 Vector3Int treeTrunkPosition = new
                     (startPosition.x + offsetIndex * randomAddPosition.x, startPosition.y + (i + 1), startPosition.z + offsetIndex * randomAddPosition.z);
-                //生成树干
-                if (i < treeHeight)
+
+                if (i >= treeHeight - 1)
                 {
-                    WorldCreateHandler.Instance.manager.AddUpdateBlock(treeTrunkPosition, treeData.treeTrunk);
-                }
-                if (i >= treeHeight)
-                {
-                    //最大范围
-                    int range = treeData.leavesRange;
+                    startLeavesPos = startLeavesPos.AddY(1);
                     if (i >= treeHeight)
                     {
                         //叶子在最顶层递减
-                        range -= (i - treeHeight);
-                        if (range < 0)
-                            range = 0;
+                        range--;
                     }
 
                     //生成叶子
@@ -608,15 +603,24 @@ public class BiomeCreateTreeTool
                     {
                         for (int z = -range; z <= range; z++)
                         {
-                            if (x == startPosition.x && z == startPosition.z)
-                                continue;
                             //有几率不生成
-                            int randomLeaves = WorldRandTools.Range(0, 3);
-                            if (randomLeaves == 0)
-                                continue;
-                            WorldCreateHandler.Instance.manager.AddUpdateBlock(treeTrunkPosition.x + x, treeTrunkPosition.y, treeTrunkPosition.z + z, treeData.treeLeaves);
+                            //int randomLeaves = WorldRandTools.Range(0, 5);
+                            //if (randomLeaves < 1)
+                            //    continue;
+                            WorldCreateHandler.Instance.manager.AddUpdateBlock(startLeavesPos.x + x, startLeavesPos.y, startLeavesPos.z + z, treeData.treeLeaves);
                         }
                     }
+                    leavesHeightOffset++;
+                }
+                else
+                {
+                    startLeavesPos = treeTrunkPosition;
+                }
+
+                //生成树干
+                if (i < treeHeight)
+                {
+                    WorldCreateHandler.Instance.manager.AddUpdateBlock(treeTrunkPosition, treeData.treeTrunk);
                 }
             }
         }

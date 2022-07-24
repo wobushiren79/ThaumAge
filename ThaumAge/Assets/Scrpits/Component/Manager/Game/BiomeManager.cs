@@ -146,7 +146,7 @@ public class BiomeManager : BaseManager
             {
                 case WorldTypeEnum.Test:
                     arrayBiome = new BiomeTypeEnum[1];
-                    arrayBiome[0] = BiomeTypeEnum.Forest;
+                    arrayBiome[0] = BiomeTypeEnum.Mountain;
                     break;
                 case WorldTypeEnum.Main:
                     arrayBiome = new BiomeTypeEnum[1];
