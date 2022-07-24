@@ -23,12 +23,6 @@ MonoBehaviour:
     m_SerializedLabels:
     - BlockMats
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 817aa751700b1214ab736177d67b4ff4
-    m_Address: Assets/Prefabs/Mats/BlockMatWater_5.mat
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - BlockMats
-    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 8d068167d5d02e24bafe921fa7108554
     m_Address: Assets/Prefabs/Mats/BlockBothFace_2.mat
     m_ReadOnly: 0
@@ -61,6 +55,12 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 1d3608e9663861f49bf24ff63f51b665
     m_Address: Assets/Prefabs/Mats/BlockTransparent_9.mat
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - BlockMats
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ef43eea0675c12c4e8365df98c928dc7
+    m_Address: Assets/Prefabs/Mats/BlockMatWater_5.mat
     m_ReadOnly: 0
     m_SerializedLabels:
     - BlockMats

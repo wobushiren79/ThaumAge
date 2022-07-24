@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using DG.Tweening;
 public class Test : BaseMonoBehaviour
 {
-    public Vector2 worldPos;
+    public Vector3 worldPos;
     public GameObject objContainer;
     protected float _edgeLen = 10;
     protected float _halfHeight = (Mathf.Sqrt(3) * 0.5f) * 10;
@@ -39,7 +39,7 @@ public class Test : BaseMonoBehaviour
 
         if (GUILayout.Button("Test3"))
         {
-            Vector2Int pos = MathUtil.GetHexagonIndex(worldPos, Origin, _edgeLen, _halfHeight);
+            Vector2Int pos = MathUtil.GetHexagonIndex(worldPos.x,worldPos.y, Origin, _edgeLen, _halfHeight);
             UnityEngine.Debug.Log("GetGridPos:"+ pos);
         }
     }

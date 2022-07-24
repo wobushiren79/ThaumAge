@@ -106,8 +106,13 @@ public class BiomeForest : Biome
         //增加花
         BiomeCreatePlantTool.BiomeForPlantData flowersData = new BiomeCreatePlantTool.BiomeForPlantData
         {
-            addRate = 0.01f,
-            listPlantType = new List<BlockTypeEnum> { BlockTypeEnum.FlowerSun, BlockTypeEnum.FlowerRose, BlockTypeEnum.FlowerChrysanthemum }
+            addRate = 0.03f,
+            listPlantType = new List<BlockTypeEnum> 
+            { 
+                BlockTypeEnum.FlowerSun, BlockTypeEnum.FlowerRose, BlockTypeEnum.FlowerChrysanthemum,
+                BlockTypeEnum.MushroomWhite1,BlockTypeEnum.MushroomWhite2,BlockTypeEnum.MushroomWhite3,BlockTypeEnum.MushroomRed,
+                BlockTypeEnum.BerryBushRed,BlockTypeEnum.BerryBushBlue
+            }
         };
         BiomeCreatePlantTool.AddFlower(101, wPos, flowersData);
         //增加枯木

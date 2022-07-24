@@ -15,6 +15,9 @@ public class BlockTypeWater : BlockBaseLiquid
         switch (closeBlock.blockType)
         {
             case BlockTypeEnum.Water:
+            case BlockTypeEnum.CoralRed:
+            case BlockTypeEnum.CoralBlue:
+            case BlockTypeEnum.CoralYellow:
             case BlockTypeEnum.Seaweed:
                 return true;
             default:

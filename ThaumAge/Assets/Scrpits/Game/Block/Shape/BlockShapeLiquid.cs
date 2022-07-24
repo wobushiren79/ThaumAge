@@ -20,7 +20,6 @@ public class BlockShapeLiquid : BlockShapeCube
             {
                 blockMetaLiquid = blockData.GetBlockMeta<BlockMetaLiquid>();
             }
-
             CheckNeedBuildFaceAndBuild(chunk, localPosition, direction, DirectionEnum.Left, vertsAddLeft, uvsAddLeft, colorsAddCube, trisAddCube, blockMetaLiquid);
 
             CheckNeedBuildFaceAndBuild(chunk, localPosition, direction, DirectionEnum.Right, vertsAddRight, uvsAddRight, colorsAddCube, trisAddCube, blockMetaLiquid);

@@ -14,6 +14,7 @@ public partial class UIPopupItemInfo : PopupShowView
         ItemsInfo = ItemsHandler.Instance.manager.GetItemsInfoById(itemId);
 
         SetItemIcon(itemId);
+        SetItemIconColor(ItemsInfo.icon_color);
         SetItemName(ItemsInfo.name);
         SetItemDetails("");
     }
@@ -25,6 +26,23 @@ public partial class UIPopupItemInfo : PopupShowView
     public void SetItemIcon(long itemsId)
     {
         ItemsHandler.Instance.SetItemsIconById(ui_ItemIcon, itemsId);
+    }
+
+    /// <summary>
+    /// 设置道具颜色
+    /// </summary>
+    /// <param name="colorStr"></param>
+    public void SetItemIconColor(string colorStr)
+    {
+        if (!colorStr.IsNull())
+        {
+            if (ColorUtility.TryParseHtmlString(colorStr, out Color iconColor))
+            {
+                ui_ItemIcon.color = iconColor;
+                return;
+            }
+        }
+        ui_ItemIcon.color = Color.white;
     }
 
     /// <summary>

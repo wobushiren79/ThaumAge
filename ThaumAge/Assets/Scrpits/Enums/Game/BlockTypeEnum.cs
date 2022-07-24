@@ -70,7 +70,13 @@ public enum BlockTypeEnum
     WeedMagicNormal = 3032,    //ÔÓ²ÝÖÐµÈ
     WeedMagicShort = 3033,    //ÔÓ²Ý¶Ì
     WeedMagicStart = 3034, //ÔÓ²Ý³¬¶Ì
+
+    CoralRed = 3091,//ºìÉºº÷
+    CoralBlue = 3092,//À¶Éºº÷
+    CoralYellow = 3093,//»ÆÉºº÷
+
     Seaweed = 3101,//º£²Ý
+
     FlowerSun = 3111,    //ÏòÈÕ¿û
     FlowerRose = 3112,    //Ãµ¹å»¨
     FlowerChrysanthemum = 3113,    //¾Õ»¨

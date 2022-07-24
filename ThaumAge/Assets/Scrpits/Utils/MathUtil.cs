@@ -120,10 +120,10 @@ public class MathUtil
     /// <param name="sideLength"></param>
     /// <param name="sideHeight"></param>
     /// <returns></returns>
-    public static Vector2Int GetHexagonIndex(Vector3 targetPosition, Vector3 originPosition, float sideLength, float sideHeight)
+    public static Vector2Int GetHexagonIndex(float x, float y, Vector3 originPosition, float sideLength, float sideHeight)
     {
-        float offsetPositionX = targetPosition.x - originPosition.x;
-        float offsetPositionY = targetPosition.y - originPosition.y;
+        float offsetPositionX = x - originPosition.x;
+        float offsetPositionY = y - originPosition.y;
         int indexX;
         int indexY;
         int addIndexX;
@@ -156,21 +156,37 @@ public class MathUtil
         Vector3 worldPos3 = GetHexagonWorldPos(indexX, indexY + addIndexY, originPosition, sideLength, sideHeight);
         Vector3 worldPos4 = GetHexagonWorldPos(indexX + addIndexX, indexY + addIndexY, originPosition, sideLength, sideHeight);
 
+        Vector3 targetPos = Vector3.zero;
         float disMin = float.MaxValue;
-        float disPos1 = Vector3.Distance(worldPos1, targetPosition);
-        disMin = disPos1 < disMin? disPos1: disMin;
-        float disPos2 = Vector3.Distance(worldPos2, targetPosition);
-        disMin = disPos2 < disMin ? disPos2 : disMin;
-        float disPos3 = Vector3.Distance(worldPos3, targetPosition);
-        disMin = disPos3 < disMin ? disPos3 : disMin;
-        float disPos4 = Vector3.Distance(worldPos4, targetPosition);
-        disMin = disPos4 < disMin ? disPos4 : disMin;
+        float disPos1 = Vector3.Distance(worldPos1, new Vector3(x, 0, y));
+        if (disPos1 < disMin)
+        {
+            disMin = disPos1;
+            targetPos = worldPos1;
+        }
+        float disPos2 = Vector3.Distance(worldPos2, new Vector3(x, 0, y));
+        if (disPos2 < disMin)
+        {
+            disMin = disPos2;
+            targetPos = worldPos2;
+        }
+        float disPos3 = Vector3.Distance(worldPos3, new Vector3(x, 0, y));
+        if (disPos3 < disMin)
+        {
+            disMin = disPos3;
+            targetPos = worldPos3;
+        }
+        float disPos4 = Vector3.Distance(worldPos4, new Vector3(x, 0, y));
+        if (disPos4 < disMin)
+        {
+            disMin = disPos4;
+            targetPos = worldPos4;
+        }
 
-        //var tx = (worldX - originPosition.x) / (sideLength * 1.5f);
-        //int cx = Mathf.RoundToInt(tx);
-        //var ty = ((worldY - originPosition.z) / sideHeight - cx % 2) / 2f;
-        //int cy = Mathf.RoundToInt(ty);
-        //return new Vector2Int(cx, cy);
-        return Vector2Int.zero;
+        var tx = (targetPos.x - originPosition.x) / (sideLength * 1.5f);
+        int cx = Mathf.RoundToInt(tx);
+        var ty = ((targetPos.z - originPosition.z) / sideHeight - cx % 2) / 2f;
+        int cy = Mathf.RoundToInt(ty);
+        return new Vector2Int(cx, cy);
     }
 }
