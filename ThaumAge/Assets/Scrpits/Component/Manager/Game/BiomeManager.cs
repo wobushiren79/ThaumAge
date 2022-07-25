@@ -128,6 +128,19 @@ public class BiomeManager : BaseManager
             return biome;
         }
     }
+    
+    /// <summary>
+    /// 获取生态数据
+    /// </summary>
+    /// <param name="worldType"></param>
+    /// <param name="biomeIndex"></param>
+    /// <returns></returns>
+    public virtual Biome GetBiome(WorldTypeEnum worldType,int biomeIndex)
+    {
+        BiomeTypeEnum[] arrayBiomeType = GetBiomeTypeListByWorldType(worldType);
+        BiomeTypeEnum biomeType = arrayBiomeType[biomeIndex];
+        return GetBiome(biomeType);
+    }
 
     /// <summary>
     /// 根据世界类型获取生态数据
@@ -146,8 +159,9 @@ public class BiomeManager : BaseManager
             switch (worldType)
             {
                 case WorldTypeEnum.Test:
-                    arrayBiome = new BiomeTypeEnum[1];
-                    arrayBiome[0] = BiomeTypeEnum.Mountain;
+                    arrayBiome = new BiomeTypeEnum[2];
+                    arrayBiome[0] = BiomeTypeEnum.Prairie;
+                    arrayBiome[1] = BiomeTypeEnum.Volcano;
                     break;
                 case WorldTypeEnum.Main:
                     arrayBiome = new BiomeTypeEnum[1];
@@ -184,12 +198,7 @@ public class BiomeManager : BaseManager
         {
             //获取该世界的所有生态
             BiomeTypeEnum[] listBiome = GetBiomeTypeListByWorldType(worldType);
-            //设置生态数据
-            ChunkBiomeData[] arrayChunkBiomeData;
-            if (chunk == null)
-                arrayChunkBiomeData = new ChunkBiomeData[16 * 16];
-            else
-                arrayChunkBiomeData = new ChunkBiomeData[chunk.chunkData.chunkWidth * chunk.chunkData.chunkWidth];
+            arrayBiome = new ChunkBiomeData[listBiome.Length];
             for (int i = 0; i < listBiome.Length; i++)
             {
                 Biome biome = GetBiome(listBiome[i]);
@@ -213,8 +222,10 @@ public class BiomeManager : BaseManager
 
                     minHeight = biome.biomeInfo.min_height,
                 };
-                arrayChunkBiomeData[i] = itemBiomeData;
+                arrayBiome[i] = itemBiomeData;
             }
+
+            dicWorldBiomeData.Add(worldType, arrayBiome);
             return arrayBiome;
         }
     }

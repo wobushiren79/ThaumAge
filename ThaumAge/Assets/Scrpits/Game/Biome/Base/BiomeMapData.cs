@@ -4,10 +4,7 @@ using UnityEngine;
 
 public class BiomeMapData
 {
-
     public ChunkTerrainData[] arrayChunkTerrainData;
-    //生态
-    public Biome biome;
 
     public BiomeMapData(Chunk chunk)
     {
@@ -45,8 +42,7 @@ public class BiomeMapData
         //    }
         //}
         //世界的生态信息
-        ChunkBiomeData[] arrayChunkBiomeData = BiomeHandler.Instance.manager.GetBiomeDataByWorldType(worldType, chunk);
-
+        ChunkBiomeData[] arrayChunkBiomeData = biomeManager.GetBiomeDataByWorldType(worldType, chunk);
         //设置地形数据
         arrayChunkTerrainData = new ChunkTerrainData[chunk.chunkData.chunkWidth * chunk.chunkData.chunkWidth];
         for (int x = 0; x < chunk.chunkData.chunkWidth; x++)
@@ -60,15 +56,16 @@ public class BiomeMapData
                 arrayChunkTerrainData[x * chunk.chunkData.chunkWidth + z] = itemTerrainData;
             }
         }
-        ComputeBuffer bufferTerrain = new ComputeBuffer(arrayChunkTerrainData.Length, 80);
+        ComputeBuffer bufferTerrain = new ComputeBuffer(arrayChunkTerrainData.Length, 28);
         bufferTerrain.SetData(arrayChunkTerrainData);
 
-        ComputeBuffer bufferBiome = new ComputeBuffer(arrayChunkBiomeData.Length, 80);
+        ComputeBuffer bufferBiome = new ComputeBuffer(arrayChunkBiomeData.Length, 52);
         bufferBiome.SetData(arrayChunkBiomeData);
 
         int kernelId = biomeManager.terrainCShader.FindKernel("CSMain");
         biomeManager.terrainCShader.SetFloats("RandomOffset", worldSeed, worldSeed);
-        biomeManager.terrainCShader.SetInt("BiomeSize", 64);
+        biomeManager.terrainCShader.SetInt("BiomeNum", arrayChunkBiomeData.Length);
+        biomeManager.terrainCShader.SetInt("BiomeSize", 32);
         biomeManager.terrainCShader.SetBuffer(kernelId, "BufferTerraninData", bufferTerrain);
         biomeManager.terrainCShader.SetBuffer(kernelId, "BufferBiomeData", bufferBiome);
         biomeManager.terrainCShader.Dispatch(kernelId, arrayChunkTerrainData.Length, 1, 1);

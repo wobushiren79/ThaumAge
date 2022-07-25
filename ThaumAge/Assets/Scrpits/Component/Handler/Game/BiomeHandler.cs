@@ -55,9 +55,9 @@ public class BiomeHandler : BaseHandler<BiomeHandler, BiomeManager>
     /// </summary>
     /// <param name="chunk"></param>
     /// <param name="biome"></param>
-    public void CreateBiomeBlockTypeForChunk(Chunk chunk, BiomeMapData biomeMapData)
+    public void CreateBiomeBlockTypeForChunk(Chunk chunk, BiomeMapData biomeMapData, Biome biome)
     {
-        biomeMapData.biome.InitBiomeBlockForChunk(chunk, biomeMapData);
+        biome.InitBiomeBlockForChunk(chunk, biomeMapData);
     }
 
     /// <summary>

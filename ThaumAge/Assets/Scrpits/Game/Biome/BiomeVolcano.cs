@@ -13,29 +13,29 @@ public class BiomeVolcano : Biome
 
     public override BlockTypeEnum GetBlockForMaxHeightDown(Chunk chunk, Vector3Int localPos, ChunkTerrainData terrainData)
     {
-        float noise = (terrainData.maxHeight - biomeInfo.min_height) / biomeInfo.amplitude0;
-        if (noise >= 0.9f)
-        {
-            if (localPos.y >= terrainData.maxHeight - 3)
-            {
-                return BlockTypeEnum.None;
-            }
-            else if (localPos.y > 20 && localPos.y < terrainData.maxHeight - 1)
-            {
-                return BlockTypeEnum.Magma;
-            }
-            else
-            {
-                return BlockTypeEnum.StoneVolcanic;
-            }
-        }
-        if (terrainData.maxHeight == localPos.y)
+        if (localPos.y == terrainData.maxHeight)
         {
             Vector3Int wPos = localPos + chunk.chunkData.positionForWorld;
-            AddDeadwood(wPos);
-            AddFireFlower(wPos);
+            int maxHight = biomeInfo.min_height + (int)biomeInfo.amplitude0 / 2;
+
+            // 地表
+            return BlockTypeEnum.StoneVolcanic;
         }
-        return BlockTypeEnum.StoneVolcanic;
+        if (localPos.y < terrainData.maxHeight && localPos.y > terrainData.maxHeight - 50)
+        {
+            //中使用泥土
+            return BlockTypeEnum.StoneVolcanic;
+        }
+        else if (localPos.y == 0)
+        {
+            //基础
+            return BlockTypeEnum.Foundation;
+        }
+        else
+        {
+            //其他石头
+            return BlockTypeEnum.Stone;
+        }
     }
 
     /// <summary>

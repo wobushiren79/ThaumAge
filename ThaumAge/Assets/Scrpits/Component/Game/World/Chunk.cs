@@ -416,16 +416,19 @@ public class Chunk
     /// <param name="chunk"></param>
     public void HandleForBaseBlock(BiomeMapData biomeMapData)
     {
+        WorldTypeEnum worldType = WorldCreateHandler.Instance.manager.worldType;
+        Biome biome = null;
         for (int x = 0; x < chunkData.chunkWidth; x++)
         {
             for (int z = 0; z < chunkData.chunkWidth; z++)
             {
                 ChunkTerrainData itemTerrainData = biomeMapData.arrayChunkTerrainData[x * chunkData.chunkWidth + z];
+                biome = BiomeHandler.Instance.manager.GetBiome(worldType, itemTerrainData.biomeIndex);
                 for (int y = 0; y < chunkData.chunkHeight; y++)
                 {
                     Vector3Int position = new Vector3Int(x, y, z);
                     //获取方块类型
-                    BlockTypeEnum blockType = BiomeHandler.Instance.CreateBiomeBlockType(this, position, biomeMapData.biome, itemTerrainData);
+                    BlockTypeEnum blockType = BiomeHandler.Instance.CreateBiomeBlockType(this, position, biome, itemTerrainData);
                     //如果是空 则跳过
                     if (blockType == BlockTypeEnum.None)
                         continue;
@@ -436,7 +439,7 @@ public class Chunk
             }
         }
         //生成区块的对应方块（洞穴 大物体之类）
-        BiomeHandler.Instance.CreateBiomeBlockTypeForChunk(this, biomeMapData);
+        BiomeHandler.Instance.CreateBiomeBlockTypeForChunk(this, biomeMapData, biome);
     }
 
     /// <summary>

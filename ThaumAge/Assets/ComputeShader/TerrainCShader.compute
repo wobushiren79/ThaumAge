@@ -41,6 +41,8 @@ struct BiomeData
 
 //种子偏移
 float2 RandomOffset;
+//生态数量
+int BiomeNum;
 //生态大小
 int BiomeSize;
 //地形数据
@@ -237,16 +239,14 @@ void CSMain (uint3 id : SV_DispatchThreadID,uint3 gid:SV_GROUPID,uint index:SV_G
    //获取该点所在的生态下标
     int2 biomeIndexPos = GetHexagonBiomeIndex(itemTerraninData.position.x, itemTerraninData.position.y, BiomeSize,sqrt(3) * 0.5  * BiomeSize);
     //随机获取生态
-    uint biomeNum;
-    uint biomeDataSize;
+    
     //获取生态数量（GetDimensions 为官方提供的 获取数组大小的方法）
-    BufferBiomeData.GetDimensions(biomeNum, biomeDataSize);
-    int randomBiomeIndex = RandomIntMinMax(RandomOffset , biomeIndexPos.x , biomeIndexPos.y , 0 , biomeNum);
+    //BufferBiomeData.GetDimensions(biomeNum, biomeDataSize);
+    int randomBiomeIndex = RandomIntMinMax(RandomOffset.x , biomeIndexPos.x , biomeIndexPos.y , 0 , BiomeNum);
 
     itemTerraninData.biomeIndex = randomBiomeIndex;
     //当前生态信息
     BiomeData biomeData =  BufferBiomeData[randomBiomeIndex];
-
 
     float finalNoise0 =  TerraninCreate(
         biomeData.perlinIterateNumber0,
