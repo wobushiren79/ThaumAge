@@ -4,6 +4,21 @@ struct TerraninData
 {    
     //当前坐标
     float2 position;
+
+    //距离该方块最近的生态点距离
+    float minBiomeDis;
+    //距离该方块第二近的生态点距离
+    float secondMinBiomeDis;
+    //距离最近和第二进的距离差
+    float offsetDis;
+    //地形最大高度
+    int maxHeight;
+    //当前生态
+    int biomeIndex;
+};
+
+struct BiomeData
+{    
     //频率（宽度）
     float perlinFrequency0;
     float perlinFrequency1;
@@ -22,27 +37,19 @@ struct TerraninData
     int perlinIterateNumber2;
     //最低高度
     float minHeight;
-
-    //距离该方块最近的生态点距离
-    float minBiomeDis;
-    //距离该方块第二近的生态点距离
-    float secondMinBiomeDis;
-    //距离最近和第二进的距离差
-    float offsetDis;
-    //地形最大高度
-    int maxHeight;
 };
 
 //种子偏移
 float2 RandomOffset;
+//生态大小
+int BiomeSize;
 //地形数据
 RWStructuredBuffer<TerraninData> BufferTerraninData;
-
-////生态中心方块坐标
-//float3 ArrayBiomeCenterPosition[100];
+//生态数据
+RWStructuredBuffer<BiomeData> BufferBiomeData;
 
 //unity noisemap生成算法
-float2 unity_gradientNoise_dir(float2 p)
+float2 Unity_GradientNoise_dir(float2 p)
 {
     p = p % 289;
     float x = (34 * p.x + 1) * p.x % 289 + p.y;
@@ -52,14 +59,14 @@ float2 unity_gradientNoise_dir(float2 p)
 }
 
 //unity noisemap生成算法
-float unity_gradientNoise(float2 p)
+float Unity_GradientNoise(float2 p)
 {
     float2 ip = floor(p);
     float2 fp = frac(p);
-    float d00 = dot(unity_gradientNoise_dir(ip), fp);
-    float d01 = dot(unity_gradientNoise_dir(ip + float2(0, 1)), fp - float2(0, 1));
-    float d10 = dot(unity_gradientNoise_dir(ip + float2(1, 0)), fp - float2(1, 0));
-    float d11 = dot(unity_gradientNoise_dir(ip + float2(1, 1)), fp - float2(1, 1));
+    float d00 = dot(Unity_GradientNoise_dir(ip), fp);
+    float d01 = dot(Unity_GradientNoise_dir(ip + float2(0, 1)), fp - float2(0, 1));
+    float d10 = dot(Unity_GradientNoise_dir(ip + float2(1, 0)), fp - float2(1, 0));
+    float d11 = dot(Unity_GradientNoise_dir(ip + float2(1, 1)), fp - float2(1, 1));
     fp = fp * fp * fp * (fp * (fp * 6 - 15) + 10);
     return lerp(lerp(d00, d01, fp.y), lerp(d10, d11, fp.y), fp.x);
 }
@@ -68,6 +75,42 @@ float unity_gradientNoise(float2 p)
 float Unity_Distance_float3(float3 A, float3 B)
 {
     return distance(A, B);
+}
+
+//随机数
+int RandomInt(int seed)
+{
+    seed = (seed ^ 61) ^ (seed >> 16);
+    seed *= 9;
+    seed = seed ^ (seed >> 4);
+    seed *= 0x27d4eb2d;
+    seed = seed ^ (seed >> 15);
+    return seed;
+}
+//随机数
+int RandomIntMinMax(int seed, int min, int max)
+{
+    int randomInt = RandomInt(seed);
+    int randomLimit = (max - min)/(2147483647/(float)randomInt);
+    return randomLimit;
+}
+//随机数
+int RandomInt(int seed,int x,int y)
+{
+    seed = seed + 76.897898 * 48.789789 *  cos(x) * sin(y) * 20.79797;
+    seed = (seed ^ 61) ^ (seed >> 16);
+    seed *= 9;
+    seed = seed ^ (seed >> 4);
+    seed *= 0x27d4eb2d;
+    seed = seed ^ (seed >> 15);
+    return seed;
+}
+//随机数
+int RandomIntMinMax(int seed,int x,int y, int min, int max)
+{
+    int randomInt = RandomInt(seed,x,y);
+    int randomLimit = (max - min)/(2147483647/(float)randomInt);
+    return randomLimit;
 }
 
 //地形生成
@@ -83,7 +126,7 @@ float TerraninCreate(int iterateNumberMax,float perlinFrequency,float perlinAmpl
         float x0 = (posX / perlinSize) * curFrequency;
         float y0 = (posY / perlinSize) * curFrequency;
 
-        float noise0 = unity_gradientNoise(float2(x0 + RandomOffset.x , y0 + RandomOffset.y)) * curAmplitude;
+        float noise0 = Unity_GradientNoise(float2(x0 + RandomOffset.x , y0 + RandomOffset.y)) * curAmplitude;
 
         finalNoise = finalNoise + noise0;
         iterateNumber = iterateNumber + 1;
@@ -93,6 +136,97 @@ float TerraninCreate(int iterateNumberMax,float perlinFrequency,float perlinAmpl
     return finalNoise;
 }
 
+//获取六边形地形位置
+float3 GetHexagonBiomeWorldPos(int x, int y, float sideLength, float sideHeight)
+{
+    float wx = x * (sideLength * 1.5f);
+    float wz = (x % 2) * sideHeight + y * sideHeight * 2;
+    return float3(wx,0,wz);
+}
+
+//获取任意坐标六边形下标
+    int2 GetHexagonBiomeIndex(float x, float y, float sideLength, float sideHeight)
+    {
+        float offsetPositionX = x;
+        float offsetPositionY = y;
+        int indexX;
+        int indexY;
+        int addIndexX;
+        int addIndexY;
+        if (offsetPositionX >= 0)
+        {
+            indexX = floor(offsetPositionX / (sideLength * 1.5f));
+            addIndexX = 1;
+        }
+        else
+        {
+            indexX = ceil(offsetPositionX / (sideLength * 1.5f));
+            addIndexX = -1;
+        }
+        if (offsetPositionY >= 0)
+        {
+            indexY = floor(offsetPositionY / (sideHeight * 2));
+            addIndexY = 1;
+        }
+        else
+        {
+            indexY = ceil(offsetPositionY / (sideHeight * 2));
+            addIndexY = -1;
+        }
+
+
+        //获取上下左右4个区块的位置
+        float3 worldPos1 = GetHexagonBiomeWorldPos(indexX, indexY, sideLength, sideHeight);
+        float3 worldPos2 = GetHexagonBiomeWorldPos(indexX + addIndexX, indexY, sideLength, sideHeight);
+        float3 worldPos3 = GetHexagonBiomeWorldPos(indexX, indexY + addIndexY, sideLength, sideHeight);
+        float3 worldPos4 = GetHexagonBiomeWorldPos(indexX + addIndexX, indexY + addIndexY, sideLength, sideHeight);
+
+        float3 targetPos = float3(0,0,0);
+        float disMin = 9999999;
+        int indexXMin = indexX;
+        int indexYMin = indexY;
+
+        float disPos1 = distance(worldPos1, float3(x, 0, y));
+        if (disPos1 < disMin)
+        {
+            disMin = disPos1;
+            targetPos = worldPos1;
+            indexXMin = indexX;
+            indexYMin = indexY;
+        }
+        float disPos2 = distance(worldPos2, float3(x, 0, y));
+        if (disPos2 < disMin)
+        {
+            disMin = disPos2;
+            targetPos = worldPos2;
+            indexXMin = indexX + addIndexX;
+            indexYMin = indexY;
+        }
+        float disPos3 = distance(worldPos3, float3(x, 0, y));
+        if (disPos3 < disMin)
+        {
+            disMin = disPos3;
+            targetPos = worldPos3;
+            indexXMin = indexX;
+            indexYMin = indexY + addIndexY;
+        }
+        float disPos4 = distance(worldPos4, float3(x, 0, y));
+        if (disPos4 < disMin)
+        {
+            disMin = disPos4;
+            targetPos = worldPos4;
+            indexXMin = indexX + addIndexX;
+            indexYMin = indexY + addIndexY;
+        }
+
+        //float tx = targetPos.x / (sideLength * 1.5f);
+        //int cx = Mathf.RoundToInt(tx);
+        //float ty = (targetPos.z / sideHeight - cx % 2) / 2f;
+        //int cy = Mathf.RoundToInt(ty);
+        return int2(indexXMin, indexYMin);
+    }
+
+
 [numthreads(1024,1,1)]
 void CSMain (uint3 id : SV_DispatchThreadID,uint3 gid:SV_GROUPID,uint index:SV_GROUPINDEX)
 {
@@ -100,38 +234,56 @@ void CSMain (uint3 id : SV_DispatchThreadID,uint3 gid:SV_GROUPID,uint index:SV_G
     int dataIndex = id.x;
     TerraninData itemTerraninData = BufferTerraninData[dataIndex];
 
+   //获取该点所在的生态下标
+    int2 biomeIndexPos = GetHexagonBiomeIndex(itemTerraninData.position.x, itemTerraninData.position.y, BiomeSize,sqrt(3) * 0.5  * BiomeSize);
+    //随机获取生态
+    uint biomeNum;
+    uint biomeDataSize;
+    //获取生态数量（GetDimensions 为官方提供的 获取数组大小的方法）
+    BufferBiomeData.GetDimensions(biomeNum, biomeDataSize);
+    int randomBiomeIndex = RandomIntMinMax(RandomOffset , biomeIndexPos.x , biomeIndexPos.y , 0 , biomeNum);
+
+    itemTerraninData.biomeIndex = randomBiomeIndex;
+    //当前生态信息
+    BiomeData biomeData =  BufferBiomeData[randomBiomeIndex];
+
+
     float finalNoise0 =  TerraninCreate(
-        itemTerraninData.perlinIterateNumber0,
-        itemTerraninData.perlinFrequency0,
-        itemTerraninData.perlinAmplitude0,
-        itemTerraninData.perlinSize0,
+        biomeData.perlinIterateNumber0,
+        biomeData.perlinFrequency0,
+        biomeData.perlinAmplitude0,
+        biomeData.perlinSize0,
         itemTerraninData.position.x,
         itemTerraninData.position.y);
 
     float finalNoise1 =  TerraninCreate(
-        itemTerraninData.perlinIterateNumber1,
-        itemTerraninData.perlinFrequency1,
-        itemTerraninData.perlinAmplitude1,
-        itemTerraninData.perlinSize1,
+        biomeData.perlinIterateNumber1,
+        biomeData.perlinFrequency1,
+        biomeData.perlinAmplitude1,
+        biomeData.perlinSize1,
         itemTerraninData.position.x,
         itemTerraninData.position.y);
 
     float finalNoise2 =  TerraninCreate(
-        itemTerraninData.perlinIterateNumber2,
-        itemTerraninData.perlinFrequency2,
-        itemTerraninData.perlinAmplitude2,
-        itemTerraninData.perlinSize2,
+        biomeData.perlinIterateNumber2,
+        biomeData.perlinFrequency2,
+        biomeData.perlinAmplitude2,
+        biomeData.perlinSize2,
         itemTerraninData.position.x,
         itemTerraninData.position.y);
+
     float finalNoise = finalNoise0;
-    if (itemTerraninData.perlinIterateNumber1 > 0) 
+
+    if (biomeData.perlinIterateNumber1 > 0) 
     {
         finalNoise = finalNoise0 > finalNoise1 ? finalNoise0 : finalNoise1;
     }
-    if (itemTerraninData.perlinIterateNumber2 > 0)
+    if (biomeData.perlinIterateNumber2 > 0)
     {
         finalNoise = finalNoise > finalNoise2 ? finalNoise : finalNoise2;
     }
+   
+
     ////距离该方块最近的生态点距离
     //float minBiomeDis = 3.40282e+038;
     ////距离该方块第二近的生态点距离
@@ -169,11 +321,11 @@ void CSMain (uint3 id : SV_DispatchThreadID,uint3 gid:SV_GROUPID,uint index:SV_G
     //itemTerraninData.secondMinBiomeDis = secondMinBiomeDis;
 
     itemTerraninData.offsetDis = itemTerraninData.secondMinBiomeDis - itemTerraninData.minBiomeDis;
-    itemTerraninData.maxHeight =  (int)(itemTerraninData.minHeight + finalNoise);
+    itemTerraninData.maxHeight =  (int)(biomeData.minHeight + finalNoise);
     //边缘处理 逐渐减缓到最低高度
     if (itemTerraninData.offsetDis <= 10) //在20范围以内
     {
-        itemTerraninData.maxHeight = ceil((itemTerraninData.maxHeight - itemTerraninData.minHeight) /10) * ceil(itemTerraninData.offsetDis) + itemTerraninData.maxHeight;
+        itemTerraninData.maxHeight = ceil((itemTerraninData.maxHeight - biomeData.minHeight) /10) * ceil(itemTerraninData.offsetDis) + itemTerraninData.maxHeight;
     }
 
     BufferTerraninData[dataIndex] = itemTerraninData;

@@ -16,10 +16,11 @@ public class BiomeManager : BaseManager
     //地形数据
     public Dictionary<BiomeTypeEnum, Biome> dicBiome = new Dictionary<BiomeTypeEnum, Biome>();
     //世界生态字典
-    public Dictionary<int, BiomeTypeEnum[]> dicWorldBiome = new Dictionary<int, BiomeTypeEnum[]>();
+    public Dictionary<WorldTypeEnum, BiomeTypeEnum[]> dicWorldBiomeType = new Dictionary<WorldTypeEnum, BiomeTypeEnum[]>();
     //缓存的地形数据
     public Dictionary<string, BiomeMapData> dicWorldChunkTerrainDataPool = new Dictionary<string, BiomeMapData>();
-
+    //世界生态数据
+    public static Dictionary<WorldTypeEnum, ChunkBiomeData[]> dicWorldBiomeData = new Dictionary<WorldTypeEnum, ChunkBiomeData[]>();
 
     //地形生成计算shader
     public ComputeShader terrainCShader;
@@ -133,10 +134,10 @@ public class BiomeManager : BaseManager
     /// </summary>
     /// <param name="worldType"></param>
     /// <returns></returns>
-    public virtual BiomeTypeEnum[] GetBiomeListByWorldType(WorldTypeEnum worldType)
+    public virtual BiomeTypeEnum[] GetBiomeTypeListByWorldType(WorldTypeEnum worldType)
     {
         //如果已经有了
-        if (dicWorldBiome.TryGetValue((int)worldType, out BiomeTypeEnum[] arrayBiome))
+        if (dicWorldBiomeType.TryGetValue(worldType, out BiomeTypeEnum[] arrayBiome))
         {
             return arrayBiome;
         }
@@ -161,7 +162,59 @@ public class BiomeManager : BaseManager
                     arrayBiome[0] = BiomeTypeEnum.Test;
                     break;
             }
-            dicWorldBiome.Add((int)worldType, arrayBiome);
+            dicWorldBiomeType.Add(worldType, arrayBiome);
+            return arrayBiome;
+        }
+    }
+
+    /// <summary>
+    /// 获取世界的生态信息
+    /// </summary>
+    /// <param name="worldType"></param>
+    /// <param name="chunk"></param>
+    /// <returns></returns>
+    public virtual ChunkBiomeData[] GetBiomeDataByWorldType(WorldTypeEnum worldType,Chunk chunk = null)
+    {
+        //如果已经有了
+        if (dicWorldBiomeData.TryGetValue(worldType, out ChunkBiomeData[] arrayBiome))
+        {
+            return arrayBiome;
+        }
+        else
+        {
+            //获取该世界的所有生态
+            BiomeTypeEnum[] listBiome = GetBiomeTypeListByWorldType(worldType);
+            //设置生态数据
+            ChunkBiomeData[] arrayChunkBiomeData;
+            if (chunk == null)
+                arrayChunkBiomeData = new ChunkBiomeData[16 * 16];
+            else
+                arrayChunkBiomeData = new ChunkBiomeData[chunk.chunkData.chunkWidth * chunk.chunkData.chunkWidth];
+            for (int i = 0; i < listBiome.Length; i++)
+            {
+                Biome biome = GetBiome(listBiome[i]);
+                ChunkBiomeData itemBiomeData = new ChunkBiomeData
+                {
+                    perlinFrequency0 = biome.biomeInfo.frequency0,
+                    perlinFrequency1 = biome.biomeInfo.frequency1,
+                    perlinFrequency2 = biome.biomeInfo.frequency2,
+
+                    perlinAmplitude0 = biome.biomeInfo.amplitude0,
+                    perlinAmplitude1 = biome.biomeInfo.amplitude1,
+                    perlinAmplitude2 = biome.biomeInfo.amplitude2,
+
+                    perlinSize0 = biome.biomeInfo.scale0,
+                    perlinSize1 = biome.biomeInfo.scale1,
+                    perlinSize2 = biome.biomeInfo.scale2,
+
+                    perlinIterateNumber0 = biome.biomeInfo.iterate_number0,
+                    perlinIterateNumber1 = biome.biomeInfo.iterate_number1,
+                    perlinIterateNumber2 = biome.biomeInfo.iterate_number2,
+
+                    minHeight = biome.biomeInfo.min_height,
+                };
+                arrayChunkBiomeData[i] = itemBiomeData;
+            }
             return arrayBiome;
         }
     }
