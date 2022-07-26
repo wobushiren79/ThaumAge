@@ -7,10 +7,10 @@ public class BlockTypeWater : BlockBaseLiquid
 {
     public override bool CheckIsSameType(Chunk closeChunk, Block closeBlock)
     {
-        return CheckIsSameTypeCommon(closeChunk, closeBlock);
+        return CheckIsSameTypeWater(closeChunk, closeBlock);
     }
 
-    public static bool CheckIsSameTypeCommon(Chunk closeChunk, Block closeBlock)
+    public static bool CheckIsSameTypeWater(Chunk closeChunk, Block closeBlock)
     {
         switch (closeBlock.blockType)
         {

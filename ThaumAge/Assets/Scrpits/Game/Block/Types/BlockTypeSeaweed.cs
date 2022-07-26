@@ -5,6 +5,6 @@ public class BlockTypeSeaweed : BlockBaseLiquidSame
 {
     public override bool CheckIsSameType(Chunk closeChunk, Block closeBlock)
     {
-        return BlockTypeWater.CheckIsSameTypeCommon(closeChunk, closeBlock);
+        return BlockTypeWater.CheckIsSameTypeWater(closeChunk, closeBlock);
     }
 }

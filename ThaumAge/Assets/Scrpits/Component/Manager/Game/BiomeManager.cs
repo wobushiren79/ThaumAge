@@ -159,9 +159,8 @@ public class BiomeManager : BaseManager
             switch (worldType)
             {
                 case WorldTypeEnum.Test:
-                    arrayBiome = new BiomeTypeEnum[2];
-                    arrayBiome[0] = BiomeTypeEnum.Prairie;
-                    arrayBiome[1] = BiomeTypeEnum.Volcano;
+                    arrayBiome = new BiomeTypeEnum[1];
+                    arrayBiome[0] = BiomeTypeEnum.PrairieLava;
                     break;
                 case WorldTypeEnum.Main:
                     arrayBiome = new BiomeTypeEnum[1];
