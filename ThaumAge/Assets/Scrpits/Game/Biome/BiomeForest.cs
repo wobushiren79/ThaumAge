@@ -30,6 +30,9 @@ public class BiomeForest : Biome
             AddWeed(wPos);
             AddFlowerAndDeadWood(wPos);
             AddTree(wPos);
+        }
+        if (localPos.y == terrainData.maxHeight)
+        {
             // 地表，使用草
             return BlockTypeEnum.Grass;
         }

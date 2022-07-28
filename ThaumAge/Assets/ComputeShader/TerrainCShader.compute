@@ -146,15 +146,20 @@ float3 GetHexagonBiomeWorldPos(int x, int y, float sideLength, float sideHeight)
     return float3(wx,0,wz);
 }
 
-//获取任意坐标六边形下标
-    int2 GetHexagonBiomeIndex(float x, float y, float sideLength, float sideHeight)
+    //获取任意坐标六边形下标
+    void GetHexagonBiomeIndex(float x, float y, float sideLength, float sideHeight,
+        out int2 disMinPosIndex, out float disMin, out float3 disMinPos,
+        out int2 disSecondPosIndex, out float disSecond, out float3 disSecondPos)
     {
         float offsetPositionX = x;
         float offsetPositionY = y;
+
         int indexX;
         int indexY;
+
         int addIndexX;
         int addIndexY;
+
         if (offsetPositionX >= 0)
         {
             indexX = floor(offsetPositionX / (sideLength * 1.5f));
@@ -183,8 +188,15 @@ float3 GetHexagonBiomeWorldPos(int x, int y, float sideLength, float sideHeight)
         float3 worldPos3 = GetHexagonBiomeWorldPos(indexX, indexY + addIndexY, sideLength, sideHeight);
         float3 worldPos4 = GetHexagonBiomeWorldPos(indexX + addIndexX, indexY + addIndexY, sideLength, sideHeight);
 
-        float3 targetPos = float3(0,0,0);
-        float disMin = 9999999;
+        disMinPosIndex = int2(0, 0);
+        disSecondPosIndex = int2(0, 0);
+
+        disMin = 9999998;
+        disSecond = 9999999;
+
+        disMinPos = float3(0, 0, 0);
+        disSecondPos = float3(0, 0, 0);
+
         int indexXMin = indexX;
         int indexYMin = indexY;
 
@@ -192,40 +204,65 @@ float3 GetHexagonBiomeWorldPos(int x, int y, float sideLength, float sideHeight)
         if (disPos1 < disMin)
         {
             disMin = disPos1;
-            targetPos = worldPos1;
-            indexXMin = indexX;
-            indexYMin = indexY;
+            disMinPos = worldPos1;
+            disMinPosIndex.x = indexX;
+            disMinPosIndex.y = indexY;
         }
+        else if (disPos1 < disSecond)
+        {
+            disSecond = disPos1;
+            disSecondPos = worldPos1;
+            disSecondPosIndex.x = indexX;
+            disSecondPosIndex.y = indexY;
+        }
+
         float disPos2 = distance(worldPos2, float3(x, 0, y));
         if (disPos2 < disMin)
         {
             disMin = disPos2;
-            targetPos = worldPos2;
-            indexXMin = indexX + addIndexX;
-            indexYMin = indexY;
+            disMinPos = worldPos2;
+            disMinPosIndex.x = indexX + addIndexX;
+            disMinPosIndex.y = indexY;
         }
+        else if (disPos2 < disSecond)
+        {
+            disSecond = disPos2;
+            disSecondPos = worldPos2;
+            disSecondPosIndex.x = indexX + addIndexX;
+            disSecondPosIndex.y = indexY;
+        }
+
         float disPos3 = distance(worldPos3, float3(x, 0, y));
         if (disPos3 < disMin)
         {
             disMin = disPos3;
-            targetPos = worldPos3;
-            indexXMin = indexX;
-            indexYMin = indexY + addIndexY;
+            disMinPos = worldPos3;
+            disMinPosIndex.x = indexX;
+            disMinPosIndex.y = indexY + addIndexY;
         }
+        else if (disPos3 < disSecond)
+        {
+            disSecond = disPos3;
+            disSecondPos = worldPos3;
+            disSecondPosIndex.x = indexX;
+            disSecondPosIndex.y = indexY + addIndexY;
+        }
+
         float disPos4 = distance(worldPos4, float3(x, 0, y));
         if (disPos4 < disMin)
         {
             disMin = disPos4;
-            targetPos = worldPos4;
-            indexXMin = indexX + addIndexX;
-            indexYMin = indexY + addIndexY;
+            disMinPos = worldPos4;
+            disMinPosIndex.x = indexX + addIndexX;
+            disMinPosIndex.y = indexY + addIndexY;
         }
-
-        //float tx = targetPos.x / (sideLength * 1.5f);
-        //int cx = Mathf.RoundToInt(tx);
-        //float ty = (targetPos.z / sideHeight - cx % 2) / 2f;
-        //int cy = Mathf.RoundToInt(ty);
-        return int2(indexXMin, indexYMin);
+        else if (disPos4 < disSecond)
+        {
+            disSecond = disPos4;
+            disSecondPos = disPos4;
+            disSecondPosIndex.x = indexX + addIndexX;
+            disSecondPosIndex.y = indexY + addIndexY;
+        }
     }
 
 
@@ -236,17 +273,29 @@ void CSMain (uint3 id : SV_DispatchThreadID,uint3 gid:SV_GROUPID,uint index:SV_G
     int dataIndex = id.x;
     TerraninData itemTerraninData = BufferTerraninData[dataIndex];
 
+    //距离最远的生态
+    int2 disMinPosIndex;
+    float disMin;
+    float3 disMinPos;
+
+    //距离第二远的生态
+    int2 disSecondPosIndex;
+    float disSecond;
+    float3 disSecondPos;
+
    //获取该点所在的生态下标
-    int2 biomeIndexPos = GetHexagonBiomeIndex(itemTerraninData.position.x, itemTerraninData.position.y, BiomeSize,sqrt(3) * 0.5  * BiomeSize);
+    GetHexagonBiomeIndex(itemTerraninData.position.x, itemTerraninData.position.y, BiomeSize,sqrt(3) * 0.5  * BiomeSize,
+         disMinPosIndex, disMin, disMinPos,
+         disSecondPosIndex, disSecond, disSecondPos);
     //随机获取生态
     
-    //获取生态数量（GetDimensions 为官方提供的 获取数组大小的方法）
-    //BufferBiomeData.GetDimensions(biomeNum, biomeDataSize);
-    int randomBiomeIndex = RandomIntMinMax(RandomOffset.x , biomeIndexPos.x , biomeIndexPos.y , 0 , BiomeNum);
+    int randomBiomeIndexMin = RandomIntMinMax(RandomOffset.x , disMinPosIndex.x , disMinPosIndex.y , 0 , BiomeNum);
+    int randomBiomeIndexSecond = RandomIntMinMax(RandomOffset.x, disSecondPosIndex.x, disSecondPosIndex.y, 0, BiomeNum);
 
-    itemTerraninData.biomeIndex = randomBiomeIndex;
+    itemTerraninData.biomeIndex = randomBiomeIndexMin;
+
     //当前生态信息
-    BiomeData biomeData =  BufferBiomeData[randomBiomeIndex];
+    BiomeData biomeData =  BufferBiomeData[randomBiomeIndexMin];
 
     float finalNoise0 =  TerraninCreate(
         biomeData.perlinIterateNumber0,

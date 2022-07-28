@@ -6,6 +6,57 @@ public class BlockShapeLiquid : BlockShapeCube
 {
 
     public static float itemVolumeHeight = 1f / BlockBaseLiquid.maxLiquidVolume;
+    public override void InitData(Block block)
+    {
+        this.block = block;
+        uvsAddLeft = new Vector2[]
+        {
+            new Vector2(0 ,1),
+            new Vector2(1,1),
+            new Vector2(1 ,0),
+            new Vector2(0 ,0)
+        };
+
+        uvsAddRight = new Vector2[]
+        {
+            new Vector2(0,0),
+            new Vector2(0,1),
+            new Vector2(1,1),
+            new Vector2(1,0)
+        };
+
+        uvsAddDown = new Vector2[]
+        {
+            new Vector2(1,1),
+            new Vector2(0,1),
+            new Vector2(0,0),
+            new Vector2(1,0)
+        };
+
+        uvsAddUp = new Vector2[]
+        {
+            new Vector2(0,0),
+            new Vector2(0,1),
+            new Vector2(1,1),
+            new Vector2(1,0)
+        };
+
+        uvsAddForward = new Vector2[]
+        {
+            new Vector2(0,0),
+            new Vector2(0,1),
+            new Vector2(1,1),
+            new Vector2(1,0)
+        };
+
+        uvsAddBack = new Vector2[]
+        {
+            new Vector2(0 ,1),
+            new Vector2(1,1),
+            new Vector2(1 ,0),
+            new Vector2(0 ,0)
+        };
+    }
 
     public override void BuildBlock(Chunk chunk, Vector3Int localPosition)
     {
@@ -127,7 +178,7 @@ public class BlockShapeLiquid : BlockShapeCube
             case BlockShapeEnum.Liquid:
             case BlockShapeEnum.LiquidCross:
             case BlockShapeEnum.LiquidCrossOblique:
-                if (block.blockType == closeBlock.blockType 
+                if (block.blockType == closeBlock.blockType
                     || (block is BlockBaseLiquid blockLiquid && blockLiquid.CheckIsSameType(closeBlockChunk, closeBlock))
                     || (block is BlockBaseLiquidSame blockLiquidSame && blockLiquidSame.CheckIsSameType(closeBlockChunk, closeBlock))
                     )
