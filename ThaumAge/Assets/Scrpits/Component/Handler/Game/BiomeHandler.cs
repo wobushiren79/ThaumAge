@@ -61,7 +61,7 @@ public class BiomeHandler : BaseHandler<BiomeHandler, BiomeManager>
     }
 
     /// <summary>
-    /// 获取生态中心点
+    /// 获取生态中心点 （无用）
     /// </summary>
     /// <param name="currentChunk"></param>
     /// <param name="range">范围</param>

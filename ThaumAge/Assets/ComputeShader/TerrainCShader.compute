@@ -4,13 +4,6 @@ struct TerraninData
 {    
     //当前坐标
     float2 position;
-
-    //距离该方块最近的生态点距离
-    float minBiomeDis;
-    //距离该方块第二近的生态点距离
-    float secondMinBiomeDis;
-    //距离最近和第二进的距离差
-    float offsetDis;
     //地形最大高度
     int maxHeight;
     //当前生态
@@ -296,6 +289,8 @@ void CSMain (uint3 id : SV_DispatchThreadID,uint3 gid:SV_GROUPID,uint index:SV_G
 
     //当前生态信息
     BiomeData biomeData =  BufferBiomeData[randomBiomeIndexMin];
+    //第二近的生态信息
+    BiomeData biomeDataSecond =  BufferBiomeData[randomBiomeIndexSecond];
 
     float finalNoise0 =  TerraninCreate(
         biomeData.perlinIterateNumber0,
@@ -331,50 +326,15 @@ void CSMain (uint3 id : SV_DispatchThreadID,uint3 gid:SV_GROUPID,uint index:SV_G
     {
         finalNoise = finalNoise > finalNoise2 ? finalNoise : finalNoise2;
     }
-   
-
-    ////距离该方块最近的生态点距离
-    //float minBiomeDis = 3.40282e+038;
-    ////距离该方块第二近的生态点距离
-    //float secondMinBiomeDis = 3.40282e+038;
-    ////最靠近的生态点
-    //float3 minBiomePosition = float3(0,0,0);
-
-    //int biomeCenterNumber = 0;
-    // //遍历中心点，寻找最靠近的生态点（维诺图）
-    //while(biomeCenterNumber < 100)
-    //{
-    //    float3 itemCenterPosition = ArrayBiomeCenterPosition[biomeCenterNumber];
-    //    //如果有这个中心点
-    //    if(itemCenterPosition.x != 0 && itemCenterPosition.y != 0 && itemCenterPosition.z != 0)
-    //    {
-    //        float3 itemPosition3 = float3(itemTerraninData.position.x , itemTerraninData.position.y , 0);
-    //        float tempDis = Unity_Distance_float3(itemPosition3, itemCenterPosition);
-
-    //        //如果小于最小距离
-    //        if (tempDis <= minBiomeDis)
-    //        {
-    //            minBiomePosition = itemCenterPosition;
-    //            minBiomeDis = tempDis;
-    //        }
-    //        //如果大于最小距离 并且小于第二小距离
-    //        else if (tempDis > minBiomeDis && tempDis <= secondMinBiomeDis)
-    //        {
-    //            secondMinBiomeDis = tempDis;
-    //        }
-    //    }
-    //    biomeCenterNumber++;
-    //}
-       
-    //itemTerraninData.minBiomeDis = minBiomeDis;
-    //itemTerraninData.secondMinBiomeDis = secondMinBiomeDis;
-
-    itemTerraninData.offsetDis = itemTerraninData.secondMinBiomeDis - itemTerraninData.minBiomeDis;
+ 
     itemTerraninData.maxHeight =  (int)(biomeData.minHeight + finalNoise);
-    //边缘处理 逐渐减缓到最低高度
-    if (itemTerraninData.offsetDis <= 10) //在20范围以内
+
+     //计算不同生态切换之间的融合 都以64高度为基础
+    float baseHeight = 64;
+    int lerpSize = 3;
+    if(disSecond - disMin <= lerpSize)
     {
-        itemTerraninData.maxHeight = ceil((itemTerraninData.maxHeight - biomeData.minHeight) /10) * ceil(itemTerraninData.offsetDis) + itemTerraninData.maxHeight;
+        itemTerraninData.maxHeight = (int)lerp((float)itemTerraninData.maxHeight , baseHeight , 1/(disSecond - disMin));
     }
 
     BufferTerraninData[dataIndex] = itemTerraninData;
