@@ -159,13 +159,21 @@ public class BiomeManager : BaseManager
             switch (worldType)
             {
                 case WorldTypeEnum.Test:
-                    arrayBiome = new BiomeTypeEnum[2];
-                    arrayBiome[0] = BiomeTypeEnum.Forest;
-                    arrayBiome[1] = BiomeTypeEnum.Prairie;
+                    arrayBiome = new BiomeTypeEnum[1];
+                    arrayBiome[0] = BiomeTypeEnum.Prairie;
                     break;
                 case WorldTypeEnum.Main:
-                    arrayBiome = new BiomeTypeEnum[1];
-                    arrayBiome[0] = BiomeTypeEnum.Forest;
+                    arrayBiome = new BiomeTypeEnum[10];
+                    arrayBiome[0] = BiomeTypeEnum.Prairie;
+                    arrayBiome[1] = BiomeTypeEnum.Forest;
+                    arrayBiome[2] = BiomeTypeEnum.Desert;
+                    arrayBiome[3] = BiomeTypeEnum.Mountain;
+                    arrayBiome[4] = BiomeTypeEnum.PrairieLava;
+                    arrayBiome[5] = BiomeTypeEnum.Ocean;
+                    arrayBiome[6] = BiomeTypeEnum.Swamp;
+                    arrayBiome[7] = BiomeTypeEnum.Snowland;
+                    arrayBiome[8] = BiomeTypeEnum.ForestMagic;
+                    arrayBiome[8] = BiomeTypeEnum.ForestBirch;
                     break;
                 case WorldTypeEnum.Launch:
                     arrayBiome = new BiomeTypeEnum[1];

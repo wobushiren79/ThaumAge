@@ -32,7 +32,7 @@ public class BiomeForest : Biome
             AddTree(wPos);
             return BlockTypeEnum.Grass;
         }
-        if (localPos.y < terrainData.maxHeight && localPos.y > terrainData.maxHeight - 10)
+        if (localPos.y < terrainData.maxHeight && localPos.y > terrainData.maxHeight - 5)
         {
             //中使用泥土
             return BlockTypeEnum.Dirt;

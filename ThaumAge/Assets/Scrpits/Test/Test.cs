@@ -9,46 +9,31 @@ using System.Collections.Generic;
 using DG.Tweening;
 public class Test : BaseMonoBehaviour
 {
-    public Vector3 worldPos;
-    public GameObject objContainer;
-    protected float _edgeLen = 10;
-    protected float _halfHeight = (Mathf.Sqrt(3) * 0.5f) * 10;
-    public Vector3 Origin { get; set; } = Vector3.zero;
-
-    public void Start()
-    {
-
-    }
-
+    public int seed;
     private void OnGUI()
     {
-        if (GUILayout.Button("Test2"))
-        {
-            objContainer.transform.DestroyAllChild();
-            for (int x = 0; x < 10; x++)
-            {
-                for (int y = 0; y < 10; y++)
-                {
-                    Vector3 vector3 = GetWorldPos(x, y);
-                    GameObject objItem = GameObject.CreatePrimitive( PrimitiveType.Capsule);
-                    objItem.transform.SetParent(objContainer.transform);
-                    objItem.transform.position = vector3;
-                }
-            }
-        }
 
         if (GUILayout.Button("Test3"))
         {
-            Vector2Int pos = MathUtil.GetHexagonIndex(worldPos.x,worldPos.y, Origin, _edgeLen, _halfHeight);
-            UnityEngine.Debug.Log("GetGridPos:"+ pos);
+            
+            for (int x=-4;x<4;x++)
+            {
+                for (int z = -4; z < 4; z++)
+                {
+                    Vector3 position= GetHexagonBiomeWorldPos(x, z, 1, (float)Mathf.Sqrt(3) * 0.5f);
+                    GameObject itemObj= GameObject.CreatePrimitive(PrimitiveType.Sphere);
+                    itemObj.transform.position = position;
+                }
+            }
         }
     }
 
 
-    public Vector3 GetWorldPos(int x, int y)
+    //获取六边形地形位置
+    Vector3 GetHexagonBiomeWorldPos(int x, int y, float sideLength, float sideHeight)
     {
-        float wx = x * _edgeLen * 1.5f;
-        float wz = (y * 2 + x % 2) * _halfHeight;
-        return Origin + new Vector3(wx, 0, wz);
+        float wx = x * (sideLength * 1.5f);
+        float wz =( Mathf.Abs (x % 2)) * sideHeight + y * sideHeight * 2;
+        return new Vector3(wx, 0, wz);
     }
 }
