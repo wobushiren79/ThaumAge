@@ -12,7 +12,7 @@ public class BiomeForest : Biome
 
     public override BlockTypeEnum GetBlockForMaxHeightDown(Chunk chunk, Vector3Int localPos, ChunkTerrainData terrainData)
     {
-        if (localPos.y == terrainData.maxHeight || localPos.y == terrainData.maxHeight - 1)
+        if (localPos.y == terrainData.maxHeight)
         {
             Vector3Int wPos = localPos + chunk.chunkData.positionForWorld;
             int waterHeight = biomeInfo.GetWaterPlaneHeight();
@@ -30,10 +30,6 @@ public class BiomeForest : Biome
             AddWeed(wPos);
             AddFlowerAndDeadWood(wPos);
             AddTree(wPos);
-        }
-        if (localPos.y == terrainData.maxHeight)
-        {
-            // 地表，使用草
             return BlockTypeEnum.Grass;
         }
         if (localPos.y < terrainData.maxHeight && localPos.y > terrainData.maxHeight - 10)

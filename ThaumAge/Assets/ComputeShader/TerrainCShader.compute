@@ -330,11 +330,11 @@ void CSMain (uint3 id : SV_DispatchThreadID,uint3 gid:SV_GROUPID,uint index:SV_G
     itemTerraninData.maxHeight =  (int)(biomeData.minHeight + finalNoise);
 
      //计算不同生态切换之间的融合 都以64高度为基础
-    float baseHeight = 64;
-    int lerpSize = 3;
-    if(disSecond - disMin <= lerpSize)
+    float baseHeight = 65;
+    float lerpSize = 10;
+    if(randomBiomeIndexMin != randomBiomeIndexSecond &&disSecond - disMin <= lerpSize)
     {
-        itemTerraninData.maxHeight = (int)lerp((float)itemTerraninData.maxHeight , baseHeight , 1/(disSecond - disMin));
+        itemTerraninData.maxHeight = (int)lerp(baseHeight, (float)itemTerraninData.maxHeight  , (disSecond - disMin)/ lerpSize);
     }
 
     BufferTerraninData[dataIndex] = itemTerraninData;
