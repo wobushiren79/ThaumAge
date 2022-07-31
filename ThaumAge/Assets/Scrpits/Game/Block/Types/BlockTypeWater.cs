@@ -24,4 +24,9 @@ public class BlockTypeWater : BlockBaseLiquid
                 return false;
         }
     }
+
+    public override void OnCollisionForPlayerCamera(Camera camera, Vector3Int worldPosition)
+    {
+        CameraHandler.Instance.SetCameraUnderLiquid(1);
+    }
 }

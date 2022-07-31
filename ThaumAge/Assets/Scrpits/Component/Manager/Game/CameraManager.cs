@@ -92,4 +92,18 @@ public class CameraManager : BaseManager
             return _cameraForBuildingEditor;
         }
     }
+
+
+    public GameObject _objEffectLiquid;
+    public GameObject objEffectLiquid
+    {
+        get
+        {
+            if (_objEffectLiquid == null)
+            {
+                _objEffectLiquid = mainCamera.transform.Find("EffectUI_Liquid").gameObject;
+            }
+            return _objEffectLiquid;
+        }
+    }
 }

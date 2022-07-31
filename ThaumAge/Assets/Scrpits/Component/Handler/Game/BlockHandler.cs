@@ -16,6 +16,7 @@ public class BlockHandler : BaseHandler<BlockHandler, BlockManager>
     //闲置的破碎方块
     public Queue<BlockCptBreak> listBreakBlockIdle = new Queue<BlockCptBreak>();
 
+
     /// <summary>
     /// 创建方块
     /// </summary>

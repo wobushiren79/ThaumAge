@@ -295,15 +295,23 @@ public class CameraHandler : BaseHandler<CameraHandler, CameraManager>
     }
 
     protected Color colorUnderLiquid0 = Color.white;
-    protected Color colorUnderLiquid1 = Color.white;
-    protected Color colorUnderLiquid2 = Color.white;
+    protected Color colorUnderLiquid1 = new Color(0f,0.35f,0.51f);
+    protected Color colorUnderLiquid2 = new Color(0.89f, 0.38f, 0.25f);
+
+    protected int lastLiquidType = 0;
     /// <summary>
     /// 设置摄像头在液体之中
     /// </summary>
     /// <param name="liquidType">液体类型 0无 1水 2岩浆</param>
     public void SetCameraUnderLiquid(int liquidType)
     {
+        if (lastLiquidType == liquidType)
+            return;
         Color colorUnder;
+        float postExposure = 0;
+        float contrast = 0;
+        bool isShowLiquidEffect = false;
+
         switch (liquidType) 
         {
             case 0:
@@ -311,15 +319,24 @@ public class CameraHandler : BaseHandler<CameraHandler, CameraManager>
                 break;
             case 1:
                 colorUnder = colorUnderLiquid1;
+                postExposure = 0.1f;
+                contrast = -20;
+                isShowLiquidEffect = true;
                 break;
             case 2:
                 colorUnder = colorUnderLiquid2;
+                postExposure = 1f;
+                contrast = -30;
+                isShowLiquidEffect = true;
                 break;
             default:
                 colorUnder = Color.white;
                 break;
         }
-
-        VolumeHandler.Instance.SetColorAdjustments(colorUnder);
+        //显示水下粒子特效
+        manager.objEffectLiquid.SetActive(isShowLiquidEffect);
+        //调整屏幕颜色
+        VolumeHandler.Instance.SetColorAdjustments(colorUnder, postExposure, contrast);
+        this.lastLiquidType = liquidType;
     }
 }

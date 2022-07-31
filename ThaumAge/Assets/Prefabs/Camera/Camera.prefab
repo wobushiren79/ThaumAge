@@ -63,13 +63,13 @@ MonoBehaviour:
   m_Lens:
     FieldOfView: 60
     OrthographicSize: 10
-    NearClipPlane: 0.1
+    NearClipPlane: 0.01
     FarClipPlane: 5000
     Dutch: 0
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 2.7574258, y: 1}
+    m_SensorSize: {x: 1.9027283, y: 1}
     Iso: 200
     ShutterSpeed: 0.005
     Aperture: 16
@@ -165,7 +165,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 1, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 9099583066950310246}
   m_Father: {fileID: 776616025876524326}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -192,7 +193,7 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: 0.1
+  near clip plane: 0.01
   far clip plane: 5000
   field of view: 60
   orthographic: 0
@@ -439,13 +440,13 @@ MonoBehaviour:
   m_Lens:
     FieldOfView: 60
     OrthographicSize: 10
-    NearClipPlane: 0.1
+    NearClipPlane: 0.01
     FarClipPlane: 5000
     Dutch: 0
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 2.7574258, y: 1}
+    m_SensorSize: {x: 1.9027283, y: 1}
     Iso: 200
     ShutterSpeed: 0.005
     Aperture: 16
@@ -748,13 +749,13 @@ MonoBehaviour:
   m_Lens:
     FieldOfView: 60
     OrthographicSize: 10
-    NearClipPlane: 0.1
+    NearClipPlane: 0.01
     FarClipPlane: 5000
     Dutch: 0
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 2.7574258, y: 1}
+    m_SensorSize: {x: 1.9027283, y: 1}
     Iso: 200
     ShutterSpeed: 0.005
     Aperture: 16
@@ -833,13 +834,13 @@ MonoBehaviour:
   m_Lens:
     FieldOfView: 60
     OrthographicSize: 10
-    NearClipPlane: 0.1
+    NearClipPlane: 0.01
     FarClipPlane: 5000
     Dutch: 0
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 2.7574258, y: 1}
+    m_SensorSize: {x: 1.9027283, y: 1}
     Iso: 200
     ShutterSpeed: 0.005
     Aperture: 16
@@ -1485,13 +1486,13 @@ MonoBehaviour:
   m_Lens:
     FieldOfView: 60
     OrthographicSize: 10
-    NearClipPlane: 0.1
+    NearClipPlane: 0.01
     FarClipPlane: 5000
     Dutch: 0
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 2.7574258, y: 1}
+    m_SensorSize: {x: 1.9027283, y: 1}
     Iso: 200
     ShutterSpeed: 0.005
     Aperture: 16
@@ -1507,3 +1508,67 @@ MonoBehaviour:
         m_Calls: []
   m_LegacyBlendHint: 0
   m_ComponentOwner: {fileID: 9198283942328849808}
+--- !u!1001 &1717783228464331323
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 2
+    m_TransformParent: {fileID: 776616026688040897}
+    m_Modifications:
+    - target: {fileID: 2939940622265413595, guid: 47c0804817fbe8043ae12a9a4a7d80b0, type: 3}
+      propertyPath: m_Name
+      value: EffectUI_Liquid
+      objectReference: {fileID: 0}
+    - target: {fileID: 7610797672387502941, guid: 47c0804817fbe8043ae12a9a4a7d80b0, type: 3}
+      propertyPath: m_RootOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7610797672387502941, guid: 47c0804817fbe8043ae12a9a4a7d80b0, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7610797672387502941, guid: 47c0804817fbe8043ae12a9a4a7d80b0, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7610797672387502941, guid: 47c0804817fbe8043ae12a9a4a7d80b0, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7610797672387502941, guid: 47c0804817fbe8043ae12a9a4a7d80b0, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7610797672387502941, guid: 47c0804817fbe8043ae12a9a4a7d80b0, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7610797672387502941, guid: 47c0804817fbe8043ae12a9a4a7d80b0, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7610797672387502941, guid: 47c0804817fbe8043ae12a9a4a7d80b0, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7610797672387502941, guid: 47c0804817fbe8043ae12a9a4a7d80b0, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7610797672387502941, guid: 47c0804817fbe8043ae12a9a4a7d80b0, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7610797672387502941, guid: 47c0804817fbe8043ae12a9a4a7d80b0, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_AddedGameObjects: []
+  m_SourcePrefab: {fileID: 100100000, guid: 47c0804817fbe8043ae12a9a4a7d80b0, type: 3}
+--- !u!4 &9099583066950310246 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7610797672387502941, guid: 47c0804817fbe8043ae12a9a4a7d80b0, type: 3}
+  m_PrefabInstance: {fileID: 1717783228464331323}
+  m_PrefabAsset: {fileID: 0}

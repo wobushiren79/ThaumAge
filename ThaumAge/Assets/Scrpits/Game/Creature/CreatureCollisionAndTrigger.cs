@@ -68,10 +68,6 @@ public class CreatureCollisionAndTrigger : CreatureBase
         {
             targetCameraBlock.OnCollisionForPlayerCamera(mainCamera, targetBlockForCameraPosition);
         }
-        else
-        {
-            CameraHandler.Instance.SetCameraUnderLiquid(0);
-        }
     }
 
     /// <summary>

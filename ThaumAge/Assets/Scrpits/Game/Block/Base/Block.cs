@@ -158,7 +158,7 @@ public class Block
     /// </summary>
     public virtual void OnCollisionForPlayerCamera(Camera camera, Vector3Int worldPosition)
     {
-
+        CameraHandler.Instance.SetCameraUnderLiquid(0);
     }
 
     /// <summary>
