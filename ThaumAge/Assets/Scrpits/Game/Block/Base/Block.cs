@@ -136,9 +136,10 @@ public class Block
     /// Åö×²
     /// </summary>
     /// <param name="user"></param>
-    public virtual void OnCollision(GameObject user, Vector3Int worldPosition, DirectionEnum direction)
+    public virtual void OnCollision(CreatureTypeEnum creatureType, GameObject targetObj, Vector3Int worldPosition, DirectionEnum direction)
     {
-
+        if(creatureType == CreatureTypeEnum.Player)
+            GameControlHandler.Instance.manager.controlForPlayer.ChangeGroundType(0);
     }
 
     /// <summary>

@@ -10,30 +10,29 @@ public class ControlForPlayer : ControlForBase
     private CapsuleCollider colliderPlayer;
     private CreatureCptCharacter character;
 
-    //攀爬高度
+    [Header("攀爬高度")]
     public float stepHeigh = 0.6f;
-    //攀爬过度
+    [Header("攀爬过度")]
     public float stepSmooth = 0.1f;
-
-    //移动速度
+    [Header("重力")]
+    public Vector3 gravityValue;
+    [Header("移动速度")]
     public float speedMove = 0.6f;
+
     //跳跃速度
     private float speedJump = 1;
     //角色旋转速度
     private float speedCharacterRotate = 10;
-
-    //重力
-    public float gravityValue = 10f;
     //移动向量
     private Vector3 playerVelocity;
-
     //攀爬剩余时间
     private float timeClimbEnd = 0;
-
     //是否正在跳跃
     private bool isJump = false;
     //是否开启跳跃检测
     private bool isJumpCheck = false;
+    //地面类型0地面 1水里
+    private int groundType = 0;
 
     private InputAction inputActionUseL;
     private InputAction inputActionUseR;
@@ -90,6 +89,8 @@ public class ControlForPlayer : ControlForBase
 
         inputActionShortcutsSelect = InputHandler.Instance.manager.GetInputPlayerData("ShortcutsSelect");
         inputActionShortcutsSelect.started += HandleForShortcutsSelect;
+
+        gravityValue = Physics.gravity;
     }
 
 
@@ -114,6 +115,7 @@ public class ControlForPlayer : ControlForBase
         if (GameHandler.Instance.manager.GetGameState() == GameStateEnum.Gaming)
         {
             HandlerForMoveUpdate();
+            HandleForGravityUpdate();
         }
     }
 
@@ -128,6 +130,23 @@ public class ControlForPlayer : ControlForBase
         inputActionUseFace.started -= HandleForUseE;
         inputActionUserDetailsData.started -= HandleForUserDetails;
         inputActionUseDrop.started -= HandleForDrop;
+    }
+
+    /// <summary>
+    /// 改变地面类型 
+    /// </summary>
+    /// <param name="groundType">0地面 1水里</param>
+    public void ChangeGroundType(int groundType)
+    {
+        this.groundType = groundType;
+        if (groundType == 0)
+        {
+            gravityValue = Physics.gravity;
+        }
+        else if (groundType == 1)
+        {
+            gravityValue = new Vector3(0, -2f, 0);
+        }
     }
 
     /// <summary>
@@ -164,8 +183,7 @@ public class ControlForPlayer : ControlForBase
         //攀爬处理
         if (timeClimbEnd > 0)
         {
-            rbPlayer.velocity = Vector3.zero;
-            rbPlayer.useGravity = false;
+            gravityValue = Vector3.zero;
             float climbSpeed = Mathf.Abs(playerVelocity.x) > Mathf.Abs(playerVelocity.z) ? Mathf.Abs(playerVelocity.x) : Mathf.Abs(playerVelocity.z);
             playerVelocity.y = climbSpeed;
             rbPlayer.MovePosition(rbPlayer.transform.position + playerVelocity);
@@ -186,7 +204,7 @@ public class ControlForPlayer : ControlForBase
             }
             else
             {
-                rbPlayer.useGravity = true;
+                gravityValue = Physics.gravity;
                 //时间到了就还原了
                 character.characterAnim.creatureAnim.SetClimbSpeed(0);
                 character.characterAnim.creatureAnim.PlayAnim("idle");
@@ -209,6 +227,17 @@ public class ControlForPlayer : ControlForBase
     }
 
     /// <summary>
+    /// 重力处理
+    /// </summary>
+    public void HandleForGravityUpdate()
+    {
+        if (!rbPlayer.isKinematic && !rbPlayer.IsSleeping() && gravityValue != Vector3.zero)
+        {
+            rbPlayer.AddForce(gravityValue, ForceMode.Acceleration);
+        }
+    }
+
+    /// <summary>
     /// 高度翻越处理
     /// </summary>
     public void HandleForStepClimb()
@@ -221,7 +250,7 @@ public class ControlForPlayer : ControlForBase
         if (RayUtil.CheckToCast(stepLowerPosition, playerVelocity, 0.5f, 1 << LayerInfo.ChunkCollider))
         {
             if (!RayUtil.CheckToCast(stepUpperPosition, playerVelocity, 0.6f, 1 << LayerInfo.ChunkCollider))
-            {     
+            {
                 rbPlayer.position += new Vector3(0, stepSmooth, 0);
             }
         }
@@ -255,6 +284,12 @@ public class ControlForPlayer : ControlForBase
     /// </summary>
     public void HandleForJumpStart(CallbackContext callback)
     {
+        //如果是在水里
+        if (groundType == 1)
+        {
+            rbPlayer.AddForce(new Vector3(0, 2f * speedJump, 0), ForceMode.Impulse);
+            return;
+        }
         if (!isActiveAndEnabled || isJump)
             return;
         isJump = true;

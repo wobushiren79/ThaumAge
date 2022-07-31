@@ -1516,9 +1516,17 @@ PrefabInstance:
     serializedVersion: 2
     m_TransformParent: {fileID: 776616026688040897}
     m_Modifications:
+    - target: {fileID: 988087270272497429, guid: 47c0804817fbe8043ae12a9a4a7d80b0, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2939940622265413595, guid: 47c0804817fbe8043ae12a9a4a7d80b0, type: 3}
       propertyPath: m_Name
       value: EffectUI_Liquid
+      objectReference: {fileID: 0}
+    - target: {fileID: 2939940622265413595, guid: 47c0804817fbe8043ae12a9a4a7d80b0, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7610797672387502941, guid: 47c0804817fbe8043ae12a9a4a7d80b0, type: 3}
       propertyPath: m_RootOrder

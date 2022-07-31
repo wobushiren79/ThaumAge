@@ -28,6 +28,7 @@ public partial class UIViewCharacterStatusShow : BaseUIView
         SetStamina(Mathf.RoundToInt(characterStatus.stamina), characterStatus.maxStamina);
         SetMagic(characterStatus.magic, characterStatus.maxMagic);
         SetSaturation(Mathf.RoundToInt(characterStatus.saturation), characterStatus.maxSaturation);
+        SetAir(Mathf.RoundToInt(characterStatus.air), characterStatus.maxAir);
     }
 
     /// <summary>
@@ -68,5 +69,13 @@ public partial class UIViewCharacterStatusShow : BaseUIView
     public void SetSaturation(int saturation, int maxSaturation)
     {
         ui_ViewCharacterStatusPro_Saturation.SetData(saturation, maxSaturation);
+    }
+
+    /// <summary>
+    /// 设置氧气
+    /// </summary>
+    public void SetAir(int air, int maxAir)
+    {
+        ui_ViewCharacterStatusPro_Air.SetData(air, maxAir);
     }
 }

@@ -24,12 +24,12 @@ public class CreatureCollisionAndTrigger : CreatureBase
         if (targetBlockPosition.y < 0 || targetBlockPosition.y >= WorldCreateHandler.Instance.manager.heightChunk)
             return;
         WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(targetBlockPosition, out Block targetBlock, out Chunk targetChunk);
-        if (targetBlock != null)
-        {
-            targetBlock.OnCollision(creature.gameObject, targetBlockPosition, DirectionEnum.None);
-        }
 
         CreatureTypeEnum creatureType = creature.creatureData.GetCreatureType();
+        if (targetBlock != null)
+        {
+            targetBlock.OnCollision(creatureType,creature.gameObject, targetBlockPosition, DirectionEnum.None);
+        }
         if (creatureType == CreatureTypeEnum.Player)
         {
             UpdateCollisionAndTriggerForPlayer(creaturePoint, targetBlockPosition);

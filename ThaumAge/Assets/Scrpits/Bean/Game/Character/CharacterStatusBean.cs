@@ -21,6 +21,10 @@ public class CharacterStatusBean
     public float saturation = 10;
     public int maxSaturation = 10;
 
+    //空气
+    public float air = 10;
+    public int maxAir = 10;
+
     /// <summary>
     /// 耐力修改
     /// </summary>

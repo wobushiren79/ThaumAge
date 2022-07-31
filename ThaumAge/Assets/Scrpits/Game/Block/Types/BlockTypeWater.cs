@@ -29,4 +29,12 @@ public class BlockTypeWater : BlockBaseLiquid
     {
         CameraHandler.Instance.SetCameraUnderLiquid(1);
     }
+
+    public override void OnCollision(CreatureTypeEnum creatureType, GameObject targetObj, Vector3Int worldPosition, DirectionEnum direction)
+    {
+        if(creatureType == CreatureTypeEnum.Player)
+        {
+            GameControlHandler.Instance.manager.controlForPlayer.ChangeGroundType(1);
+        }
+    }
 }

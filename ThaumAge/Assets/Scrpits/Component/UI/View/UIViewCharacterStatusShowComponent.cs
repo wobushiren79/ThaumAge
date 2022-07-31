@@ -12,5 +12,7 @@ public partial class UIViewCharacterStatusShow
 
     public UIViewCharacterStatusShowPro ui_ViewCharacterStatusPro_Saturation;
 
+    public UIViewCharacterStatusShowPro ui_ViewCharacterStatusPro_Air;
+
 
 }

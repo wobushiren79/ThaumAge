@@ -25,4 +25,6 @@ public class BlockTypeMagma : BlockTypeWater
     {
         CameraHandler.Instance.SetCameraUnderLiquid(2);
     }
+
+    
 }

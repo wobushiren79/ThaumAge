@@ -7,6 +7,8 @@ public class Player : BaseMonoBehaviour
     public PlayerPickUp playerPickUp;
     public PlayerRay playerRay;
 
+    protected Rigidbody rbPlayer;
+
     [HideInInspector]
     public CreatureCptCharacter character;
 
@@ -21,6 +23,7 @@ public class Player : BaseMonoBehaviour
 
     public void Awake()
     {
+        rbPlayer = GetComponent<Rigidbody>();
         character = GetComponentInChildren<CreatureCptCharacter>();
         character.creatureData.SetCreatureType(CreatureTypeEnum.Player);
 
@@ -76,6 +79,10 @@ public class Player : BaseMonoBehaviour
         SetPosition(new Vector3(transform.position.x, maxHeight + 2, transform.position.z));
     }
 
+    /// <summary>
+    /// 设置位置
+    /// </summary>
+    /// <param name="position"></param>
     public void SetPosition(Vector3 position)
     {
         //开关角色控制
