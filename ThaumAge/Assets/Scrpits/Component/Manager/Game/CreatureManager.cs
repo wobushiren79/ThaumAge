@@ -215,7 +215,7 @@ public class CreatureManager : BaseManager,
     /// <returns></returns>
     public void GetCharacterHairModel(string hairName, Action<GameObject> callBack)
     {
-        GetModelForAddressables(dicCharacterHairModel, $"{pathHair}/{hairName}.fbx", callBack);
+        GetModelForAddressables(dicCharacterHairModel, $"{pathHair}/{hairName}.prefab", callBack);
     }
 
     /// <summary>

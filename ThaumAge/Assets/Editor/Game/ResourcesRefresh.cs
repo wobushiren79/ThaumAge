@@ -139,6 +139,16 @@ public class ResourcesRefresh : Editor
         EditorUtil.RefreshAsset();
     }
 
+    [MenuItem("工具/资源/刷新FBX资源（发型）")]
+    public static void RefreshFBXForHair()
+    {
+        string hairPath = "Assets/Art/FBX/Character/Hair";
+        string hairModelPath = "Assets/Prefabs/Model/Character/Hair";
+        Material objMat = EditorUtil.GetAssetByPath<Material>($"{hairPath}/Hair_Mat_1.mat");
+        CreateModelGameObject(hairPath, hairModelPath, objMat);
+        EditorUtil.RefreshAsset();
+    }
+
     [MenuItem("工具/资源/刷新FBX资源（生物）")]
     public static void RefreshFBXForCreature()
     {
@@ -206,7 +216,7 @@ public class ResourcesRefresh : Editor
         }
     }
 
-    protected static void CreateModelGameObject(string sourcePath, string createPath)
+    protected static void CreateModelGameObject(string sourcePath, string createPath, Material targetMat = null)
     {
 
         //获取文件价目录下的所有文件
@@ -238,6 +248,12 @@ public class ResourcesRefresh : Editor
             objFBX.transform.localScale = new Vector3(0.03125f, 0.03125f, 0.03125f);
             objFBX.transform.localPosition = new Vector3(0, 0, 0);
             objFBX.transform.parent = objModel.transform;
+
+            if (targetMat != null)
+            {
+                MeshRenderer meshRenderer = objFBX.GetComponentInChildren<MeshRenderer>();
+                meshRenderer.material = targetMat;
+            }
 
             //创建预支体
             EditorUtil.CreatePrefab(objCreate, $"{createPath}/{objName}");
