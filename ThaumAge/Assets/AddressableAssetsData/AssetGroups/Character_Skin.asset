@@ -16,7 +16,17 @@ MonoBehaviour:
   m_Data:
     m_SerializedData: []
   m_GUID: e21843047bef14e43a084fa206cf1db1
-  m_SerializeEntries: []
+  m_SerializeEntries:
+  - m_GUID: 70588b1704ad46a48867819ba5c5228d
+    m_Address: Assets/Texture/Character/Skin/character_skin_1.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e140dfb3d4f6c3e4b8bde983fef3ebe9
+    m_Address: Assets/Texture/Character/Skin/character_skin_2.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: fd6114d87f1af534fbf270c47c0f10bf, type: 2}
   m_SchemaSet:

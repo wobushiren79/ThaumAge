@@ -16,20 +16,7 @@ public class CharacterSkin : CharacterBase
     //头发容器
     public GameObject objHairContainer;
     public Material hairMat;
-    
-    //头发材质模型
-    protected Material _hairMatModel;
-    public Material hairMatModel
-    {
-        get
-        {
-            if (_hairMatModel == null)
-            {
-                _hairMatModel = LoadResourcesUtil.SyncLoadData<Material>("Mat/Character/MatCharacterHair");
-            }
-            return _hairMatModel;
-        }
-    }
+
 
     public CharacterSkin(CreatureCptCharacter character) : base(character)
     {
@@ -126,9 +113,8 @@ public class CharacterSkin : CharacterBase
                         GameObject objHair = CreatureHandler.Instance.Instantiate(objHairContainer, data);
                         objHair.transform.localPosition = Vector3.zero;
                         //objHair.transform.localEulerAngles = Vector3.zero;
-                        MeshRenderer hairMeshRebderer = objHair.GetComponent<MeshRenderer>();
-                        hairMeshRebderer.material = hairMatModel;
-                        hairMat = hairMeshRebderer.material;
+                        MeshRenderer hairMeshRebderer = objHair.GetComponentInChildren<MeshRenderer>();
+                        hairMat = hairMeshRebderer.sharedMaterial;
                     }
                 });
         }

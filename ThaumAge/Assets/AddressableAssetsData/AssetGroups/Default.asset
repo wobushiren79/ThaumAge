@@ -16,7 +16,12 @@ MonoBehaviour:
   m_Data:
     m_SerializedData: []
   m_GUID: 1261beb35e7b46c4fbf9458f1cd39db6
-  m_SerializeEntries: []
+  m_SerializeEntries:
+  - m_GUID: a45d2d4d3ae385c438da8e2217efd098
+    m_Address: Assets/Texture/Character/Eye/character_eye_2.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: fd6114d87f1af534fbf270c47c0f10bf, type: 2}
   m_SchemaSet:

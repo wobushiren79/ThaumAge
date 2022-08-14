@@ -47,8 +47,56 @@ MonoBehaviour:
     m_SerializedLabels:
     - Equip
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ae6a8b1766d0fb3468c89fbb088b34f9
+    m_Address: Assets/Prefabs/Model/Character/Hair/Hair_8.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Equip
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 7963f14cfc2d91a4a841f70823f59502
+    m_Address: Assets/Prefabs/Model/Character/Hair/Hair_3.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Equip
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 90bed1548fda0be428c2f310e56afe59
+    m_Address: Assets/Prefabs/Model/Character/Hair/Hair_7.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Equip
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 276a18e6bd82e9a4ca81f1686be15e68
+    m_Address: Assets/Prefabs/Model/Character/Hair/Hair_4.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Equip
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: a73ed7209726ffb48b43b9685a01029a
     m_Address: Assets/Prefabs/Model/Character/Hair/Hair_2.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Equip
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: dee9533a7edd09f49a3c11e2709135a8
+    m_Address: Assets/Prefabs/Model/Character/Hair/Hair_6.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Equip
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: d71f60ea523248a40aedc59b2056662c
+    m_Address: Assets/Prefabs/Model/Character/Hair/Hair_10.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Equip
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: d09983da25193f7458e74ed003e4d981
+    m_Address: Assets/Prefabs/Model/Character/Hair/Hair_9.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Equip
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 6efbca7510fde044cb26154cf44d549d
+    m_Address: Assets/Prefabs/Model/Character/Hair/Hair_5.prefab
     m_ReadOnly: 0
     m_SerializedLabels:
     - Equip

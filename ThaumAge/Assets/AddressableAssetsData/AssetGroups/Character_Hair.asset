@@ -16,47 +16,7 @@ MonoBehaviour:
   m_Data:
     m_SerializedData: []
   m_GUID: a83ffcffc25bfc649ba5c4561338ee7e
-  m_SerializeEntries:
-  - m_GUID: d18b8c39de72e9c47ad51269d3856b32
-    m_Address: Assets/Prefabs/Model/Character/Hair/character_hair_1.fbx
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-  - m_GUID: fcff9510d67f15d4c863836d622ba545
-    m_Address: Assets/Prefabs/Model/Character/Hair/character_hair_2.fbx
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-  - m_GUID: 5e0b6692e92f0314db75536c0e1ac392
-    m_Address: Assets/Prefabs/Model/Character/Hair/character_hair_3.fbx
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-  - m_GUID: d41408ab11701c845971414f373173dd
-    m_Address: Assets/Prefabs/Model/Character/Hair/character_hair_10.fbx
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-  - m_GUID: bbf0a86d594504a40bf276f617f95306
-    m_Address: Assets/Prefabs/Model/Character/Hair/character_hair_9.fbx
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-  - m_GUID: c31d12e5ca217eb4da8d1d0d7498ee3a
-    m_Address: Assets/Prefabs/Model/Character/Hair/character_hair_8.fbx
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-  - m_GUID: fb41fa5702e0e6643970074f94432b34
-    m_Address: Assets/Prefabs/Model/Character/Hair/character_hair_7.fbx
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-  - m_GUID: 161d6cb174dc6184f87454039281662d
-    m_Address: Assets/Prefabs/Model/Character/Hair/character_hair_6.fbx
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-  - m_GUID: 49271cb44f9be4d42bf84b00ef1a0e23
-    m_Address: Assets/Prefabs/Model/Character/Hair/character_hair_5.fbx
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-  - m_GUID: 14f64f6820fb4c946b753188c20a5f78
-    m_Address: Assets/Prefabs/Model/Character/Hair/character_hair_4.fbx
-    m_ReadOnly: 0
-    m_SerializedLabels: []
+  m_SerializeEntries: []
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: fd6114d87f1af534fbf270c47c0f10bf, type: 2}
   m_SchemaSet:
