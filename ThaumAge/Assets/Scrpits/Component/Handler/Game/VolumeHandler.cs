@@ -21,7 +21,6 @@ public class VolumeHandler : BaseHandler<VolumeHandler, VolumeManager>
     /// </summary>
     public void InitData()
     {
-
         GameConfigBean gameConfig = GameDataHandler.Instance.manager.GetGameConfig();
         manager.SetShadowsDistance(gameConfig.shadowDis);
     }
@@ -59,6 +58,22 @@ public class VolumeHandler : BaseHandler<VolumeHandler, VolumeManager>
             }
             manager.SetDepthOfField(1f, 4f, dis + 10, dis + 30);
             lastDisDepthOfField = dis;
+        }
+    }
+
+    /// <summary>
+    /// 设置雾
+    /// </summary>
+    /// <param name="gameState"></param>
+    public void SetFog(GameStateEnum gameState)
+    {
+        if (gameState == GameStateEnum.Main)
+        {
+            manager.SetFog(false);
+        }
+        else if (gameState == GameStateEnum.Gaming)
+        {
+            manager.SetFog(true);
         }
     }
 

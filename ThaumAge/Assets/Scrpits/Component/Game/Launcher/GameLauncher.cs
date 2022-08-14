@@ -35,6 +35,8 @@ public class GameLauncher : BaseLauncher
             GameControlHandler.Instance.SetPlayerControlEnabled(false);
             //设置世界类型
             WorldCreateHandler.Instance.SetWorldType(worldType);
+            //渲染设置
+            VolumeHandler.Instance.SetFog(GameStateEnum.Gaming);
             //刷新周围区块
             GameConfigBean gameConfig = GameDataHandler.Instance.manager.GetGameConfig();
             WorldCreateHandler.Instance.CreateChunkRangeForCenterPosition(Vector3Int.zero, gameConfig.worldRefreshRange, true, CompleteForUpdateChunk);

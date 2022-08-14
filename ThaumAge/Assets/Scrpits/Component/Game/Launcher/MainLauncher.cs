@@ -26,8 +26,7 @@ public class MainLauncher : BaseLauncher
             WorldCreateHandler.Instance.SetWorldType(WorldTypeEnum.Launch);
             //设置远景模糊
             VolumeHandler.Instance.SetDepthOfField(GameStateEnum.Main);
-
-            
+            VolumeHandler.Instance.SetFog(GameStateEnum.Main);
             //刷新周围区块
             WorldCreateHandler.Instance.CreateChunkRangeForCenterPosition(Vector3Int.zero, worldRange, true, CompleteForUpdateChunk);
         });

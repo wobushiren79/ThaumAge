@@ -75,6 +75,20 @@ public class VolumeManager : BaseManager
         }
     }
 
+    //雾
+    protected Fog _fog;
+    public Fog fog
+    {
+        get
+        {
+            if (_fog == null)
+            {
+                volumeProfile.TryGet(out _fog);
+            }
+            return _fog;
+        }
+    }
+
     //基础设置
     protected Volume _volume;
     public Volume volume
@@ -89,6 +103,8 @@ public class VolumeManager : BaseManager
             return _volume;
         }
     }
+
+
     protected VolumeProfile _volumeProfile;
     public VolumeProfile volumeProfile
     {
@@ -186,5 +202,15 @@ public class VolumeManager : BaseManager
 
         colorAdjustments.saturation.overrideState = true;
         colorAdjustments.saturation.value = postExposure;
+    }
+
+    /// <summary>
+    /// 设置雾
+    /// </summary>
+    /// <param name="enabled"></param>
+    public void SetFog(bool enabled)
+    {
+        fog.enabled.overrideState = true;
+        fog.enabled.value = enabled;
     }
 }
