@@ -32,7 +32,7 @@ public class MVCEditorWindow : EditorWindow
         EditorGUILayout.BeginHorizontal();
         EditorUI.GUIText("创建MVC,输入MVC名称:", 200);
         mvcClassName = EditorUI.GUIEditorText(mvcClassName, 100);
-        EditorUI.GUIText("保存类型（1.SQLite 2.FileJson 3.Excel）:", 200);
+        EditorUI.GUIText("保存类型（1.SQLite 2.FileJson 3.Excel）:", 300);
         saveType = EditorUI.GUIEditorText(saveType, 50);
         EditorGUILayout.EndHorizontal();
 

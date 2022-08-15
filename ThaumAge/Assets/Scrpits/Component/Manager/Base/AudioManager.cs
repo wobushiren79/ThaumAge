@@ -4,9 +4,61 @@ using System.Collections.Generic;
 
 public class AudioManager : BaseManager
 {
-    public AudioBeanDictionary listMusicData = new AudioBeanDictionary();
-    public AudioBeanDictionary listSoundData = new AudioBeanDictionary();
-    public AudioBeanDictionary listEnvironmentData = new AudioBeanDictionary();
+    protected AudioListener _audioListener;
+    protected AudioSource _audioSourceForMusic;
+    protected AudioSource _audioSourceForSound;
+    protected AudioSource _audioSourceForEnvironment;
+    public AudioListener audioSourceForListener
+    {
+        get
+        {
+            if (_audioListener == null)
+            {
+                _audioListener = FindWithTag<AudioListener>(TagInfo.Tag_AudioListener);
+            }
+            return _audioListener;
+        }
+    }
+    public AudioSource audioSourceForMusic
+    {
+        get
+        {
+            if (_audioSourceForMusic == null)
+            {
+                _audioSourceForMusic = FindWithTag<AudioSource>(TagInfo.Tag_AudioMusic);
+            }
+            return _audioSourceForMusic;
+        }
+    }
+
+    public AudioSource audioSourceForSound
+    {
+        get
+        {
+            if (_audioSourceForSound == null)
+            {
+                _audioSourceForSound = FindWithTag<AudioSource>(TagInfo.Tag_AudioSound);
+            }
+            return _audioSourceForSound;
+        }
+    }
+
+    public AudioSource audioSourceForEnvironment
+    {
+        get
+        {
+            if (_audioSourceForEnvironment == null)
+            {
+                _audioSourceForEnvironment = FindWithTag<AudioSource>(TagInfo.Tag_AudioEnvironment);
+            }
+            return _audioSourceForEnvironment;
+        }
+    }
+
+
+    public Dictionary<string, AudioClip> dicMusicData = new Dictionary<string, AudioClip>();
+    public Dictionary<string, AudioClip> dicSoundData = new Dictionary<string, AudioClip>();
+    public Dictionary<string, AudioClip> dicEnvironmentData = new Dictionary<string, AudioClip>();
 
     /// <summary>
     /// 根据名字获取音乐
@@ -15,7 +67,7 @@ public class AudioManager : BaseManager
     /// <param name="completeAction"></param>
     public void GetMusicClip(string name, System.Action<AudioClip> completeAction)
     {
-        LoadClipData(1, name, completeAction);
+        LoadClipDataByAddressbles(AuidoTypeEnum.Music, name, completeAction);
     }
 
     /// <summary>
@@ -25,7 +77,7 @@ public class AudioManager : BaseManager
     /// <param name="completeAction"></param>
     public void GetSoundClip(string name, System.Action<AudioClip> completeAction)
     {
-        LoadClipData(2, name, completeAction);
+        LoadClipDataByAddressbles(AuidoTypeEnum.Sound, name, completeAction);
     }
 
     /// <summary>
@@ -35,58 +87,33 @@ public class AudioManager : BaseManager
     /// <param name="completeAction"></param>
     public void GetEnvironmentClip(string name, System.Action<AudioClip> completeAction)
     {
-        LoadClipData(3, name, completeAction);
+        LoadClipDataByAddressbles(AuidoTypeEnum.Environment, name, completeAction);
     }
 
-    protected void LoadClipData(int type, string name, System.Action<AudioClip> completeAction)
+    /// <summary>
+    /// 加载音频资源
+    /// </summary>
+    /// <param name="type"></param>
+    /// <param name="name"></param>
+    /// <param name="completeAction"></param>
+    public void LoadClipDataByAddressbles(AuidoTypeEnum audioType, string name, System.Action<AudioClip> completeAction)
     {
-        string dataPath = "audio/";
-        AudioBeanDictionary dicData = new AudioBeanDictionary();
-        AudioClip audioClip = null;
-        switch (type)
+        Dictionary<string, AudioClip> dicAudioData;
+        switch (audioType)
         {
-            case 1:
-                dicData = listMusicData;
-                dataPath += "music";
+            case AuidoTypeEnum.Music:
+                dicAudioData = dicMusicData;
                 break;
-            case 2:
-                dicData = listSoundData;
-                dataPath += "sound";
+            case AuidoTypeEnum.Sound:
+                dicAudioData = dicSoundData;
                 break;
-            case 3:
-                dicData = listEnvironmentData;
-                dataPath += "environment";
+            case AuidoTypeEnum.Environment:
+                dicAudioData = dicEnvironmentData;
                 break;
+            default:
+                return;
         }
-        if (dicData.TryGetValue(name, out audioClip))
-        {
-            completeAction?.Invoke(audioClip);
-            return;
-        }
-        audioClip = LoadAssetUtil.SyncLoadAsset<AudioClip>(dataPath, name);
-        if (audioClip != null)
-        {
-            dicData.Add(name, audioClip);
-        }
-        completeAction?.Invoke(audioClip);
-    }
-
-    public void LoadClipDataByAddressbles(int type, string name, System.Action<AudioClip> completeAction)
-    {
-        AudioBeanDictionary dicData = new AudioBeanDictionary();
-        switch (type)
-        {
-            case 1:
-                dicData = listMusicData;
-                break;
-            case 2:
-                dicData = listSoundData;
-                break;
-            case 3:
-                dicData = listEnvironmentData;
-                break;
-        }
-        if (dicData.TryGetValue(name, out AudioClip audioClip))
+        if (dicAudioData.TryGetValue(name, out AudioClip audioClip))
         {
             completeAction?.Invoke(audioClip);
             return;
@@ -95,10 +122,11 @@ public class AudioManager : BaseManager
         {
             if (data.Result != null)
             {
-                dicData.Add(name, data.Result);
+                dicAudioData.Add(name, data.Result);
+                completeAction?.Invoke(data.Result);
+                return;
             }
-            completeAction?.Invoke(data.Result);
+            completeAction?.Invoke(null);
         });
-
     }
 }

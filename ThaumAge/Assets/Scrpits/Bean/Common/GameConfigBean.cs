@@ -15,9 +15,9 @@ public class GameConfigBean
     public float soundVolume = 0.5f;
     //音乐大小
     public float musicVolume = 0.5f;
-
     //环境音乐大小
     public float environmentVolume = 0.5f;
+
     //自动保存时间
     public float autoSaveTime = 30;
     //UI大小

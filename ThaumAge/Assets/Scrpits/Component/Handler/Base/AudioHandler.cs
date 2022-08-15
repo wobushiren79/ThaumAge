@@ -6,60 +6,10 @@ using System;
 
 public class AudioHandler : BaseHandler<AudioHandler, AudioManager>
 {
-    protected AudioListener _audioListener;
-    protected AudioSource _audioSourceForMusic;
-    protected AudioSource _audioSourceForSound;
-    protected AudioSource _audioSourceForEnvironment;
-
+    //当前正在播放的音效数量
     protected int sourceNumber = 0;
+    //最大同时存在的音效数量
     protected int sourceMaxNumber = 5;
-
-    public AudioListener audioSourceForListener
-    {
-        get
-        {
-            if (_audioListener == null)
-            {
-                _audioListener = FindWithTag<AudioListener>(TagInfo.Tag_AudioListener);
-            }
-            return _audioListener;
-        }
-    }
-    public AudioSource audioSourceForMusic
-    {
-        get
-        {
-            if (_audioSourceForMusic == null)
-            {
-                _audioSourceForMusic = FindWithTag<AudioSource>(TagInfo.Tag_AudioMusic);
-            }
-            return _audioSourceForMusic;
-        }
-    }
-
-    public AudioSource audioSourceForSound
-    {
-        get
-        {
-            if (_audioSourceForSound == null)
-            {
-                _audioSourceForSound = FindWithTag<AudioSource>(TagInfo.Tag_AudioSound);
-            }
-            return _audioSourceForSound;
-        }
-    }
-
-    public AudioSource audioSourceForEnvironment
-    {
-        get
-        {
-            if (_audioSourceForEnvironment == null)
-            {
-                _audioSourceForEnvironment = FindWithTag<AudioSource>(TagInfo.Tag_AudioEnvironment);
-            }
-            return _audioSourceForEnvironment;
-        }
-    }
 
     /// <summary>
     /// 初始化
@@ -67,19 +17,19 @@ public class AudioHandler : BaseHandler<AudioHandler, AudioManager>
     public void InitAudio()
     {
         GameConfigBean gameConfig = GameDataHandler.Instance.manager.GetGameConfig();
-        audioSourceForMusic.volume = gameConfig.musicVolume;
-        audioSourceForSound.volume = gameConfig.soundVolume;
-        audioSourceForEnvironment.volume = gameConfig.environmentVolume;
+        manager.audioSourceForMusic.volume = gameConfig.musicVolume;
+        manager.audioSourceForSound.volume = gameConfig.soundVolume;
+        manager.audioSourceForEnvironment.volume = gameConfig.environmentVolume;
     }
 
     /// <summary>
     ///  循环播放音乐
     /// </summary>
     /// <param name="audioMusic"></param>
-    public void PlayMusicForLoop(AudioMusicEnum audioMusic)
+    public void PlayMusicForLoop(int musicId)
     {
         GameConfigBean gameConfig = GameDataHandler.Instance.manager.GetGameConfig();
-        PlayMusicForLoop(audioMusic, gameConfig.musicVolume);
+        PlayMusicForLoop(musicId, gameConfig.musicVolume);
     }
 
     /// <summary>
@@ -87,46 +37,15 @@ public class AudioHandler : BaseHandler<AudioHandler, AudioManager>
     /// </summary>
     /// <param name="audioMusic"></param>
     /// <param name="volumeScale"></param>
-    public void PlayMusicForLoop(AudioMusicEnum audioMusic, float volumeScale)
+    public void PlayMusicForLoop(int musicId, float volumeScale)
     {
         AudioClip audioClip = null;
-        //switch (audioMusic)
-        //{
-            //case AudioMusicEnum.LangTaoSha:
-            //    audioClip = audioManager.GetMusicClip("music_langtaosha_1");
-            //    break;
-            //case AudioMusicEnum.YangChunBaiXue:
-            //    audioClip = audioManager.GetMusicClip("music_yangchunbaixue_1");
-            //    break;
-            //case AudioMusicEnum.Main:
-            //    audioClip = audioManager.GetMusicClip("music_1");
-            //    break;
-            //case AudioMusicEnum.Game:
-            //    List<AudioClip> listGameClip = new List<AudioClip>()
-            //    {
-            //        audioManager.GetMusicClip("music_1"),
-            //        audioManager.GetMusicClip("music_2"),
-            //        audioManager.GetMusicClip("music_3"),
-            //        audioManager.GetMusicClip("music_6"),
-            //        audioManager.GetMusicClip("music_7")
-            //    };
-            //    audioClip = RandomUtil.GetRandomDataByList(listGameClip);
-            //    break;
-            //case AudioMusicEnum.Battle:
-            //    List<AudioClip> listBattleClip = new List<AudioClip>()
-            //    {
-            //        audioManager.GetMusicClip("music_4"),
-            //        audioManager.GetMusicClip("music_8")
-            //    };
-            //    audioClip = RandomUtil.GetRandomDataByList(listBattleClip);
-            //    break;
-         // }
         if (audioClip != null)
         {
-            audioSourceForMusic.clip = audioClip;
-            audioSourceForMusic.volume = volumeScale;
-            audioSourceForMusic.loop = true;
-            audioSourceForMusic.Play();
+            manager.audioSourceForMusic.clip = audioClip;
+            manager.audioSourceForMusic.volume = volumeScale;
+            manager.audioSourceForMusic.loop = true;
+            manager.audioSourceForMusic.Play();
         }
     }
 
@@ -135,36 +54,33 @@ public class AudioHandler : BaseHandler<AudioHandler, AudioManager>
     /// </summary>
     /// <param name="sound">音效</param>
     /// <param name="volumeScale">音量大小</param>
-    public void PlaySound(AudioSoundEnum sound, Vector3 soundPosition, float volumeScale)
+    public void PlaySound(int soundId, Vector3 soundPosition, float volumeScale)
     {
         if (sourceNumber > sourceMaxNumber)
             return;
-        AudioSource audioSource = audioSourceForSound;
+        AudioSource audioSource = manager.audioSourceForSound;
         Action<AudioClip> completeAction = (audioClip) => 
         {
             if (audioClip != null)
             {
-
                 StartCoroutine(CoroutineForPlayOneShot(audioSource, audioClip, volumeScale));
                 //audioSource.PlayOneShot(audioClip, volumeScale);
             }
             // AudioSource.PlayClipAtPoint(soundClip, soundPosition,volumeScale);
         };
-        switch (sound)
-        {
-            case AudioSoundEnum.ButtonForNormal:
-                manager.GetSoundClip("sound_btn_3", completeAction);
-                break;
-            case AudioSoundEnum.ButtonForBack:
-                manager.GetSoundClip("sound_btn_2", completeAction);
-                break;
-            case AudioSoundEnum.ButtonForHighLight:
-                manager.GetSoundClip("sound_btn_1", completeAction);
-                break;
-            case AudioSoundEnum.ButtonForShow:
-                manager.GetSoundClip("sound_btn_6", completeAction);
-                break;
-        }
+        manager.GetSoundClip("sound_btn_2", completeAction);
+    }
+
+    public void PlaySound(int soundId)
+    {
+        GameConfigBean gameConfig = GameDataHandler.Instance.manager.GetGameConfig();
+        PlaySound(soundId, Camera.main.transform.position, gameConfig.soundVolume);
+    }
+
+    public void PlaySound(int soundId, Vector3 soundPosition)
+    {
+        GameConfigBean gameConfig = GameDataHandler.Instance.manager.GetGameConfig();
+        PlaySound(soundId, soundPosition, gameConfig.soundVolume);
     }
 
     /// <summary>
@@ -182,76 +98,70 @@ public class AudioHandler : BaseHandler<AudioHandler, AudioManager>
         sourceNumber--;
     }
 
-    public void PlaySound(AudioSoundEnum sound)
-    {
-        GameConfigBean gameConfig = GameDataHandler.Instance.manager.GetGameConfig();
-        PlaySound(sound, Camera.main.transform.position, gameConfig.soundVolume);
-    }
-    public void PlaySound(AudioSoundEnum sound, float volumeScale)
-    {
-        PlaySound(sound, Camera.main.transform.position, volumeScale);
-    }
-    public void PlaySound(AudioSoundEnum sound, Vector3 soundPosition)
-    {
-        PlaySound(sound, soundPosition, 1);
-    }
-
     /// <summary>
     /// 播放环境音乐
     /// </summary>
     /// <param name="audioEnvironment"></param>
-    public void PlayEnvironment(AudioEnvironmentEnum audioEnvironment, float volumeScale)
+    public void PlayEnvironment(int environmentId, float volumeScale)
     {
         AudioClip audioClip = null;
-        //switch (audioEnvironment)
-        //{
-
-        //}
-        audioSourceForEnvironment.volume = volumeScale;
-        audioSourceForEnvironment.clip = audioClip;
-        audioSourceForEnvironment.Play();
+        manager.audioSourceForEnvironment.volume = volumeScale;
+        manager.audioSourceForEnvironment.clip = audioClip;
+        manager.audioSourceForEnvironment.Play();
     }
+
+    public void PlayEnvironment(int environmentId)
+    {
+        GameConfigBean gameConfig = GameDataHandler.Instance.manager.GetGameConfig();
+        PlayEnvironment(environmentId, gameConfig.environmentVolume);
+    }
+
+
     /// <summary>
     /// 停止播放
     /// </summary>
     public void StopEnvironment()
     {
-        audioSourceForEnvironment.clip = null;
-        audioSourceForEnvironment.Stop();
+        manager.audioSourceForEnvironment.clip = null;
+        manager.audioSourceForEnvironment.Stop();
     }
 
     public void StopMusic()
     {
-        audioSourceForMusic.clip = null;
-        audioSourceForMusic.Stop();
+        manager.audioSourceForMusic.clip = null;
+        manager.audioSourceForMusic.Stop();
     }
 
     /// <summary>
-    /// 暂停
+    /// 暂停环境音
     /// </summary>
     public void PauseEnvironment()
     {
-        audioSourceForEnvironment.Pause();
+        manager.audioSourceForEnvironment.Pause();
     }
-
-
-    public void PauseMusic()
-    {
-        audioSourceForMusic.Pause();
-    }
-
 
     /// <summary>
-    /// 恢复
+    ///  暂停音乐
+    /// </summary>
+    public void PauseMusic()
+    {
+        manager.audioSourceForMusic.Pause();
+    }
+
+    /// <summary>
+    /// 恢复环境音
     /// </summary>
     public void RestoreEnvironment()
     {
-        audioSourceForEnvironment.Play();
+        manager.audioSourceForEnvironment.Play();
     }
 
+    /// <summary>
+    /// 恢复音乐
+    /// </summary>
     public void RestoreMusic()
     {
-        audioSourceForMusic.Play();
+        manager.audioSourceForMusic.Play();
     }
 
 }

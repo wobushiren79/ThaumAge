@@ -93,7 +93,7 @@ public enum InputActionUIEnum
     F1, F2, F3, F4, F5, F6, F7, F8, F9, F10, F11, F12,
     N1, N2, N3, N4, N5, N6, N7, N8, N9, N0, NAdd, NSub,//1234567890+-
     Shift,
-    ESC,B,M,T,H,
+    ESC, B, M, T, H,
 
 }
 
@@ -105,3 +105,14 @@ public enum EffectTypeEnum
     Normal = 0,//老板粒子系统
     Visual = 1//新版shader粒子系统
 }
+
+/// <summary>
+/// 音频类型
+/// </summary>
+public enum AuidoTypeEnum
+{
+    Music = 0,
+    Sound = 1,
+    Environment = 2,
+}
+
