@@ -5,8 +5,8 @@
             <authoring_tool>VoxelShop V1.8.22
 </authoring_tool>
         </contributor>
-        <created>2022-06-19T21:00:15</created>
-        <modified>2022-06-19T21:00:15</modified>
+        <created>2022-08-16T22:36:56</created>
+        <modified>2022-08-16T22:36:56</modified>
         <unit meter="1" name="meter"/>
         <up_axis>Z_UP</up_axis>
     </asset>
@@ -57,7 +57,7 @@
         <geometry id="Plane-tex-mesh-0" name="Plane-tex">
             <mesh>
                 <source id="Plane-tex-mesh-0-positions">
-                    <float_array count="180" id="Plane-tex-mesh-0-positions-array">-7 -7 33 -7 -5 9 -7 -7 9 -7 -5 33 -7 7 33 -7 9 9 -7 7 9 -7 9 33 9 -5 33 9 -3 31 9 -5 31 9 7 33 9 5 31 9 7 31 9 -3 25 9 5 1 9 -3 1 9 5 25 -9 -5 1 -9 -5 33 -9 -3 25 -9 -3 31 -9 7 1 -9 -3 33 -9 5 25 -9 7 33 -9 5 31 -9 5 33 -11 -3 33 -11 5 31 -11 -3 31 -11 5 33 9 -7 33 9 -5 9 9 -7 9 9 9 9 9 7 9 9 9 33 11 -5 1 11 -5 33 11 -3 25 11 -3 31 11 7 1 11 -3 33 11 5 25 11 7 33 11 5 31 11 5 33 -7 -3 31 -7 -5 31 -7 5 31 -7 7 31 -7 -3 25 -7 5 1 -7 -3 1 -7 5 25 13 -3 33 13 5 31 13 -3 31 13 5 33</float_array>
+                    <float_array count="180" id="Plane-tex-mesh-0-positions-array">-8 -8 34 -8 -6 10 -8 -8 10 -8 -6 34 -8 6 34 -8 8 10 -8 6 10 -8 8 34 8 -6 34 8 -4 32 8 -6 32 8 6 34 8 4 32 8 6 32 8 -4 26 8 4 2 8 -4 2 8 4 26 -10 -6 2 -10 -6 34 -10 -4 26 -10 -4 32 -10 6 2 -10 -4 34 -10 4 26 -10 6 34 -10 4 32 -10 4 34 -12 -4 34 -12 4 32 -12 -4 32 -12 4 34 8 -8 34 8 -6 10 8 -8 10 8 8 10 8 6 10 8 8 34 10 -6 2 10 -6 34 10 -4 26 10 -4 32 10 6 2 10 -4 34 10 4 26 10 6 34 10 4 32 10 4 34 -8 -4 32 -8 -6 32 -8 4 32 -8 6 32 -8 -4 26 -8 4 2 -8 -4 2 -8 4 26 12 -4 34 12 4 32 12 -4 32 12 4 34</float_array>
                     <technique_common>
                         <accessor count="60" source="#Plane-tex-mesh-0-positions-array" stride="3">
                             <param name="X" type="float"/>

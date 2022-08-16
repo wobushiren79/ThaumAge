@@ -101,6 +101,18 @@ MonoBehaviour:
     m_SerializedLabels:
     - Equip
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 201f220a609fd2e41974c931018a61e8
+    m_Address: Assets/Prefabs/Model/Character/Equip/LeafMr.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Equip
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 5c47cd14ba10ae84eb71b5f39462a69d
+    m_Address: Assets/Prefabs/Model/Character/Equip/LeafMs.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Equip
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: fd6114d87f1af534fbf270c47c0f10bf, type: 2}
   m_SchemaSet:
