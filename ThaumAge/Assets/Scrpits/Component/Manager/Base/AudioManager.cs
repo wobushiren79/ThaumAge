@@ -1,8 +1,9 @@
 ﻿using UnityEngine;
 using UnityEditor;
 using System.Collections.Generic;
+using System;
 
-public class AudioManager : BaseManager
+public class AudioManager : BaseManager, IAudioInfoView
 {
     protected AudioListener _audioListener;
     protected AudioSource _audioSourceForMusic;
@@ -15,6 +16,11 @@ public class AudioManager : BaseManager
             if (_audioListener == null)
             {
                 _audioListener = FindWithTag<AudioListener>(TagInfo.Tag_AudioListener);
+                if (_audioListener == null)
+                {
+                    _audioListener = CameraHandler.Instance.manager.mainCamera.gameObject.AddComponentEX<AudioListener>();
+                    _audioListener.tag = TagInfo.Tag_AudioListener;
+                }
             }
             return _audioListener;
         }
@@ -26,6 +32,16 @@ public class AudioManager : BaseManager
             if (_audioSourceForMusic == null)
             {
                 _audioSourceForMusic = FindWithTag<AudioSource>(TagInfo.Tag_AudioMusic);
+                if (_audioListener == null)
+                {
+                    Camera mainCamera = CameraHandler.Instance.manager.mainCamera;
+                    GameObject obj = new GameObject("AudioMusic");
+
+                    obj.transform.localPosition = Vector3.zero;
+                    obj.transform.parent = mainCamera.transform;
+                    _audioSourceForMusic = obj.AddComponentEX<AudioSource>();
+                    _audioSourceForMusic.tag = TagInfo.Tag_AudioMusic;
+                }
             }
             return _audioSourceForMusic;
         }
@@ -38,6 +54,16 @@ public class AudioManager : BaseManager
             if (_audioSourceForSound == null)
             {
                 _audioSourceForSound = FindWithTag<AudioSource>(TagInfo.Tag_AudioSound);
+                if (_audioListener == null)
+                {
+                    Camera mainCamera = CameraHandler.Instance.manager.mainCamera;
+                    GameObject obj = new GameObject("AudioSound");
+
+                    obj.transform.localPosition = Vector3.zero;
+                    obj.transform.parent = mainCamera.transform;
+                    _audioSourceForSound = obj.AddComponentEX<AudioSource>();
+                    _audioSourceForSound.tag = TagInfo.Tag_AudioSound;
+                }
             }
             return _audioSourceForSound;
         }
@@ -50,15 +76,61 @@ public class AudioManager : BaseManager
             if (_audioSourceForEnvironment == null)
             {
                 _audioSourceForEnvironment = FindWithTag<AudioSource>(TagInfo.Tag_AudioEnvironment);
+                if (_audioListener == null)
+                {
+                    Camera mainCamera = CameraHandler.Instance.manager.mainCamera;
+                    GameObject obj = new GameObject("AudioEnvironment");
+
+                    obj.transform.localPosition = Vector3.zero;
+                    obj.transform.parent = mainCamera.transform;
+                    _audioSourceForEnvironment = obj.AddComponentEX<AudioSource>();
+                    _audioSourceForEnvironment.tag = TagInfo.Tag_AudioEnvironment;
+                }
             }
             return _audioSourceForEnvironment;
         }
     }
 
 
-    public Dictionary<string, AudioClip> dicMusicData = new Dictionary<string, AudioClip>();
-    public Dictionary<string, AudioClip> dicSoundData = new Dictionary<string, AudioClip>();
-    public Dictionary<string, AudioClip> dicEnvironmentData = new Dictionary<string, AudioClip>();
+    protected Dictionary<string, AudioClip> dicMusicData = new Dictionary<string, AudioClip>();
+    protected Dictionary<string, AudioClip> dicSoundData = new Dictionary<string, AudioClip>();
+    protected Dictionary<string, AudioClip> dicEnvironmentData = new Dictionary<string, AudioClip>();
+
+    protected Dictionary<int, AudioInfoBean> dicAudioInfoData = new Dictionary<int, AudioInfoBean>();
+    protected AudioInfoController controllerForAudioInfo;
+
+    public virtual void Awake()
+    {
+        controllerForAudioInfo = new AudioInfoController(this, this);
+        controllerForAudioInfo.GetAllAudioInfoData(InitAudioInfoData);
+    }
+
+    /// <summary>
+    /// 初始化音频数据
+    /// </summary>
+    /// <param name="listData"></param>
+    public void InitAudioInfoData(List<AudioInfoBean> listData)
+    {
+        dicAudioInfoData.Clear();
+        for (int i = 0; i < listData.Count; i++)
+        {
+            var itemData = listData[i];
+            dicAudioInfoData.Add(itemData.id, itemData);
+        }
+    }
+
+    /// <summary>
+    /// 获取音频数据
+    /// </summary>
+    /// <param name="id"></param>
+    public AudioInfoBean GetAudioInfo(int id)
+    {
+        if (dicAudioInfoData.TryGetValue(id,out AudioInfoBean data))
+        {
+            return data;
+        }
+        return null;
+    }
 
     /// <summary>
     /// 根据名字获取音乐
@@ -129,4 +201,15 @@ public class AudioManager : BaseManager
             completeAction?.Invoke(null);
         });
     }
+
+    #region 获取数据回调
+    public void GetAudioInfoSuccess<T>(T data, Action<T> action)
+    {
+        action?.Invoke(data);
+    }
+
+    public void GetAudioInfoFail(string failMsg, Action action)
+    {
+    }
+    #endregion
 }

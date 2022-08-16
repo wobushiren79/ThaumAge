@@ -5,7 +5,7 @@ using System;
 		/// <summary>
 		///内容
 		/// </summary>
-		public string name;
+		public string name_res;
 		/// <summary>
 		///备注
 		/// </summary>

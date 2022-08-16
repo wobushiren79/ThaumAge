@@ -54,33 +54,33 @@ public class AudioHandler : BaseHandler<AudioHandler, AudioManager>
     /// </summary>
     /// <param name="sound">音效</param>
     /// <param name="volumeScale">音量大小</param>
-    public void PlaySound(int soundId, Vector3 soundPosition, float volumeScale)
+    public void PlaySound(int soundId, Vector3 soundPosition, float volumeScale, AudioSource audioSource = null)
     {
         if (sourceNumber > sourceMaxNumber)
             return;
-        AudioSource audioSource = manager.audioSourceForSound;
-        Action<AudioClip> completeAction = (audioClip) => 
+        Action<AudioClip> completeAction = (audioClip) =>
         {
             if (audioClip != null)
             {
-                StartCoroutine(CoroutineForPlayOneShot(audioSource, audioClip, volumeScale));
-                //audioSource.PlayOneShot(audioClip, volumeScale);
+                StartCoroutine(CoroutineForPlayOneShot(audioSource, audioClip, volumeScale, soundPosition));
             }
-            // AudioSource.PlayClipAtPoint(soundClip, soundPosition,volumeScale);
         };
-        manager.GetSoundClip("sound_btn_2", completeAction);
+        AudioInfoBean audioInfo = manager.GetAudioInfo(soundId);
+        if (audioInfo == null)
+            return;
+        manager.GetSoundClip(audioInfo.name_res, completeAction);
     }
 
-    public void PlaySound(int soundId)
+    public void PlaySound(int soundId, AudioSource audioSource = null)
     {
         GameConfigBean gameConfig = GameDataHandler.Instance.manager.GetGameConfig();
-        PlaySound(soundId, Camera.main.transform.position, gameConfig.soundVolume);
+        PlaySound(soundId, Camera.main.transform.position, gameConfig.soundVolume, audioSource);
     }
 
-    public void PlaySound(int soundId, Vector3 soundPosition)
+    public void PlaySound(int soundId, Vector3 soundPosition, AudioSource audioSource = null)
     {
         GameConfigBean gameConfig = GameDataHandler.Instance.manager.GetGameConfig();
-        PlaySound(soundId, soundPosition, gameConfig.soundVolume);
+        PlaySound(soundId, soundPosition, gameConfig.soundVolume, audioSource);
     }
 
     /// <summary>
@@ -90,10 +90,17 @@ public class AudioHandler : BaseHandler<AudioHandler, AudioManager>
     /// <param name="audioClip"></param>
     /// <param name="volumeScale"></param>
     /// <returns></returns>
-    IEnumerator CoroutineForPlayOneShot(AudioSource audioSource, AudioClip audioClip, float volumeScale)
+    IEnumerator CoroutineForPlayOneShot(AudioSource audioSource, AudioClip audioClip, float volumeScale, Vector3 soundPosition)
     {
         sourceNumber++;
-        audioSource.PlayOneShot(audioClip, volumeScale);
+        if (audioSource != null)
+        {
+            audioSource.PlayOneShot(audioClip, volumeScale);
+        }
+        else
+        {
+            AudioSource.PlayClipAtPoint(audioClip, soundPosition, volumeScale);
+        }
         yield return new WaitForSeconds(audioClip.length);
         sourceNumber--;
     }
