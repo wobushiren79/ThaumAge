@@ -39,14 +39,19 @@ public class AudioHandler : BaseHandler<AudioHandler, AudioManager>
     /// <param name="volumeScale"></param>
     public void PlayMusicForLoop(int musicId, float volumeScale)
     {
-        AudioClip audioClip = null;
-        if (audioClip != null)
+        AudioInfoBean audioInfo = manager.GetAudioInfo(musicId);
+        if (audioInfo == null)
+            return;
+        manager.GetMusicClip(audioInfo.name_res, (audioClip) => 
         {
-            manager.audioSourceForMusic.clip = audioClip;
-            manager.audioSourceForMusic.volume = volumeScale;
-            manager.audioSourceForMusic.loop = true;
-            manager.audioSourceForMusic.Play();
-        }
+            if (audioClip != null)
+            {
+                manager.audioSourceForMusic.clip = audioClip;
+                manager.audioSourceForMusic.volume = volumeScale;
+                manager.audioSourceForMusic.loop = true;
+                manager.audioSourceForMusic.Play();
+            }
+        });
     }
 
     /// <summary>
@@ -58,17 +63,16 @@ public class AudioHandler : BaseHandler<AudioHandler, AudioManager>
     {
         if (sourceNumber > sourceMaxNumber)
             return;
-        Action<AudioClip> completeAction = (audioClip) =>
+        AudioInfoBean audioInfo = manager.GetAudioInfo(soundId);
+        if (audioInfo == null)
+            return;
+        manager.GetSoundClip(audioInfo.name_res, (audioClip) => 
         {
             if (audioClip != null)
             {
                 StartCoroutine(CoroutineForPlayOneShot(audioSource, audioClip, volumeScale, soundPosition));
             }
-        };
-        AudioInfoBean audioInfo = manager.GetAudioInfo(soundId);
-        if (audioInfo == null)
-            return;
-        manager.GetSoundClip(audioInfo.name_res, completeAction);
+        });
     }
 
     public void PlaySound(int soundId, AudioSource audioSource = null)
@@ -111,10 +115,19 @@ public class AudioHandler : BaseHandler<AudioHandler, AudioManager>
     /// <param name="audioEnvironment"></param>
     public void PlayEnvironment(int environmentId, float volumeScale)
     {
-        AudioClip audioClip = null;
-        manager.audioSourceForEnvironment.volume = volumeScale;
-        manager.audioSourceForEnvironment.clip = audioClip;
-        manager.audioSourceForEnvironment.Play();
+        AudioInfoBean audioInfo = manager.GetAudioInfo(environmentId);
+        if (audioInfo == null)
+            return;
+        manager.GetMusicClip(audioInfo.name_res, (audioClip) =>
+        {
+            if (audioClip != null)
+            {
+                manager.audioSourceForEnvironment.volume = volumeScale;
+                manager.audioSourceForEnvironment.clip = audioClip;
+                manager.audioSourceForEnvironment.loop = true;
+                manager.audioSourceForEnvironment.Play();
+            }
+        });
     }
 
     public void PlayEnvironment(int environmentId)

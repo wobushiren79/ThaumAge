@@ -18,13 +18,20 @@ public class AudioManager : BaseManager, IAudioInfoView
                 _audioListener = FindWithTag<AudioListener>(TagInfo.Tag_AudioListener);
                 if (_audioListener == null)
                 {
-                    _audioListener = CameraHandler.Instance.manager.mainCamera.gameObject.AddComponentEX<AudioListener>();
-                    _audioListener.tag = TagInfo.Tag_AudioListener;
+                    Camera mainCamera = CameraHandler.Instance.manager.mainCamera;
+                    GameObject obj = new GameObject("AudioListener");
+
+                    obj.transform.localPosition = Vector3.zero;
+                    obj.transform.parent = mainCamera.transform;
+                    obj.tag = TagInfo.Tag_AudioListener;
+
+                    _audioListener = obj.AddComponentEX<AudioListener>();
                 }
             }
             return _audioListener;
         }
     }
+
     public AudioSource audioSourceForMusic
     {
         get
@@ -39,8 +46,9 @@ public class AudioManager : BaseManager, IAudioInfoView
 
                     obj.transform.localPosition = Vector3.zero;
                     obj.transform.parent = mainCamera.transform;
+                    obj.tag = TagInfo.Tag_AudioMusic;
+
                     _audioSourceForMusic = obj.AddComponentEX<AudioSource>();
-                    _audioSourceForMusic.tag = TagInfo.Tag_AudioMusic;
                 }
             }
             return _audioSourceForMusic;
@@ -57,12 +65,13 @@ public class AudioManager : BaseManager, IAudioInfoView
                 if (_audioListener == null)
                 {
                     Camera mainCamera = CameraHandler.Instance.manager.mainCamera;
-                    GameObject obj = new GameObject("AudioSound");
 
+                    GameObject obj = new GameObject("AudioSound");
                     obj.transform.localPosition = Vector3.zero;
                     obj.transform.parent = mainCamera.transform;
+                    obj.tag = TagInfo.Tag_AudioSound;
+
                     _audioSourceForSound = obj.AddComponentEX<AudioSource>();
-                    _audioSourceForSound.tag = TagInfo.Tag_AudioSound;
                 }
             }
             return _audioSourceForSound;
@@ -79,22 +88,26 @@ public class AudioManager : BaseManager, IAudioInfoView
                 if (_audioListener == null)
                 {
                     Camera mainCamera = CameraHandler.Instance.manager.mainCamera;
-                    GameObject obj = new GameObject("AudioEnvironment");
 
+                    GameObject obj = new GameObject("AudioEnvironment");
                     obj.transform.localPosition = Vector3.zero;
                     obj.transform.parent = mainCamera.transform;
+                    obj.tag = TagInfo.Tag_AudioEnvironment;
+
                     _audioSourceForEnvironment = obj.AddComponentEX<AudioSource>();
-                    _audioSourceForEnvironment.tag = TagInfo.Tag_AudioEnvironment;
                 }
             }
             return _audioSourceForEnvironment;
         }
     }
 
-
     protected Dictionary<string, AudioClip> dicMusicData = new Dictionary<string, AudioClip>();
     protected Dictionary<string, AudioClip> dicSoundData = new Dictionary<string, AudioClip>();
     protected Dictionary<string, AudioClip> dicEnvironmentData = new Dictionary<string, AudioClip>();
+
+    protected static string PathMusic = "Assets/Prefabs/Audio/Music";
+    protected static string PathSound = "Assets/Prefabs/Audio/Sound";
+    protected static string PathEnvironment = "Assets/Prefabs/Audio/Environment";
 
     protected Dictionary<int, AudioInfoBean> dicAudioInfoData = new Dictionary<int, AudioInfoBean>();
     protected AudioInfoController controllerForAudioInfo;
@@ -137,7 +150,7 @@ public class AudioManager : BaseManager, IAudioInfoView
     /// </summary>
     /// <param name="name"></param>
     /// <param name="completeAction"></param>
-    public void GetMusicClip(string name, System.Action<AudioClip> completeAction)
+    public void GetMusicClip(string name, Action<AudioClip> completeAction)
     {
         LoadClipDataByAddressbles(AuidoTypeEnum.Music, name, completeAction);
     }
@@ -147,7 +160,7 @@ public class AudioManager : BaseManager, IAudioInfoView
     /// </summary>
     /// <param name="name"></param>
     /// <param name="completeAction"></param>
-    public void GetSoundClip(string name, System.Action<AudioClip> completeAction)
+    public void GetSoundClip(string name, Action<AudioClip> completeAction)
     {
         LoadClipDataByAddressbles(AuidoTypeEnum.Sound, name, completeAction);
     }
@@ -157,7 +170,7 @@ public class AudioManager : BaseManager, IAudioInfoView
     /// </summary>
     /// <param name="name"></param>
     /// <param name="completeAction"></param>
-    public void GetEnvironmentClip(string name, System.Action<AudioClip> completeAction)
+    public void GetEnvironmentClip(string name, Action<AudioClip> completeAction)
     {
         LoadClipDataByAddressbles(AuidoTypeEnum.Environment, name, completeAction);
     }
@@ -168,33 +181,38 @@ public class AudioManager : BaseManager, IAudioInfoView
     /// <param name="type"></param>
     /// <param name="name"></param>
     /// <param name="completeAction"></param>
-    public void LoadClipDataByAddressbles(AuidoTypeEnum audioType, string name, System.Action<AudioClip> completeAction)
+    public void LoadClipDataByAddressbles(AuidoTypeEnum audioType, string name, Action<AudioClip> completeAction)
     {
         Dictionary<string, AudioClip> dicAudioData;
+        string pathData;
         switch (audioType)
         {
             case AuidoTypeEnum.Music:
+                pathData = PathMusic;
                 dicAudioData = dicMusicData;
                 break;
             case AuidoTypeEnum.Sound:
+                pathData = PathSound;
                 dicAudioData = dicSoundData;
                 break;
             case AuidoTypeEnum.Environment:
+                pathData = PathEnvironment;
                 dicAudioData = dicEnvironmentData;
                 break;
             default:
                 return;
         }
-        if (dicAudioData.TryGetValue(name, out AudioClip audioClip))
+        string allPathData = $"{pathData}/{name}";
+        if (dicAudioData.TryGetValue(allPathData, out AudioClip audioClip))
         {
             completeAction?.Invoke(audioClip);
             return;
         }
-        LoadAddressablesUtil.LoadAssetAsync<AudioClip>(name, (data) =>
+        LoadAddressablesUtil.LoadAssetAsync<AudioClip>(allPathData, (data) =>
         {
             if (data.Result != null)
             {
-                dicAudioData.Add(name, data.Result);
+                dicAudioData.Add(allPathData, data.Result);
                 completeAction?.Invoke(data.Result);
                 return;
             }
