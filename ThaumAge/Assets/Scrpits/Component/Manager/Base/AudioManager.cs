@@ -212,6 +212,11 @@ public class AudioManager : BaseManager, IAudioInfoView
         {
             if (data.Result != null)
             {
+                if (dicAudioData.TryGetValue(allPathData, out AudioClip audioClip))
+                {
+                    completeAction?.Invoke(audioClip);
+                    return;
+                }
                 dicAudioData.Add(allPathData, data.Result);
                 completeAction?.Invoke(data.Result);
                 return;

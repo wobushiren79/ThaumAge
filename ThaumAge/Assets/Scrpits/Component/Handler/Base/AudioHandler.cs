@@ -59,7 +59,7 @@ public class AudioHandler : BaseHandler<AudioHandler, AudioManager>
     /// </summary>
     /// <param name="sound">音效</param>
     /// <param name="volumeScale">音量大小</param>
-    public void PlaySound(int soundId, Vector3 soundPosition, float volumeScale, AudioSource audioSource = null)
+    public void PlaySound(int soundId, Vector3 soundPosition, float volumeScale, AudioSource audioSource)
     {
         if (sourceNumber > sourceMaxNumber)
             return;
@@ -75,16 +75,16 @@ public class AudioHandler : BaseHandler<AudioHandler, AudioManager>
         });
     }
 
-    public void PlaySound(int soundId, AudioSource audioSource = null)
+    public void PlaySound(int soundId)
     {
         GameConfigBean gameConfig = GameDataHandler.Instance.manager.GetGameConfig();
-        PlaySound(soundId, Camera.main.transform.position, gameConfig.soundVolume, audioSource);
+        PlaySound(soundId, Camera.main.transform.position, gameConfig.soundVolume, manager.audioSourceForSound);
     }
 
-    public void PlaySound(int soundId, Vector3 soundPosition, AudioSource audioSource = null)
+    public void PlaySound(int soundId, Vector3 soundPosition)
     {
         GameConfigBean gameConfig = GameDataHandler.Instance.manager.GetGameConfig();
-        PlaySound(soundId, soundPosition, gameConfig.soundVolume, audioSource);
+        PlaySound(soundId, soundPosition, gameConfig.soundVolume, null);
     }
 
     /// <summary>

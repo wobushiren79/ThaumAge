@@ -49,7 +49,12 @@ public class UIChildGameSettingGameContent : UIChildGameSettingBaseContent
     public override void RefreshUI()
     {
         base.RefreshUI();
-        settingSelectLanguage.SetTitle(TextHandler.Instance.GetTextById(101));
+        if (settingSelectLanguage)
+            settingSelectLanguage.SetTitle(TextHandler.Instance.GetTextById(101));
+        if (worldRefreshRange)
+            worldRefreshRange.SetTitle(TextHandler.Instance.GetTextById(116));
+        if (worldDestoryRange)
+            worldDestoryRange.SetTitle(TextHandler.Instance.GetTextById(117));
     }
 
     /// <summary>

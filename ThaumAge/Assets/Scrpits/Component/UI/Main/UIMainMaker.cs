@@ -12,7 +12,7 @@ public partial class UIMainMaker : BaseUIComponent
             HandleForBack();
         }
         //播放音效
-        AudioHandler.Instance.PlaySound(1);
+        AudioHandler.Instance.PlaySound(100001);
     }
 
     public override void RefreshUI()

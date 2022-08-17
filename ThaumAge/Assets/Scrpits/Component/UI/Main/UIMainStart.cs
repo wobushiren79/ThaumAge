@@ -14,7 +14,7 @@ public partial class UIMainStart : BaseUIComponent
         else if (viewButton == ui_Exit) HandleForExit();
         else if (viewButton == ui_Title) HandleForMaker();
         //播放音效
-        AudioHandler.Instance.PlaySound(1);
+        AudioHandler.Instance.PlaySound(100001);
     }
 
     public override void RefreshUI()

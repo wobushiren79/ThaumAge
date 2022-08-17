@@ -66,6 +66,8 @@ public partial class UIListItemMainUserData : BaseUIView
         {
             HandleForDelete();
         }
+        //播放音效
+        AudioHandler.Instance.PlaySound(100001);
     }
 
     /// <summary>
@@ -134,7 +136,6 @@ public partial class UIListItemMainUserData : BaseUIView
     /// </summary>
     public void HandleForDelete()
     {
-
         Action<DialogView, DialogBean> actionSubmit = (view, data) =>
          {
              GameDataHandler.Instance.manager.DeletGameData(userData.userId);

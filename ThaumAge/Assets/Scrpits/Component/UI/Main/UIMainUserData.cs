@@ -14,7 +14,7 @@ public partial class UIMainUserData : BaseUIComponent
         if (viewButton == ui_ViewClose) HandleForBackStartUI();
 
         //播放音效
-        AudioHandler.Instance.PlaySound(1);
+        AudioHandler.Instance.PlaySound(100001);
     }
 
     public override void Awake()

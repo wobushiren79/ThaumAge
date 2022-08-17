@@ -92,7 +92,7 @@ public partial class UIMainCreate : BaseUIComponent,
         }
 
         //播放音效
-        AudioHandler.Instance.PlaySound(1);
+        AudioHandler.Instance.PlaySound(100001);
     }
 
     /// <summary>
