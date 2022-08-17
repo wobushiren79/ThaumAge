@@ -11,6 +11,8 @@ public partial class UIMainMaker : BaseUIComponent
         {
             HandleForBack();
         }
+        //播放音效
+        AudioHandler.Instance.PlaySound(1);
     }
 
     public override void RefreshUI()

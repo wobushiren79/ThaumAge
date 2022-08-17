@@ -90,6 +90,9 @@ public partial class UIMainCreate : BaseUIComponent,
         {
             HandleForStartGame();
         }
+
+        //播放音效
+        AudioHandler.Instance.PlaySound(1);
     }
 
     /// <summary>

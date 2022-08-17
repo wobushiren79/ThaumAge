@@ -105,9 +105,9 @@ public class AudioManager : BaseManager, IAudioInfoView
     protected Dictionary<string, AudioClip> dicSoundData = new Dictionary<string, AudioClip>();
     protected Dictionary<string, AudioClip> dicEnvironmentData = new Dictionary<string, AudioClip>();
 
-    protected static string PathMusic = "Assets/Prefabs/Audio/Music";
-    protected static string PathSound = "Assets/Prefabs/Audio/Sound";
-    protected static string PathEnvironment = "Assets/Prefabs/Audio/Environment";
+    protected static string PathMusic = "Assets/Audio/Music";
+    protected static string PathSound = "Assets/Audio/Sound";
+    protected static string PathEnvironment = "Assets/Audio/Environment";
 
     protected Dictionary<int, AudioInfoBean> dicAudioInfoData = new Dictionary<int, AudioInfoBean>();
     protected AudioInfoController controllerForAudioInfo;

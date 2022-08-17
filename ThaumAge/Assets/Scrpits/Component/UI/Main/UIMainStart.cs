@@ -8,10 +8,13 @@ public partial class UIMainStart : BaseUIComponent
     public override void OnClickForButton(Button viewButton)
     {
         base.OnClickForButton(viewButton);
+
         if (viewButton == ui_Start) HandleForStart();
         else if (viewButton == ui_Setting) HandleForSetting();
         else if (viewButton == ui_Exit) HandleForExit();
         else if (viewButton == ui_Title) HandleForMaker();
+        //播放音效
+        AudioHandler.Instance.PlaySound(1);
     }
 
     public override void RefreshUI()
