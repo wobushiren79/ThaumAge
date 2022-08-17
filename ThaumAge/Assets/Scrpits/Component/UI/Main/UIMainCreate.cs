@@ -57,7 +57,6 @@ public partial class UIMainCreate : BaseUIComponent,
     public void SetUIText()
     {
         ui_StartText.text = TextHandler.Instance.GetTextById(31);
-
         ui_NameTitle.text = TextHandler.Instance.GetTextById(32);
         ui_TitleHair.text = TextHandler.Instance.GetTextById(35);
         ui_TitleHairColor.text = TextHandler.Instance.GetTextById(36);
@@ -65,6 +64,7 @@ public partial class UIMainCreate : BaseUIComponent,
         ui_TitleSkin.text = TextHandler.Instance.GetTextById(38);
         ui_TitleMouth.text = TextHandler.Instance.GetTextById(39);
         ui_TitleClothes.text = TextHandler.Instance.GetTextById(40);
+        ui_NamePlaceholder.text = TextHandler.Instance.GetTextById(41);
     }
 
     public override void OnClickForButton(Button viewButton)

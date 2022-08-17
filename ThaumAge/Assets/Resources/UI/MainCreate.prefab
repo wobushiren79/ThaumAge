@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 2279736711073570778}
   - component: {fileID: 9025810739290289767}
   m_Layer: 5
-  m_Name: Placeholder
+  m_Name: NamePlaceholder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1526,6 +1526,7 @@ MonoBehaviour:
   ui_TitleClothes: {fileID: 170094067103303499}
   ui_StartText: {fileID: 3501176315206933126}
   ui_SexTitle: {fileID: 8833075054768503431}
+  ui_NamePlaceholder: {fileID: 9025810739290289767}
 --- !u!1 &6759167545617767833
 GameObject:
   m_ObjectHideFlags: 0

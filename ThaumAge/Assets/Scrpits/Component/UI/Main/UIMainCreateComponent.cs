@@ -50,5 +50,7 @@ public partial class UIMainCreate
 
     public Text ui_SexTitle;
 
+    public Text ui_NamePlaceholder;
+
 
 }
