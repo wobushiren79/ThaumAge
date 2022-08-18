@@ -13,7 +13,7 @@ public class GameTimeHandler : BaseHandler<GameTimeHandler, GameTimeManager>
         GameStateEnum gameState = GameHandler.Instance.manager.GetGameState();          
         Time.timeScale = timeScale;
         //受缩放时间影响
-        if (timeOffset >= 5)
+        if (timeOffset >= 2)
         {
             switch (gameState) 
             {
