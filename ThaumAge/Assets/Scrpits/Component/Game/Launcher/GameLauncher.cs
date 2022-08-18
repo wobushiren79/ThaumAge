@@ -7,7 +7,7 @@ using UnityEngine;
 public class GameLauncher : BaseLauncher
 {
     public WorldTypeEnum testWorldType = WorldTypeEnum.Test;
-
+    public int seed = 0;
     public override void Launch()
     {
         base.Launch();
@@ -30,6 +30,10 @@ public class GameLauncher : BaseLauncher
             //设置游戏状态
             GameHandler.Instance.manager.SetGameState(GameStateEnum.Init);
             //设置种子
+            if(seed != 0)
+            {
+                userData.seed = seed;
+            }
             WorldCreateHandler.Instance.manager.SetWorldSeed(userData.seed);
             //开关角色控制
             GameControlHandler.Instance.SetPlayerControlEnabled(false);

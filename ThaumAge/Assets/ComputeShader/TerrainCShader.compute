@@ -121,8 +121,8 @@ float TerraninCreate(int iterateNumberMax,float perlinFrequency,float perlinAmpl
         float x0 = (posX / perlinSize) * curFrequency;
         float y0 = (posY / perlinSize) * curFrequency;
 
-        float noise0 = Unity_GradientNoise(float2(x0 + RandomOffset.x , y0 + RandomOffset.y)) * curAmplitude;
-
+        //float noise0 = Unity_GradientNoise(float2(x0 + RandomOffset.x , y0 + RandomOffset.y)) * curAmplitude;
+        float noise0 = Unity_GradientNoise(float2(x0, y0)) * curAmplitude;
         finalNoise = finalNoise + noise0;
         iterateNumber = iterateNumber + 1;
         curFrequency = curFrequency * 2;

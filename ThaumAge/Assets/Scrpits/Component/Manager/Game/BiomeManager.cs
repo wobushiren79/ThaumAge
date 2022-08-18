@@ -173,7 +173,7 @@ public class BiomeManager : BaseManager
                     arrayBiome[6] = BiomeTypeEnum.Swamp;
                     arrayBiome[7] = BiomeTypeEnum.Snowland;
                     arrayBiome[8] = BiomeTypeEnum.ForestMagic;
-                    arrayBiome[8] = BiomeTypeEnum.ForestBirch;
+                    arrayBiome[9] = BiomeTypeEnum.ForestBirch;
                     break;
                 case WorldTypeEnum.Launch:
                     arrayBiome = new BiomeTypeEnum[1];

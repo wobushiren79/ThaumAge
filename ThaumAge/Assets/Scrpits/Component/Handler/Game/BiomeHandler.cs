@@ -20,6 +20,14 @@ public class BiomeHandler : BaseHandler<BiomeHandler, BiomeManager>
         fastNoise = new FastNoise(seed);
     }
 
+    /// <summary>
+    /// 清理缓存数据
+    /// </summary>
+    public void ClearBiomeMapData()
+    {
+        manager.dicWorldChunkTerrainDataPool.Clear();
+    }
+
     public BiomeMapData GetBiomeMapData(Chunk chunk)
     {
         if (manager.dicWorldChunkTerrainDataPool.TryGetValue($"{chunk.chunkData.positionForWorld.x}|{chunk.chunkData.positionForWorld.z}", out BiomeMapData biomeMapData))
@@ -31,7 +39,7 @@ public class BiomeHandler : BaseHandler<BiomeHandler, BiomeManager>
             biomeMapData = new BiomeMapData(chunk);
             //添加到缓存中
             if (manager.dicWorldChunkTerrainDataPool.Count > 2047)
-                manager.dicWorldChunkTerrainDataPool.Clear();
+                ClearBiomeMapData();
             manager.dicWorldChunkTerrainDataPool.Add($"{chunk.chunkData.positionForWorld.x}|{chunk.chunkData.positionForWorld.z}", biomeMapData);
             return biomeMapData;
         }
