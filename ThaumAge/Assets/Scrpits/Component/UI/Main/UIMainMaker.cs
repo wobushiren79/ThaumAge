@@ -10,9 +10,10 @@ public partial class UIMainMaker : BaseUIComponent
         if (viewButton == ui_ViewClose)
         {
             HandleForBack();
+            //播放音效
+            AudioHandler.Instance.PlaySound(2);
         }
-        //播放音效
-        AudioHandler.Instance.PlaySound(100001);
+
     }
 
     public override void RefreshUI()

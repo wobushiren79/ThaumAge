@@ -67,7 +67,7 @@ public partial class UIListItemMainUserData : BaseUIView
             HandleForDelete();
         }
         //播放音效
-        AudioHandler.Instance.PlaySound(100001);
+        AudioHandler.Instance.PlaySound(1);
     }
 
     /// <summary>

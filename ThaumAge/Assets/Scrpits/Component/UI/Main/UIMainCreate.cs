@@ -73,26 +73,33 @@ public partial class UIMainCreate : BaseUIComponent,
         if (viewButton == ui_ViewClose)
         {
             HandleForBack();
+            //播放音效
+            AudioHandler.Instance.PlaySound(2);
         }
         else if (viewButton == ui_Man)
         {
             ChangeSex(SexTypeEnum.Man);
+            //播放音效
+            AudioHandler.Instance.PlaySound(1);
         }
         else if (viewButton == ui_Woman)
         {
             ChangeSex(SexTypeEnum.Woman);
+            //播放音效
+            AudioHandler.Instance.PlaySound(1);
         }
         else if (viewButton == ui_RandomCharacter)
         {
             HandleForRandomCharacter();
+            //播放音效
+            AudioHandler.Instance.PlaySound(1);
         }
         else if (viewButton == ui_Start)
         {
             HandleForStartGame();
+            //播放音效
+            AudioHandler.Instance.PlaySound(1);
         }
-
-        //播放音效
-        AudioHandler.Instance.PlaySound(100001);
     }
 
     /// <summary>

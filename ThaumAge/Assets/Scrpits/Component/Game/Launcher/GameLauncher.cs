@@ -11,7 +11,7 @@ public class GameLauncher : BaseLauncher
     public override void Launch()
     {
         base.Launch();
-        IconHandler.Instance.InitData(null);
+        IconHandler.Instance.InitData();
         //打开主UI
         UIHandler.Instance.OpenUIAndCloseOther<UILoading>(UIEnum.Loading);
         //初始化摄像头数据

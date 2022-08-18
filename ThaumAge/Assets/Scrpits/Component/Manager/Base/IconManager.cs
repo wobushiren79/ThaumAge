@@ -16,8 +16,9 @@ public class IconManager : BaseManager
 
     public Dictionary<string, Texture2D> dicTextureUI = new Dictionary<string, Texture2D>();
 
-    public string PathSpriteAtlasForUI = "Assets/Texture/SpriteAtlas/SpriteAtlasForUI.spriteatlas";
-    public string PathSpriteAtlasForItems = "Assets/Texture/SpriteAtlas/SpriteAtlasForItems.spriteatlas";
+    public static string PathSpriteAtlas = "Assets/Texture/SpriteAtlas";
+    public string PathSpriteAtlasForUI = $"{PathSpriteAtlas}/SpriteAtlasForUI.spriteatlas";
+    public string PathSpriteAtlasForItems = $"{PathSpriteAtlas}/SpriteAtlasForItems.spriteatlas";
     /// <summary>
     /// 根据名字获取UI图标
     /// </summary>

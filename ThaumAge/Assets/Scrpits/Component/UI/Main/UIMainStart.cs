@@ -9,12 +9,30 @@ public partial class UIMainStart : BaseUIComponent
     {
         base.OnClickForButton(viewButton);
 
-        if (viewButton == ui_Start) HandleForStart();
-        else if (viewButton == ui_Setting) HandleForSetting();
-        else if (viewButton == ui_Exit) HandleForExit();
-        else if (viewButton == ui_Title) HandleForMaker();
-        //播放音效
-        AudioHandler.Instance.PlaySound(100001);
+        if (viewButton == ui_Start)
+        {
+            HandleForStart();
+            //播放音效
+            AudioHandler.Instance.PlaySound(1);
+        }
+        else if (viewButton == ui_Setting)
+        {
+            HandleForSetting();
+            //播放音效
+            AudioHandler.Instance.PlaySound(1);
+        }
+        else if (viewButton == ui_Title)
+        {
+            HandleForMaker();
+            //播放音效
+            AudioHandler.Instance.PlaySound(1);
+        }
+        else if (viewButton == ui_Exit) 
+        {
+            HandleForExit();
+            //播放音效
+            AudioHandler.Instance.PlaySound(2);
+        } 
     }
 
     public override void RefreshUI()

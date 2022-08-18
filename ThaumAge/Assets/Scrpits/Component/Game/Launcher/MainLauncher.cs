@@ -12,7 +12,7 @@ public class MainLauncher : BaseLauncher
     public override void Launch()
     {
         base.Launch();
-        IconHandler.Instance.InitData(null);
+        IconHandler.Instance.InitData();
 
         UIHandler.Instance.OpenUIAndCloseOther<UILoading>(UIEnum.Loading);
 

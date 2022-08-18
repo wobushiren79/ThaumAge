@@ -43,15 +43,22 @@ public partial class UIGameSetting : BaseUIComponent, IRadioGroupCallBack
     public override void OnClickForButton(Button viewButton)
     {
         base.OnClickForButton(viewButton);
-        if (viewButton == ui_ViewClose) OnClickForClose();
-        AudioHandler.Instance.PlaySound(100001);
+        if (viewButton == ui_ViewClose) 
+        {
+            OnClickForClose();
+            AudioHandler.Instance.PlaySound(2);
+        } 
+
     }
 
     public override void OnInputActionForStarted(InputActionUIEnum inputType, UnityEngine.InputSystem.InputAction.CallbackContext callback)
     {
         base.OnInputActionForStarted(inputType, callback);
-        if (inputType == InputActionUIEnum.ESC) OnClickForClose();
-        AudioHandler.Instance.PlaySound(100001);
+        if (inputType == InputActionUIEnum.ESC) 
+        {
+            OnClickForClose();
+            AudioHandler.Instance.PlaySound(2);
+        } 
     }
 
     public override void RefreshUI()
@@ -107,7 +114,7 @@ public partial class UIGameSetting : BaseUIComponent, IRadioGroupCallBack
         {
             settingControlContent.Open();
         }
-        AudioHandler.Instance.PlaySound(100001);
+        AudioHandler.Instance.PlaySound(1);
     }
 
     public void RadioButtonUnSelected(RadioGroupView rgView, int position, RadioButtonView rbview)
