@@ -101,20 +101,23 @@ public partial class UIGameSetting : BaseUIComponent, IRadioGroupCallBack
         if (rbview == ui_ViewLabel_Game)
         {
             settingGameContent.Open();
+            AudioHandler.Instance.PlaySound(1);
         }
         else if (rbview == ui_ViewLabel_Display)
         {
             settingDisplayContent.Open();
+            AudioHandler.Instance.PlaySound(1);
         }
         else if (rbview == ui_ViewLabel_Audio)
         {
             settingAudioContent.Open();
+            AudioHandler.Instance.PlaySound(1);
         }
         else if (rbview == ui_ViewLabel_Control)
         {
             settingControlContent.Open();
+            AudioHandler.Instance.PlaySound(1);
         }
-        AudioHandler.Instance.PlaySound(1);
     }
 
     public void RadioButtonUnSelected(RadioGroupView rgView, int position, RadioButtonView rbview)

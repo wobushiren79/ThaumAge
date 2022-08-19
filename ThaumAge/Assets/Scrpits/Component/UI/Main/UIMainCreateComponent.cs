@@ -52,5 +52,11 @@ public partial class UIMainCreate
 
     public Text ui_NamePlaceholder;
 
+    public Text ui_SeedPlaceholder;
+
+    public InputField ui_SeedInputField;
+
+    public Text ui_SeedTitle;
+
 
 }

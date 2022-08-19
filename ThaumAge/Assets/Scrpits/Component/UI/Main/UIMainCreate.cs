@@ -65,6 +65,8 @@ public partial class UIMainCreate : BaseUIComponent,
         ui_TitleMouth.text = TextHandler.Instance.GetTextById(39);
         ui_TitleClothes.text = TextHandler.Instance.GetTextById(40);
         ui_NamePlaceholder.text = TextHandler.Instance.GetTextById(41);
+        ui_SeedTitle.text = TextHandler.Instance.GetTextById(42);
+        ui_SeedPlaceholder.text = TextHandler.Instance.GetTextById(43);
     }
 
     public override void OnClickForButton(Button viewButton)
@@ -156,6 +158,16 @@ public partial class UIMainCreate : BaseUIComponent,
         ui_ViewSelectColorChange_Skin.SetData(1, 1, 1);
         ui_ViewSelectColorChange_Hair.SetData(0, 0, 0);
         ChangeSex(SexTypeEnum.Man);
+        SetSeed(UnityEngine.Random.Range(1, int.MaxValue));
+    }
+
+    /// <summary>
+    /// 设置种子
+    /// </summary>
+    /// <param name="seed"></param>
+    public void SetSeed(int seed)
+    {
+        ui_SeedInputField.text = $"{seed}";
     }
 
     /// <summary>
@@ -173,6 +185,7 @@ public partial class UIMainCreate : BaseUIComponent,
         //随机性别
         int sexRandom = WorldRandTools.Range(0, 2);
         ChangeSex(sexRandom == 0 ? SexTypeEnum.Man : SexTypeEnum.Woman);
+        SetSeed(UnityEngine.Random.Range(1, int.MaxValue));
     }
 
     /// <summary>
@@ -183,6 +196,7 @@ public partial class UIMainCreate : BaseUIComponent,
         CreatureCptCharacter character = GetCharacter();
         string characterName = ui_NameInput.text;
         string userId = $"UserId_{SystemUtil.GetUUID(SystemUtil.UUIDTypeEnum.N)}";
+        int seed = int.Parse(ui_SeedInputField.text);
         if (characterName.IsNull())
         {
             UIHandler.Instance.ToastHint<ToastView>(TextHandler.Instance.GetTextById(30001));
@@ -195,7 +209,7 @@ public partial class UIMainCreate : BaseUIComponent,
             userData.userId = userId;
             userData.characterData = character.GetCharacterData();
             userData.characterData.characterName = characterName;
-            userData.seed = UnityEngine.Random.Range(0, int.MaxValue);
+            userData.seed = seed;
             //设置位置
             userData.userPosition.SetPosition(Vector3.zero);
             userData.userPosition.SetWorldType(WorldTypeEnum.Main);

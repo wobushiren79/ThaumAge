@@ -17,4 +17,18 @@ public partial class UIDialogNormal : DialogView
         UGUIUtil.RefreshUISize(ui_Content.rectTransform);
         UGUIUtil.RefreshUISize(ui_ContentShow);
     }
+
+    public override void SubmitOnClick()
+    {
+        base.SubmitOnClick();           
+        //播放音效
+        AudioHandler.Instance.PlaySound(1);
+    }
+
+    public override void CancelOnClick()
+    {
+        base.CancelOnClick();
+        //播放音效
+        AudioHandler.Instance.PlaySound(2);
+    }
 }

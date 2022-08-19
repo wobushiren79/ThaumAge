@@ -29,6 +29,8 @@ public partial class UIGameCommonNormal : BaseUIComponent
         if (viewButton == ui_Exit)
         {
             HandleForBackMain();
+            //≤•∑≈“Ù–ß
+            AudioHandler.Instance.PlaySound(2);
         }
     }
 

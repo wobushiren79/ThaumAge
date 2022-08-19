@@ -31,14 +31,20 @@ public partial class UIGameMain : BaseUIComponent
         if (viewButton == ui_Details)
         {
             OpenUserDetailsUI();
+            //播放音效
+            AudioHandler.Instance.PlaySound(1);
         }
         else if (viewButton == ui_Book)
         {
             OpenBookUI();
+            //播放音效
+            AudioHandler.Instance.PlaySound(1);
         }
         else if (viewButton == ui_Setting)
         {
             OpenSettingUI();
+            //播放音效
+            AudioHandler.Instance.PlaySound(1);
         }
     }
 
@@ -49,15 +55,23 @@ public partial class UIGameMain : BaseUIComponent
         {
             case InputActionUIEnum.F12:
                 OpenGodMain();
+                //播放音效
+                AudioHandler.Instance.PlaySound(1);
                 break;
             case InputActionUIEnum.ESC:
                 OpenSettingUI();
+                //播放音效
+                AudioHandler.Instance.PlaySound(1);
                 break;
             case InputActionUIEnum.B:
                 OpenUserDetailsUI();
+                //播放音效
+                AudioHandler.Instance.PlaySound(1);
                 break;
             case InputActionUIEnum.T:
                 OpenBookUI();
+                //播放音效
+                AudioHandler.Instance.PlaySound(1);
                 break;
         }
     }

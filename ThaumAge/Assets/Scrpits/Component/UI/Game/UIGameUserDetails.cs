@@ -40,6 +40,7 @@ public partial class UIGameUserDetails : UIGameCommonNormal, IRadioGroupCallBack
             case InputActionUIEnum.ESC:
             case InputActionUIEnum.B:
                 HandleForBackMain();
+                AudioHandler.Instance.PlaySound(2);
                 break;
         }
     }
@@ -72,6 +73,7 @@ public partial class UIGameUserDetails : UIGameCommonNormal, IRadioGroupCallBack
             ui_ViewCharacterEquip.CloseUI();
             ui_ViewSynthesis.OpenUI();
         }
+        AudioHandler.Instance.PlaySound(1);
     }
 
     public void RadioButtonUnSelected(RadioGroupView rgView, int position, RadioButtonView rbview)

@@ -31,6 +31,7 @@ public partial class UIListItemMainUserData : BaseUIView
         SetName(userData.characterData.characterName);
         SetGameTime(userData.timeForGame);
         SetPlayTime(userData.timeForPlay);
+        SetSeed(userData.seed);
     }
 
     /// <summary>
@@ -45,6 +46,8 @@ public partial class UIListItemMainUserData : BaseUIView
         ui_NameTitle.text = TextHandler.Instance.GetTextById(204);
         ui_GameTimeTitle.text = TextHandler.Instance.GetTextById(205);
         ui_PlayTimeTitle.text = TextHandler.Instance.GetTextById(206);
+
+        ui_SeedTitle.text = TextHandler.Instance.GetTextById(207);
     }
 
     /// <summary>
@@ -118,6 +121,14 @@ public partial class UIListItemMainUserData : BaseUIView
     public void SetPlayTime(TimeBean time)
     {
         ui_PlayTimeContent.text = $"{time.hour}:{time.minute}";
+    }
+
+    /// <summary>
+    /// 设置种子
+    /// </summary>
+    public void SetSeed(int seed)
+    {
+        ui_SeedContent.text = $"{seed}";
     }
 
     /// <summary>

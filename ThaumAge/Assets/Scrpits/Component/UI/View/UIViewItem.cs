@@ -266,6 +266,7 @@ public partial class UIViewItem : BaseUIView,
     }
     public void OnPointerDown(PointerEventData eventData)
     {
+        AudioHandler.Instance.PlaySound(1);
         //LogUtil.Log($"OnPointerDown dragging:{eventData.dragging} pointerDrag:{eventData.pointerDrag.name} eligibleForClick:{eventData.eligibleForClick}");
     }
 

@@ -34,6 +34,8 @@ public partial class UIGodMain : UIGameCommonNormal
             case InputActionUIEnum.F12:
             case InputActionUIEnum.ESC:
                 HandleForBackMain();
+                //播放音效
+                AudioHandler.Instance.PlaySound(2);
                 break;
         }
     }
@@ -44,18 +46,26 @@ public partial class UIGodMain : UIGameCommonNormal
         if (viewButton == ui_Time_1)
         {
             HandleForTimeChange(0, 0);
+            //播放音效
+            AudioHandler.Instance.PlaySound(1);
         }
         else if (viewButton == ui_Time_2)
         {
             HandleForTimeChange(6, 0);
+            //播放音效
+            AudioHandler.Instance.PlaySound(1);
         }
         else if (viewButton == ui_Time_3)
         {
             HandleForTimeChange(12, 0);
+            //播放音效
+            AudioHandler.Instance.PlaySound(1);
         }
         else if (viewButton == ui_Time_4)
         {
             HandleForTimeChange(18, 0);
+            //播放音效
+            AudioHandler.Instance.PlaySound(1);
         }
     }
 

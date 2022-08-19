@@ -32,5 +32,9 @@ public partial class UIListItemMainUserData
 
     public Button ui_Delete;
 
+    public Text ui_SeedTitle;
+
+    public Text ui_SeedContent;
+
 
 }
