@@ -717,6 +717,24 @@ public partial class @GameInputActions : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""N"",
+                    ""type"": ""Button"",
+                    ""id"": ""0c045a48-ace7-4f8e-a443-680969c032be"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""P"",
+                    ""type"": ""Button"",
+                    ""id"": ""ebb4a038-da5d-4976-a89d-1915386cfe88"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -1214,6 +1232,28 @@ public partial class @GameInputActions : IInputActionCollection2, IDisposable
                     ""action"": ""T"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""ed925878-9fca-4d31-9baf-e1574dd15c05"",
+                    ""path"": ""<Keyboard>/n"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""N"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""e7a38564-f385-43de-967b-03eae2d989e7"",
+                    ""path"": ""<Keyboard>/p"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""P"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -1323,6 +1363,8 @@ public partial class @GameInputActions : IInputActionCollection2, IDisposable
         m_UI_NSub = m_UI.FindAction("NSub", throwIfNotFound: true);
         m_UI_B = m_UI.FindAction("B", throwIfNotFound: true);
         m_UI_T = m_UI.FindAction("T", throwIfNotFound: true);
+        m_UI_N = m_UI.FindAction("N", throwIfNotFound: true);
+        m_UI_P = m_UI.FindAction("P", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -1529,6 +1571,8 @@ public partial class @GameInputActions : IInputActionCollection2, IDisposable
     private readonly InputAction m_UI_NSub;
     private readonly InputAction m_UI_B;
     private readonly InputAction m_UI_T;
+    private readonly InputAction m_UI_N;
+    private readonly InputAction m_UI_P;
     public struct UIActions
     {
         private @GameInputActions m_Wrapper;
@@ -1559,6 +1603,8 @@ public partial class @GameInputActions : IInputActionCollection2, IDisposable
         public InputAction @NSub => m_Wrapper.m_UI_NSub;
         public InputAction @B => m_Wrapper.m_UI_B;
         public InputAction @T => m_Wrapper.m_UI_T;
+        public InputAction @N => m_Wrapper.m_UI_N;
+        public InputAction @P => m_Wrapper.m_UI_P;
         public InputActionMap Get() { return m_Wrapper.m_UI; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1646,6 +1692,12 @@ public partial class @GameInputActions : IInputActionCollection2, IDisposable
                 @T.started -= m_Wrapper.m_UIActionsCallbackInterface.OnT;
                 @T.performed -= m_Wrapper.m_UIActionsCallbackInterface.OnT;
                 @T.canceled -= m_Wrapper.m_UIActionsCallbackInterface.OnT;
+                @N.started -= m_Wrapper.m_UIActionsCallbackInterface.OnN;
+                @N.performed -= m_Wrapper.m_UIActionsCallbackInterface.OnN;
+                @N.canceled -= m_Wrapper.m_UIActionsCallbackInterface.OnN;
+                @P.started -= m_Wrapper.m_UIActionsCallbackInterface.OnP;
+                @P.performed -= m_Wrapper.m_UIActionsCallbackInterface.OnP;
+                @P.canceled -= m_Wrapper.m_UIActionsCallbackInterface.OnP;
             }
             m_Wrapper.m_UIActionsCallbackInterface = instance;
             if (instance != null)
@@ -1728,6 +1780,12 @@ public partial class @GameInputActions : IInputActionCollection2, IDisposable
                 @T.started += instance.OnT;
                 @T.performed += instance.OnT;
                 @T.canceled += instance.OnT;
+                @N.started += instance.OnN;
+                @N.performed += instance.OnN;
+                @N.canceled += instance.OnN;
+                @P.started += instance.OnP;
+                @P.performed += instance.OnP;
+                @P.canceled += instance.OnP;
             }
         }
     }
@@ -1820,5 +1878,7 @@ public partial class @GameInputActions : IInputActionCollection2, IDisposable
         void OnNSub(InputAction.CallbackContext context);
         void OnB(InputAction.CallbackContext context);
         void OnT(InputAction.CallbackContext context);
+        void OnN(InputAction.CallbackContext context);
+        void OnP(InputAction.CallbackContext context);
     }
 }

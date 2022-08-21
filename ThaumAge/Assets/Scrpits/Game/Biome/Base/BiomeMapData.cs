@@ -36,7 +36,7 @@ public class BiomeMapData
         bufferBiome.SetData(arrayChunkBiomeData);
 
         int kernelId = biomeManager.terrainCShader.FindKernel("CSMain");
-        biomeManager.terrainCShader.SetFloats("RandomOffset", worldSeed, worldSeed);
+        biomeManager.terrainCShader.SetInt("RandomSeed", worldSeed);
         biomeManager.terrainCShader.SetInt("BiomeNum", arrayChunkBiomeData.Length);
         biomeManager.terrainCShader.SetInt("BiomeSize", 256);
         biomeManager.terrainCShader.SetBuffer(kernelId, "BufferTerraninData", bufferTerrain);

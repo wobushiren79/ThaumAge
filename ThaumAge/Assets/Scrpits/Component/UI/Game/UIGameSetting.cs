@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public partial class UIGameSetting : BaseUIComponent, IRadioGroupCallBack
+public partial class UIGameSetting : UIGameCommonNormal, IRadioGroupCallBack
 {
     //游戏设置内容
     protected UIChildGameSettingGameContent settingGameContent;

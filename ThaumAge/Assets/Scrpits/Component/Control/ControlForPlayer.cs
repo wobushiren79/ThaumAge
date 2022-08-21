@@ -164,6 +164,8 @@ public class ControlForPlayer : ControlForBase
     /// <param name="callback"></param>
     public void HandleForUserDetails(CallbackContext callback)
     {
+        if (!enabledControl)
+            return;
         if (!isActiveAndEnabled)
             return;
         UIGameUserDetails uiGameUserDetails = UIHandler.Instance.OpenUIAndCloseOther<UIGameUserDetails>(UIEnum.GameUserDetails);
@@ -175,6 +177,8 @@ public class ControlForPlayer : ControlForBase
     /// </summary>
     public void HandlerForMoveUpdate()
     {
+        if (!enabledControl)
+            return;
         Vector2 moveData = inputActionMove.ReadValue<Vector2>();
         //旋转角色
         RotateCharacter(moveData, speedCharacterRotate);
@@ -284,6 +288,8 @@ public class ControlForPlayer : ControlForBase
     /// </summary>
     public void HandleForJumpStart(CallbackContext callback)
     {
+        if (!enabledControl)
+            return;
         //如果是在水里
         if (groundType == 1)
         {
@@ -329,6 +335,8 @@ public class ControlForPlayer : ControlForBase
     /// </summary>
     public void HandleForUseUpdate()
     {
+        if (!enabledControl)
+            return;
         if (isUseItem)
         {
             timeUpdateForUseItem += Time.deltaTime;
@@ -347,6 +355,8 @@ public class ControlForPlayer : ControlForBase
     /// <param name="callback"></param>
     public void HandleForUseL(CallbackContext callback)
     {
+        if (!enabledControl)
+            return;
         HandleForUse(callback, ItemUseTypeEnum.Left);
     }
 
@@ -357,6 +367,8 @@ public class ControlForPlayer : ControlForBase
     /// <param name="callback"></param>
     public void HandleForUseR(CallbackContext callback)
     {
+        if (!enabledControl)
+            return;
         HandleForUse(callback, ItemUseTypeEnum.Right);
     }
 
@@ -366,6 +378,8 @@ public class ControlForPlayer : ControlForBase
     /// <param name="callback"></param>
     public void HandleForUseE(CallbackContext callback)
     {
+        if (!enabledControl)
+            return;
         HandleForUse(callback, ItemUseTypeEnum.E, false);
     }
 
@@ -375,6 +389,8 @@ public class ControlForPlayer : ControlForBase
     /// <param name="callback"></param>
     public void HandleForDrop(CallbackContext callback)
     {
+        if (!enabledControl)
+            return;
         //获取道具栏上的物品
         UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();
         ItemsBean itemData = userData.GetItemsFromShortcut();
@@ -399,6 +415,8 @@ public class ControlForPlayer : ControlForBase
     /// <param name="isUserItem"></param>
     public void HandleForUse(CallbackContext callback, ItemUseTypeEnum useType, bool isUserItem = true)
     {
+        if (!enabledControl)
+            return;
         if (!isActiveAndEnabled)
             return;
         if (UGUIUtil.IsPointerUI())
@@ -428,6 +446,8 @@ public class ControlForPlayer : ControlForBase
     /// <param name="callBack"></param>
     public void HandleForShortcutsSelect(CallbackContext callBack)
     {
+        if (!enabledControl)
+            return;
         if (!isActiveAndEnabled)
             return;
         float data = callBack.ReadValue<float>();

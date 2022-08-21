@@ -31,20 +31,18 @@ public partial class UIGameMain : BaseUIComponent
         if (viewButton == ui_Details)
         {
             OpenUserDetailsUI();
-            //播放音效
-            AudioHandler.Instance.PlaySound(1);
         }
         else if (viewButton == ui_Book)
         {
             OpenBookUI();
-            //播放音效
-            AudioHandler.Instance.PlaySound(1);
         }
         else if (viewButton == ui_Setting)
         {
             OpenSettingUI();
-            //播放音效
-            AudioHandler.Instance.PlaySound(1);
+        }
+        else if (viewButton == ui_Exit)
+        {
+            OpenExitUI();
         }
     }
 
@@ -55,23 +53,18 @@ public partial class UIGameMain : BaseUIComponent
         {
             case InputActionUIEnum.F12:
                 OpenGodMain();
-                //播放音效
-                AudioHandler.Instance.PlaySound(1);
+                break;
+            case InputActionUIEnum.P:
+                OpenSettingUI();
                 break;
             case InputActionUIEnum.ESC:
-                OpenSettingUI();
-                //播放音效
-                AudioHandler.Instance.PlaySound(1);
+                OpenExitUI();
                 break;
             case InputActionUIEnum.B:
                 OpenUserDetailsUI();
-                //播放音效
-                AudioHandler.Instance.PlaySound(1);
                 break;
             case InputActionUIEnum.T:
                 OpenBookUI();
-                //播放音效
-                AudioHandler.Instance.PlaySound(1);
                 break;
         }
     }
@@ -83,6 +76,8 @@ public partial class UIGameMain : BaseUIComponent
     {
         //打开用户详情
         UIHandler.Instance.OpenUIAndCloseOther<UIGameUserDetails>(UIEnum.GameUserDetails);
+        //播放音效
+        AudioHandler.Instance.PlaySound(1);
     }
 
     /// <summary>
@@ -92,6 +87,8 @@ public partial class UIGameMain : BaseUIComponent
     {
         //打开魔法书
         UIHandler.Instance.OpenUIAndCloseOther<UIGameBook>(UIEnum.GameBook);
+        //播放音效
+        AudioHandler.Instance.PlaySound(1);
     }
 
     /// <summary>
@@ -101,6 +98,19 @@ public partial class UIGameMain : BaseUIComponent
     {
         //打开设置
         UIHandler.Instance.OpenUIAndCloseOther<UIGameSetting>(UIEnum.GameSetting);
+        //播放音效
+        AudioHandler.Instance.PlaySound(1);
+    }
+
+    /// <summary>
+    /// 打开离开
+    /// </summary>
+    public void OpenExitUI()
+    {
+        //打开离开
+        UIHandler.Instance.OpenUIAndCloseOther<UIGameExit>(UIEnum.GameExit);
+        //播放音效
+        AudioHandler.Instance.PlaySound(1);
     }
 
     /// <summary>
@@ -112,6 +122,8 @@ public partial class UIGameMain : BaseUIComponent
         {
             //打开GM菜单
             UIHandler.Instance.OpenUIAndCloseOther<UIGodMain>(UIEnum.GodMain);
+            //播放音效
+            AudioHandler.Instance.PlaySound(1);
         }
     }
 }

@@ -31,6 +31,8 @@ public class ControlForCamera : ControlForBase
     /// </summary>
     public void HandleForDistance(InputAction.CallbackContext callBack)
     {
+        if (!enabledControl)
+            return;
         if (!isActiveAndEnabled)
             return;
         float data = callBack.ReadValue<float>();

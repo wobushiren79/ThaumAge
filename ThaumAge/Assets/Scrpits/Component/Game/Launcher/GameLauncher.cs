@@ -8,6 +8,8 @@ public class GameLauncher : BaseLauncher
 {
     public WorldTypeEnum testWorldType = WorldTypeEnum.Test;
     public int seed = 0;
+
+    
     public override void Launch()
     {
         base.Launch();
@@ -20,7 +22,7 @@ public class GameLauncher : BaseLauncher
         GameHandler.Instance.LoadGameResources(() =>
         {
             UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();
-            userData.userPosition.GetWorldPosition(out WorldTypeEnum worldType, out Vector3 worldPosition);
+            userData.userExitPosition.GetWorldPosition(out WorldTypeEnum worldType, out Vector3 worldPosition);
             //如果是测试数据
             if (userData.userId.Equals("Test"))
             {
@@ -52,20 +54,26 @@ public class GameLauncher : BaseLauncher
     /// </summary>
     public void CompleteForUpdateChunk()
     {
+        StartCoroutine(CoroutineForCompleteForUpdateChunk());
+    }
+
+    public IEnumerator CoroutineForCompleteForUpdateChunk()
+    {
+        while (!WorldCreateHandler.Instance.CheckAllInitChunkLoadComplete())
+        {
+            yield return new WaitForSeconds(1f);
+        }
+        yield return new WaitForSeconds(1f);
         //修改游戏状态
         GameHandler.Instance.manager.SetGameState(GameStateEnum.Gaming);
-        //打开主UI
-        UIHandler.Instance.OpenUIAndCloseOther<UIGameMain>(UIEnum.GameMain);
         //修改天气
         WeatherHandler.Instance.ChangeWeather(WeatherTypeEnum.Cloudy, 2000);
         //开关角色控制
         GameControlHandler.Instance.SetPlayerControlEnabled(true);
-        //初始化位置
-        GameHandler.Instance.manager.player.InitPosition();
         //初始化游戏角色
-        UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();
-        userData.userPosition.GetWorldPosition(out WorldTypeEnum worldType, out Vector3 worldPosition);
-        GameHandler.Instance.InitCharacter(worldPosition);
+        GameHandler.Instance.InitCharacter();
+        //打开主UI
+        UIHandler.Instance.OpenUIAndCloseOther<UIGameMain>(UIEnum.GameMain);
     }
 
 }

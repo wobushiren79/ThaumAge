@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System.Collections;
+using System.Diagnostics;
 using UnityEditor;
 using UnityEngine;
 
@@ -37,13 +38,19 @@ public class MainLauncher : BaseLauncher
     /// </summary>
     public void CompleteForUpdateChunk()
     {
+        StartCoroutine(CoroutineForCompleteForUpdateChunk());
+    }
+
+    public IEnumerator CoroutineForCompleteForUpdateChunk()
+    {
+        while (!WorldCreateHandler.Instance.CheckAllInitChunkLoadComplete())
+        {
+            yield return new WaitForSeconds(1f);
+        }
+        yield return new WaitForSeconds(1f);
         //显示人物
         SceneMainHandler.Instance.ShowCharacter();
-        //延迟3秒显示
-        this.WaitExecuteSeconds(2, () =>
-        {
-            //打开主UI
-            UIHandler.Instance.OpenUIAndCloseOther<UIMainStart>(UIEnum.MainStart);
-        });
+        //打开主UI
+        UIHandler.Instance.OpenUIAndCloseOther<UIMainStart>(UIEnum.MainStart);
     }
 }

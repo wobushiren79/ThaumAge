@@ -14,5 +14,7 @@ public partial class UIGameMain
 
     public UIViewCharacterStatusShow ui_ViewCharacterStatus;
 
+    public Button ui_Exit;
+
 
 }

@@ -152,8 +152,8 @@ public class FileUtil
         if (Directory.Exists(fullPath))
         {
             DirectoryInfo direction = new DirectoryInfo(fullPath);
+            //删除所有文件
             FileInfo[] files = direction.GetFiles("*", SearchOption.AllDirectories);
-
             for (int i = 0; i < files.Length; i++)
             {
                 if (files[i].Name.EndsWith(".meta"))
@@ -162,6 +162,12 @@ public class FileUtil
                 }
                 string filePath = fullPath + "/" + files[i].Name;
                 DeleteFile(filePath);
+            }
+            //删除所有文件夹
+            DirectoryInfo[] directoryInfos = direction.GetDirectories();
+            for (int i = 0; i < directoryInfos.Length; i++)
+            {
+                DeleteDirectory(directoryInfos[i].FullName);
             }
             return true;
         }

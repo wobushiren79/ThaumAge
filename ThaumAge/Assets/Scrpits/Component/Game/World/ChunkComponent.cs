@@ -183,10 +183,7 @@ public class ChunkComponent : BaseMonoBehaviour
             LogUtil.Log("绘制出错_" + e.ToString());
             chunk.isDrawMesh = false;
         }
-        finally
-        {
-            chunk.isDrawMesh = false;
-        }
+        chunk.isDrawMesh = false;
     }
 
     /// <summary>

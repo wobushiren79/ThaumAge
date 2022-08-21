@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class ControlForBase : BaseMonoBehaviour
-{    
-
+{
+    public bool enabledControl;
     /// <summary>
     /// ¿ª¹Ø¿ØÖÆ
     /// </summary>
     /// <param name="enabled"></param>
     public virtual void EnabledControl(bool enabled)
     {
-        this.enabled = enabled;
+        this.enabledControl = enabled;
     }
 }

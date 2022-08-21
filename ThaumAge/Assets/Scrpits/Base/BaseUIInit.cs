@@ -109,6 +109,9 @@ public class BaseUIInit : BaseMonoBehaviour
             return;
         if (gameObject.activeInHierarchy && gameObject.activeSelf)
         {
+            //检测是否有弹窗 如果有的话就不执行快捷键操作
+            if (UIHandler.Instance.manager.dialogList.Count > 0)
+                return;
             this.WaitExecuteEndOfFrame(1, () =>
             {
                 if (gameObject.activeInHierarchy && gameObject.activeSelf)

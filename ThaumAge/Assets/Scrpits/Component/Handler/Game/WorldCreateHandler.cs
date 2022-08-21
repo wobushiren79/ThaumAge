@@ -306,7 +306,8 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
     public void HandleForUpdateChunk()
     {
         if (manager.listUpdateChunkInit.Count > 0)
-        {          
+        {
+            int numberLoop = 0;
             //处理初始化待更新的Chunk
             while (manager.listUpdateChunkInit.TryDequeue(out Chunk updateChunk))
             {
@@ -320,6 +321,10 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
                     manager.AddUpdateDrawChunk(updateChunk, 0);
                 };
                 updateChunk.BuildChunkForAsync(callBackForComplete);
+                //优化处理 每帧只处理5次的异步生成
+                numberLoop++;
+                if (numberLoop >= 5)
+                    break;
             }
         }
         if (manager.listUpdateChunkEditor.Count > 0)
@@ -366,5 +371,29 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
                 DestroyChunkRangeForWorldPosition(playPosition, gameConfig.worldRefreshRange + gameConfig.worldDestoryRange, null);
             }
         }
+    }
+
+    /// <summary>
+    /// 检测是否所有 init 的 chunk都加载完毕  包括生成数据 绘制（不包括预加载的区块）
+    /// </summary>
+    public bool CheckAllInitChunkLoadComplete()
+    {
+        foreach (var itemData in manager.dicChunk)
+        {
+            Chunk itemChunk = itemData.Value;
+            //如果
+            if (itemChunk.isInit)
+            {
+                if (itemChunk.isBuildChunk)
+                    return false;
+                if (itemChunk.isDrawMesh)
+                    return false;
+            }
+        }
+        if (manager.listUpdateChunkInit.Count > 0)
+            return false;
+        if (manager.listUpdateDrawChunkInit.Count > 0)
+            return false;
+        return true;
     }
 }

@@ -16,6 +16,7 @@ public enum UIEnum
     GameMain = 2001,//游戏-主界面
     GameUserDetails = 2002,//游戏-用户详情
     GameBook = 2003,//游戏-书籍
+    GameExit = 2009,//游戏-退出
     GameBox = 2101,//游戏-箱子
     GameFurnacesSimple = 2102,//游戏-简易熔炉
     GameSign = 2103,//游戏-牌子

@@ -41,11 +41,11 @@ public class GameHandler : BaseHandler<GameHandler, GameManager>
     /// <summary>
     /// 初始化游戏角色
     /// </summary>
-    public void InitCharacter(Vector3 characterPosition)
+    public void InitCharacter()
     {
         Player player = manager.player;
         //设置位置
-        player.SetPosition(characterPosition);
+        player.InitPosition();
         //刷新角色身上装备和皮肤
         player.RefreshCharacter();
     }

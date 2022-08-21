@@ -12,6 +12,7 @@ public class PlayerTargetBlock : BaseMonoBehaviour
     protected MeshRenderer meshRenderer;
 
     protected Vector3Int lastWorldPosition = Vector3Int.one * int.MaxValue;
+    protected bool isShow = false;
     public void Awake()
     {
         meshFilter = objTargetBlock.GetComponent<MeshFilter>();
@@ -19,6 +20,8 @@ public class PlayerTargetBlock : BaseMonoBehaviour
     }
     public void Show(Vector3Int worldPosition, Block block, bool isInteractive)
     {
+        if (!isShow) return;
+
         gameObject.SetActive(true);
         //展示文本互动提示
         objInteractive.ShowObj(isInteractive);
@@ -71,5 +74,22 @@ public class PlayerTargetBlock : BaseMonoBehaviour
     public void Hide()
     {
         gameObject.SetActive(false);
+    }
+
+    /// <summary>
+    /// 设置是否显示
+    /// </summary>
+    /// <param name="isShow"></param>
+    public void SetIsShow(bool isShow)
+    {
+        this.isShow = isShow;
+        if (isShow)
+        {
+            gameObject.SetActive(true);
+        }
+        else
+        {
+            gameObject.SetActive(false);
+        }
     }
 }

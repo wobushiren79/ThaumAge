@@ -64,10 +64,14 @@ public class Player : BaseMonoBehaviour
     /// </summary>
     public void InitPosition()
     {
-        int maxHeight = WorldCreateHandler.Instance.manager.GetMaxHeightForWorldPosition(Mathf.RoundToInt(transform.position.x), Mathf.RoundToInt(transform.position.z));
         UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();
-        userData.userPosition.GetWorldPosition(out WorldTypeEnum worldType, out Vector3 position);
-        SetPosition(new Vector3(position.x, maxHeight + 2, position.z));
+        userData.userExitPosition.GetWorldPosition(out WorldTypeEnum worldType, out Vector3 worldPosition);
+        if (worldPosition.y <= 0)
+        {
+            int maxHeight = WorldCreateHandler.Instance.manager.GetMaxHeightForWorldPosition(Mathf.RoundToInt(transform.position.x), Mathf.RoundToInt(transform.position.z));
+            worldPosition.y = maxHeight;
+        }
+        SetPosition(new Vector3(worldPosition.x, worldPosition.y + 0.75f, worldPosition.z));
     }
 
     /// <summary>
@@ -76,7 +80,7 @@ public class Player : BaseMonoBehaviour
     public void BeyondBorderPosition()
     {
         int maxHeight = WorldCreateHandler.Instance.manager.GetMaxHeightForWorldPosition(Mathf.RoundToInt(transform.position.x), Mathf.RoundToInt(transform.position.z));
-        SetPosition(new Vector3(transform.position.x, maxHeight + 2, transform.position.z));
+        SetPosition(new Vector3(transform.position.x, maxHeight + 1, transform.position.z));
     }
 
     /// <summary>
@@ -84,12 +88,8 @@ public class Player : BaseMonoBehaviour
     /// </summary>
     /// <param name="position"></param>
     public void SetPosition(Vector3 position)
-    {
-        //开关角色控制
-        GameControlHandler.Instance.SetPlayerControlEnabled(false);
+    { 
         transform.position = position;
-        //开关角色控制
-        GameControlHandler.Instance.SetPlayerControlEnabled(true);
     }
 
     /// <summary>

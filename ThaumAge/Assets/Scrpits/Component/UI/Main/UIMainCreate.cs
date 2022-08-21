@@ -37,6 +37,23 @@ public partial class UIMainCreate : BaseUIComponent,
         base.Awake();
         ui_RRotate.AddLongClickListener(OnLongClickForRoateR);
         ui_LRotate.AddLongClickListener(OnLongClickForRoateL);
+        ui_SeedInputField.onValueChanged.AddListener(SeedInputFieldValueChanged);
+    }
+
+    /// <summary>
+    /// 种子输入监听
+    /// </summary>
+    /// <param name="changeData"></param>
+    public void SeedInputFieldValueChanged(string changeData)
+    {
+        if (int.TryParse(changeData,out int intData))
+        {
+
+        }
+        else
+        { 
+
+        }
     }
 
     public override void OpenUI()
@@ -213,6 +230,8 @@ public partial class UIMainCreate : BaseUIComponent,
             //设置位置
             userData.userPosition.SetPosition(Vector3.zero);
             userData.userPosition.SetWorldType(WorldTypeEnum.Main);
+            userData.userExitPosition.SetPosition(Vector3.zero);
+            userData.userExitPosition.SetWorldType(WorldTypeEnum.Main);
             //设置时间
             userData.timeForGame.hour = 6;
 

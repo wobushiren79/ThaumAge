@@ -97,8 +97,10 @@ public class GameDataManager : BaseManager,
         {
             lock (lockForSaveData)
             {
+                //保存用户数据
+                SaveUserData();
+                //保存区块数据
                 chunkSaveData.SaveData();
-                controllerForUserData.SetUserData(userData);
                 controllerForChunkSave.SetChunkSaveData(chunkSaveData, null);
             }
         });
@@ -111,6 +113,13 @@ public class GameDataManager : BaseManager,
     public void SaveUserData(UserDataBean userData)
     {
         controllerForUserData.SetUserData(userData);
+    }
+    public void SaveUserData()
+    {
+        Player player = GameHandler.Instance.manager.player;
+        userData.userExitPosition.SetWorldType(WorldCreateHandler.Instance.manager.worldType);
+        userData.userExitPosition.SetPosition(player.transform.position);
+        SaveUserData(userData);
     }
 
     /// <summary>

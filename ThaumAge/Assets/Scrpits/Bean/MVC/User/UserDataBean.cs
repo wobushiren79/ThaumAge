@@ -23,6 +23,9 @@ public class UserDataBean
     public UserEquipBean userEquip = new UserEquipBean();
     //玩家位置数据
     public UserPositionBean userPosition = new UserPositionBean();
+    //玩家离开位置数据
+    public UserPositionBean userExitPosition = new UserPositionBean();
+
     //玩家成就数据
     public UserAchievementBean userAchievement = new UserAchievementBean();
     //玩家设置数据

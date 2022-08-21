@@ -33,7 +33,7 @@ struct BiomeData
 };
 
 //种子偏移
-float2 RandomOffset;
+int RandomSeed;
 //生态数量
 int BiomeNum;
 //生态大小
@@ -115,18 +115,21 @@ float TerraninCreate(int iterateNumberMax,float perlinFrequency,float perlinAmpl
     int iterateNumber = 0;
     float curFrequency = perlinFrequency;
     float curAmplitude = perlinAmplitude;
+
+    int curRandomSeedOffset = RandomSeed % (BiomeSize * 10);
     //循环种子次数
     while(iterateNumberMax > iterateNumber)
     {
         float x0 = (posX / perlinSize) * curFrequency;
         float y0 = (posY / perlinSize) * curFrequency;
 
-        //float noise0 = Unity_GradientNoise(float2(x0 + RandomOffset.x , y0 + RandomOffset.y)) * curAmplitude;
-        float noise0 = Unity_GradientNoise(float2(x0, y0)) * curAmplitude;
+        float noise0 = Unity_GradientNoise(float2(x0 + curRandomSeedOffset, y0 + curRandomSeedOffset)) * curAmplitude;
+        //float noise0 = Unity_GradientNoise(float2(x0, y0)) * curAmplitude;
         finalNoise = finalNoise + noise0;
         iterateNumber = iterateNumber + 1;
         curFrequency = curFrequency * 2;
         curAmplitude = curAmplitude / 2;
+        curRandomSeedOffset = curRandomSeedOffset / 2;
     }
     return finalNoise;
 }
@@ -346,8 +349,8 @@ void CSMain (uint3 id : SV_DispatchThreadID,uint3 gid:SV_GROUPID,uint index:SV_G
          disSecondPosIndex, disSecond, disSecondPos);
     //随机获取生态
     
-    int randomBiomeIndexMin = RandomIntMinMax(RandomOffset.x , disMinPosIndex.x , disMinPosIndex.y , 0 , BiomeNum);
-    int randomBiomeIndexSecond = RandomIntMinMax(RandomOffset.x, disSecondPosIndex.x, disSecondPosIndex.y, 0, BiomeNum);
+    int randomBiomeIndexMin = RandomIntMinMax(RandomSeed , disMinPosIndex.x , disMinPosIndex.y , 0 , BiomeNum);
+    int randomBiomeIndexSecond = RandomIntMinMax(RandomSeed, disSecondPosIndex.x, disSecondPosIndex.y, 0, BiomeNum);
 
     itemTerraninData.biomeIndex = randomBiomeIndexMin;
 
