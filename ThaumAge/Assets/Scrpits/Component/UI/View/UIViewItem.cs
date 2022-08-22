@@ -313,7 +313,7 @@ public partial class UIViewItem : BaseUIView,
         //将生成的物体设为canvas的最后一个子物体，一般来说最后一个子物体是可操作的
         transform.SetAsLastSibling();
         //需要将鼠标的坐标转换成UGUI坐标
-        RectTransformUtility.ScreenPointToLocalPointInRectangle(rtfContainer, eventData.position, CameraHandler.Instance.manager.uiCamera, out Vector2 vecMouse);
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(rtfContainer, eventData.position, null, out Vector2 vecMouse);
         rectTransform.anchoredPosition = vecMouse;
     }
 

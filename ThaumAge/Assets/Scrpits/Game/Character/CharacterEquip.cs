@@ -16,6 +16,8 @@ public class CharacterEquip : CharacterBase
     public GameObject objClothesRContainer;
     public GameObject objClothesLContainer;
 
+    public bool isShowHead = true;
+
     public CharacterEquip(CreatureCptCharacter character) : base(character)
     {
         if (character.characterHead == null)
@@ -42,6 +44,7 @@ public class CharacterEquip : CharacterBase
     {
         base.SetCharacterData(characterData);
         //初始化设置衣服
+        ChangeEquip(EquipTypeEnum.Hats, this.characterData.headId);
         ChangeEquip(EquipTypeEnum.Clothes, this.characterData.clothesId);
         ChangeEquip(EquipTypeEnum.Shoes, this.characterData.shoesId);
     }
@@ -56,8 +59,20 @@ public class CharacterEquip : CharacterBase
         switch (equipType)
         {
             case EquipTypeEnum.Hats://帽子
+
                 this.characterData.headId = equipId;
-                ChangeEquipDetails(equipId, objHatContainer, callBack: callBack, callBackModelRemark: callBackModelRemark);
+                Action<GameObject> callBackForHat = (obj) =>
+                {
+                    //如果是玩家 再刷新一次头部显示
+                    if (character.creatureData.GetCreatureType() == CreatureTypeEnum.Player)
+                    {
+                        callBack?.Invoke(obj);
+                        Player player = GameHandler.Instance.manager.player;
+                        player.SetHeadShow();
+                    }
+                };
+                ChangeEquipDetails(equipId, objHatContainer, callBack : callBackForHat, callBackModelRemark : callBackModelRemark);
+
                 return;
             case EquipTypeEnum.Clothes://衣服
                 this.characterData.clothesId = equipId;
@@ -116,7 +131,6 @@ public class CharacterEquip : CharacterBase
                     GameObject objModel = ItemsHandler.Instance.Instantiate(objEquipContainer, itemsObj);
                     objModel.transform.localPosition = Vector3.zero;
                     objModel.transform.localEulerAngles = Vector3.zero;
-
                     callBack?.Invoke(objModel);
                 },
                 (listItemsRemarkObj) =>

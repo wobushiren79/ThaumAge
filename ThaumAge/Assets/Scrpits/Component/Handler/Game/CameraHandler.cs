@@ -178,10 +178,12 @@ public class CameraHandler : BaseHandler<CameraHandler, CameraManager>
         CinemachineVirtualCamera cameraForFirst = manager.cameraForFirst;
         CinemachineFreeLook cameraForThree = manager.cameraForThree;
 
+        bool isShowHead = false;
         if (distance <= 0)
         {
             ChangeCameraPriority(cameraForFirst, 1);
             ChangeCameraPriority(cameraForThree, 0);
+            isShowHead = false;
         }
         else
         {
@@ -192,14 +194,15 @@ public class CameraHandler : BaseHandler<CameraHandler, CameraManager>
                 cameraForThree.m_Orbits[i].m_Height = manager.threeFreeLookOriginalOrbits[i].m_Height * distance;
                 cameraForThree.m_Orbits[i].m_Radius = manager.threeFreeLookOriginalOrbits[i].m_Radius * distance;
             }
+            isShowHead = true;
         }
 
+        Player player = GameHandler.Instance.manager.player;
         //隐藏或显示自己的头
-        //if (player != null)
-        //{
-        //    CreatureCptCharacter creatureCpt = player.GetCharacter();
-        //    creatureCpt.SetActiveHead(isShowHead);
-        //}
+        if (player != null)
+        {
+            player.SetHeadShow(isShowHead);
+        }
 
         //保存数据
         UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();

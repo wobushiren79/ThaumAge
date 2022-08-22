@@ -84,26 +84,6 @@ public class GameUtil
         }
     }
 
-
-    /// <summary>
-    /// 世界坐标转换为本地UI坐标
-    /// 成功转化的前提条件为UI所用摄像头为Camera.main
-    /// </summary>
-    /// <param name="rtfCanvas"></param>
-    /// <param name="camera"></param>
-    /// <param name="point"></param>
-    /// <returns></returns>
-    public static Vector2 WorldPointToUILocalPoint(RectTransform rtfCanvas, Vector3 worldPositon)
-    {
-        Vector3 screenPoint = Camera.main.WorldToScreenPoint(worldPositon);
-        RectTransformUtility.ScreenPointToLocalPointInRectangle(rtfCanvas, screenPoint, Camera.main, out Vector2 localPoint);
-        return localPoint;
-    }
-    public static void WorldPointToUILocalPoint(RectTransform uiParent, Vector3 worldPositon,  RectTransform uiTarget)
-    {
-        uiTarget.anchoredPosition = WorldPointToUILocalPoint(uiParent, worldPositon);
-    }
-
     /// <summary>
     /// 鼠标位置转为屏幕UGUI位置
     /// </summary>

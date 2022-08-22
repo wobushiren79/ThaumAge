@@ -20,6 +20,8 @@ public class Player : BaseMonoBehaviour
     protected float timeUpdateForPlayerData = 0;
     protected float timeUpdateMaxForPlayerData = 1f;
 
+    [HideInInspector]
+    public bool isShowHead = false;
 
     public void Awake()
     {
@@ -88,7 +90,7 @@ public class Player : BaseMonoBehaviour
     /// </summary>
     /// <param name="position"></param>
     public void SetPosition(Vector3 position)
-    { 
+    {
         transform.position = position;
     }
 
@@ -140,5 +142,34 @@ public class Player : BaseMonoBehaviour
     {
         UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();
         character.SetCharacterData(userData.characterData);
+    }
+
+    /// <summary>
+    /// 设置头部显示隐藏
+    /// </summary>
+    /// <param name="isShow"></param>
+    public void SetHeadShow(bool isShow)
+    {
+        this.isShowHead = isShow;
+        MeshRenderer[] listMeshRenderer = character.characterHead.GetComponentsInChildren<MeshRenderer>();
+        UnityEngine.Rendering.ShadowCastingMode shadowCastingMode;
+        if (isShow)
+        {
+            shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.On;
+        }
+        else
+        {
+            shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.ShadowsOnly;
+        }
+
+        for (int i = 0; i < listMeshRenderer.Length; i++)
+        {
+            MeshRenderer itemMeshRender = listMeshRenderer[i];
+            itemMeshRender.shadowCastingMode = shadowCastingMode;
+        }
+    }
+    public void SetHeadShow()
+    {
+        SetHeadShow(isShowHead);
     }
 }

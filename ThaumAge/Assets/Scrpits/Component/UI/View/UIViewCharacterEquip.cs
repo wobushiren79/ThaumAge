@@ -15,16 +15,11 @@ public partial class UIViewCharacterEquip : BaseUIView
     public override void Awake()
     {
         base.Awake();
-        //获取渲染摄像头
-        GameObject objRenderModel = LoadResourcesUtil.SyncLoadData<GameObject>("UI/Render/RenderCharacterUI");
-        //实例化渲染
-        objRender = Instantiate(UIHandler.Instance.manager.GetUITypeContainer(UITypeEnum.Model3D).gameObject, objRenderModel);
-        //获取展示的角色
-        showCharacter = objRender.GetComponentInChildren<CreatureCptCharacter>();
 
         ui_RotateLeft.AddLongClickListener(OnLongClickForRoateR);
         ui_RotateRight.AddLongClickListener(OnLongClickForRoateL);
 
+        InitRenderer();
         InitEquip();
         InitCharacterStatus();
     }
@@ -79,6 +74,23 @@ public partial class UIViewCharacterEquip : BaseUIView
             itemContainer.Value.SetHintText(UserEquipBean.GetEquipName(itemContainer.Key));
             itemContainer.Value.SetCallBackForSetViewItem(CallBackForSetEquip);
         }
+    }
+
+    /// <summary>
+    /// 初始化渲染
+    /// </summary>
+    public void InitRenderer()
+    {
+        //获取渲染摄像头
+        GameObject objRenderModel = LoadResourcesUtil.SyncLoadData<GameObject>("UI/Render/RenderCharacterUI");
+        //实例化渲染
+        objRender = Instantiate(UIHandler.Instance.manager.GetUITypeContainer(UITypeEnum.Model3D).gameObject, objRenderModel);
+        //获取展示的角色
+        showCharacter = objRender.GetComponentInChildren<CreatureCptCharacter>();
+        //获取渲染摄像头
+        Camera cameraRender = objRender.GetComponent<Camera>();
+        //设置渲染
+        ui_CharacterRT.texture = cameraRender.targetTexture;
     }
 
     /// <summary>

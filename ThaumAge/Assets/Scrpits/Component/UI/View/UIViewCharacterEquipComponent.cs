@@ -30,5 +30,7 @@ public partial class UIViewCharacterEquip
 
     public UIViewItemContainer ui_Equip_Trousers;
 
+    public RawImage ui_CharacterRT;
+
 
 }

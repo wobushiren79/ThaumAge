@@ -49,12 +49,7 @@ public class PopupShowView : BaseUIView
 
             Transform tfContainer = UIHandler.Instance.manager.GetUITypeContainer(UITypeEnum.Popup);
             //屏幕坐标转换为UI坐标
-            RectTransformUtility.ScreenPointToLocalPointInRectangle(
-                (RectTransform)tfContainer,
-                Input.mousePosition,
-                CameraHandler.Instance.manager.uiCamera,
-                out Vector2 outPosition);
-
+            Vector2 outPosition = GameUtil.MousePointToUGUIPoint(null,(RectTransform)tfContainer);
             float moveX = outPosition.x;
             float moveY = outPosition.y;
 
