@@ -14,5 +14,7 @@ public partial class UIViewSynthesis
 
     public Button ui_BtnSynthesis;
 
+    public Text ui_TVBtnSynthesis;
+
 
 }

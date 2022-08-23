@@ -6,8 +6,8 @@ using System;
 public class CharacterStatusBean
 {
     //生命值
-    public int health = 1000;
-    public int maxHealth = 1000;
+    public int health = 100;
+    public int maxHealth = 100;
 
     //耐力值
     public float stamina = 10f;

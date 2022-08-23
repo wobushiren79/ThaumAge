@@ -93,12 +93,14 @@ public class GameDataManager : BaseManager,
     /// </summary>
     public async void SaveGameDataAsync(ChunkSaveBean chunkSaveData)
     {
+        Player player = GameHandler.Instance.manager.player;
+        Vector3 playerPosition = player.transform.position;
         await Task.Run(() =>
         {
             lock (lockForSaveData)
             {
                 //保存用户数据
-                SaveUserData();
+                SaveUserData(playerPosition);
                 //保存区块数据
                 chunkSaveData.SaveData();
                 controllerForChunkSave.SetChunkSaveData(chunkSaveData, null);
@@ -114,12 +116,17 @@ public class GameDataManager : BaseManager,
     {
         controllerForUserData.SetUserData(userData);
     }
+    public void SaveUserData(Vector3 playerPosition)
+    {
+        userData.userExitPosition.SetWorldType(WorldCreateHandler.Instance.manager.worldType);
+        userData.userExitPosition.SetPosition(playerPosition);
+        SaveUserData(userData);
+    }
     public void SaveUserData()
     {
         Player player = GameHandler.Instance.manager.player;
-        userData.userExitPosition.SetWorldType(WorldCreateHandler.Instance.manager.worldType);
-        userData.userExitPosition.SetPosition(player.transform.position);
-        SaveUserData(userData);
+        Vector3 playerPosition = player.transform.position;
+        SaveUserData(playerPosition);
     }
 
     /// <summary>

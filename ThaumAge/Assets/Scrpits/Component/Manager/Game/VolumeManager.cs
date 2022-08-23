@@ -5,6 +5,8 @@ using UnityEngine.Rendering.HighDefinition;
 
 public class VolumeManager : BaseManager
 {
+    //Volume的资源路径
+    protected static string PathResVolume = "Assets/Prefabs/Render/Volume.prefab";
     //颜色天空
     protected GradientSky _gradientSky;
     public GradientSky gradientSky
@@ -98,7 +100,13 @@ public class VolumeManager : BaseManager
             if (_volume == null)
             {
                 _volume = FindWithTag<Volume>(TagInfo.Tag_Volume);
-
+                if (_volume == null)
+                {
+                    GameObject objVolumeModel = LoadAddressablesUtil.LoadAssetSync<GameObject>(PathResVolume);
+                    GameObject objVolume = Instantiate(gameObject, objVolumeModel);
+                    objVolume.transform.localPosition = Vector3.zero;
+                    _volume = objVolume.GetComponent<Volume>();
+                }
             }
             return _volume;
         }

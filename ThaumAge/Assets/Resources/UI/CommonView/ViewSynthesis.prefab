@@ -389,7 +389,7 @@ RectTransform:
   - {fileID: 1516792827181857219}
   - {fileID: 233137878368276898}
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -422,6 +422,7 @@ MonoBehaviour:
   ui_SynthesisMaterials: {fileID: 5658148817274492421}
   ui_ViewSynthesisMaterial: {fileID: 5319787814660743514}
   ui_BtnSynthesis: {fileID: 3305670000183288985}
+  ui_TVBtnSynthesis: {fileID: 7650540649168528184}
 --- !u!1 &7326292706391742089
 GameObject:
   m_ObjectHideFlags: 0

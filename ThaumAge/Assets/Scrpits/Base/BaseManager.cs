@@ -260,7 +260,8 @@ public class BaseManager : BaseMonoBehaviour
         });
     }
 
-    protected void GetSpriteByName(Dictionary<string, Sprite> dicIcon, SpriteAtlas spriteAtlas, string resName, string name, Action<SpriteAtlas> callBackForSpriteAtlas, Action<Sprite> callBackForSprite)
+    protected void GetSpriteByName(Dictionary<string, Sprite> dicIcon, SpriteAtlas spriteAtlas, string resName, string name, 
+        Action<SpriteAtlas> callBackForSpriteAtlas = null, Action<Sprite> callBackForSprite = null)
     {
         if (name == null)
             return;
@@ -279,15 +280,11 @@ public class BaseManager : BaseMonoBehaviour
             callBackForSprite?.Invoke(itemSprite);
             return;
         }
-        Action<AsyncOperationHandle<SpriteAtlas>> loadCallBack = (data) =>
+        SpriteAtlas spriteAtlasNew = LoadAddressablesUtil.LoadAssetSync<SpriteAtlas>(resName);
+        if (spriteAtlasNew != null)
         {
-            if (data.Result != null)
-            {
-                SpriteAtlas spriteAtlas = data.Result;
-                callBackForSpriteAtlas?.Invoke(spriteAtlas);
-            }
-        };
-        LoadAddressablesUtil.LoadAssetAsync(resName, loadCallBack);
+            callBackForSpriteAtlas?.Invoke(spriteAtlasNew);
+        }
     }
 
     protected Sprite GetSpriteByName(IconBeanDictionary dicIcon, ref SpriteAtlas spriteAtlas, string atlasName, string assetBundlePath, string name)

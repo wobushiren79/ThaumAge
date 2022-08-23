@@ -100,6 +100,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: b96908cd8371a9643af457b91c98e7b7, type: 3}
   - {fileID: 21300000, guid: caebe32e177c41746a65e73b97f4d8bc, type: 3}
   - {fileID: 21300000, guid: 469fbe4e437b0554eb0ccac0f865788d, type: 3}
+  - {fileID: 21300000, guid: 6c85ccde3337d784b88d46781c858b7b, type: 3}
   - {fileID: 21300000, guid: cc3c70afd9e974d46ab9cb1ac5f8cd89, type: 3}
   - {fileID: 21300000, guid: 6ad3aaef769a62f4a879c2b6cd4b515f, type: 3}
   m_PackedSpriteNamesToIndex:
@@ -153,6 +154,7 @@ SpriteAtlas:
   - ui_slider_2
   - ui_border_10
   - ui_border_3
+  - icon_unknow
   - ui_border_5
   - ui_cancel_1
   m_RenderDataMap: {}

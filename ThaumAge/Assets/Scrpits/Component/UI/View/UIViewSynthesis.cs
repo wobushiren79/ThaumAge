@@ -25,7 +25,6 @@ public partial class UIViewSynthesis : BaseUIView
         base.OpenUI();
         this.RegisterEvent<int>(EventsInfo.UIViewSynthesis_SetSelect, SetSelect);
         this.RegisterEvent<ItemsSynthesisTypeEnum>(EventsInfo.UIViewSynthesis_SetInitData, SetDataType);
-        indexSelect = 0;
     }
 
     public override void RefreshUI()
@@ -34,7 +33,16 @@ public partial class UIViewSynthesis : BaseUIView
         listSynthesisData = ItemsHandler.Instance.manager.GetItemsSynthesisByType(itemsSynthesisType);
         ui_SynthesisList.SetCellCount(listSynthesisData.Count);
         RefreshMaterials();
+        RefreshUIText();
         SetSelect(indexSelect);
+    }
+
+    /// <summary>
+    /// 刷新UI文本
+    /// </summary>
+    public void RefreshUIText()
+    {
+        ui_TVBtnSynthesis.text = TextHandler.Instance.GetTextById(311);
     }
 
     /// <summary>
@@ -46,6 +54,10 @@ public partial class UIViewSynthesis : BaseUIView
         this.itemsSynthesisType = itemsSynthesisType;
     }
 
+    /// <summary>
+    /// 点击
+    /// </summary>
+    /// <param name="viewButton"></param>
     public override void OnClickForButton(Button viewButton)
     {
         base.OnClickForButton(viewButton);
@@ -128,6 +140,9 @@ public partial class UIViewSynthesis : BaseUIView
         UIViewShortcuts shortcutsUI = currentUI.GetComponentInChildren<UIViewShortcuts>();
         shortcutsUI.RefreshUI();
         RefreshUI();
+
+        //播放音效
+        AudioHandler.Instance.PlaySound(1);
     }
 
     /// <summary>
@@ -137,12 +152,23 @@ public partial class UIViewSynthesis : BaseUIView
     public void SetSelect(int indexSelect)
     {
         this.indexSelect = indexSelect;
-        //刷新列表
-        ui_SynthesisList.RefreshAllCells();
+        ItemsSynthesisBean curSelectItemsSynthesis = listSynthesisData[indexSelect];
         //刷新结果
-        ui_SynthesisResults.SetData(listSynthesisData[indexSelect], -1, false);
+        ui_SynthesisResults.SetData(curSelectItemsSynthesis, -1, false);
         //刷新素材
         SetSynthesisMaterials();
+        //刷新列表
+        ui_SynthesisList.RefreshAllCells();
+        //检测当前道具是否能合成
+        bool canSynthesis = curSelectItemsSynthesis.CheckSynthesis();
+        if (canSynthesis)
+        {
+            ui_TVBtnSynthesis.color = Color.green;
+        }
+        else
+        {
+            ui_TVBtnSynthesis.color = Color.gray;
+        }
     }
 
     /// <summary>

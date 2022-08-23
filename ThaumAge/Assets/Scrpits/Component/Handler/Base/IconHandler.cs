@@ -33,7 +33,7 @@ public class IconHandler : BaseHandler<IconHandler, IconManager>
     /// <returns></returns>
     public void GetUnKnowSprite(Action<Sprite> callBack)
     {
-        manager.GetItemsSpriteByName("icon_unknow", callBack);
+        manager.GetUISpriteByName("icon_unknow", callBack);
     }
 
     /// <summary>

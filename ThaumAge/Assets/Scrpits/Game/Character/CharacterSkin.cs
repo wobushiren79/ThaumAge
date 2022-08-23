@@ -115,6 +115,13 @@ public class CharacterSkin : CharacterBase
                         //objHair.transform.localEulerAngles = Vector3.zero;
                         MeshRenderer hairMeshRebderer = objHair.GetComponentInChildren<MeshRenderer>();
                         hairMat = hairMeshRebderer.sharedMaterial;
+
+                        //如果是玩家 再刷新一次头部显示
+                        if (character.creatureData.GetCreatureType() == CreatureTypeEnum.Player)
+                        {
+                            Player player = GameHandler.Instance.manager.player;
+                            player.SetHeadShow();
+                        }
                     }
                 });
         }
