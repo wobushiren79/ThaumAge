@@ -2,22 +2,26 @@
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
+using DG.Tweening;
 
 public partial class UIViewSynthesis : BaseUIView
 {
     //合成数据
     protected List<ItemsSynthesisBean> listSynthesisData;
     //当前选中项
-    protected int indexSelect = 0;
+    protected int indexSelect = -1;
     //素材UI
     protected List<UIViewSynthesisMaterial> listUIMaterial;
+
+    protected Queue<GameObject> poolEffectItemSynthesis = new Queue<GameObject>();
 
     protected ItemsSynthesisTypeEnum itemsSynthesisType = ItemsSynthesisTypeEnum.Self;
     public override void Awake()
     {
         base.Awake();
         ui_SynthesisList.AddCellListener(OnCellForItemSynthesis);
-        ui_ViewSynthesisMaterial.ShowObj(false);
+        ui_ModelViewSynthesisMaterial.ShowObj(false);
+        ui_ModelEffectItemSynthesis.ShowObj(false);
     }
 
     public override void OpenUI()
@@ -34,7 +38,14 @@ public partial class UIViewSynthesis : BaseUIView
         ui_SynthesisList.SetCellCount(listSynthesisData.Count);
         RefreshMaterials();
         RefreshUIText();
-        SetSelect(indexSelect);
+        if (indexSelect == -1)
+        {
+            SetSelect(0);
+        }
+        else
+        {
+            SetSelect(indexSelect);
+        }
     }
 
     /// <summary>
@@ -142,7 +153,47 @@ public partial class UIViewSynthesis : BaseUIView
         RefreshUI();
 
         //播放音效
-        AudioHandler.Instance.PlaySound(1);
+        AudioHandler.Instance.PlaySound(201);
+        //播放道具合成特效
+        PlayEffectItemSynthesis();
+    }
+
+    /// <summary>
+    /// 动画相关参数
+    /// </summary>
+    protected float timeAnimEffectItem = 0.5f;
+    protected float scaleAnimEffectItem = 1.5f;
+    protected float moveYAnimEffectItem = 100f;
+
+    /// <summary>
+    /// 播放道具合成特效
+    /// </summary>
+    public void PlayEffectItemSynthesis()
+    {
+        GameObject objItem;
+        if (poolEffectItemSynthesis.Count > 0)
+        {
+            objItem = poolEffectItemSynthesis.Dequeue();
+        }
+        else
+        {
+            objItem = Instantiate(gameObject, ui_ModelEffectItemSynthesis.gameObject);
+        }
+        objItem.ShowObj(true);
+        objItem.transform.position = ui_SynthesisResults.transform.position;
+        RectTransform rtfItem = (RectTransform)objItem.transform;
+        Image imgItem = objItem.GetComponent<Image>();
+        imgItem.sprite = ui_SynthesisResults.ui_ItemIcon.sprite;
+        imgItem.color = new Color(imgItem.color.r, imgItem.color.g, imgItem.color.b, 1);
+        rtfItem.localScale = Vector3.one;
+        //开始动画
+        imgItem.DOFade(0, timeAnimEffectItem);
+        rtfItem.DOScale(scaleAnimEffectItem, timeAnimEffectItem);
+        rtfItem.DOAnchorPosY(rtfItem.anchoredPosition.y + moveYAnimEffectItem, timeAnimEffectItem).OnComplete(() =>
+        {
+            objItem.ShowObj(false);
+            poolEffectItemSynthesis.Enqueue(objItem);
+        });
     }
 
     /// <summary>
@@ -151,16 +202,24 @@ public partial class UIViewSynthesis : BaseUIView
     /// <param name="indexSelect"></param>
     public void SetSelect(int indexSelect)
     {
+        bool isSameSelect = false;
+        if (this.indexSelect == indexSelect)
+        {
+            isSameSelect = true;
+        }
+        else
+        {
+            isSameSelect = false;
+        }
         this.indexSelect = indexSelect;
         ItemsSynthesisBean curSelectItemsSynthesis = listSynthesisData[indexSelect];
         //刷新结果
         ui_SynthesisResults.SetData(curSelectItemsSynthesis, -1, false);
-        //刷新素材
-        SetSynthesisMaterials();
         //刷新列表
         ui_SynthesisList.RefreshAllCells();
         //检测当前道具是否能合成
         bool canSynthesis = curSelectItemsSynthesis.CheckSynthesis();
+
         if (canSynthesis)
         {
             ui_TVBtnSynthesis.color = Color.green;
@@ -168,6 +227,16 @@ public partial class UIViewSynthesis : BaseUIView
         else
         {
             ui_TVBtnSynthesis.color = Color.gray;
+        }
+
+        if (isSameSelect)
+        {
+
+        }
+        else
+        {
+            //刷新素材
+            SetSynthesisMaterials();
         }
     }
 
@@ -192,7 +261,7 @@ public partial class UIViewSynthesis : BaseUIView
 
         for (int i = 0; i < listMaterials.Count; i++)
         {
-            GameObject objMaterial = Instantiate(ui_SynthesisMaterials.gameObject, ui_ViewSynthesisMaterial.gameObject);
+            GameObject objMaterial = Instantiate(ui_SynthesisMaterials.gameObject, ui_ModelViewSynthesisMaterial.gameObject);
             UIViewSynthesisMaterial itemMaterial = objMaterial.GetComponent<UIViewSynthesisMaterial>();
 
             ItemsSynthesisMaterialsBean itemData = listMaterials[i];

@@ -239,6 +239,9 @@ public class Item
             //移除该方块
             targetChunk.RemoveBlockForWorld(targetPosition);
         }
+
+        //播放破坏音效
+        AudioHandler.Instance.PlaySound(301);
     }
 
     /// <summary>

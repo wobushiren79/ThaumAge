@@ -17,23 +17,38 @@ MonoBehaviour:
     m_SerializedData: []
   m_GUID: effcff228b318ed4f81ddc5564c059a4
   m_SerializeEntries:
-  - m_GUID: fe45971073ab66e4fad8b867aa6a8923
-    m_Address: Assets/Audio/Sound/audio_sound_btn1.wav
+  - m_GUID: e2badf6441103c647b5d05389ed535c5
+    m_Address: Assets/Audio/Sound/audio_sound_btn3.mp3
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 7af5e39d5fb46854e91d2f0d721dc5e5
-    m_Address: Assets/Audio/Sound/audio_sound_btn3
+  - m_GUID: e2a044b90d391924f93d36878c34c260
+    m_Address: Assets/Audio/Sound/audio_sound_synthesis_1.wav
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: fb13603fcc5b36d4c8d57602c97497e9
-    m_Address: Assets/Audio/Sound/audio_sound_btn2.wav
+  - m_GUID: 2aade8f04fed8af46a18a266bdc939dd
+    m_Address: Assets/Audio/Sound/audio_sound_btn5.mp3
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 000954f6bea66404587d4685b684be30
-    m_Address: Assets/Audio/Sound/audio_sound_btn1
+  - m_GUID: ab9d5f06fdeabc34bbfb39b443349905
+    m_Address: Assets/Audio/Sound/audio_sound_btn4.mp3
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 76273f7083df46a4fb8c1f3a6cd83f50
+    m_Address: Assets/Audio/Sound/audio_sound_eat_1.wav
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e9dea5cbab1c5df42b7eb26d82ef926d
+    m_Address: Assets/Audio/Sound/audio_sound_dig_1.wav
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 798ea9df0a925df46b23f12041c5e63d
+    m_Address: Assets/Audio/Sound/audio_sound_dig_2.wav
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0

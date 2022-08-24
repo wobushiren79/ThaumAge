@@ -8,13 +8,15 @@ public partial class UIViewSynthesis
 
     public UIViewSynthesisItem ui_SynthesisResults;
 
-    public RectTransform ui_SynthesisMaterials;
-
-    public UIViewSynthesisMaterial ui_ViewSynthesisMaterial;
-
     public Button ui_BtnSynthesis;
 
     public Text ui_TVBtnSynthesis;
+
+    public Image ui_ModelEffectItemSynthesis;
+
+    public RectTransform ui_ModelViewSynthesisMaterial;
+
+    public RectTransform ui_SynthesisMaterials;
 
 
 }
