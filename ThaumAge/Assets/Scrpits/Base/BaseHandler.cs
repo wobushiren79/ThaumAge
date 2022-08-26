@@ -5,7 +5,8 @@ public class BaseHandler<T,M> : BaseSingletonMonoBehaviour<T>
     where M : BaseManager
     where T : BaseMonoBehaviour
 {
-    private M mManager;
+    private M _manager;
+
     public virtual void Awake()
     {
 
@@ -15,11 +16,11 @@ public class BaseHandler<T,M> : BaseSingletonMonoBehaviour<T>
     {
         get
         {
-            if (mManager == null)
+            if (_manager == null)
             {
-                mManager = gameObject.AddComponentEX<M>();
+                _manager = gameObject.AddComponentEX<M>();
             }
-            return mManager;
+            return _manager;
         }
     }
 }
