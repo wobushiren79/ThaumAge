@@ -170,7 +170,7 @@ public class ItemCptDrop : BaseMonoBehaviour
                     System.Random random = new System.Random();
                     rbItem.AddForce(random.Next(-100, 100), random.Next(-100, 100), random.Next(-100, 100));
                 }
-                UIHandler.Instance.RefreshAllUI();
+                UIHandler.Instance.RefreshUI();
             });
     }
 

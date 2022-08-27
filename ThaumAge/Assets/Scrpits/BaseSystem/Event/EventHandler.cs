@@ -187,7 +187,7 @@ public class EventHandler : BaseSingleton<EventHandler>
     {
         if (!DicEvent.TryGetValue(eventName, out EventEntity eventEntity))
         {
-            LogUtil.Log($"没有名字为{eventName}的事件");
+            //LogUtil.Log($"没有名字为{eventName}的事件");
             return;
         }
         if (eventEntity is EventSignal t)
@@ -200,7 +200,7 @@ public class EventHandler : BaseSingleton<EventHandler>
     {
         if (!DicEvent.TryGetValue(eventName, out EventEntity eventEntity))
         {
-            LogUtil.Log($"没有名字为{eventName}的事件");
+            //LogUtil.Log($"没有名字为{eventName}的事件");
             return;
         }
         if (eventEntity is EventSignal<T> t)
@@ -213,7 +213,7 @@ public class EventHandler : BaseSingleton<EventHandler>
     {
         if (!DicEvent.TryGetValue(eventName, out EventEntity eventEntity))
         {
-            LogUtil.Log($"没有名字为{eventName}的事件");
+           // LogUtil.Log($"没有名字为{eventName}的事件");
             return;
         }
         if (eventEntity is EventSignal<T, U> t)
@@ -226,7 +226,7 @@ public class EventHandler : BaseSingleton<EventHandler>
     {
         if (!DicEvent.TryGetValue(eventName, out EventEntity eventEntity))
         {
-            LogUtil.Log($"没有名字为{eventName}的事件");
+            //LogUtil.Log($"没有名字为{eventName}的事件");
             return;
         }
         if (eventEntity is EventSignal<T, U, V> t)
@@ -239,7 +239,7 @@ public class EventHandler : BaseSingleton<EventHandler>
     {
         if (!DicEvent.TryGetValue(eventName, out EventEntity eventEntity))
         {
-            LogUtil.Log($"没有名字为{eventName}的事件");
+            //LogUtil.Log($"没有名字为{eventName}的事件");
             return;
         }
         if (eventEntity is EventSignal<T, U, V, W> t)

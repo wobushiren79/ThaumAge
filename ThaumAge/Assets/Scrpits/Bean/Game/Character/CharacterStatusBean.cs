@@ -25,6 +25,17 @@ public class CharacterStatusBean
     public float air = 10;
     public int maxAir = 10;
 
+    //物防
+    public int def = 0;
+    //魔防
+    public int defMagic = 0;
+
+    public int defMetal = 0;
+    public int defWooden = 0;
+    public int defWater = 0;
+    public int defFire = 0;
+    public int defEarth = 0;
+
     /// <summary>
     /// 耐力修改
     /// </summary>

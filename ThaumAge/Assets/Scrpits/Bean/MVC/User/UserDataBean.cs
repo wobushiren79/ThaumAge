@@ -181,15 +181,6 @@ public class UserDataBean
         {
             this.indexForShortcuts = 9;
         }
-
-        //改变手中的物品
-        Player player = GameHandler.Instance.manager.player;
-        if (player != null)
-        {
-            CreatureCptCharacter character = player.GetCharacter();
-            ItemsBean itemsData = GetItemsFromShortcut();
-            character.CharacterItems.ChangeRightHandItem(itemsData.itemId);
-        }
         return this.indexForShortcuts;
     }
 

@@ -43,6 +43,7 @@ public partial class UIViewSynthesisItem : BaseUIView
         if (viewButton == configBtn)
         {
             this.TriggerEvent(EventsInfo.UIViewSynthesis_SetSelect, index);
+            AudioHandler.Instance.PlaySound(1);
         }
     }
 
@@ -71,11 +72,13 @@ public partial class UIViewSynthesisItem : BaseUIView
     {
         if (canSynthesis)
         {
-            ui_ItemIcon.material.SetFloat("_EffectAmount", 0);
+            ui_ItemIcon.materialForRendering.SetFloat("_EffectAmount", 0);
+            //ui_ItemIcon.material.SetFloat("_EffectAmount", 0);
         }
         else
         {
-            ui_ItemIcon.material.SetFloat("_EffectAmount", 1);
+            ui_ItemIcon.materialForRendering.SetFloat("_EffectAmount", 1);
+            //ui_ItemIcon.material.SetFloat("_EffectAmount", 1);
         }
     }
 

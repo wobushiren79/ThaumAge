@@ -237,11 +237,15 @@ public class Item
             //创建掉落
             ItemsHandler.Instance.CreateItemCptDrop(targetBlock, targetChunk, targetPosition);
             //移除该方块
-            targetChunk.RemoveBlockForWorld(targetPosition);
+            targetChunk.RemoveBlockForWorld(targetPosition);           
+            //播放掉落音效
+            AudioHandler.Instance.PlaySound(301);
         }
-
-        //播放破坏音效
-        AudioHandler.Instance.PlaySound(301);
+        else
+        {
+            //播放破坏音效
+            AudioHandler.Instance.PlaySound(301);
+        }
     }
 
     /// <summary>

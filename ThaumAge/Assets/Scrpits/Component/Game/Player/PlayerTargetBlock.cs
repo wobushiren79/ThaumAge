@@ -12,7 +12,7 @@ public class PlayerTargetBlock : BaseMonoBehaviour
     protected MeshRenderer meshRenderer;
 
     protected Vector3Int lastWorldPosition = Vector3Int.one * int.MaxValue;
-    protected bool isShow = false;
+    protected bool isShow = true;
     public void Awake()
     {
         meshFilter = objTargetBlock.GetComponent<MeshFilter>();

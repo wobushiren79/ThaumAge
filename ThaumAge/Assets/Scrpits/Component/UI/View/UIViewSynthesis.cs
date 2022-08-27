@@ -202,7 +202,7 @@ public partial class UIViewSynthesis : BaseUIView
     /// <param name="indexSelect"></param>
     public void SetSelect(int indexSelect)
     {
-        bool isSameSelect = false;
+        bool isSameSelect;
         if (this.indexSelect == indexSelect)
         {
             isSameSelect = true;
@@ -255,7 +255,7 @@ public partial class UIViewSynthesis : BaseUIView
         ItemsSynthesisBean itemsSynthesis = listSynthesisData[indexSelect];
         List<ItemsSynthesisMaterialsBean> listMaterials = itemsSynthesis.GetSynthesisMaterials();
         //获取起始点位置
-        Vector2[] listCirclePosition = VectorUtil.GetListCirclePosition(listMaterials.Count, 0, Vector2.zero, 95);
+        Vector2[] listCirclePosition = VectorUtil.GetListCirclePosition(listMaterials.Count, 0, Vector2.zero, 120);
         //创建所有素材
         int itemAngle = 360 / listMaterials.Count;
 

@@ -8,6 +8,9 @@ public class CharacterItems : CharacterBase
 
     public ItemCptHold itemHoldRight;
 
+    //当前的道具ID
+    protected long curItemID = long.MinValue;
+
     public CharacterItems(CreatureCptCharacter character) : base(character)
     {
         objRightHand = character.characterRightHand;
@@ -19,6 +22,9 @@ public class CharacterItems : CharacterBase
     /// </summary>
     public void ChangeRightHandItem(long itemId)
     {
+        if (curItemID == itemId)
+            return;
+        this.curItemID = itemId;
         ItemsInfoBean itemsInfo = ItemsHandler.Instance.manager.GetItemsInfoById(itemId);
         if (itemsInfo == null || itemsInfo.id == 0)
         {

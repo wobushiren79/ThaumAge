@@ -85,21 +85,4 @@ public class CombatCommon
         }
     }
 
-    /// <summary>
-    /// 获取伤害数据
-    /// </summary>
-    /// <param name="damageDataStr"></param>
-    /// <returns></returns>
-    public static DamageBean GetDamageData(string damageDataStr)
-    {
-        DamageBean damageData = new DamageBean();
-        string[] itemDataStr = damageDataStr.SplitForArrayStr('|');
-        for (int i = 0; i < itemDataStr.Length; i++)
-        {
-            string[] itemDetailsDataStr = itemDataStr[i].SplitForArrayStr(':');
-            DamageAdditionEnum damageAdditionEnum = EnumExtension.GetEnum<DamageAdditionEnum>(itemDetailsDataStr[0]);
-            damageData.dicDamageData.Add(damageAdditionEnum, itemDetailsDataStr[1]);
-        }
-        return damageData;
-    }
 }

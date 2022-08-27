@@ -428,6 +428,8 @@ public class ControlForPlayer : ControlForBase
         ItemsBean itemsData = userData.GetItemsFromShortcut();
         Player player = GameHandler.Instance.manager.player;
         ItemsHandler.Instance.UseItem(player.gameObject, itemsData, useType);
+        //刷新手上的物品
+        GameHandler.Instance.manager.player.RefreshHandItem();
     }
 
     /// <summary>
@@ -462,6 +464,8 @@ public class ControlForPlayer : ControlForBase
         }
         UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();
         userData.SetShortcuts(userData.indexForShortcuts + changIndex);
+        //刷新手上物品
+        GameHandler.Instance.manager.player.RefreshHandItem();
         //刷新UI
         UIHandler.Instance.GetOpenUI().RefreshUI();
     }

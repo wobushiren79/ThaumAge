@@ -145,6 +145,16 @@ public class Player : BaseMonoBehaviour
     }
 
     /// <summary>
+    /// 刷新手上的道具
+    /// </summary>
+    public void RefreshHandItem()
+    {
+        UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();
+        ItemsBean itemsData = userData.GetItemsFromShortcut();
+        character.CharacterItems.ChangeRightHandItem(itemsData.itemId);
+    }
+
+    /// <summary>
     /// 设置头部显示隐藏
     /// </summary>
     /// <param name="isShow"></param>

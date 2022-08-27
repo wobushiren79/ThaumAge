@@ -12,5 +12,9 @@ public partial class UIPopupItemInfo
 
     public RectTransform ui_Details;
 
+    public RectTransform ui_Attribute;
+
+    public RectTransform ui_ItemAttribute;
+
 
 }

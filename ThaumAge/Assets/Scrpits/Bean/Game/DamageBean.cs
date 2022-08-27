@@ -5,16 +5,36 @@ using UnityEngine;
 
 public class DamageBean
 {
-    public Dictionary<DamageAdditionEnum, string> dicDamageData = new Dictionary<DamageAdditionEnum, string>();
+    public Dictionary<AttributeTypeEnum, string> dicDamageData = new Dictionary<AttributeTypeEnum, string>();
+
+    public DamageBean(string dataStr)
+    {
+        string[] itemDataStr = dataStr.SplitForArrayStr('|');
+        for (int i = 0; i < itemDataStr.Length; i++)
+        {
+            string[] itemDetailsDataStr = itemDataStr[i].SplitForArrayStr(':');
+            AttributeTypeEnum damageAdditionEnum = EnumExtension.GetEnum<AttributeTypeEnum>(itemDetailsDataStr[0]);
+            switch (damageAdditionEnum)
+            {
+                case AttributeTypeEnum.Damage:
+                case AttributeTypeEnum.DamageMagic:
+                case AttributeTypeEnum.KnockbackDis:
+                case AttributeTypeEnum.KnockbackTime:
+                    dicDamageData.Add(damageAdditionEnum, itemDetailsDataStr[1]);
+                    break;
+            }
+        }
+    }
+
 
     /// <summary>
     /// 获取数据
     /// </summary>
     /// <param name="damageAddition"></param>
     /// <returns></returns>
-    public string GetData(DamageAdditionEnum damageAddition)
+    public string GetData(AttributeTypeEnum attributeType)
     {
-        if (dicDamageData.TryGetValue(DamageAdditionEnum.Damage, out string value))
+        if (dicDamageData.TryGetValue(AttributeTypeEnum.Damage, out string value))
         {
             return value;
         }
@@ -27,7 +47,7 @@ public class DamageBean
     /// <returns></returns>
     public int GetDamage()
     {
-        string data = GetData(DamageAdditionEnum.Damage);
+        string data = GetData(AttributeTypeEnum.Damage);
         if (data.IsNull())
         {
             return 0;
@@ -51,14 +71,14 @@ public class DamageBean
         {
             switch (itemDamgeData.Key)
             {
-                case DamageAdditionEnum.Damage:
+                case AttributeTypeEnum.Damage:
                     damage = int.Parse(itemDamgeData.Value);
                     HandleForDamage(damage, atkObj, beAtkCreature);
                     break;
-                case DamageAdditionEnum.KnockbackDis:
+                case AttributeTypeEnum.KnockbackDis:
                     disKnockback = float.Parse(itemDamgeData.Value);
                     break;
-                case DamageAdditionEnum.KnockbackTime:
+                case AttributeTypeEnum.KnockbackTime:
                     timeKnockback = float.Parse(itemDamgeData.Value);
                     break;
             }

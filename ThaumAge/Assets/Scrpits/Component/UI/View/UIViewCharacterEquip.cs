@@ -100,11 +100,19 @@ public partial class UIViewCharacterEquip : BaseUIView
     {
         UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();
         CharacterStatusBean characterStatusData = userData.characterData.GetCharacterStatus();
-        CreateCharacterStatusItem("ui_life_1", characterStatusData.maxHealth, TextHandler.Instance.GetTextById(2001));
-        CreateCharacterStatusItem("ui_life_2", Mathf.RoundToInt(characterStatusData.maxStamina), TextHandler.Instance.GetTextById(2002));
-        CreateCharacterStatusItem("ui_life_4", characterStatusData.maxMagic, TextHandler.Instance.GetTextById(2003));
-        CreateCharacterStatusItem("ui_life_3", Mathf.RoundToInt(characterStatusData.maxSaturation), TextHandler.Instance.GetTextById(2004));
-        CreateCharacterStatusItem("ui_life_5", Mathf.RoundToInt(characterStatusData.maxAir), TextHandler.Instance.GetTextById(2005));
+        CreateCharacterStatusItem(AttributeBean.GetAttributeIconKey(AttributeTypeEnum.Health), characterStatusData.maxHealth, AttributeBean.GetAttributeText(AttributeTypeEnum.Health));
+        CreateCharacterStatusItem(AttributeBean.GetAttributeIconKey(AttributeTypeEnum.Stamina), Mathf.RoundToInt(characterStatusData.maxStamina), AttributeBean.GetAttributeText(AttributeTypeEnum.Stamina));
+        CreateCharacterStatusItem(AttributeBean.GetAttributeIconKey(AttributeTypeEnum.Magic), characterStatusData.maxMagic, AttributeBean.GetAttributeText(AttributeTypeEnum.Magic));
+        CreateCharacterStatusItem(AttributeBean.GetAttributeIconKey(AttributeTypeEnum.Saturation), Mathf.RoundToInt(characterStatusData.maxSaturation), AttributeBean.GetAttributeText(AttributeTypeEnum.Saturation));
+        CreateCharacterStatusItem(AttributeBean.GetAttributeIconKey(AttributeTypeEnum.Air), Mathf.RoundToInt(characterStatusData.maxAir), AttributeBean.GetAttributeText(AttributeTypeEnum.Air));
+
+        CreateCharacterStatusItem(AttributeBean.GetAttributeIconKey(AttributeTypeEnum.Def), characterStatusData.def, AttributeBean.GetAttributeText(AttributeTypeEnum.Def));
+        CreateCharacterStatusItem(AttributeBean.GetAttributeIconKey(AttributeTypeEnum.DefMagic), characterStatusData.defMagic, AttributeBean.GetAttributeText(AttributeTypeEnum.DefMagic));
+        CreateCharacterStatusItem(AttributeBean.GetAttributeIconKey(AttributeTypeEnum.DefMetal), characterStatusData.defMetal, AttributeBean.GetAttributeText(AttributeTypeEnum.DefMetal));
+        CreateCharacterStatusItem(AttributeBean.GetAttributeIconKey(AttributeTypeEnum.DefWood), characterStatusData.defWooden, AttributeBean.GetAttributeText(AttributeTypeEnum.DefWood));
+        CreateCharacterStatusItem(AttributeBean.GetAttributeIconKey(AttributeTypeEnum.DefWater), characterStatusData.defWater, AttributeBean.GetAttributeText(AttributeTypeEnum.DefWater));
+        CreateCharacterStatusItem(AttributeBean.GetAttributeIconKey(AttributeTypeEnum.DefFire), characterStatusData.defFire, AttributeBean.GetAttributeText(AttributeTypeEnum.DefFire));
+        CreateCharacterStatusItem(AttributeBean.GetAttributeIconKey(AttributeTypeEnum.DefEarth), characterStatusData.defWooden, AttributeBean.GetAttributeText(AttributeTypeEnum.DefEarth));
     }
 
     /// <summary>
