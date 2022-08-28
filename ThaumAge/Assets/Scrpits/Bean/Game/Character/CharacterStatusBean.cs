@@ -98,4 +98,23 @@ public class CharacterStatusBean
         }
         return curHealth;
     }
+
+    /// <summary>
+    /// 改变魔法值
+    /// </summary>
+    /// <param name="changeData"></param>
+    /// <returns></returns>
+    public int MagicChange(int changeData)
+    {
+        this.curMagic += changeData;
+        if (curMagic > magic)
+        {
+            curMagic = magic;
+        }
+        if (curMagic < 0)
+        {
+            curMagic = 0;
+        }
+        return curMagic;
+    }
 }

@@ -9,13 +9,17 @@ public class ItemTypeFood : Item
             return;
         ItemsInfoBean itemsInfo = ItemsHandler.Instance.manager.GetItemsInfoById(itemData.itemId);
         AttributeBean attributeData = itemsInfo.GetAttributeData();
-        int addSatureation = attributeData.GetAttributeValue(AttributeTypeEnum.Saturation);
 
-        if(user == GameHandler.Instance.manager.player.gameObject)
+        int addSatureation = attributeData.GetAttributeValue(AttributeTypeEnum.Saturation);
+        int addHealth = attributeData.GetAttributeValue(AttributeTypeEnum.Health);
+        int addMagic = attributeData.GetAttributeValue(AttributeTypeEnum.Magic);
+
+        if (user == GameHandler.Instance.manager.player.gameObject)
         {
             UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();
             userData.characterData.GetCharacterStatus().SaturationChange(addSatureation);
-
+            userData.characterData.GetCharacterStatus().HealthChange(addHealth);
+            userData.characterData.GetCharacterStatus().MagicChange(addMagic);
             //减少道具
             userData.AddItems(itemData,-1);
             //刷新UI
