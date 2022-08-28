@@ -44,11 +44,10 @@ public class CharacterEquip : CharacterBase
     {
         base.SetCharacterData(characterData);
         //初始化设置衣服
-        if (characterData.characterEquip == null)
-            return;
-        ChangeEquip(EquipTypeEnum.Hats, characterData.characterEquip.hats);
-        ChangeEquip(EquipTypeEnum.Clothes, characterData.characterEquip.clothes);
-        ChangeEquip(EquipTypeEnum.Shoes, characterData.characterEquip.shoes);
+        CharacterEquipBean characterEquipData = characterData.GetCharacterEquip();
+        ChangeEquip(EquipTypeEnum.Hats, characterEquipData.hats);
+        ChangeEquip(EquipTypeEnum.Clothes, characterEquipData.clothes);
+        ChangeEquip(EquipTypeEnum.Shoes, characterEquipData.shoes);
     }
 
     /// <summary>
@@ -61,10 +60,11 @@ public class CharacterEquip : CharacterBase
         {
             equipId = equipData.itemId;
         }
+        CharacterEquipBean characterEquipData = characterData.GetCharacterEquip();
         switch (equipType)
         {
             case EquipTypeEnum.Hats://帽子
-                characterData.characterEquip.hats = equipData;
+                characterEquipData.hats = equipData;
                 Action<GameObject> callBackForHat = (obj) =>
                 {
                     //如果是玩家 再刷新一次头部显示
@@ -79,13 +79,13 @@ public class CharacterEquip : CharacterBase
 
                 return;
             case EquipTypeEnum.Clothes://衣服
-                characterData.characterEquip.clothes = equipData;
+                characterEquipData.clothes = equipData;
                 ChangeEquipDetails(equipId, objClothesContainer, new List<GameObject>() { objClothesRContainer, objClothesLContainer }, callBack: callBack, callBackModelRemark: callBackModelRemark);
                 return;
             case EquipTypeEnum.Gloves://手套
                 return;
             case EquipTypeEnum.Shoes://鞋子
-                characterData.characterEquip.shoes = equipData;
+                characterEquipData.shoes = equipData;
                 ChangeEquipDetails(equipId, objShoesLContainer, new List<GameObject>() { objShoesRContainer }, callBack: callBack, callBackModelRemark: callBackModelRemark);
                 return;
             case EquipTypeEnum.Trousers://裤子

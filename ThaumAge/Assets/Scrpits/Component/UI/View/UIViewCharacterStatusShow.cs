@@ -3,7 +3,7 @@ using UnityEngine;
 
 public partial class UIViewCharacterStatusShow : BaseUIView
 {
-    protected CharacterStatusBean characterStatus;
+    protected CharacterBean characterData;
 
     public override void Awake()
     {
@@ -14,21 +14,24 @@ public partial class UIViewCharacterStatusShow : BaseUIView
     /// <summary>
     /// 设置数据
     /// </summary>
-    public void SetData(CharacterStatusBean characterStatus)
+    public void SetData(CharacterBean characterData)
     {
-        this.characterStatus = characterStatus;
+        this.characterData = characterData;
     }
 
     public override void RefreshUI()
     {
         base.RefreshUI();
-        if (characterStatus == null)
+        if (characterData == null)
             return;
-        SetHealth(characterStatus.health, characterStatus.maxHealth);
-        SetStamina(Mathf.RoundToInt(characterStatus.stamina), characterStatus.maxStamina);
-        SetMagic(characterStatus.magic, characterStatus.maxMagic);
-        SetSaturation(Mathf.RoundToInt(characterStatus.saturation), characterStatus.maxSaturation);
-        SetAir(Mathf.RoundToInt(characterStatus.air), characterStatus.maxAir);
+
+        CharacterStatusBean characterStatus = characterData.characterStatus;
+
+        SetHealth(characterStatus.curHealth, characterData.GetAttributeValue(AttributeTypeEnum.Health));
+        SetStamina(Mathf.RoundToInt(characterStatus.curStamina), characterData.GetAttributeValue(AttributeTypeEnum.Stamina));
+        SetMagic(characterStatus.curMagic, characterData.GetAttributeValue(AttributeTypeEnum.Magic));
+        SetSaturation(Mathf.RoundToInt(characterStatus.curSaturation), characterData.GetAttributeValue(AttributeTypeEnum.Saturation));
+        SetAir(Mathf.RoundToInt(characterStatus.curAir), characterData.GetAttributeValue(AttributeTypeEnum.Air));
     }
 
     /// <summary>

@@ -68,10 +68,12 @@ public class Player : BaseMonoBehaviour
     {
         UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();
         userData.userExitPosition.GetWorldPosition(out WorldTypeEnum worldType, out Vector3 worldPosition);
-        if (worldPosition.y <= 0)
+        if (worldPosition.y <= 0 && worldPosition.x == 0 && worldPosition.z == 0)
         {
-            int maxHeight = WorldCreateHandler.Instance.manager.GetMaxHeightForWorldPosition(Mathf.RoundToInt(transform.position.x), Mathf.RoundToInt(transform.position.z));
+            int maxHeight = WorldCreateHandler.Instance.manager.GetMaxHeightForWorldPosition(0,0);
             worldPosition.y = maxHeight;
+            worldPosition.x = 0.5f;
+            worldPosition.z = 0.5f;
         }
         SetPosition(new Vector3(worldPosition.x, worldPosition.y + 0.75f, worldPosition.z));
     }
@@ -111,7 +113,8 @@ public class Player : BaseMonoBehaviour
     public void HandleForUserData()
     {
         UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();
-        CharacterStatusBean characterStatus = userData.characterData.GetCharacterStatus();
+        CharacterBean characterData = userData.characterData;
+        CharacterStatusBean characterStatus = characterData.GetCharacterStatus();
         //增加耐力
         characterStatus.StaminaChange(0.5f);
         //减少饥饿度
@@ -120,7 +123,8 @@ public class Player : BaseMonoBehaviour
         if (saturation <= 0)
         {
             //按比例减少
-            characterStatus.HealthChange(Mathf.RoundToInt(-characterStatus.maxHealth * 0.1f));
+            int maxHealth = characterData.GetAttributeValue(AttributeTypeEnum.Health);
+            characterStatus.HealthChange(Mathf.RoundToInt(-maxHealth * 0.1f));
         }
         //刷新UI
         EventHandler.Instance.TriggerEvent(EventsInfo.CharacterStatus_StatusChange);

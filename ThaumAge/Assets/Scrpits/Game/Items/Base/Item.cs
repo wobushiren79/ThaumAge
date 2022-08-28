@@ -19,7 +19,7 @@ public class Item
     /// <summary>
     /// 播放使用动画
     /// </summary>
-    public virtual void UseForAnim(GameObject user, ItemsBean itemsData)
+    public virtual void UseForAnim(GameObject user, ItemsBean itemsData, ItemUseTypeEnum useType)
     {
         //播放使用动画
         ItemsInfoBean itemsInfo = GetItemsInfo(itemsData.itemId);
@@ -110,7 +110,7 @@ public class Item
                 }
                 else
                 {
-                    TargetUse(itemsData, targetPosition, closePosition, direction);
+                    TargetUse(player.gameObject, itemsData, targetPosition, closePosition, direction);
                 }
             }
         }
@@ -158,7 +158,7 @@ public class Item
     /// <summary>
     /// 使用道具
     /// </summary>
-    public virtual void TargetUse(ItemsBean itemData, Vector3Int targetPosition, Vector3Int closePosition, BlockDirectionEnum direction)
+    public virtual void TargetUse(GameObject user, ItemsBean itemData, Vector3Int targetPosition, Vector3Int closePosition, BlockDirectionEnum direction)
     {
         //获取目标方块
         WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(targetPosition, out Block targetBlock, out BlockDirectionEnum targetBlockDirection, out Chunk targetChunk);

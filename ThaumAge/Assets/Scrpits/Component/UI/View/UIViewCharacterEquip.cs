@@ -8,6 +8,9 @@ public partial class UIViewCharacterEquip : BaseUIView
 {
     //装备类型
     public Dictionary<EquipTypeEnum, UIViewItemContainer> dicEquip = new Dictionary<EquipTypeEnum, UIViewItemContainer>();
+    //属性数据
+    public Dictionary<AttributeTypeEnum, UIViewItemCharacterStatus> dicAttribute = new Dictionary<AttributeTypeEnum, UIViewItemCharacterStatus>();
+
     //渲染对象
     protected GameObject objRender;
     //展示的角色
@@ -48,12 +51,18 @@ public partial class UIViewCharacterEquip : BaseUIView
             objRender.ShowObj(false);
     }
 
+    public override void OpenUI()
+    {
+        base.OpenUI();
+        RefreshCharacterStatus();
+        RefreshEquip();
+    }
+
     /// <summary>
     /// 初始化装备
     /// </summary>
     public void InitEquip()
     {
-        UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();
         dicEquip.Clear();
         dicEquip.Add(EquipTypeEnum.Hats, ui_Equip_Hats);
         dicEquip.Add(EquipTypeEnum.Gloves, ui_Equip_Gloves);
@@ -66,12 +75,21 @@ public partial class UIViewCharacterEquip : BaseUIView
         dicEquip.Add(EquipTypeEnum.RightRing, ui_Equip_RightRing);
         dicEquip.Add(EquipTypeEnum.Cape, ui_Equip_Cape);
 
+        RefreshEquip();
+    }
+
+    /// <summary>
+    /// 刷新装备
+    /// </summary>
+    public void RefreshEquip()
+    {
+        UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();
+        CharacterEquipBean characterEquipData = userData.characterData.GetCharacterEquip();
         foreach (var itemContainer in dicEquip)
         {
-            ItemsBean itemData = userData.characterData.characterEquip.GetEquipByType(itemContainer.Key);
+            ItemsBean itemData = characterEquipData.GetEquipByType(itemContainer.Key);
             itemContainer.Value.SetLimitType(itemContainer.Key);
             itemContainer.Value.SetData(UIViewItemContainer.ContainerType.Equip, itemData);
-            itemContainer.Value.SetHintText(CharacterEquipBean.GetEquipName(itemContainer.Key));
             itemContainer.Value.SetCallBackForSetViewItem(CallBackForSetEquip);
         }
     }
@@ -98,32 +116,62 @@ public partial class UIViewCharacterEquip : BaseUIView
     /// </summary>
     public void InitCharacterStatus()
     {
-        UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();
-        CharacterStatusBean characterStatusData = userData.characterData.GetCharacterStatus();
-        CreateCharacterStatusItem(AttributeBean.GetAttributeIconKey(AttributeTypeEnum.Health), characterStatusData.maxHealth, AttributeBean.GetAttributeText(AttributeTypeEnum.Health));
-        CreateCharacterStatusItem(AttributeBean.GetAttributeIconKey(AttributeTypeEnum.Stamina), Mathf.RoundToInt(characterStatusData.maxStamina), AttributeBean.GetAttributeText(AttributeTypeEnum.Stamina));
-        CreateCharacterStatusItem(AttributeBean.GetAttributeIconKey(AttributeTypeEnum.Magic), characterStatusData.maxMagic, AttributeBean.GetAttributeText(AttributeTypeEnum.Magic));
-        CreateCharacterStatusItem(AttributeBean.GetAttributeIconKey(AttributeTypeEnum.Saturation), Mathf.RoundToInt(characterStatusData.maxSaturation), AttributeBean.GetAttributeText(AttributeTypeEnum.Saturation));
-        CreateCharacterStatusItem(AttributeBean.GetAttributeIconKey(AttributeTypeEnum.Air), Mathf.RoundToInt(characterStatusData.maxAir), AttributeBean.GetAttributeText(AttributeTypeEnum.Air));
+        dicAttribute.Clear();
+        CreateCharacterStatusItem(AttributeTypeEnum.Health);
+        CreateCharacterStatusItem(AttributeTypeEnum.Stamina);
+        CreateCharacterStatusItem(AttributeTypeEnum.Magic);
+        CreateCharacterStatusItem(AttributeTypeEnum.Saturation);
+        CreateCharacterStatusItem(AttributeTypeEnum.Air);
 
-        CreateCharacterStatusItem(AttributeBean.GetAttributeIconKey(AttributeTypeEnum.Def), characterStatusData.def, AttributeBean.GetAttributeText(AttributeTypeEnum.Def));
-        CreateCharacterStatusItem(AttributeBean.GetAttributeIconKey(AttributeTypeEnum.DefMagic), characterStatusData.defMagic, AttributeBean.GetAttributeText(AttributeTypeEnum.DefMagic));
-        CreateCharacterStatusItem(AttributeBean.GetAttributeIconKey(AttributeTypeEnum.DefMetal), characterStatusData.defMetal, AttributeBean.GetAttributeText(AttributeTypeEnum.DefMetal));
-        CreateCharacterStatusItem(AttributeBean.GetAttributeIconKey(AttributeTypeEnum.DefWood), characterStatusData.defWooden, AttributeBean.GetAttributeText(AttributeTypeEnum.DefWood));
-        CreateCharacterStatusItem(AttributeBean.GetAttributeIconKey(AttributeTypeEnum.DefWater), characterStatusData.defWater, AttributeBean.GetAttributeText(AttributeTypeEnum.DefWater));
-        CreateCharacterStatusItem(AttributeBean.GetAttributeIconKey(AttributeTypeEnum.DefFire), characterStatusData.defFire, AttributeBean.GetAttributeText(AttributeTypeEnum.DefFire));
-        CreateCharacterStatusItem(AttributeBean.GetAttributeIconKey(AttributeTypeEnum.DefEarth), characterStatusData.defWooden, AttributeBean.GetAttributeText(AttributeTypeEnum.DefEarth));
+        CreateCharacterStatusItem(AttributeTypeEnum.Damage);
+        CreateCharacterStatusItem(AttributeTypeEnum.DamageMagic);
+
+        CreateCharacterStatusItem(AttributeTypeEnum.Def);
+        CreateCharacterStatusItem(AttributeTypeEnum.DefMagic);
+        CreateCharacterStatusItem(AttributeTypeEnum.DefMetal);
+        CreateCharacterStatusItem(AttributeTypeEnum.DefWood);
+        CreateCharacterStatusItem(AttributeTypeEnum.DefWater);
+        CreateCharacterStatusItem(AttributeTypeEnum.DefFire);
+        CreateCharacterStatusItem(AttributeTypeEnum.DefEarth);
+    }
+
+    /// <summary>
+    /// 刷新角色状态显示数据
+    /// </summary>
+    public void RefreshCharacterStatus()
+    {
+        UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();
+        CharacterBean characterData = userData.characterData;
+
+        foreach (var itemStatus in dicAttribute)
+        {
+            //获取数据
+            string iconKey = AttributeBean.GetAttributeIconKey(itemStatus.Key);
+            int statusData = characterData.GetAttributeValue(itemStatus.Key);
+            string popupShowStr = AttributeBean.GetAttributeText(itemStatus.Key);
+
+            itemStatus.Value.SetData(iconKey, $"{statusData}", popupShowStr);
+        }
     }
 
     /// <summary>
     ///  创建角色状态Item
     /// </summary>
-    public void CreateCharacterStatusItem(string iconKey, int statusData, string popupShowStr)
+    public void CreateCharacterStatusItem(AttributeTypeEnum attributeType)
     {
+        UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();
+        CharacterBean characterData = userData.characterData;
+        //获取数据
+        string iconKey = AttributeBean.GetAttributeIconKey(attributeType);
+        int statusData = characterData.GetAttributeValue(attributeType);
+        string popupShowStr = AttributeBean.GetAttributeText(attributeType);
+        //设置数据
         ui_ViewItemCharacterStatus.ShowObj(false);
         GameObject objItemStatus = Instantiate(ui_StatusContent.gameObject, ui_ViewItemCharacterStatus.gameObject);
         UIViewItemCharacterStatus itemStatus = objItemStatus.GetComponent<UIViewItemCharacterStatus>();
         itemStatus.SetData(iconKey, $"{statusData}",popupShowStr);
+
+        dicAttribute.Add(attributeType, itemStatus);
     }
 
     /// <summary>
@@ -155,6 +203,7 @@ public partial class UIViewCharacterEquip : BaseUIView
                 showCharacter.characterEquip.ChangeEquip(itemContainer.Key, changeItemData, callBack, callBackModelRemark);
             }
         }
+        RefreshCharacterStatus();
     }
 
     /// <summary>

@@ -41,7 +41,6 @@ public partial class UIViewItemContainer : BaseUIView
     public override void Awake()
     {
         base.Awake();
-        ui_Hint.ShowObj(false);
         ui_ViewItemModel.ShowObj(false);
         SetSelectState(false);
     }
@@ -133,16 +132,6 @@ public partial class UIViewItemContainer : BaseUIView
     public void SetCallBackForSetViewItem(Action<UIViewItemContainer, ItemsBean> callBackForSetViewItem)
     {
         this.callBackForSetViewItem = callBackForSetViewItem;
-    }
-
-    /// <summary>
-    /// 设置提示文本
-    /// </summary>
-    /// <param name="hintText"></param>
-    public void SetHintText(string hintText)
-    {
-        ui_Hint.ShowObj(true);
-        ui_Hint.text = hintText;
     }
 
     /// <summary>

@@ -23,6 +23,66 @@ public class CharacterBean : CreatureBean
     public ColorBean colorSkin;
 
     /// <summary>
+    /// 获取属性值
+    /// </summary>
+    /// <param name="attributeType"></param>
+    /// <returns></returns>
+    public int GetAttributeValue(AttributeTypeEnum attributeType)
+    {
+        int totalData = 0;
+        totalData += characterEquip.GetAttributeTotal(attributeType);
+        switch (attributeType)
+        {
+            case AttributeTypeEnum.Health:
+                totalData += characterStatus.health;
+                break;
+            case AttributeTypeEnum.Stamina:
+                totalData += characterStatus.stamina;
+                break;
+            case AttributeTypeEnum.Magic:
+                totalData += characterStatus.magic;
+                break;
+            case AttributeTypeEnum.Saturation:
+                totalData += characterStatus.saturation;
+                break;
+            case AttributeTypeEnum.Air:
+                totalData += characterStatus.air;
+                break;
+            case AttributeTypeEnum.Def:
+                totalData += characterStatus.def;
+                break;
+            case AttributeTypeEnum.DefMagic:
+                totalData += characterStatus.defMagic;
+                break;
+            case AttributeTypeEnum.DefMetal:
+                totalData += characterStatus.defMetal;
+                break;
+            case AttributeTypeEnum.DefWood:
+                totalData += characterStatus.defWooden;
+                break;
+            case AttributeTypeEnum.DefWater:
+                totalData += characterStatus.defWater;
+                break;
+            case AttributeTypeEnum.DefFire:
+                totalData += characterStatus.defFire;
+                break;
+            case AttributeTypeEnum.DefEarth:
+                totalData += characterStatus.defEarth;
+                break;
+            case AttributeTypeEnum.Damage:
+                totalData += characterStatus.damage;
+                break;
+            case AttributeTypeEnum.DamageMagic:
+                totalData += characterStatus.damageMagic;
+                break;
+            case AttributeTypeEnum.KnockbackDis:
+            case AttributeTypeEnum.KnockbackTime:
+                break;
+        }
+        return totalData;
+    }
+
+    /// <summary>
     /// 设置头发颜色
     /// </summary>
     /// <param name="color"></param>
@@ -88,5 +148,18 @@ public class CharacterBean : CreatureBean
         if (characterStatus == null)
             characterStatus = new CharacterStatusBean();
         return characterStatus;
+    }
+
+    /// <summary>
+    /// 获取角色装备信息
+    /// </summary>
+    /// <returns></returns>
+    public CharacterEquipBean GetCharacterEquip()
+    {
+        if (characterEquip == null)
+        {
+            characterEquip = new CharacterEquipBean();
+        }
+        return characterEquip;
     }
 }

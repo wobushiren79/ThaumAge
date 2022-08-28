@@ -30,9 +30,9 @@ public class AttributeBean
             case AttributeTypeEnum.Stamina:
                 return "ui_life_2";
             case AttributeTypeEnum.Magic:
-                return "ui_life_3";
-            case AttributeTypeEnum.Saturation:
                 return "ui_life_4";
+            case AttributeTypeEnum.Saturation:
+                return "ui_life_3";
             case AttributeTypeEnum.Air:
                 return "ui_life_5";
 
@@ -107,4 +107,22 @@ public class AttributeBean
         }
         return "";
     }
+
+
+    /// <summary>
+    /// 获取属性值
+    /// </summary>
+    /// <param name="attributeType"></param>
+    /// <returns></returns>
+    public int GetAttributeValue(AttributeTypeEnum attributeType)
+    {
+        if (dicAttributeData == null)
+            return 0;
+        if (dicAttributeData.TryGetValue(attributeType,out int value))
+        {
+            return value;
+        }
+        return 0;
+    }
+
 }

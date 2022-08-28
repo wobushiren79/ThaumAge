@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class ItemClassWateringCanWood : ItemBaseTool
 {
-    public override void TargetUse(ItemsBean itemData, Vector3Int targetPosition, Vector3Int closePosition, BlockDirectionEnum direction)
+    public override void TargetUse(GameObject user, ItemsBean itemData, Vector3Int targetPosition, Vector3Int closePosition, BlockDirectionEnum direction)
     {       
         //获取目标方块
         WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(targetPosition, out Block targetBlock, out BlockDirectionEnum targetBlockDirection, out Chunk targetChunk);

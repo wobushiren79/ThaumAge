@@ -6,18 +6,22 @@ using static BiomeCreateTool;
 
 public class BiomeMountain : Biome
 {
+    protected int maxHight;
+    protected int lineSnow;
+    protected int lineHalfSnow;
     //高山
     public BiomeMountain() : base(BiomeTypeEnum.Mountain)
     {
-
+        maxHight = biomeInfo.min_height + (int)biomeInfo.amplitude0 / 2;
+        lineSnow = maxHight - 30;
+        lineHalfSnow = maxHight - 24;
     }
 
     public override BlockTypeEnum GetBlockForMaxHeightUp(Chunk chunk, Vector3Int localPos, ChunkTerrainData terrainData)
     {
         if (localPos.y == terrainData.maxHeight + 1)
         {
-            int maxHight = biomeInfo.min_height + (int)biomeInfo.amplitude0 / 2;
-            if (localPos.y >= maxHight - 30 && localPos.y <= maxHight - 24)
+            if (localPos.y >= lineSnow && localPos.y <= lineHalfSnow)
             {
                 return BlockTypeEnum.HalfStoneSnow;
             }
@@ -30,21 +34,23 @@ public class BiomeMountain : Biome
         if (localPos.y == terrainData.maxHeight)
         {
             Vector3Int wPos = localPos + chunk.chunkData.positionForWorld;
-            int maxHight = biomeInfo.min_height + (int)biomeInfo.amplitude0 / 2;
-            if (localPos.y > maxHight - 25)
+            if (localPos.y > lineHalfSnow - 1)
             {
                 // 地表，使用草
                 AddWeedSnow(wPos);
-                return BlockTypeEnum.GrassSnow;
+                return BlockTypeEnum.StoneSnow;
             }
             AddWeed(wPos);
             AddFlower(wPos);
             AddTree1(wPos);
-            if (localPos.y < maxHight - 30)
+            if (localPos.y < lineSnow)
             {
                 AddTree2(wPos);
             }
-
+            if (localPos.y >= lineSnow && localPos.y <= lineHalfSnow)
+            {
+                return BlockTypeEnum.GrassSnow;
+            }
             // 地表，使用草
             return BlockTypeEnum.Grass;
         }

@@ -25,6 +25,29 @@ public class CharacterEquipBean
     public ItemsBean cape;
 
 
+    public int GetAttributeTotal(AttributeTypeEnum attributeType)
+    {
+        int dataAttribute = 0;
+        dataAttribute += GetAttributeItem(hats, attributeType);
+        dataAttribute += GetAttributeItem(gloves, attributeType);
+        dataAttribute += GetAttributeItem(clothes, attributeType);
+        dataAttribute += GetAttributeItem(shoes, attributeType);
+        dataAttribute += GetAttributeItem(trousers, attributeType);
+        dataAttribute += GetAttributeItem(headwear, attributeType);
+        dataAttribute += GetAttributeItem(leftRing, attributeType);
+        dataAttribute += GetAttributeItem(rightRing, attributeType);
+        dataAttribute += GetAttributeItem(cape, attributeType);
+        return dataAttribute;
+    }
+    protected int GetAttributeItem(ItemsBean itemsData , AttributeTypeEnum attributeType)
+    {
+        if (itemsData == null || itemsData.itemId == 0)
+            return 0;
+        ItemsInfoBean itemsInfo = ItemsHandler.Instance.manager.GetItemsInfoById(itemsData.itemId);
+        AttributeBean attributeData = itemsInfo.GetAttributeData();
+        return  attributeData.GetAttributeValue(attributeType);
+    }
+
     /// <summary>
     /// 通过道具类型获取身上的装备
     /// </summary>

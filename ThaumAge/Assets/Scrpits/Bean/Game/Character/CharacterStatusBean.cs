@@ -6,24 +6,24 @@ using System;
 public class CharacterStatusBean
 {
     //生命值
+    public int curHealth = 100;
     public int health = 100;
-    public int maxHealth = 100;
 
     //耐力值
-    public float stamina = 10f;
-    public int maxStamina = 10;
+    public float curStamina = 10f;
+    public int stamina = 10;
 
     //魔力值
+    public int curMagic = 0;
     public int magic = 0;
-    public int maxMagic = 0;
 
     //饥饿值
-    public float saturation = 10;
-    public int maxSaturation = 10;
+    public float curSaturation = 10;
+    public int saturation = 10;
 
     //空气
-    public float air = 10;
-    public int maxAir = 10;
+    public float curAir = 10;
+    public int air = 10;
 
     //物防
     public int def = 0;
@@ -36,44 +36,48 @@ public class CharacterStatusBean
     public int defFire = 0;
     public int defEarth = 0;
 
+    //攻击
+    public int damage;
+    public int damageMagic;
+
     /// <summary>
-    /// 耐力修改
+    /// 改变耐力
     /// </summary>
     /// <param name="changeData">修改的值</param>
     public bool StaminaChange(float changeData)
     {
-        if (changeData > 0 && stamina >= maxStamina)
+        if (changeData > 0 && curStamina >= stamina)
         {
             return false;
         }
-        if (changeData < 0 && stamina <= 0)
+        if (changeData < 0 && curStamina <= 0)
         {
             return false;
         }
-        stamina += changeData;
-        if (stamina > maxStamina)
-            stamina = maxStamina;
-        if (stamina < 0)
-            stamina = 0;
+        curStamina += changeData;
+        if (curStamina > stamina)
+            curStamina = stamina;
+        if (curStamina < 0)
+            curStamina = 0;
         return true;
     }
 
     /// <summary>
-    /// 减少饥饿值
+    /// 改变饥饿值
     /// </summary>
     /// <returns></returns>
     public float SaturationChange(float changeData)
     {
-        this.saturation += changeData;
-        if (saturation > maxSaturation)
+        this.curSaturation += changeData;
+        if (curSaturation > saturation)
         {
-            saturation = maxSaturation;
+            curSaturation = saturation;
         }
-        if (saturation < 0)
+        if (curSaturation < 0)
         {
-            saturation = 0;
+            curSaturation = 0;
         }
-        return saturation;
+        return curSaturation;
     }
 
     /// <summary>
@@ -83,15 +87,15 @@ public class CharacterStatusBean
     /// <returns></returns>
     public int HealthChange(int changeData)
     {
-        this.health += changeData;
-        if (health > maxHealth)
+        this.curHealth += changeData;
+        if (curHealth > health)
         {
-            health = maxHealth;
+            curHealth = health;
         }
-        if (health < 0)
+        if (curHealth < 0)
         {
-            health = 0;
+            curHealth = 0;
         }
-        return health;
+        return curHealth;
     }
 }
