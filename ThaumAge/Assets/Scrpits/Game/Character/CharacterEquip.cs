@@ -44,23 +44,27 @@ public class CharacterEquip : CharacterBase
     {
         base.SetCharacterData(characterData);
         //初始化设置衣服
-        ChangeEquip(EquipTypeEnum.Hats, this.characterData.headId);
-        ChangeEquip(EquipTypeEnum.Clothes, this.characterData.clothesId);
-        ChangeEquip(EquipTypeEnum.Shoes, this.characterData.shoesId);
+        if (characterData.characterEquip == null)
+            return;
+        ChangeEquip(EquipTypeEnum.Hats, characterData.characterEquip.hats);
+        ChangeEquip(EquipTypeEnum.Clothes, characterData.characterEquip.clothes);
+        ChangeEquip(EquipTypeEnum.Shoes, characterData.characterEquip.shoes);
     }
 
     /// <summary>
     /// 改变装备
     /// </summary>
-    /// <param name="equipType"></param>
-    /// <param name="clothesId"></param>
-    public void ChangeEquip(EquipTypeEnum equipType, long equipId, Action<GameObject> callBack = null, Action<IList<GameObject>> callBackModelRemark = null)
+    public void ChangeEquip(EquipTypeEnum equipType, ItemsBean equipData, Action<GameObject> callBack = null, Action<IList<GameObject>> callBackModelRemark = null)
     {
+        long equipId = 0;
+        if (equipData != null)
+        {
+            equipId = equipData.itemId;
+        }
         switch (equipType)
         {
             case EquipTypeEnum.Hats://帽子
-
-                this.characterData.headId = equipId;
+                characterData.characterEquip.hats = equipData;
                 Action<GameObject> callBackForHat = (obj) =>
                 {
                     //如果是玩家 再刷新一次头部显示
@@ -75,13 +79,13 @@ public class CharacterEquip : CharacterBase
 
                 return;
             case EquipTypeEnum.Clothes://衣服
-                this.characterData.clothesId = equipId;
+                characterData.characterEquip.clothes = equipData;
                 ChangeEquipDetails(equipId, objClothesContainer, new List<GameObject>() { objClothesRContainer, objClothesLContainer }, callBack: callBack, callBackModelRemark: callBackModelRemark);
                 return;
             case EquipTypeEnum.Gloves://手套
                 return;
             case EquipTypeEnum.Shoes://鞋子
-                this.characterData.shoesId = equipId;
+                characterData.characterEquip.shoes = equipData;
                 ChangeEquipDetails(equipId, objShoesLContainer, new List<GameObject>() { objShoesRContainer }, callBack: callBack, callBackModelRemark: callBackModelRemark);
                 return;
             case EquipTypeEnum.Trousers://裤子
@@ -95,6 +99,11 @@ public class CharacterEquip : CharacterBase
             case EquipTypeEnum.Cape://披风
                 return;
         }
+    }
+    public void ChangeEquip(EquipTypeEnum equipType, long equipId, Action<GameObject> callBack = null, Action<IList<GameObject>> callBackModelRemark = null)
+    {
+        ItemsBean itemsData = new ItemsBean(equipId,1);
+        ChangeEquip(equipType, itemsData, callBack, callBackModelRemark);
     }
 
     protected void ChangeEquipDetails(long equipId, GameObject objEquipContainer, List<GameObject> objEquipRemarkContainer = null,

@@ -19,8 +19,7 @@ public class UserDataBean
     //数据序号
     public int dataIndex;
 
-    //玩家装备数据
-    public UserEquipBean userEquip = new UserEquipBean();
+
     //玩家位置数据
     public UserPositionBean userPosition = new UserPositionBean();
     //玩家离开位置数据

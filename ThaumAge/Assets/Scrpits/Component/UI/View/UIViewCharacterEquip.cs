@@ -68,10 +68,10 @@ public partial class UIViewCharacterEquip : BaseUIView
 
         foreach (var itemContainer in dicEquip)
         {
-            ItemsBean itemData = userData.userEquip.GetEquipByType(itemContainer.Key);
+            ItemsBean itemData = userData.characterData.characterEquip.GetEquipByType(itemContainer.Key);
             itemContainer.Value.SetLimitType(itemContainer.Key);
             itemContainer.Value.SetData(UIViewItemContainer.ContainerType.Equip, itemData);
-            itemContainer.Value.SetHintText(UserEquipBean.GetEquipName(itemContainer.Key));
+            itemContainer.Value.SetHintText(CharacterEquipBean.GetEquipName(itemContainer.Key));
             itemContainer.Value.SetCallBackForSetViewItem(CallBackForSetEquip);
         }
     }
@@ -140,7 +140,7 @@ public partial class UIViewCharacterEquip : BaseUIView
                 //更换装备
                 Player player = GameHandler.Instance.manager.player;
                 CreatureCptCharacter character = player.GetCharacter();
-                character.characterEquip.ChangeEquip(itemContainer.Key, changeItemData.itemId);
+                character.characterEquip.ChangeEquip(itemContainer.Key, changeItemData);
 
                 //设置渲染摄像头
                 Action<GameObject> callBack = (objModel) =>
@@ -152,7 +152,7 @@ public partial class UIViewCharacterEquip : BaseUIView
                     showCharacter.SetLayerAllChild(LayerInfo.RenderCamera);
                 };
                 //UI显示也修改
-                showCharacter.characterEquip.ChangeEquip(itemContainer.Key, changeItemData.itemId, callBack, callBackModelRemark);
+                showCharacter.characterEquip.ChangeEquip(itemContainer.Key, changeItemData, callBack, callBackModelRemark);
             }
         }
     }

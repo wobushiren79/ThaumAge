@@ -158,7 +158,7 @@ public partial class UIViewItemContainer : BaseUIView
     }
     public void SetLimitType(EquipTypeEnum equipType)
     {
-        ItemsTypeEnum itemsType = UserEquipBean.EquipTypeEnumToItemsType(equipType);
+        ItemsTypeEnum itemsType = CharacterEquipBean.EquipTypeEnumToItemsType(equipType);
         SetLimitType(itemsType);
     }
 

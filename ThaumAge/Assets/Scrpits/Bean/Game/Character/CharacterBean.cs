@@ -7,17 +7,13 @@ public class CharacterBean : CreatureBean
 {
     //角色状态
     public CharacterStatusBean characterStatus;
+    //角色装备
+    public CharacterEquipBean characterEquip;
+
     //角色姓名
     public string characterName;
     //角色性别
     public int characterSex;
-
-    //帽子ID
-    public long headId;
-    //衣服ID
-    public long clothesId;
-    //鞋子ID
-    public long shoesId;
 
     public long hairId;
     public long eyeId;
