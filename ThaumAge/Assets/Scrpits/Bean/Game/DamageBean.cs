@@ -7,6 +7,11 @@ public class DamageBean
 {
     public Dictionary<AttributeTypeEnum, string> dicDamageData = new Dictionary<AttributeTypeEnum, string>();
 
+    public DamageBean(int damage)
+    {
+        dicDamageData.Add(AttributeTypeEnum.Damage, $"{damage}");
+    }
+
     public DamageBean(string dataStr)
     {
         string[] itemDataStr = dataStr.SplitForArrayStr('|');
