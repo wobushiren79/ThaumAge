@@ -14,20 +14,20 @@ public class ItemTypeBlock : Item
                 //获取位置和方向
                 player.playerRay.GetHitPositionAndDirection(hit, out Vector3Int targetPosition, out Vector3Int closePosition, out BlockDirectionEnum direction);
                 //如果上手没有物品 或者是左键点击 则挖掘
-                if (itemData == null || itemData.itemId == 0 || useType ==  ItemUseTypeEnum.Left)
+                if (itemData == null || itemData.itemId == 0 || useType == ItemUseTypeEnum.Left)
                 {
-                     TargetBreak(itemData, targetPosition);
+                    TargetBreak(itemData, targetPosition);
                 }
                 //如果手上有物品 则使用
                 else
                 {
-                    TargetUse(itemData, targetPosition, closePosition, direction);
+                    TargetUse(player.gameObject, itemData, targetPosition, closePosition, direction);
                 }
             }
         }
     }
 
-    public override void TargetUse(ItemsBean itemData, Vector3Int targetPosition, Vector3Int closePosition, BlockDirectionEnum direction)
+    public override void TargetUse(GameObject user, ItemsBean itemData, Vector3Int targetPosition, Vector3Int closePosition, BlockDirectionEnum direction)
     {
         //获取目标方块
         WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(targetPosition, out Block targetBlock, out BlockDirectionEnum targetBlockDirection, out Chunk taragetChunk);

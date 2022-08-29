@@ -260,6 +260,7 @@ public class ControlForPlayer : ControlForBase
         }
     }
 
+    protected float jumpStartPositionY = 0;
     /// <summary>
     /// 处理跳跃
     /// </summary>
@@ -279,7 +280,20 @@ public class ControlForPlayer : ControlForBase
                 isJumpCheck = false;
                 isJump = false;
                 character.characterAnim.creatureAnim.PlayJump(isJump);
+                //获取坠落高度
+                float fallHeight = jumpStartPositionY - transform.position.y;
+                if (fallHeight > 5)
+                {
+                    //如果高度大于值 则触发掉落伤害
+                    Player player = GameHandler.Instance.manager.player;
+                    //扣除伤害
+                    player.character.UnderAttack(null,new DamageBean(1));
+                }
             }
+        }
+        else
+        {
+            jumpStartPositionY = transform.position.y;
         }
     }
 
@@ -428,6 +442,8 @@ public class ControlForPlayer : ControlForBase
         ItemsBean itemsData = userData.GetItemsFromShortcut();
         Player player = GameHandler.Instance.manager.player;
         ItemsHandler.Instance.UseItem(player.gameObject, itemsData, useType);
+        //刷新手上的物品
+        GameHandler.Instance.manager.player.RefreshHandItem();
     }
 
     /// <summary>
@@ -462,6 +478,8 @@ public class ControlForPlayer : ControlForBase
         }
         UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();
         userData.SetShortcuts(userData.indexForShortcuts + changIndex);
+        //刷新手上物品
+        GameHandler.Instance.manager.player.RefreshHandItem();
         //刷新UI
         UIHandler.Instance.GetOpenUI().RefreshUI();
     }

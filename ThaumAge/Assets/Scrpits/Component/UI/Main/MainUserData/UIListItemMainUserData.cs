@@ -150,7 +150,7 @@ public partial class UIListItemMainUserData : BaseUIView
         Action<DialogView, DialogBean> actionSubmit = (view, data) =>
          {
              GameDataHandler.Instance.manager.DeletGameData(userData.userId);
-             UIHandler.Instance.RefreshAllUI();
+             UIHandler.Instance.RefreshUI();
              SceneMainHandler.Instance.manager.ShowCharacterObjByIndex(userDataIndex, false);
          };
         DialogBean dialogData = new DialogBean();

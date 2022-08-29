@@ -41,7 +41,6 @@ public partial class UIViewItemContainer : BaseUIView
     public override void Awake()
     {
         base.Awake();
-        ui_Hint.ShowObj(false);
         ui_ViewItemModel.ShowObj(false);
         SetSelectState(false);
     }
@@ -136,16 +135,6 @@ public partial class UIViewItemContainer : BaseUIView
     }
 
     /// <summary>
-    /// 设置提示文本
-    /// </summary>
-    /// <param name="hintText"></param>
-    public void SetHintText(string hintText)
-    {
-        ui_Hint.ShowObj(true);
-        ui_Hint.text = hintText;
-    }
-
-    /// <summary>
     /// 设置限制放置的道具类型
     /// </summary>
     public void SetLimitTypes(List<ItemsTypeEnum> listLimitTypes)
@@ -158,7 +147,7 @@ public partial class UIViewItemContainer : BaseUIView
     }
     public void SetLimitType(EquipTypeEnum equipType)
     {
-        ItemsTypeEnum itemsType = UserEquipBean.EquipTypeEnumToItemsType(equipType);
+        ItemsTypeEnum itemsType = CharacterEquipBean.EquipTypeEnumToItemsType(equipType);
         SetLimitType(itemsType);
     }
 

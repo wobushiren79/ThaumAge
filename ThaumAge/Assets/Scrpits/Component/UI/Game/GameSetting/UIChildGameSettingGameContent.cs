@@ -88,7 +88,7 @@ public class UIChildGameSettingGameContent : UIChildGameSettingBaseContent
     public void HandleForSelectLanguage(int index)
     {
         gameConfig.SetLanguage((LanguageEnum)index);
-        UIHandler.Instance.RefreshAllUI();
+        UIHandler.Instance.RefreshUI();
         RefreshUI();
     }
 }

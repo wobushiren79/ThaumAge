@@ -116,7 +116,7 @@ float TerraninCreate(int iterateNumberMax,float perlinFrequency,float perlinAmpl
     float curFrequency = perlinFrequency;
     float curAmplitude = perlinAmplitude;
 
-    int curRandomSeedOffset = RandomSeed % (BiomeSize * 10);
+    int curRandomSeedOffset = RandomSeed % (BiomeSize * 7);
     //循环种子次数
     while(iterateNumberMax > iterateNumber)
     {

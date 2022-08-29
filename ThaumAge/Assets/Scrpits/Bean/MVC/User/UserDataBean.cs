@@ -19,8 +19,7 @@ public class UserDataBean
     //数据序号
     public int dataIndex;
 
-    //玩家装备数据
-    public UserEquipBean userEquip = new UserEquipBean();
+
     //玩家位置数据
     public UserPositionBean userPosition = new UserPositionBean();
     //玩家离开位置数据
@@ -180,15 +179,6 @@ public class UserDataBean
         else if (this.indexForShortcuts < 0)
         {
             this.indexForShortcuts = 9;
-        }
-
-        //改变手中的物品
-        Player player = GameHandler.Instance.manager.player;
-        if (player != null)
-        {
-            CreatureCptCharacter character = player.GetCharacter();
-            ItemsBean itemsData = GetItemsFromShortcut();
-            character.CharacterItems.ChangeRightHandItem(itemsData.itemId);
         }
         return this.indexForShortcuts;
     }

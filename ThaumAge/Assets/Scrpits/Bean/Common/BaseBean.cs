@@ -15,7 +15,7 @@ public class BaseBean
     {
         get
         {
-            return GetBaseText("name");
+            return GetBaseText("name").Replace(" ",TextHandler.Instance.noBreakingSpace);
         }
     }
 

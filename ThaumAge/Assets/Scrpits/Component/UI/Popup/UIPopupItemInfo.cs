@@ -1,10 +1,17 @@
 ﻿using UnityEditor;
 using UnityEngine;
+using UnityEngine.UI;
 
 public partial class UIPopupItemInfo : PopupShowView
 {
     public long itemId;
     public ItemsInfoBean ItemsInfo;
+
+    public override void Awake()
+    {
+        base.Awake();
+        ui_ItemAttribute.ShowObj(false);
+    }
 
     public void SetData(long itemId)
     {
@@ -17,6 +24,7 @@ public partial class UIPopupItemInfo : PopupShowView
         SetItemIconColor(ItemsInfo.icon_color);
         SetItemName(ItemsInfo.name);
         SetItemDetails("");
+        SetAttribute(ItemsInfo);
     }
 
     /// <summary>
@@ -68,6 +76,35 @@ public partial class UIPopupItemInfo : PopupShowView
         {
             ui_Details.gameObject.SetActive(true);
             ui_ItemDetails.text = itemDetails;
+        }
+    }
+
+    /// <summary>
+    /// 设置属性
+    /// </summary>
+    public void SetAttribute(ItemsInfoBean ItemsInfo)
+    {
+        CptUtil.RemoveChildsByActive(ui_Attribute);
+        AttributeBean attributeData = ItemsInfo.GetAttributeData();
+        if (attributeData == null || attributeData.dicAttributeData == null || attributeData.dicAttributeData.Count == 0)
+        {
+            ui_Attribute.ShowObj(false);
+            return;
+        }
+        ui_Attribute.ShowObj(true);
+        foreach (var itemAttribute in attributeData.dicAttributeData)
+        {
+            GameObject objItem = Instantiate(ui_Attribute.gameObject, ui_ItemAttribute.gameObject);
+            Text tvContent = objItem.transform.Find("AttributeText").GetComponent<Text>();
+            Image ivIcon = objItem.transform.Find("AttributeIcon").GetComponent<Image>();
+
+            string iconKey = AttributeBean.GetAttributeIconKey(itemAttribute.Key);
+            string contentStr = AttributeBean.GetAttributeText(itemAttribute.Key);
+            IconHandler.Instance.manager.GetUISpriteByName(iconKey, (sprite) =>
+             {
+                 ivIcon.sprite = sprite;
+             });
+            tvContent.text = $"{contentStr}+{itemAttribute.Value}";
         }
     }
 

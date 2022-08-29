@@ -34,7 +34,7 @@ public class ItemsHandler : BaseHandler<ItemsHandler, ItemsManager>
         }
         else
         {
-            item.UseForAnim(user, itemsData);
+            item.UseForAnim(user, itemsData, useType);
         }
     }
 

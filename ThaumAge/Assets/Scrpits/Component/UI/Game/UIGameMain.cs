@@ -11,7 +11,7 @@ public partial class UIGameMain : BaseUIComponent
     {
         //设置对应数据
         UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();
-        ui_ViewCharacterStatus.SetData(userData.characterData.GetCharacterStatus());
+        ui_ViewCharacterStatus.SetData(userData.characterData);
 
         base.OpenUI();
     }

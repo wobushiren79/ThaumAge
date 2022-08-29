@@ -89,6 +89,7 @@ public class UIViewShortcuts : BaseUIView
                 return;
         }
         userData.SetShortcuts(indexForShortcuts);
+        GameHandler.Instance.manager.player.RefreshHandItem();
         RefreshUI();
     }
 

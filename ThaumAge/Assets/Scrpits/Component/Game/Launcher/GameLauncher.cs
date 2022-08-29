@@ -32,7 +32,7 @@ public class GameLauncher : BaseLauncher
             //设置游戏状态
             GameHandler.Instance.manager.SetGameState(GameStateEnum.Init);
             //设置种子
-            if(seed != 0)
+            if(Application.isEditor && seed != 0)
             {
                 userData.seed = seed;
             }
