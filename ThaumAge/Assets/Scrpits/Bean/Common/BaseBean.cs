@@ -11,14 +11,10 @@ public class BaseBean
     public string name_cn;
     public string name_en;
 
-    public string name
+    public string GetName()
     {
-        get
-        {
-            return GetBaseText("name").Replace(" ",TextHandler.Instance.noBreakingSpace);
-        }
+        return GetBaseText("name").Replace(" ", TextHandler.Instance.noBreakingSpace);
     }
-
 
     /// <summary>
     /// 获取字段值

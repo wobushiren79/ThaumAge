@@ -31,7 +31,8 @@ public class CreatureCptBaseMonster : CreatureCptBase
     /// </summary>
     public virtual void HandleForUpdateData()
     {
-        creatureData.AddLife(1);
+        CreatureStatusBean creatureStatus = creatureData.GetCreatureStatus();
+        creatureStatus.HealthChange(1);
         timeUpdateForData = 0;
         //刷新血条
         creatureBattle.RefreshLifeProgress();

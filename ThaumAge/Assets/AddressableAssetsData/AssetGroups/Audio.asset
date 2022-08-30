@@ -52,6 +52,51 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: fb13603fcc5b36d4c8d57602c97497e9
+    m_Address: Assets/Audio/Sound/audio_sound_btn2.wav
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 3e35165a27ee59c4f9f78b02bf7084db
+    m_Address: Assets/Audio/Sound/audio_sound_water_1.wav
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: fe45971073ab66e4fad8b867aa6a8923
+    m_Address: Assets/Audio/Sound/audio_sound_btn1.wav
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 05c8dce7829a50040a9a0ddb98ef1611
+    m_Address: Assets/Audio/Sound/audio_sound_dig_53.wav
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: b7881ce902a595644b6ccc3514ecd312
+    m_Address: Assets/Audio/Sound/audio_sound_dig_3.wav
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 2a8020839bf88494b95ad4308545f319
+    m_Address: Assets/Audio/Sound/auido_sound_get_1.wav
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e0aefde3073316740904097098506189
+    m_Address: Assets/Audio/Sound/audio_sound_dig_52.wav
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 2697628634883964a8a940f355f5399d
+    m_Address: Assets/Audio/Sound/audio_sound_dig_51.wav
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 89866c2ebb88d094aa20d8bf57d0af84
+    m_Address: Assets/Audio/Sound/auido_sound_door_1.wav
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: fd6114d87f1af534fbf270c47c0f10bf, type: 2}
   m_SchemaSet:

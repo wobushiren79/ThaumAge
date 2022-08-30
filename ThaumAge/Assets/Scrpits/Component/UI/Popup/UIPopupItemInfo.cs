@@ -22,7 +22,7 @@ public partial class UIPopupItemInfo : PopupShowView
 
         SetItemIcon(itemId);
         SetItemIconColor(ItemsInfo.icon_color);
-        SetItemName(ItemsInfo.name);
+        SetItemName(ItemsInfo.GetName());
         SetItemDetails("");
         SetAttribute(ItemsInfo);
     }

@@ -261,6 +261,7 @@ public class ControlForPlayer : ControlForBase
     }
 
     protected float jumpStartPositionY = 0;
+    protected float maxFallHeight = 5;
     /// <summary>
     /// 处理跳跃
     /// </summary>
@@ -280,15 +281,10 @@ public class ControlForPlayer : ControlForBase
                 isJumpCheck = false;
                 isJump = false;
                 character.characterAnim.creatureAnim.PlayJump(isJump);
-                //获取坠落高度
-                float fallHeight = jumpStartPositionY - transform.position.y;
-                if (fallHeight > 5)
-                {
-                    //如果高度大于值 则触发掉落伤害
-                    Player player = GameHandler.Instance.manager.player;
-                    //扣除伤害
-                    player.character.UnderAttack(null,new DamageBean(1));
-                }
+
+                //受到掉落伤害
+                Player player = GameHandler.Instance.manager.player;
+                player.character.UnderFall(jumpStartPositionY);
             }
         }
         else
@@ -503,9 +499,9 @@ public class ControlForPlayer : ControlForBase
         {
             //加速消耗耐力
             UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();
-            CharacterStatusBean characterStatus = userData.characterData.GetCharacterStatus();
+            CreatureStatusBean creatureStatus = userData.characterData.GetCreatureStatus();
             //判断是否成功消耗耐力
-            bool isExpendStamina = characterStatus.StaminaChange(-Time.deltaTime * 2);
+            bool isExpendStamina = creatureStatus.StaminaChange(-Time.deltaTime * 2);
             moveSpeed = isExpendStamina ? moveSpeed * 1.5f : moveSpeed;
             //刷新UI
             EventHandler.Instance.TriggerEvent(EventsInfo.CharacterStatus_StatusChange);

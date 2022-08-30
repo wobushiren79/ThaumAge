@@ -25,13 +25,13 @@ public partial class UIViewCharacterStatusShow : BaseUIView
         if (characterData == null)
             return;
 
-        CharacterStatusBean characterStatus = characterData.characterStatus;
+        CreatureStatusBean creatureStatus = characterData.GetCreatureStatus();
 
-        SetHealth(characterStatus.curHealth, characterData.GetAttributeValue(AttributeTypeEnum.Health));
-        SetStamina(Mathf.RoundToInt(characterStatus.curStamina), characterData.GetAttributeValue(AttributeTypeEnum.Stamina));
-        SetMagic(characterStatus.curMagic, characterData.GetAttributeValue(AttributeTypeEnum.Magic));
-        SetSaturation(Mathf.RoundToInt(characterStatus.curSaturation), characterData.GetAttributeValue(AttributeTypeEnum.Saturation));
-        SetAir(Mathf.RoundToInt(characterStatus.curAir), characterData.GetAttributeValue(AttributeTypeEnum.Air));
+        SetHealth(creatureStatus.curHealth, characterData.GetAttributeValue(AttributeTypeEnum.Health));
+        SetStamina(Mathf.RoundToInt(creatureStatus.curStamina), characterData.GetAttributeValue(AttributeTypeEnum.Stamina));
+        SetMagic(creatureStatus.curMagic, characterData.GetAttributeValue(AttributeTypeEnum.Magic));
+        SetSaturation(Mathf.RoundToInt(creatureStatus.curSaturation), characterData.GetAttributeValue(AttributeTypeEnum.Saturation));
+        SetAir(Mathf.RoundToInt(creatureStatus.curAir), characterData.GetAttributeValue(AttributeTypeEnum.Air));
     }
 
     /// <summary>

@@ -17,9 +17,12 @@ public class ItemTypeFood : Item
         if (user == GameHandler.Instance.manager.player.gameObject)
         {
             UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();
-            userData.characterData.GetCharacterStatus().SaturationChange(addSatureation);
-            userData.characterData.GetCharacterStatus().HealthChange(addHealth);
-            userData.characterData.GetCharacterStatus().MagicChange(addMagic);
+            CreatureStatusBean creatureStatus = userData.characterData.GetCreatureStatus();
+
+            creatureStatus.SaturationChange(addSatureation);
+            creatureStatus.HealthChange(addHealth);
+            creatureStatus.MagicChange(addMagic);
+
             //减少道具
             userData.AddItems(itemData,-1);
             //刷新UI

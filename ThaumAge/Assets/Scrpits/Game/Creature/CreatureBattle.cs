@@ -39,7 +39,7 @@ public class CreatureBattle : CreatureBase
     protected void UnderAttackForPlayer(GameObject atkObj, DamageBean damageData)
     {
         //处理伤害数据
-        damageData.ExecuteData(atkObj,creature, 
+        damageData.ExecuteData(atkObj, creature,
             out int damage);
         if (damage > 0)
         {
@@ -59,7 +59,7 @@ public class CreatureBattle : CreatureBase
     }
 
     protected void UnderAttackForCreature(GameObject atkObj, DamageBean damageData)
-    {        
+    {
         //处理伤害数据
         damageData.ExecuteData(atkObj, creature,
             out int damage);
@@ -104,15 +104,16 @@ public class CreatureBattle : CreatureBase
         if (creature.creatureData.GetCreatureType() == CreatureTypeEnum.Player)
         {
             UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();
-            CharacterStatusBean characterStatus = userData.characterData.GetCharacterStatus();
-            if (characterStatus.health <= 0)
+            CreatureStatusBean creatureStatus = userData.characterData.GetCreatureStatus();
+            if (creatureStatus.curHealth <= 0)
             {
                 return true;
             }
         }
         else
         {
-            if (creature.creatureData.currentLife <= 0)
+            CreatureStatusBean creatureStatus = creature.creatureData.GetCreatureStatus();
+            if (creatureStatus.curHealth <= 0)
             {
                 return true;
             }
@@ -158,7 +159,10 @@ public class CreatureBattle : CreatureBase
             }
         }
         if (lifeProgress != null)
-            lifeProgress.SetData(creature.creatureData.maxLife, creature.creatureData.currentLife);
+        {
+            CreatureStatusBean creatureStatus = creature.creatureData.GetCreatureStatus();
+            lifeProgress.SetData(creatureStatus.health, creatureStatus.curHealth);
+        }
     }
 
     /// <summary>
@@ -167,7 +171,10 @@ public class CreatureBattle : CreatureBase
     public void RefreshLifeProgress()
     {
         if (lifeProgress != null)
-            lifeProgress.RefreshData(creature.creatureData.maxLife, creature.creatureData.currentLife);
+        {
+            CreatureStatusBean creatureStatus = creature.creatureData.GetCreatureStatus();
+            lifeProgress.RefreshData(creatureStatus.health, creatureStatus.curHealth);
+        }
     }
 
     /// <summary>

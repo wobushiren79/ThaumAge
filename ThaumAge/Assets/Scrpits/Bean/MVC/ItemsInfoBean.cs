@@ -56,7 +56,7 @@ public class ItemsInfoBean : BaseBean
         for (int i = 0; i < listInfo.Count; i++)
         {
             ItemsInfoBean itemData = listInfo[i];
-            listName.Add(itemData.name);
+            listName.Add(itemData.GetName());
         }
 
         return listName;

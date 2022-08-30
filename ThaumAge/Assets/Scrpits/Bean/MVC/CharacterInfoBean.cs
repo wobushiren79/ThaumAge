@@ -27,7 +27,7 @@ public class CharacterInfoBean : BaseBean
         for (int i = 0; i < listCharacterInfo.Count; i++)
         {
             CharacterInfoBean itemData = listCharacterInfo[i];
-            listName.Add(itemData.name);
+            listName.Add(itemData.GetName());
         }
 
         return listName;

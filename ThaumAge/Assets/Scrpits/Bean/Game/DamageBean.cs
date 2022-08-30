@@ -102,16 +102,17 @@ public class DamageBean
         CreatureTypeEnum creatureType = beAtkCreature.creatureData.GetCreatureType();
         if (creatureType == CreatureTypeEnum.Player)
         {
-            //扣除伤害
             UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();
-            CharacterStatusBean characterStatus = userData.characterData.GetCharacterStatus();
-            characterStatus.HealthChange(-damage);
+            CreatureStatusBean creatureStatusBean = userData.characterData.GetCreatureStatus();
+            //扣除伤害
+            creatureStatusBean.HealthChange(-damage);
         }
         //其他生物被攻击
         else
         {
             //扣除伤害
-            beAtkCreature.creatureData.AddLife(-damage);
+            CreatureStatusBean creatureStatusBean = beAtkCreature.creatureData.GetCreatureStatus();
+            creatureStatusBean.HealthChange(-damage);
         }
     }
 

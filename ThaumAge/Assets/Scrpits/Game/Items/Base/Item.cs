@@ -244,7 +244,8 @@ public class Item
         else
         {
             //播放破坏音效
-            AudioHandler.Instance.PlaySound(301);
+            int randomAudioId = Random.Range(351,354);
+            AudioHandler.Instance.PlaySound(randomAudioId);
         }
     }
 

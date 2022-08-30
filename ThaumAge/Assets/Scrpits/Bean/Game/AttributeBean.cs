@@ -18,6 +18,8 @@ public class AttributeBean
         }
     }
 
+
+
     /// <summary>
     /// 获取属性图标
     /// </summary>
@@ -108,6 +110,59 @@ public class AttributeBean
         return "";
     }
 
+    public static int GetAttributeValue(AttributeTypeEnum attributeType,CreatureStatusBean creatureStatus)
+    {
+        int totalData = 0;
+        switch (attributeType)
+        {
+            case AttributeTypeEnum.Health:
+                totalData += creatureStatus.health;
+                break;
+            case AttributeTypeEnum.Stamina:
+                totalData += creatureStatus.stamina;
+                break;
+            case AttributeTypeEnum.Magic:
+                totalData += creatureStatus.magic;
+                break;
+            case AttributeTypeEnum.Saturation:
+                totalData += creatureStatus.saturation;
+                break;
+            case AttributeTypeEnum.Air:
+                totalData += creatureStatus.air;
+                break;
+            case AttributeTypeEnum.Def:
+                totalData += creatureStatus.def;
+                break;
+            case AttributeTypeEnum.DefMagic:
+                totalData += creatureStatus.defMagic;
+                break;
+            case AttributeTypeEnum.DefMetal:
+                totalData += creatureStatus.defMetal;
+                break;
+            case AttributeTypeEnum.DefWood:
+                totalData += creatureStatus.defWooden;
+                break;
+            case AttributeTypeEnum.DefWater:
+                totalData += creatureStatus.defWater;
+                break;
+            case AttributeTypeEnum.DefFire:
+                totalData += creatureStatus.defFire;
+                break;
+            case AttributeTypeEnum.DefEarth:
+                totalData += creatureStatus.defEarth;
+                break;
+            case AttributeTypeEnum.Damage:
+                totalData += creatureStatus.damage;
+                break;
+            case AttributeTypeEnum.DamageMagic:
+                totalData += creatureStatus.damageMagic;
+                break;
+            case AttributeTypeEnum.KnockbackDis:
+            case AttributeTypeEnum.KnockbackTime:
+                break;
+        }
+        return totalData;
+    }
 
     /// <summary>
     /// 获取属性值
@@ -124,5 +179,7 @@ public class AttributeBean
         }
         return 0;
     }
+
+
 
 }

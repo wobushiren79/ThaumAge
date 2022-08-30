@@ -114,17 +114,17 @@ public class Player : BaseMonoBehaviour
     {
         UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();
         CharacterBean characterData = userData.characterData;
-        CharacterStatusBean characterStatus = characterData.GetCharacterStatus();
+        CreatureStatusBean creatureStatus = characterData.GetCreatureStatus();
         //增加耐力
-        characterStatus.StaminaChange(0.5f);
+        creatureStatus.StaminaChange(0.5f);
         //减少饥饿度
-        float saturation = characterStatus.SaturationChange(-0.001f);
+        float saturation = creatureStatus.SaturationChange(-0.001f);
         //如果没有饥饿度了则减少生命值
         if (saturation <= 0)
         {
             //按比例减少
             int maxHealth = characterData.GetAttributeValue(AttributeTypeEnum.Health);
-            characterStatus.HealthChange(Mathf.RoundToInt(-maxHealth * 0.1f));
+            creatureStatus.HealthChange(Mathf.RoundToInt(-maxHealth * 0.1f));
         }
         //刷新UI
         EventHandler.Instance.TriggerEvent(EventsInfo.CharacterStatus_StatusChange);

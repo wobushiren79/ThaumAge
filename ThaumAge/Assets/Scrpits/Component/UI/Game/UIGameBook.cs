@@ -52,7 +52,7 @@ public partial class UIGameBook : UIGameCommonNormal, IRadioGroupCallBack
             //设置文本
             Transform tfTitle = objItemLabel.transform.Find("Title");
             Text tvTitle = tfTitle.GetComponent<Text>();
-            tvTitle.text = bookModel.name;
+            tvTitle.text = bookModel.GetName();
             //获取按钮
             RadioButtonView btLabel = objItemLabel.GetComponent<RadioButtonView>();
             listLabels.Add(btLabel);

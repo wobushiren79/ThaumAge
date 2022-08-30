@@ -56,8 +56,9 @@ public class CreatureCptBase : BaseMonoBehaviour
     {
         this.creatureInfo = creatureInfo;
         creatureData = new CreatureBean();
-        creatureData.maxLife = creatureInfo.life;
-        creatureData.currentLife = creatureInfo.life;
+        CreatureStatusBean creatureStatus = creatureData.GetCreatureStatus();
+        creatureStatus.health = creatureInfo.life;
+        creatureStatus.curHealth = creatureInfo.life;
         creatureData.creatureType = creatureInfo.creature_type;
     }
 
@@ -69,6 +70,27 @@ public class CreatureCptBase : BaseMonoBehaviour
     public virtual void UnderAttack(GameObject atkObj, DamageBean damageData)
     {
         creatureBattle.UnderAttack(atkObj, damageData);
+    }
+
+
+    protected float maxFallHeight = 5;
+    /// <summary>
+    /// 受到掉落伤害
+    /// </summary>
+    public virtual void UnderFall(float jumpStartPositionY)
+    {
+        //获取坠落高度
+        float fallHeight = jumpStartPositionY - transform.position.y;
+        if (fallHeight > maxFallHeight)
+        {
+            float heightAdd = fallHeight - maxFallHeight;
+            //按比例减少
+            CreatureStatusBean creatureStatus = creatureData.GetCreatureStatus();
+            int maxHealth = creatureStatus.health;
+            //扣除伤害
+            int damage = (int)(maxHealth * 0.1f * heightAdd);
+            UnderAttack(null, new DamageBean(damage));
+        }
     }
 
     /// <summary>

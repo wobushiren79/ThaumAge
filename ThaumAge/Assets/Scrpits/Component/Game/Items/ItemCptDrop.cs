@@ -171,6 +171,8 @@ public class ItemCptDrop : BaseMonoBehaviour
                     rbItem.AddForce(random.Next(-100, 100), random.Next(-100, 100), random.Next(-100, 100));
                 }
                 UIHandler.Instance.RefreshUI();
+                //播放音效
+                AudioHandler.Instance.PlaySound(401);
             });
     }
 

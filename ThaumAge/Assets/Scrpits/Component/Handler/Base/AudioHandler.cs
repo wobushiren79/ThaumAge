@@ -72,6 +72,10 @@ public class AudioHandler : BaseHandler<AudioHandler, AudioManager>
             {
                 StartCoroutine(CoroutineForPlayOneShot(audioSource, audioClip, volumeScale, soundPosition));
             }
+            else
+            {
+                Debug.LogError($"没有名字为:{audioInfo.name_res} 的音效资源");
+            }
         });
     }
 
