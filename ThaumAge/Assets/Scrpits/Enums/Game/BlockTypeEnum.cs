@@ -122,6 +122,7 @@ public enum BlockTypeEnum
     FenceDoorWooden = 6361,//木制栅栏门
 
     BedWooden = 6901,//床
+    Tombstone = 6999,//墓碑
 
     BookshelfOak = 8001, //书架-橡树           
     BookshelfSilver = 8002, //书架-银树

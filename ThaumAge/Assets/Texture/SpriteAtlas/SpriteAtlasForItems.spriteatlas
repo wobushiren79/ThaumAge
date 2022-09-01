@@ -132,6 +132,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 1af0d977e218412479e9582f0dc910eb, type: 3}
   - {fileID: 21300000, guid: 5f547e8755057cc4c96c85bbfe902007, type: 3}
   - {fileID: 21300000, guid: b5a9c997f408aca4ab6e9541bfd9ee02, type: 3}
+  - {fileID: 21300000, guid: f7796ba701388d045b5580f83a917dd0, type: 3}
   - {fileID: 21300000, guid: e0c5fbc7970ef0145b724ed63c30f110, type: 3}
   - {fileID: 21300000, guid: 8c5d23f70b0a1e74596173a200236533, type: 3}
   - {fileID: 21300000, guid: f7b47628d0cfb3742ab6f1ee347f2051, type: 3}
@@ -297,6 +298,7 @@ SpriteAtlas:
   - icon_item_3100001
   - icon_item_106311
   - icon_item_1200011
+  - icon_item_106999
   - icon_item_104001
   - icon_item_2200001
   - icon_item_107102
