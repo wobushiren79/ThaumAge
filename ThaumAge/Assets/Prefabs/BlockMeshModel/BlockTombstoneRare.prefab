@@ -28,7 +28,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1001626597077129015}
+  - {fileID: 7900654073208303525}
   m_Father: {fileID: 4225425581871103741}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -43,7 +43,7 @@ GameObject:
   - component: {fileID: 4225425581871103741}
   - component: {fileID: 5031982672662484177}
   m_Layer: 0
-  m_Name: BlockTombstone
+  m_Name: BlockTombstoneRare
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -78,7 +78,7 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0.5, y: 0.5, z: 0.5}
---- !u!1001 &1258043464448912325
+--- !u!1001 &5948108264481258211
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -86,35 +86,31 @@ PrefabInstance:
     serializedVersion: 2
     m_TransformParent: {fileID: 3957117614714892002}
     m_Modifications:
-    - target: {fileID: 2059000212963671282, guid: 62d94e19bca3f5f43acc4a713d6a208e, type: 3}
+    - target: {fileID: 3349886777585043830, guid: 98f6b463ef888ca40bfbe970c4ef03aa, type: 3}
+      propertyPath: m_Name
+      value: BlockTombstone_2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4552910484506580294, guid: 98f6b463ef888ca40bfbe970c4ef03aa, type: 3}
       propertyPath: m_RootOrder
       value: 3
       objectReference: {fileID: 0}
-    - target: {fileID: 2059000212963671282, guid: 62d94e19bca3f5f43acc4a713d6a208e, type: 3}
+    - target: {fileID: 4552910484506580294, guid: 98f6b463ef888ca40bfbe970c4ef03aa, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 2059000212963671282, guid: 62d94e19bca3f5f43acc4a713d6a208e, type: 3}
+    - target: {fileID: 4552910484506580294, guid: 98f6b463ef888ca40bfbe970c4ef03aa, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 2059000212963671282, guid: 62d94e19bca3f5f43acc4a713d6a208e, type: 3}
+    - target: {fileID: 4552910484506580294, guid: 98f6b463ef888ca40bfbe970c4ef03aa, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4698286515155973429, guid: 62d94e19bca3f5f43acc4a713d6a208e, type: 3}
-      propertyPath: m_Name
-      value: BlockTombstone_1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4698286515155973429, guid: 62d94e19bca3f5f43acc4a713d6a208e, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_AddedGameObjects: []
-  m_SourcePrefab: {fileID: 100100000, guid: 62d94e19bca3f5f43acc4a713d6a208e, type: 3}
---- !u!4 &1001626597077129015 stripped
+  m_SourcePrefab: {fileID: 100100000, guid: 98f6b463ef888ca40bfbe970c4ef03aa, type: 3}
+--- !u!4 &7900654073208303525 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: 2059000212963671282, guid: 62d94e19bca3f5f43acc4a713d6a208e, type: 3}
-  m_PrefabInstance: {fileID: 1258043464448912325}
+  m_CorrespondingSourceObject: {fileID: 4552910484506580294, guid: 98f6b463ef888ca40bfbe970c4ef03aa, type: 3}
+  m_PrefabInstance: {fileID: 5948108264481258211}
   m_PrefabAsset: {fileID: 0}

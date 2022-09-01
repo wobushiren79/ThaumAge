@@ -411,6 +411,7 @@ public class BlockEditorWindow : EditorWindow
     /// </summary>
     public static void CreateBlockMeshData()
     {
+        EditorUtil.RefreshAsset();
         FileInfo[] files = FileUtil.GetFilesByPath($"{Path_Block_MeshModel}");
         if (files.IsNull())
         {
@@ -635,15 +636,20 @@ public class BlockEditorWindow : EditorWindow
                 //保存mesh
                 string pathMesh = $"{Path_Block_Model_Save}/{newMesh.name}.asset";
                 EditorUtil.CreateAsset(newMesh, pathMesh);
+                EditorUtil.RefreshAsset();
+
+                //重新查找这个资源
+                newMesh = EditorUtil.GetAssetByPath<Mesh>($"{pathMesh}");
                 //设置mesh
                 objNewMeshFilter.sharedMesh = newMesh;
-
+                objNewMeshFilter.mesh = newMesh;
                 //设置材质
                 objNewMeshRenderer.material = matUse;
 
                 EditorUtil.CreatePrefab(objNew, $"{Path_Block_Model_Save}/{itemCreateData.nameBlock}");
                 //EditorUtil.RefreshAsset(objNew);
                 DestroyImmediate(objNew);
+                EditorUtil.RefreshAsset();
             }
         }
         finally

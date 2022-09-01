@@ -122,6 +122,8 @@ public enum BlockTypeEnum
     FenceDoorWooden = 6361,//Ä¾ÖÆÕ¤À¸ÃÅ
 
     BedWooden = 6901,//´²
+
+    TombstoneRare = 6998,//Ä¹±®Ï¡ÓÐ
     Tombstone = 6999,//Ä¹±®
 
     BookshelfOak = 8001, //Êé¼Ü-ÏðÊ÷           
