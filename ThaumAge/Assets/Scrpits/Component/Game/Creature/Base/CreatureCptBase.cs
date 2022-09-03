@@ -90,6 +90,8 @@ public class CreatureCptBase : BaseMonoBehaviour
             //扣除伤害
             int damage = (int)(maxHealth * 0.1f * heightAdd);
             UnderAttack(null, new DamageBean(damage));
+            //播放音效
+            AudioHandler.Instance.PlaySound(501);
         }
     }
 

@@ -12,6 +12,7 @@ TagManager:
   - Moon
   - UICamera
   - CameraCinemachine
+  - Audio
   layers:
   - Default
   - TransparentFX

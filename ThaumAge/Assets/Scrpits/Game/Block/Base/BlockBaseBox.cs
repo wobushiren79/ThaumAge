@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class BlockBaseBox : Block
 {
+    protected int boxSize = 7 * 7;
     public override void Interactive(GameObject user, Vector3Int worldPosition,BlockDirectionEnum blockDirection)
     {
         base.Interactive(user, worldPosition, blockDirection);
@@ -11,17 +12,17 @@ public class BlockBaseBox : Block
             return;
         //打开箱子UI
         UIGameBox uiGameBox = UIHandler.Instance.OpenUIAndCloseOther<UIGameBox>(UIEnum.GameBox);
-        uiGameBox.SetData(worldPosition);
+        uiGameBox.SetData(worldPosition, boxSize);
         //打开盒子
         OpenBox(worldPosition);
     }
 
-    public void OpenBox(Vector3Int worldPosition)
+    public virtual void OpenBox(Vector3Int worldPosition)
     {
         AnimForBox(worldPosition, 1);
     }
 
-    public void CloseBox(Vector3Int worldPosition)
+    public virtual void CloseBox(Vector3Int worldPosition)
     {
         AnimForBox(worldPosition, 0);
     }

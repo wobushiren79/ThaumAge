@@ -1,6 +1,6 @@
 public enum BlockTypeEnum
 {
-    None = 0,    //空
+    None = 0,    //空气
     Foundation = 1,    //地基
     LinkChild = 2,//链接子方块
 

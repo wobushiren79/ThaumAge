@@ -2,6 +2,7 @@
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 public class UGUIUtil
@@ -22,17 +23,31 @@ public class UGUIUtil
     /// <returns></returns>
     public static bool IsPointerUI()
     {
-        //只有在电脑上有用 手机没用
-        if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
+        PointerEventData pointerEventData = new PointerEventData(EventSystem.current);
+        pointerEventData.position = Mouse.current.position.ReadValue();
+        List<RaycastResult> raycastResultsList = new List<RaycastResult>();
+        EventSystem.current.RaycastAll(pointerEventData, raycastResultsList);
+        for (int i = 0; i < raycastResultsList.Count; i++)
         {
-            //点击到了UI
-            return true;
+            if (raycastResultsList[i].gameObject.GetType() == typeof(GameObject))
+            {
+                return true;
+                break;
+            }
         }
-        else
-        {
-            //没有点击到UI
-            return false;
-        }
+        return false;
+
+        ////只有在电脑上有用 手机没用
+        //if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
+        //{
+        //    //点击到了UI
+        //    return true;
+        //}
+        //else
+        //{
+        //    //没有点击到UI
+        //    return false;
+        //}
     }
 
     /// <summary>

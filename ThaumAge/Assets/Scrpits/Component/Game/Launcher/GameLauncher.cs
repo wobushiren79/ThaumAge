@@ -72,6 +72,8 @@ public class GameLauncher : BaseLauncher
         GameControlHandler.Instance.SetPlayerControlEnabled(true);
         //初始化游戏角色
         GameHandler.Instance.InitCharacter();
+        //修改光照
+        LightHandler.Instance.InitLight();
         //打开主UI
         UIHandler.Instance.OpenUIAndCloseOther<UIGameMain>(UIEnum.GameMain);
     }

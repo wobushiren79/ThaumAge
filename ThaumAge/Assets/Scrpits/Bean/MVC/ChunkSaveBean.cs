@@ -12,7 +12,7 @@ public class ChunkSaveBean : BaseBean
     //chunk坐标
     public Vector3Int position;
     //保存的方块数据
-    public List<BlockBean> listBlockData = new List<BlockBean>();
+    public BlockBean[] arrayBlockData = new BlockBean[0];
     //生态数据
     public int biomeType = -1;
 
@@ -25,9 +25,9 @@ public class ChunkSaveBean : BaseBean
         dicBlockData.Clear();
         int widthChunk = WorldCreateHandler.Instance.manager.widthChunk;
         int heightChunk = WorldCreateHandler.Instance.manager.heightChunk;
-        for (int i = 0; i < listBlockData.Count; i++)
+        for (int i = 0; i < arrayBlockData.Length; i++)
         {
-            BlockBean blockData = listBlockData[i];
+            BlockBean blockData = arrayBlockData[i];
             Vector3Int localPosition = blockData.localPosition;
             int index = MathUtil.GetSingleIndexForThree(localPosition, widthChunk, heightChunk);
             if (!dicBlockData.ContainsKey(index))
@@ -37,17 +37,12 @@ public class ChunkSaveBean : BaseBean
 
     public void SaveData()
     {
-        try
+        arrayBlockData = new BlockBean[dicBlockData.Count];
+        int i = 0;
+        foreach (var itemData in dicBlockData)
         {
-            listBlockData.Clear();
-            foreach (var itemData in dicBlockData)
-            {
-                listBlockData.Add(itemData.Value);
-            }
-        }
-        catch
-        {
-
+            arrayBlockData[i] = itemData.Value;
+            i++;
         }
     }
 

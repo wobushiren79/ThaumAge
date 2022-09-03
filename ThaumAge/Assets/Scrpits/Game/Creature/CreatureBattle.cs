@@ -52,10 +52,7 @@ public class CreatureBattle : CreatureBase
         EventHandler.Instance.TriggerEvent(EventsInfo.CharacterStatus_StatusChange);
 
         //检测是否死亡
-        if (CheckIsDead())
-        {
-
-        }
+        CheckIsDead();
     }
 
     protected void UnderAttackForCreature(GameObject atkObj, DamageBean damageData)
@@ -91,8 +88,6 @@ public class CreatureBattle : CreatureBase
         {
             //隐藏生命条
             lifeProgress.ShowObj(false);
-            //死亡
-            creature.Dead();
         }
     }
 
@@ -107,6 +102,8 @@ public class CreatureBattle : CreatureBase
             CreatureStatusBean creatureStatus = userData.characterData.GetCreatureStatus();
             if (creatureStatus.curHealth <= 0)
             {
+                //死亡
+                creature.Dead();
                 return true;
             }
         }
@@ -115,6 +112,8 @@ public class CreatureBattle : CreatureBase
             CreatureStatusBean creatureStatus = creature.creatureData.GetCreatureStatus();
             if (creatureStatus.curHealth <= 0)
             {
+                //死亡
+                creature.Dead();
                 return true;
             }
         }

@@ -97,14 +97,6 @@ public class Chunk
     }
 
     /// <summary>
-    /// 设置存储数据
-    /// </summary>
-    /// <param name="worldData"></param>
-    public void SetChunkSaveData(ChunkSaveBean chunkSaveData)
-    {
-        this.chunkSaveData = chunkSaveData;
-    }
-    /// <summary>
     /// 获取存储数据
     /// </summary>
     /// <returns></returns>
@@ -451,7 +443,7 @@ public class Chunk
         //获取数据中的chunk
         UserDataBean userData = gameDataManager.GetUserData();
 
-        ChunkSaveBean chunkSaveData = gameDataManager.GetChunkSaveData(userData.userId, WorldCreateHandler.Instance.manager.worldType, chunkData.positionForWorld);
+        chunkSaveData = gameDataManager.GetChunkSaveData(userData.userId, WorldCreateHandler.Instance.manager.worldType, chunkData.positionForWorld);
         //如果没有世界数据 则创建一个
         if (chunkSaveData == null)
         {
@@ -460,20 +452,19 @@ public class Chunk
             chunkSaveData.userId = userData.userId;
             chunkSaveData.position = chunkData.positionForWorld;
         }
-        chunkSaveData.InitData();
-        Dictionary<int, BlockBean> dicBlockData = chunkSaveData.dicBlockData;
-        foreach (var itemData in dicBlockData)
+        else
         {
-            BlockBean blockData = itemData.Value;
-            Vector3Int positionBlock = blockData.localPosition;
+            chunkSaveData.InitData();
+            Dictionary<int, BlockBean> dicBlockData = chunkSaveData.dicBlockData;
+            foreach (var itemData in dicBlockData)
+            {
+                BlockBean blockData = itemData.Value;
+                Vector3Int positionBlock = blockData.localPosition;
 
-            //添加方块 如果已经有该方块 则先删除，优先使用存档的方块
-            //chunkData.GetBlockForLocal(positionBlock, out Block block, out DirectionEnum direction);
-
-            Block block = BlockHandler.Instance.manager.GetRegisterBlock(blockData.blockId);
-            chunkData.SetBlockForLocal(positionBlock, block, blockData.direction);
+                Block block = BlockHandler.Instance.manager.GetRegisterBlock(blockData.blockId);
+                chunkData.SetBlockForLocal(positionBlock, block, blockData.direction);
+            }
         }
-        SetChunkSaveData(chunkSaveData);
     }
 
     /// <summary>

@@ -129,7 +129,7 @@ public class ItemsHandler : BaseHandler<ItemsHandler, ItemsManager>
         else
         {
             //获取掉落道具
-            List<ItemsBean> listDrop = targetBlock.GetDropItems();
+            List<ItemsBean> listDrop = targetBlock.GetDropItems(blockData);
             //如果没有掉落物，则默认掉落本体一个
             if (listDrop.IsNull())
             {

@@ -76,4 +76,27 @@ public class CreatureCptCharacter : CreatureCptBase
         }
         return characterData;
     }
+
+    public override void Dead()
+    {
+        if (creatureData.GetCreatureType() == CreatureTypeEnum.Player)
+        {
+            //如果是玩家控制的角色
+            Vector3Int worldPos = Vector3Int.RoundToInt(transform.position);
+            //创建一个坟墓
+            WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(worldPos, out Block block, out Chunk chunk);
+            if (chunk != null)
+            {
+                float randmType = Random.Range(0f, 1f);
+                //一定概率生成稀有墓碑
+                BlockTypeEnum tombType = BlockTypeEnum.Tombstone;
+                if (randmType <= 0.01f)
+                {
+                    tombType = BlockTypeEnum.TombstoneRare;
+                }
+                int direction = Random.Range(11, 15);
+                chunk.SetBlockForLocal(worldPos - chunk.chunkData.positionForWorld, tombType, (BlockDirectionEnum)direction);
+            }
+        }
+    }
 }

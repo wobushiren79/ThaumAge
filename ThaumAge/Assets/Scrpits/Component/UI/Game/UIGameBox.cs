@@ -17,7 +17,7 @@ public partial class UIGameBox : UIGameCommonNormal
     /// 设置数据
     /// </summary>
     /// <param name="worldPosition"></param>
-    public void SetData(Vector3Int worldPosition)
+    public void SetData(Vector3Int worldPosition,int boxSize)
     {
         this.blockWorldPosition = worldPosition;
         //获取对应方块
@@ -26,7 +26,7 @@ public partial class UIGameBox : UIGameCommonNormal
         //获取方块数据
         blockData = chunk.GetBlockData(worldPosition - chunk.chunkData.positionForWorld);
         //设置数据
-        ui_ViewBoxList.SetData(worldPosition, blockData);
+        ui_ViewBoxList.SetData(worldPosition, blockData, boxSize);
     }
 
     /// <summary>

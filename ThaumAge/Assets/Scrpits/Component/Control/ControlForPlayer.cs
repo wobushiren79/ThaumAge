@@ -33,6 +33,8 @@ public class ControlForPlayer : ControlForBase
     private bool isJumpCheck = false;
     //地面类型0地面 1水里
     private int groundType = 0;
+    //是否在地面
+    private bool isGround = true;
 
     private InputAction inputActionUseL;
     private InputAction inputActionUseR;
@@ -114,6 +116,7 @@ public class ControlForPlayer : ControlForBase
     {
         if (GameHandler.Instance.manager.GetGameState() == GameStateEnum.Gaming)
         {
+            HandleForGround();
             HandlerForMoveUpdate();
             HandleForGravityUpdate();
         }
@@ -187,6 +190,7 @@ public class ControlForPlayer : ControlForBase
         //攀爬处理
         if (timeClimbEnd > 0)
         {
+            jumpStartPositionY = transform.position.y;
             gravityValue = Vector3.zero;
             float climbSpeed = Mathf.Abs(playerVelocity.x) > Mathf.Abs(playerVelocity.z) ? Mathf.Abs(playerVelocity.x) : Mathf.Abs(playerVelocity.z);
             playerVelocity.y = climbSpeed;
@@ -269,27 +273,42 @@ public class ControlForPlayer : ControlForBase
     {
         if (isJump && isJumpCheck)
         {
-            //发射射线检测
-            if (RayUtil.CheckToCast
-                (
-                    rbPlayer.transform.position + new Vector3(0, 0.1f, 0),
-                    Vector3.down,
-                    0.2f,
-                    1 << LayerInfo.ChunkTrigger | 1 << LayerInfo.ChunkCollider | 1 << LayerInfo.Character | 1 << LayerInfo.Creature)
-                )
+            if (isGround)
             {
                 isJumpCheck = false;
                 isJump = false;
                 character.characterAnim.creatureAnim.PlayJump(isJump);
+            }
+        }
+    }
 
+    /// <summary>
+    /// 在地面处理
+    /// </summary>
+    public void HandleForGround()
+    {
+        //发射射线检测
+        if (RayUtil.CheckToCast
+            (
+                rbPlayer.transform.position + new Vector3(0, 0.1f, 0),
+                Vector3.down,
+                0.2f,
+                1 << LayerInfo.ChunkCollider | 1 << LayerInfo.Character | 1 << LayerInfo.Creature)
+            )
+        {
+            //如果上一个状态不在地面上
+            if (!isGround)
+            {
                 //受到掉落伤害
                 Player player = GameHandler.Instance.manager.player;
                 player.character.UnderFall(jumpStartPositionY);
             }
+            jumpStartPositionY = transform.position.y;
+            isGround = true;
         }
         else
         {
-            jumpStartPositionY = transform.position.y;
+            isGround = false;
         }
     }
 
@@ -466,11 +485,11 @@ public class ControlForPlayer : ControlForBase
         int changIndex = 0;
         if (data > 0)
         {
-            changIndex = 1;
+            changIndex = -1;
         }
         else if (data < 0)
         {
-            changIndex = -1;
+            changIndex = 1;
         }
         UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();
         userData.SetShortcuts(userData.indexForShortcuts + changIndex);

@@ -32,8 +32,7 @@ public class BiomeMapData
         ComputeBuffer bufferTerrain = new ComputeBuffer(arrayChunkTerrainData.Length, 16);
         bufferTerrain.SetData(arrayChunkTerrainData);
 
-        ComputeBuffer bufferBiome = new ComputeBuffer(arrayChunkBiomeData.Length, 52);
-        bufferBiome.SetData(arrayChunkBiomeData);
+        ComputeBuffer bufferBiome = BiomeHandler.Instance.manager.GetBiomeComputeBufferByWorldType(worldType);
 
         int kernelId = biomeManager.terrainCShader.FindKernel("CSMain");
         biomeManager.terrainCShader.SetInt("RandomSeed", worldSeed);
@@ -44,6 +43,5 @@ public class BiomeMapData
         biomeManager.terrainCShader.Dispatch(kernelId, arrayChunkTerrainData.Length, 1, 1);
         bufferTerrain.GetData(arrayChunkTerrainData);
         bufferTerrain.Dispose();
-
     }
 }

@@ -50,6 +50,8 @@ public class MainLauncher : BaseLauncher
         yield return new WaitForSeconds(1f);
         //显示人物
         SceneMainHandler.Instance.ShowCharacter();
+        //修改光照
+        LightHandler.Instance.InitLight();
         //打开主UI
         UIHandler.Instance.OpenUIAndCloseOther<UIMainStart>(UIEnum.MainStart);
     }

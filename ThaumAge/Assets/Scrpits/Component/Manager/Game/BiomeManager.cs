@@ -21,6 +21,8 @@ public class BiomeManager : BaseManager
     public Dictionary<string, BiomeMapData> dicWorldChunkTerrainDataPool = new Dictionary<string, BiomeMapData>();
     //世界生态数据
     public static Dictionary<WorldTypeEnum, ChunkBiomeData[]> dicWorldBiomeData = new Dictionary<WorldTypeEnum, ChunkBiomeData[]>();
+    //世界生态buffer数据
+    public static Dictionary<WorldTypeEnum, ComputeBuffer> dicWorldBiomeBuffer = new Dictionary<WorldTypeEnum, ComputeBuffer>();
 
     //地形生成计算shader
     public ComputeShader terrainCShader;
@@ -121,21 +123,21 @@ public class BiomeManager : BaseManager
         {
             //通过反射获取类
             biome = ReflexUtil.CreateInstance<Biome>($"Biome{biomeType.GetEnumName()}");
-            if (biome != null) 
+            if (biome != null)
             {
-                dicBiome.Add(biomeType,biome);
+                dicBiome.Add(biomeType, biome);
             }
             return biome;
         }
     }
-    
+
     /// <summary>
     /// 获取生态数据
     /// </summary>
     /// <param name="worldType"></param>
     /// <param name="biomeIndex"></param>
     /// <returns></returns>
-    public virtual Biome GetBiome(WorldTypeEnum worldType,int biomeIndex)
+    public virtual Biome GetBiome(WorldTypeEnum worldType, int biomeIndex)
     {
         BiomeTypeEnum[] arrayBiomeType = GetBiomeTypeListByWorldType(worldType);
         BiomeTypeEnum biomeType = arrayBiomeType[biomeIndex];
@@ -160,7 +162,7 @@ public class BiomeManager : BaseManager
             {
                 case WorldTypeEnum.Test:
                     arrayBiome = new BiomeTypeEnum[1];
-                    arrayBiome[0] = BiomeTypeEnum.Ocean;
+                    arrayBiome[0] = BiomeTypeEnum.Test;
                     break;
                 case WorldTypeEnum.Main:
                     arrayBiome = new BiomeTypeEnum[10];
@@ -195,7 +197,7 @@ public class BiomeManager : BaseManager
     /// <param name="worldType"></param>
     /// <param name="chunk"></param>
     /// <returns></returns>
-    public virtual ChunkBiomeData[] GetBiomeDataByWorldType(WorldTypeEnum worldType,Chunk chunk = null)
+    public virtual ChunkBiomeData[] GetBiomeDataByWorldType(WorldTypeEnum worldType, Chunk chunk = null)
     {
         //如果已经有了
         if (dicWorldBiomeData.TryGetValue(worldType, out ChunkBiomeData[] arrayBiome))
@@ -236,6 +238,26 @@ public class BiomeManager : BaseManager
             dicWorldBiomeData.Add(worldType, arrayBiome);
             return arrayBiome;
         }
+    }
+
+    /// <summary>
+    /// 获取生态buffer数据
+    /// </summary>
+    /// <param name="worldType"></param>
+    /// <param name="chunk"></param>
+    /// <returns></returns>
+    public virtual ComputeBuffer GetBiomeComputeBufferByWorldType(WorldTypeEnum worldType, Chunk chunk = null)
+    {        //如果已经有了
+        if (dicWorldBiomeBuffer.TryGetValue(worldType, out ComputeBuffer buffer))
+        {
+            return buffer;
+        }
+        ChunkBiomeData[] arrayChunkBiomeData = GetBiomeDataByWorldType(worldType, chunk);
+
+        buffer = new ComputeBuffer(arrayChunkBiomeData.Length, 52);
+        buffer.SetData(arrayChunkBiomeData);
+        dicWorldBiomeBuffer.Add(worldType, buffer);
+        return buffer;
     }
 
     #region 数据回调

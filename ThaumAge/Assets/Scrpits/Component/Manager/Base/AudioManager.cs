@@ -9,22 +9,20 @@ public class AudioManager : BaseManager, IAudioInfoView
     protected AudioSource _audioSourceForMusic;
     protected AudioSource _audioSourceForSound;
     protected AudioSource _audioSourceForEnvironment;
-    public AudioListener audioSourceForListener
+    public AudioListener audioListener
     {
         get
         {
             if (_audioListener == null)
             {
-                _audioListener = FindWithTag<AudioListener>(TagInfo.Tag_AudioListener);
+                _audioListener = FindWithTag<AudioListener>(TagInfo.Tag_Audio);
                 if (_audioListener == null)
                 {
-                    Camera mainCamera = CameraHandler.Instance.manager.mainCamera;
-                    GameObject obj = new GameObject("AudioListener");
-
+                    GameObject obj = new GameObject("Audio");
+                    DontDestroyOnLoad(obj);
+                    obj.transform.SetParent(transform);
                     obj.transform.localPosition = Vector3.zero;
-                    obj.transform.parent = mainCamera.transform;
-                    obj.tag = TagInfo.Tag_AudioListener;
-
+                    obj.tag = TagInfo.Tag_Audio;
                     _audioListener = obj.AddComponentEX<AudioListener>();
                 }
             }
@@ -38,18 +36,7 @@ public class AudioManager : BaseManager, IAudioInfoView
         {
             if (_audioSourceForMusic == null)
             {
-                _audioSourceForMusic = FindWithTag<AudioSource>(TagInfo.Tag_AudioMusic);
-                if (_audioListener == null)
-                {
-                    Camera mainCamera = CameraHandler.Instance.manager.mainCamera;
-                    GameObject obj = new GameObject("AudioMusic");
-
-                    obj.transform.localPosition = Vector3.zero;
-                    obj.transform.parent = mainCamera.transform;
-                    obj.tag = TagInfo.Tag_AudioMusic;
-
-                    _audioSourceForMusic = obj.AddComponentEX<AudioSource>();
-                }
+                _audioSourceForMusic = audioListener.transform.AddComponentEX<AudioSource>();
             }
             return _audioSourceForMusic;
         }
@@ -61,18 +48,7 @@ public class AudioManager : BaseManager, IAudioInfoView
         {
             if (_audioSourceForSound == null)
             {
-                _audioSourceForSound = FindWithTag<AudioSource>(TagInfo.Tag_AudioSound);
-                if (_audioListener == null)
-                {
-                    Camera mainCamera = CameraHandler.Instance.manager.mainCamera;
-
-                    GameObject obj = new GameObject("AudioSound");
-                    obj.transform.localPosition = Vector3.zero;
-                    obj.transform.parent = mainCamera.transform;
-                    obj.tag = TagInfo.Tag_AudioSound;
-
-                    _audioSourceForSound = obj.AddComponentEX<AudioSource>();
-                }
+                _audioSourceForSound = audioListener.transform.AddComponentEX<AudioSource>();
             }
             return _audioSourceForSound;
         }
@@ -84,18 +60,7 @@ public class AudioManager : BaseManager, IAudioInfoView
         {
             if (_audioSourceForEnvironment == null)
             {
-                _audioSourceForEnvironment = FindWithTag<AudioSource>(TagInfo.Tag_AudioEnvironment);
-                if (_audioListener == null)
-                {
-                    Camera mainCamera = CameraHandler.Instance.manager.mainCamera;
-
-                    GameObject obj = new GameObject("AudioEnvironment");
-                    obj.transform.localPosition = Vector3.zero;
-                    obj.transform.parent = mainCamera.transform;
-                    obj.tag = TagInfo.Tag_AudioEnvironment;
-
-                    _audioSourceForEnvironment = obj.AddComponentEX<AudioSource>();
-                }
+                _audioSourceForEnvironment = audioListener.transform.AddComponentEX<AudioSource>();
             }
             return _audioSourceForEnvironment;
         }

@@ -53,14 +53,14 @@ public partial class UIViewBoxList : BaseUIView
     /// <summary>
     /// 初始化数据
     /// </summary>
-    public void SetData(Vector3Int worldPosition, BlockBean blockData)
+    public void SetData(Vector3Int worldPosition, BlockBean blockData,int boxSize)
     {
         if (blockData == null)
             return;
         this.blockWorldPosition = worldPosition;
         this.blockData = blockData;
         this.blockBoxData = Block.FromMetaData<BlockMetaBox>(blockData.meta);
-        if (blockBoxData == null) blockBoxData = new BlockMetaBox(7 * 7);
+        if (blockBoxData == null) blockBoxData = new BlockMetaBox(boxSize);
         ui_ItemList.SetCellCount(blockBoxData.items.Length);
         ui_ItemList.RefreshAllCells();
     }

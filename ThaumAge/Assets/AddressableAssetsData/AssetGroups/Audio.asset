@@ -37,8 +37,8 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 76273f7083df46a4fb8c1f3a6cd83f50
-    m_Address: Assets/Audio/Sound/audio_sound_eat_1.wav
+  - m_GUID: 68c68a0d4ac8d394092924d5fc4bb02b
+    m_Address: Assets/Audio/Sound/audio_sound_fall_1.wav
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
@@ -99,6 +99,11 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: c2f821057f86df34aa780834238f335a
     m_Address: Assets/Audio/Sound/auido_sound_get_2.wav
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e91959b5881f1ff4dbab690a18ca5c4e
+    m_Address: Assets/Audio/Sound/audio_sound_fall_2.wav
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0

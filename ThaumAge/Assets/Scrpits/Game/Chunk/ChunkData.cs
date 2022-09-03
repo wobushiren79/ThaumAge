@@ -102,6 +102,13 @@ public class ChunkData
         direction = (BlockDirectionEnum)blockDirection;
     }
 
+    public int GetBlockForLocalBase(int x, int y, int z)
+    {
+        int yIndex = y / chunkWidth;
+        ChunkSectionData chunkSection = chunkSectionDatas[yIndex];
+        return chunkSection.GetBlock(x, y % chunkWidth, z);
+    }
+
     public void GetBlockForLocal(Vector3Int blockPosition, out Block block, out BlockDirectionEnum direction)
     {
         GetBlockForLocal(blockPosition.x, blockPosition.y, blockPosition.z, out block, out direction);
@@ -109,9 +116,7 @@ public class ChunkData
 
     public Block GetBlockForLocal(int x, int y, int z)
     {
-        int yIndex = y / chunkWidth;
-        ChunkSectionData chunkSection = chunkSectionDatas[yIndex];
-        int blockType = chunkSection.GetBlock(x, y % chunkWidth, z);
+        int blockType = GetBlockForLocalBase(x, y, z);
         return BlockHandler.Instance.manager.GetRegisterBlock(blockType);
     }
 
