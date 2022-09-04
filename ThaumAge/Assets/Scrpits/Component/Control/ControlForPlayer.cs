@@ -239,7 +239,7 @@ public class ControlForPlayer : ControlForBase
     /// </summary>
     public void HandleForGravityUpdate()
     {
-        if (!rbPlayer.isKinematic && !rbPlayer.IsSleeping() && gravityValue != Vector3.zero)
+        if (!rbPlayer.isKinematic && !rbPlayer.IsSleeping())
         {
             rbPlayer.AddForce(gravityValue, ForceMode.Acceleration);
         }
@@ -273,7 +273,8 @@ public class ControlForPlayer : ControlForBase
     {
         if (isJump && isJumpCheck)
         {
-            if (isGround)
+            //如果是在地面或者在攀爬
+            if (isGround || timeClimbEnd > 0)
             {
                 isJumpCheck = false;
                 isJump = false;

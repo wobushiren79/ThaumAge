@@ -5,5 +5,8 @@ using System;
 [Serializable]
 public class BlockMetaBase
 {
-
+    public string ToJson()
+    {
+        return JsonUtil.ToJson(this);
+    }
 }

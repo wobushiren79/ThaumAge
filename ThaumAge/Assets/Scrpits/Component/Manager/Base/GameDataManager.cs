@@ -5,7 +5,7 @@ using UnityEditor;
 using UnityEngine;
 
 public class GameDataManager : BaseManager,
-    IGameConfigView, IChunkSaveView, IUserDataView,IBaseDataView
+    IGameConfigView, IChunkSaveView, IUserDataView, IBaseDataView
 {
     //游戏设置
     public GameConfigBean gameConfig;
@@ -48,7 +48,7 @@ public class GameDataManager : BaseManager,
             userData.timeForGame.hour = 6;
             userData.userId = "Test";
             userData.seed = 132349;
-        }  
+        }
         return userData;
     }
 
@@ -64,9 +64,9 @@ public class GameDataManager : BaseManager,
     /// 获取世界数据
     /// </summary>
     /// <returns></returns>
-    public ChunkSaveBean GetChunkSaveData(string userId, WorldTypeEnum worldType,Vector3Int position)
+    public ChunkSaveBean GetChunkSaveData(string userId, WorldTypeEnum worldType, Vector3Int position)
     {
-        return controllerForChunkSave.GetChunkSaveData( userId,  worldType, position,  null);
+        return controllerForChunkSave.GetChunkSaveData(userId, worldType, position, null);
     }
 
     /// <summary>
@@ -95,12 +95,14 @@ public class GameDataManager : BaseManager,
     {
         Player player = GameHandler.Instance.manager.player;
         Vector3 playerPosition = player.transform.position;
+        WorldTypeEnum worldType = WorldCreateHandler.Instance.manager.worldType;
+
         await Task.Run(() =>
         {
             lock (lockForSaveData)
             {
                 //保存用户数据
-                SaveUserData(playerPosition);
+                SaveUserData(worldType, playerPosition);
                 //保存区块数据
                 chunkSaveData.SaveData();
                 controllerForChunkSave.SetChunkSaveData(chunkSaveData, null);
@@ -116,17 +118,20 @@ public class GameDataManager : BaseManager,
     {
         controllerForUserData.SetUserData(userData);
     }
-    public void SaveUserData(Vector3 playerPosition)
+
+    public void SaveUserData(WorldTypeEnum worldType, Vector3 playerPosition)
     {
-        userData.userExitPosition.SetWorldType(WorldCreateHandler.Instance.manager.worldType);
+        userData.userExitPosition.SetWorldType(worldType);
         userData.userExitPosition.SetPosition(playerPosition);
         SaveUserData(userData);
     }
+
     public void SaveUserData()
     {
         Player player = GameHandler.Instance.manager.player;
         Vector3 playerPosition = player.transform.position;
-        SaveUserData(playerPosition);
+        WorldTypeEnum worldType = WorldCreateHandler.Instance.manager.worldType;
+        SaveUserData(worldType, playerPosition);
     }
 
     /// <summary>

@@ -13,4 +13,20 @@ public class BlockMetaBox : BlockMetaBase
             items[i] = new ItemsBean();
         }
     }
+
+    public BlockMetaBox(int number, ItemsBean[] listData)
+    {
+        items = new ItemsBean[number];
+        for (int i = 0; i < items.Length; i++)
+        {
+            if (i < listData.Length)
+            {
+                items[i] = listData[i];
+            }
+            else
+            {
+                items[i] = new ItemsBean();
+            }
+        }
+    }
 }

@@ -41,6 +41,18 @@ public class CreatureStatusBean
     public int damageMagic;
 
     /// <summary>
+    /// 回复所有状态
+    /// </summary>
+    public void ReplyAllStatus()
+    {
+        curHealth = health;
+        curStamina = stamina;
+        curMagic = magic;
+        curSaturation = saturation;
+        curAir = air;
+    }
+
+    /// <summary>
     /// 改变耐力
     /// </summary>
     /// <param name="changeData">修改的值</param>

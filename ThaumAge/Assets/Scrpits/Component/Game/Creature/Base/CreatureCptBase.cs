@@ -105,7 +105,7 @@ public class CreatureCptBase : BaseMonoBehaviour
         effectDataForBody.effectName = EffectInfo.Effect_DeadBody_1;
         effectDataForBody.effectType = EffectTypeEnum.Normal;
         effectDataForBody.timeForShow = 5f;
-        effectDataForBody.effectPosition = transform.position+new Vector3(0,0.3f,0);
+        effectDataForBody.effectPosition = transform.position + new Vector3(0,0.3f,0);
 
         SkinnedMeshRenderer skinnedMeshRenderer = gameObject.GetComponentInChildren<SkinnedMeshRenderer>();
         Mesh bodyMesh = skinnedMeshRenderer.sharedMesh;

@@ -11,7 +11,7 @@ public partial class UIGameExit : UIGameCommonNormal
         InitUIData();
     }
 
-    public void InitUIData()
+    public virtual void InitUIData()
     {
         ui_BtnNameBackGame.text = TextHandler.Instance.GetTextById(901);
         ui_BtnNameBackMain.text = TextHandler.Instance.GetTextById(902);
@@ -48,7 +48,7 @@ public partial class UIGameExit : UIGameCommonNormal
     /// <summary>
     /// 返回游戏继续
     /// </summary>
-    public void HandleForBackGame()
+    public virtual void HandleForBackGame()
     {
         UIHandler.Instance.OpenUIAndCloseOther<UIGameMain>(UIEnum.GameMain);
         AudioHandler.Instance.PlaySound(1);
@@ -63,10 +63,7 @@ public partial class UIGameExit : UIGameCommonNormal
         dialogData.content = TextHandler.Instance.GetTextById(20003);
         dialogData.actionSubmit = (view, data) =>
         {
-            //保存数据
-            GameDataHandler.Instance.manager.SaveUserData();
-            //改变场景
-            SceneMainHandler.Instance.ChangeScene(ScenesEnum.MainScene);
+            ActionForBackMain();
         };
         UIHandler.Instance.ShowDialog<UIDialogNormal>(dialogData);
         AudioHandler.Instance.PlaySound(1);
@@ -75,18 +72,31 @@ public partial class UIGameExit : UIGameCommonNormal
     /// <summary>
     /// 退出游戏
     /// </summary>
-    public void HandleForExitGame()
+    public virtual void HandleForExitGame()
     {
         DialogBean dialogData = new DialogBean();
         dialogData.content = TextHandler.Instance.GetTextById(20004);
         dialogData.actionSubmit = (view, data) =>
-        {            
-            //保存数据
-            GameDataHandler.Instance.manager.SaveUserData();
-            //离开游戏
-            GameUtil.ExitGame();
+        {
+            ActionForExitGame();
         };
         UIHandler.Instance.ShowDialog<UIDialogNormal>(dialogData);
         AudioHandler.Instance.PlaySound(1);
+    }
+
+    public virtual void ActionForBackMain()
+    {
+        //保存数据
+        GameDataHandler.Instance.manager.SaveUserData();
+        //改变场景
+        SceneMainHandler.Instance.ChangeScene(ScenesEnum.MainScene);
+    }
+
+    public virtual void ActionForExitGame()
+    {
+        //保存数据
+        GameDataHandler.Instance.manager.SaveUserData();
+        //离开游戏
+        GameUtil.ExitGame();
     }
 }

@@ -62,6 +62,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 952e32118bc1c3b42846645edf449e75, type: 3}
   - {fileID: 21300000, guid: 6fa9f1613e1a95e489359043a317439e, type: 3}
   - {fileID: 21300000, guid: ccb10e71a87b54b40a840bf4feffbe99, type: 3}
+  - {fileID: 21300000, guid: 9df460025771e4e45be7c7fd2b5109ba, type: 3}
   - {fileID: 21300000, guid: 412b2f5262115b8419cd85fac2a00bf5, type: 3}
   - {fileID: 21300000, guid: 77653bb26a3c53447a4f05eb49ce2bcd, type: 3}
   - {fileID: 21300000, guid: 2f3c1cb23246d2544a705acb645da20e, type: 3}
@@ -136,6 +137,7 @@ SpriteAtlas:
   - ui_sky_3
   - ui_equip_3
   - ui_cancel_3
+  - ui_bg_1
   - ui_slider_5
   - ui_def_7
   - ui_backpack_1

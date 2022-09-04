@@ -81,10 +81,15 @@ public class CreatureCptCharacter : CreatureCptBase
     {
         if (creatureData.GetCreatureType() == CreatureTypeEnum.Player)
         {
+            //展示死亡特效
+            Player player = GameHandler.Instance.manager.player;
+            player.gameObject.ShowObj(false);
+
             //如果是玩家控制的角色
-            Vector3Int worldPos = Vector3Int.RoundToInt(transform.position);
+            Vector3Int worldPos = Vector3Int.FloorToInt(transform.position + Vector3.up * 0.5f);
             //创建一个坟墓
             WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(worldPos, out Block block, out Chunk chunk);
+            UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();
             if (chunk != null)
             {
                 float randmType = Random.Range(0f, 1f);
@@ -94,9 +99,29 @@ public class CreatureCptCharacter : CreatureCptBase
                 {
                     tombType = BlockTypeEnum.TombstoneRare;
                 }
+                //随机墓碑的方向
                 int direction = Random.Range(11, 15);
-                chunk.SetBlockForLocal(worldPos - chunk.chunkData.positionForWorld, tombType, (BlockDirectionEnum)direction);
+                ItemsBean[] allShortcutItems = userData.GetAllItemsFromShortcut();
+                BlockMetaBox blockMetaData = new BlockMetaBox(2 * 7, allShortcutItems);
+                chunk.SetBlockForLocal(worldPos - chunk.chunkData.positionForWorld, tombType, (BlockDirectionEnum)direction, blockMetaData.ToJson());
+                //清除所有的道具
+                userData.ClearAllItemsFromShortcut();
+                //刷新UI
+                UIHandler.Instance.RefreshUI();
             }
+            //弹出死亡UI
+            UIHandler.Instance.OpenUI<UIGameDead>(UIEnum.GameDead);
+            //关闭控制
+            GameControlHandler.Instance.manager.controlForPlayer.EnabledControl(false);
+            GameDataHandler.Instance.WaitExecuteEndOfFrame(30, () =>
+            {
+                //回复所有状态
+                userData.characterData.GetCreatureStatus().ReplyAllStatus();
+                //获取世界位置
+                userData.userPosition.GetWorldPosition(out WorldTypeEnum worldType, out Vector3 worldPosition);
+                //保存数据
+                GameDataHandler.Instance.manager.SaveUserData(worldType, worldPosition);
+            });
         }
     }
 }

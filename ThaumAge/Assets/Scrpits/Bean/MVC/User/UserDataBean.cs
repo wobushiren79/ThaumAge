@@ -49,7 +49,7 @@ public class UserDataBean
     /// </summary>
     /// <param name="itemData"></param>
     /// <param name="itemNumber"></param>
-    public int AddItems(ItemsBean itemData ,int itemNumber)
+    public int AddItems(ItemsBean itemData, int itemNumber)
     {
         itemData.number += itemNumber;
         ItemsInfoBean itemsInfo = ItemsHandler.Instance.manager.GetItemsInfoById(itemData.itemId);
@@ -71,7 +71,7 @@ public class UserDataBean
     /// <summary>
     /// 增加道具
     /// </summary>
-    public int AddItems(long itemId, int itemNumber,string meta)
+    public int AddItems(long itemId, int itemNumber, string meta)
     {
         //首先查询背包和快捷栏里是否有同样的道具                     
         //依次增加相应道具的数量 直到该道具的上限
@@ -94,7 +94,7 @@ public class UserDataBean
     /// <param name="itemId"></param>
     /// <param name="itemNumber"></param>
     /// <returns></returns>
-    protected int AddOldItems(ItemsBean[] arrayContainer, long itemId, int itemNumber,string meta)
+    protected int AddOldItems(ItemsBean[] arrayContainer, long itemId, int itemNumber, string meta)
     {
         ItemsInfoBean itemsInfo = ItemsHandler.Instance.manager.GetItemsInfoById(itemId);
         for (int i = 0; i < arrayContainer.Length; i++)
@@ -132,7 +132,7 @@ public class UserDataBean
     /// <param name="itemId"></param>
     /// <param name="itemNumber"></param>
     /// <returns></returns>
-    protected int AddNewItems(ItemsBean[] arrayContainer, long itemId, int itemNumber,string meta)
+    protected int AddNewItems(ItemsBean[] arrayContainer, long itemId, int itemNumber, string meta)
     {
         ItemsInfoBean itemsInfo = ItemsHandler.Instance.manager.GetItemsInfoById(itemId);
         for (int i = 0; i < arrayContainer.Length; i++)
@@ -167,7 +167,7 @@ public class UserDataBean
     /// </summary>
     /// <param name="indexForShortcuts"></param>
     public int SetShortcuts(int indexForShortcuts)
-    {       
+    {
         //如果没有改变 则不处理
         if (this.indexForShortcuts == indexForShortcuts)
             return indexForShortcuts;
@@ -202,6 +202,24 @@ public class UserDataBean
     public ItemsBean GetItemsFromShortcut()
     {
         return GetItemsFromShortcut(indexForShortcuts);
+    }
+
+    public ItemsBean[] GetAllItemsFromShortcut()
+    {
+        return listShortcutsItems;
+    }
+
+    /// <summary>
+    /// 清理所有快捷栏里的道具
+    /// </summary>
+    public void ClearAllItemsFromShortcut()
+    {
+        for (int i = 0; i < listShortcutsItems.Length; i++)
+        {
+            ItemsBean itemData = listShortcutsItems[i];
+            itemData.itemId = 0;
+            itemData.number = 0;
+        }
     }
 
     /// <summary>
