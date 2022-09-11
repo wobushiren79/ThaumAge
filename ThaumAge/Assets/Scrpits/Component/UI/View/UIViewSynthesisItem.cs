@@ -53,7 +53,7 @@ public partial class UIViewSynthesisItem : BaseUIView
     /// <param name="itemsId"></param>
     public void SetPopupInfo(long itemsId)
     {
-        ui_ViewSynthesisItem.SetItemId(itemsId);
+        ui_ViewSynthesisItem.SetItemId(new ItemsBean(itemsId));
     }
 
     /// <summary>

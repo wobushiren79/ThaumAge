@@ -32,7 +32,6 @@ public class UGUIUtil
             if (raycastResultsList[i].gameObject.GetType() == typeof(GameObject))
             {
                 return true;
-                break;
             }
         }
         return false;

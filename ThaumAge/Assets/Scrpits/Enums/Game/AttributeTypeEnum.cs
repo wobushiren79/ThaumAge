@@ -21,4 +21,8 @@ public enum AttributeTypeEnum
     DamageMagic = 202,//魔法伤害
     KnockbackDis = 211,//击退距离
     KnockbackTime = 212,//击退时间
+
+    Durability = 301,//装备耐久
+    BreakSpeed = 401,//挖掘速度
+    BreakLevel = 402,//挖掘等级
 }

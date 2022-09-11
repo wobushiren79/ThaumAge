@@ -185,7 +185,7 @@ public class Item
         //    targetPosition, targetBlockDirection, targetBlock, targetChunk,
         //    closePosition, closeBlockDirection, closeBlock, closeChunk,
         //    direction, metaData);
-        targetBlock.TargetUseBlock(targetChunk , targetPosition);
+        targetBlock.TargetUseBlock(targetChunk, targetPosition);
     }
 
     /// <summary>
@@ -214,13 +214,13 @@ public class Item
         //扣除道具耐久
         if (breakDamage > 0 && this is ItemBaseTool itemTool)
         {
-            ItemsDetailsToolBean itemsDetailsTool = itemsData.GetMetaData<ItemsDetailsToolBean>();
+            ItemsMetaTool itemsDetailsTool = itemsData.GetMetaData<ItemsMetaTool>();
             //如果已经没有耐久了 则不造成伤害
-            if (itemsDetailsTool.life <= 0)
+            if (itemsDetailsTool.curDurability <= 0)
             {
                 breakDamage = 0;
             }
-            itemsDetailsTool.AddLife(-1);
+            itemsDetailsTool.AddLife(-breakDamage);
             //保存数据
             itemsData.SetMetaData(itemsDetailsTool);
             //回调
@@ -237,15 +237,41 @@ public class Item
             //创建掉落
             ItemsHandler.Instance.CreateItemCptDrop(targetBlock, targetChunk, targetPosition);
             //移除该方块
-            targetChunk.RemoveBlockForWorld(targetPosition);           
-            //播放掉落音效
-            AudioHandler.Instance.PlaySound(301);
+            targetChunk.RemoveBlockForWorld(targetPosition);
+
+            PlayItemDropSound(itemsData);
         }
         else
         {
-            //播放破坏音效
-            int randomAudioId = Random.Range(351,354);
-            AudioHandler.Instance.PlaySound(randomAudioId);
+            PlayItemUseSound(itemsData);
+        }
+    }
+
+    /// <summary>
+    /// 播放方块掉落声音
+    /// </summary>
+    public virtual void PlayItemDropSound(ItemsBean itemsData)
+    {
+        //播放掉落音效
+        AudioHandler.Instance.PlaySound(301);
+    }
+
+    /// <summary>
+    /// 播放道具使用声音
+    /// </summary>
+    public virtual void PlayItemUseSound(ItemsBean itemsData)
+    {
+        //播放破坏音效
+        //int randomAudioId = Random.Range(351,354);
+        ItemsInfoBean itemsInfo = GetItemsInfo(itemsData.itemId);
+        if (itemsInfo != null && !itemsInfo.sound_use.IsNull())
+        {
+            int soundId = int.Parse(itemsInfo.sound_use);
+            AudioHandler.Instance.PlaySound(soundId);
+        }
+        else
+        {
+            AudioHandler.Instance.PlaySound(351);
         }
     }
 
@@ -254,20 +280,33 @@ public class Item
     /// </summary>
     public virtual int GetBreakDamage(ItemsBean itemsData, Block breakBlock)
     {
-        //检测是否能造成伤害
-        bool canBreak = breakBlock.blockInfo.CheckCanBreak(itemsData.itemId);
+        //检测是否能造成伤害 
+        breakBlock.blockInfo.CheckCanBreak(itemsData.itemId, out bool canBreak, out bool isAdditionBreak);
+        ItemsInfoBean itemsInfo = GetItemsInfo(itemsData.itemId);
+        AttributeBean attributeData = itemsInfo.GetAttributeData();
+
+        //伤害默认为1
+        int breakSpeed = 1;
+        if (attributeData.HasAttributeValue(AttributeTypeEnum.BreakSpeed) && isAdditionBreak)
+        {
+            breakSpeed = attributeData.GetAttributeValue(AttributeTypeEnum.BreakSpeed);
+        }
+
         if (canBreak)
-            return 1;
+            return breakSpeed;
         else
             return 0;
     }
 
     /// <summary>
-    /// 获取道具详情数据
+    /// 获取初始化meta数据
     /// </summary>
+    /// <param name="itemId"></param>
     /// <returns></returns>
-    public virtual ItemsDetailsBean GetItemsDetailsBean(long itemId)
+    public virtual ItemsMetaTool GetInitMetaData(long itemId)
     {
-        return new ItemsDetailsBean();
+        ItemsMetaTool data = new ItemsMetaTool();
+        data.itemId = itemId;
+        return data;
     }
 }

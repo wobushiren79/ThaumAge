@@ -23,7 +23,6 @@ public class ItemsInfoBean : BaseBean
     public string model_remark_name;//备用模型名字
 
     public string tex_name;//贴图名字
-    public int life;//耐久度
     public float cd_use;//使用间隔
 
     public string attribute_data;//属性数据
@@ -32,6 +31,8 @@ public class ItemsInfoBean : BaseBean
     public string hold_data;//拿住道具的数据（位置旋转等）
     public string link_class;//关联的类（针对有对应类 需要单独处理的特殊道具）
     public string fire_items;//道具被火烧之后的数据（道具ID,数量,时间）
+
+    public string sound_use;//道具使用声音
 
     public int elemental_metal;    //元素
     public int elemental_wood;

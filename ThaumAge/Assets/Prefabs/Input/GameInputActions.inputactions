@@ -571,6 +571,15 @@
                     "initialStateCheck": false
                 },
                 {
+                    "name": "Ctrl",
+                    "type": "Button",
+                    "id": "21e7c223-bdb3-46a5-b70f-7c5fe993a767",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "N0",
                     "type": "Button",
                     "id": "0c85748c-c38d-4a43-b930-b6345abd04d1",
@@ -1230,6 +1239,17 @@
                     "processors": "",
                     "groups": "Keyboard&Mouse",
                     "action": "P",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "aad8b202-9b09-4c77-821f-ee2731009d19",
+                    "path": "<Keyboard>/ctrl",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "Ctrl",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

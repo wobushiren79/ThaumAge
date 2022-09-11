@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
@@ -17,6 +18,8 @@ public class UIViewShortcuts : BaseUIView
 
     public List<UIViewItemContainer> listShortcut;
 
+
+
     public override void Awake()
     {
         base.Awake();
@@ -31,6 +34,11 @@ public class UIViewShortcuts : BaseUIView
         listShortcut.Add(ui_ShortcutItem_8);
         listShortcut.Add(ui_ShortcutItem_9);
         listShortcut.Add(ui_ShortcutItem_10);
+        //设置回调
+        for(int i = 0; i < listShortcut.Count; i++)
+        {
+            listShortcut[i].SetCallBackForSetViewItem(actionForItemChanged);
+        }
     }
 
     public override void RefreshUI()
@@ -122,4 +130,22 @@ public class UIViewShortcuts : BaseUIView
         }
     }
 
+
+    /// <summary>
+    /// 道具改变回调
+    /// </summary>
+    /// <param name="callBackForSetViewItem"></param>
+    Action<UIViewItemContainer, ItemsBean> actionForItemChanged = (container, itemsData) =>
+    {
+        //如果是快捷栏
+        if (container.containerType == UIViewItemContainer.ContainerType.Shortcuts)
+        {
+            UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();
+            //如果当前快捷栏等于改变的道具栏 所以刷新手上道具
+            if (userData.indexForShortcuts == container.viewIndex)
+            {
+                GameHandler.Instance.manager.player.RefreshHandItem();
+            }      
+        }
+    };
 }

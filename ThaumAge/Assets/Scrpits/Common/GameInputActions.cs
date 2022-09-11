@@ -593,6 +593,15 @@ public partial class @GameInputActions : IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
+                    ""name"": ""Ctrl"",
+                    ""type"": ""Button"",
+                    ""id"": ""21e7c223-bdb3-46a5-b70f-7c5fe993a767"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
                     ""name"": ""N0"",
                     ""type"": ""Button"",
                     ""id"": ""0c85748c-c38d-4a43-b930-b6345abd04d1"",
@@ -1254,6 +1263,17 @@ public partial class @GameInputActions : IInputActionCollection2, IDisposable
                     ""action"": ""P"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""aad8b202-9b09-4c77-821f-ee2731009d19"",
+                    ""path"": ""<Keyboard>/ctrl"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Ctrl"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -1349,6 +1369,7 @@ public partial class @GameInputActions : IInputActionCollection2, IDisposable
         m_UI_F12 = m_UI.FindAction("F12", throwIfNotFound: true);
         m_UI_ESC = m_UI.FindAction("ESC", throwIfNotFound: true);
         m_UI_Shift = m_UI.FindAction("Shift", throwIfNotFound: true);
+        m_UI_Ctrl = m_UI.FindAction("Ctrl", throwIfNotFound: true);
         m_UI_N0 = m_UI.FindAction("N0", throwIfNotFound: true);
         m_UI_N1 = m_UI.FindAction("N1", throwIfNotFound: true);
         m_UI_N2 = m_UI.FindAction("N2", throwIfNotFound: true);
@@ -1557,6 +1578,7 @@ public partial class @GameInputActions : IInputActionCollection2, IDisposable
     private readonly InputAction m_UI_F12;
     private readonly InputAction m_UI_ESC;
     private readonly InputAction m_UI_Shift;
+    private readonly InputAction m_UI_Ctrl;
     private readonly InputAction m_UI_N0;
     private readonly InputAction m_UI_N1;
     private readonly InputAction m_UI_N2;
@@ -1589,6 +1611,7 @@ public partial class @GameInputActions : IInputActionCollection2, IDisposable
         public InputAction @F12 => m_Wrapper.m_UI_F12;
         public InputAction @ESC => m_Wrapper.m_UI_ESC;
         public InputAction @Shift => m_Wrapper.m_UI_Shift;
+        public InputAction @Ctrl => m_Wrapper.m_UI_Ctrl;
         public InputAction @N0 => m_Wrapper.m_UI_N0;
         public InputAction @N1 => m_Wrapper.m_UI_N1;
         public InputAction @N2 => m_Wrapper.m_UI_N2;
@@ -1650,6 +1673,9 @@ public partial class @GameInputActions : IInputActionCollection2, IDisposable
                 @Shift.started -= m_Wrapper.m_UIActionsCallbackInterface.OnShift;
                 @Shift.performed -= m_Wrapper.m_UIActionsCallbackInterface.OnShift;
                 @Shift.canceled -= m_Wrapper.m_UIActionsCallbackInterface.OnShift;
+                @Ctrl.started -= m_Wrapper.m_UIActionsCallbackInterface.OnCtrl;
+                @Ctrl.performed -= m_Wrapper.m_UIActionsCallbackInterface.OnCtrl;
+                @Ctrl.canceled -= m_Wrapper.m_UIActionsCallbackInterface.OnCtrl;
                 @N0.started -= m_Wrapper.m_UIActionsCallbackInterface.OnN0;
                 @N0.performed -= m_Wrapper.m_UIActionsCallbackInterface.OnN0;
                 @N0.canceled -= m_Wrapper.m_UIActionsCallbackInterface.OnN0;
@@ -1738,6 +1764,9 @@ public partial class @GameInputActions : IInputActionCollection2, IDisposable
                 @Shift.started += instance.OnShift;
                 @Shift.performed += instance.OnShift;
                 @Shift.canceled += instance.OnShift;
+                @Ctrl.started += instance.OnCtrl;
+                @Ctrl.performed += instance.OnCtrl;
+                @Ctrl.canceled += instance.OnCtrl;
                 @N0.started += instance.OnN0;
                 @N0.performed += instance.OnN0;
                 @N0.canceled += instance.OnN0;
@@ -1864,6 +1893,7 @@ public partial class @GameInputActions : IInputActionCollection2, IDisposable
         void OnF12(InputAction.CallbackContext context);
         void OnESC(InputAction.CallbackContext context);
         void OnShift(InputAction.CallbackContext context);
+        void OnCtrl(InputAction.CallbackContext context);
         void OnN0(InputAction.CallbackContext context);
         void OnN1(InputAction.CallbackContext context);
         void OnN2(InputAction.CallbackContext context);

@@ -398,7 +398,7 @@ void CSMain (uint3 id : SV_DispatchThreadID,uint3 gid:SV_GROUPID,uint index:SV_G
 
      //计算不同生态切换之间的融合 都以64高度为基础
     float baseHeight = 65;
-    float lerpSize = 5;
+    float lerpSize = 10;
     
     if(randomBiomeIndexMin != randomBiomeIndexSecond && disSecond - disMin <= lerpSize)
     {

@@ -17,6 +17,7 @@ public partial class UIViewItem : BaseUIView,
     //移动到指定位置的时间
     protected float timeForMove = 0.25f;
 
+    //UIViewItem 只做数据记录 实际的itemBean保存在容器里
     public long itemId;
     public int itemNumber;
     public string meta;
@@ -35,12 +36,14 @@ public partial class UIViewItem : BaseUIView,
 
     protected InputAction inputActionClick;
     protected InputAction inputActionShiftClick;
+    protected InputAction inputActionCtrlClick;
 
     public override void Awake()
     {
         base.Awake();
         inputActionClick = InputHandler.Instance.manager.GetInputUIData(InputActionUIEnum.Click);
         inputActionShiftClick = InputHandler.Instance.manager.GetInputUIData(InputActionUIEnum.Shift);
+        inputActionCtrlClick = InputHandler.Instance.manager.GetInputUIData(InputActionUIEnum.Ctrl);
     }
 
     /// <summary>
@@ -74,7 +77,9 @@ public partial class UIViewItem : BaseUIView,
     /// </summary>
     public void SetLife()
     {
-        if (itemsInfo.life == 0)
+        AttributeBean attributeData =  itemsInfo.GetAttributeData();
+        int druability = attributeData.GetAttributeValue(AttributeTypeEnum.Durability);
+        if (druability == 0)
         {
             //如果没有生命值 则没有耐久
             ui_Life.ShowObj(false);
@@ -83,8 +88,8 @@ public partial class UIViewItem : BaseUIView,
         {
             if (!meta.IsNull())
             {
-                ItemsDetailsToolBean itemsDetails = ItemsBean.GetMetaData<ItemsDetailsToolBean>(meta);
-                ui_Life.value = (float)itemsDetails.life / itemsInfo.life;
+                ItemsMetaTool itemsDetails = ItemsBean.GetMetaData<ItemsMetaTool>(meta);
+                ui_Life.value = (float)itemsDetails.curDurability / itemsDetails.durability;
                 ui_Life.ShowObj(true);
             }
             else
@@ -175,10 +180,10 @@ public partial class UIViewItem : BaseUIView,
     /// <param name="eventData"></param>
     public void OnPointerClick(PointerEventData eventData)
     {
-        float isFastClick = inputActionShiftClick.ReadValue<float>();
+        float isShiftClick = inputActionShiftClick.ReadValue<float>();
         //LogUtil.Log($"OnPointerClick dragging:{eventData.dragging} pointerDrag:{eventData.pointerDrag.name} eligibleForClick:{eventData.eligibleForClick} isFastClick:{isFastClick}");
         //如果是快速选择
-        if (isFastClick == 1)
+        if (isShiftClick == 1)
         {
             BaseUIComponent currentUI = UIHandler.Instance.GetOpenUI();
             UIViewBoxList boxList;
@@ -223,7 +228,7 @@ public partial class UIViewItem : BaseUIView,
                                 //如果是上帝模式则需要在原位置复制一个
                                 if (originalParent.containerType == UIViewItemContainer.ContainerType.God)
                                 {
-                                    CopyItemInOriginal();
+                                    CopyItemInOriginal(int.MaxValue);
                                 }
                                 ExchangeItemForContainer(itemContainer);
                                 return;
@@ -281,12 +286,25 @@ public partial class UIViewItem : BaseUIView,
             isBeginDrag = false;
             return;
         }
+        UIHandler.Instance.manager.CanClickUIButtons = false;
+        UIHandler.Instance.manager.CanInputActionStarted = false;
+
+        float isCtrlClick = inputActionCtrlClick.ReadValue<float>();
         isBeginDrag = true;
         originalParent = transform.parent.GetComponent<UIViewItemContainer>();
         //如果是无限物品格 则在原位置实例化一个新的
         if (itemNumber == int.MaxValue)
         {
-            CopyItemInOriginal();
+            CopyItemInOriginal(int.MaxValue);
+        }
+        //如果是ctrl点击 则只拿一半
+        else if (isCtrlClick == 1)
+        {
+            if (itemNumber >= 2)
+            {
+                int halfNumber = itemNumber / 2;
+                CopyItemInOriginal(halfNumber, itemNumber - halfNumber);
+            }
         }
         else
         {
@@ -323,6 +341,9 @@ public partial class UIViewItem : BaseUIView,
     /// <param name="eventData"></param>
     public void OnEndDrag(PointerEventData eventData)
     {
+        UIHandler.Instance.manager.CanClickUIButtons = true;
+        UIHandler.Instance.manager.CanInputActionStarted = true;
+
         if (isAnim || !isBeginDrag)
         {
             return;
@@ -385,6 +406,11 @@ public partial class UIViewItem : BaseUIView,
             {
                 originalParent.ClearItemsData();
             }
+            //如果不是本道具 说明是拆分出来的 拆分的道具丢弃
+            else
+            {
+
+            }
         }
     }
 
@@ -395,14 +421,36 @@ public partial class UIViewItem : BaseUIView,
     {
         //其他情况下 则返回原来的位置
         transform.SetParent(originalParent.transform);
-        if (originalParent.GetViewItem() != this)
+        UIViewItem originViewItem = originalParent.GetViewItem();
+        if (originViewItem != this)
         {
-            //如果原来的位置已经被占据 则删除
-            AnimForPositionChange(timeForBackOriginal, () => { DestroyImmediate(gameObject); });
+            //如果原来的位置已经被占据 
+            //1.从god模式拿取道具 在原来的地方生成了1个新的
+            //2.拆分了一半的道具 在原来的地方有另外一半的道具
+            if (originViewItem.itemNumber == int.MaxValue)
+            {
+                //1
+            }
+            else
+            {
+                //2
+                originalParent.itemsData.number += itemNumber;
+                originViewItem.itemNumber = originalParent.itemsData.number;
+            }
+
+            AnimForPositionChange(timeForBackOriginal, () => 
+            {
+                originViewItem.RefreshUI();
+                //删除拖拽的UI
+                DestroyImmediate(gameObject);
+            });
         }
         else
         {
-            AnimForPositionChange(timeForBackOriginal, () => { });
+            AnimForPositionChange(timeForBackOriginal, () => 
+            {
+
+            });
         }
     }
 
@@ -445,18 +493,29 @@ public partial class UIViewItem : BaseUIView,
     }
 
     /// <summary>
-    /// 在原位置复制一个道具 并且数量为该道具的最大
+    /// 在原位置复制一个道具
     /// </summary>
-    protected void CopyItemInOriginal()
+    protected void CopyItemInOriginal(int copyItemNumber = -1, int curNumber = -1)
     {
+        if (copyItemNumber == -1)
+        {
+            copyItemNumber = itemsInfo.max_number;
+        }
+        if (curNumber == -1)
+        {
+            curNumber = itemsInfo.max_number;
+        }
         GameObject objOriginal = Instantiate(originalParent.gameObject, gameObject);
         objOriginal.name = "ViewItem";
         UIViewItem viewItem = objOriginal.GetComponent<UIViewItem>();
+        viewItem.itemNumber = copyItemNumber;
         objOriginal.transform.position = gameObject.transform.position;
         originalParent.SetViewItem(viewItem);
-        //设置拿出的物体数量为该物体的最大数量
-        itemNumber = itemsInfo.max_number;
+        originalParent.itemsData.number = copyItemNumber;
+        viewItem.RefreshUI();
 
+        //设置拿出的物体数量为该物体的最大数量
+        itemNumber = curNumber;
         //刷新一下UI
         RefreshUI();
     }
@@ -476,8 +535,17 @@ public partial class UIViewItem : BaseUIView,
             if (canSetItem)
             {
                 //如果容器里没有道具 则直接设置容器的道具为当前道具
-                //首先清空原容器里的数据
-                originalParent.ClearViewItem();
+                UIViewItem originViewItem = originalParent.GetViewItem();
+                if (originViewItem != this)
+                {
+                    //首先判断一下原容器里面是不是创建了新物体
+
+                }
+                else
+                {
+                    //如果原容器的物体就是拖拽的物体 首先清空原容器里的数据
+                    originalParent.ClearViewItem();
+                }
                 //设置新的容器
                 viewItemContainer.SetViewItem(this);
                 AnimForPositionChange(timeForMove, null);
@@ -502,7 +570,7 @@ public partial class UIViewItem : BaseUIView,
     /// </summary>
     /// <param name="viewItem"></param>
     /// <returns></returns>
-    protected bool ExchangeItemForItem(UIViewItem viewItem)
+    protected void ExchangeItemForItem(UIViewItem viewItem)
     {
         //如果目标是同一物品
         if (viewItem.itemsInfo.id == itemsInfo.id)
@@ -512,8 +580,11 @@ public partial class UIViewItem : BaseUIView,
             {
                 transform.SetParent(viewItem.transform.parent);
                 transform.localScale = Vector3.one;
-                AnimForPositionChange(timeForMove, () => { DestroyImmediate(gameObject); });
-                return true;
+                AnimForPositionChange(timeForMove, () => 
+                {
+                    DestroyImmediate(gameObject); 
+                });
+                return;
             }
             //如果目标不是无限物品，则先将目标叠加到最大，自己再返回原位置
             else
@@ -525,12 +596,14 @@ public partial class UIViewItem : BaseUIView,
                     //如果目标数量超出最大了
                     itemNumber = viewItem.itemNumber - viewItem.itemsInfo.max_number;
                     viewItem.itemNumber = viewItem.itemsInfo.max_number;
+                    viewItem.originalParent.itemsData.number = viewItem.itemNumber;
                 }
                 else
                 {
                     //如果没有 则自己的数量为0
                     itemNumber = 0;
                 }
+                viewItem.originalParent.itemsData.number = viewItem.itemNumber;
                 //刷新一下UI
                 viewItem.RefreshUI();
                 RefreshUI();
@@ -539,13 +612,19 @@ public partial class UIViewItem : BaseUIView,
                 {
                     //如果自己没有数量了，则删除
                     DestroyImmediate(gameObject);
-                    return true;
+                    UIViewItem originViewItem = originalParent.GetViewItem();
+                    //如果是自己 还要清除数据
+                    if (originViewItem == this)
+                    {
+                        originalParent.ClearViewItem();
+                    }
+                    return;
                 }
                 else
                 {
                     //如果自己还有数量，则返回原容器
                     HandleForBackOriginalContainer();
-                    return true;
+                    return;
                 }
             }
         }
@@ -556,7 +635,7 @@ public partial class UIViewItem : BaseUIView,
             if (viewItem.itemNumber == int.MaxValue)
             {
                 HandleForBackOriginalContainer();
-                return true;
+                return;
             }
             //如果是目标不是无限物品，则交换物品位置
             else
@@ -565,34 +644,46 @@ public partial class UIViewItem : BaseUIView,
                 bool canSetItem = viewItem.originalParent.CheckCanSetItem(itemsInfo.GetItemsType());
                 if (canSetItem)
                 {
-                    //交换位置
-                    UIViewItemContainer dargContainer = this.originalParent;
-                    UIViewItemContainer targetContainer = viewItem.originalParent;
-                    //交换父级
-                    if (dargContainer.GetViewItem() != null && dargContainer.GetViewItem().itemNumber == int.MaxValue)
+                    UIViewItem originViewItem = originalParent.GetViewItem();
+                    if (originViewItem != this)
                     {
-                        //如果原父级有东西 则把目标容器里的物品丢出来
-                        viewItem.DropItem();
+                        //首先判断一下原容器里面是不是创建了新物体 如果创建了则返回
+                        HandleForBackOriginalContainer();
                     }
                     else
                     {
-                        //如果原父级没有东西 则交换父级
-                        dargContainer.SetViewItem(viewItem);
+                        //如果没有创建 则直接交换位置
+                        UIViewItemContainer dargContainer = this.originalParent;
+                        UIViewItemContainer targetContainer = viewItem.originalParent;
+                        //交换父级
+                        if (dargContainer.GetViewItem() != null && dargContainer.GetViewItem().itemNumber == int.MaxValue)
+                        {
+                            //如果原父级有东西 则把目标容器里的物品丢出来
+                            viewItem.DropItem();
+                        }
+                        else
+                        {
+                            //如果原父级没有东西 则交换父级
+                            dargContainer.SetViewItem(viewItem);
+                            //设置位置
+                            viewItem.rectTransform.anchoredPosition = Vector2.zero;
+                            viewItem.transform.localScale = Vector3.one;
+                        }
+                        targetContainer.SetViewItem(this);
                         //设置位置
-                        viewItem.rectTransform.anchoredPosition = Vector2.zero;
-                        viewItem.transform.localScale = Vector3.one;
+                        transform.localScale = Vector3.one;
+                        AnimForPositionChange(timeForMove, () => 
+                        {
+                        
+                        });
                     }
-                    targetContainer.SetViewItem(this);
-                    //设置位置
-                    transform.localScale = Vector3.one;
-                    AnimForPositionChange(timeForMove, () => { });
-                    return true;
+                    return;
                 }
                 else
                 {
                     //如果不能设置该物品（容器不能装该类型） 则返回
                     HandleForBackOriginalContainer();
-                    return true;
+                    return;
                 }
             }
         }

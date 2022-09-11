@@ -68,7 +68,7 @@ public partial class UIViewSynthesisMaterial : BaseUIView
     /// <param name="itemsId"></param>
     public void SetPopupInfo(long itemsId)
     {
-        ui_ViewSynthesisMaterial.SetItemId(itemsId);
+        ui_ViewSynthesisMaterial.SetItemId(new ItemsBean(itemsId));
     }
 
     /// <summary>

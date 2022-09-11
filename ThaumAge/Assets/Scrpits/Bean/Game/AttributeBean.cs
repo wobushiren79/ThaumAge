@@ -18,8 +18,6 @@ public class AttributeBean
         }
     }
 
-
-
     /// <summary>
     /// 获取属性图标
     /// </summary>
@@ -61,6 +59,13 @@ public class AttributeBean
                 return "ui_def_6";
             case AttributeTypeEnum.DefEarth:
                 return "ui_def_7";
+
+            case AttributeTypeEnum.Durability:
+                return "ui_anvil_1";
+            case AttributeTypeEnum.BreakSpeed:
+                return "ui_break_1";
+            case AttributeTypeEnum.BreakLevel:
+                return "ui_break_2";
         }
         return "";
     }
@@ -106,6 +111,13 @@ public class AttributeBean
                 return TextHandler.Instance.GetTextById(2011);
             case AttributeTypeEnum.DefEarth:
                 return TextHandler.Instance.GetTextById(2012);
+
+            case AttributeTypeEnum.Durability:
+                return TextHandler.Instance.GetTextById(2017);
+            case AttributeTypeEnum.BreakSpeed:
+                return TextHandler.Instance.GetTextById(2018);
+            case AttributeTypeEnum.BreakLevel:
+                return TextHandler.Instance.GetTextById(2019);
         }
         return "";
     }
@@ -160,6 +172,8 @@ public class AttributeBean
             case AttributeTypeEnum.KnockbackDis:
             case AttributeTypeEnum.KnockbackTime:
                 break;
+            default:
+                break;
         }
         return totalData;
     }
@@ -180,6 +194,13 @@ public class AttributeBean
         return 0;
     }
 
-
-
+    /// <summary>
+    /// 是否包含要给属性
+    /// </summary>
+    /// <param name="attributeType"></param>
+    /// <returns></returns>
+    public bool HasAttributeValue(AttributeTypeEnum attributeType)
+    {
+        return dicAttributeData.ContainsKey(attributeType);
+    }
 }

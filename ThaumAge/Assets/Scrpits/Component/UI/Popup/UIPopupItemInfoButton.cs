@@ -4,8 +4,7 @@ using UnityEngine.EventSystems;
 
 public partial class UIPopupItemInfoButton : PopupButtonView<UIPopupItemInfo>
 {
-    public long itemId;
-
+    public ItemsBean itemData;
     public override void Awake()
     {
         base.Awake();
@@ -16,14 +15,14 @@ public partial class UIPopupItemInfoButton : PopupButtonView<UIPopupItemInfo>
     /// 设置道具ID
     /// </summary>
     /// <param name="itemId"></param>
-    public void SetItemId(long itemId)
+    public void SetItemId(ItemsBean itemData)
     {
-        this.itemId = itemId;
+        this.itemData = itemData;
     }
 
     public override void OnPointerEnter(PointerEventData eventData)
     {
-        if (this.itemId == 0)
+        if (this.itemData == null || this.itemData.itemId == 0)
             return;
         base.OnPointerEnter(eventData);
     }
@@ -35,7 +34,7 @@ public partial class UIPopupItemInfoButton : PopupButtonView<UIPopupItemInfo>
 
     public override void PopupShow()
     {
-        popupShow.SetData(itemId);
+        popupShow.SetData(itemData);
     }
 
 }

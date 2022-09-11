@@ -16,5 +16,9 @@ public partial class UIPopupItemInfo
 
     public RectTransform ui_ItemAttribute;
 
+    public UIViewCommonPro ui_ViewCommonPro;
+
+    public RectTransform ui_Durability;
+
 
 }

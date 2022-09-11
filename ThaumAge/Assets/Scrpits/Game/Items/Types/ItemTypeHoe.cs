@@ -38,9 +38,9 @@ public class ItemTypeHoe : ItemBaseTool
                     //扣除道具耐久
                     if (this is ItemBaseTool itemTool)
                     {
-                        ItemsDetailsToolBean itemsDetailsTool = itemData.GetMetaData<ItemsDetailsToolBean>();
+                        ItemsMetaTool itemsDetailsTool = itemData.GetMetaData<ItemsMetaTool>();
                         //如果没有耐久 不能锄地
-                        if (itemsDetailsTool.life <= 0)
+                        if (itemsDetailsTool.curDurability <= 0)
                         {
                             return;
                         }

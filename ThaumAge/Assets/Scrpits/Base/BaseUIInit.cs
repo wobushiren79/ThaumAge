@@ -67,7 +67,12 @@ public class BaseUIInit : BaseMonoBehaviour
         for (int i = 0; i < buttonArray.Length; i++)
         {
             Button itemButton = buttonArray[i];
-            itemButton.onClick.AddListener(() => { OnClickForButton(itemButton); });
+            itemButton.onClick.AddListener(() =>
+            {
+                if (!UIHandler.Instance.manager.CanClickUIButtons)
+                    return;
+                OnClickForButton(itemButton);
+            });
         }
     }
 
@@ -106,6 +111,8 @@ public class BaseUIInit : BaseMonoBehaviour
     protected virtual void CallBackForInputActionStarted(CallbackContext callback)
     {
         if (callback.action.name.IsNull())
+            return;
+        if (!UIHandler.Instance.manager.CanInputActionStarted)
             return;
         if (gameObject.activeInHierarchy && gameObject.activeSelf)
         {

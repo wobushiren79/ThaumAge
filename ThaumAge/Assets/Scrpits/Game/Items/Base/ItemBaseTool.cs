@@ -3,12 +3,13 @@ using UnityEngine;
 
 public class ItemBaseTool : Item
 {
-    public override ItemsDetailsBean GetItemsDetailsBean(long itemId)
+    public override ItemsMetaTool GetInitMetaData(long itemId)
     {
         ItemsInfoBean itemsInfo = GetItemsInfo(itemId);
-        ItemsDetailsToolBean itemsDetailsTool = new ItemsDetailsToolBean();
-        itemsDetailsTool.life = itemsInfo.life;
-        itemsDetailsTool.lifeMax = itemsInfo.life;
+        ItemsMetaTool itemsDetailsTool = new ItemsMetaTool();
+        int maxDurability = itemsInfo.GetAttributeData().GetAttributeValue( AttributeTypeEnum.Durability);
+        itemsDetailsTool.curDurability = maxDurability;
+        itemsDetailsTool.durability = maxDurability;
         return itemsDetailsTool;
     }
 }

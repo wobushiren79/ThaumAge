@@ -19,6 +19,9 @@ public class UIManager : BaseUIManager
     //所有Popup模型
     public Dictionary<string, GameObject> dicPopupModel = new Dictionary<string, GameObject>();
 
+    //是否能点击UI按钮
+    public bool CanClickUIButtons = true;
+    public bool CanInputActionStarted = true;
 
     /// <summary>
     /// 获取弹窗模型

@@ -49,6 +49,8 @@ public class BlockInfoBean : BaseBean
 
     public string break_type;//指定破坏类型
 
+    public string break_level;//指定破坏等级
+
     public int interactive_state;//互动状态 0不可互动 1可互动(F键)
 
     public int remark_int;//备注int
@@ -134,7 +136,7 @@ public class BlockInfoBean : BaseBean
     }
 
     /// <summary>
-    /// 获取破坏类型
+    /// 获取破坏类型(默认使用道具的类型 ，特殊情况特殊处理)
     /// </summary>
     /// <returns></returns>
     public List<BlockBreakTypeEnum> GetBreakType()
@@ -156,41 +158,61 @@ public class BlockInfoBean : BaseBean
         return listData;
     }
 
+
     /// <summary>
-    /// 检测是否能被破坏
+    ///  检测是否能被破坏
     /// </summary>
-    /// <returns></returns>
-    public bool CheckCanBreak(long breakItemId)
+    /// <param name="breakItemId"></param>
+    /// <param name="canBreak">是否能挖掘</param>
+    /// <param name="isAdditionBreak">是否享受挖掘加成</param>
+    public void CheckCanBreak(long breakItemId, out bool canBreak, out bool isAdditionBreak)
     {
+        canBreak = false;
+        isAdditionBreak = false;
         List<BlockBreakTypeEnum> listBreakType = GetBreakType();
         for (int i = 0; i < listBreakType.Count; i++)
         {
             BlockBreakTypeEnum blockBreakType = listBreakType[i];
             if (blockBreakType == BlockBreakTypeEnum.NotBreak)
             {
-                return false;
+                canBreak = false;
+                isAdditionBreak = false;
             }
             if (blockBreakType == BlockBreakTypeEnum.Normal)
             {
-                return true;
+                canBreak = true;
+                isAdditionBreak = false;
             }
             else
             {
                 //如果是空手
-                if (breakItemId == 0) 
+                if (breakItemId == 0)
                 {
-                  
+                    canBreak = false;
+                    isAdditionBreak = false;
                 }
                 else
                 {
                     ItemsInfoBean useItemInfo = ItemsHandler.Instance.manager.GetItemsInfoById(breakItemId);
-                    if (useItemInfo.GetItemsType()== (ItemsTypeEnum)listBreakType[i])
+                    AttributeBean attributeData = useItemInfo.GetAttributeData();
+                    int itemBreakLevel = attributeData.GetAttributeValue(AttributeTypeEnum.BreakLevel);
+                    //如果有破坏等级 并且道具的挖掘等级小于破坏等级 则不可以挖
+                    if (!break_level.IsNull() && int.Parse(break_level) > itemBreakLevel)
                     {
-                        return true;
+                        canBreak = false;
+                        isAdditionBreak = false;
+                    }
+                    //其他情况都可以挖
+                    else
+                    {
+                        if (useItemInfo.GetItemsType() == (ItemsTypeEnum)listBreakType[i])
+                        {
+                            canBreak = true;
+                            isAdditionBreak = true;
+                        }
                     }
                 }
             }
         }
-        return false;
     }
 }

@@ -55,17 +55,30 @@ public class PopupShowView : BaseUIView
 
             transform.localPosition = new Vector3(moveX + offsetX, moveY + offsetY, transform.localPosition.z);
 
+            float offsetTotalX;
+            float offsetTotalY;
             //判断鼠标在屏幕的左右
             if (Input.mousePosition.x <= (Screen.width / 2))
-            {
+            {    
                 //左
-                rtfContent.pivot = new Vector2(0 - offsetPivot.x, 0.5f + offsetPivot.y);
+                offsetTotalX = 0 - offsetPivot.x;
+            }
+            else
+            {  
+                //右
+                offsetTotalX = 1 + offsetPivot.x;
+            }
+
+            //屏幕上下修正
+            if (Input.mousePosition.y <= (Screen.height / 2))
+            {
+                offsetTotalY = 0 + offsetPivot.y;
             }
             else
             {
-                //右
-                rtfContent.pivot = new Vector2(1 + offsetPivot.x, 0.5f + offsetPivot.y);
+                offsetTotalY = 1 + offsetPivot.y;
             }
+            rtfContent.pivot = new Vector2(offsetTotalX, offsetTotalY);
         }
     }
 

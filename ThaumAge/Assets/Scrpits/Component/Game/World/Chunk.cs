@@ -569,7 +569,7 @@ public class Chunk
     /// <param name="updateTime">1,60</param>
     public void RegisterEventUpdate(Vector3Int position, TimeUpdateEventTypeEnum updateTimeType)
     {
-        switch (updateTimeType) 
+        switch (updateTimeType)
         {
             case TimeUpdateEventTypeEnum.SecTiny:
                 if (!listEventUpdateForSecTiny.Contains(position))
