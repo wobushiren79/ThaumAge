@@ -63,6 +63,8 @@ public class ItemTypeBlock : Item
             userData.AddItems(itemData, -1);
             //刷新UI
             UIHandler.Instance.RefreshUI();
+            //播放音效
+            AudioHandler.Instance.PlaySound(601);
         }
     }
 }

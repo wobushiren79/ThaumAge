@@ -9,6 +9,25 @@ public partial class ItemsSynthesisBean
     protected List<ItemsSynthesisMaterialsBean> listMaterials;
 
     /// <summary>
+    /// 检测是否已经解锁该合成
+    /// </summary>
+    /// <returns></returns>
+    public bool CheckIsUnlockSynthesis()
+    {
+        UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();
+        //获取合成材料
+        List<ItemsSynthesisMaterialsBean> listMaterials = GetSynthesisMaterials();
+        for (int i = 0; i < listMaterials.Count; i++)
+        {
+            var itemMaterial = listMaterials[i];
+            bool isUnlockMaterail = userData.userAchievement.CheckUnlockGetItems(itemMaterial.itemIds);
+            if (isUnlockMaterail == false)
+                return false;
+        }
+        return true;
+    }
+
+    /// <summary>
     /// 检测是否能合成
     /// </summary>
     public bool CheckSynthesis()

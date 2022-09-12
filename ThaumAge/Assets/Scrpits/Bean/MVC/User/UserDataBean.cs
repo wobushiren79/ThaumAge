@@ -73,6 +73,9 @@ public class UserDataBean
     /// </summary>
     public int AddItems(long itemId, int itemNumber, string meta)
     {
+        //记录成就
+        userAchievement.UnlockGetItems(itemId);
+
         //首先查询背包和快捷栏里是否有同样的道具                     
         //依次增加相应道具的数量 直到该道具的上限
         itemNumber = AddOldItems(listShortcutsItems, itemId, itemNumber, meta);

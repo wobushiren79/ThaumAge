@@ -97,8 +97,17 @@ public class ItemsManager : BaseManager,
         foreach (var itemData in dicItemsSynthesis)
         {
             ItemsSynthesisBean itemValue = itemData.Value;
+            //检测是否包含该类型的合成
             if (itemValue.CheckSynthesisType(types))
             {
+                //如果是默认的 那不用判断是否解锁 默认解锁
+                if(!itemValue.type_synthesis.Equals("0"))
+                {
+                    //检测是否解锁该合成
+                    bool isUnlockSynthesis = itemValue.CheckIsUnlockSynthesis();
+                    if (isUnlockSynthesis == false)
+                        continue;
+                }
                 listData.Add(itemValue);
             }
         }
