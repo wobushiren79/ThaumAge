@@ -175,6 +175,93 @@ public partial class UIViewItem : BaseUIView,
     }
 
     /// <summary>
+    /// shift点击 快速放入 类型：放入背包和快捷栏中
+    /// </summary>
+    public bool HandleForShiftClickForBackpackAndShortcuts()
+    {
+        BaseUIComponent currentUI = UIHandler.Instance.GetOpenUI();
+        //首先放进快捷栏
+        UIViewShortcuts shortcutsUI = currentUI.GetComponentInChildren<UIViewShortcuts>();
+        if (shortcutsUI != null)
+        {
+            for (int i = 0; i < shortcutsUI.listShortcut.Count; i++)
+            {
+                UIViewItemContainer itemContainer = shortcutsUI.listShortcut[i];
+                //如果有容器VIEW 并且里面没有东西
+                if (itemContainer != null && itemContainer.GetViewItem() == null)
+                {
+                    ExchangeItemForContainer(itemContainer);
+                    return true;
+                }
+            }
+        }
+        //如果没有成功再放进背包
+        UIViewBackpackList backpackUI = currentUI.GetComponentInChildren<UIViewBackpackList>();
+        if (backpackUI != null)
+        {
+            if (backpackUI.AddItems(this))
+                return true;
+        }
+        return false;
+    }
+
+    /// <summary>
+    /// shift点击 快速放入 类型：放入背包和盒子
+    /// </summary>
+    public bool HandleForShiftClickForBoxAndBackpack()
+    {
+        BaseUIComponent currentUI = UIHandler.Instance.GetOpenUI();
+        //首先检测是否有箱子 优先放进箱子
+        UIViewBoxList boxList = currentUI.GetComponentInChildren<UIViewBoxList>();
+        if (boxList != null)
+        {
+            if (boxList.AddItems(this)) return true;
+        }
+        UIViewBackpackList backpackUI = currentUI.GetComponentInChildren<UIViewBackpackList>();
+        if (backpackUI != null)
+        {
+            if (backpackUI.AddItems(this)) return true;
+        }
+        return false;
+    }
+
+
+    /// <summary>
+    /// shift点击 快速放入 类型：放入快捷栏和盒子
+    /// </summary>
+    public bool HandleForShiftClickForBoxAndShortcuts()
+    {
+        BaseUIComponent currentUI = UIHandler.Instance.GetOpenUI();
+        //首先检测是否有箱子 优先放进箱子
+        UIViewBoxList boxList = currentUI.GetComponentInChildren<UIViewBoxList>();
+        if (boxList != null)
+        {
+            if (boxList.AddItems(this)) return true;
+        }
+        //获取快捷栏
+        UIViewShortcuts shortcutsUI = currentUI.GetComponentInChildren<UIViewShortcuts>();
+        if (shortcutsUI != null)
+        {
+            for (int i = 0; i < shortcutsUI.listShortcut.Count; i++)
+            {
+                UIViewItemContainer itemContainer = shortcutsUI.listShortcut[i];
+                //如果有容器VIEW 并且里面没有东西
+                if (itemContainer != null && itemContainer.GetViewItem() == null)
+                {
+                    //如果是上帝模式则需要在原位置复制一个
+                    if (originalParent.containerType == UIViewItemContainer.ContainerType.God)
+                    {
+                        CopyItemInOriginal(int.MaxValue);
+                    }
+                    ExchangeItemForContainer(itemContainer);
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    /// <summary>
     /// 点击
     /// </summary>
     /// <param name="eventData"></param>
@@ -185,81 +272,21 @@ public partial class UIViewItem : BaseUIView,
         //如果是快速选择
         if (isShiftClick == 1)
         {
-            BaseUIComponent currentUI = UIHandler.Instance.GetOpenUI();
-            UIViewBoxList boxList;
-            UIViewBackpackList backpackUI;
-            UIViewShortcuts shortcutsUI;
             switch (originalParent.containerType)
             {
                 //如果是快捷栏
                 case UIViewItemContainer.ContainerType.Shortcuts:
-                    //首先检测是否有箱子 优先放进箱子
-                    boxList = currentUI.GetComponentInChildren<UIViewBoxList>();
-                    if (boxList != null)
-                    {
-                        if (boxList.AddItems(this)) return;
-                    }
-                    backpackUI = currentUI.GetComponentInChildren<UIViewBackpackList>();
-                    if (backpackUI != null)
-                    {
-                        if (backpackUI.AddItems(this)) return;
-                    }
+                    HandleForShiftClickForBoxAndBackpack();
                     break;
                 //如果是背包或者上帝模式
                 case UIViewItemContainer.ContainerType.Backpack:
                 case UIViewItemContainer.ContainerType.God:
-
-                    //首先检测是否有箱子 优先放进箱子
-                    boxList = currentUI.GetComponentInChildren<UIViewBoxList>();
-                    if (boxList != null)
-                    {
-                        if (boxList.AddItems(this)) return;
-                    }
-                    //获取快捷栏
-                    shortcutsUI = currentUI.GetComponentInChildren<UIViewShortcuts>();
-                    if (shortcutsUI != null)
-                    {
-                        for (int i = 0; i < shortcutsUI.listShortcut.Count; i++)
-                        {
-                            UIViewItemContainer itemContainer = shortcutsUI.listShortcut[i];
-                            //如果有容器VIEW 并且里面没有东西
-                            if (itemContainer != null && itemContainer.GetViewItem() == null)
-                            {
-                                //如果是上帝模式则需要在原位置复制一个
-                                if (originalParent.containerType == UIViewItemContainer.ContainerType.God)
-                                {
-                                    CopyItemInOriginal(int.MaxValue);
-                                }
-                                ExchangeItemForContainer(itemContainer);
-                                return;
-                            }
-                        }
-                    }
+                    HandleForShiftClickForBoxAndShortcuts();
                     break;
                 //如果是箱子里的东西
                 case UIViewItemContainer.ContainerType.Box:
                 case UIViewItemContainer.ContainerType.Furnaces:
-                    //首先放进快捷栏
-                    shortcutsUI = currentUI.GetComponentInChildren<UIViewShortcuts>();
-                    if (shortcutsUI != null)
-                    {
-                        for (int i = 0; i < shortcutsUI.listShortcut.Count; i++)
-                        {
-                            UIViewItemContainer itemContainer = shortcutsUI.listShortcut[i];
-                            //如果有容器VIEW 并且里面没有东西
-                            if (itemContainer != null && itemContainer.GetViewItem() == null)
-                            {
-                                ExchangeItemForContainer(itemContainer);
-                                return;
-                            }
-                        }
-                    }
-                    //如果没有成功再放进背包
-                    backpackUI = currentUI.GetComponentInChildren<UIViewBackpackList>();
-                    if (backpackUI != null)
-                    {
-                        if (backpackUI.AddItems(this)) return;
-                    }
+                    HandleForShiftClickForBackpackAndShortcuts();
                     break;
             }
         }
@@ -268,6 +295,19 @@ public partial class UIViewItem : BaseUIView,
     public void OnPointerUp(PointerEventData eventData)
     {
         //LogUtil.Log($"OnPointerUp dragging:{eventData.dragging} pointerDrag:{eventData.pointerDrag.name} eligibleForClick:{eventData.eligibleForClick}");
+        //如果是右键点击
+        if (eventData.button == PointerEventData.InputButton.Right)
+        {
+            if(originalParent.containerType== UIViewItemContainer.ContainerType.Shortcuts
+                || originalParent.containerType == UIViewItemContainer.ContainerType.Backpack)
+            {
+                //打开道具操作弹窗
+                DialogBean dialogData = new DialogBean();
+                dialogData.dialogType = DialogEnum.ItemOptions;
+                UIDialogItemOptions dialog = UIHandler.Instance.ShowDialog<UIDialogItemOptions>(dialogData);
+                dialog.SetData(this);
+            }
+        }
     }
     public void OnPointerDown(PointerEventData eventData)
     {
@@ -454,7 +494,6 @@ public partial class UIViewItem : BaseUIView,
         }
     }
 
-
     /// <summary>
     /// 是否忽略本身的射线检测
     /// </summary>
@@ -495,7 +534,7 @@ public partial class UIViewItem : BaseUIView,
     /// <summary>
     /// 在原位置复制一个道具
     /// </summary>
-    protected void CopyItemInOriginal(int copyItemNumber = -1, int curNumber = -1)
+    public void CopyItemInOriginal(int copyItemNumber = -1, int curNumber = -1)
     {
         if (copyItemNumber == -1)
         {
