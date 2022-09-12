@@ -20,7 +20,7 @@ public partial class ItemsSynthesisBean
         for (int i = 0; i < listMaterials.Count; i++)
         {
             var itemMaterial = listMaterials[i];
-            bool isUnlockMaterail = userData.userAchievement.CheckUnlockGetItems(itemMaterial.itemIds);
+            bool isUnlockMaterail = userData.userAchievement.CheckUnlockGetItemsForOr(itemMaterial.itemIds);
             if (isUnlockMaterail == false)
                 return false;
         }

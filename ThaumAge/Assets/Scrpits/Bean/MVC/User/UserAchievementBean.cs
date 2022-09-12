@@ -58,7 +58,28 @@ public class UserAchievementBean
         return false;
     }
 
-    public bool CheckUnlockGetItems(long[] itemIds)
+    /// <summary>
+    /// 检测是否解锁（只要解锁其中一个就行）
+    /// </summary>
+    /// <param name="itemIds"></param>
+    /// <returns></returns>
+    public bool CheckUnlockGetItemsForOr(long[] itemIds)
+    {
+        for (int i = 0; i < itemIds.Length; i++)
+        {
+            bool isUnlock = CheckUnlockGetItems(itemIds[i]);
+            if (isUnlock == true)
+                return true;
+        }
+        return false;
+    }
+
+    /// <summary>
+    /// 检测是否解锁（需要解锁全部）
+    /// </summary>
+    /// <param name="itemIds"></param>
+    /// <returns></returns>
+    public bool CheckUnlockGetItemsForAnd(long[] itemIds)
     {
         for (int i = 0; i < itemIds.Length; i++)
         {
