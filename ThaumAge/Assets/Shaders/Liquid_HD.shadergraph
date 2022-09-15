@@ -46,9 +46,6 @@
             "m_Id": "e13d3bdc8a1642e7aeb177c389350adc"
         },
         {
-            "m_Id": "d8616591886c47f1ab32c59152a1626e"
-        },
-        {
             "m_Id": "524b615d02174e7eb10d5717096f6f93"
         },
         {
@@ -381,9 +378,6 @@
                 "m_Id": "e13d3bdc8a1642e7aeb177c389350adc"
             },
             {
-                "m_Id": "d8616591886c47f1ab32c59152a1626e"
-            },
-            {
                 "m_Id": "524b615d02174e7eb10d5717096f6f93"
             },
             {
@@ -415,7 +409,7 @@
     },
     "m_ActiveTargets": [
         {
-            "m_Id": "b50e66b26d054121a2b9c05884af9906"
+            "m_Id": "033558c311ad44b0af5b468074f3d672"
         }
     ]
 }
@@ -458,6 +452,26 @@
         "w": 0.0
     },
     "m_Labels": []
+}
+
+{
+    "m_SGVersion": 1,
+    "m_Type": "UnityEditor.Rendering.Universal.ShaderGraph.UniversalTarget",
+    "m_ObjectId": "033558c311ad44b0af5b468074f3d672",
+    "m_ActiveSubTarget": {
+        "m_Id": "f90a815e37dd448b8fc873df1cd8de4f"
+    },
+    "m_AllowMaterialOverride": false,
+    "m_SurfaceType": 1,
+    "m_ZTestMode": 4,
+    "m_ZWriteControl": 0,
+    "m_AlphaMode": 0,
+    "m_RenderFace": 2,
+    "m_AlphaClip": false,
+    "m_CastShadows": true,
+    "m_ReceiveShadows": true,
+    "m_CustomEditorGUI": "",
+    "m_SupportVFX": false
 }
 
 {
@@ -2084,31 +2098,6 @@
 
 {
     "m_SGVersion": 0,
-    "m_Type": "UnityEditor.Rendering.HighDefinition.ShaderGraph.HDTarget",
-    "m_ObjectId": "b50e66b26d054121a2b9c05884af9906",
-    "m_ActiveSubTarget": {
-        "m_Id": "1928d1bd9f21411f9809d04f47fad1f1"
-    },
-    "m_Datas": [
-        {
-            "m_Id": "ff2df40c73b44fab9883d19fee279bf9"
-        },
-        {
-            "m_Id": "764e295b6a214253abc334a6e39b5b3b"
-        },
-        {
-            "m_Id": "cbbab5c8f06443a1bc8aad4864ab9cef"
-        },
-        {
-            "m_Id": "5a3dea91b3b4462eae42da31dd91f237"
-        }
-    ],
-    "m_CustomEditorGUI": "",
-    "m_SupportVFX": false
-}
-
-{
-    "m_SGVersion": 0,
     "m_Type": "UnityEditor.ShaderGraph.PropertyNode",
     "m_ObjectId": "b6e5e7189d85459b8b6e26f7d7d01499",
     "m_Group": {
@@ -2327,64 +2316,6 @@
     "m_Value": 0.0,
     "m_DefaultValue": 0.0,
     "m_Labels": []
-}
-
-{
-    "m_SGVersion": 0,
-    "m_Type": "UnityEditor.ShaderGraph.NormalMaterialSlot",
-    "m_ObjectId": "d4eb7b3f9de34037a68c25d51ede97b4",
-    "m_Id": 0,
-    "m_DisplayName": "Bent Normal",
-    "m_SlotType": 0,
-    "m_Hidden": false,
-    "m_ShaderOutputName": "BentNormal",
-    "m_StageCapability": 2,
-    "m_Value": {
-        "x": 0.0,
-        "y": 0.0,
-        "z": 0.0
-    },
-    "m_DefaultValue": {
-        "x": 0.0,
-        "y": 0.0,
-        "z": 0.0
-    },
-    "m_Labels": [],
-    "m_Space": 3
-}
-
-{
-    "m_SGVersion": 0,
-    "m_Type": "UnityEditor.ShaderGraph.BlockNode",
-    "m_ObjectId": "d8616591886c47f1ab32c59152a1626e",
-    "m_Group": {
-        "m_Id": ""
-    },
-    "m_Name": "SurfaceDescription.BentNormal",
-    "m_DrawState": {
-        "m_Expanded": true,
-        "m_Position": {
-            "serializedVersion": "2",
-            "x": 0.0,
-            "y": 0.0,
-            "width": 0.0,
-            "height": 0.0
-        }
-    },
-    "m_Slots": [
-        {
-            "m_Id": "d4eb7b3f9de34037a68c25d51ede97b4"
-        }
-    ],
-    "synonyms": [],
-    "m_Precision": 0,
-    "m_PreviewExpanded": true,
-    "m_DismissedVersion": 0,
-    "m_PreviewMode": 0,
-    "m_CustomColors": {
-        "m_SerializableColors": []
-    },
-    "m_SerializedDescriptor": "SurfaceDescription.BentNormal"
 }
 
 {
@@ -2811,6 +2742,16 @@
         "m_SerializableColors": []
     },
     "m_SerializedDescriptor": "SurfaceDescription.Smoothness"
+}
+
+{
+    "m_SGVersion": 1,
+    "m_Type": "UnityEditor.Rendering.Universal.ShaderGraph.UniversalLitSubTarget",
+    "m_ObjectId": "f90a815e37dd448b8fc873df1cd8de4f",
+    "m_WorkflowMode": 1,
+    "m_NormalDropOffSpace": 0,
+    "m_ClearCoat": false,
+    "m_BlendModePreserveSpecular": true
 }
 
 {

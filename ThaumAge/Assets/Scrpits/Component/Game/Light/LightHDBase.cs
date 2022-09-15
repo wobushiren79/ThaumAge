@@ -1,20 +1,20 @@
 ﻿using UnityEditor;
 using UnityEngine;
-using UnityEngine.Rendering.HighDefinition;
+using UnityEngine.Rendering.Universal;
 
 public class LightHDBase : BaseMonoBehaviour
 {
-    protected HDAdditionalLightData hdAdditionalLightData;
+    protected UniversalAdditionalLightData hdAdditionalLightData;
     protected void Awake()
     {
-        hdAdditionalLightData = GetComponent<HDAdditionalLightData>();
+        hdAdditionalLightData = GetComponent<UniversalAdditionalLightData>();
         if (hdAdditionalLightData != null)
         {
             GameConfigBean gameConfig =  GameDataHandler.Instance.manager.GetGameConfig();
             //设置阴影质量
-            hdAdditionalLightData.SetShadowResolutionLevel(gameConfig.shadowResolutionLevel);
-            hdAdditionalLightData.slopeBias = 0;
-            hdAdditionalLightData.normalBias = 5;
+            //hdAdditionalLightData.SetShadowResolutionLevel(gameConfig.shadowResolutionLevel);
+            //hdAdditionalLightData.slopeBias = 0;
+            //hdAdditionalLightData.normalBias = 5;
             //添加数据
             LightHandler.Instance.manager.AddHDLightData(hdAdditionalLightData);
         }

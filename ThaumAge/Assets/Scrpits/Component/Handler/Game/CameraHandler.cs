@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
-using UnityEngine.Rendering.HighDefinition;
+using UnityEngine.Rendering.Universal;
 
 public class CameraHandler : BaseHandler<CameraHandler, CameraManager>
 {
@@ -120,42 +120,42 @@ public class CameraHandler : BaseHandler<CameraHandler, CameraManager>
     /// <param name="qualityLevel"></param>
     public void ChangeAntialiasing(AntialiasingEnum antialiasingEnum, int qualityLevel = 1)
     {
-        HDAdditionalCameraData hdAdditionalCamera = manager.mainCamera.GetComponent<HDAdditionalCameraData>();
-        HDAdditionalCameraData.AntialiasingMode antialiasingMode = HDAdditionalCameraData.AntialiasingMode.None;
-        switch (antialiasingEnum)
-        {
-            case AntialiasingEnum.None:
-                break;
-            case AntialiasingEnum.FXAA:
-                antialiasingMode = HDAdditionalCameraData.AntialiasingMode.FastApproximateAntialiasing;
-                break;
-            case AntialiasingEnum.TAA:
-                antialiasingMode = HDAdditionalCameraData.AntialiasingMode.TemporalAntialiasing;
-                break;
-            case AntialiasingEnum.SMAA:
-                antialiasingMode = HDAdditionalCameraData.AntialiasingMode.SubpixelMorphologicalAntiAliasing;
-                break;
-        }
-        hdAdditionalCamera.antialiasing = antialiasingMode;
-        switch (qualityLevel)
-        {
-            case 0:
-                hdAdditionalCamera.SMAAQuality = HDAdditionalCameraData.SMAAQualityLevel.Low;
-                hdAdditionalCamera.TAAQuality = HDAdditionalCameraData.TAAQualityLevel.Low;
-                break;
-            case 1:
-                hdAdditionalCamera.SMAAQuality = HDAdditionalCameraData.SMAAQualityLevel.Medium;
-                hdAdditionalCamera.TAAQuality = HDAdditionalCameraData.TAAQualityLevel.Medium;
-                break;
-            case 2:
-                hdAdditionalCamera.SMAAQuality = HDAdditionalCameraData.SMAAQualityLevel.High;
-                hdAdditionalCamera.TAAQuality = HDAdditionalCameraData.TAAQualityLevel.High;
-                break;
-            default:
-                hdAdditionalCamera.SMAAQuality = HDAdditionalCameraData.SMAAQualityLevel.Low;
-                hdAdditionalCamera.TAAQuality = HDAdditionalCameraData.TAAQualityLevel.Low;
-                break;
-        }
+        //HDAdditionalCameraData hdAdditionalCamera = manager.mainCamera.GetComponent<HDAdditionalCameraData>();
+        //HDAdditionalCameraData.AntialiasingMode antialiasingMode = HDAdditionalCameraData.AntialiasingMode.None;
+        //switch (antialiasingEnum)
+        //{
+        //    case AntialiasingEnum.None:
+        //        break;
+        //    case AntialiasingEnum.FXAA:
+        //        antialiasingMode = HDAdditionalCameraData.AntialiasingMode.FastApproximateAntialiasing;
+        //        break;
+        //    case AntialiasingEnum.TAA:
+        //        antialiasingMode = HDAdditionalCameraData.AntialiasingMode.TemporalAntialiasing;
+        //        break;
+        //    case AntialiasingEnum.SMAA:
+        //        antialiasingMode = HDAdditionalCameraData.AntialiasingMode.SubpixelMorphologicalAntiAliasing;
+        //        break;
+        //}
+        //hdAdditionalCamera.antialiasing = antialiasingMode;
+        //switch (qualityLevel)
+        //{
+        //    case 0:
+        //        hdAdditionalCamera.SMAAQuality = HDAdditionalCameraData.SMAAQualityLevel.Low;
+        //        hdAdditionalCamera.TAAQuality = HDAdditionalCameraData.TAAQualityLevel.Low;
+        //        break;
+        //    case 1:
+        //        hdAdditionalCamera.SMAAQuality = HDAdditionalCameraData.SMAAQualityLevel.Medium;
+        //        hdAdditionalCamera.TAAQuality = HDAdditionalCameraData.TAAQualityLevel.Medium;
+        //        break;
+        //    case 2:
+        //        hdAdditionalCamera.SMAAQuality = HDAdditionalCameraData.SMAAQualityLevel.High;
+        //        hdAdditionalCamera.TAAQuality = HDAdditionalCameraData.TAAQualityLevel.High;
+        //        break;
+        //    default:
+        //        hdAdditionalCamera.SMAAQuality = HDAdditionalCameraData.SMAAQualityLevel.Low;
+        //        hdAdditionalCamera.TAAQuality = HDAdditionalCameraData.TAAQualityLevel.Low;
+        //        break;
+        //}
     }
 
     /// <summary>

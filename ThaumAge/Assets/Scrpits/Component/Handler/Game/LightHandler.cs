@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.Rendering.HighDefinition;
+using UnityEngine.Rendering.Universal;
 
 public class LightHandler : BaseHandler<LightHandler, LightManager>
 {
@@ -52,11 +52,11 @@ public class LightHandler : BaseHandler<LightHandler, LightManager>
     /// <param name="level"></param>
     public void ChangeShadowResolutionLevel(int level)
     {
-        List<HDAdditionalLightData> listHDLightData = manager.GetAllHDLightData();
+        List<UniversalAdditionalLightData> listHDLightData = manager.GetAllHDLightData();
         for (int i = 0; i < listHDLightData.Count; i++)
         {
-            HDAdditionalLightData lightData = listHDLightData[i];
-            lightData.SetShadowResolutionLevel(level);
+            UniversalAdditionalLightData lightData = listHDLightData[i];
+            //lightData.SetShadowResolutionLevel(level);
         }
     }
 
