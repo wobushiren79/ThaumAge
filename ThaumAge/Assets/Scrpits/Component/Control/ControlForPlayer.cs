@@ -159,6 +159,10 @@ public class ControlForPlayer : ControlForBase
     public override void EnabledControl(bool enabled)
     {
         base.EnabledControl(enabled);
+        if (enabled == false)
+        {
+            character.characterAnim.creatureAnim.PlayBaseAnim(CreatureAnimBaseState.Idle);
+        }
     }
 
     /// <summary>

@@ -13,6 +13,8 @@ public class LightHDBase : BaseMonoBehaviour
             GameConfigBean gameConfig =  GameDataHandler.Instance.manager.GetGameConfig();
             //设置阴影质量
             hdAdditionalLightData.SetShadowResolutionLevel(gameConfig.shadowResolutionLevel);
+            hdAdditionalLightData.slopeBias = 0;
+            hdAdditionalLightData.normalBias = 5;
             //添加数据
             LightHandler.Instance.manager.AddHDLightData(hdAdditionalLightData);
         }
