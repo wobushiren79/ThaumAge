@@ -3,16 +3,12 @@ using UnityEngine;
 
 public class BlockShapeLiquidCross : BlockShapeLiquid
 {
-    public BlockShapeLiquidCross() : base()
+    public BlockShapeLiquidCross(Block block) : base(block)
     {
         vertsAdd = BlockShapeCross.VertsAddCross;
         trisAdd = BlockShapeCross.TrisAddCross;
         colorsAdd = BlockShapeCross.ColorsAddCross;
-    }
 
-    public override void InitData(Block block)
-    {
-        base.InitData(block);
         Vector2 uvStartPosition = BlockShapeCross.GetUVStartPosition(block);
 
         uvsAdd = new Vector2[]
@@ -28,6 +24,7 @@ public class BlockShapeLiquidCross : BlockShapeLiquid
             new Vector2(uvStartPosition.x + uvWidth,uvStartPosition.y)
         };
     }
+
     public override void BuildBlock(Chunk chunk, Vector3Int localPosition)
     {
         base.BuildBlock(chunk, localPosition);

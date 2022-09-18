@@ -17,7 +17,7 @@ public class BlockShapeCrossOblique : BlockShapeCross
             new Vector3(0f,0f,1f)
     };
 
-    public BlockShapeCrossOblique() : base()
+    public BlockShapeCrossOblique(Block block) : base(block)
     {
         vertsAdd = VertsAddCrossOblique;
     }

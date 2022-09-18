@@ -274,12 +274,20 @@ public class ReflexUtil
     /// <param name="fullName">命名空间.类型名</param>
     /// <param name="assemblyName">程序集</param>
     /// <returns></returns>
-    public static T CreateInstance<T>(string className)
+    public static T CreateInstance<T>(string className, object[] data = null)
     {
         try
         {
             Type o = Type.GetType(className);//加载类型
-            object obj = Activator.CreateInstance(o);//根据类型创建实例
+            object obj;//根据类型创建实例
+            if (data == null)
+            {
+                obj = Activator.CreateInstance(o);//根据类型创建实例
+            }
+            else
+            {
+                obj = Activator.CreateInstance(o, data);//根据类型创建实例
+            }
             return (T)obj;//类型转换并返回
         }
         catch

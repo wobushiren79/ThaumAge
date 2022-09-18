@@ -5,6 +5,67 @@ using UnityEngine;
 public class BlockShapeCubeHalf : BlockShapeCube
 {
     protected static float offsetCubeHalf = 0.5f;
+
+    public BlockShapeCubeHalf(Block block) : base(block)
+    {
+        Vector2 uvStart = GetUVStartPosition(block, DirectionEnum.Left);
+        float halfUV = uvWidth / 2f;
+        uvsAddHalfUp = new Vector2[][]
+        {
+            HandleHalfUvs(uvStart,uvsAddLeft, new Vector2(0,halfUV)),
+            HandleHalfUvs(uvStart,uvsAddRight, new Vector2(0,halfUV)),
+            HandleHalfUvs(uvStart,uvsAddUp, new Vector2(0,0)),
+            HandleHalfUvs(uvStart,uvsAddDown, new Vector2(0,0)),
+            HandleHalfUvs(uvStart,uvsAddForward, new Vector2(0,halfUV)),
+            HandleHalfUvs(uvStart,uvsAddBack, new Vector2(0,halfUV))
+        };
+        uvsAddHalfDown = new Vector2[][]
+        {
+            HandleHalfUvs(uvStart,uvsAddLeft, new Vector2(0,-halfUV)),
+            HandleHalfUvs(uvStart,uvsAddRight, new Vector2(0,-halfUV)),
+            HandleHalfUvs(uvStart,uvsAddUp, new Vector2(0,0)),
+            HandleHalfUvs(uvStart,uvsAddDown, new Vector2(0,0)),
+            HandleHalfUvs(uvStart,uvsAddForward, new Vector2(0,-halfUV)),
+            HandleHalfUvs(uvStart,uvsAddBack, new Vector2(0,-halfUV))
+        };
+        uvsAddHalfLeft = new Vector2[][]
+        {
+            HandleHalfUvs(uvStart,uvsAddLeft, new Vector2(0,0)),
+            HandleHalfUvs(uvStart,uvsAddRight, new Vector2(0,0)),
+            HandleHalfUvs(uvStart,uvsAddUp, new Vector2(-halfUV,0)),
+            HandleHalfUvs(uvStart,uvsAddDown, new Vector2(-halfUV,0)),
+            HandleHalfUvs(uvStart,uvsAddForward, new Vector2(-halfUV,0)),
+            HandleHalfUvs(uvStart,uvsAddBack, new Vector2(-halfUV,0))
+        };
+        uvsAddHalfRight = new Vector2[][]
+        {
+            HandleHalfUvs(uvStart,uvsAddLeft, new Vector2(0,0)),
+            HandleHalfUvs(uvStart,uvsAddRight, new Vector2(0,0)),
+            HandleHalfUvs(uvStart,uvsAddUp, new Vector2(halfUV,0)),
+            HandleHalfUvs(uvStart,uvsAddDown, new Vector2(halfUV,0)),
+            HandleHalfUvs(uvStart,uvsAddForward, new Vector2(halfUV,0)),
+            HandleHalfUvs(uvStart,uvsAddBack, new Vector2(halfUV,0))
+        };
+        uvsAddHalfForward = new Vector2[][]
+        {
+            HandleHalfUvs(uvStart,uvsAddLeft, new Vector2(-halfUV,0)),
+            HandleHalfUvs(uvStart,uvsAddRight, new Vector2(-halfUV,0)),
+            HandleHalfUvs(uvStart,uvsAddUp, new Vector2(0,-halfUV)),
+            HandleHalfUvs(uvStart,uvsAddDown, new Vector2(0,-halfUV)),
+            HandleHalfUvs(uvStart,uvsAddForward, new Vector2(0,0)),
+            HandleHalfUvs(uvStart,uvsAddBack, new Vector2(0,0))
+        };
+        uvsAddHalfBack = new Vector2[][]
+        {
+            HandleHalfUvs(uvStart,uvsAddLeft, new Vector2(halfUV,0)),
+            HandleHalfUvs(uvStart,uvsAddRight, new Vector2(halfUV,0)),
+            HandleHalfUvs(uvStart,uvsAddUp, new Vector2(0,halfUV)),
+            HandleHalfUvs(uvStart,uvsAddDown, new Vector2(0,halfUV)),
+            HandleHalfUvs(uvStart,uvsAddForward, new Vector2(0,0)),
+            HandleHalfUvs(uvStart,uvsAddBack, new Vector2(0,0))
+        };
+    }
+
     protected static Vector3[] HandleHalfVerts(Vector3[] verts, Vector3 offsetPosition)
     {
         Vector3[] newVerts = new Vector3[verts.Length];
@@ -108,67 +169,6 @@ public class BlockShapeCubeHalf : BlockShapeCube
     public Vector2[][] uvsAddHalfRight;
     public Vector2[][] uvsAddHalfForward;
     public Vector2[][] uvsAddHalfBack;
-
-    public override void InitData(Block block)
-    {
-        base.InitData(block);
-        Vector2 uvStart = GetUVStartPosition(block, DirectionEnum.Left);
-        float halfUV = uvWidth / 2f;
-        uvsAddHalfUp = new Vector2[][]
-        {
-            HandleHalfUvs(uvStart,uvsAddLeft, new Vector2(0,halfUV)),
-            HandleHalfUvs(uvStart,uvsAddRight, new Vector2(0,halfUV)),
-            HandleHalfUvs(uvStart,uvsAddUp, new Vector2(0,0)),
-            HandleHalfUvs(uvStart,uvsAddDown, new Vector2(0,0)),
-            HandleHalfUvs(uvStart,uvsAddForward, new Vector2(0,halfUV)),
-            HandleHalfUvs(uvStart,uvsAddBack, new Vector2(0,halfUV))
-        };
-        uvsAddHalfDown = new Vector2[][]
-        {
-            HandleHalfUvs(uvStart,uvsAddLeft, new Vector2(0,-halfUV)),
-            HandleHalfUvs(uvStart,uvsAddRight, new Vector2(0,-halfUV)),
-            HandleHalfUvs(uvStart,uvsAddUp, new Vector2(0,0)),
-            HandleHalfUvs(uvStart,uvsAddDown, new Vector2(0,0)),
-            HandleHalfUvs(uvStart,uvsAddForward, new Vector2(0,-halfUV)),
-            HandleHalfUvs(uvStart,uvsAddBack, new Vector2(0,-halfUV))
-        };
-        uvsAddHalfLeft = new Vector2[][]
-        {
-            HandleHalfUvs(uvStart,uvsAddLeft, new Vector2(0,0)),
-            HandleHalfUvs(uvStart,uvsAddRight, new Vector2(0,0)),
-            HandleHalfUvs(uvStart,uvsAddUp, new Vector2(-halfUV,0)),
-            HandleHalfUvs(uvStart,uvsAddDown, new Vector2(-halfUV,0)),
-            HandleHalfUvs(uvStart,uvsAddForward, new Vector2(-halfUV,0)),
-            HandleHalfUvs(uvStart,uvsAddBack, new Vector2(-halfUV,0))
-        };
-        uvsAddHalfRight = new Vector2[][]
-        {
-            HandleHalfUvs(uvStart,uvsAddLeft, new Vector2(0,0)),
-            HandleHalfUvs(uvStart,uvsAddRight, new Vector2(0,0)),
-            HandleHalfUvs(uvStart,uvsAddUp, new Vector2(halfUV,0)),
-            HandleHalfUvs(uvStart,uvsAddDown, new Vector2(halfUV,0)),
-            HandleHalfUvs(uvStart,uvsAddForward, new Vector2(halfUV,0)),
-            HandleHalfUvs(uvStart,uvsAddBack, new Vector2(halfUV,0))
-        };
-        uvsAddHalfForward = new Vector2[][]
-        {
-            HandleHalfUvs(uvStart,uvsAddLeft, new Vector2(-halfUV,0)),
-            HandleHalfUvs(uvStart,uvsAddRight, new Vector2(-halfUV,0)),
-            HandleHalfUvs(uvStart,uvsAddUp, new Vector2(0,-halfUV)),
-            HandleHalfUvs(uvStart,uvsAddDown, new Vector2(0,-halfUV)),
-            HandleHalfUvs(uvStart,uvsAddForward, new Vector2(0,0)),
-            HandleHalfUvs(uvStart,uvsAddBack, new Vector2(0,0))
-        };
-        uvsAddHalfBack = new Vector2[][]
-        {
-            HandleHalfUvs(uvStart,uvsAddLeft, new Vector2(halfUV,0)),
-            HandleHalfUvs(uvStart,uvsAddRight, new Vector2(halfUV,0)),
-            HandleHalfUvs(uvStart,uvsAddUp, new Vector2(0,halfUV)),
-            HandleHalfUvs(uvStart,uvsAddDown, new Vector2(0,halfUV)),
-            HandleHalfUvs(uvStart,uvsAddForward, new Vector2(0,0)),
-            HandleHalfUvs(uvStart,uvsAddBack, new Vector2(0,0))
-        };
-    }
 
     /// <summary>
     /// 构建方块的六个面

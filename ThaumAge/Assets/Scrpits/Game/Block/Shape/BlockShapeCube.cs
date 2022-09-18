@@ -69,17 +69,12 @@ public class BlockShapeCube : BlockShape
     public Vector2[] uvsAddForward;
     public Vector2[] uvsAddBack;
 
-    public BlockShapeCube() : base()
+    public BlockShapeCube(Block block) : base(block)
     {
         trisAdd = trisAddCube;
         colorsAdd = colorsAddCube;
-    }
 
-    public override void InitData(Block block)
-    {
-        base.InitData(block);
         Vector2 uvStart = GetUVStartPosition(block, DirectionEnum.Left);
-
         uvsAddLeft = new Vector2[]
         {
             new Vector2(uvStart.x ,uvStart.y + uvWidth),

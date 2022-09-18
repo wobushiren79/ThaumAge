@@ -133,13 +133,13 @@ public class BlockManager : BaseManager, IBlockInfoView
     /// </summary>
     /// <param name="blockShapeEnum"></param>
     /// <returns></returns>
-    public BlockShape GetRegisterBlockShape(BlockShapeEnum blockShapeEnum)
+    public BlockShape GetRegisterBlockShape(Block block, BlockShapeEnum blockShapeEnum)
     {
         string blockShapeName = blockShapeEnum.GetEnumName();
         //通过反射获取类
-        BlockShape blockShape = ReflexUtil.CreateInstance<BlockShape>($"BlockShape{blockShapeName}");
+        BlockShape blockShape = ReflexUtil.CreateInstance<BlockShape>($"BlockShape{blockShapeName}",new object[] { block });
         if (blockShape == null)
-            blockShape = new BlockShape();
+            blockShape = new BlockShape(block);
         return blockShape;
     }
 

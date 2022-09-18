@@ -27,18 +27,13 @@ public class BlockShapeCross : BlockShape
             Color.white,Color.white,Color.white,Color.white
     };
 
-    public BlockShapeCross() : base()
+    public BlockShapeCross(Block block) : base(block)
     {
         vertsAdd = VertsAddCross;
         trisAdd = TrisAddCross;
         colorsAdd = ColorsAddCross;
-    }
 
-    public override void InitData(Block block)
-    {
-        base.InitData(block);
         Vector2 uvStartPosition = GetUVStartPosition(block);
-
         uvsAdd = new Vector2[]
         {
             new Vector2(uvStartPosition.x,uvStartPosition.y),

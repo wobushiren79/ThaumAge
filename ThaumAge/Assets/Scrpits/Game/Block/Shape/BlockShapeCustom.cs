@@ -8,9 +8,9 @@ public class BlockShapeCustom : BlockShape
     public MeshDataCustom blockMeshData;
     public Vector3[] vertsColliderAddCustom;
     public int[] trisColliderAddCustom;
-    public override void InitData(Block block)
+
+    public BlockShapeCustom(Block block) : base(block)
     {
-        base.InitData(block);
         blockMeshData = block.blockInfo.GetBlockMeshData();
         vertsAdd = blockMeshData.mainMeshData.vertices;
         trisAdd = blockMeshData.mainMeshData.triangles;

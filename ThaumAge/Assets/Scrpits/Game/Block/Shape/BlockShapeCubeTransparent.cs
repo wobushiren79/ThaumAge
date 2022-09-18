@@ -3,6 +3,11 @@ using UnityEngine;
 
 public class BlockShapeCubeTransparent : BlockShapeCube
 {
+    public BlockShapeCubeTransparent(Block block) : base(block)
+    {
+
+    }
+
     /// <summary>
     /// 检测是否生成面
     /// </summary>

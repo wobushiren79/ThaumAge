@@ -4,9 +4,9 @@ using UnityEngine;
 public class BlockShapePlough : BlockShapeCubeCuboid
 {
     protected Color[] colorAddWater;
-    public override void InitData(Block block)
+
+    public BlockShapePlough(Block block) : base(block)
     {
-        base.InitData(block);
         colorAddWater = new Color[]{
             Color.gray,
             Color.gray,

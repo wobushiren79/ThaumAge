@@ -8,7 +8,7 @@ public class BlockShapeWell : BlockShapeCross
     protected float forwardOffsetBorder;
     protected float backOffsetBorder;
 
-    public int[] TrisAddWell= new int[]
+    public int[] TrisAddWell = new int[]
     {
             0,1,2, 0,2,3,
             4,5,6, 4,6,7,
@@ -16,14 +16,11 @@ public class BlockShapeWell : BlockShapeCross
             12,13,14, 12,14,15
     };
 
-    public BlockShapeWell() : base()
+    public BlockShapeWell(Block block) : base(block)
     {
         trisAdd = TrisAddWell;
-    }
 
-    public override void InitData(Block block)
-    {
-        base.InitData(block);
+        Vector2 uvStart = GetUVStartPosition(block);
 
         float[] offsetBorder = block.blockInfo.GetOffsetBorder();
 
@@ -34,9 +31,9 @@ public class BlockShapeWell : BlockShapeCross
 
         vertsAdd = new Vector3[]
         {
-            new Vector3(0,0,0).AddX(leftOffsetBorder),
-            new Vector3(0,1,0).AddX(leftOffsetBorder),
             new Vector3(0,1,1).AddX(leftOffsetBorder),
+            new Vector3(0,1,0).AddX(leftOffsetBorder),
+            new Vector3(0,0,0).AddX(leftOffsetBorder),
             new Vector3(0,0,1).AddX(leftOffsetBorder),
 
             new Vector3(1,0,0).AddX(rightOffsetBorder),
@@ -49,35 +46,41 @@ public class BlockShapeWell : BlockShapeCross
             new Vector3(1,1,0).AddZ(forwardOffsetBorder),
             new Vector3(1,0,0).AddZ(forwardOffsetBorder),
 
-            new Vector3(0,0,1).AddZ(backOffsetBorder),
-            new Vector3(0,1,1).AddZ(backOffsetBorder),
             new Vector3(1,1,1).AddZ(backOffsetBorder),
+            new Vector3(0,1,1).AddZ(backOffsetBorder),
+            new Vector3(0,0,1).AddZ(backOffsetBorder),
             new Vector3(1,0,1).AddZ(backOffsetBorder)
         };
 
-        Vector2 uvStartPosition = GetUVStartPosition(block);
-
         uvsAdd = new Vector2[]
         {
-            new Vector2(uvStartPosition.x,uvStartPosition.y),
-            new Vector2(uvStartPosition.x,uvStartPosition.y + uvWidth),
-            new Vector2(uvStartPosition.x + uvWidth,uvStartPosition.y + uvWidth),
-            new Vector2(uvStartPosition.x + uvWidth,uvStartPosition.y),
+            new Vector2(uvStart.x ,uvStart.y + uvWidth),
+            new Vector2(uvStart.x + uvWidth,uvStart.y + uvWidth),
+            new Vector2(uvStart.x + uvWidth ,uvStart.y),
+            new Vector2(uvStart.x ,uvStart.y),
 
-            new Vector2(uvStartPosition.x,uvStartPosition.y),
-            new Vector2(uvStartPosition.x,uvStartPosition.y + uvWidth),
-            new Vector2(uvStartPosition.x + uvWidth,uvStartPosition.y + uvWidth),
-            new Vector2(uvStartPosition.x + uvWidth,uvStartPosition.y),
+            new Vector2(uvStart.x,uvStart.y),
+            new Vector2(uvStart.x,uvStart.y + uvWidth),
+            new Vector2(uvStart.x+ uvWidth,uvStart.y+ uvWidth),
+            new Vector2(uvStart.x+ uvWidth,uvStart.y),
 
-            new Vector2(uvStartPosition.x,uvStartPosition.y),
-            new Vector2(uvStartPosition.x,uvStartPosition.y + uvWidth),
-            new Vector2(uvStartPosition.x + uvWidth,uvStartPosition.y + uvWidth),
-            new Vector2(uvStartPosition.x + uvWidth,uvStartPosition.y),
+            new Vector2(uvStart.x,uvStart.y),
+            new Vector2(uvStart.x,uvStart.y + uvWidth),
+            new Vector2(uvStart.x+ uvWidth,uvStart.y+ uvWidth),
+            new Vector2(uvStart.x+ uvWidth,uvStart.y),
 
-            new Vector2(uvStartPosition.x,uvStartPosition.y),
-            new Vector2(uvStartPosition.x,uvStartPosition.y + uvWidth),
-            new Vector2(uvStartPosition.x + uvWidth,uvStartPosition.y + uvWidth),
-            new Vector2(uvStartPosition.x + uvWidth,uvStartPosition.y)
+            new Vector2(uvStart.x ,uvStart.y + uvWidth),
+            new Vector2(uvStart.x + uvWidth,uvStart.y + uvWidth),
+            new Vector2(uvStart.x + uvWidth ,uvStart.y),
+            new Vector2(uvStart.x ,uvStart.y)
+        };
+
+        colorsAdd = new Color[] 
+        {
+            Color.white,Color.white,Color.white,Color.white,
+            Color.white,Color.white,Color.white,Color.white,
+            Color.white,Color.white,Color.white,Color.white,
+            Color.white,Color.white,Color.white,Color.white
         };
     }
 }

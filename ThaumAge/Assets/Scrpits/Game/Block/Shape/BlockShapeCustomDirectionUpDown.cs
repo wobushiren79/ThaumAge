@@ -7,9 +7,9 @@ public class BlockShapeCustomDirectionUpDown : BlockShapeCustom
     public int[] trisAddDirection;
     public Vector2[] uvsAddDirection;
     public Color[] colorsAddDirection;
-    public override void InitData(Block block)
+
+    public BlockShapeCustomDirectionUpDown(Block block) :base(block)
     {
-        base.InitData(block);
         MeshDataDetailsCustom otherMesh = blockMeshData.otherMeshData[0];
         vertsAddDirection = otherMesh.vertices;
         trisAddDirection = otherMesh.triangles;

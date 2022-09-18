@@ -8,16 +8,15 @@ public class BlockShapeCustomAroundLRFB : BlockShapeCustom
     protected Vector2[] uvsAddLink;
     protected Color[] colorAddLink;
 
-    public override void InitData(Block block)
+    public BlockShapeCustomAroundLRFB(Block block) : base(block)
     {
-        base.InitData(block);
         MeshDataDetailsCustom otherMesh = blockMeshData.otherMeshData[0];
         vertsAddLink = otherMesh.vertices;
         trisAddLink = otherMesh.triangles;
         uvsAddLink = otherMesh.uv;
 
         colorAddLink = new Color[vertsAddLink.Length];
-        for (int i = 0; i < colorAddLink.Length;i++)
+        for (int i = 0; i < colorAddLink.Length; i++)
         {
             colorAddLink[i] = Color.white;
         }

@@ -61,11 +61,7 @@ public class BlockShape
 
     public static float uvWidth = 1 / 128f;
 
-    /// <summary>
-    /// 设置数据
-    /// </summary>
-    /// <param name="blockType"></param>
-    public virtual void InitData(Block block)
+    public BlockShape(Block block)
     {
         this.block = block;
     }
@@ -118,8 +114,8 @@ public class BlockShape
         Chunk chunk, Vector3Int localPosition, BlockDirectionEnum blockDirection,
         Vector3[] vertsAdd, Vector2[] uvsAdd, Color[] colorsAdd)
     {
-        AddVertsUVsColors(localPosition, 
-            blockDirection,chunk.chunkMeshData.verts, chunk.chunkMeshData.uvs, chunk.chunkMeshData.colors,
+        AddVertsUVsColors(localPosition,
+            blockDirection, chunk.chunkMeshData.verts, chunk.chunkMeshData.uvs, chunk.chunkMeshData.colors,
             vertsAdd, uvsAdd, colorsAdd);
 
         if (block.blockInfo.collider_state == 1)

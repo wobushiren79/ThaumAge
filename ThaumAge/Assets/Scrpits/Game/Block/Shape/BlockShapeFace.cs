@@ -38,13 +38,23 @@ public class BlockShapeFace : BlockShape
     {
             0,1,2, 0,2,3, 4,6,5, 4,7,6
     };
-    public BlockShapeFace() : base()
+    public BlockShapeFace(Block block) : base(block)
     {
         vertsAdd = VertsAddFace;
 
         trisAdd = TrisAddFace;
 
         colorsAdd = ColorAddFace;
+
+        Vector2 uvStartPosition = GetUVStartPosition(block);
+
+        uvsAdd = new Vector2[]
+        {
+            new Vector2(uvStartPosition.x,uvStartPosition.y),
+            new Vector2(uvStartPosition.x,uvStartPosition.y + uvWidth),
+            new Vector2(uvStartPosition.x + uvWidth,uvStartPosition.y + uvWidth),
+            new Vector2(uvStartPosition.x + uvWidth,uvStartPosition.y)
+        };
     }
 
     /// <summary>
@@ -96,20 +106,6 @@ public class BlockShapeFace : BlockShape
             int triggerIndex = chunk.chunkMeshData.vertsTrigger.Count;
             AddTris(triggerIndex, trisTrigger, trisColliderAdd);
         }
-    }
-
-    public override void InitData(Block block)
-    {
-        base.InitData(block);
-        Vector2 uvStartPosition = GetUVStartPosition(block);
-
-        uvsAdd = new Vector2[]
-        {
-            new Vector2(uvStartPosition.x,uvStartPosition.y),
-            new Vector2(uvStartPosition.x,uvStartPosition.y + uvWidth),
-            new Vector2(uvStartPosition.x + uvWidth,uvStartPosition.y + uvWidth),
-            new Vector2(uvStartPosition.x + uvWidth,uvStartPosition.y)
-        };
     }
 
     public virtual Vector2 GetUVStartPosition(Block block)

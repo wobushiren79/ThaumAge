@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class BlockShapeLinkChild : BlockShapeCube
 {
+    public BlockShapeLinkChild(Block block) : base(block)
+    {
+
+    }
 
     public override void BuildBlock(Chunk chunk, Vector3Int localPosition)
     {

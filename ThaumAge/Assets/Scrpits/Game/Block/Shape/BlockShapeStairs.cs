@@ -78,7 +78,7 @@ public class BlockShapeStairs : BlockShapeCube
             Color.white
     };
 
-    public BlockShapeStairs() : base()
+    public BlockShapeStairs(Block block) : base(block)
     {
         //添加固有的面
         vertsAdd = new Vector3[]
@@ -99,11 +99,7 @@ public class BlockShapeStairs : BlockShapeCube
             Color.white,
             Color.white,
         };
-    }
 
-    public override void InitData(Block block)
-    {
-        base.InitData(block);
         Vector2 uvStart = GetUVStartPosition(block, DirectionEnum.Left);
 
         uvsAddLeft = new Vector2[]

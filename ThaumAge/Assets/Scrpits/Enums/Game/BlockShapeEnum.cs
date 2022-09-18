@@ -24,7 +24,7 @@ public enum BlockShapeEnum
 
     CropCross = 301,//种植，正交叉
     CropCrossOblique = 302,//种植，斜交叉
-    CropWell = 303,//种植，＃字型
+    CropWell = 311,//种植，＃字型
 
     Plough = 401,//耕地
 

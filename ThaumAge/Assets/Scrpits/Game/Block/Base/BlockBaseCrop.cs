@@ -194,4 +194,32 @@ public class BlockBaseCrop : BlockBasePlant
         }
         return newVertsAdd;
     }
+
+
+    /// <summary>
+    /// 获取生长UV
+    /// </summary>
+    public static Vector2 GetUVStartPosition(Block block, BlockInfoBean blockInfo, BlockMetaCrop blockCropData)
+    {
+        BlockBaseCrop blockCrop = block as BlockBaseCrop;
+        List<Vector2Int[]> listUVData = blockCrop.GetListGrowUV();
+        Vector2 uvStartPosition;
+        if (listUVData.IsNull())
+        {
+            uvStartPosition = Vector2.zero;
+        }
+        else if (blockCropData.growPro >= blockCrop.GetCropLifeCycle(blockInfo))
+        {
+            //如果生长周期大于UV长度 则取最后一个
+            Vector2Int[] itemUVData = listUVData[listUVData.Count - 1];
+            uvStartPosition = new Vector2(BlockShape.uvWidth * itemUVData[blockCropData.level].y, BlockShape.uvWidth * itemUVData[blockCropData.level].x);
+        }
+        else
+        {
+            Vector2Int[] itemUVData = listUVData[blockCropData.growPro];
+            //按生长周期取UV
+            uvStartPosition = new Vector2(BlockShape.uvWidth * itemUVData[blockCropData.level].y, BlockShape.uvWidth * itemUVData[blockCropData.level].x);
+        }
+        return uvStartPosition;
+    }
 }

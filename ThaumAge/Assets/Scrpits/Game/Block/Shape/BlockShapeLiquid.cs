@@ -6,16 +6,16 @@ public class BlockShapeLiquid : BlockShapeCube
 {
 
     public static float itemVolumeHeight = 1f / BlockBaseLiquid.maxLiquidVolume;
-    public override void InitData(Block block)
+
+    public BlockShapeLiquid(Block block) : base(block)
     {
-        this.block = block;
         uvsAddLeft = new Vector2[]
-        {
+       {
             new Vector2(0 ,1),
             new Vector2(1,1),
             new Vector2(1 ,0),
             new Vector2(0 ,0)
-        };
+       };
 
         uvsAddRight = new Vector2[]
         {

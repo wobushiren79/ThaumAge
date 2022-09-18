@@ -3,6 +3,10 @@ using UnityEngine;
 
 public class BlockShapeCubeLeaves : BlockShapeCube
 {
+    public BlockShapeCubeLeaves(Block block) : base(block)
+    {
+
+    }
 
     /// <summary>
     /// 检测是否需要构建面

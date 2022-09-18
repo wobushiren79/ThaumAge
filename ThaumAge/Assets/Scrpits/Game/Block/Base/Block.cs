@@ -32,7 +32,7 @@ public class Block
             if (_blockShape == null)
             {
                 BlockShapeEnum blockShapeType = blockInfo.GetBlockShape();
-                _blockShape = BlockHandler.Instance.manager.GetRegisterBlockShape(blockShapeType);
+                _blockShape = BlockHandler.Instance.manager.GetRegisterBlockShape(this, blockShapeType);
             }
             return _blockShape;
         }
@@ -54,7 +54,6 @@ public class Block
     public virtual void SetData(BlockTypeEnum blockType)
     {
         this.blockType = blockType;
-        blockShape.InitData(this);
     }
 
     /// <summary>
@@ -138,7 +137,7 @@ public class Block
     /// <param name="user"></param>
     public virtual void OnCollision(CreatureTypeEnum creatureType, GameObject targetObj, Vector3Int worldPosition, DirectionEnum direction)
     {
-        if(creatureType == CreatureTypeEnum.Player)
+        if (creatureType == CreatureTypeEnum.Player)
             GameControlHandler.Instance.manager.controlForPlayer.ChangeGroundType(0);
     }
 

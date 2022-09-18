@@ -20,10 +20,8 @@ public class BlockShapeCubeCuboid : BlockShapeCube
     public Vector3[] vertsAddForwardOffset;
     public Vector3[] vertsAddBackOffset;
 
-    public override void InitData(Block block)
+    public BlockShapeCubeCuboid(Block block) : base(block)
     {
-        base.InitData(block);
-
         float[] offsetBorder = block.blockInfo.GetOffsetBorder();
 
         leftOffsetBorder = offsetBorder[0];

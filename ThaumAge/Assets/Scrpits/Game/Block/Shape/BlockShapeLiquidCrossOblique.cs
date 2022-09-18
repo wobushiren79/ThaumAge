@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class BlockShapeLiquidCrossOblique : BlockShapeLiquidCross
 {
-    public BlockShapeLiquidCrossOblique() : base()
+    public BlockShapeLiquidCrossOblique(Block block) : base(block)
     {
         vertsAdd = BlockShapeCrossOblique.VertsAddCrossOblique;
     }
