@@ -117,6 +117,13 @@ public class BlockBaseCrop : BlockBasePlant
         {
             blockMetaCrop = FromMetaData<BlockMetaCrop>(blockData.meta);
         }
+        //如果是已经长好的 就不在监听
+        if (blockMetaCrop.level > 0)
+        {
+            chunk.UnRegisterEventUpdate(localPosition, TimeUpdateEventTypeEnum.Min);
+            return;
+        }
+
         //获取下方方块，如果下方方块时耕地
         GetCloseBlockByDirection(chunk, localPosition, DirectionEnum.Down, out Block blockDown, out Chunk blockChunkDown, out Vector3Int blockDownLocalPosition);
         if (blockDown is BlockBasePlough)
@@ -176,13 +183,15 @@ public class BlockBaseCrop : BlockBasePlant
     /// 初始化植物定点
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public static void InitCropVert(Vector3[] vertsAdd)
+    public static Vector3[] InitCropVert(Vector3[] vertsAdd)
     {
         //往下偏移的位置
-        float offsetY = -1f / 16f;
+        Vector3[] newVertsAdd = new Vector3[vertsAdd.Length];
+        float offsetY = -(1f / 16f);
         for (int i = 0; i < vertsAdd.Length; i++)
         {
-            vertsAdd[i] = vertsAdd[i].AddY(offsetY);
+            newVertsAdd[i] = vertsAdd[i].AddY(offsetY);
         }
+        return newVertsAdd;
     }
 }

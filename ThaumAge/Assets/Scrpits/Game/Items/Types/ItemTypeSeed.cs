@@ -11,9 +11,15 @@ public class ItemTypeSeed : Item
         {
             ChunkComponent chunkForHit = hit.collider.GetComponentInParent<ChunkComponent>();
             if (chunkForHit != null)
-            {
+            {                
                 //获取位置和方向
                 player.playerRay.GetHitPositionAndDirection(hit, out Vector3Int targetPosition, out Vector3Int closePosition, out BlockDirectionEnum direction);
+                //挖掘
+                if (useType == ItemUseTypeEnum.Left)
+                {
+                    TargetBreak(itemData, targetPosition);
+                    return;
+                }
 
                 Vector3Int localPosition = targetPosition - chunkForHit.chunk.chunkData.positionForWorld;
                 //获取原位置方块

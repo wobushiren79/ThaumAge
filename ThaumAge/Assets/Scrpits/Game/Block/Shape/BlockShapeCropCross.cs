@@ -6,7 +6,7 @@ public class BlockShapeCropCross : BlockShapeCross
 {
     public BlockShapeCropCross() : base()
     {
-        BlockBaseCrop.InitCropVert(vertsAdd);
+        vertsAdd = BlockBaseCrop.InitCropVert(vertsAdd);
     }
 
     public override void BaseAddVertsUVsColors(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum blockDirection,

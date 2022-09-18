@@ -9,9 +9,12 @@ public class BlockTypeCropCorn : BlockBaseCrop
         BlockBean blockData = chunk.GetBlockData(localPosition);
         //获取成长周期
         BlockMetaCrop blockCropData = FromMetaData<BlockMetaCrop>(blockData.meta);
-
+        //判断是否是衍生植物
+        if (blockCropData.level > 0)
+            return;
         //判断是否已经是最大生长周期
         int lifeCycle = GetCropLifeCycle(blockInfo);
+
         if (blockCropData.growPro >= lifeCycle)
         {
             //在玉米的上2格再生成同样的方格

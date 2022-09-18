@@ -99,6 +99,8 @@ public enum BlockTypeEnum
 
     CropPotato = 5001,//种植 土豆
     CropCorn = 5002,//种植 玉米
+    CropWheat = 5003,//种植 小麦
+
     CropWatermelonGrow = 5101,//种植生长中 西瓜
     CropWatermelon = 5102,//种植 西瓜
 
