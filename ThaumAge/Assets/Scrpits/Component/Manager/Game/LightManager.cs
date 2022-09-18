@@ -1,14 +1,14 @@
 ﻿using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.Rendering.Universal;
+using UnityEngine.Rendering.HighDefinition;
 
 public class LightManager : BaseManager
 {
     protected Light _sunLight;
     protected Light _moonLight;
 
-    protected List<UniversalAdditionalLightData> listHDLightData = new List<UniversalAdditionalLightData>();
+    protected List<HDAdditionalLightData> listHDLightData = new List<HDAdditionalLightData>();
 
     protected void Awake()
     {
@@ -44,7 +44,7 @@ public class LightManager : BaseManager
     /// 增加HD光照信息
     /// </summary>
     /// <param name="itemData"></param>
-    public void AddHDLightData(UniversalAdditionalLightData itemData)
+    public void AddHDLightData(HDAdditionalLightData itemData)
     {
         if (!listHDLightData.Contains(itemData))
         {
@@ -56,7 +56,7 @@ public class LightManager : BaseManager
     /// 移除光照信息
     /// </summary>
     /// <param name="itemData"></param>
-    public void RemoveHDLightData(UniversalAdditionalLightData itemData)
+    public void RemoveHDLightData(HDAdditionalLightData itemData)
     {
         if (listHDLightData.Contains(itemData))
         {
@@ -68,7 +68,7 @@ public class LightManager : BaseManager
     /// 获取所有HD光照数据
     /// </summary>
     /// <returns></returns>
-    public List<UniversalAdditionalLightData> GetAllHDLightData()
+    public List<HDAdditionalLightData> GetAllHDLightData()
     {
         return listHDLightData;
     }

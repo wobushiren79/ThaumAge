@@ -37,6 +37,9 @@
             "m_Id": "54ee807fd0bb4efa8976b30ee2a79f35"
         },
         {
+            "m_Id": "232e58821ee44fbeb770cb866af799f8"
+        },
+        {
             "m_Id": "f2b9e623a7974049a4bb47164b0f9352"
         },
         {
@@ -273,6 +276,9 @@
                 "m_Id": "54ee807fd0bb4efa8976b30ee2a79f35"
             },
             {
+                "m_Id": "232e58821ee44fbeb770cb866af799f8"
+            },
+            {
                 "m_Id": "f2b9e623a7974049a4bb47164b0f9352"
             },
             {
@@ -307,7 +313,7 @@
     },
     "m_ActiveTargets": [
         {
-            "m_Id": "54dbaf19eb4847b98a3cd8d4dfe07421"
+            "m_Id": "db26e74461794474879728bda731cf0e"
         }
     ]
 }
@@ -360,6 +366,30 @@
         "b": 0.5,
         "a": 1.0
     }
+}
+
+{
+    "m_SGVersion": 0,
+    "m_Type": "UnityEditor.ShaderGraph.NormalMaterialSlot",
+    "m_ObjectId": "0bf3bf9b38c84147ae6dd14f9eed830a",
+    "m_Id": 0,
+    "m_DisplayName": "Bent Normal",
+    "m_SlotType": 0,
+    "m_Hidden": false,
+    "m_ShaderOutputName": "BentNormal",
+    "m_StageCapability": 2,
+    "m_Value": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+    },
+    "m_DefaultValue": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+    },
+    "m_Labels": [],
+    "m_Space": 3
 }
 
 {
@@ -448,6 +478,40 @@
     },
     "m_Labels": [],
     "m_Channel": 0
+}
+
+{
+    "m_SGVersion": 0,
+    "m_Type": "UnityEditor.ShaderGraph.BlockNode",
+    "m_ObjectId": "232e58821ee44fbeb770cb866af799f8",
+    "m_Group": {
+        "m_Id": ""
+    },
+    "m_Name": "SurfaceDescription.BentNormal",
+    "m_DrawState": {
+        "m_Expanded": true,
+        "m_Position": {
+            "serializedVersion": "2",
+            "x": 0.0,
+            "y": 0.0,
+            "width": 0.0,
+            "height": 0.0
+        }
+    },
+    "m_Slots": [
+        {
+            "m_Id": "0bf3bf9b38c84147ae6dd14f9eed830a"
+        }
+    ],
+    "synonyms": [],
+    "m_Precision": 0,
+    "m_PreviewExpanded": true,
+    "m_DismissedVersion": 0,
+    "m_PreviewMode": 0,
+    "m_CustomColors": {
+        "m_SerializableColors": []
+    },
+    "m_SerializedDescriptor": "SurfaceDescription.BentNormal"
 }
 
 {
@@ -767,26 +831,6 @@
         "m_SerializableColors": []
     },
     "m_SerializedDescriptor": "SurfaceDescription.Alpha"
-}
-
-{
-    "m_SGVersion": 1,
-    "m_Type": "UnityEditor.Rendering.Universal.ShaderGraph.UniversalTarget",
-    "m_ObjectId": "54dbaf19eb4847b98a3cd8d4dfe07421",
-    "m_ActiveSubTarget": {
-        "m_Id": "e3f01b68b54d4573b859b387189115bb"
-    },
-    "m_AllowMaterialOverride": false,
-    "m_SurfaceType": 1,
-    "m_ZTestMode": 4,
-    "m_ZWriteControl": 0,
-    "m_AlphaMode": 0,
-    "m_RenderFace": 2,
-    "m_AlphaClip": true,
-    "m_CastShadows": true,
-    "m_ReceiveShadows": true,
-    "m_CustomEditorGUI": "",
-    "m_SupportVFX": false
 }
 
 {
@@ -1657,6 +1701,31 @@
 
 {
     "m_SGVersion": 0,
+    "m_Type": "UnityEditor.Rendering.HighDefinition.ShaderGraph.HDTarget",
+    "m_ObjectId": "db26e74461794474879728bda731cf0e",
+    "m_ActiveSubTarget": {
+        "m_Id": "fa06c403e72b45a09c14f91b65519b55"
+    },
+    "m_Datas": [
+        {
+            "m_Id": "9a31ddebb70545fd8d8afc69e7eb2a28"
+        },
+        {
+            "m_Id": "002d4c8de81944859c688266547b0e83"
+        },
+        {
+            "m_Id": "a2fa695a352b49bebe338eff4a652c1f"
+        },
+        {
+            "m_Id": "cd0cfd10bb514526954bfcecfd4fd9f0"
+        }
+    ],
+    "m_CustomEditorGUI": "",
+    "m_SupportVFX": false
+}
+
+{
+    "m_SGVersion": 0,
     "m_Type": "UnityEditor.ShaderGraph.MultiplyNode",
     "m_ObjectId": "db76ad04e43346fba34b501f7acf7b3d",
     "m_Group": {
@@ -1864,16 +1933,6 @@
     "m_Value": 1.0,
     "m_DefaultValue": 1.0,
     "m_Labels": []
-}
-
-{
-    "m_SGVersion": 1,
-    "m_Type": "UnityEditor.Rendering.Universal.ShaderGraph.UniversalLitSubTarget",
-    "m_ObjectId": "e3f01b68b54d4573b859b387189115bb",
-    "m_WorkflowMode": 1,
-    "m_NormalDropOffSpace": 0,
-    "m_ClearCoat": false,
-    "m_BlendModePreserveSpecular": true
 }
 
 {
