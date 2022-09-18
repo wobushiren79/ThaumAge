@@ -71,14 +71,43 @@ public class VolumeManager : BaseManager
         }
     }
 
+    protected UniversalRenderPipelineAsset renderPipelineAsset;
+
+    public void Awake()
+    {
+        renderPipelineAsset = QualitySettings.renderPipeline as UniversalRenderPipelineAsset;
+    }
+
     /// <summary>
     /// 设置阴影距离
     /// </summary>
     /// <param name="dis"></param>
     public void SetShadowsDistance(float dis)
     {
-        //shadowSettings.maxShadowDistance.overrideState = true;
-        //shadowSettings.maxShadowDistance.value = dis;
+        renderPipelineAsset.shadowDistance = dis;
+    }
+
+    /// <summary>
+    /// 设置阴影等级
+    /// </summary>
+    /// <param name="level"></param>
+    public void SetShadowsLevel(int level)
+    {
+        //switch (level)
+        //{
+        //    case 0:
+        //        QualitySettings.shadowResolution = UnityEngine.ShadowResolution.Low;
+        //        break;
+        //    case 1:
+        //        QualitySettings.shadowResolution = UnityEngine.ShadowResolution.Medium;
+        //        break;
+        //    case 2:
+        //        QualitySettings.shadowResolution = UnityEngine.ShadowResolution.High;
+        //        break;
+        //    case 3:
+        //        QualitySettings.shadowResolution = UnityEngine.ShadowResolution.VeryHigh;
+        //        break;
+        //}
     }
 
     /// <summary>
@@ -120,15 +149,9 @@ public class VolumeManager : BaseManager
     /// </summary>
     public void SetDepthOfField(float nearStart,float nearEnd,float farStart, float farEnd)
     {
-        //depthOfField.nearFocusStart.overrideState = true;
-        //depthOfField.nearFocusStart.value = nearStart;
-        //depthOfField.nearFocusEnd.overrideState = true;
-        //depthOfField.nearFocusEnd.value = nearEnd;
-
-        //depthOfField.farFocusStart.overrideState = true;
-        //depthOfField.farFocusStart.value = farStart;
-        //depthOfField.farFocusEnd.overrideState = true;
-        //depthOfField.farFocusEnd.value = farEnd;
+        depthOfField.gaussianStart.overrideState = true;
+        depthOfField.gaussianStart.value = farStart;
+        depthOfField.gaussianEnd.value = farEnd;
     }
 
     /// <summary>
