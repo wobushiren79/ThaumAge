@@ -34,7 +34,7 @@ public class VolumeHandler : BaseHandler<VolumeHandler, VolumeManager>
     {
         if (gameState == GameStateEnum.Main)
         {
-            manager.SetDepthOfField(2, 3, 20, 30);
+            manager.SetDepthOfField(2, 3, 10, 20);
         }
         else if (gameState == GameStateEnum.Gaming)
         {

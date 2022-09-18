@@ -1,53 +1,12 @@
 ﻿using System.Collections;
 using UnityEngine;
 using UnityEngine.Rendering;
-using UnityEngine.Rendering.HighDefinition;
+using UnityEngine.Rendering.Universal;
 
 public class VolumeManager : BaseManager
 {
     //Volume的资源路径
     protected static string PathResVolume = "Assets/Prefabs/Render/Volume.prefab";
-    //颜色天空
-    protected GradientSky _gradientSky;
-    public GradientSky gradientSky
-    {
-        get
-        {
-            if (_gradientSky == null)
-            {
-                volumeProfile.TryGet(out _gradientSky);
-            }
-            return _gradientSky;
-        }
-    }
-
-    //物理天空
-    protected PhysicallyBasedSky _physicallyBasedSky;
-    public PhysicallyBasedSky physicallyBasedSky
-    {
-        get
-        {
-            if (_physicallyBasedSky == null)
-            {
-                volumeProfile.TryGet(out _physicallyBasedSky);
-            }
-            return _physicallyBasedSky;
-        }
-    }
-
-    //阴影设置
-    protected HDShadowSettings _shadowSettings;
-    public HDShadowSettings shadowSettings
-    {
-        get
-        {
-            if (_shadowSettings == null)
-            {
-                volumeProfile.TryGet(out _shadowSettings);
-            }
-            return _shadowSettings;
-        }
-    }
 
     //远近模糊
     protected DepthOfField _depthOfField;
@@ -74,20 +33,6 @@ public class VolumeManager : BaseManager
                 volumeProfile.TryGet(out _colorAdjustments);
             }
             return _colorAdjustments;
-        }
-    }
-
-    //雾
-    protected Fog _fog;
-    public Fog fog
-    {
-        get
-        {
-            if (_fog == null)
-            {
-                volumeProfile.TryGet(out _fog);
-            }
-            return _fog;
         }
     }
 
@@ -132,8 +77,8 @@ public class VolumeManager : BaseManager
     /// <param name="dis"></param>
     public void SetShadowsDistance(float dis)
     {
-        shadowSettings.maxShadowDistance.overrideState = true;
-        shadowSettings.maxShadowDistance.value = dis;
+        //shadowSettings.maxShadowDistance.overrideState = true;
+        //shadowSettings.maxShadowDistance.value = dis;
     }
 
     /// <summary>
@@ -144,12 +89,12 @@ public class VolumeManager : BaseManager
     /// <param name="colorBottom"></param>
     public void SetGradientSkyColor(Color colorTop, Color colorMiddle, Color colorBottom)
     {
-        gradientSky.top.overrideState = true;
-        gradientSky.top.value = colorTop;
-        gradientSky.middle.overrideState = true;
-        gradientSky.middle.value = colorMiddle;
-        gradientSky.bottom.overrideState = true;
-        gradientSky.bottom.value = colorBottom;
+        //gradientSky.top.overrideState = true;
+        //gradientSky.top.value = colorTop;
+        //gradientSky.middle.overrideState = true;
+        //gradientSky.middle.value = colorMiddle;
+        //gradientSky.bottom.overrideState = true;
+        //gradientSky.bottom.value = colorBottom;
     }
 
     /// <summary>
@@ -160,14 +105,14 @@ public class VolumeManager : BaseManager
     /// <param name="colorGround"></param>
     public void SetPhysicallyBasedSkyColor(Color colorZenith, Color colorHorizon, Color colorGround)
     {
-        physicallyBasedSky.zenithTint.overrideState = true;
-        physicallyBasedSky.zenithTint.value = colorZenith;
+        //physicallyBasedSky.zenithTint.overrideState = true;
+        //physicallyBasedSky.zenithTint.value = colorZenith;
 
-        physicallyBasedSky.horizonTint.overrideState = true;
-        physicallyBasedSky.horizonTint.value = colorHorizon;
+        //physicallyBasedSky.horizonTint.overrideState = true;
+        //physicallyBasedSky.horizonTint.value = colorHorizon;
 
-        physicallyBasedSky.groundTint.overrideState = true;
-        physicallyBasedSky.groundTint.value = colorGround;
+        //physicallyBasedSky.groundTint.overrideState = true;
+        //physicallyBasedSky.groundTint.value = colorGround;
     }
 
     /// <summary>
@@ -175,15 +120,15 @@ public class VolumeManager : BaseManager
     /// </summary>
     public void SetDepthOfField(float nearStart,float nearEnd,float farStart, float farEnd)
     {
-        depthOfField.nearFocusStart.overrideState = true;
-        depthOfField.nearFocusStart.value = nearStart;
-        depthOfField.nearFocusEnd.overrideState = true;
-        depthOfField.nearFocusEnd.value = nearEnd;
+        //depthOfField.nearFocusStart.overrideState = true;
+        //depthOfField.nearFocusStart.value = nearStart;
+        //depthOfField.nearFocusEnd.overrideState = true;
+        //depthOfField.nearFocusEnd.value = nearEnd;
 
-        depthOfField.farFocusStart.overrideState = true;
-        depthOfField.farFocusStart.value = farStart;
-        depthOfField.farFocusEnd.overrideState = true;
-        depthOfField.farFocusEnd.value = farEnd;
+        //depthOfField.farFocusStart.overrideState = true;
+        //depthOfField.farFocusStart.value = farStart;
+        //depthOfField.farFocusEnd.overrideState = true;
+        //depthOfField.farFocusEnd.value = farEnd;
     }
 
     /// <summary>
@@ -218,7 +163,7 @@ public class VolumeManager : BaseManager
     /// <param name="enabled"></param>
     public void SetFog(bool enabled)
     {
-        fog.enabled.overrideState = true;
-        fog.enabled.value = enabled;
+        //fog.enabled.overrideState = true;
+        //fog.enabled.value = enabled;
     }
 }
