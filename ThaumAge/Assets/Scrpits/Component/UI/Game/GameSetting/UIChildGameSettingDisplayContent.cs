@@ -20,7 +20,7 @@ public class UIChildGameSettingDisplayContent : UIChildGameSettingBaseContent
     //UI大小
     protected UIListItemGameSettingSelect settingUISize;
     //阴影质量
-    protected UIListItemGameSettingSelect settingShadowResolutionLevelData;
+    //protected UIListItemGameSettingSelect settingShadowResolutionLevelData;
     //阴影距离
     protected UIListItemGameSettingRange settingShadowDis;
     //抗锯齿
@@ -143,8 +143,8 @@ public class UIChildGameSettingDisplayContent : UIChildGameSettingBaseContent
         settingUISize.SetIndex(GetUISizeIndex(gameConfig.uiSize));
 
         //阴影质量等级
-        settingShadowResolutionLevelData = CreateItemForSelect(TextHandler.Instance.GetTextById(112), listShadowResolutionLevelData, HandleForShadowResolutionLevel);
-        settingShadowResolutionLevelData.SetIndex(gameConfig.shadowResolutionLevel);
+        //settingShadowResolutionLevelData = CreateItemForSelect(TextHandler.Instance.GetTextById(112), listShadowResolutionLevelData, HandleForShadowResolutionLevel);
+        //settingShadowResolutionLevelData.SetIndex(gameConfig.shadowResolutionLevel);
 
         //阴影距离
         settingShadowDis = CreateItemForRange(TextHandler.Instance.GetTextById(105), HandleForShadowDis);
@@ -199,6 +199,7 @@ public class UIChildGameSettingDisplayContent : UIChildGameSettingBaseContent
         gameConfig.shadowResolutionLevel = index;
         LightHandler.Instance.ChangeShadowResolutionLevel(gameConfig.shadowResolutionLevel);
         VolumeHandler.Instance.manager.SetShadowsDistance(gameConfig.shadowDis);
+        VolumeHandler.Instance.manager.SetShadowsLevel(gameConfig.shadowResolutionLevel);
     }
 
     /// <summary>

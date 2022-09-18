@@ -209,7 +209,7 @@ public class ResourcesRefresh : Editor
             Material objMat = EditorUtil.GetAssetByPath<Material>($"{matCreateAllPath}");
             if (objMat == null)
             {
-                EditorUtil.CreateMaterial(texturePath, "HDRP/Lit", matCreatePath);
+                EditorUtil.CreateMaterial(texturePath, "Universal Render Pipeline/Lit", matCreatePath);
             }
 
             FBXEditor.ChangeMaterial($"{fbxFilesPath}/{file.Name}", $"{matCreateAllPath}");

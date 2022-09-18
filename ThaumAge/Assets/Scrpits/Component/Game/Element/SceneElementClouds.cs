@@ -3,7 +3,6 @@ using UnityEditor;
 using UnityEngine;
 using DG.Tweening;
 using System;
-using UnityEngine.VFX.Utility;
 using UnityEngine.VFX;
 
 public class SceneElementClouds : SceneElementBase
