@@ -100,9 +100,20 @@ public enum BlockTypeEnum
     CropPotato = 5001,//种植 土豆
     CropCorn = 5002,//种植 玉米
     CropWheat = 5003,//种植 小麦
+    CropFlax = 5004,//亚麻
+    CropChili = 5005,//辣椒
+    CropTomato = 5006,//西红柿
 
     CropWatermelonGrow = 5101,//种植生长中 西瓜
     CropWatermelon = 5102,//种植 西瓜
+
+    SaplingOak = 5801,//   橡树苗
+    SaplingSilver = 5802,//   银树苗
+    SaplingWorld = 5803,//   世界树苗
+    SaplingCherry = 5804,//   樱花树苗
+    SaplingPalm = 5805,//   棕榈树苗
+    SaplingBirch = 5806,//   桦树苗
+    SaplingWalnut = 5807,//   胡桃树苗
 
     BerryBushGrowRed = 5901,//红色浆果丛 - 生长
     BerryBushRed = 5902,//红色浆果丛

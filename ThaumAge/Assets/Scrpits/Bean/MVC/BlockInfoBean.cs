@@ -170,42 +170,44 @@ public class BlockInfoBean : BaseBean
         canBreak = false;
         isAdditionBreak = false;
         List<BlockBreakTypeEnum> listBreakType = GetBreakType();
-        for (int i = 0; i < listBreakType.Count; i++)
+
+        //如果是空手 并且目标方块可以被空手破坏
+        if (breakItemId == 0 && listBreakType.Contains(BlockBreakTypeEnum.Normal))
         {
-            BlockBreakTypeEnum blockBreakType = listBreakType[i];
-            if (blockBreakType == BlockBreakTypeEnum.NotBreak)
+            canBreak = true;
+            isAdditionBreak = false;
+        }
+        else if (listBreakType.Contains(BlockBreakTypeEnum.NotBreak))
+        {
+            canBreak = false;
+            isAdditionBreak = false;
+        }
+        else
+        {
+            for (int i = 0; i < listBreakType.Count; i++)
             {
-                canBreak = false;
-                isAdditionBreak = false;
-            }
-            if (blockBreakType == BlockBreakTypeEnum.Normal)
-            {
-                canBreak = true;
-                isAdditionBreak = false;
-            }
-            else
-            {
-                //如果是空手
-                if (breakItemId == 0)
+                BlockBreakTypeEnum blockBreakType = listBreakType[i];
+                if (blockBreakType == BlockBreakTypeEnum.Normal || blockBreakType == BlockBreakTypeEnum.NotBreak)
                 {
-                    canBreak = false;
-                    isAdditionBreak = false;
+              
                 }
                 else
                 {
                     ItemsInfoBean useItemInfo = ItemsHandler.Instance.manager.GetItemsInfoById(breakItemId);
                     AttributeBean attributeData = useItemInfo.GetAttributeData();
                     int itemBreakLevel = attributeData.GetAttributeValue(AttributeTypeEnum.BreakLevel);
-                    //如果有破坏等级 并且道具的挖掘等级小于破坏等级 则不可以挖
-                    if (!break_level.IsNull() && int.Parse(break_level) > itemBreakLevel)
+                    //如果是当前使用道具
+                    if (useItemInfo.GetItemsType() == (ItemsTypeEnum)listBreakType[i])
                     {
-                        canBreak = false;
-                        isAdditionBreak = false;
-                    }
-                    //其他情况都可以挖
-                    else
-                    {
-                        if (useItemInfo.GetItemsType() == (ItemsTypeEnum)listBreakType[i])
+                        //如果有破坏等级 并且道具的挖掘等级小于破坏等级 则不可以挖
+                        if (!break_level.IsNull() && int.Parse(break_level) > itemBreakLevel)
+                        {
+                            canBreak = false;
+                            isAdditionBreak = false;
+                            return;
+                        }
+                        //其他情况则可以挖掘
+                        else
                         {
                             canBreak = true;
                             isAdditionBreak = true;

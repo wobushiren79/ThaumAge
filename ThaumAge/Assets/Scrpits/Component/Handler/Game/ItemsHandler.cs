@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
@@ -81,14 +82,15 @@ public class ItemsHandler : BaseHandler<ItemsHandler, ItemsManager>
     /// </summary>
     public void CreateItemCptDropList(List<ItemsBean> itemDatas, ItemDropStateEnum itemDropState, Vector3 dropPosition)
     {
-        CreateItemCptDropList(itemDatas, itemDropState, dropPosition, Vector3.zero);
+        StartCoroutine(CreateItemCptDropList(itemDatas, itemDropState, dropPosition, Vector3.zero));
     }
-    public void CreateItemCptDropList(List<ItemsBean> itemDatas, ItemDropStateEnum itemCptDropState, Vector3 dropPosition, Vector3 dropDirection)
+    public IEnumerator CreateItemCptDropList(List<ItemsBean> itemDatas, ItemDropStateEnum itemCptDropState, Vector3 dropPosition, Vector3 dropDirection)
     {
         for (int i = 0; i < itemDatas.Count; i++)
         {
             ItemDropBean itemDropData = new ItemDropBean(itemDatas[i], itemCptDropState, dropPosition, dropDirection);
             CreateItemCptDrop(itemDropData);
+            yield return new WaitForSeconds(0.1f);
         }
     }
 
@@ -106,6 +108,9 @@ public class ItemsHandler : BaseHandler<ItemsHandler, ItemsManager>
             ItemCptDrop.SetData(itemDropData);
             callBackForComplete?.Invoke(ItemCptDrop);
         });
+
+        //播放道具掉落音效
+        AudioHandler.Instance.PlaySound(503);
     }
 
     /// <summary>
@@ -120,9 +125,8 @@ public class ItemsHandler : BaseHandler<ItemsHandler, ItemsManager>
             || targetBlock.blockInfo.GetBlockShape() == BlockShapeEnum.CropWell)
         {
             //首先判断生长周期
-
             //获取种植收货
-            List<ItemsBean> listHarvest = targetBlock.GetDropItems();
+            List<ItemsBean> listHarvest = targetBlock.GetDropItems(blockData);
             //创建掉落物
             CreateItemCptDropList(listHarvest, ItemDropStateEnum.DropPick, targetWorldPosition + Vector3.one * 0.5f);
         }

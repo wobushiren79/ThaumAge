@@ -192,6 +192,33 @@ public class WorldCreateManager : BaseManager
     }
 
     /// <summary>
+    /// 增加需要更新的方块(用于编辑时设置)
+    /// </summary>
+    public void AddUpdateBlockForEditor(Vector3Int worldPosition, int blockId, BlockDirectionEnum blockDirection = BlockDirectionEnum.UpForward)
+    {
+        Chunk chunk = GetChunkForWorldPosition(worldPosition.x, worldPosition.z);
+        if (chunk == null)
+        {
+            GetChunkPositionForWorldPosition(worldPosition.x, worldPosition.z, out int chunkX, out int chunkZ);
+            //如果没有区块 先创建一个
+            chunk = WorldCreateHandler.Instance.CreateChunk(new Vector3Int(chunkX, 0, chunkZ), false);
+        }
+        //设置方块
+        Block blockUpdate = BlockHandler.Instance.manager.GetRegisterBlock(blockId);
+        chunk.SetBlockForLocal(worldPosition - chunk.chunkData.positionForWorld, blockUpdate.blockType, blockDirection);
+        AddUpdateChunk(chunk, 1);
+    }
+
+    public void AddUpdateBlockForEditor(Vector3Int worldPosition, BlockTypeEnum blockId, BlockDirectionEnum blockDirection = BlockDirectionEnum.UpForward)
+    {
+        AddUpdateBlockForEditor(worldPosition, (int)blockId, blockDirection);
+    }
+    public void AddUpdateBlockForEditor(int worldPositionX, int worldPositionY, int worldPositionZ, BlockTypeEnum blockId, BlockDirectionEnum blockDirection = BlockDirectionEnum.UpForward)
+    {
+        AddUpdateBlockForEditor(new Vector3Int(worldPositionX, worldPositionY, worldPositionZ), (int)blockId, blockDirection);
+    }
+
+    /// <summary>
     /// 获取区块
     /// </summary>
     /// <param name="position">区块的坐标</param>

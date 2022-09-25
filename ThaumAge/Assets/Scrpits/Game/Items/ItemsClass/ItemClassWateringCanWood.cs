@@ -54,5 +54,7 @@ public class ItemClassWateringCanWood : ItemBaseTool
         targetChunk.SetBlockData(blockData);
         //更新区块
         WorldCreateHandler.Instance.manager.AddUpdateChunk(targetChunk, 1);
+        //播放音效
+        PlayItemUseSound(itemData);
     }
 }

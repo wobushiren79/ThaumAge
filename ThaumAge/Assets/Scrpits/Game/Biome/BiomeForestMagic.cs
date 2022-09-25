@@ -22,8 +22,6 @@ public class BiomeForestMagic : Biome
             {
                 Vector3Int wPos = localPos + chunk.chunkData.positionForWorld;
                 AddWeed(wPos);
-                AddBigTree(wPos);
-                AddWorldTree(wPos);
                 AddMushroomTree(wPos);
                 AddStoneMoss(wPos);
                 AddFlower(wPos);
@@ -69,7 +67,11 @@ public class BiomeForestMagic : Biome
 
         Vector3Int bigTreeWorldPosition = new Vector3Int
             (chunkPosition.x + centerPosition.x, Mathf.RoundToInt(centerPositionTerrainData.maxHeight), chunkPosition.z + centerPosition.z);
-        AddBigTree(bigTreeWorldPosition);
+        bool isWorldTreeCreate = AddWorldTree(bigTreeWorldPosition);
+        if (!isWorldTreeCreate)
+        {
+            AddBigTree(bigTreeWorldPosition);
+        }
     }
 
     protected void AddMushroomTree(Vector3Int wPos)
@@ -108,11 +110,11 @@ public class BiomeForestMagic : Biome
         BiomeCreateTreeTool.AddTreeForBig(501, wPos, treeData);
     }
 
-    protected void AddWorldTree(Vector3Int wPos)
+    protected bool AddWorldTree(Vector3Int wPos)
     {
         BiomeForTreeData treeData = new BiomeForTreeData
         {
-            addRate = 0.00005f,
+            addRate = 0.0001f,
             minHeight = 30,
             maxHeight = 50,
             treeTrunk = BlockTypeEnum.TreeWorld,
@@ -120,7 +122,7 @@ public class BiomeForestMagic : Biome
             leavesRange = 4,
             trunkRange = 3,
         };
-        BiomeCreateTreeTool.AddTreeForWorld(wPos, treeData);
+        return BiomeCreateTreeTool.AddTreeForWorld(502, wPos, treeData);
     }
 
     protected void AddWeed(Vector3Int wPos)

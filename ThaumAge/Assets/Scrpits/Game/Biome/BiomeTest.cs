@@ -86,7 +86,7 @@ public class BiomeTest : Biome
     {
         BiomeForTreeData treeData = new BiomeForTreeData
         {
-            addRate = 0.00005f,
+            addRate = 0.0001f,
             minHeight = 30,
             maxHeight = 50,
             treeTrunk = BlockTypeEnum.TreeWorld,
@@ -94,7 +94,7 @@ public class BiomeTest : Biome
             leavesRange = 4,
             trunkRange = 3,
         };
-        BiomeCreateTreeTool.AddTreeForWorld(wPos, treeData);
+        BiomeCreateTreeTool.AddTreeForWorld(502,wPos, treeData);
     }
 
     protected void AddWeed(Vector3Int wPos)

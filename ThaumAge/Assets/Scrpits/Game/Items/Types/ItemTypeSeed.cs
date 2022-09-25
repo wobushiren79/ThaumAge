@@ -54,7 +54,18 @@ public class ItemTypeSeed : Item
                 userData.AddItems(itemData, -1);
                 //刷新UI
                 UIHandler.Instance.RefreshUI();
+                //播放音效
+                PlayItemUseSound(itemData);
             }
         }
+    }
+
+    /// <summary>
+    /// 播放播种的声音
+    /// </summary>
+    /// <param name="itemsData"></param>
+    public override void PlayItemUseSound(ItemsBean itemsData)
+    {
+        AudioHandler.Instance.PlaySound(602);
     }
 }
