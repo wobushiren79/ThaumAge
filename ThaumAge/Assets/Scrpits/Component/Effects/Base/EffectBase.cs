@@ -21,6 +21,11 @@ public class EffectBase : BaseMonoBehaviour
             return;
         this.effectData = effectData;
         transform.position = effectData.effectPosition;
+        //是否展示的时候 马上播放
+        if (effectData.isPlayInShow)
+        {
+            PlayEffect();
+        }
     }
 
     /// <summary>

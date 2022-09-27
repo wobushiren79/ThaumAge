@@ -186,6 +186,7 @@ public class Item
         //    closePosition, closeBlockDirection, closeBlock, closeChunk,
         //    direction, metaData);
         targetBlock.TargetUseBlock(targetChunk, targetPosition);
+        PlayItemUseSound(itemData);
     }
 
     /// <summary>
@@ -243,7 +244,7 @@ public class Item
         }
         else
         {
-            PlayItemUseSound(itemsData);
+            PlayItemUseSound(null);
         }
     }
 
@@ -263,6 +264,11 @@ public class Item
     {
         //播放破坏音效
         //int randomAudioId = Random.Range(351,354);
+        if (itemsData == null)
+        {
+            AudioHandler.Instance.PlaySound(351);
+            return;
+        }
         ItemsInfoBean itemsInfo = GetItemsInfo(itemsData.itemId);
         if (itemsInfo != null && !itemsInfo.sound_use.IsNull())
         {

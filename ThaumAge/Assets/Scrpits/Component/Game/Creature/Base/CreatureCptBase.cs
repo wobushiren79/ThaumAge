@@ -127,10 +127,7 @@ public class CreatureCptBase : BaseMonoBehaviour
         effectDataForSmoke.effectType = EffectTypeEnum.Visual;
         effectDataForSmoke.timeForShow = 5;
         effectDataForSmoke.effectPosition = bodyTF.position;
-        EffectHandler.Instance.ShowEffect(effectDataForSmoke, (effect) => 
-        { 
-            effect.PlayEffect(); 
-        });
+        EffectHandler.Instance.ShowEffect(effectDataForSmoke);
 
         ////身体侧翻
         //Vector3 randomRotate;

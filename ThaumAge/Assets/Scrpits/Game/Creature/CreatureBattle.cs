@@ -186,9 +186,6 @@ public class CreatureBattle : CreatureBase
         effectData.effectName = EffectInfo.Effect_Blood_1;
         effectData.effectPosition = creature.transform.position;
         effectData.timeForShow = 0.5f;
-        EffectHandler.Instance.ShowEffect(effectData, (effect) =>
-         {
-             effect.PlayEffect();
-         });
+        EffectHandler.Instance.ShowEffect(effectData);
     }
 }

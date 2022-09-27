@@ -12,4 +12,6 @@ public class EffectInfo
     public readonly static string Effect_Dead_1 = "Effect_Dead_1";
     //死亡身体特效
     public readonly static string Effect_DeadBody_1 = "Effect_DeadBody_1";
+    //浇水特效
+    public readonly static string Effect_Water_1 = "Effect_Water_1";
 }

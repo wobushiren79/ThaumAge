@@ -4,7 +4,7 @@ using UnityEngine;
 public class ItemClassWateringCanWood : ItemBaseTool
 {
     public override void TargetUse(GameObject user, ItemsBean itemData, Vector3Int targetPosition, Vector3Int closePosition, BlockDirectionEnum direction)
-    {       
+    {
         //获取目标方块
         WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(targetPosition, out Block targetBlock, out BlockDirectionEnum targetBlockDirection, out Chunk targetChunk);
 
@@ -41,7 +41,7 @@ public class ItemClassWateringCanWood : ItemBaseTool
         else if (targetBlock is BlockBaseCrop)
         {
             //如果是植物 则获取他下方的一个方块 
-            targetBlock.GetCloseBlockByDirection(targetChunk, ploughLocalPosition,DirectionEnum.Down,out Block blockDown,out Chunk blockChunkDown,out Vector3Int localPositionDown);
+            targetBlock.GetCloseBlockByDirection(targetChunk, ploughLocalPosition, DirectionEnum.Down, out Block blockDown, out Chunk blockChunkDown, out Vector3Int localPositionDown);
             ploughLocalPosition = localPositionDown;
         }
 
@@ -56,5 +56,13 @@ public class ItemClassWateringCanWood : ItemBaseTool
         WorldCreateHandler.Instance.manager.AddUpdateChunk(targetChunk, 1);
         //播放音效
         PlayItemUseSound(itemData);
+        //播放浇水粒子特效
+        EffectBean effectData = new EffectBean();
+        effectData.effectName = EffectInfo.Effect_Water_1;
+        effectData.effectType = EffectTypeEnum.Visual;
+        effectData.effectPosition = ploughLocalPosition + new Vector3(0.5f, 0.5f, 0.5f);
+        effectData.timeForShow = 2;
+
+        EffectHandler.Instance.ShowEffect(effectData);
     }
 }
