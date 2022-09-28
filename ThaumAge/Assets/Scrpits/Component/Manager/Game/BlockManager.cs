@@ -137,7 +137,9 @@ public class BlockManager : BaseManager, IBlockInfoView
     {
         string blockShapeName = blockShapeEnum.GetEnumName();
         //通过反射获取类
-        BlockShape blockShape = ReflexUtil.CreateInstance<BlockShape>($"BlockShape{blockShapeName}",new object[] { block });
+        string className = $"BlockShape{blockShapeName}";
+        BlockShape blockShape = ReflexUtil.CreateInstance<BlockShape>(className, new object[] { block });
+
         if (blockShape == null)
             blockShape = new BlockShape(block);
         return blockShape;
@@ -152,14 +154,11 @@ public class BlockManager : BaseManager, IBlockInfoView
         for (int i = 0; i < listBlockType.Count; i++)
         {
             BlockTypeEnum blockType = listBlockType[i];
-            //获取方块数据
-            BlockInfoBean blockInfo = GetBlockInfo(blockType);
             string blockTypeName = EnumExtension.GetEnumName(blockType);
             //通过反射获取类
             Block block = ReflexUtil.CreateInstance<Block>($"BlockType{blockTypeName}");
             if (block == null) block = new Block();
             block.SetData(blockType);
-            block.blockInfo = blockInfo;
             arrayBlockRegister[(int)blockType] = block;
         }
     }

@@ -5,42 +5,10 @@ using UnityEngine;
 [Serializable]
 public class Block
 {
-    public BlockTypeEnum blockType;    //方块类型
-    protected BlockInfoBean _blockInfo;//方块信息
-    protected BlockShape _blockShape;//方块的形状
+    public BlockTypeEnum blockType;//方块类型
 
-    public BlockInfoBean blockInfo
-    {
-        get
-        {
-            if (_blockInfo == null)
-            {
-                _blockInfo = BlockHandler.Instance.manager.GetBlockInfo(blockType);
-            }
-            return _blockInfo;
-        }
-        set
-        {
-            _blockInfo = value;
-        }
-    }
-
-    public BlockShape blockShape
-    {
-        get
-        {
-            if (_blockShape == null)
-            {
-                BlockShapeEnum blockShapeType = blockInfo.GetBlockShape();
-                _blockShape = BlockHandler.Instance.manager.GetRegisterBlockShape(this, blockShapeType);
-            }
-            return _blockShape;
-        }
-        set
-        {
-            _blockShape = value;
-        }
-    }
+    public BlockShape blockShape;//方块的形状
+    public BlockInfoBean blockInfo;//方块信息
 
     public Block()
     {
@@ -54,6 +22,12 @@ public class Block
     public virtual void SetData(BlockTypeEnum blockType)
     {
         this.blockType = blockType;
+        //获取方块数据
+        blockInfo = BlockHandler.Instance.manager.GetBlockInfo(blockType);
+        //获取方块形状
+        BlockShapeEnum blockShapeType = blockInfo.GetBlockShape();
+        //获取形状数据
+        blockShape = BlockHandler.Instance.manager.GetRegisterBlockShape(this, blockShapeType);
     }
 
     /// <summary>

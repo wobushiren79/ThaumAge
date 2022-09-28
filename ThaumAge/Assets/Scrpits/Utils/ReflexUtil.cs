@@ -280,7 +280,7 @@ public class ReflexUtil
         {
             Type o = Type.GetType(className);//加载类型
             object obj;//根据类型创建实例
-            if (data == null)
+            if (data.IsNull())
             {
                 obj = Activator.CreateInstance(o);//根据类型创建实例
             }
