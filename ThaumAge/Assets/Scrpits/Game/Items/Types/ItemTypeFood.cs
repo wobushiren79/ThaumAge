@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class ItemTypeFood : Item
 {
-    public override void TargetUse(GameObject user, ItemsBean itemData, Vector3Int targetPosition, Vector3Int closePosition, BlockDirectionEnum direction)
+    public override void TargetUseR(GameObject user, ItemsBean itemData, Vector3Int targetPosition, Vector3Int closePosition, BlockDirectionEnum direction)
     {
         if (itemData == null)
             return;

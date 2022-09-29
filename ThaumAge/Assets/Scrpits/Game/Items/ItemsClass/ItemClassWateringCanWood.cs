@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class ItemClassWateringCanWood : ItemBaseTool
 {
-    public override void TargetUse(GameObject user, ItemsBean itemData, Vector3Int targetPosition, Vector3Int closePosition, BlockDirectionEnum direction)
+    public override void TargetUseR(GameObject user, ItemsBean itemData, Vector3Int targetPosition, Vector3Int closePosition, BlockDirectionEnum direction)
     {
         //获取目标方块
         WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(targetPosition, out Block targetBlock, out BlockDirectionEnum targetBlockDirection, out Chunk targetChunk);
@@ -55,7 +55,7 @@ public class ItemClassWateringCanWood : ItemBaseTool
         //更新区块
         WorldCreateHandler.Instance.manager.AddUpdateChunk(targetChunk, 1);
         //播放音效
-        PlayItemUseSound(itemData);
+        PlayItemSoundUseR(itemData);
         //播放浇水粒子特效
         EffectBean effectData = new EffectBean();
         effectData.effectName = EffectInfo.Effect_Water_1;

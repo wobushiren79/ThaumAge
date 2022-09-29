@@ -40,7 +40,7 @@ public class ItemTypeCreature : Item
             }
             else
             {
-                TargetBreak(itemData, targetBlockPosition);
+                TargetUseL(itemData, targetBlockPosition);
             }
         }
     }

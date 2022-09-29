@@ -376,7 +376,14 @@ public class ControlForPlayer : ControlForBase
             timeUpdateForUseItem += Time.deltaTime;
             if (timeUpdateForUseItem > timeUpdateMaxForUseItem)
             {
-                HandleForUseL(new CallbackContext());
+                if(inputActionUseL.ReadValue<float>() == 1)
+                {
+                    HandleForUseL(new CallbackContext());
+                }
+                else if (inputActionUseR.ReadValue<float>() == 1)
+                {
+                    HandleForUseR(new CallbackContext());
+                }
             }
             //转动方向
             RotateCharacter(Vector2.up, speedCharacterRotate);

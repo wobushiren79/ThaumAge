@@ -3,7 +3,7 @@ using UnityEngine;
 
 public enum ItemsTypeEnum
 {
-    None = 0,//nul;
+    None = 0,//null;
     Block = 1,//方块
     Seed = 2,//种子
     Food = 3,//食物

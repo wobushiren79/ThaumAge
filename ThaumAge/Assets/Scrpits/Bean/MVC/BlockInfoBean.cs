@@ -180,50 +180,75 @@ public class BlockInfoBean : BaseBean
         isAdditionBreak = false;
         List<BlockBreakTypeEnum> listBreakType = GetBreakType();
 
-        //如果是空手 并且目标方块可以被空手破坏
-        if (breakItemId == 0 && listBreakType.Contains(BlockBreakTypeEnum.Normal))
+        //并且目标方块可以被任意道具破坏
+        if (listBreakType.Contains(BlockBreakTypeEnum.Normal))
         {
-            canBreak = true;
-            isAdditionBreak = false;
+            //如果是空手
+            if (breakItemId == 0)
+            {
+                canBreak = true;
+                isAdditionBreak = false;
+                return;
+            }
+            //如果不是空手
+            else
+            {
+                ItemsInfoBean useItemInfo = ItemsHandler.Instance.manager.GetItemsInfoById(breakItemId);
+                AttributeBean attributeData = useItemInfo.GetAttributeData();
+                int itemBreakLevel = attributeData.GetAttributeValue(AttributeTypeEnum.BreakLevel);
+                ItemsTypeEnum itemsType = useItemInfo.GetItemsType();
+                for (int i = 0; i < listBreakType.Count; i++)
+                {
+                    //如果是当前使用道具
+                    if (itemsType == (ItemsTypeEnum)listBreakType[i])
+                    {
+                        canBreak = true;
+                        isAdditionBreak = true;
+                        return;
+                    }
+                }
+                canBreak = true;
+                isAdditionBreak = false;
+                return;
+            }
         }
+        //目标方块不能被破坏
         else if (listBreakType.Contains(BlockBreakTypeEnum.NotBreak))
         {
             canBreak = false;
             isAdditionBreak = false;
         }
+        //目标方块只能被指定道具破坏
         else
         {
             for (int i = 0; i < listBreakType.Count; i++)
             {
                 BlockBreakTypeEnum blockBreakType = listBreakType[i];
-                if (blockBreakType == BlockBreakTypeEnum.Normal || blockBreakType == BlockBreakTypeEnum.NotBreak)
+                ItemsInfoBean useItemInfo = ItemsHandler.Instance.manager.GetItemsInfoById(breakItemId);
+                AttributeBean attributeData = useItemInfo.GetAttributeData();
+                int itemBreakLevel = attributeData.GetAttributeValue(AttributeTypeEnum.BreakLevel);
+                //如果是当前使用道具
+                if (useItemInfo.GetItemsType() == (ItemsTypeEnum)blockBreakType)
                 {
-              
-                }
-                else
-                {
-                    ItemsInfoBean useItemInfo = ItemsHandler.Instance.manager.GetItemsInfoById(breakItemId);
-                    AttributeBean attributeData = useItemInfo.GetAttributeData();
-                    int itemBreakLevel = attributeData.GetAttributeValue(AttributeTypeEnum.BreakLevel);
-                    //如果是当前使用道具
-                    if (useItemInfo.GetItemsType() == (ItemsTypeEnum)listBreakType[i])
+                    //如果有破坏等级 并且道具的挖掘等级小于破坏等级 则不可以挖
+                    if (!break_level.IsNull() && int.Parse(break_level) > itemBreakLevel)
                     {
-                        //如果有破坏等级 并且道具的挖掘等级小于破坏等级 则不可以挖
-                        if (!break_level.IsNull() && int.Parse(break_level) > itemBreakLevel)
-                        {
-                            canBreak = false;
-                            isAdditionBreak = false;
-                            return;
-                        }
-                        //其他情况则可以挖掘
-                        else
-                        {
-                            canBreak = true;
-                            isAdditionBreak = true;
-                        }
+                        canBreak = false;
+                        isAdditionBreak = false;
+                        return;
+                    }
+                    //其他情况则可以挖掘
+                    else
+                    {
+                        canBreak = true;
+                        isAdditionBreak = true;
+                        return;
                     }
                 }
             }
+            canBreak = false;
+            isAdditionBreak = false;
+            return;
         }
     }
 }

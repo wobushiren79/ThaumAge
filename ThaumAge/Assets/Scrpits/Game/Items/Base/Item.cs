@@ -106,11 +106,11 @@ public class Item
                 //挖掘
                 if (itemUseType == ItemUseTypeEnum.Left)
                 {
-                    TargetBreak(itemsData, targetPosition);
+                    TargetUseL(itemsData, targetPosition);
                 }
                 else
                 {
-                    TargetUse(player.gameObject, itemsData, targetPosition, closePosition, direction);
+                    TargetUseR(player.gameObject, itemsData, targetPosition, closePosition, direction);
                 }
             }
         }
@@ -156,43 +156,9 @@ public class Item
     }
 
     /// <summary>
-    /// 使用道具
+    /// 破碎目标(鼠标左键)
     /// </summary>
-    public virtual void TargetUse(GameObject user, ItemsBean itemData, Vector3Int targetPosition, Vector3Int closePosition, BlockDirectionEnum direction)
-    {
-        //获取目标方块
-        WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(targetPosition, out Block targetBlock, out BlockDirectionEnum targetBlockDirection, out Chunk targetChunk);
-        ////首先获取靠近方块
-        //WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(closePosition, out Block closeBlock, out BlockDirectionEnum closeBlockDirection, out Chunk closeChunk);
-        //if (targetChunk == null)
-        //    return;
-        ////如果原位置是空则不做处理
-        //if (targetBlock == null || targetBlock.blockType == BlockTypeEnum.None)
-        //    return;
-
-        ////获取物品信息
-        //ItemsInfoBean itemsInfo = ItemsHandler.Instance.manager.GetItemsInfoById(itemData.itemId);
-        ////获取方块信息
-        //Block useBlock = BlockHandler.Instance.manager.GetRegisterBlock(itemsInfo.type_id);
-        //BlockInfoBean blockInfo = useBlock.blockInfo;
-
-        //BlockTypeEnum changeBlockType = blockInfo.GetBlockType();
-
-        ////获取meta数据
-        //string metaData = useBlock.ItemUseMetaData(closePosition, changeBlockType, closeBlockDirection, itemData.meta);
-        ////使用方块
-        //useBlock.ItemUse(this, itemData,
-        //    targetPosition, targetBlockDirection, targetBlock, targetChunk,
-        //    closePosition, closeBlockDirection, closeBlock, closeChunk,
-        //    direction, metaData);
-        targetBlock.TargetUseBlock(targetChunk, targetPosition);
-        PlayItemUseSound(itemData);
-    }
-
-    /// <summary>
-    /// 破碎目标
-    /// </summary>
-    public virtual void TargetBreak(ItemsBean itemsData, Vector3Int targetPosition)
+    public virtual void TargetUseL(ItemsBean itemsData, Vector3Int targetPosition)
     {
         //获取原位置方块
         WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(targetPosition, out Block targetBlock, out Chunk targetChunk);
@@ -244,9 +210,45 @@ public class Item
         }
         else
         {
-            PlayItemUseSound(null);
+            PlayItemSoundUseL(itemsData);
         }
     }
+
+    /// <summary>
+    /// 使用道具（鼠标右键）
+    /// </summary>
+    public virtual void TargetUseR(GameObject user, ItemsBean itemData, Vector3Int targetPosition, Vector3Int closePosition, BlockDirectionEnum direction)
+    {
+        //获取目标方块
+        WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(targetPosition, out Block targetBlock, out BlockDirectionEnum targetBlockDirection, out Chunk targetChunk);
+        ////首先获取靠近方块
+        //WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(closePosition, out Block closeBlock, out BlockDirectionEnum closeBlockDirection, out Chunk closeChunk);
+        //if (targetChunk == null)
+        //    return;
+        ////如果原位置是空则不做处理
+        //if (targetBlock == null || targetBlock.blockType == BlockTypeEnum.None)
+        //    return;
+
+        ////获取物品信息
+        //ItemsInfoBean itemsInfo = ItemsHandler.Instance.manager.GetItemsInfoById(itemData.itemId);
+        ////获取方块信息
+        //Block useBlock = BlockHandler.Instance.manager.GetRegisterBlock(itemsInfo.type_id);
+        //BlockInfoBean blockInfo = useBlock.blockInfo;
+
+        //BlockTypeEnum changeBlockType = blockInfo.GetBlockType();
+
+        ////获取meta数据
+        //string metaData = useBlock.ItemUseMetaData(closePosition, changeBlockType, closeBlockDirection, itemData.meta);
+        ////使用方块
+        //useBlock.ItemUse(this, itemData,
+        //    targetPosition, targetBlockDirection, targetBlock, targetChunk,
+        //    closePosition, closeBlockDirection, closeBlock, closeChunk,
+        //    direction, metaData);
+        targetBlock.TargetUseBlock(targetChunk, targetPosition);
+        PlayItemSoundUseR(itemData);
+    }
+
+
 
     /// <summary>
     /// 播放方块掉落声音
@@ -258,12 +260,34 @@ public class Item
     }
 
     /// <summary>
-    /// 播放道具使用声音
+    /// 播放道具破坏音效（鼠标左键） 
     /// </summary>
-    public virtual void PlayItemUseSound(ItemsBean itemsData)
+    public virtual void PlayItemSoundUseL(ItemsBean itemsData)
     {
         //播放破坏音效
-        //int randomAudioId = Random.Range(351,354);
+        if (itemsData == null)
+        {
+            AudioHandler.Instance.PlaySound(351);
+            return;
+        }
+        ItemsInfoBean itemsInfo = GetItemsInfo(itemsData.itemId);
+        if (itemsInfo != null && !itemsInfo.sound_use.IsNull())
+        {
+            int soundId = int.Parse(itemsInfo.sound_use);
+            AudioHandler.Instance.PlaySound(soundId);
+        }
+        else
+        {
+            AudioHandler.Instance.PlaySound(351);
+        }
+    }
+
+    /// <summary>
+    /// 播放道具使用声音（鼠标右键）
+    /// </summary>
+    public virtual void PlayItemSoundUseR(ItemsBean itemsData)
+    {
+        //播放破坏音效
         if (itemsData == null)
         {
             AudioHandler.Instance.PlaySound(351);
