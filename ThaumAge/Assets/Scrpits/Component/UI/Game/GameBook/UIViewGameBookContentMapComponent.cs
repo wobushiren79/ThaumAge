@@ -10,5 +10,7 @@ public partial class UIViewGameBookContentMap
 
     public UIViewGameBookMapItem ui_ViewGameBookMapItem;
 
+    public RectTransform ui_Select;
+
 
 }

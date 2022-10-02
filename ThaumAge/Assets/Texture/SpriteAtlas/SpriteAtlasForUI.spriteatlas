@@ -117,6 +117,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 031e082dbdec2b64f8d3e6f57481e698, type: 3}
   - {fileID: 21300000, guid: 82bb7e6d9419d7a449b2f7e11736a7e2, type: 3}
   - {fileID: 21300000, guid: 91b7c28dd08414040b3004d063ed9809, type: 3}
+  - {fileID: 21300000, guid: fb20699d9460c99479a95c47b6d966fe, type: 3}
   - {fileID: 21300000, guid: b96908cd8371a9643af457b91c98e7b7, type: 3}
   - {fileID: 21300000, guid: ccfb380e60c797b4dbb7374665fddb58, type: 3}
   - {fileID: 21300000, guid: caebe32e177c41746a65e73b97f4d8bc, type: 3}
@@ -195,6 +196,7 @@ SpriteAtlas:
   - ui_equip_9
   - ui_fire_1
   - ui_life_3
+  - ui_border_17
   - ui_slider_2
   - ui_def_6
   - ui_border_10

@@ -13,7 +13,9 @@ public static class EventsInfo
     public static readonly string ItemsBean_MetaChange = "ItemsBean_MetaChange";//道具数据发生改变
 
     public static readonly string UIGameBook_MapItemChange = "UIGameBook_MapItemChange";//模块描述改变
-
+    public static readonly string UIGameBook_MapItemClean = "UIGameBook_MapItemClean";//模块描述清空
+    public static readonly string UIGameBook_MapItemRefresh = "UIGameBook_MapItemRefresh";//模块刷新
+    
     public static readonly string CharacterStatus_StatusChange = "CharacterStatus_StatusChange";//角色状态修改
 
 

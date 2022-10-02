@@ -10,6 +10,8 @@ public partial class UIViewGameBookContentMap : BaseUIView
     public BookModelInfoBean bookModelInfo;
     [HideInInspector]
     public float uiSize = 2;
+    [HideInInspector]
+    public List<UIViewGameBookMapItem> listMapItem;
 
     public override void Awake()
     {
@@ -21,6 +23,7 @@ public partial class UIViewGameBookContentMap : BaseUIView
     {
         base.OpenUI();
         RegisterEvent<BookModelDetailsInfoBean>(EventsInfo.UIGameBook_MapItemChange, EventForMapItemChange);
+        RegisterEvent<BookModelDetailsInfoBean>(EventsInfo.UIGameBook_MapItemRefresh, EventForMapItemRefresh);
     }
 
     public void SetData(BookModelInfoBean bookModelInfo)
@@ -29,6 +32,10 @@ public partial class UIViewGameBookContentMap : BaseUIView
         SetContentBG();
         SetContentSizePosition();
         InitMapData();
+
+        //默认打开清空内容
+        TriggerEvent(EventsInfo.UIGameBook_MapItemClean);
+        ui_Select.ShowObj(false);
     }
 
     /// <summary>
@@ -55,9 +62,17 @@ public partial class UIViewGameBookContentMap : BaseUIView
     {
         if (bookModelInfo == null)
             return;
+        if (dicBookModelInfoDetails == null)
+            dicBookModelInfoDetails = new Dictionary<int, BookModelDetailsInfoBean>();
+        if (listMapItem == null)
+            listMapItem = new List<UIViewGameBookMapItem>();
         //清除数据
         dicBookModelInfoDetails.Clear();
-        ui_ContentBG.transform.DestroyAllChild(true, 1);
+        foreach (var itemMap in listMapItem)
+        {
+            DestroyImmediate(itemMap.gameObject);
+        }
+        listMapItem.Clear();
         //获取数据
         var listBookModelInfoDetails = GameInfoHandler.Instance.manager.GetBookModelDetailsById(bookModelInfo.id);
         for (int i = 0; i < listBookModelInfoDetails.Count; i++)
@@ -79,6 +94,7 @@ public partial class UIViewGameBookContentMap : BaseUIView
             GameObject objItem = Instantiate(ui_ContentBG.gameObject, ui_ViewGameBookMapItem.gameObject);
             UIViewGameBookMapItem mapItem = objItem.GetComponent<UIViewGameBookMapItem>();
             mapItem.SetData(itemData, this);
+            listMapItem.Add(mapItem);
         }
     }
 
@@ -118,12 +134,23 @@ public partial class UIViewGameBookContentMap : BaseUIView
 
 
     /// <summary>
-    /// 事件-地图item改变
+    /// 事件-地图item选择改变
     /// </summary>
     /// <param name="bookModelDetailsInfo"></param>
     protected void EventForMapItemChange(BookModelDetailsInfoBean bookModelDetailsInfo)
     {
+        ui_Select.ShowObj(true);
+        ui_Select.transform.SetAsLastSibling();
+        ui_Select.anchoredPosition = bookModelDetailsInfo.GetMapPosition();
+    }
 
+    /// <summary>
+    /// 事件-地图item刷新
+    /// </summary>
+    protected void EventForMapItemRefresh(BookModelDetailsInfoBean bookModelDetailsInfo)
+    {
+        InitMapData();
+        ui_Select.transform.SetAsLastSibling();
     }
 }
 

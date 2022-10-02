@@ -12,5 +12,9 @@ public partial class UIViewGameBookShowDetails
 
     public RectTransform ui_Content;
 
+    public ScrollRect ui_ListContentDetails;
+
+    public Text ui_Null;
+
 
 }

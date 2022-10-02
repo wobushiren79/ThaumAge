@@ -57,7 +57,10 @@ public class HierarchySelect
                     {
                         if (itemRootComponent.name.Equals(componentName))
                         {
-                            dicSelectObj.Add(componentName, itemRootComponent);
+                            if (!dicSelectObj.ContainsKey(componentName))
+                            {
+                                dicSelectObj.Add(componentName, itemRootComponent);
+                            }
                         }
                     }
                 }

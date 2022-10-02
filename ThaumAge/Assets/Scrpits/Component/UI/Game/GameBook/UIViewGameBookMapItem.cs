@@ -8,6 +8,18 @@ public partial class UIViewGameBookMapItem : BaseUIView
     protected BookModelDetailsInfoBean bookModelDetailsInfo;
     protected UIViewGameBookContentMap uiGameBookContentMap;
 
+    public override void Awake()
+    {
+        base.Awake();
+        Material matIcon = new Material(ui_Icon.material);
+        ui_Icon.material = matIcon;
+    }
+
+    public override void OpenUI()
+    {
+        base.OpenUI();
+    }
+
     /// <summary>
     /// 设置数据
     /// </summary>
@@ -32,11 +44,11 @@ public partial class UIViewGameBookMapItem : BaseUIView
         if (isUnlock)
         {
             IconHandler.Instance.manager.GetUISpriteByName("ui_border_13", (sprite) =>
-             {
+            {
                  ui_BG.sprite = sprite;
                  ui_BG.color = Color.green;
-                 ui_Icon.material.SetFloat("_EffectAmount", 0);
-             });
+                 ui_Icon.materialForRendering.SetFloat("_EffectAmount", 0);
+            });
         }
         else
         {
@@ -44,7 +56,7 @@ public partial class UIViewGameBookMapItem : BaseUIView
             {
                 ui_BG.sprite = sprite;
                 ui_BG.color = Color.white;
-                ui_Icon.material.SetFloat("_EffectAmount", 1);
+                ui_Icon.materialForRendering.SetFloat("_EffectAmount", 1);
             });
         }
     }
@@ -88,7 +100,7 @@ public partial class UIViewGameBookMapItem : BaseUIView
             lineViewItem.lineThickness = 1;
             lineViewItem.linePositionDirection = 0;
 
-            if (uiGameBookContentMap.dicBookModelInfoDetails.TryGetValue(itemPreShowId,out var itemPreShowData))
+            if (uiGameBookContentMap.dicBookModelInfoDetails.TryGetValue(itemPreShowId, out var itemPreShowData))
             {
                 UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();
 
@@ -145,5 +157,8 @@ public partial class UIViewGameBookMapItem : BaseUIView
     protected void OnClickForSubmit()
     {
         TriggerEvent(EventsInfo.UIGameBook_MapItemChange, bookModelDetailsInfo);
+        //播放音效
+        AudioHandler.Instance.PlaySound(801);
     }
+
 }

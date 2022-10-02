@@ -137,6 +137,21 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 9c107d169f452d345b1a5cb989ff7d82
+    m_Address: Assets/Audio/Sound/audio_sound_book_2.wav
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 33cb4bdddd9b47f4bbdd16ca46aaf9eb
+    m_Address: Assets/Audio/Sound/audio_sound_book_1.wav
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 8061cc3691545d545a807cabc898abf2
+    m_Address: Assets/Audio/Sound/audio_sound_reward_1.wav
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: fd6114d87f1af534fbf270c47c0f10bf, type: 2}
   m_SchemaSet:

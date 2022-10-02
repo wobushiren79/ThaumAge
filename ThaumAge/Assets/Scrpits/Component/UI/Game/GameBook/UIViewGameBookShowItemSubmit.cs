@@ -66,5 +66,8 @@ public partial class UIViewGameBookShowItemSubmit : BaseUIView
     {
         UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();
         userData.userAchievement.UnlockBookModelDetails(bookModelDetailsInfo.id);
+
+        TriggerEvent(EventsInfo.UIGameBook_MapItemRefresh, bookModelDetailsInfo);
+        AudioHandler.Instance.PlaySound(901);
     }
 }

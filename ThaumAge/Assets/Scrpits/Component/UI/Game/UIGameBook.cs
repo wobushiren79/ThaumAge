@@ -66,6 +66,9 @@ public partial class UIGameBook : UIGameCommonNormal, IRadioGroupCallBack
     {
         BookModelInfoBean bookModelInfo = listBookModel[position];
         ui_ViewGameBookContentMap.SetData(bookModelInfo);
+
+        //播放音效声音
+        AudioHandler.Instance.PlaySound(802);
     }
 
     public void RadioButtonUnSelected(RadioGroupView rgView, int position, RadioButtonView rbview)
