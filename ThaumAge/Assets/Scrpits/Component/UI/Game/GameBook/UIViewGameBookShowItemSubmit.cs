@@ -1,4 +1,5 @@
-﻿using UnityEditor;
+﻿using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,10 +10,11 @@ public partial class UIViewGameBookShowItemSubmit : BaseUIView
     public override void OnClickForButton(Button viewButton)
     {
         base.OnClickForButton(viewButton);
-        if(viewButton == ui_BTSumit)
+        if (viewButton == ui_BTSumit)
         {
             OnClickForSubmit();
         }
+        ui_ViewGameBookShowItemSubmitDetails.ShowObj(false);
     }
 
     /// <summary>
@@ -23,21 +25,29 @@ public partial class UIViewGameBookShowItemSubmit : BaseUIView
     {
         this.bookModelDetailsInfo = bookModelDetailsInfo;
         SetSubmitState(bookModelDetailsInfo.id);
-        SetUnlockItems(bookModelDetailsInfo.unlock_items);
+        SetUnlockItems(bookModelDetailsInfo.GetUnlockItems());
     }
 
     /// <summary>
     /// 设置待解锁道具
     /// </summary>
     /// <param name="itemsData"></param>
-    public void SetUnlockItems(string unlockItemsData)
+    public void SetUnlockItems(List<ItemsBean> listUnlockItems)
     {
-        if (unlockItemsData.IsNull())
+        if (listUnlockItems.IsNull())
         {
-            ui_ItemList.gameObject.SetActive(false);
+            ui_Content.gameObject.SetActive(false);
             return;
         }
-        ui_ItemList.gameObject.SetActive(true);
+        ui_Content.gameObject.SetActive(true);
+        ui_Content.DestroyAllChild(true,1);
+        for (int i = 0; i < listUnlockItems.Count; i++)
+        {
+            GameObject objItem = Instantiate(ui_Content.gameObject, ui_ViewGameBookShowItemSubmitDetails.gameObject);
+            objItem.ShowObj(true);
+            UIViewGameBookShowItemSubmitDetails itemView = objItem.GetComponent<UIViewGameBookShowItemSubmitDetails>();
+            itemView.SetData(bookModelDetailsInfo, listUnlockItems[i]);
+        }
     }
 
     /// <summary>
@@ -64,9 +74,26 @@ public partial class UIViewGameBookShowItemSubmit : BaseUIView
     /// </summary>
     public void OnClickForSubmit()
     {
+        AudioHandler.Instance.PlaySound(1);
+        List<ItemsBean> listUnlockItems = bookModelDetailsInfo.GetUnlockItems();
         UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();
+        foreach (var itemUnlock in listUnlockItems)
+        {
+            bool hasEnoughItem = userData.HasEnoughItem(itemUnlock.itemId, itemUnlock.number);
+            if (!hasEnoughItem)
+            {
+                UIHandler.Instance.ToastHint<ToastView>(TextHandler.Instance.GetTextById(30003));
+                return;
+            }
+        }
+        //移除道具
+        foreach (var itemUnlock in listUnlockItems)
+        {
+            userData.RemoveItem(itemUnlock.itemId, itemUnlock.number);
+        }
+        //扣除道具
+        //保存数据
         userData.userAchievement.UnlockBookModelDetails(bookModelDetailsInfo.id);
-
         TriggerEvent(EventsInfo.UIGameBook_MapItemRefresh, bookModelDetailsInfo);
         AudioHandler.Instance.PlaySound(901);
     }

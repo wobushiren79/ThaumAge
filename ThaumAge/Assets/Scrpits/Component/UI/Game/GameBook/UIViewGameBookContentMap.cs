@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using DG.Tweening;
 
 public partial class UIViewGameBookContentMap : BaseUIView
 {
@@ -95,6 +96,9 @@ public partial class UIViewGameBookContentMap : BaseUIView
             UIViewGameBookMapItem mapItem = objItem.GetComponent<UIViewGameBookMapItem>();
             mapItem.SetData(itemData, this);
             listMapItem.Add(mapItem);
+
+            objItem.transform.localScale = Vector3.one;
+            objItem.transform.DOScale(0.8f,0.25f).From().SetEase(Ease.OutBack);
         }
     }
 
@@ -142,6 +146,15 @@ public partial class UIViewGameBookContentMap : BaseUIView
         ui_Select.ShowObj(true);
         ui_Select.transform.SetAsLastSibling();
         ui_Select.anchoredPosition = bookModelDetailsInfo.GetMapPosition();
+
+        foreach (var itemView in listMapItem) 
+        {
+            if (itemView.bookModelDetailsInfo == bookModelDetailsInfo)
+            {
+                itemView.transform.localScale = Vector3.one;
+                itemView.transform.DOScale(0.8f, 0.25f).From().SetEase(Ease.OutBack);
+            }
+        }
     }
 
     /// <summary>

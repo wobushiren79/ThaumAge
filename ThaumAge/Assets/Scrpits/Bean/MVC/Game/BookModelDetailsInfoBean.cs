@@ -19,6 +19,10 @@ using System;
 		/// </summary>
 		public string show_pre;
 		/// <summary>
+		///展示前置线（0不展示 1展示）
+		/// </summary>
+		public int show_pre_line;
+		/// <summary>
 		///标题
 		/// </summary>
 		public string title_cn;
@@ -35,7 +39,7 @@ using System;
 		/// </summary>
 		public string content_en;
 		/// <summary>
-		///解锁拥有道具
+		///解锁（持有道具）
 		/// </summary>
 		public string unlock_items;
 		/// <summary>

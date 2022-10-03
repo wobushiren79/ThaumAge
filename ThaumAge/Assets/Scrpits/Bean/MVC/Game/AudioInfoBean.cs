@@ -11,7 +11,7 @@ using System;
 		/// </summary>
 		public string remark;
 		/// <summary>
-		///类型0音乐 1音效 2环境音
+		///类型0音效 1音乐 2环境音
 		/// </summary>
 		public int audio_type;
 	}

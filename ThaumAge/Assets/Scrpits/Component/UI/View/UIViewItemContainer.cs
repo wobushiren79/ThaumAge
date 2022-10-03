@@ -193,7 +193,7 @@ public partial class UIViewItemContainer : BaseUIView
         itemsData.meta = null;
 
         //设置展示信息
-        ui_ViewItemContainer.SetItemId(itemsData);
+        ui_ViewItemContainer.SetItemData(itemsData);
         //设置回调
         callBackForSetViewItem?.Invoke(this, itemsData);
         this.TriggerEvent(EventsInfo.UIViewItemContainer_ItemChange, this, itemsData.itemId);
@@ -225,7 +225,7 @@ public partial class UIViewItemContainer : BaseUIView
         callBackForSetViewItem?.Invoke(this, itemsData);
         this.TriggerEvent(EventsInfo.UIViewItemContainer_ItemChange, this, itemsData.itemId);
         //设置展示信息
-        ui_ViewItemContainer.SetItemId(itemsData);
+        ui_ViewItemContainer.SetItemData(itemsData);
 
         return true;
     }
@@ -237,7 +237,7 @@ public partial class UIViewItemContainer : BaseUIView
     public void SetViewItem(ItemsBean itemsData)
     {
         //设置展示信息
-        ui_ViewItemContainer.SetItemId(itemsData);
+        ui_ViewItemContainer.SetItemData(itemsData);
 
         //如果没有东西，则删除原来存在的
         if (itemsData == null || itemsData.itemId == 0)

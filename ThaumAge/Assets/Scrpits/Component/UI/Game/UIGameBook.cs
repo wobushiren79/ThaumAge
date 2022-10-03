@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 public partial class UIGameBook : UIGameCommonNormal, IRadioGroupCallBack
@@ -34,6 +35,17 @@ public partial class UIGameBook : UIGameCommonNormal, IRadioGroupCallBack
     {
         listBookModel = GameInfoHandler.Instance.manager.GetUnLockBookModelInfo();
         SetLabels(listBookModel);
+    }
+
+    public override void OnInputActionForStarted(InputActionUIEnum inputType, InputAction.CallbackContext callback)
+    {
+        base.OnInputActionForStarted(inputType, callback);
+        switch (inputType)
+        {
+            case InputActionUIEnum.ESC:
+                HandleForBackMain();
+                break;
+        }
     }
 
     /// <summary>

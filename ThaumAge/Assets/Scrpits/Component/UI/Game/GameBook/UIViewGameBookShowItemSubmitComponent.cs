@@ -14,7 +14,7 @@ public partial class UIViewGameBookShowItemSubmit
 
     public RectTransform ui_Content;
 
-    public RectTransform ui_ItemList;
+    public UIViewGameBookShowItemSubmitDetails ui_ViewGameBookShowItemSubmitDetails;
 
 
 }

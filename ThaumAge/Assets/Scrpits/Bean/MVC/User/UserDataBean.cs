@@ -289,6 +289,41 @@ public class UserDataBean
         }
     }
 
+
+    /// <summary>
+    /// 检测身上道具数量
+    /// </summary>
+    /// <param name="itemsId"></param>
+    /// <param name="type">0全部 1状态栏 2背包</param>
+    /// <returns></returns>
+    public int CheckItemNumber(long itemsId,int type = 0)
+    {
+        ItemsBean[] allItems = new ItemsBean[0];
+        switch (type) 
+        {
+            case 0:
+                allItems = GetAllItems();
+                break;
+            case 1:
+                allItems = listShortcutsItems;
+                break;
+            case 2:
+                allItems = listBackpack;
+                break;
+        }
+
+        int totalNumber = 0;
+        for (int i = 0; i < allItems.Length; i++)
+        {
+            ItemsBean itemData = allItems[i];
+            if (itemData == null || itemData.itemId == 0)
+                continue;
+            if (itemData.itemId == itemsId)
+                totalNumber += itemData.number;
+        }
+        return totalNumber;
+    }
+
     /// <summary>
     /// 移除道具
     /// </summary>

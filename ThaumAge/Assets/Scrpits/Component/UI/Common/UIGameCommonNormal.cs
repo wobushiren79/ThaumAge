@@ -32,16 +32,16 @@ public partial class UIGameCommonNormal : BaseUIComponent
         if (viewButton == ui_Exit)
         {
             HandleForBackMain();
-            //播放音效
-            AudioHandler.Instance.PlaySound(2);
         }
     }
 
     /// <summary>
     /// 处理返回主界面
     /// </summary>
-    public virtual void HandleForBackMain() 
+    public virtual void HandleForBackMain()
     {
         UIHandler.Instance.OpenUIAndCloseOther<UIGameMain>(UIEnum.GameMain);
+        //播放音效
+        AudioHandler.Instance.PlaySound(2);
     }
 }

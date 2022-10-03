@@ -148,7 +148,13 @@ public class ExcelEditorWindow : EditorWindow
                         object o = ab.CreateInstance(type.ToString());
                         for (int column = 1; column <= columnCount; column++)
                         {
-                            FieldInfo fieldInfo = type.GetField(sheet.Cells[w, column].Text); //先获得字段信息，方便获得字段类型
+                            string sheetCellName = sheet.Cells[w, column].Text;
+                            FieldInfo fieldInfo = type.GetField(sheetCellName); //先获得字段信息，方便获得字段类型
+                            if (fieldInfo == null)
+                            {
+                                LogUtil.LogError($"没有找到 第{column}竖排：{sheetCellName}的字段信息");
+                                continue;
+                            }
                             System.Object value = Convert.ChangeType(sheet.Cells[row, column].Text, fieldInfo.FieldType);
                             type.GetField(sheet.Cells[1, column].Text).SetValue(o, value);
                         }

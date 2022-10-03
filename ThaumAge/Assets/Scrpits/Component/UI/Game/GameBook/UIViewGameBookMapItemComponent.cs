@@ -10,5 +10,7 @@ public partial class UIViewGameBookMapItem
 
     public Button ui_BTSubmit;
 
+    public LineView ui_LineModel;
+
 
 }

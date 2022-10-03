@@ -31,6 +31,10 @@ public partial class UIViewGameBookShowDetails : BaseUIView
         ui_ViewGameBookShowItemTitle.SetData(bookModelDetailsInfo.title);
         ui_ViewGameBookShowItemContent.SetData(bookModelDetailsInfo.content);
         ui_ViewGameBookShowItemSubmit.SetData(bookModelDetailsInfo);
+
+        UGUIUtil.RefreshUISize(ui_ViewGameBookShowItemTitle.rectTransform);
+        UGUIUtil.RefreshUISize(ui_ViewGameBookShowItemContent.rectTransform);
+        UGUIUtil.RefreshUISize(ui_ViewGameBookShowItemSubmit.rectTransform);
     }
 
     /// <summary>

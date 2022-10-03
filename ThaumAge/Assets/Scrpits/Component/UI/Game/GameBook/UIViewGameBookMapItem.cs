@@ -5,19 +5,33 @@ using UnityEngine.UI;
 
 public partial class UIViewGameBookMapItem : BaseUIView
 {
-    protected BookModelDetailsInfoBean bookModelDetailsInfo;
+    [HideInInspector]
+    public BookModelDetailsInfoBean bookModelDetailsInfo;
+
     protected UIViewGameBookContentMap uiGameBookContentMap;
 
+    protected List<LineView> listLine = new List<LineView>();
     public override void Awake()
     {
         base.Awake();
         Material matIcon = new Material(ui_Icon.material);
         ui_Icon.material = matIcon;
+        ui_LineModel.ShowObj(false);
     }
 
     public override void OpenUI()
     {
         base.OpenUI();
+    }
+
+    public override void OnDestroy()
+    {
+        for (int i = 0; i < listLine.Count; i++)
+        {
+            Destroy(listLine[i]);
+        }
+        listLine.Clear();
+        base.OnDestroy();
     }
 
     /// <summary>
@@ -31,6 +45,7 @@ public partial class UIViewGameBookMapItem : BaseUIView
         SetPosition();
         SetIcon();
         SetItemState();
+        CreatePreShowLine();
     }
 
     /// <summary>
@@ -45,9 +60,9 @@ public partial class UIViewGameBookMapItem : BaseUIView
         {
             IconHandler.Instance.manager.GetUISpriteByName("ui_border_13", (sprite) =>
             {
-                 ui_BG.sprite = sprite;
-                 ui_BG.color = Color.green;
-                 ui_Icon.materialForRendering.SetFloat("_EffectAmount", 0);
+                ui_BG.sprite = sprite;
+                ui_BG.color = Color.green;
+                ui_Icon.materialForRendering.SetFloat("_EffectAmount", 0);
             });
         }
         else
@@ -85,19 +100,25 @@ public partial class UIViewGameBookMapItem : BaseUIView
     /// </summary>
     public void CreatePreShowLine()
     {
+        if (bookModelDetailsInfo == null)
+            return;
+        if (bookModelDetailsInfo.show_pre_line == 0)
+            return;
         int[] preShowIds = bookModelDetailsInfo.GetPreShowIds();
         for (int i = 0; i < preShowIds.Length; i++)
         {
             int itemPreShowId = preShowIds[i];
             //创建连线
-            GameObject objLine = Instantiate(transform.parent.gameObject, null);
+            GameObject objLine = Instantiate(transform.parent.gameObject, ui_LineModel.gameObject);
+            objLine.ShowObj(true);
+            objLine.transform.SetAsFirstSibling();
             LineView lineViewItem = objLine.GetComponent<LineView>();
             //清除连线数据
             lineViewItem.listPosition.Clear();
             lineViewItem.listPositionColor.Clear();
 
             //设置连线数据
-            lineViewItem.lineThickness = 1;
+            lineViewItem.lineThickness = 3;
             lineViewItem.linePositionDirection = 0;
 
             if (uiGameBookContentMap.dicBookModelInfoDetails.TryGetValue(itemPreShowId, out var itemPreShowData))
@@ -125,16 +146,26 @@ public partial class UIViewGameBookMapItem : BaseUIView
                     //如果自身没有解锁 则线条半绿
                     else
                     {
-                        lineViewItem.listPositionColor.Add(Color.green / 2f);
+                        lineViewItem.listPositionColor.Add(new Color(0, 0, 0, 0));
                     }
                 }
                 //如果前置没有解锁
                 else
                 {
-                    lineViewItem.listPositionColor.Add(Color.gray);
-                    lineViewItem.listPositionColor.Add(Color.gray / 2f);
+                    lineViewItem.listPositionColor.Add(new Color(0, 0, 0, 0));
+                    if (isUnlockSelf)
+                    {
+                        lineViewItem.listPositionColor.Add(Color.green);
+                    }
+                    //如果自身没有解锁 则线条半绿
+                    else
+                    {
+                        lineViewItem.listPositionColor.Add(new Color(0, 0, 0, 0));
+                    }
                 }
             }
+
+            listLine.Add(lineViewItem);
         }
     }
 

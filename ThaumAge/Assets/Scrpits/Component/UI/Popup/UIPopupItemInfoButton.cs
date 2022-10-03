@@ -15,7 +15,7 @@ public partial class UIPopupItemInfoButton : PopupButtonView<UIPopupItemInfo>
     /// 设置道具ID
     /// </summary>
     /// <param name="itemId"></param>
-    public void SetItemId(ItemsBean itemData)
+    public void SetItemData(ItemsBean itemData)
     {
         this.itemData = itemData;
     }

@@ -23,7 +23,9 @@ public class LineView : MaskableGraphic
         for (int i = 0; i < listPosition.Count; i++)
         {
             //设置顶点颜色
-            if (listPositionColor.Count > i)
+            if (listPositionColor.IsNull())
+                vertex.color = Color.white;
+            else if (listPositionColor.Count > i)
                 vertex.color = listPositionColor[i];
             else
                 vertex.color = listPositionColor[listPositionColor.Count - 1];
