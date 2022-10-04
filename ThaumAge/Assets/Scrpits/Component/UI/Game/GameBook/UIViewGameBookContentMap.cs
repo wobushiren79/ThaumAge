@@ -107,7 +107,7 @@ public partial class UIViewGameBookContentMap : BaseUIView
     /// </summary>
     public void SetContentBG()
     {
-        IconHandler.Instance.manager.GetUISpriteByName(bookModelInfo.background, (iconSprite) =>
+        IconHandler.Instance.manager.GetSkySpriteByName(bookModelInfo.background, (iconSprite) =>
         {
             ui_ContentBG.sprite = iconSprite;
         });

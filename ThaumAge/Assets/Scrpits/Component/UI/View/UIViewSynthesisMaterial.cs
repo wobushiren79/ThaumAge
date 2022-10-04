@@ -4,7 +4,7 @@ using DG.Tweening;
 
 public partial class UIViewSynthesisMaterial : BaseUIView
 {
-    public ItemsSynthesisMaterialsBean materialsData;
+    public ItemsArrayBean materialsData;
 
     protected Material matIcon;
     public override void Awake()
@@ -17,9 +17,8 @@ public partial class UIViewSynthesisMaterial : BaseUIView
 
     public override void OnDestroy()
     {
+        StopAllAnim();
         base.OnDestroy();
-        rectTransform.DOKill();
-        StopAllCoroutines();
     }
 
     public override void RefreshUI()
@@ -30,13 +29,22 @@ public partial class UIViewSynthesisMaterial : BaseUIView
         SetCanHasItems(materialsData.itemIds, materialsData.itemNumber);
     }
 
+    public void StopAllAnim()
+    {
+        rectTransform.DOKill();
+        StopAllCoroutines();
+    }
+
     /// <summary>
     /// 设置数据
     /// </summary>
     /// <param name="materialsData"></param>
-    public void SetData(ItemsSynthesisMaterialsBean materialsData, float startAngle)
+    public void SetData(ItemsArrayBean materialsData, float startAngle)
     {
         this.materialsData = materialsData;
+
+        StopAllAnim();
+
         AnimForMove(startAngle);
         AnimForChangeMaterial(materialsData.itemIds, 0);
         RefreshUI();
@@ -107,6 +115,7 @@ public partial class UIViewSynthesisMaterial : BaseUIView
             ui_Icon.material.SetFloat("_EffectAmount", 1);
         }
     }
+
     /// <summary>
     /// 移动动画
     /// </summary>

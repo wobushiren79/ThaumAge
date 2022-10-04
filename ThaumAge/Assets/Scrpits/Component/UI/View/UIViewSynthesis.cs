@@ -112,14 +112,14 @@ public partial class UIViewSynthesis : BaseUIView
         //首先消耗素材
         BaseUIComponent currentUI = UIHandler.Instance.GetOpenUI();
         //获取素材
-        List<ItemsSynthesisMaterialsBean> listMaterials = itemsSynthesis.GetSynthesisMaterials();
+        List<ItemsArrayBean> listMaterials = itemsSynthesis.GetSynthesisMaterials();
 
         UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();
 
         //扣除素材
         for (int i = 0; i < listMaterials.Count; i++)
         {
-            ItemsSynthesisMaterialsBean itemMaterials = listMaterials[i];
+            ItemsArrayBean itemMaterials = listMaterials[i];
             for (int f = 0; f < itemMaterials.itemIds.Length; f++)
             {
                 //只要扣除其中一项素材就行
@@ -253,7 +253,7 @@ public partial class UIViewSynthesis : BaseUIView
         ui_SynthesisMaterials.DestroyAllChild();
         //获取当前选中合成道具
         ItemsSynthesisBean itemsSynthesis = listSynthesisData[indexSelect];
-        List<ItemsSynthesisMaterialsBean> listMaterials = itemsSynthesis.GetSynthesisMaterials();
+        List<ItemsArrayBean> listMaterials = itemsSynthesis.GetSynthesisMaterials();
         //获取起始点位置
         Vector2[] listCirclePosition = VectorUtil.GetListCirclePosition(listMaterials.Count, 0, Vector2.zero, 120);
         //创建所有素材
@@ -264,7 +264,7 @@ public partial class UIViewSynthesis : BaseUIView
             GameObject objMaterial = Instantiate(ui_SynthesisMaterials.gameObject, ui_ModelViewSynthesisMaterial.gameObject);
             UIViewSynthesisMaterial itemMaterial = objMaterial.GetComponent<UIViewSynthesisMaterial>();
 
-            ItemsSynthesisMaterialsBean itemData = listMaterials[i];
+            ItemsArrayBean itemData = listMaterials[i];
             itemMaterial.SetData(itemData, itemAngle * i);
             itemMaterial.rectTransform.anchoredPosition = listCirclePosition[i];
             listUIMaterial.Add(itemMaterial);

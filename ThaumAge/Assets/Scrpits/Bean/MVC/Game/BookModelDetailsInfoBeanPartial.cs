@@ -20,7 +20,7 @@ public partial class BookModelDetailsInfoBean
         }
     }
 
-    protected List<ItemsBean> listUnlockItem;
+    protected List<ItemsArrayBean> listUnlockItem;
 
     /// <summary>
     /// 获取UI点位
@@ -62,25 +62,13 @@ public partial class BookModelDetailsInfoBean
     /// 获取解锁道具（持有）
     /// </summary>
     /// <returns></returns>
-    public List<ItemsBean> GetUnlockItems()
+    public List<ItemsArrayBean> GetUnlockItems()
     {
         if (listUnlockItem == null)
-            listUnlockItem = new List<ItemsBean>();
+            listUnlockItem = new List<ItemsArrayBean>();
         if (!unlock_items.IsNull() && listUnlockItem.Count == 0)
         {
-            string[] unlockItemsStr = unlock_items.Split('&');
-
-            foreach (var itemUnlockStr in unlockItemsStr)
-            {
-                string[] unlockItemsDetailsStr = itemUnlockStr.Split(':');
-                int itemId = int.Parse(unlockItemsDetailsStr[0]);
-                int itemNumber = 1;
-                if (unlockItemsDetailsStr.Length > 1)
-                {
-                    itemNumber = int.Parse(unlockItemsDetailsStr[1]);
-                }
-                listUnlockItem.Add(new ItemsBean(itemId, itemNumber));
-            }
+            listUnlockItem = ItemsArrayBean.GetListItemsArrayBean(unlock_items);
         }
         return listUnlockItem;
     }

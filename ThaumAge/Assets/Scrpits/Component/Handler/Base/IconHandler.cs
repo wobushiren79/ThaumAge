@@ -55,13 +55,17 @@ public class IconHandler : BaseHandler<IconHandler, IconManager>
                 callBack?.Invoke(sprite);
             }
         };
-        if (spriteArrayData[0].Equals("SpriteAtlasForUI"))
+        if (spriteArrayData[0].Equals("0"))
         {
             manager.GetUISpriteByName(spriteArrayData[1], callBackForComplete);
         }
-        else if (spriteArrayData[0].Equals("SpriteAtlasForItems"))
+        else if (spriteArrayData[0].Equals("1"))
         {
             manager.GetItemsSpriteByName(spriteArrayData[1], callBackForComplete);
+        }
+        else if (spriteArrayData[0].Equals("2"))
+        {
+            manager.GetSkySpriteByName(spriteArrayData[1], callBackForComplete);
         }
     }
 }

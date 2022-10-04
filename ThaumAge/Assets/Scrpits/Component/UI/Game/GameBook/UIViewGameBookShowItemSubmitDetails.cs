@@ -1,4 +1,5 @@
-﻿using UnityEditor;
+﻿using DG.Tweening;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -6,50 +7,45 @@ public partial class UIViewGameBookShowItemSubmitDetails : BaseUIView
 {
     protected BookModelDetailsInfoBean bookModelDetailsInfo;
 
-    protected ItemsBean itemData;
-    protected ItemsInfoBean unlockItemsInfo;
+    protected ItemsArrayBean itemData;
+
     public override void Awake()
     {
         base.Awake();
         ui_Icon.material = new Material(ui_Icon.material);
     }
 
+    public override void OnDestroy()
+    {
+        StopAllAnim();
+        base.OnDestroy();
+    }
+    public void StopAllAnim()
+    {
+        rectTransform.DOKill();
+        StopAllCoroutines();
+    }
+
     /// <summary>
     /// 设置数据
     /// </summary>
     /// <param name="unlockItemData"></param>
-    public void SetData(BookModelDetailsInfoBean bookModelDetailsInfo, ItemsBean itemData)
+    public void SetData(BookModelDetailsInfoBean bookModelDetailsInfo, ItemsArrayBean itemData)
     {
         this.bookModelDetailsInfo = bookModelDetailsInfo;
         this.itemData = itemData;
-        unlockItemsInfo = ItemsHandler.Instance.manager.GetItemsInfoById(itemData.itemId);
-        UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();
-        //设置图标
-        SetIcon(unlockItemsInfo.icon_key);
-        //设置数量
-        int curItemNumber = userData.CheckItemNumber(itemData.itemId);
-        SetNumber(curItemNumber, itemData.number);
 
-        //添加点位颜色
-        bool isUnlockSelf = userData.userAchievement.CheckUnlockBookModelDetails(bookModelDetailsInfo.id);
-        if (isUnlockSelf)
+        StopAllAnim();
+
+        if (itemData.itemIds.Length == 1)
         {
-            SetStatus(2);
+            ChangeItem(itemData.itemIds[0]);
         }
         else
         {
-            if (userData.HasEnoughItem(itemData.itemId, itemData.number))
-            {
-                SetStatus(1);
-            }
-            else
-            {
-                SetStatus(0);
-            }
+            StopAllCoroutines();
+            AnimForChange(itemData.itemIds, 0);
         }
-
-        //设置展示信息
-        ui_InfoShow.SetItemData(itemData);
     }
 
     /// <summary>
@@ -102,5 +98,56 @@ public partial class UIViewGameBookShowItemSubmitDetails : BaseUIView
                 ui_Icon.materialForRendering.SetFloat("_EffectAmount", 0);
                 break;
         }
+    }
+
+    /// <summary>
+    /// 改变道具
+    /// </summary>
+    /// <param name="itemId"></param>
+    public void ChangeItem(long itemId)
+    {
+        UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();
+        ItemsInfoBean unlockItemsInfo = ItemsHandler.Instance.manager.GetItemsInfoById(itemId);
+        //设置图标
+        SetIcon(unlockItemsInfo.icon_key);
+        //设置展示信息
+        ui_InfoShow.SetItemData(new ItemsBean(itemId));
+        //设置数量
+        int curItemNumber = userData.CheckItemNumber(itemId);
+        SetNumber(curItemNumber, itemData.itemNumber);
+
+        //添加点位颜色
+        bool isUnlockSelf = userData.userAchievement.CheckUnlockBookModelDetails(bookModelDetailsInfo.id);
+        if (isUnlockSelf)
+        {
+            SetStatus(2);
+        }
+        else
+        {
+            if (userData.HasEnoughItem(itemId, itemData.itemNumber))
+            {
+                SetStatus(1);
+            }
+            else
+            {
+                SetStatus(0);
+            }
+        }
+    }
+
+    /// <summary>
+    /// 改变道具动画，用于可替换道具
+    /// </summary>
+    public void AnimForChange(long[] listItemsId, int startIndex)
+    {
+        ChangeItem(listItemsId[startIndex]);
+        this.WaitExecuteSeconds(2, () =>
+        {
+            startIndex++;
+            if (startIndex >= listItemsId.Length)
+                startIndex = 0;
+            ChangeItem(listItemsId[startIndex]);
+            AnimForChange(listItemsId, startIndex);
+        });
     }
 }

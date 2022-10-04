@@ -32,7 +32,7 @@ public partial class UIViewGameBookShowItemSubmit : BaseUIView
     /// 设置待解锁道具
     /// </summary>
     /// <param name="itemsData"></param>
-    public void SetUnlockItems(List<ItemsBean> listUnlockItems)
+    public void SetUnlockItems(List<ItemsArrayBean> listUnlockItems)
     {
         if (listUnlockItems.IsNull())
         {
@@ -75,11 +75,19 @@ public partial class UIViewGameBookShowItemSubmit : BaseUIView
     public void OnClickForSubmit()
     {
         AudioHandler.Instance.PlaySound(1);
-        List<ItemsBean> listUnlockItems = bookModelDetailsInfo.GetUnlockItems();
+        List<ItemsArrayBean> listUnlockItems = bookModelDetailsInfo.GetUnlockItems();
         UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();
         foreach (var itemUnlock in listUnlockItems)
         {
-            bool hasEnoughItem = userData.HasEnoughItem(itemUnlock.itemId, itemUnlock.number);
+            bool hasEnoughItem = false;
+            //只要其中一个满足就行
+            foreach (var itemId in itemUnlock.itemIds)
+            {
+                hasEnoughItem = userData.HasEnoughItem(itemId, itemUnlock.itemNumber);
+                if (hasEnoughItem)
+                    break;
+            }
+
             if (!hasEnoughItem)
             {
                 UIHandler.Instance.ToastHint<ToastView>(TextHandler.Instance.GetTextById(30003));
@@ -87,11 +95,10 @@ public partial class UIViewGameBookShowItemSubmit : BaseUIView
             }
         }
         //移除道具
-        foreach (var itemUnlock in listUnlockItems)
-        {
-            userData.RemoveItem(itemUnlock.itemId, itemUnlock.number);
-        }
-        //扣除道具
+        //foreach (var itemUnlock in listUnlockItems)
+        //{
+        //    userData.RemoveItem(itemUnlock.itemId, itemUnlock.number);
+        //}
         //保存数据
         userData.userAchievement.UnlockBookModelDetails(bookModelDetailsInfo.id);
         TriggerEvent(EventsInfo.UIGameBook_MapItemRefresh, bookModelDetailsInfo);

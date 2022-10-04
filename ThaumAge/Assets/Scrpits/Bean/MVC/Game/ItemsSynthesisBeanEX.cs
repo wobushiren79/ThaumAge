@@ -5,8 +5,7 @@ using UnityEngine;
 
 public partial class ItemsSynthesisBean
 {
-
-    protected List<ItemsSynthesisMaterialsBean> listMaterials;
+    protected List<ItemsArrayBean> listMaterials;
 
     /// <summary>
     /// 检测是否已经解锁该合成
@@ -16,7 +15,7 @@ public partial class ItemsSynthesisBean
     {
         UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();
         //获取合成材料
-        List<ItemsSynthesisMaterialsBean> listMaterials = GetSynthesisMaterials();
+        List<ItemsArrayBean> listMaterials = GetSynthesisMaterials();
         for (int i = 0; i < listMaterials.Count; i++)
         {
             var itemMaterial = listMaterials[i];
@@ -33,11 +32,11 @@ public partial class ItemsSynthesisBean
     public bool CheckSynthesis()
     {
         //获取合成材料
-        List<ItemsSynthesisMaterialsBean> listMaterials = GetSynthesisMaterials();
+        List<ItemsArrayBean> listMaterials = GetSynthesisMaterials();
         UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();
         for (int i = 0; i < listMaterials.Count; i++)
         {
-            ItemsSynthesisMaterialsBean itemMaterials = listMaterials[i];
+            ItemsArrayBean itemMaterials = listMaterials[i];
             bool hasMaterial = false;
             for (int f = 0; f < itemMaterials.itemIds.Length; f++)
             {
@@ -81,29 +80,9 @@ public partial class ItemsSynthesisBean
     /// 获取合成的道具
     /// </summary>
     /// <returns></returns>
-    public List<ItemsSynthesisMaterialsBean> GetSynthesisMaterials()
+    public List<ItemsArrayBean> GetSynthesisMaterials()
     {
-        if (listMaterials == null)
-        {
-            listMaterials = new List<ItemsSynthesisMaterialsBean>();
-            string[] listItemsData = materials.SplitForArrayStr('&');
-            for (int i = 0; i < listItemsData.Length; i++)
-            {
-                string itemData1 = listItemsData[i];
-                string[] itemData2 = itemData1.SplitForArrayStr(':');
-                long[] itemData3 = itemData2[0].SplitForArrayLong('|');
-
-                if (itemData2.Length == 1)
-                {
-                    listMaterials.Add(new ItemsSynthesisMaterialsBean(itemData3, 1));
-                }
-                else
-                {
-                    listMaterials.Add(new ItemsSynthesisMaterialsBean(itemData3, int.Parse(itemData2[1])));
-                }
-            }
-        }
-        return listMaterials;
+        return ItemsArrayBean.GetListItemsArrayBean(materials);
     }
 
     /// <summary>
@@ -123,17 +102,4 @@ public partial class ItemsSynthesisBean
             itemNumber = (int)itemData[1];
         }
     }
-}
-
-public class ItemsSynthesisMaterialsBean
-{
-    public long[] itemIds;
-    public int itemNumber;
-
-    public ItemsSynthesisMaterialsBean(long[] itemIds, int itemNumber)
-    {
-        this.itemIds = itemIds;
-        this.itemNumber = itemNumber;
-    }
-
 }
