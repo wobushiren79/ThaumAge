@@ -16,16 +16,14 @@ public class BlockShapeCustom : BlockShape
         trisAdd = blockMeshData.mainMeshData.triangles;
         uvsAdd = blockMeshData.mainMeshData.uv;
         colorsAdd = new Color[uvsAdd.Length];
-        for (int i = 0; i < colorsAdd.Length; i++)
-        {
-            colorsAdd[i] = Color.white;
-        }
 
         if (!blockMeshData.verticesCollider.IsNull())
             vertsColliderAddCustom = blockMeshData.verticesCollider;
 
         if (!blockMeshData.trianglesCollider.IsNull())
             trisColliderAddCustom = blockMeshData.trianglesCollider;
+
+        InitBlockColor(colorsAdd);
     }
 
     #region 增加三角

@@ -29,6 +29,15 @@ public enum BlockTypeEnum
     OreTin = 905,//锡矿
     OreAluminum = 906,//铝矿
 
+    ElementalCrystalMetal = 991,//金元素水晶
+    ElementalCrystalWood = 992,//木元素水晶
+    ElementalCrystalWater = 993,//水元素水晶
+    ElementalCrystalFire = 994,//火元素水晶
+    ElementalCrystalEarth = 995,//土元素水晶
+    ElementalCrystalLight = 996,//光元素水晶
+    ElementalCrystalDark = 997,//暗元素水晶
+    ElementalCrystalThaum = 999,//神秘元素水晶
+
     TreeOak = 1001,//橡木
     TreeSilver = 1002,//银树
     TreeWorld = 1003,//世界树

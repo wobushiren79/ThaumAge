@@ -21,6 +21,16 @@ public static class EditorUtil
     }
 
     /// <summary>
+    /// 替换资源
+    /// </summary>
+    /// <param name="asset"></param>
+    /// <param name="path"></param>
+    public static void ReplaceAsset(UnityEngine.Object asset, string path)
+    {
+        AssetDatabase.AddObjectToAsset(asset, path);
+    }
+
+    /// <summary>
     /// 创建预置
     /// </summary>
     /// <param name="obj"></param>
@@ -29,6 +39,7 @@ public static class EditorUtil
     {
         PrefabUtility.SaveAsPrefabAsset(obj, $"{path}.prefab");
     }
+
 
     /// <summary>
     /// 通过资源文件的唯一ID获取选择文件的路径

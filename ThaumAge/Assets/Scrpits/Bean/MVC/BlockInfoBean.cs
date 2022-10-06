@@ -16,6 +16,8 @@ public class BlockInfoBean : BaseBean
 
     public string model_name;
 
+    public string color;//颜色
+
     public int shape;//形状
 
     public string uv_position;//uv位置
@@ -71,6 +73,19 @@ public class BlockInfoBean : BaseBean
     public BlockShapeEnum GetBlockShape()
     {
         return (BlockShapeEnum)shape;
+    }
+    
+    /// <summary>
+    /// 获取方块颜色
+    /// </summary>
+    /// <returns></returns>
+    public Color GetBlockColor()
+    {
+        if (ColorUtility.TryParseHtmlString($"#{color}", out Color colorBlock))
+        {
+            return colorBlock;
+        }
+        return Color.white;
     }
 
     /// <summary>

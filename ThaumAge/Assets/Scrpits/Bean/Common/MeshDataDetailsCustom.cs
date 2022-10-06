@@ -26,8 +26,22 @@ public class MeshDataDetailsCustom
             Vector3 itemVer = vertices[i];
 
             Vector3 newVer = itemVer * size + offset;
+            ////保留小数点后5位
+            //float newFX = float.Parse(newVer.x.ToString("f5"));
+            //float newFY = float.Parse(newVer.y.ToString("f5"));
+            //float newFZ = float.Parse(newVer.z.ToString("f5"));
+            //newVer = new Vector3(newFX, newFY, newFZ);
             vertices[i] = newVer;
         }
+        //for (int i = 0; i < uv.Length; i++)
+        //{
+        //    Vector2 itemUV = uv[i];
+        //    //保留小数点后5位
+        //    float newFX = float.Parse(itemUV.x.ToString("f5"));
+        //    float newFY = float.Parse(itemUV.y.ToString("f5"));
+        //    itemUV = new Vector2(newFX, newFY);
+        //    uv[i] = itemUV;
+        //}
     }
     public MeshDataDetailsCustom(float size, Vector3 offset, Vector3 rotate)
     {

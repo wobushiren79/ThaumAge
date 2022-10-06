@@ -7,7 +7,8 @@ public class BlockShapeLiquidCross : BlockShapeLiquid
     {
         vertsAdd = BlockShapeCross.VertsAddCross;
         trisAdd = BlockShapeCross.TrisAddCross;
-        colorsAdd = BlockShapeCross.ColorsAddCross;
+        colorsAdd = new Color[8];
+        InitBlockColor(colorsAdd);
 
         Vector2 uvStartPosition = BlockShapeCross.GetUVStartPosition(block);
 

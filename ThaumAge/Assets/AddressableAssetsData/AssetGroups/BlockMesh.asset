@@ -28,108 +28,174 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels:
     - BlockMeshData
+    - BlockMesh
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 3bc75d95c30b9c2408125f2487c16a3e
     m_Address: Assets/Prefabs/BlockMeshData/BlockFenceDoorWooden.txt
     m_ReadOnly: 0
     m_SerializedLabels:
     - BlockMeshData
+    - BlockMesh
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 3f4061a6772929b4ba394b8f57fe89e2
     m_Address: Assets/Prefabs/BlockMeshData/BlockMushroomWhite2.txt
     m_ReadOnly: 0
     m_SerializedLabels:
     - BlockMeshData
+    - BlockMesh
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: e4a5184a94ef8b24a9fd0c0f02b5e72e
     m_Address: Assets/Prefabs/BlockMeshData/BlockSignWooden.txt
     m_ReadOnly: 0
     m_SerializedLabels:
     - BlockMeshData
+    - BlockMesh
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 6f4b865de55e77a4c87c5ed9b2e55a54
     m_Address: Assets/Prefabs/BlockMeshData/BlockLanternStone.txt
     m_ReadOnly: 0
     m_SerializedLabels:
     - BlockMeshData
+    - BlockMesh
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: f78a7992a8887de46be8bb1a3b1d2aec
     m_Address: Assets/Prefabs/BlockMeshData/BlockCraftingTableSimple.txt
     m_ReadOnly: 0
     m_SerializedLabels:
     - BlockMeshData
+    - BlockMesh
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 4d57ae53335dcc049a7dbcc5dffa90e2
     m_Address: Assets/Prefabs/BlockMeshData/BlockMushroomWhite3.txt
     m_ReadOnly: 0
     m_SerializedLabels:
     - BlockMeshData
+    - BlockMesh
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: fcd4885d50d6a35449b0c71a34fb1deb
     m_Address: Assets/Prefabs/BlockMeshData/BlockFenceWooden.txt
     m_ReadOnly: 0
     m_SerializedLabels:
     - BlockMeshData
+    - BlockMesh
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 701016fd885390a47a15b3d4ffa2ce87
     m_Address: Assets/Prefabs/BlockMeshData/BlockSwitchesWooden.txt
     m_ReadOnly: 0
     m_SerializedLabels:
     - BlockMeshData
+    - BlockMesh
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: c76e00e2e48519940942c16d5d7e220c
     m_Address: Assets/Prefabs/BlockMeshData/BlockFurnacesSimple.txt
     m_ReadOnly: 0
     m_SerializedLabels:
     - BlockMeshData
+    - BlockMesh
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 297f995af34e9294d896bdacab23a7e8
     m_Address: Assets/Prefabs/BlockMeshData/BlockTombstoneRare.txt
     m_ReadOnly: 0
     m_SerializedLabels:
     - BlockMeshData
+    - BlockMesh
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 7dba8aa21ba23a34c8d9433694bdf350
     m_Address: Assets/Prefabs/BlockMeshData/BlockLadderWood.txt
     m_ReadOnly: 0
     m_SerializedLabels:
     - BlockMeshData
+    - BlockMesh
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 486f531502941f84da7d391da5ce0e4b
     m_Address: Assets/Prefabs/BlockMeshData/BlockCropWatermelon.txt
     m_ReadOnly: 0
     m_SerializedLabels:
     - BlockMeshData
+    - BlockMesh
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 2f0769abd006ea64eb77231a1630c947
     m_Address: Assets/Prefabs/BlockMeshData/BlockTombstone.txt
     m_ReadOnly: 0
     m_SerializedLabels:
     - BlockMeshData
+    - BlockMesh
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: a0c35ab674a3e8046a75d80b5ace1a50
     m_Address: Assets/Prefabs/BlockMeshData/BlockDoor.txt
     m_ReadOnly: 0
     m_SerializedLabels:
     - BlockMeshData
+    - BlockMesh
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 45bc797d554f3e044b4abb1ee6d9cd2d
     m_Address: Assets/Prefabs/BlockMeshData/BlockTorchWooden.txt
     m_ReadOnly: 0
     m_SerializedLabels:
     - BlockMeshData
+    - BlockMesh
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 63022ce5131232a48b672a386d11f8b5
     m_Address: Assets/Prefabs/BlockMeshData/BlockMushroomWhite1.txt
     m_ReadOnly: 0
     m_SerializedLabels:
     - BlockMeshData
+    - BlockMesh
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: ea34d6c5d19a7f042808f4c2717e8ff9
     m_Address: Assets/Prefabs/BlockMeshData/BlockFrameItem.txt
     m_ReadOnly: 0
     m_SerializedLabels:
     - BlockMeshData
+    - BlockMesh
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 7c404ec829fa7f34b9e52020449b2c9b
+    m_Address: Assets/Prefabs/BlockMeshData/BlockElementalCrystalThaum.txt
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - BlockMesh
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 79183d9c80a967941a6bd76e93d3c743
+    m_Address: Assets/Prefabs/BlockMeshData/BlockElementalCrystalFire.txt
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - BlockMesh
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 50191b658406f754baf495161db6d6f6
+    m_Address: Assets/Prefabs/BlockMeshData/BlockElementalCrystalWater.txt
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - BlockMesh
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 1aa33d878a504ea4d859169524cc8481
+    m_Address: Assets/Prefabs/BlockMeshData/BlockElementalCrystalMetal.txt
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - BlockMesh
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 390ad57cbb843e74d852981ae0d11ac5
+    m_Address: Assets/Prefabs/BlockMeshData/BlockElementalCrystalDark.txt
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - BlockMesh
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 7cd2123d2443d3048b4721e9a4f25b73
+    m_Address: Assets/Prefabs/BlockMeshData/BlockElementalCrystalEarth.txt
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - BlockMesh
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: d799d336935c6cd4886ed733f4f078b5
+    m_Address: Assets/Prefabs/BlockMeshData/BlockElementalCrystalLight.txt
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - BlockMesh
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ae319ebfd7a4d864e931b69cfb284bd8
+    m_Address: Assets/Prefabs/BlockMeshData/BlockElementalCrystalWood.txt
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - BlockMesh
     FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: fd6114d87f1af534fbf270c47c0f10bf, type: 2}

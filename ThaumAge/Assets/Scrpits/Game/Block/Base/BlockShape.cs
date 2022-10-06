@@ -65,6 +65,29 @@ public class BlockShape
     {
         this.block = block;
     }
+    
+    /// <summary>
+    /// 初始化方块颜色
+    /// </summary>
+    /// <param name="colorArray"></param>
+    public virtual void InitBlockColor(Color[] colorArray)
+    {
+        if (block.blockInfo.color.IsNull())
+        {
+            for (int i = 0; i < colorsAdd.Length; i++)
+            {
+                colorArray[i] = Color.white;
+            }
+        }
+        else
+        {
+            Color blockColor = block.blockInfo.GetBlockColor();
+            for (int i = 0; i < colorsAdd.Length; i++)
+            {
+                colorArray[i] = blockColor;
+            }
+        }
+    }
 
     /// <summary>
     /// 构建方块

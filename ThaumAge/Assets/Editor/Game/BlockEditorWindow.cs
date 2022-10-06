@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -447,10 +448,6 @@ public class BlockEditorWindow : EditorWindow
                 {
                     meshData = new MeshDataCustom(colliderModel, meshFilterModel.sharedMesh, 0.03125f, offsetPosition, meshFilterModel.transform.localEulerAngles);
                 }
-                else if (meshFilterModel.mesh != null)
-                {
-                    meshData = new MeshDataCustom(colliderModel, meshFilterModel.mesh, 0.03125f, offsetPosition, meshFilterModel.transform.localEulerAngles);
-                }
                 else
                 {
                     Debug.LogError("生成数据失败 meshFilterModel:" + meshFilterModel.name);
@@ -635,7 +632,16 @@ public class BlockEditorWindow : EditorWindow
                 newMesh.RecalculateNormals();
                 //保存mesh
                 string pathMesh = $"{Path_Block_Model_Save}/{newMesh.name}.asset";
-                EditorUtil.CreateAsset(newMesh, pathMesh);
+                //首先查询是否有资源
+                if (EditorUtil.GetAssetByPath<Mesh>(pathMesh) == null)
+                {
+                    EditorUtil.CreateAsset(newMesh, pathMesh);
+                }
+                else
+                {
+                    EditorUtil.ReplaceAsset(newMesh, pathMesh);
+                }
+
                 EditorUtil.RefreshAsset();
 
                 //重新查找这个资源
@@ -651,6 +657,10 @@ public class BlockEditorWindow : EditorWindow
                 DestroyImmediate(objNew);
                 EditorUtil.RefreshAsset();
             }
+        }
+        catch (Exception e)
+        {
+            Debug.LogError(e.ToString());
         }
         finally
         {

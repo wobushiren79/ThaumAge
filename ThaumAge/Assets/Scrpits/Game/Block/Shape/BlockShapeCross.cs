@@ -21,17 +21,12 @@ public class BlockShapeCross : BlockShape
             0,1,2, 0,2,3, 4,5,6, 4,6,7
     };
 
-    public static Color[] ColorsAddCross = new Color[]
-    {
-            Color.white,Color.white,Color.white,Color.white,
-            Color.white,Color.white,Color.white,Color.white
-    };
-
     public BlockShapeCross(Block block) : base(block)
     {
         vertsAdd = VertsAddCross;
         trisAdd = TrisAddCross;
-        colorsAdd = ColorsAddCross;
+        colorsAdd = new Color[8];
+        InitBlockColor(colorsAdd);
 
         Vector2 uvStartPosition = GetUVStartPosition(block);
         uvsAdd = new Vector2[]

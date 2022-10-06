@@ -68,15 +68,22 @@ public class AddressableUtil
     public static AddressableAssetEntry AddAssetEntry(AddressableAssetGroup group, string assetPath, string address)
     {
         string guid = AssetDatabase.AssetPathToGUID(assetPath);
-        AddressableAssetSettings Settings = AddressableAssetSettingsDefaultObject.Settings;
-        AddressableAssetEntry entry = group.entries.FirstOrDefault(e => e.guid == guid);
-        if (entry == null)
+        if (guid.IsNull())
         {
-            entry = Settings.CreateOrMoveEntry(guid, group);
+            return null;
         }
-        entry.address = address;
-        entry.SetLabel(group.Name, true, false, false);
-        return entry;
+        else
+        {
+            AddressableAssetSettings Settings = AddressableAssetSettingsDefaultObject.Settings;
+            AddressableAssetEntry entry = group.entries.FirstOrDefault(e => e.guid == guid);
+            if (entry == null)
+            {
+                entry = Settings.CreateOrMoveEntry(guid, group);
+            }
+            entry.address = address;
+            entry.SetLabel(group.Name, true, false, false);
+            return entry;
+        }
     }
 
 
