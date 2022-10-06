@@ -492,6 +492,7 @@ public class BlockEditorWindow : EditorWindow
             FileUtil.CreateTextFile($"{Application.dataPath}/Prefabs/BlockMeshData", $"{saveFileName}.txt", jsonData);
             //添加到addressable中
             string addressName = $"Assets/Prefabs/BlockMeshData/{saveFileName}.txt";
+            EditorUtil.RefreshAsset();
             AddressableUtil.AddAssetEntry(addressableAssetGroup, addressName, addressName);
         }
         EditorUtil.RefreshAsset();
@@ -623,25 +624,31 @@ public class BlockEditorWindow : EditorWindow
                     newUVList[f] += itemCreateData.GetStartUV(blockTextureSize);
                 }
                 //创建新的mesh
-                Mesh newMesh = new Mesh();
-                newMesh.name = $"{itemCreateData.nameBlock}_Mesh";
+                string newMeshName= $"{itemCreateData.nameBlock}_Mesh";
+                string pathMesh = $"{Path_Block_Model_Save}/{newMeshName}.asset";
+
+                Mesh newMesh = EditorUtil.GetAssetByPath<Mesh>(pathMesh);
+                bool isNew = false;
+                if (newMesh == null)
+                {
+                    isNew = true;
+                    newMesh = new Mesh();
+                }
+                newMesh.name = newMeshName;
                 newMesh.SetVertices(objOldMeshFilter.sharedMesh.vertices);
                 newMesh.SetTriangles(objOldMeshFilter.sharedMesh.triangles, 0);
                 newMesh.SetUVs(0, newUVList);
                 newMesh.RecalculateBounds();
                 newMesh.RecalculateNormals();
                 //保存mesh
-                string pathMesh = $"{Path_Block_Model_Save}/{newMesh.name}.asset";
-                //首先查询是否有资源
-                if (EditorUtil.GetAssetByPath<Mesh>(pathMesh) == null)
+                if (isNew)
                 {
                     EditorUtil.CreateAsset(newMesh, pathMesh);
                 }
                 else
                 {
-                    EditorUtil.ReplaceAsset(newMesh, pathMesh);
+                    EditorUtil.SaveAsset(newMesh);
                 }
-
                 EditorUtil.RefreshAsset();
 
                 //重新查找这个资源

@@ -17,17 +17,17 @@ public static class EditorUtil
     /// <param name="path">Assets/TexArray.asset</param>
     public static void CreateAsset(UnityEngine.Object asset, string path)
     {
+        //首先查询是否有资源
         AssetDatabase.CreateAsset(asset, path);
     }
 
     /// <summary>
-    /// 替换资源
+    /// 保存资源
     /// </summary>
     /// <param name="asset"></param>
-    /// <param name="path"></param>
-    public static void ReplaceAsset(UnityEngine.Object asset, string path)
+    public static void SaveAsset(UnityEngine.Object asset)
     {
-        AssetDatabase.AddObjectToAsset(asset, path);
+        EditorUtility.SetDirty(asset);
     }
 
     /// <summary>

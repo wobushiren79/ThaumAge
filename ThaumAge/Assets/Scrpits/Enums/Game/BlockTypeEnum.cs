@@ -131,8 +131,11 @@ public enum BlockTypeEnum
 
     LadderWood = 6001,//木梯子
     Door = 6010,//门
-    CraftingTableSimple = 6101,//简易制作台
+    CraftingTableSimple = 6101,//简易制造台
+    CraftingTableArcane = 6111,//奥术制造台
+
     FurnacesSimple = 6151,//简易熔炉
+    Crucible = 6161,//坩埚
     Box = 6201,//箱子
     SwitchesWooden = 6301,//木制开关
     TorchWooden = 6311, //木制火把
@@ -144,6 +147,7 @@ public enum BlockTypeEnum
     FenceDoorWooden = 6361,//木制栅栏门
 
     BedWooden = 6901,//床
+
 
     TombstoneRare = 6998,//墓碑稀有
     Tombstone = 6999,//墓碑
@@ -168,6 +172,9 @@ public enum BlockTypeEnum
     BricksRedMoss = 8204,//苔藓砖块
     BricksSand = 8205,//沙砖
     BricksSandMoss = 8206,//苔藓沙砖
+
+    ArcaneStone = 8301,//奥术石材
+    ArcaneStoneBricks = 8302,//奥术石砖
 
     HalfSand = 7003,//沙子-半
     HalfDirt = 7004,//泥土-半

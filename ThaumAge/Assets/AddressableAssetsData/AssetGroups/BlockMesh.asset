@@ -149,8 +149,8 @@ MonoBehaviour:
     - BlockMeshData
     - BlockMesh
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 7c404ec829fa7f34b9e52020449b2c9b
-    m_Address: Assets/Prefabs/BlockMeshData/BlockElementalCrystalThaum.txt
+  - m_GUID: 390ad57cbb843e74d852981ae0d11ac5
+    m_Address: Assets/Prefabs/BlockMeshData/BlockElementalCrystalDark.txt
     m_ReadOnly: 0
     m_SerializedLabels:
     - BlockMesh
@@ -161,8 +161,8 @@ MonoBehaviour:
     m_SerializedLabels:
     - BlockMesh
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 50191b658406f754baf495161db6d6f6
-    m_Address: Assets/Prefabs/BlockMeshData/BlockElementalCrystalWater.txt
+  - m_GUID: 7c404ec829fa7f34b9e52020449b2c9b
+    m_Address: Assets/Prefabs/BlockMeshData/BlockElementalCrystalThaum.txt
     m_ReadOnly: 0
     m_SerializedLabels:
     - BlockMesh
@@ -173,8 +173,14 @@ MonoBehaviour:
     m_SerializedLabels:
     - BlockMesh
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 390ad57cbb843e74d852981ae0d11ac5
-    m_Address: Assets/Prefabs/BlockMeshData/BlockElementalCrystalDark.txt
+  - m_GUID: d799d336935c6cd4886ed733f4f078b5
+    m_Address: Assets/Prefabs/BlockMeshData/BlockElementalCrystalLight.txt
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - BlockMesh
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 50191b658406f754baf495161db6d6f6
+    m_Address: Assets/Prefabs/BlockMeshData/BlockElementalCrystalWater.txt
     m_ReadOnly: 0
     m_SerializedLabels:
     - BlockMesh
@@ -185,14 +191,20 @@ MonoBehaviour:
     m_SerializedLabels:
     - BlockMesh
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: d799d336935c6cd4886ed733f4f078b5
-    m_Address: Assets/Prefabs/BlockMeshData/BlockElementalCrystalLight.txt
+  - m_GUID: ae319ebfd7a4d864e931b69cfb284bd8
+    m_Address: Assets/Prefabs/BlockMeshData/BlockElementalCrystalWood.txt
     m_ReadOnly: 0
     m_SerializedLabels:
     - BlockMesh
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: ae319ebfd7a4d864e931b69cfb284bd8
-    m_Address: Assets/Prefabs/BlockMeshData/BlockElementalCrystalWood.txt
+  - m_GUID: fdd8a9b77a81d424ebbeee4e1a29889f
+    m_Address: Assets/Prefabs/BlockMeshData/BlockCrucible.txt
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - BlockMesh
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 4693276dc62c3e84fb47e02f7942ec74
+    m_Address: Assets/Prefabs/BlockMeshData/BlockCraftingTableArcane.txt
     m_ReadOnly: 0
     m_SerializedLabels:
     - BlockMesh
