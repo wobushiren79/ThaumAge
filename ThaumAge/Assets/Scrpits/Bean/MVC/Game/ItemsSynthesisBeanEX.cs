@@ -59,19 +59,17 @@ public partial class ItemsSynthesisBean
     /// 检测合成类型 
     /// </summary>
     /// <param name="types"></param>
-    public bool CheckSynthesisType(ItemsSynthesisTypeEnum[] types)
+    public bool CheckSynthesisType(ItemsSynthesisTypeEnum itemsSynthesisType,out int[] currentTypes)
     {
+        currentTypes = null;
         if (type_synthesis.IsNull())
-            return true;
-        int[] currentTypes = type_synthesis.SplitForArrayInt('|');
-        for (int i = 0; i < types.Length; i++)
+            return false;
+        currentTypes = type_synthesis.SplitForArrayInt('|');
+        int itemType = (int)itemsSynthesisType;
+        for (int f = 0; f < currentTypes.Length; f++)
         {
-            int itemType = (int)types[i];
-            for (int f = 0; f < currentTypes.Length; f++)
-            {
-                if (itemType == currentTypes[f])
-                    return true;
-            }
+            if (itemType == currentTypes[f])
+                return true;
         }
         return false;
     }

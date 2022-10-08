@@ -26,9 +26,22 @@ public partial class UIViewSynthesis : BaseUIView
 
     public override void OpenUI()
     {
+        indexSelect = -1;
         base.OpenUI();
         this.RegisterEvent<int>(EventsInfo.UIViewSynthesis_SetSelect, SetSelect);
         this.RegisterEvent<ItemsSynthesisTypeEnum>(EventsInfo.UIViewSynthesis_SetInitData, SetDataType);
+    }
+
+    public override void CloseUI()
+    {
+        base.CloseUI();
+        ResetAnimArcaneTable();
+    }
+
+    public override void OnDestroy()
+    {
+        base.OnDestroy();
+        ResetAnimArcaneTable();
     }
 
     public override void RefreshUI()
@@ -63,6 +76,19 @@ public partial class UIViewSynthesis : BaseUIView
     public void SetDataType(ItemsSynthesisTypeEnum itemsSynthesisType)
     {
         this.itemsSynthesisType = itemsSynthesisType;
+        switch (itemsSynthesisType)
+        {
+            case ItemsSynthesisTypeEnum.Arcane:
+                ui_ArcaneBackground.ShowObj(true);
+                ui_MagicPay.ShowObj(true);
+                ui_MagicTotal.ShowObj(true);
+                break;
+            default:
+                ui_ArcaneBackground.ShowObj(false);
+                ui_MagicPay.ShowObj(false);
+                ui_MagicTotal.ShowObj(false);
+                break;
+        }
     }
 
     /// <summary>
@@ -197,11 +223,30 @@ public partial class UIViewSynthesis : BaseUIView
     }
 
     /// <summary>
+    /// 设置魔力
+    /// </summary>
+    public void SetMagicPay(int payMagic)
+    {
+        ui_MagicPay.text = $"{TextHandler.Instance.GetTextById(303)}:{payMagic}";
+    }
+
+    /// <summary>
     /// 设置选中第几项
     /// </summary>
     /// <param name="indexSelect"></param>
     public void SetSelect(int indexSelect)
     {
+        ResetAnimArcaneTable();
+
+        if (listSynthesisData.Count == 0)
+        {
+            ui_Top.ShowObj(false);
+            return;
+        }
+        else
+        {
+            ui_Top.ShowObj(true);
+        }
         bool isSameSelect;
         if (this.indexSelect == indexSelect)
         {
@@ -223,6 +268,11 @@ public partial class UIViewSynthesis : BaseUIView
         if (canSynthesis)
         {
             ui_TVBtnSynthesis.color = Color.green;
+            //如果是奥术制造台 开启特效
+            if(itemsSynthesisType == ItemsSynthesisTypeEnum.Arcane)
+            {
+                ui_ArcaneBackgroundTable_2.DOColor(Color.green,1).SetLoops(-1,LoopType.Yoyo);
+            }
         }
         else
         {
@@ -238,6 +288,17 @@ public partial class UIViewSynthesis : BaseUIView
             //刷新素材
             SetSynthesisMaterials();
         }
+        //设置魔力消耗
+        SetMagicPay(curSelectItemsSynthesis.magic_pay);
+    }
+
+    //还原动画
+    protected void ResetAnimArcaneTable()
+    {
+        //还原颜色
+        ColorUtility.TryParseHtmlString("#044816", out Color colorDefArance);
+        ui_ArcaneBackgroundTable_2.DOKill();
+        ui_ArcaneBackgroundTable_2.color = colorDefArance;
     }
 
     /// <summary>

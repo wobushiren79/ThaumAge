@@ -7,7 +7,7 @@ using System;
 		/// </summary>
 		public long model_id;
 		/// <summary>
-		///图标（图集，名字）
+		///图标（图集0UI 1Item 3Sky，名字）
 		/// </summary>
 		public string icon_key;
 		/// <summary>
@@ -39,7 +39,7 @@ using System;
 		/// </summary>
 		public string content_en;
 		/// <summary>
-		///解锁（持有道具）
+		///解锁（持有道具 | 分割：表示数量）
 		/// </summary>
 		public string unlock_items;
 		/// <summary>

@@ -3,6 +3,10 @@ using System;
 	public partial class ItemsSynthesisBean : BaseBean
 	{
 		/// <summary>
+		///魔力消耗
+		/// </summary>
+		public int magic_pay;
+		/// <summary>
 		///合成结果:分隔道具数量
 		/// </summary>
 		public string results;
@@ -12,7 +16,7 @@ using System;
 		/// </summary>
 		public string materials;
 		/// <summary>
-		///合成类型(用|分割) 0自身  1基础合成台
+		///合成类型(用|分割) 0自身  1基础制造台 11神秘制造台
 		/// </summary>
 		public string type_synthesis;
 		/// <summary>

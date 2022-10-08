@@ -91,17 +91,30 @@ public class ItemsManager : BaseManager,
     /// </summary>
     /// <param name="type"></param>
     /// <returns></returns>
-    public List<ItemsSynthesisBean> GetItemsSynthesisByType(ItemsSynthesisTypeEnum[] types)
+    public List<ItemsSynthesisBean> GetItemsSynthesisByType(ItemsSynthesisTypeEnum itemsSynthesisType)
     {
         List<ItemsSynthesisBean> listData = new List<ItemsSynthesisBean>();
         foreach (var itemData in dicItemsSynthesis)
         {
             ItemsSynthesisBean itemValue = itemData.Value;
             //检测是否包含该类型的合成
-            if (itemValue.CheckSynthesisType(types))
+            if (itemValue.CheckSynthesisType(itemsSynthesisType,out int[] itemSynthesisTypes))
             {
-                //如果是默认的 那不用判断是否解锁 默认解锁
-                if(!itemValue.type_synthesis.Equals("0"))
+                bool hasSelf = false;
+                foreach (var itemDataType in itemSynthesisTypes)
+                {
+                    //如果是默认的 那不用判断是否解锁 默认解锁
+                    if (itemDataType == (int)ItemsSynthesisTypeEnum.Self)
+                    {
+                        hasSelf = true;
+                        break;
+                    }
+                }
+                if (hasSelf)
+                {
+
+                }
+                else
                 {
                     //检测是否解锁该合成
                     bool isUnlockSynthesis = itemValue.CheckIsUnlockSynthesis();
@@ -113,20 +126,6 @@ public class ItemsManager : BaseManager,
         }
         return listData;
     }
-    public List<ItemsSynthesisBean> GetItemsSynthesisByType(ItemsSynthesisTypeEnum type)
-    {
-        ItemsSynthesisTypeEnum[] listType;
-        if (type == ItemsSynthesisTypeEnum.Self)
-        {
-            listType = new ItemsSynthesisTypeEnum[] { type };
-        }
-        else
-        {
-            listType = new ItemsSynthesisTypeEnum[] { ItemsSynthesisTypeEnum.Self, type };
-        }
-        return GetItemsSynthesisByType(listType);
-    }
-
 
     /// <summary>
     /// 获取所有物体信息

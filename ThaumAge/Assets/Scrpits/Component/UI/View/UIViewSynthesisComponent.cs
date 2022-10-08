@@ -18,5 +18,17 @@ public partial class UIViewSynthesis
 
     public RectTransform ui_SynthesisMaterials;
 
+    public RectTransform ui_ArcaneBackground;
+
+    public Text ui_MagicPay;
+
+    public ProgressView ui_MagicTotal;
+
+    public RectTransform ui_Top;
+
+    public Image ui_ArcaneBackgroundTable_1;
+
+    public Image ui_ArcaneBackgroundTable_2;
+
 
 }
