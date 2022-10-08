@@ -17,8 +17,8 @@ MonoBehaviour:
     m_SerializedData: []
   m_GUID: effcff228b318ed4f81ddc5564c059a4
   m_SerializeEntries:
-  - m_GUID: e2badf6441103c647b5d05389ed535c5
-    m_Address: Assets/Audio/Sound/audio_sound_btn3.mp3
+  - m_GUID: 3b7ec4949638e6942a24d50ae9ed8a7c
+    m_Address: Assets/Audio/Sound/audio_sound_btn3.wav
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
@@ -149,6 +149,11 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 8061cc3691545d545a807cabc898abf2
     m_Address: Assets/Audio/Sound/audio_sound_reward_1.wav
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 88edb66f8c4d28645b1bd138c15f1c6e
+    m_Address: Assets/Audio/Sound/audio_sound_show_1.wav
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
