@@ -1,6 +1,7 @@
 ﻿using UnityEditor;
 using UnityEngine;
 using DG.Tweening;
+using UnityEngine.UI;
 
 public partial class UIViewSynthesisMaterial : BaseUIView
 {
@@ -104,13 +105,16 @@ public partial class UIViewSynthesisMaterial : BaseUIView
                 break;
             }
         }
+        Image ivBG = rectTransform.GetComponent<Image>();
         if (hasEnoughItem)
         {
+            ivBG.color = Color.green;
             ui_TVNumber.color = Color.green;
             ui_Icon.material.SetFloat("_EffectAmount", 0);
         }
         else
         {
+            ivBG.color = Color.white;
             ui_TVNumber.color = Color.white;
             ui_Icon.material.SetFloat("_EffectAmount", 1);
         }

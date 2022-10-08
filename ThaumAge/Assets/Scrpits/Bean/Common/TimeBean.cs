@@ -17,7 +17,7 @@ public class TimeBean
 
     }
 
-    public TimeBean(int year,int month,int day,int hour,int minute,int second)
+    public TimeBean(int year, int month, int day, int hour, int minute, int second)
     {
         this.year = year;
         this.month = month;
@@ -27,7 +27,7 @@ public class TimeBean
         this.second = second;
     }
 
-    public void SetTimeForYMD(int year,int month,int day)
+    public void SetTimeForYMD(int year, int month, int day)
     {
         this.year = year;
         this.month = month;
@@ -64,7 +64,7 @@ public class TimeBean
         hour += addHour;
     }
 
-    public void AddTimeForYMHMS(int addYear,int addMonth,int addDay, int addHour, int addMin, int Addsecond)
+    public void AddTimeForYMHMS(int addYear, int addMonth, int addDay, int addHour, int addMin, int Addsecond)
     {
         AddTimeForHMS(addHour, addMin, Addsecond);
         if (hour >= 24)

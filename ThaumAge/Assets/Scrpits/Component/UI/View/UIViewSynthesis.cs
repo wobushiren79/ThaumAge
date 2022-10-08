@@ -16,6 +16,13 @@ public partial class UIViewSynthesis : BaseUIView
     protected Queue<GameObject> poolEffectItemSynthesis = new Queue<GameObject>();
 
     protected ItemsSynthesisTypeEnum itemsSynthesisType = ItemsSynthesisTypeEnum.Self;
+
+    //目标方块位置
+    protected Vector3Int targetBlockWorldPosition;
+
+    //是否循环查询更新方块数据
+    protected bool isLoopUpdateBlockMetaData = false;
+    protected float timeUpdateBlockMetaData = 0;
     public override void Awake()
     {
         base.Awake();
@@ -24,18 +31,38 @@ public partial class UIViewSynthesis : BaseUIView
         ui_ModelEffectItemSynthesis.ShowObj(false);
     }
 
+    public void Update()
+    {
+        if (isLoopUpdateBlockMetaData)
+        {
+            timeUpdateBlockMetaData += Time.deltaTime;
+            if (timeUpdateBlockMetaData >= 1)
+            {
+                RefreshMagicProgress();
+                timeUpdateBlockMetaData = 0;
+            }
+        } 
+    }
+
     public override void OpenUI()
     {
         indexSelect = -1;
         base.OpenUI();
         this.RegisterEvent<int>(EventsInfo.UIViewSynthesis_SetSelect, SetSelect);
-        this.RegisterEvent<ItemsSynthesisTypeEnum>(EventsInfo.UIViewSynthesis_SetInitData, SetDataType);
     }
 
     public override void CloseUI()
     {
         base.CloseUI();
         ResetAnimArcaneTable();
+        switch (itemsSynthesisType)
+        {
+            case ItemsSynthesisTypeEnum.Arcane:
+
+                break;
+            default:
+                break;
+        }
     }
 
     public override void OnDestroy()
@@ -67,14 +94,34 @@ public partial class UIViewSynthesis : BaseUIView
     public void RefreshUIText()
     {
         ui_TVBtnSynthesis.text = TextHandler.Instance.GetTextById(311);
+        ui_Null.text = TextHandler.Instance.GetTextById(10);
+    }
+
+    /// <summary>
+    /// 刷新魔力进度
+    /// </summary>
+    public void RefreshMagicProgress()
+    {
+        //设置魔力进度
+        switch (itemsSynthesisType)
+        {
+            case ItemsSynthesisTypeEnum.Arcane:
+                //设置魔力进度
+                GetBlockMetaData(targetBlockWorldPosition, out BlockBean blockData, out BlockMetaCraftingTable blockMetaData);
+                SetMagicProgress(blockMetaData.maxMagic, blockMetaData.magic);
+                break;
+            default:
+                break;
+        }
     }
 
     /// <summary>
     /// 设置数据类型
     /// </summary>
     /// <param name="itemsSynthesisType"></param>
-    public void SetDataType(ItemsSynthesisTypeEnum itemsSynthesisType)
+    public void SetData(ItemsSynthesisTypeEnum itemsSynthesisType, Vector3Int blockWorldPosition)
     {
+        this.targetBlockWorldPosition = blockWorldPosition;
         this.itemsSynthesisType = itemsSynthesisType;
         switch (itemsSynthesisType)
         {
@@ -82,13 +129,68 @@ public partial class UIViewSynthesis : BaseUIView
                 ui_ArcaneBackground.ShowObj(true);
                 ui_MagicPay.ShowObj(true);
                 ui_MagicTotal.ShowObj(true);
+                isLoopUpdateBlockMetaData = true;
                 break;
             default:
                 ui_ArcaneBackground.ShowObj(false);
                 ui_MagicPay.ShowObj(false);
                 ui_MagicTotal.ShowObj(false);
+                isLoopUpdateBlockMetaData = false;
                 break;
         }
+        RefreshMagicProgress();
+    }
+
+    /// <summary>
+    /// 获取对应方块数据
+    /// </summary>
+    public void GetBlockMetaData(Vector3Int blockWorldPosition, out BlockBean blockData, out BlockMetaCraftingTable blockMetaData)
+    {
+        WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(blockWorldPosition, out Block targetBlock,out BlockDirectionEnum blockDirection, out Chunk targetChunk);
+        blockData = targetChunk.GetBlockData(blockWorldPosition - targetChunk.chunkData.positionForWorld);
+        if (blockData == null)
+        {
+            blockData = new BlockBean(blockWorldPosition - targetChunk.chunkData.positionForWorld, targetBlock.blockType, blockDirection);
+        }
+        blockMetaData = blockData.GetBlockMeta<BlockMetaCraftingTable>();
+        int totalMagic = 0;
+        if (targetBlock is BlockTypeCraftingTableArcane craftingTableArcane)
+        {
+            totalMagic = craftingTableArcane.GetAroundMagicTotal();
+        }
+        if (blockMetaData == null)
+        {
+            blockMetaData = new BlockMetaCraftingTable();
+            blockMetaData.magic = totalMagic;
+            blockMetaData.maxMagic = totalMagic;
+        }
+        else
+        {
+            TimeBean timePlay = GameTimeHandler.Instance.manager.GetPlayTime();
+            int addMagic = blockMetaData.GetTimeAddMagic(timePlay);
+            blockMetaData.maxMagic = totalMagic;
+            blockMetaData.AddMagic(addMagic);
+        }
+        blockData.meta = blockMetaData.ToJson();
+        targetChunk.SetBlockData(blockData);
+    }
+
+    /// <summary>
+    /// 保存对应方块数据
+    /// </summary>
+    public bool SaveBlockMetaData(Vector3Int blockWorldPosition, BlockBean blockData, BlockMetaCraftingTable blockMetaData)
+    {
+        WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(blockWorldPosition, out Block targetBlock, out Chunk targetChunk);
+        if (targetChunk == null || targetBlock == null
+            || targetBlock.blockType != BlockTypeEnum.CraftingTableArcane)
+        {
+            return false;
+        }
+        TimeBean timePlay = GameTimeHandler.Instance.manager.GetPlayTime();
+        blockMetaData.closeTime = timePlay;
+        blockData.meta = blockMetaData.ToJson();
+        targetChunk.SetBlockData(blockData);
+        return true;
     }
 
     /// <summary>
@@ -134,6 +236,27 @@ public partial class UIViewSynthesis : BaseUIView
             //素材不足 无法合成
             UIHandler.Instance.ToastHint<ToastView>(TextHandler.Instance.GetTextById(30002));
             return;
+        }
+
+        //如果是奥术制造台 还需要判断一下魔力
+        if (itemsSynthesisType == ItemsSynthesisTypeEnum.Arcane)
+        {
+            GetBlockMetaData(targetBlockWorldPosition, out BlockBean blockData, out BlockMetaCraftingTable blockMetaData);
+            if (blockMetaData.magic < itemsSynthesis.magic_pay)
+            {
+                //魔力不足 无法合成
+                UIHandler.Instance.ToastHint<ToastView>(TextHandler.Instance.GetTextById(30004));
+                return;
+            }
+            //扣除魔力
+            blockMetaData.AddMagic(-itemsSynthesis.magic_pay);
+            bool isSaveBlockMetaDat = SaveBlockMetaData(targetBlockWorldPosition, blockData, blockMetaData);
+            if (!isSaveBlockMetaDat)
+            {            
+                //目标方块不存在 无法合成
+                UIHandler.Instance.ToastHint<ToastView>(TextHandler.Instance.GetTextById(30005));
+                return;
+            }
         }
         //首先消耗素材
         BaseUIComponent currentUI = UIHandler.Instance.GetOpenUI();
@@ -182,6 +305,8 @@ public partial class UIViewSynthesis : BaseUIView
         AudioHandler.Instance.PlaySound(201);
         //播放道具合成特效
         PlayEffectItemSynthesis();
+        //刷新魔力
+        RefreshMagicProgress();
     }
 
     /// <summary>
@@ -231,6 +356,14 @@ public partial class UIViewSynthesis : BaseUIView
     }
 
     /// <summary>
+    /// 设置魔力进度条
+    /// </summary>
+    public void SetMagicProgress(float maxData, float data)
+    {
+        ui_MagicTotal.SetData(maxData, data);
+    }
+
+    /// <summary>
     /// 设置选中第几项
     /// </summary>
     /// <param name="indexSelect"></param>
@@ -241,11 +374,15 @@ public partial class UIViewSynthesis : BaseUIView
         if (listSynthesisData.Count == 0)
         {
             ui_Top.ShowObj(false);
+            ui_Bottom.ShowObj(false);
+            ui_Null.ShowObj(true);
             return;
         }
         else
         {
             ui_Top.ShowObj(true);
+            ui_Bottom.ShowObj(true);
+            ui_Null.ShowObj(false);
         }
         bool isSameSelect;
         if (this.indexSelect == indexSelect)
@@ -264,21 +401,19 @@ public partial class UIViewSynthesis : BaseUIView
         ui_SynthesisList.RefreshAllCells();
         //检测当前道具是否能合成
         bool canSynthesis = curSelectItemsSynthesis.CheckSynthesis();
-
         if (canSynthesis)
         {
             ui_TVBtnSynthesis.color = Color.green;
             //如果是奥术制造台 开启特效
-            if(itemsSynthesisType == ItemsSynthesisTypeEnum.Arcane)
+            if (itemsSynthesisType == ItemsSynthesisTypeEnum.Arcane)
             {
-                ui_ArcaneBackgroundTable_2.DOColor(Color.green,1).SetLoops(-1,LoopType.Yoyo);
+                ui_ArcaneBackgroundTable_2.DOColor(Color.green, 2).SetLoops(-1, LoopType.Yoyo);
             }
         }
         else
         {
             ui_TVBtnSynthesis.color = Color.gray;
         }
-
         if (isSameSelect)
         {
 
@@ -292,7 +427,9 @@ public partial class UIViewSynthesis : BaseUIView
         SetMagicPay(curSelectItemsSynthesis.magic_pay);
     }
 
-    //还原动画
+    /// <summary>
+    /// 还原动画
+    /// </summary>
     protected void ResetAnimArcaneTable()
     {
         //还原颜色

@@ -13,7 +13,15 @@ public class BlockTypeCraftingTableArcane : Block
         if (user == null || user.GetComponent<Player>() == null)
             return;
         UIGameUserDetails uiGameUserDetails = UIHandler.Instance.OpenUIAndCloseOther<UIGameUserDetails>(UIEnum.GameUserDetails);
-        uiGameUserDetails.ui_ViewSynthesis.SetDataType(ItemsSynthesisTypeEnum.Arcane);
+        uiGameUserDetails.ui_ViewSynthesis.SetData(ItemsSynthesisTypeEnum.Arcane, worldPosition);
         uiGameUserDetails.SetSelectType(1);
+    }
+
+    /// <summary>
+    /// 获取周围魔力加成
+    /// </summary>
+    public int GetAroundMagicTotal()
+    {
+        return 100;
     }
 }

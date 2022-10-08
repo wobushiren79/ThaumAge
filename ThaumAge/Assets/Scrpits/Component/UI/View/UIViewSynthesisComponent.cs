@@ -30,5 +30,9 @@ public partial class UIViewSynthesis
 
     public Image ui_ArcaneBackgroundTable_2;
 
+    public Text ui_Null;
+
+    public RectTransform ui_Bottom;
+
 
 }

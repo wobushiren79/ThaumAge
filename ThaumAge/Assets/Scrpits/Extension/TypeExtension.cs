@@ -15,7 +15,7 @@ public static class TypeExtension
     /// <returns></returns>
     public static DateTime ToDateTime(this TimeBean timeBean)
     {
-        DateTime dateTime = new DateTime(timeBean.year, timeBean.month, timeBean.day, timeBean.hour, timeBean.minute, timeBean.second);
+        DateTime dateTime = new DateTime(timeBean.year, timeBean.month, timeBean.day, timeBean.hour, timeBean.minute, (int)timeBean.second);
         return dateTime;
     }
 

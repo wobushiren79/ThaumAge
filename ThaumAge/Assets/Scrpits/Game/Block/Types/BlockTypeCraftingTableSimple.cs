@@ -13,7 +13,7 @@ public class BlockTypeCraftingTableSimple : Block
         if (user == null || user.GetComponent<Player>() == null)
             return;
         UIGameUserDetails uiGameUserDetails = UIHandler.Instance.OpenUIAndCloseOther<UIGameUserDetails>(UIEnum.GameUserDetails);
-        uiGameUserDetails.ui_ViewSynthesis.SetDataType(ItemsSynthesisTypeEnum.Base);
+        uiGameUserDetails.ui_ViewSynthesis.SetData(ItemsSynthesisTypeEnum.Base,worldPosition);
         uiGameUserDetails.SetSelectType(1);
     }
 }

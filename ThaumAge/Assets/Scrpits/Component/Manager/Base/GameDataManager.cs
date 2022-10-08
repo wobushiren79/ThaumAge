@@ -17,6 +17,7 @@ public class GameDataManager : BaseManager,
     public BaseDataController controllerForBase;
 
     protected static object lockForSaveData = new object();
+
     protected void Awake()
     {
         controllerForGameConfig = new GameConfigController(this, this);
@@ -45,7 +46,7 @@ public class GameDataManager : BaseManager,
         {
             //如果没有数据 则使用测试数据
             userData = new UserDataBean();
-            userData.timeForGame.hour = 6;
+            userData.timeForGame.hour = 7;
             userData.userId = "Test";
             userData.seed = 132349;
         }
