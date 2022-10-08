@@ -16,19 +16,20 @@ public class MeshUtil : ScriptableObject
         public List<Vector3> vertices = new List<Vector3>();
         public List<Vector3> normals = new List<Vector3>();
         public List<Vector2> texCoords = new List<Vector2>();
-
-        public MeshUtilData(Sprite sprite, float depth = 0.0625f) : this(TextureUtil.SpriteToTexture2D(sprite), depth)
+        public Color colorMesh;
+        public MeshUtilData(Sprite sprite, Color colorAdd, float depth = 0.0625f) : this(TextureUtil.SpriteToTexture2D(sprite), colorAdd, depth)
         {
 
         }
 
-        public MeshUtilData(Texture2D targetTex, float depth = 0.0625f)
+        public MeshUtilData(Texture2D targetTex, Color colorAdd, float depth = 0.0625f)
         {
             this.targetTex = targetTex;
             this.depth = depth;
             colors = targetTex.GetPixels32();
             width = targetTex.width;
             height = targetTex.height;
+            colorMesh = colorAdd;
         }
     }
 
@@ -69,6 +70,14 @@ public class MeshUtil : ScriptableObject
         mesh.vertices = data.vertices.ToArray();
         mesh.normals = data.normals.ToArray();
         mesh.uv = data.texCoords.ToArray();
+        //设置mesh颜色
+        //Color[] colorMesh = new Color[mesh.vertices.Length];
+        //for (int i = 0; i < colorMesh.Length; i++)
+        //{
+        //    colorMesh[i] = data.colorMesh;
+        //}
+        //mesh.colors = colorMesh;
+
         int[] quads = new int[data.vertices.Count];
         for (int i = 0; i < quads.Length; i++)
             quads[i] = i;

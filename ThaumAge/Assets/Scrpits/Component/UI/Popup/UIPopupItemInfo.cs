@@ -22,7 +22,7 @@ public partial class UIPopupItemInfo : PopupShowView
 
         SetItemDurability();
         SetItemIcon(itemData.itemId);
-        SetItemIconColor(itemsInfo.icon_color);
+        SetItemIconColor(itemsInfo.GetItemsColor());
         SetItemName(itemsInfo.GetName());
         SetItemDetails("");
         SetAttribute(itemsInfo);
@@ -57,17 +57,9 @@ public partial class UIPopupItemInfo : PopupShowView
     /// 设置道具颜色
     /// </summary>
     /// <param name="colorStr"></param>
-    public void SetItemIconColor(string colorStr)
+    public void SetItemIconColor(Color colorIcon)
     {
-        if (!colorStr.IsNull())
-        {
-            if (ColorUtility.TryParseHtmlString(colorStr, out Color iconColor))
-            {
-                ui_ItemIcon.color = iconColor;
-                return;
-            }
-        }
-        ui_ItemIcon.color = Color.white;
+        ui_ItemIcon.color = colorIcon;
     }
 
     /// <summary>

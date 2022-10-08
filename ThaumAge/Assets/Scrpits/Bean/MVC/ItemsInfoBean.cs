@@ -149,4 +149,18 @@ public class ItemsInfoBean : BaseBean
         return attributeData;
     }
    
+    /// <summary>
+    /// 获取道具颜色
+    /// </summary>
+    /// <returns></returns>
+    public Color GetItemsColor()
+    {
+        if (icon_color.IsNull())
+            return Color.white;
+        if (ColorUtility.TryParseHtmlString(icon_color, out Color iconColor))
+        {
+            return iconColor;
+        }
+        return Color.white;
+    }
 }

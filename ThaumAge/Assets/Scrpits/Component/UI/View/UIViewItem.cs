@@ -66,7 +66,7 @@ public partial class UIViewItem : BaseUIView,
         base.RefreshUI();
         if (itemsInfo != null && itemId != 0)
         {
-            SetIcon(itemsInfo.icon_key, itemsInfo.icon_color);
+            SetIcon(itemsInfo.icon_key, itemsInfo.GetItemsColor());
             SetNumber(itemNumber, itemsInfo.max_number);
             SetLife();
         }
@@ -141,7 +141,7 @@ public partial class UIViewItem : BaseUIView,
     /// <summary>
     /// 设置图标
     /// </summary>
-    public void SetIcon(string iconKey, string iconColor)
+    public void SetIcon(string iconKey, Color iconColor)
     {
         IconHandler.Instance.manager.GetItemsSpriteByName(iconKey, (spIcon) =>
         {
@@ -162,15 +162,7 @@ public partial class UIViewItem : BaseUIView,
         });
         if (ui_IVIcon != null) 
         {
-            if (!iconColor.IsNull())
-            {
-                ColorUtility.TryParseHtmlString(iconColor, out Color colorSp);
-                ui_IVIcon.color = colorSp;
-            }
-            else
-            {
-                ui_IVIcon.color = Color.white;
-            }
+            ui_IVIcon.color = iconColor;
         }
     }
 

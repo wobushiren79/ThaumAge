@@ -77,7 +77,7 @@ public class ItemCptDrop : BaseMonoBehaviour
         transform.position = itemDropData.dropPosition;
         //设置头像
         SetIcon(itemDropData.itemData.itemId);
-        SetIconColor(itemsInfo.icon_color);
+        SetIconColor(itemsInfo.GetItemsColor());
         //增加一个跳动的力
         //随机方向
         if (itemDropData.dropDirection == Vector3.zero)
@@ -110,19 +110,10 @@ public class ItemCptDrop : BaseMonoBehaviour
     /// <summary>
     /// 设置道具颜色
     /// </summary>
-    public void SetIconColor(string colorStr)
+    public void SetIconColor(Color colorIcon)
     {
-        if (!colorStr.IsNull())
-        {
-            if (ColorUtility.TryParseHtmlString(colorStr, out Color iconColor))
-            {
-                srIcon.color = iconColor;
-                srIcon.material.SetColor("_Color", iconColor);
-                return;
-            }
-        }
-        srIcon.color = Color.white;
-        srIcon.material.SetColor("_Color", Color.white);
+        srIcon.color = colorIcon;
+        srIcon.material.SetColor("_Color", colorIcon);
     }
 
     /// <summary>

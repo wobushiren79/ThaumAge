@@ -59,7 +59,8 @@ public class ItemCptLaunch : BaseMonoBehaviour
             //设置材质的贴图
             meshRenderer.material.mainTexture = itemTex;
             //获取道具的mesh
-            MeshUtil.MeshUtilData meshUtilData = new MeshUtil.MeshUtilData(itemTex);
+            ItemsInfoBean itemsInfo = ItemsHandler.Instance.manager.GetItemsInfoById(itemLaunchData.itemId);
+            MeshUtil.MeshUtilData meshUtilData = new MeshUtil.MeshUtilData(itemTex, itemsInfo.GetItemsColor());
             Mesh picMesh = MeshUtil.GenerateMeshPicture(meshUtilData);
             meshFilter.mesh = picMesh;
         });
