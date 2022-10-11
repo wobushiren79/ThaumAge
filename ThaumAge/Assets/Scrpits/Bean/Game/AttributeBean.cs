@@ -37,13 +37,13 @@ public class AttributeBean
                 return "ui_life_5";
 
             case AttributeTypeEnum.Damage:
-                return "ui_attack_1";
+                return "ui_attribute_1";
             case AttributeTypeEnum.DamageMagic:
-                return "ui_attack_4";
+                return "ui_attribute_4";
             case AttributeTypeEnum.KnockbackDis:
-                return "ui_attack_2";
+                return "ui_attribute_2";
             case AttributeTypeEnum.KnockbackTime:
-                return "ui_attack_3";
+                return "ui_attribute_3";
 
             case AttributeTypeEnum.Def:
                 return "ui_def_1";
@@ -66,6 +66,9 @@ public class AttributeBean
                 return "ui_break_1";
             case AttributeTypeEnum.BreakLevel:
                 return "ui_break_2";
+
+            case AttributeTypeEnum.ShowElemental:
+                return "ui_attribute_5";
         }
         return "";
     }
@@ -118,6 +121,9 @@ public class AttributeBean
                 return TextHandler.Instance.GetTextById(2018);
             case AttributeTypeEnum.BreakLevel:
                 return TextHandler.Instance.GetTextById(2019);
+
+            case AttributeTypeEnum.ShowElemental:
+                return TextHandler.Instance.GetTextById(2020);
         }
         return "";
     }

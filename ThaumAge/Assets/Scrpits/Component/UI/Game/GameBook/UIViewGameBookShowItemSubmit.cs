@@ -101,7 +101,10 @@ public partial class UIViewGameBookShowItemSubmit : BaseUIView
         //}
         //保存数据
         userData.userAchievement.UnlockBookModelDetails(bookModelDetailsInfo.id);
+        //通知UI更新
         TriggerEvent(EventsInfo.UIGameBook_MapItemRefresh, bookModelDetailsInfo);
+        TriggerEvent(EventsInfo.UIGameBook_RefreshLabels);
+        //播放音效
         AudioHandler.Instance.PlaySound(901);
     }
 }

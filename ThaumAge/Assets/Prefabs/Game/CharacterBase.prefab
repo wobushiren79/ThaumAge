@@ -223,8 +223,26 @@ MonoBehaviour:
     damage_data: 
   creatureData:
     creatureType: 0
-    maxLife: 0
-    currentLife: 0
+    creatureStatus:
+      curHealth: 100
+      health: 100
+      curStamina: 10
+      stamina: 10
+      curMagic: 0
+      magic: 0
+      curSaturation: 10
+      saturation: 10
+      curAir: 10
+      air: 10
+      def: 0
+      defMagic: 0
+      defMetal: 0
+      defWooden: 0
+      defWater: 0
+      defFire: 0
+      defEarth: 0
+      damage: 0
+      damageMagic: 0
     meta: 
   characterHead: {fileID: 2532596581479033649}
   characterHat: {fileID: 3573984851173886854}
@@ -240,25 +258,66 @@ MonoBehaviour:
     character: {fileID: 0}
     characterData:
       creatureType: 0
-      maxLife: 0
-      currentLife: 0
-      meta: 
-      characterStatus:
-        health: 10
-        maxHealth: 10
+      creatureStatus:
+        curHealth: 100
+        health: 100
+        curStamina: 10
         stamina: 10
-        maxStamina: 10
+        curMagic: 0
         magic: 0
-        maxMagic: 0
+        curSaturation: 10
         saturation: 10
-        maxSaturation: 10
+        curAir: 10
         air: 10
-        maxAir: 10
+        def: 0
+        defMagic: 0
+        defMetal: 0
+        defWooden: 0
+        defWater: 0
+        defFire: 0
+        defEarth: 0
+        damage: 0
+        damageMagic: 0
+      meta: 
+      characterEquip:
+        hats:
+          itemId: 0
+          number: 0
+          meta: 
+        gloves:
+          itemId: 0
+          number: 0
+          meta: 
+        clothes:
+          itemId: 0
+          number: 0
+          meta: 
+        shoes:
+          itemId: 0
+          number: 0
+          meta: 
+        trousers:
+          itemId: 0
+          number: 0
+          meta: 
+        headwear:
+          itemId: 0
+          number: 0
+          meta: 
+        leftRing:
+          itemId: 0
+          number: 0
+          meta: 
+        rightRing:
+          itemId: 0
+          number: 0
+          meta: 
+        cape:
+          itemId: 0
+          number: 0
+          meta: 
       characterName: 
       characterSex: 0
-      headId: 0
-      clothesId: 0
-      shoesId: 0
       hairId: 0
       eyeId: 0
       mouthId: 0
@@ -301,14 +360,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3573984851173886854}
-  m_LocalRotation: {x: 0.70710677, y: 0, z: 0, w: 0.70710677}
-  m_LocalPosition: {x: -0.03125, y: 0.0312, z: -1.15}
+  m_LocalRotation: {x: 0, y: 0.70710677, z: 0.70710677, w: 0}
+  m_LocalPosition: {x: 0, y: 0, z: -1.15}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2913344627071086987}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 90, y: 90, z: 90}
+  m_LocalEulerAnglesHint: {x: -90, y: 90, z: 90}
 --- !u!1 &5101106526243639490
 GameObject:
   m_ObjectHideFlags: 0

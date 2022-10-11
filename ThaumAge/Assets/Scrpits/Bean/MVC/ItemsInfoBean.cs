@@ -33,13 +33,9 @@ public class ItemsInfoBean : BaseBean
     public string fire_items;//道具被火烧之后的数据（道具ID,数量,时间）
 
     public string sound_use;//道具使用声音
+    public string elementals;//所有元素
 
-    public int elemental_metal;    //元素
-    public int elemental_wood;
-    public int elemental_water;
-    public int elemental_fire;
-    public int elemental_earth;
-
+    protected Dictionary<ElementalTypeEnum, int> dicElemental;
     public ItemsTypeEnum GetItemsType()
     {
         return (ItemsTypeEnum)items_type;
@@ -162,5 +158,49 @@ public class ItemsInfoBean : BaseBean
             return iconColor;
         }
         return Color.white;
+    }
+
+    /// <summary>
+    /// 获取元素
+    /// </summary>
+    /// <param name="elementalType"></param>
+    /// <returns></returns>
+    public int GetElemental(ElementalTypeEnum elementalType)
+    {
+        var dicElemental = GetAllElemental();
+        if (dicElemental.TryGetValue(elementalType,out int elementalData))
+        {
+            return elementalData;
+        }
+        return 0;
+    }
+
+    /// <summary>
+    /// 获取所有元素
+    /// </summary>
+    /// <returns></returns>
+    public Dictionary<ElementalTypeEnum,int> GetAllElemental()
+    {
+        if (dicElemental == null)
+        {
+            dicElemental = new Dictionary<ElementalTypeEnum, int>();
+            if (!elementals.IsNull())
+            {
+                string[] elementalStr = elementals.SplitForArrayStr('&');
+                foreach (var itemElementalData in elementalStr)
+                {
+                    string[] elementItemStr = itemElementalData.SplitForArrayStr(':');
+                    if (elementItemStr.Length == 1)
+                    {
+                        dicElemental.Add(EnumExtension.GetEnum<ElementalTypeEnum>(elementItemStr[0]), 1);
+                    }
+                    else
+                    {
+                        dicElemental.Add(EnumExtension.GetEnum<ElementalTypeEnum>(elementItemStr[0]), int.Parse(elementItemStr[1]));
+                    }
+                }
+            }
+        }
+        return dicElemental;
     }
 }

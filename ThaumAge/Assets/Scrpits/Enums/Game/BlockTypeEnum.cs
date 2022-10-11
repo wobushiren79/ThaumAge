@@ -136,6 +136,7 @@ public enum BlockTypeEnum
 
     FurnacesSimple = 6151,//简易熔炉
     Crucible = 6161,//坩埚
+    ResearchTable = 6162,//研究台
     Box = 6201,//箱子
     SwitchesWooden = 6301,//木制开关
     TorchWooden = 6311, //木制火把
@@ -152,9 +153,31 @@ public enum BlockTypeEnum
     TombstoneRare = 6998,//墓碑稀有
     Tombstone = 6999,//墓碑
 
+    HalfSand = 7003,//沙子-半
+    HalfDirt = 7004,//泥土-半
+    HalfStone = 7005,//石头-半
+    HalfStoneIce = 7008,//冰块-半
+    HalfStoneSnow = 7009,//雪块-半
+
+    HalfFloorOak = 7101,//橡树地板-半
+    HalfFloorSilver = 7102, //银树地板-半
+    HalfFloorWorld = 7103, //世界树地板-半
+    HalfFloorCherry = 7104,//樱花地板-半
+    HalfFloorPalm = 7105,//棕榈地板-半
+    HalfFloorBirch = 7106,//桦树地板-半
+    HalfFloorWalnut = 7107,//胡桃地板-半
+
     BookshelfOak = 8001, //书架-橡树           
     BookshelfSilver = 8002, //书架-银树
     BookshelfWorl = 8003,  //书架-世界树
+
+    FloorOak = 8051,//橡木地板
+    FloorSilver = 8052,//银树地板
+    FloorWorld = 8053,//世界树地板
+    FloorCherry = 8054,//樱花地板
+    FloorPalm = 8055,//棕榈地板
+    FloorBirch = 8056,//桦树地板
+    FloorWalnut = 8057,//胡桃地板
 
     StairsOak = 8101,//橡木楼梯
     StairsSilver = 8102, //银树楼梯
@@ -175,28 +198,6 @@ public enum BlockTypeEnum
 
     ArcaneStone = 8301,//奥术石材
     ArcaneStoneBricks = 8302,//奥术石砖
-
-    HalfSand = 7003,//沙子-半
-    HalfDirt = 7004,//泥土-半
-    HalfStone = 7005,//石头-半
-    HalfStoneIce = 7008,//冰块-半
-    HalfStoneSnow = 7009,//雪块-半
-
-    HalfFloorOak = 7101,//橡树地板-半
-    HalfFloorSilver = 7102, //银树地板-半
-    HalfFloorWorld = 7103, //世界树地板-半
-    HalfFloorCherry = 7104,//樱花地板-半
-    HalfFloorPalm = 7105,//棕榈地板-半
-    HalfFloorBirch = 7106,//桦树地板-半
-    HalfFloorWalnut = 7107,//胡桃地板-半
-
-    FloorOak = 8051,//橡木地板
-    FloorSilver = 8052,//银树地板
-    FloorWorld = 8053,//世界树地板
-    FloorCherry = 8054,//樱花地板
-    FloorPalm = 8055,//棕榈地板
-    FloorBirch = 8056,//桦树地板
-    FloorWalnut = 8057,//胡桃地板
 
     Water = 9001,//水
     Magma = 9002,//岩浆

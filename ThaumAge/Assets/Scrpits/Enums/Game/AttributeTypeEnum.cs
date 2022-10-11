@@ -23,6 +23,9 @@ public enum AttributeTypeEnum
     KnockbackTime = 212,//击退时间
 
     Durability = 301,//装备耐久
+    
     BreakSpeed = 401,//挖掘速度
     BreakLevel = 402,//挖掘等级
+
+    ShowElemental = 1001,//元素展示
 }

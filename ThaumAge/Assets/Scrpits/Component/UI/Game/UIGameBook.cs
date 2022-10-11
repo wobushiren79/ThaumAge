@@ -8,7 +8,7 @@ public partial class UIGameBook : UIGameCommonNormal, IRadioGroupCallBack
 {
     protected List<RadioButtonView> listLabels = new List<RadioButtonView>();
     protected List<BookModelInfoBean> listBookModel;
-
+    protected int labelIndex = 0;
     public override void Awake()
     {
         base.Awake();
@@ -21,7 +21,9 @@ public partial class UIGameBook : UIGameCommonNormal, IRadioGroupCallBack
         base.OpenUI();
         ui_ViewGameBookContentMap.OpenUI();
         ui_ViewGameBookShowDetails.OpenUI();
+        labelIndex = 0;
         InitData();
+        this.RegisterEvent(EventsInfo.UIGameBook_RefreshLabels, RefreshLabels);
     }
 
     public override void CloseUI()
@@ -34,6 +36,15 @@ public partial class UIGameBook : UIGameCommonNormal, IRadioGroupCallBack
     public void InitData()
     {
         listBookModel = GameInfoHandler.Instance.manager.GetUnLockBookModelInfo();
+        SetLabels(listBookModel);
+        ui_Labels.SetPosition(labelIndex, true);
+    }
+
+    /// <summary>
+    /// 刷新标签
+    /// </summary>
+    public void RefreshLabels()
+    {
         SetLabels(listBookModel);
     }
 
@@ -55,9 +66,13 @@ public partial class UIGameBook : UIGameCommonNormal, IRadioGroupCallBack
     {
         ui_Labels.DestroyAllChild(true, 1);
         listLabels.Clear();
+        UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();
         for (int i = 0; i < listBookModel.Count; i++)
         {
             BookModelInfoBean bookModel = listBookModel[i];
+            var isUnlock = userData.userAchievement.CheckUnlockBookModel(bookModel.unlock_model_details_id);
+            if (!isUnlock)
+                continue;
             //创建一个标签
             GameObject objItemLabel = Instantiate(ui_Labels.gameObject, ui_LabelItem.gameObject);
             objItemLabel.SetActive(true);
@@ -70,7 +85,7 @@ public partial class UIGameBook : UIGameCommonNormal, IRadioGroupCallBack
             listLabels.Add(btLabel);
         }
         ui_Labels.InitRadioButton();
-        ui_Labels.SetPosition(0, true);
+        ui_Labels.SetPosition(labelIndex, false);
     }
 
     #region 选中回调

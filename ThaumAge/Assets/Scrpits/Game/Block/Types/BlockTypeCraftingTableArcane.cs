@@ -1,4 +1,5 @@
-﻿using UnityEditor;
+﻿using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 public class BlockTypeCraftingTableArcane : Block
@@ -20,8 +21,35 @@ public class BlockTypeCraftingTableArcane : Block
     /// <summary>
     /// 获取周围魔力加成
     /// </summary>
-    public int GetAroundMagicTotal()
+    public int GetAroundMagicTotal(Vector3Int worldPosition)
     {
-        return 100;
+        int magicTotal = 100;
+        List<Block> listBlock = GetRoundBlock(worldPosition);
+        for (int i = 0; i < listBlock.Count; i++)
+        {
+            magicTotal += GetSingleBlockMagic(listBlock[i]);
+        }
+        return magicTotal;
+    }
+
+    /// <summary>
+    /// 获取单个方块的魔力加成
+    /// </summary>
+    /// <param name="targetBlock"></param>
+    /// <returns></returns>
+    public int GetSingleBlockMagic(Block targetBlock)
+    {
+        int magic = 0;
+        if (targetBlock == null)
+        {
+            return magic;
+        }
+        var itemInfo = ItemsHandler.Instance.manager.GetItemsInfoByBlockType(targetBlock.blockType);
+        if (itemInfo != null)
+        {
+            int magicElemental = itemInfo.GetElemental(ElementalTypeEnum.Magic);
+            magic += magicElemental * 10;
+        }
+        return magic;
     }
 }

@@ -79,7 +79,8 @@ public class Block
     /// <summary>
     /// 获取周围的方块
     /// </summary>
-    public void GetRoundBlock(Vector3Int worldPosition, out Block upBlock, out Block downBlock, out Block leftBlock, out Block rightBlock, out Block forwardBlock, out Block backBlock)
+    public void GetRoundBlock(Vector3Int worldPosition,
+        out Block upBlock, out Block downBlock, out Block leftBlock, out Block rightBlock, out Block forwardBlock, out Block backBlock)
     {
         //获取周围的方块 并触发互动
         Vector3Int upPosition = worldPosition + Vector3Int.up;
@@ -96,6 +97,26 @@ public class Block
         WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(backPosition, out backBlock, out Chunk backChunk);
     }
 
+    public List<Block> GetRoundBlock(Vector3Int worldPosition, int range = 1)
+    {
+        List<Block> listBlock = new List<Block>();
+        for (int x = -range; x <= range; x++)
+        {
+            for (int y = -range; y <= range; y++)
+            {
+                for (int z = -range; z <= range; z++)
+                {
+                    if (x == 0 && y == 0 && z == 0)
+                        continue;
+                    Vector3Int targetPosition = worldPosition + new Vector3Int(x, y, z);
+                    WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(targetPosition, out Block targetBlock, out Chunk targetChunk);
+                    if (targetChunk != null && targetBlock != null)
+                        listBlock.Add(targetBlock);
+                }
+            }
+        }
+        return listBlock;
+    }
 
     /// <summary>
     /// 互动

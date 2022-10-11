@@ -113,6 +113,18 @@ MonoBehaviour:
     m_SerializedLabels:
     - Equip
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 21d024b21a86ec34aa971a0e03393a28
+    m_Address: Assets/Prefabs/Model/Character/Equip/WitchHat.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Equip
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: bcf040d4fad5b9742919f2a94572720f
+    m_Address: Assets/Prefabs/Model/Character/Equip/GogglesOfRevealing.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Equip
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: fd6114d87f1af534fbf270c47c0f10bf, type: 2}
   m_SchemaSet:

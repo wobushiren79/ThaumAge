@@ -106,9 +106,11 @@ public class BlockBaseFurnaces : Block
         {
             ItemsInfoBean itemsInfoFire = ItemsHandler.Instance.manager.GetItemsInfoById(blockMetaData.itemFireSourceId);
             //拥有相应元素 能够烧制 一个元素能烧制10秒
-            if (itemsInfoFire.elemental_wood != 0 || itemsInfoFire.elemental_fire != 0)
+            int elementalWood = itemsInfoFire.GetElemental(ElementalTypeEnum.Wood);
+            int elementalFire = itemsInfoFire.GetElemental(ElementalTypeEnum.Fire);
+            if (elementalWood != 0 || elementalFire != 0)
             {
-                int fireAddRemain = blockMetaData.fireTimeRemain + itemsInfoFire.elemental_wood * 10 + itemsInfoFire.elemental_fire * 10;
+                int fireAddRemain = blockMetaData.fireTimeRemain + elementalWood * 10 + elementalFire * 10;
                 //限制最大100能量
                 if (fireAddRemain < blockMetaData.fireTimeMax)
                 {

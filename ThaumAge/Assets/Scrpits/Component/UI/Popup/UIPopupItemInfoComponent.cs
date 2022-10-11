@@ -20,5 +20,9 @@ public partial class UIPopupItemInfo
 
     public RectTransform ui_Durability;
 
+    public RectTransform ui_Elemental;
+
+    public RectTransform ui_ItemElement;
+
 
 }

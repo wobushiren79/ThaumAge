@@ -14,6 +14,22 @@ public class UserAchievementBean
     /// <summary>
     /// 检测是否解锁模块
     /// </summary>
+    public bool CheckUnlockBookModel(string unlockDataStr)
+    {
+        int[] unlockIds = unlockDataStr.SplitForArrayInt('&');
+        for (int i = 0; i < unlockIds.Length; i++)
+        {
+            if (!listBookModelDetailsUnlock.Contains(unlockIds[i]))
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /// <summary>
+    /// 检测是否解锁模块
+    /// </summary>
     public bool CheckUnlockBookModelDetails(int modelDetailsId)
     {
         if (listBookModelDetailsUnlock.Contains(modelDetailsId))

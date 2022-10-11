@@ -1,4 +1,5 @@
-﻿using UnityEditor;
+﻿using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -11,6 +12,7 @@ public partial class UIPopupItemInfo : PopupShowView
     {
         base.Awake();
         ui_ItemAttribute.ShowObj(false);
+        ui_ItemElement.ShowObj(false);
     }
 
     public void SetData(ItemsBean itemData)
@@ -26,6 +28,7 @@ public partial class UIPopupItemInfo : PopupShowView
         SetItemName(itemsInfo.GetName());
         SetItemDetails("");
         SetAttribute(itemsInfo);
+        SetElemental(itemsInfo);
     }
 
     /// <summary>
@@ -91,10 +94,10 @@ public partial class UIPopupItemInfo : PopupShowView
     /// <summary>
     /// 设置属性
     /// </summary>
-    public void SetAttribute(ItemsInfoBean ItemsInfo)
+    public void SetAttribute(ItemsInfoBean itemsInfo)
     {
         CptUtil.RemoveChildsByActive(ui_Attribute);
-        AttributeBean attributeData = ItemsInfo.GetAttributeData();
+        AttributeBean attributeData = itemsInfo.GetAttributeData();
         if (attributeData == null || attributeData.dicAttributeData == null || attributeData.dicAttributeData.Count == 0)
         {
             ui_Attribute.ShowObj(false);
@@ -120,4 +123,33 @@ public partial class UIPopupItemInfo : PopupShowView
         }
     }
 
+    public void SetElemental(ItemsInfoBean itemsInfo)
+    {
+        CptUtil.RemoveChildsByActive(ui_Elemental);
+        UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();
+        if (userData.characterData.GetAttributeValue(AttributeTypeEnum.ShowElemental) == 0)
+        {
+            ui_Elemental.ShowObj(false);
+            return;
+        }
+        ui_Elemental.ShowObj(true);
+        Dictionary<ElementalTypeEnum, int>  dicElemental = itemsInfo.GetAllElemental();
+        foreach (var itemElemental in dicElemental)
+        {
+            ElementalInfoBean elementalInfo = GameInfoHandler.Instance.manager.GetElementalInfo(itemElemental.Key);
+            GameObject objItem = Instantiate(ui_Elemental.gameObject, ui_ItemElement.gameObject);
+
+            Text tvContent = objItem.transform.Find("ElementNum").GetComponent<Text>();
+            Image ivIcon = objItem.transform.Find("ElementIcon").GetComponent<Image>();
+
+            IconHandler.Instance.manager.GetUISpriteByName(elementalInfo.icon_key,(Sprite iconSp) =>
+            {
+                ColorUtility.TryParseHtmlString($"#{elementalInfo.color}", out Color ivColor);
+                ivIcon.sprite = iconSp;
+                ivIcon.color = ivColor;
+            });
+
+            tvContent.text = $"{itemElemental.Value}";
+        }
+    }
 }

@@ -244,7 +244,7 @@ public class ResourcesRefresh : Editor
             GameObject objFBXModel = EditorUtil.GetAssetByPath<GameObject>($"{sourcePath}/{file.Name}");
             GameObject objFBX = Instantiate(objFBXModel);
             objFBX.name = $"{objName}FBX";
-            objFBX.transform.localEulerAngles = new Vector3(-90, 180, 0);
+            objFBX.transform.localEulerAngles = new Vector3(0, 0, 0);
             objFBX.transform.localScale = new Vector3(0.03125f, 0.03125f, 0.03125f);
             objFBX.transform.localPosition = new Vector3(0, 0, 0);
             objFBX.transform.parent = objModel.transform;

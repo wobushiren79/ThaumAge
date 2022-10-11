@@ -156,7 +156,7 @@ public partial class UIViewSynthesis : BaseUIView
         int totalMagic = 0;
         if (targetBlock is BlockTypeCraftingTableArcane craftingTableArcane)
         {
-            totalMagic = craftingTableArcane.GetAroundMagicTotal();
+            totalMagic = craftingTableArcane.GetAroundMagicTotal(blockWorldPosition);
         }
         if (blockMetaData == null)
         {

@@ -11,6 +11,10 @@ using System;
 		/// </summary>
 		public string background;
 		/// <summary>
+		///解锁模块详情id(用&分割)
+		/// </summary>
+		public string unlock_model_details_id;
+		/// <summary>
 		///备注
 		/// </summary>
 		public string remark;
