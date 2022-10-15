@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
+  m_IndirectSpecularColor: {r: 0.09334874, g: 0.13015586, b: 0.2583444, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -231,8 +231,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b3f86ef755432fc42beb635c70ec056b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  worldPos: {x: 9, y: 9}
-  objContainer: {fileID: 0}
+  seed: 0
 --- !u!1 &840339376
 GameObject:
   m_ObjectHideFlags: 0
@@ -496,6 +495,7 @@ MonoBehaviour:
   m_TrackedDeviceOrientationAction: {fileID: -8121692360697341290, guid: a99670d5999484b4996a8e5262cf734c, type: 3}
   m_DeselectOnBackgroundClick: 1
   m_PointerBehavior: 0
+  m_CursorLockBehavior: 0
 --- !u!114 &1958435364
 MonoBehaviour:
   m_ObjectHideFlags: 0

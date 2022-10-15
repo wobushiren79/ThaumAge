@@ -54,12 +54,27 @@ public class BlockBean
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <returns></returns>
-    public T GetBlockMeta<T>()
+    public T GetBlockMeta<T>() where T : BlockMetaBase
     {
         if (meta.IsNull())
             return default;
         T data = JsonUtil.FromJson<T>(meta);
         return data;
+    }
+
+    /// <summary>
+    /// 设置方块数据
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="data"></param>
+    /// <returns></returns>
+    public string SetBlockMeta<T>(T data) where T: BlockMetaBase
+    {
+        if (data != null)
+        {
+            meta = data.ToJson();
+        }
+        return meta;
     }
 
     public BlockTypeEnum GetBlockType()

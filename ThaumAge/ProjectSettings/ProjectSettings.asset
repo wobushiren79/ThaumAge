@@ -641,6 +641,7 @@ PlayerSettings:
   webGLMemoryLinearGrowthStep: 16
   webGLMemoryGeometricGrowthStep: 0.2
   webGLMemoryGeometricGrowthCap: 96
+  webGLPowerPreference: 2
   scriptingDefineSymbols:
     Android: CT_TR;CROSS_PLATFORM_INPUT
     CloudRendering: CT_TR

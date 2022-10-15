@@ -65,6 +65,12 @@ MonoBehaviour:
     m_SerializedLabels:
     - BlockMats
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: c3cef5a79a0d1c24496032a229285fc8
+    m_Address: Assets/Prefabs/Mats/BlockCustomTransparent_10.mat
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - BlockMats
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: fd6114d87f1af534fbf270c47c0f10bf, type: 2}
   m_SchemaSet:

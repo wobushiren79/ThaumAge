@@ -2,10 +2,10 @@
 using System.Diagnostics;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Item
 {
-
     /// <summary>
     /// /获取道具信息
     /// </summary>
@@ -181,7 +181,7 @@ public class Item
         //扣除道具耐久
         if (breakDamage > 0 && this is ItemBaseTool itemTool)
         {
-            ItemsMetaTool itemsDetailsTool = itemsData.GetMetaData<ItemsMetaTool>();
+            ItemMetaTool itemsDetailsTool = itemsData.GetMetaData<ItemMetaTool>();
             //如果已经没有耐久了 则不造成伤害
             if (itemsDetailsTool.curDurability <= 0)
             {
@@ -333,10 +333,46 @@ public class Item
     /// </summary>
     /// <param name="itemId"></param>
     /// <returns></returns>
-    public virtual ItemsMetaTool GetInitMetaData(long itemId)
+    public virtual ItemBaseMeta GetInitMetaData<T>(long itemId) where T : ItemBaseMeta
     {
-        ItemsMetaTool data = new ItemsMetaTool();
+        ItemBaseMeta data = ReflexUtil.CreateInstance<T>();
         data.itemId = itemId;
         return data;
+    }
+
+    /// <summary>
+    /// 设置道具图标
+    /// </summary>
+    /// <param name="ivTarget"></param>
+    /// <param name="itemsInfo"></param>
+    public virtual void SetItemIcon(Image ivTarget, ItemsBean itemData, ItemsInfoBean itemsInfo)
+    {
+        SetItemIcon(ivTarget, itemsInfo);
+    }
+
+    public static void SetItemIcon(Image ivTarget, ItemsInfoBean itemsInfo)
+    {
+        CptUtil.RemoveChildsByActive(ivTarget.transform);
+        IconHandler.Instance.manager.GetItemsSpriteByName(itemsInfo.icon_key, (spIcon) =>
+        {
+            if (spIcon == null)
+            {
+                IconHandler.Instance.GetUnKnowSprite((spIcon) =>
+                {
+                    if (ivTarget != null)
+                    {
+                        ivTarget.sprite = spIcon;
+                    }
+                });
+            }
+            if (ivTarget != null)
+            {
+                ivTarget.sprite = spIcon;
+            }
+        });
+        if (ivTarget != null)
+        {
+            ivTarget.color = itemsInfo.GetItemsColor();
+        }
     }
 }

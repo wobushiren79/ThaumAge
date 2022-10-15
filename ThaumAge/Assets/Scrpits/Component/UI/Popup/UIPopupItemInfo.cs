@@ -39,7 +39,7 @@ public partial class UIPopupItemInfo : PopupShowView
         Item item = ItemsHandler.Instance.manager.GetRegisterItem(itemData.itemId, itemsInfo.GetItemsType());
         if (item is ItemBaseTool  itemTool)
         {
-            ItemsMetaTool itemsMeta = itemData.GetMetaData<ItemsMetaTool>();
+            ItemMetaTool itemsMeta = itemData.GetMetaData<ItemMetaTool>();
             ui_Durability.ShowObj(true);
             ui_ViewCommonPro.SetData(itemsMeta.curDurability, itemsMeta.durability);
             return;

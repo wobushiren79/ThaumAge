@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?><COLLADA xmlns="http://www.collada.org/2005/11/COLLADASchema" version="1.4.1">
+    <asset>
+        <contributor>
+            <author>VoxelShop User</author>
+            <authoring_tool>VoxelShop V1.8.22
+</authoring_tool>
+        </contributor>
+        <created>2022-10-15T13:03:05</created>
+        <modified>2022-10-15T13:03:05</modified>
+        <unit meter="1" name="meter"/>
+        <up_axis>Y_UP</up_axis>
+    </asset>
+    <library_images>
+        <image id="BlockBonfires_texture0-image" name="BlockBonfires_texture0-image">
+            <init_from>file://BlockBonfires_texture0.png</init_from>
+        </image>
+    </library_images>
+    <library_effects>
+        <effect id="lambert0-fx">
+            <profile_COMMON>
+                <newparam sid="BlockBonfires_texture0-surface">
+                    <surface type="2D">
+                        <init_from>BlockBonfires_texture0-image</init_from>
+                    </surface>
+                </newparam>
+                <newparam sid="BlockBonfires_texture0-sampler">
+                    <sampler2D>
+                        <source>BlockBonfires_texture0-surface</source>
+                        <wrap_s>WRAP</wrap_s>
+                        <wrap_t>WRAP</wrap_t>
+                        <minfilter>NEAREST</minfilter>
+                        <magfilter>NEAREST</magfilter>
+                    </sampler2D>
+                </newparam>
+                <technique sid="common">
+                    <lambert>
+                        <emission>
+                            <color>0 0 0 1</color>
+                        </emission>
+                        <ambient>
+                            <color>0 0 0 1</color>
+                        </ambient>
+                        <diffuse>
+                            <texture texcoord="TEX0" texture="BlockBonfires_texture0-sampler"/>
+                        </diffuse>
+                    </lambert>
+                </technique>
+            </profile_COMMON>
+        </effect>
+    </library_effects>
+    <library_materials>
+        <material id="lambert0-material" name="lambert0">
+            <instance_effect url="#lambert0-fx"/>
+        </material>
+    </library_materials>
+    <library_geometries>
+        <geometry id="Plane-tex-mesh-0" name="Plane-tex">
+            <mesh>
+                <source id="Plane-tex-mesh-0-positions">
+                    <float_array count="192" id="Plane-tex-mesh-0-positions-array">6 10 14 6 6 12 6 4 14 6 4 12 6 6 6 6 10 -14 6 6 -6 6 4 -6 6 6 -12 6 4 6 6 4 -14 6 4 -12 -12 10 14 -12 6 12 -12 4 14 -12 4 12 -12 6 6 -12 10 -14 -12 6 -6 -12 4 -6 -12 6 -12 -12 4 6 -12 4 -14 -12 4 -12 -14 6 12 -14 2 6 -14 0 12 -14 0 -12 -14 6 6 -14 2 -6 -14 6 -12 -14 6 -6 -6 10 14 -6 6 12 -6 4 14 -6 4 12 -6 6 6 -6 10 -14 -6 6 -6 -6 4 -6 -6 6 -12 -6 4 6 -6 4 -14 -6 4 -12 12 10 14 12 6 12 12 4 14 12 4 12 12 6 6 12 10 -14 12 6 -6 12 4 -6 12 6 -12 12 4 6 12 4 -14 12 4 -12 14 6 12 14 2 6 14 0 12 14 0 -12 14 6 6 14 2 -6 14 6 -12 14 6 -6</float_array>
+                    <technique_common>
+                        <accessor count="64" source="#Plane-tex-mesh-0-positions-array" stride="3">
+                            <param name="X" type="float"/>
+                            <param name="Y" type="float"/>
+                            <param name="Z" type="float"/>
+                        </accessor>
+                    </technique_common>
+                </source>
+                <source id="Plane-tex-mesh-0-uvs">
+                    <float_array count="60" id="Plane-tex-mesh-0-uvs-array">0.1875221 0.5937279 0.2187058 0.5937279 0.1875221 0.56254417 0.37503126 0.5624812 0.43749374 0.4687875 0.468725 0.5624812 0.5312847 0.5000104 0.56248266 0.5468386 0.56248266 0.484401 0.374975 0.5000375 0.374975 0.5468562 0.31255 0.5468562 0.53127927 0.81255484 0.53127927 0.84373903 0.56244147 0.85933113 0.18754464 0.5625219 0.62497765 0.93745625 0.62497765 0.5625219 0.031272322 0.59379375 0.031272322 0.9687281 0.46870536 0.9687281 0.46870255 0.34377033 0.031273726 0.53120935 0.031273726 0.34377033 0.5312263 0.34370932 0.5312263 0.15627034 0.09379745 0.15627034 0.3125442 0.5468529 0.35935292 0.50004417 0.35935292 0.5468529</float_array>
+                    <technique_common>
+                        <accessor count="30" source="#Plane-tex-mesh-0-uvs-array" stride="2">
+                            <param name="S" type="float"/>
+                            <param name="T" type="float"/>
+                        </accessor>
+                    </technique_common>
+                </source>
+                <vertices id="Plane-tex-mesh-0-vertices">
+                    <input semantic="POSITION" source="#Plane-tex-mesh-0-positions"/>
+                </vertices>
+                <triangles count="132" material="Plane-tex-mesh-0-lambert0-material">
+                    <input offset="0" semantic="VERTEX" source="#Plane-tex-mesh-0-vertices"/>
+                    <input offset="1" semantic="TEXCOORD" set="0" source="#Plane-tex-mesh-0-uvs"/>
+                    <p>0 0 1 1 2 2 1 0 3 1 2 2 1 0 0 1 4 2 0 0 5 1 4 2 5 0 6 1 4 2 4 0 6 1 7 2 5 0 8 1 6 2 4 0 7 1 9 2 8 0 5 1 10 2 8 0 10 1 11 2 12 0 13 1 14 2 13 0 15 1 14 2 13 0 12 1 16 2 12 0 17 1 16 2 17 0 18 1 16 2 16 0 18 1 19 2 17 0 20 1 18 2 16 0 19 1 21 2 20 0 17 1 22 2 20 0 22 1 23 2 24 3 25 4 26 5 25 6 27 7 26 8 24 9 28 10 25 11 25 12 29 13 27 14 27 5 29 4 30 3 29 11 31 10 30 9 33 1 32 0 34 2 35 1 33 0 34 2 32 1 33 0 36 2 37 1 32 0 36 2 38 1 37 0 36 2 38 1 36 0 39 2 40 1 37 0 38 2 39 1 36 0 41 2 37 1 40 0 42 2 42 1 40 0 43 2 45 1 44 0 46 2 47 1 45 0 46 2 44 1 45 0 48 2 49 1 44 0 48 2 50 1 49 0 48 2 50 1 48 0 51 2 52 1 49 0 50 2 51 1 48 0 53 2 49 1 52 0 54 2 54 1 52 0 55 2 57 4 56 3 58 5 59 7 57 6 58 8 60 10 56 9 57 11 61 13 57 12 59 14 61 4 59 5 62 3 63 10 61 11 62 9 27 16 58 15 26 17 59 19 58 18 27 20 3 1 46 0 2 2 47 1 46 0 3 2 7 1 53 0 9 2 51 1 53 0 7 2 10 1 55 0 11 2 54 1 55 0 10 2 22 1 43 0 23 2 42 1 43 0 22 2 19 1 41 0 21 2 39 1 41 0 19 2 15 1 34 0 14 2 35 1 34 0 15 2 57 21 29 22 25 23 57 24 61 25 29 26 56 0 48 1 45 2 56 0 60 1 48 2 63 0 52 1 50 2 63 0 62 1 52 2 6 0 40 1 38 2 6 0 8 1 40 2 1 0 36 1 33 2 1 0 4 1 36 2 18 0 30 1 31 2 18 0 20 1 30 2 13 0 28 1 24 2 13 0 16 1 28 2 44 0 5 1 0 2 44 0 49 1 5 2 32 0 17 1 12 2 32 0 37 1 17 2 29 0 61 1 7 2 61 0 51 1 7 2 7 0 39 1 29 2 61 0 63 1 51 2 39 0 19 1 29 2 7 0 38 1 39 2 63 0 50 1 51 2 19 0 31 1 29 2 7 0 6 1 38 2 19 0 18 1 31 2 26 0 58 1 3 2 58 0 47 1 3 2 3 0 35 1 26 2 58 0 56 1 47 2 35 0 15 1 26 2 3 0 33 1 35 2 56 0 45 1 47 2 15 0 24 1 26 2 3 0 1 1 33 2 15 0 13 1 24 2 46 27 0 28 2 29 46 28 44 29 0 27 34 27 12 28 14 29 34 28 32 29 12 27 57 1 25 0 9 2 53 1 57 0 9 2 41 1 9 0 25 2 60 1 57 0 53 2 21 1 41 0 25 2 36 1 9 0 41 2 48 1 60 0 53 2 28 1 21 0 25 2 4 1 9 0 36 2 16 1 21 0 28 2 59 1 27 0 11 2 55 1 59 0 11 2 43 1 11 0 27 2 62 1 59 0 55 2 23 1 43 0 27 2 40 1 11 0 43 2 52 1 62 0 55 2 30 1 23 0 27 2 8 1 11 0 40 2 20 1 23 0 30 2 5 28 54 27 10 29 49 29 54 28 5 27 17 28 42 27 22 29 37 29 42 28 17 27</p>
+                </triangles>
+            </mesh>
+        </geometry>
+    </library_geometries>
+    <library_visual_scenes>
+        <visual_scene id="Scene" name="Scene">
+            <node id="blockbonfires.merged" name="BlockBonfires.Merged" type="NODE">
+                <translate sid="location">-0.0 -0.0 0.0</translate>
+                <rotate sid="rotationZ">0 0 1 0</rotate>
+                <rotate sid="rotationY">0 1 0 0</rotate>
+                <rotate sid="rotationX">1 0 0 0</rotate>
+                <scale sid="scale">1.0 1.0 1.0</scale>
+                <instance_geometry name="Merged" sid="blockbonfires.merged" url="#Plane-tex-mesh-0">
+                    <bind_material>
+                        <technique_common>
+                            <instance_material symbol="lambert0-material" target="#lambert0-material">
+                                <bind_vertex_input input_semantic="TEXCOORD" input_set="0" semantic="TEX0"/>
+                            </instance_material>
+                        </technique_common>
+                    </bind_material>
+                </instance_geometry>
+            </node>
+        </visual_scene>
+    </library_visual_scenes>
+    <scene>
+        <instance_visual_scene url="#Scene"/>
+    </scene>
+</COLLADA>

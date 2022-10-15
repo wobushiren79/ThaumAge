@@ -23,6 +23,7 @@ public class BlockEditorWindow : EditorWindow
 
     public static readonly string Path_BlockMatCommon = "Assets/Mats/BlockCommon.mat";
     public static readonly string Path_BlockMatCustom = "Assets/Prefabs/Mats/BlockCustom_0.mat";
+    public static readonly string Path_BlockMatCustomTransparent = "Assets/Prefabs/Mats/BlockCustomTransparent_10.mat";
 
     public static readonly string Path_Block_Model_Save = "Assets/Prefabs/BlockModel";
 
@@ -501,7 +502,7 @@ public class BlockEditorWindow : EditorWindow
     /// <summary>
     /// 创建方块模型
     /// </summary>
-    public static void CreateBlockModel(int blockTextureSize, string pathRes, string pathSaveTexure, string saveName, string pathMatBlock, int textureArrayNumber = 1)
+    public static void CreateBlockModel(int blockTextureSize, string pathRes, string pathSaveTexure, string saveName, string pathMatBlock, int textureArrayNumber = 1,bool isCreateTransparent = false, string pathMatBlockTransparent = null)
     {
         try
         {
@@ -599,6 +600,15 @@ public class BlockEditorWindow : EditorWindow
                 //设置材质球
                 matUse.mainTexture = createTex;
                 EditorUtil.RefreshAsset(matUse);
+                //是否创建透明贴图
+                if (isCreateTransparent)
+                {
+                    CreateBlockTexture(blockTextureSize, pathSaveTexure, saveName + "Transparent", 0, listCreateData);
+                    Texture2D createTexTransparent = EditorUtil.GetAssetByPath<Texture2D>($"{pathSaveTexure}/{saveName}Transparent_0.png");
+
+                    Material matUseTransparent = EditorUtil.GetAssetByPath<Material>(pathMatBlockTransparent);
+                    matUseTransparent.mainTexture = createTexTransparent;
+                }
             }
 
             //生成相关模型

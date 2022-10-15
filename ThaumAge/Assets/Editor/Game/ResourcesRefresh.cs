@@ -118,7 +118,8 @@ public class ResourcesRefresh : Editor
     public static void RefreshBlockModelCustomRes()
     {
         //注： 如果是超过2048的图片 需要选用其他的压缩格式
-        BlockEditorWindow.CreateBlockModel(2048, BlockEditorWindow.Path_FBX_BlockModelCustom, $"{BlockEditorWindow.Path_BlockTexturesMat}", "BlockCustom", BlockEditorWindow.Path_BlockMatCustom);
+        BlockEditorWindow.CreateBlockModel(2048, BlockEditorWindow.Path_FBX_BlockModelCustom, $"{BlockEditorWindow.Path_BlockTexturesMat}", "BlockCustom", BlockEditorWindow.Path_BlockMatCustom,
+            isCreateTransparent : true,pathMatBlockTransparent : BlockEditorWindow.Path_BlockMatCustomTransparent);
         BlockEditorWindow.CreateBlockMeshData();
     }
 

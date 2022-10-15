@@ -28,6 +28,8 @@ Material:
   - SHADOWCASTER
   - MOTIONVECTORS
   - RayTracingPrepass
+  - TransparentDepthPrepass
+  - TransparentBackface
   m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
@@ -189,7 +191,7 @@ Material:
     - _ConservativeDepthOffsetEnable: 0
     - _Cull: 0
     - _CullMode: 0
-    - _CullModeForward: 2
+    - _CullModeForward: 0
     - _Cutoff: 0
     - _DepthOffsetEnable: 0
     - _DetailAlbedoMapScale: 1
@@ -235,10 +237,10 @@ Material:
     - _SupportDecals: 1
     - _Surface: 1
     - _SurfaceType: 1
-    - _TransparentBackfaceEnable: 1
+    - _TransparentBackfaceEnable: 0
     - _TransparentCullMode: 2
     - _TransparentDepthPostpassEnable: 1
-    - _TransparentDepthPrepassEnable: 1
+    - _TransparentDepthPrepassEnable: 0
     - _TransparentSortPriority: 0
     - _TransparentWritingMotionVec: 0
     - _TransparentZWrite: 0

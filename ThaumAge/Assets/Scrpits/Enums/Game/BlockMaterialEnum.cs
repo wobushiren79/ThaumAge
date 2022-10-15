@@ -11,4 +11,5 @@ public enum BlockMaterialEnum
     Water = 5,//水流
     Magma = 6,//岩浆
     Transparent = 9,//透明
+    CustomTransparent = 10,//自定义透明
 }

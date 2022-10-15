@@ -28,7 +28,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 8321920708573121508}
+  - {fileID: 1626949430756791504}
   m_Father: {fileID: 4225425581871103741}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -78,7 +78,7 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0.5, y: 0.5, z: 0.5}
---- !u!1001 &556102861422280942
+--- !u!1001 &1413359061684835773
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -86,59 +86,59 @@ PrefabInstance:
     serializedVersion: 2
     m_TransformParent: {fileID: 3957117614714892002}
     m_Modifications:
-    - target: {fileID: 2567144477770806771, guid: d518068ec463d7142bcf7856df34791c, type: 3}
-      propertyPath: m_Name
-      value: BlockCraftingTableMagic
-      objectReference: {fileID: 0}
-    - target: {fileID: 8415761299359697674, guid: d518068ec463d7142bcf7856df34791c, type: 3}
+    - target: {fileID: 362917414331318637, guid: ef62ef0050fcee84699755a790b3e875, type: 3}
       propertyPath: m_RootOrder
       value: 6
       objectReference: {fileID: 0}
-    - target: {fileID: 8415761299359697674, guid: d518068ec463d7142bcf7856df34791c, type: 3}
+    - target: {fileID: 362917414331318637, guid: ef62ef0050fcee84699755a790b3e875, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 8415761299359697674, guid: d518068ec463d7142bcf7856df34791c, type: 3}
+    - target: {fileID: 362917414331318637, guid: ef62ef0050fcee84699755a790b3e875, type: 3}
       propertyPath: m_LocalPosition.y
       value: -0.5
       objectReference: {fileID: 0}
-    - target: {fileID: 8415761299359697674, guid: d518068ec463d7142bcf7856df34791c, type: 3}
+    - target: {fileID: 362917414331318637, guid: ef62ef0050fcee84699755a790b3e875, type: 3}
       propertyPath: m_LocalPosition.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 8415761299359697674, guid: d518068ec463d7142bcf7856df34791c, type: 3}
+    - target: {fileID: 362917414331318637, guid: ef62ef0050fcee84699755a790b3e875, type: 3}
       propertyPath: m_LocalRotation.w
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 8415761299359697674, guid: d518068ec463d7142bcf7856df34791c, type: 3}
+    - target: {fileID: 362917414331318637, guid: ef62ef0050fcee84699755a790b3e875, type: 3}
       propertyPath: m_LocalRotation.x
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 8415761299359697674, guid: d518068ec463d7142bcf7856df34791c, type: 3}
+    - target: {fileID: 362917414331318637, guid: ef62ef0050fcee84699755a790b3e875, type: 3}
       propertyPath: m_LocalRotation.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 8415761299359697674, guid: d518068ec463d7142bcf7856df34791c, type: 3}
+    - target: {fileID: 362917414331318637, guid: ef62ef0050fcee84699755a790b3e875, type: 3}
       propertyPath: m_LocalRotation.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 8415761299359697674, guid: d518068ec463d7142bcf7856df34791c, type: 3}
+    - target: {fileID: 362917414331318637, guid: ef62ef0050fcee84699755a790b3e875, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 8415761299359697674, guid: d518068ec463d7142bcf7856df34791c, type: 3}
+    - target: {fileID: 362917414331318637, guid: ef62ef0050fcee84699755a790b3e875, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 8415761299359697674, guid: d518068ec463d7142bcf7856df34791c, type: 3}
+    - target: {fileID: 362917414331318637, guid: ef62ef0050fcee84699755a790b3e875, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6823502762074014668, guid: ef62ef0050fcee84699755a790b3e875, type: 3}
+      propertyPath: m_Name
+      value: BlockCraftingTableArcane
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_AddedGameObjects: []
-  m_SourcePrefab: {fileID: 100100000, guid: d518068ec463d7142bcf7856df34791c, type: 3}
---- !u!4 &8321920708573121508 stripped
+  m_SourcePrefab: {fileID: 100100000, guid: ef62ef0050fcee84699755a790b3e875, type: 3}
+--- !u!4 &1626949430756791504 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: 8415761299359697674, guid: d518068ec463d7142bcf7856df34791c, type: 3}
-  m_PrefabInstance: {fileID: 556102861422280942}
+  m_CorrespondingSourceObject: {fileID: 362917414331318637, guid: ef62ef0050fcee84699755a790b3e875, type: 3}
+  m_PrefabInstance: {fileID: 1413359061684835773}
   m_PrefabAsset: {fileID: 0}

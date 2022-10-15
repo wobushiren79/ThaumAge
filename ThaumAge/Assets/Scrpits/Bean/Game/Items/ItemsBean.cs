@@ -32,7 +32,7 @@ public class ItemsBean
         this.meta = meta;
     }
 
-    public T GetMetaData<T>() where T : ItemsBaseMeta
+    public T GetMetaData<T>() where T : ItemBaseMeta
     {        
         //如果meta数据是null的 则按items的类型赋予不同的数据
         if (meta.IsNull()||meta.Equals("{}"))
@@ -40,7 +40,7 @@ public class ItemsBean
             ItemsInfoBean itemsInfo = ItemsHandler.Instance.manager.GetItemsInfoById(itemId);
             Item item = ItemsHandler.Instance.manager.GetRegisterItem(itemsInfo.id,itemsInfo.GetItemsType());
             //获取不同道具的初始化meta数据
-            ItemsBaseMeta itemsDetails = item.GetInitMetaData(itemId);
+            ItemBaseMeta itemsDetails = item.GetInitMetaData<T>(itemId);
 
             meta =  SetMetaData(itemsDetails);
             return itemsDetails as T;
@@ -49,13 +49,13 @@ public class ItemsBean
         return data;
     }
 
-    public static T GetMetaData<T>(string meta) where T : ItemsBaseMeta
+    public static T GetMetaData<T>(string meta) where T : ItemBaseMeta
     {
         T data = JsonUtil.FromJson<T>(meta);
         return data;
     }
 
-    public string SetMetaData<T>(T data) where T : ItemsBaseMeta
+    public string SetMetaData<T>(T data) where T : ItemBaseMeta
     {
         meta = JsonUtil.ToJson<T>(data);
         return meta;

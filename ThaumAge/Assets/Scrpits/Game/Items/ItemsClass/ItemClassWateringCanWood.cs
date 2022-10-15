@@ -19,7 +19,7 @@ public class ItemClassWateringCanWood : ItemBaseTool
         {
             return;
         }
-        ItemsMetaTool itemsDetailsTool = itemData.GetMetaData<ItemsMetaTool>();
+        ItemMetaTool itemsDetailsTool = itemData.GetMetaData<ItemMetaTool>();
         //如果没有耐久了 则不执行
         if (itemsDetailsTool.curDurability <= 0)
         {

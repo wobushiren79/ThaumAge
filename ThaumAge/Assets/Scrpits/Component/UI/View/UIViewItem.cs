@@ -66,7 +66,7 @@ public partial class UIViewItem : BaseUIView,
         base.RefreshUI();
         if (itemsInfo != null && itemId != 0)
         {
-            SetIcon(itemsInfo.icon_key, itemsInfo.GetItemsColor());
+            SetIcon(itemsInfo);
             SetNumber(itemNumber, itemsInfo.max_number);
             SetLife();
         }
@@ -77,7 +77,7 @@ public partial class UIViewItem : BaseUIView,
     /// </summary>
     public void SetLife()
     {
-        AttributeBean attributeData =  itemsInfo.GetAttributeData();
+        AttributeBean attributeData = itemsInfo.GetAttributeData();
         int druability = attributeData.GetAttributeValue(AttributeTypeEnum.Durability);
         if (druability == 0)
         {
@@ -88,7 +88,7 @@ public partial class UIViewItem : BaseUIView,
         {
             if (!meta.IsNull())
             {
-                ItemsMetaTool itemsDetails = ItemsBean.GetMetaData<ItemsMetaTool>(meta);
+                ItemMetaTool itemsDetails = ItemsBean.GetMetaData<ItemMetaTool>(meta);
                 ui_Life.value = (float)itemsDetails.curDurability / itemsDetails.durability;
                 ui_Life.ShowObj(true);
             }
@@ -141,28 +141,16 @@ public partial class UIViewItem : BaseUIView,
     /// <summary>
     /// 设置图标
     /// </summary>
-    public void SetIcon(string iconKey, Color iconColor)
+    public void SetIcon(ItemsInfoBean itemsInfo)
     {
-        IconHandler.Instance.manager.GetItemsSpriteByName(iconKey, (spIcon) =>
+        Item targetItem = ItemsHandler.Instance.manager.GetRegisterItem(itemsInfo.id);
+        if (targetItem == null)
         {
-             if (spIcon == null)
-             {
-                 IconHandler.Instance.GetUnKnowSprite((spIcon) =>
-                 {
-                     if (ui_IVIcon != null)
-                     {
-                         ui_IVIcon.sprite = spIcon;
-                     }
-                 });
-             }
-             if (ui_IVIcon != null)
-             {
-                 ui_IVIcon.sprite = spIcon;
-             }
-        });
-        if (ui_IVIcon != null) 
+            Item.SetItemIcon(ui_IVIcon, itemsInfo);
+        }
+        else
         {
-            ui_IVIcon.color = iconColor;
+            targetItem.SetItemIcon(ui_IVIcon, originalParent.itemsData, itemsInfo);
         }
     }
 
@@ -290,7 +278,7 @@ public partial class UIViewItem : BaseUIView,
         //如果是右键点击
         if (eventData.button == PointerEventData.InputButton.Right)
         {
-            if(originalParent.containerType== UIViewItemContainer.ContainerType.Shortcuts
+            if (originalParent.containerType == UIViewItemContainer.ContainerType.Shortcuts
                 || originalParent.containerType == UIViewItemContainer.ContainerType.Backpack)
             {
                 //打开道具操作弹窗
@@ -470,7 +458,7 @@ public partial class UIViewItem : BaseUIView,
                 originViewItem.itemNumber = originalParent.itemsData.number;
             }
 
-            AnimForPositionChange(timeForBackOriginal, () => 
+            AnimForPositionChange(timeForBackOriginal, () =>
             {
                 originViewItem.RefreshUI();
                 //删除拖拽的UI
@@ -479,7 +467,7 @@ public partial class UIViewItem : BaseUIView,
         }
         else
         {
-            AnimForPositionChange(timeForBackOriginal, () => 
+            AnimForPositionChange(timeForBackOriginal, () =>
             {
 
             });
@@ -611,9 +599,9 @@ public partial class UIViewItem : BaseUIView,
             {
                 transform.SetParent(viewItem.transform.parent);
                 transform.localScale = Vector3.one;
-                AnimForPositionChange(timeForMove, () => 
+                AnimForPositionChange(timeForMove, () =>
                 {
-                    DestroyImmediate(gameObject); 
+                    DestroyImmediate(gameObject);
                 });
                 return;
             }
@@ -703,9 +691,9 @@ public partial class UIViewItem : BaseUIView,
                         targetContainer.SetViewItem(this);
                         //设置位置
                         transform.localScale = Vector3.one;
-                        AnimForPositionChange(timeForMove, () => 
+                        AnimForPositionChange(timeForMove, () =>
                         {
-                        
+
                         });
                     }
                     return;

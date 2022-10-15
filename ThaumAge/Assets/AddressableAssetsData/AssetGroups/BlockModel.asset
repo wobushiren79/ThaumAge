@@ -23,7 +23,7 @@ MonoBehaviour:
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 4c988ebef8231e14b85e8ac4eb1097d1
-    m_Address: Assets/Prefabs/Block/BlockBonfire.prefab
+    m_Address: Assets/Prefabs/Block/BlockBonfire_1.prefab
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
@@ -109,6 +109,26 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: ad895078b76c3f2478b4a459bc9085c8
     m_Address: Assets/Prefabs/Block/BlockFenceDoorWooden.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: fb0a395685600524ca7555cd786ad232
+    m_Address: Assets/Prefabs/Block/BlockCrucible.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: dec2fa3da4c27324da44c3529d9c2a01
+    m_Address: Assets/Prefabs/Block/BlockShineLight.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ffda41ea19d612949ad424e14dd97381
+    m_Address: Assets/Prefabs/Block/BlockCrankWooden.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 09d8906a085470949a65bfd311a42c6e
+    m_Address: Assets/Prefabs/Block/BlockBonfire_2.prefab
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0

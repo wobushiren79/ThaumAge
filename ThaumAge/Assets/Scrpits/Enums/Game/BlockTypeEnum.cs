@@ -135,6 +135,9 @@ public enum BlockTypeEnum
     CraftingTableArcane = 6111,//奥术制造台
 
     FurnacesSimple = 6151,//简易熔炉
+    CrankWooden = 6155,//木制曲柄
+    GrinderSimple = 6156,//简易研磨机
+
     Crucible = 6161,//坩埚
     ResearchTable = 6162,//研究台
     Box = 6201,//箱子
@@ -146,6 +149,7 @@ public enum BlockTypeEnum
     SignWooden = 6341,//木制牌子
     FenceWooden = 6351,//木制栅栏
     FenceDoorWooden = 6361,//木制栅栏门
+    Bonfire = 6371,//篝火
 
     BedWooden = 6901,//床
 
@@ -198,6 +202,12 @@ public enum BlockTypeEnum
 
     ArcaneStone = 8301,//奥术石材
     ArcaneStoneBricks = 8302,//奥术石砖
+
+    ShineLightWhite = 8401, //闪耀之光
+    ShineLightRed = 8402,
+    ShineLightBlue = 8403,
+    ShineLightYellow = 8404,
+    ShineLightGreen = 8405,
 
     Water = 9001,//水
     Magma = 9002,//岩浆

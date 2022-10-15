@@ -59,6 +59,39 @@ public class BlockShape
             20,22,21, 20,23,22
     };
 
+    public static Vector2[] uvColliderAdd = new Vector2[]
+{
+            new Vector2(0,0),
+            new Vector2(0,0),
+            new Vector2(0,0),
+            new Vector2(0,0),
+
+            new Vector2(0,0),
+            new Vector2(0,0),
+            new Vector2(0,0),
+            new Vector2(0,0),
+
+            new Vector2(0,0),
+            new Vector2(0,0),
+            new Vector2(0,0),
+            new Vector2(0,0),
+
+            new Vector2(0,0),
+            new Vector2(0,0),
+            new Vector2(0,0),
+            new Vector2(0,0),
+
+            new Vector2(0,0),
+            new Vector2(0,0),
+            new Vector2(0,0),
+            new Vector2(0,0),
+
+            new Vector2(0,0),
+            new Vector2(0,0),
+            new Vector2(0,0),
+            new Vector2(0,0)
+};
+
     public static float uvWidth = 1 / 128f;
 
     public BlockShape(Block block)

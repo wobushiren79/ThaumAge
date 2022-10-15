@@ -189,6 +189,10 @@ public class BlockCptBreak : BaseMonoBehaviour
             else
             {
                 Vector2Int[] arrayUVData = block.blockInfo.GetUVPosition();
+                if (arrayUVData == null)
+                {
+                    arrayUVData = new Vector2Int[] { Vector2Int.zero };
+                }
                 int randomUV = Random.Range(0, arrayUVData.Length);
                 Vector2 uvStartPosition = new Vector2(texBlock.width * (arrayUVData[randomUV].y * BlockShape.uvWidth), texBlock.width * (arrayUVData[randomUV].x * BlockShape.uvWidth));
 

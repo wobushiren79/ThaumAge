@@ -295,4 +295,17 @@ public class ReflexUtil
             return default(T);
         }
     }
+
+    public static T CreateInstance<T>()
+    {
+        try
+        {
+            T obj = Activator.CreateInstance<T>();//根据类型创建实例
+            return obj;//类型转换并返回
+        }
+        catch
+        {
+            return default(T);
+        }
+    }
 }
