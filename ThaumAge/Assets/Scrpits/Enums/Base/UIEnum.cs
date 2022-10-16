@@ -19,8 +19,9 @@ public enum UIEnum
     GameExit = 2009,//游戏-退出
     GameDead = 2010,//游戏-死亡
     GameBox = 2101,//游戏-箱子
-    GameFurnacesSimple = 2102,//游戏-简易熔炉
+    GameFurnaces = 2102,//游戏-熔炉
     GameSign = 2103,//游戏-牌子
+    GameItemsTransition = 2104,//游戏-道具转换
 
     GameSetting = 2999,//游戏-设置
 

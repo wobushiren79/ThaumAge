@@ -18,6 +18,7 @@ public partial class UIViewItemContainer : BaseUIView
         Box,//箱子
         God,//列表 GOD模式
         Furnaces,//熔炉
+        ItemsTransition,//转换
     }
 
     [Header("限制的物品类型")]

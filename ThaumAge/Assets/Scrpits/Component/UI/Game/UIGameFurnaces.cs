@@ -1,7 +1,7 @@
 ﻿using UnityEditor;
 using UnityEngine;
 
-public partial class UIGameFurnacesSimple : UIGameCommonNormal
+public partial class UIGameFurnaces : UIGameCommonNormal
 {
     public override void OpenUI()
     {
@@ -14,8 +14,8 @@ public partial class UIGameFurnacesSimple : UIGameCommonNormal
     /// 设置数据
     /// </summary>
     /// <param name="blockData"></param>
-    public void SetFurnacesData(Vector3Int worldPosition)
+    public void SetData(Vector3Int worldPosition)
     {
-        ui_ViewFurnacesSimple.SetData(worldPosition);
+        ui_ViewFurnaces.SetData(worldPosition);
     }
 }

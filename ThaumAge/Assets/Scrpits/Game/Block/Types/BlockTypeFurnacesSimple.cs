@@ -11,8 +11,10 @@ public class BlockTypeFurnacesSimple : BlockBaseFurnaces
         base.Interactive(user, worldPosition, direction);
 
         //打开箱子UI
-        UIGameFurnacesSimple uiGameFurnacesSimple = UIHandler.Instance.OpenUIAndCloseOther<UIGameFurnacesSimple>(UIEnum.GameFurnacesSimple);
+        UIGameFurnaces uiGameFurnacesSimple = UIHandler.Instance.OpenUIAndCloseOther<UIGameFurnaces>(UIEnum.GameFurnaces);
         //设置数据
-        uiGameFurnacesSimple.SetFurnacesData(worldPosition);
+        uiGameFurnacesSimple.SetData(worldPosition);
+
+        AudioHandler.Instance.PlaySound(1);
     }
 }

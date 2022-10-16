@@ -74,7 +74,7 @@ public class BlockBaseFurnaces : Block
         }
 
         //设置火焰
-        if (blockMetaData.firePro <= 0)
+        if (blockMetaData.transitionPro <= 0)
         {
             tfItemFire.ShowObj(false);
         }
@@ -123,7 +123,7 @@ public class BlockBaseFurnaces : Block
         //如果没有烧制的物品 或者剩下的烧制时间为0 则结束
         if (blockMetaData.itemBeforeId == 0 || blockMetaData.fireTimeRemain == 0)
         {
-            blockMetaData.firePro = 0;
+            blockMetaData.transitionPro = 0;
             chunk.UnRegisterEventUpdate(localPosition, TimeUpdateEventTypeEnum.Sec);
             //保存数据
             SaveFurnacesData(chunk, localPosition, blockData, blockMetaData);
@@ -133,7 +133,7 @@ public class BlockBaseFurnaces : Block
         ItemsInfoBean itemsInfoBefore = ItemsHandler.Instance.manager.GetItemsInfoById(blockMetaData.itemBeforeId);
         if (itemsInfoBefore.fire_items.IsNull())
         {
-            blockMetaData.firePro = 0;
+            blockMetaData.transitionPro = 0;
             //如果是不能烧制的物品 则结束刷新
             chunk.UnRegisterEventUpdate(localPosition, TimeUpdateEventTypeEnum.Sec);
             //保存数据
@@ -145,14 +145,14 @@ public class BlockBaseFurnaces : Block
         itemsInfoBefore.GetFireItems(out int[] fireItemsId, out int[] fireItemsNum, out int[] fireTime);
         int itemFireTime = fireTime[0];
         //检测是否正在烧制物品
-        if (blockMetaData.firePro < 1)
+        if (blockMetaData.transitionPro < 1)
         {
-            blockMetaData.firePro += 1f / itemFireTime;
+            blockMetaData.transitionPro += 1f / itemFireTime;
         }
-        else if (blockMetaData.firePro >= 1)
+        else if (blockMetaData.transitionPro >= 1)
         {            
             //烧制完成
-            blockMetaData.firePro = 0;
+            blockMetaData.transitionPro = 0;
             blockMetaData.itemAfterId = fireItemsId[0];
             blockMetaData.itemAfterNum++;
             blockMetaData.itemBeforeNum--;
@@ -165,13 +165,13 @@ public class BlockBaseFurnaces : Block
             if (blockMetaData.itemAfterId != 0 
                 && (blockMetaData.itemAfterId != fireItemsId[0] || itemsInfoAfter.max_number <= blockMetaData.itemAfterNum))
             {
-                blockMetaData.firePro = 0;
+                blockMetaData.transitionPro = 0;
                 chunk.UnRegisterEventUpdate(localPosition, TimeUpdateEventTypeEnum.Sec);
                 //保存数据
                 SaveFurnacesData(chunk, localPosition, blockData, blockMetaData);
                 return;
             }
-            blockMetaData.firePro = 1f / itemFireTime;
+            blockMetaData.transitionPro = 1f / itemFireTime;
         }
         blockMetaData.fireTimeRemain--;
         //保存数据

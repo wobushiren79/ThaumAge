@@ -1,7 +1,7 @@
 ﻿using UnityEditor;
 using UnityEngine;
 
-public partial class UIViewFurnacesSimple : BaseUIView
+public partial class UIViewFurnaces : BaseUIView
 {
     protected ItemsBean itemsFire;
     protected ItemsBean itemsBefore;
@@ -57,7 +57,7 @@ public partial class UIViewFurnacesSimple : BaseUIView
         itemsAfter.number = blockMetaFurnaces.itemAfterNum;
 
         lerpFirePowerPro = blockMetaFurnaces.fireTimeRemain / (float)blockMetaFurnaces.fireTimeMax;
-        lerpFirePro = blockMetaFurnaces.firePro;
+        lerpFirePro = blockMetaFurnaces.transitionPro;
 
         SetFireItems(itemsFire);
         SetBeforeItems(itemsBefore);
@@ -107,7 +107,7 @@ public partial class UIViewFurnacesSimple : BaseUIView
     }
 
     /// <summary>
-    /// 设置烧纸能量道具
+    /// 设置烧制能量道具
     /// </summary>
     public void SetFireItems(ItemsBean itemsData)
     {

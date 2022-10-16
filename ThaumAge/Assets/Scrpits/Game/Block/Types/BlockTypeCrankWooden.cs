@@ -18,7 +18,7 @@ public class BlockTypeCrankWooden : Block
         switch (downBlockType)
         {
             case BlockTypeEnum.GrinderSimple:
-                HandleForGrinderSimple(objTarget);
+                HandleForGrinderSimple(objTarget, downBlock, downChunk, downLocalPosition);
                 break;
         }
     }
@@ -27,10 +27,13 @@ public class BlockTypeCrankWooden : Block
     /// 处理 研磨机
     /// </summary>
     /// <param name="objTarget"></param>
-    public void HandleForGrinderSimple(GameObject objTarget)
+    public void HandleForGrinderSimple(GameObject objTarget, Block grinderBlock,  Chunk grinderChunk,  Vector3Int grinderLocalPosition)
     {
         Transform tfModel = objTarget.transform.Find("Model");
         tfModel.DOComplete();
         tfModel.DOLocalRotate(tfModel.localEulerAngles + new Vector3(0, 45, 0), 0.5f);
+
+        BlockBaseGrinder blockBaseGrinder = grinderBlock as BlockBaseGrinder;
+        blockBaseGrinder.AddTransitionPro(grinderBlock, grinderChunk, grinderLocalPosition,1/8f);
     }
 }

@@ -30,7 +30,9 @@ public class ItemsInfoBean : BaseBean
     public string anim_use;//使用动画
     public string hold_data;//拿住道具的数据（位置旋转等）
     public string link_class;//关联的类（针对有对应类 需要单独处理的特殊道具）
+
     public string fire_items;//道具被火烧之后的数据（道具ID,数量,时间）
+    public string grind_items;//道具被研磨之后的数据（道具ID,数量）
 
     public string sound_use;//道具使用声音
     public string elementals;//所有元素
@@ -96,6 +98,31 @@ public class ItemsInfoBean : BaseBean
             fireItemsId[i] = itemData[0];
             fireItemsNum[i] = itemData[1];
             fireTime[i] = itemData[2];
+        }
+    }
+
+    /// <summary>
+    /// 获取研磨之后的物体
+    /// </summary>
+    /// <param name="itemsId"></param>
+    /// <param name="itemsNum"></param>
+    public void GetGrindItems(out int itemsId, out int itemsNum)
+    {
+        itemsId = 0;
+        itemsNum = 0;
+        if (!grind_items.IsNull())
+        {
+            int[] grindData = grind_items.SplitForArrayInt(',');
+            if (grindData.Length==1)
+            {
+                itemsId = grindData[0];
+                itemsNum = 1;
+            }
+            else if(grindData.Length == 2)
+            {
+                itemsId = grindData[0];
+                itemsNum = grindData[1];
+            }
         }
     }
 

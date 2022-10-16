@@ -266,6 +266,7 @@ public partial class UIViewItem : BaseUIView,
                 //如果是箱子里的东西
                 case UIViewItemContainer.ContainerType.Box:
                 case UIViewItemContainer.ContainerType.Furnaces:
+                case UIViewItemContainer.ContainerType.ItemsTransition:
                     HandleForShiftClickForBackpackAndShortcuts();
                     break;
             }
