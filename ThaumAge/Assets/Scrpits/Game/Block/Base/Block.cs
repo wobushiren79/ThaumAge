@@ -324,7 +324,7 @@ public class Block
     /// <summary>
     /// 被使用
     /// </summary>
-    public virtual void TargetUseBlock(Chunk targetChunk, Vector3Int targetWorldPosition)
+    public virtual void TargetUseBlock(GameObject user, ItemsBean itemData, Chunk targetChunk, Vector3Int targetWorldPosition)
     {
 
     }
@@ -332,7 +332,7 @@ public class Block
     /// <summary>
     /// 被破坏
     /// </summary>
-    public virtual void TargetBreakBlock(Chunk targetChunk, Vector3Int worldPosition)
+    public virtual void TargetBreakBlock(GameObject user, ItemsBean itemData, Chunk targetChunk, Vector3Int worldPosition)
     {
 
     }

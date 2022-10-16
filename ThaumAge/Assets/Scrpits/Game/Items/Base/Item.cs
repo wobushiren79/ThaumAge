@@ -106,7 +106,7 @@ public class Item
                 //挖掘
                 if (itemUseType == ItemUseTypeEnum.Left)
                 {
-                    TargetUseL(itemsData, targetPosition);
+                    TargetUseL(player.gameObject, itemsData, targetPosition);
                 }
                 else
                 {
@@ -158,7 +158,7 @@ public class Item
     /// <summary>
     /// 破碎目标(鼠标左键)
     /// </summary>
-    public virtual void TargetUseL(ItemsBean itemsData, Vector3Int targetPosition)
+    public virtual void TargetUseL(GameObject user, ItemsBean itemsData, Vector3Int targetPosition)
     {
         //获取原位置方块
         WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(targetPosition, out Block targetBlock, out Chunk targetChunk);
@@ -194,7 +194,7 @@ public class Item
             EventHandler.Instance.TriggerEvent(EventsInfo.ItemsBean_MetaChange, itemsData);
         }
         //通知
-        targetBlock.TargetBreakBlock(targetChunk, targetPosition);
+        targetBlock.TargetBreakBlock(user, itemsData, targetChunk, targetPosition);
 
         BlockCptBreak BlockCptBreak = BlockHandler.Instance.BreakBlock(targetPosition, targetBlock, breakDamage);
         if (BlockCptBreak.blockLife <= 0)
@@ -244,7 +244,7 @@ public class Item
         //    targetPosition, targetBlockDirection, targetBlock, targetChunk,
         //    closePosition, closeBlockDirection, closeBlock, closeChunk,
         //    direction, metaData);
-        targetBlock.TargetUseBlock(targetChunk, targetPosition);
+        targetBlock.TargetUseBlock(user, itemData, targetChunk, targetPosition);
         PlayItemSoundUseR(itemData);
     }
 

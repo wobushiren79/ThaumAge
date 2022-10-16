@@ -40,7 +40,7 @@ public class ItemTypeCreature : Item
             }
             else
             {
-                TargetUseL(itemData, targetBlockPosition);
+                TargetUseL(player.gameObject, itemData, targetBlockPosition);
             }
         }
     }

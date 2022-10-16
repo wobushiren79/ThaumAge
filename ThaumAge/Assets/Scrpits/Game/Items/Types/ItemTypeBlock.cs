@@ -16,7 +16,7 @@ public class ItemTypeBlock : Item
                 //如果上手没有物品 或者是左键点击 则挖掘
                 if (itemData == null || itemData.itemId == 0 || useType == ItemUseTypeEnum.Left)
                 {
-                    TargetUseL(itemData, targetPosition);
+                    TargetUseL(player.gameObject,itemData, targetPosition);
                 }
                 //如果手上有物品 则使用
                 else

@@ -9,9 +9,9 @@ public class BlockTypeCrucible : Block
     /// </summary>
     /// <param name="targetChunk"></param>
     /// <param name="targetWorldPosition"></param>
-    public override void TargetUseBlock(Chunk targetChunk, Vector3Int targetWorldPosition)
+    public override void TargetUseBlock(GameObject user, ItemsBean itemData, Chunk targetChunk, Vector3Int targetWorldPosition)
     {
-        base.TargetUseBlock(targetChunk, targetWorldPosition);
+        base.TargetUseBlock(user, itemData, targetChunk, targetWorldPosition);
         int water = Random.Range(0, 6);
         SetWater(targetWorldPosition, water, true);
     }
@@ -32,7 +32,7 @@ public class BlockTypeCrucible : Block
         Transform tfWaterPlane = objBlock.transform.Find("WaterPlane");
         Transform tfBoiling = objBlock.transform.Find("WaterPlane/Effect_WaterBoiling_1");
         float waterPlaneY = 0;
-        switch (level) 
+        switch (level)
         {
             case 0:
                 tfWaterPlane.ShowObj(false);
@@ -55,7 +55,7 @@ public class BlockTypeCrucible : Block
                 waterPlaneY = 0.4f;
                 break;
         }
-        tfWaterPlane.DOLocalMoveY(waterPlaneY,1);
+        tfWaterPlane.DOLocalMoveY(waterPlaneY, 1);
         tfWaterPlane.ShowObj(true);
         if (isBoiling)
         {
