@@ -412,7 +412,7 @@ public partial class UIViewItem : BaseUIView,
         ItemDropBean itemDropData = new ItemDropBean
             (
             itemId,
-            player.transform.position + Vector3.up,
+            player.transform.position + Vector3.up*1.25f,
             player.transform.forward + randomFroce,
             itemNumber,
             meta,

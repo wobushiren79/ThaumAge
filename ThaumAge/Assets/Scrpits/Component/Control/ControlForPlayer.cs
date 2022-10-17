@@ -439,7 +439,7 @@ public class ControlForPlayer : ControlForBase
         //丢出道具
         Player player = GameHandler.Instance.manager.player;
         Vector3 randomFroce = new Vector3(UnityEngine.Random.Range(-0.5f, 0.5f), UnityEngine.Random.Range(0f, 0.5f), UnityEngine.Random.Range(-0.5f, 0.5f));
-        ItemDropBean itemDropData = new ItemDropBean(itemData.itemId, player.transform.position + Vector3.up, player.transform.forward + randomFroce, 1, itemData.meta, ItemDropStateEnum.DropNoPick);
+        ItemDropBean itemDropData = new ItemDropBean(itemData.itemId, player.transform.position + Vector3.up * 1.25f, player.transform.forward + randomFroce, 1, itemData.meta, ItemDropStateEnum.DropNoPick);
         ItemsHandler.Instance.CreateItemCptDrop(itemDropData);
 
         //扣除道具

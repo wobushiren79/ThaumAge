@@ -291,7 +291,7 @@ public partial class UIViewSynthesis : BaseUIView
         if (moreNum > 0)
         {
             Player player = GameHandler.Instance.manager.player;
-            ItemDropBean itemDropData = new ItemDropBean(itemsId, player.transform.position + Vector3.up, moreNum, null, ItemDropStateEnum.DropNoPick);
+            ItemDropBean itemDropData = new ItemDropBean(itemsId, player.transform.position + Vector3.up * 1.25f, moreNum, null, ItemDropStateEnum.DropNoPick);
             ItemsHandler.Instance.CreateItemCptDrop(itemDropData);
         }
 
