@@ -281,16 +281,16 @@ public class WorldCreateManager : BaseManager
     /// </summary>
     /// <param name="pos">世界坐标</param>
     /// <returns></returns>
-    public void GetBlockForWorldPosition(Vector3Int pos, out Block block, out BlockDirectionEnum direction, out Chunk chunk)
+    public void GetBlockForWorldPosition(Vector3Int pos, out Block block, out BlockDirectionEnum blockDirection, out Chunk chunk)
     {
         chunk = GetChunkForWorldPosition(pos);
         if (chunk == null)
         {
             block = BlockHandler.Instance.manager.GetRegisterBlock(BlockTypeEnum.None);
-            direction = BlockDirectionEnum.UpForward;
+            blockDirection = BlockDirectionEnum.UpForward;
             return;
         }
-        chunk.chunkData.GetBlockForLocal(pos - chunk.chunkData.positionForWorld, out block, out direction);
+        chunk.chunkData.GetBlockForLocal(pos - chunk.chunkData.positionForWorld, out block, out blockDirection);
     }
 
     public void GetBlockForWorldPosition(Vector3Int pos, out Block block, out Chunk chunk)

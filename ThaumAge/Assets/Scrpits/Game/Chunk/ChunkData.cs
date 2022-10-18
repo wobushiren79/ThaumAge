@@ -132,6 +132,11 @@ public class ChunkData
         return (BlockDirectionEnum)chunkSection.GetBlockDirection(x, y % chunkWidth, z);
     }
 
+    public BlockDirectionEnum GetBlockDirection(Vector3Int blockPosition)
+    {
+        return GetBlockDirection(blockPosition.x, blockPosition.y, blockPosition.z);
+    }
+
     /// <summary>
     /// 获取下标
     /// </summary>

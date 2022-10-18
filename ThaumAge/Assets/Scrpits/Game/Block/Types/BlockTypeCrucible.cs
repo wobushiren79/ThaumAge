@@ -1,19 +1,177 @@
 ﻿using UnityEditor;
 using UnityEngine;
 using DG.Tweening;
+using System.Collections.Generic;
+
 public class BlockTypeCrucible : Block
 {
 
     /// <summary>
-    /// 对着坩埚使用
+    /// 对着空手使用
     /// </summary>
     /// <param name="targetChunk"></param>
     /// <param name="targetWorldPosition"></param>
     public override void TargetUseBlock(GameObject user, ItemsBean itemData, Chunk targetChunk, Vector3Int targetWorldPosition)
     {
         base.TargetUseBlock(user, itemData, targetChunk, targetWorldPosition);
-        int water = Random.Range(0, 6);
-        SetWater(targetWorldPosition, water, true);
+
+        //保存坩埚数据
+        Vector3Int blockLocalPosition = targetWorldPosition - targetChunk.chunkData.positionForWorld;
+        BlockDirectionEnum blockDirection = targetChunk.chunkData.GetBlockDirection(blockLocalPosition.x, blockLocalPosition.y, blockLocalPosition.z);
+        SaveCrucibleData(targetChunk, blockDirection, targetWorldPosition, 0, true);
+    }
+
+    /// <summary>
+    /// 放置道具
+    /// </summary>
+    /// <param name="blockWorldPosition"></param>
+    /// <param name="itemData"></param>
+    /// <returns></returns>
+    public override bool SetItems(Chunk targetChunk, Block targetBlock, BlockDirectionEnum targetBlockDirection, Vector3Int blockWorldPosition, ItemsBean itemData)
+    {
+        if (itemData != null)
+        {
+            //如果是水桶 并且里面装的是水
+            ItemMetaBuckets itemMetaBuckets = itemData.GetMetaData<ItemMetaBuckets>();
+            if (itemMetaBuckets != null && itemMetaBuckets.itemIdForSomething == 109001)
+            {
+                //设置水桶空了
+                itemMetaBuckets.itemIdForSomething = 0;
+                itemData.SetMetaData(itemMetaBuckets);
+                //保存坩埚数据
+                SaveCrucibleData(targetChunk, targetBlockDirection, blockWorldPosition, 5);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /// <summary>
+    /// 增加元素
+    /// </summary>
+    /// <param name="listElemental"></param>
+    /// <returns></returns>
+    public bool AddElemental(Vector3Int blockWorldPosition, List<NumberBean> listElemental)
+    {
+        WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(blockWorldPosition, out Block targetBlock, out BlockDirectionEnum targetBlockDirection, out Chunk targetChunk);
+        GeteCrucibleData(targetChunk, targetBlockDirection, blockWorldPosition, out BlockBean blockData, out BlockMetaCrucible blockMetaData);
+        //如果没有水 则不添加
+        if (blockMetaData.waterLevel == 0)
+        {
+            return false;
+        }
+        bool isBoiling = CheckIsBoiling(targetChunk, blockWorldPosition);
+        //如果没有烧开
+        if (!isBoiling)
+        {
+            return false;
+        }
+        if (targetChunk != null && targetBlock != null)
+        {
+            SaveCrucibleData(targetChunk, targetBlockDirection, blockWorldPosition, listElemental: listElemental);
+            return true;
+        }
+        return false;
+    }
+
+    /// <summary>
+    /// 设置坩埚数据
+    /// </summary>
+    public void SaveCrucibleData(Chunk targetChunk, BlockDirectionEnum targetBlockDirection, Vector3Int blockWorldPosition,
+        int waterLevel = -1, bool isCleanElemental = false, List<NumberBean> listElemental = null)
+    {
+        GeteCrucibleData(targetChunk, targetBlockDirection, blockWorldPosition, out BlockBean blockData, out BlockMetaCrucible blockMetaData);
+        //是否设置水量
+        if (waterLevel != -1)
+            blockMetaData.waterLevel = waterLevel;
+        blockData.meta = blockMetaData.ToJson();
+        //是否清除元素
+        if (isCleanElemental && !blockMetaData.listElemental.IsNull())
+        {
+            blockMetaData.listElemental.Clear();
+        }
+        if (!listElemental.IsNull())
+        {
+            blockMetaData.AddElemental(listElemental);
+        }
+        targetChunk.isSaveData = true;
+
+        bool isBoiling = CheckIsBoiling(targetChunk, blockWorldPosition);
+        SetWaterShow(blockWorldPosition, blockMetaData.waterLevel, isBoiling);
+
+    }
+
+    /// <summary>
+    /// 获取坩埚数据
+    /// </summary>
+    public void GeteCrucibleData(Chunk targetChunk, BlockDirectionEnum targetBlockDirection, Vector3Int blockWorldPosition,
+        out BlockBean blockData, out BlockMetaCrucible blockMetaData)
+    {
+        Vector3Int blockLocalPosition = blockWorldPosition - targetChunk.chunkData.positionForWorld;
+        blockData = targetChunk.GetBlockData(blockLocalPosition);
+        if (blockData == null)
+        {
+            blockData = new BlockBean(blockLocalPosition, blockType, targetBlockDirection);
+        }
+        blockMetaData = blockData.GetBlockMeta<BlockMetaCrucible>();
+        if (blockMetaData == null)
+            blockMetaData = new BlockMetaCrucible();
+    }
+
+
+    public override void RefreshBlock(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction)
+    {
+        base.RefreshBlock(chunk, localPosition, direction);
+        chunk.RegisterEventUpdate(localPosition, TimeUpdateEventTypeEnum.Sec);
+    }
+
+    public override void BuildBlock(Chunk chunk, Vector3Int localPosition)
+    {
+        base.BuildBlock(chunk, localPosition);
+        chunk.RegisterEventUpdate(localPosition, TimeUpdateEventTypeEnum.Sec);
+    }
+
+    public override void EventBlockUpdateForSec(Chunk chunk, Vector3Int localPosition)
+    {
+        base.EventBlockUpdateForSec(chunk, localPosition);
+        InitWater(chunk, localPosition);
+        chunk.UnRegisterEventUpdate(localPosition, TimeUpdateEventTypeEnum.Sec);
+    }
+
+    /// <summary>
+    /// 检测是否煮沸
+    /// </summary>
+    /// <returns></returns>
+    public bool CheckIsBoiling(Chunk targetChunk, Vector3Int blockWorldPosition)
+    {
+        Vector3Int blockLocalPosition = blockWorldPosition - targetChunk.chunkData.positionForWorld;
+        GetCloseBlockByDirection(targetChunk, blockLocalPosition, DirectionEnum.Down, out Block downBlock, out Chunk downChunk, out Vector3Int downLocalPosition);
+        if (downChunk != null && downBlock != null)
+        {
+            ItemsInfoBean itemInfoBlock = ItemsHandler.Instance.manager.GetItemsInfoByBlockId(downBlock.blockInfo.id);
+            if (itemInfoBlock.GetElemental(ElementalTypeEnum.Fire) >= 5)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /// <summary>
+    /// 初始化水的状态
+    /// </summary>
+    /// <param name="chunk"></param>
+    /// <param name="localPosition"></param>
+    public void InitWater(Chunk chunk, Vector3Int localPosition)
+    {
+        Vector3Int targetWorldPosition = localPosition + chunk.chunkData.positionForWorld;
+        BlockDirectionEnum targetBlockDirection = chunk.chunkData.GetBlockDirection(localPosition);
+        //获取坩埚数据
+        GeteCrucibleData(chunk, targetBlockDirection, localPosition + chunk.chunkData.positionForWorld, out BlockBean blockData, out BlockMetaCrucible blockMetaData);
+        //获取是否烧开
+        bool isBoiling = CheckIsBoiling(chunk, targetWorldPosition);
+        //设置水位
+        SetWaterShow(targetWorldPosition, blockMetaData.waterLevel, isBoiling);
     }
 
     /// <summary>
@@ -21,7 +179,7 @@ public class BlockTypeCrucible : Block
     /// </summary>
     /// <param name="level">0没有水 5满水</param>
     /// <param name="isBoiling">是否沸腾</param>
-    public void SetWater(Vector3Int blockWorldPosition, int level, bool isBoiling)
+    public void SetWaterShow(Vector3Int blockWorldPosition, int level, bool isBoiling)
     {
         GameObject objBlock = GetBlockObj(blockWorldPosition);
         if (objBlock == null)

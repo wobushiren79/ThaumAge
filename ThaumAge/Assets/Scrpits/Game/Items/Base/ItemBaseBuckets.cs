@@ -139,7 +139,21 @@ public class ItemBaseBuckets : Item
     /// 放东西
     /// </summary>
     public virtual void SetSomething(ItemsBean itemData, Vector3Int targetPosition, Vector3Int closePosition)
-    {
+    {        
+        //获取目标方块
+        WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(targetPosition, out Block targetBlock, out BlockDirectionEnum targetBlockDirection, out Chunk targetChunk);
+        if (targetChunk == null)
+            return;
+        if (targetBlock != null)
+        {
+            //首先看看能否把水桶里的水放进方块里面
+            bool isSetSuccess = targetBlock.SetItems(targetChunk, targetBlock, targetBlockDirection,targetPosition, itemData);
+            if (isSetSuccess)
+            {
+                UIHandler.Instance.RefreshUI();
+                return;
+            }
+        }
         //首先获取靠近方块
         WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(closePosition, out Block closeBlock, out BlockDirectionEnum closeBlockDirection, out Chunk closeChunk);
         if (closeChunk == null)

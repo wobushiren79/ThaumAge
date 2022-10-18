@@ -235,6 +235,11 @@ public class Block
     /// </summary>
     public virtual void CreateBlockModelSuccess(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum blockDirection, GameObject obj)
     {
+        BlockTypeComponent blockTypeComponent = obj.GetComponent<BlockTypeComponent>();
+        if (blockTypeComponent != null)
+        {
+            blockTypeComponent.SetBlockWorldPosition(chunk.chunkData.positionForWorld + localPosition);
+        }
         RefreshObjModel(chunk, localPosition);
     }
 
@@ -646,6 +651,15 @@ public class Block
     public virtual Vector3 GetRotateAngles(BlockDirectionEnum direction)
     {
         return BlockShape.GetRotateAngles(direction);
+    }
+
+    /// <summary>
+    /// ∑≈÷√ŒÔ∆∑
+    /// </summary>
+    /// <returns></returns>
+    public virtual bool SetItems(Chunk targetChunk, Block targetBlock, BlockDirectionEnum targetBlockDirection, Vector3Int blockWorldPosition, ItemsBean itemData)
+    {
+        return false;
     }
 
     /// <summary>
