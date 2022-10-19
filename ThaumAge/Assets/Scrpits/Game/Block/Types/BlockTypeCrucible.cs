@@ -47,6 +47,43 @@ public class BlockTypeCrucible : Block
     }
 
     /// <summary>
+    /// 开始合成
+    /// </summary>
+    /// <returns></returns>
+    public bool StartSynthesis(Vector3Int blockWorldPosition, ItemsBean itemData)
+    {
+        GeteCrucibleData(blockWorldPosition, out BlockBean blockData, out BlockMetaCrucible blockMetaData);
+        List<ItemsSynthesisBean> listSynthesis = ItemsHandler.Instance.manager.GetItemsSynthesisForCrucible();
+        for (int i = 0; i < listSynthesis.Count; i++)
+        {
+            ItemsSynthesisBean itemSynthesisData = listSynthesis[i];
+            bool canSynthesis = itemSynthesisData.CheckSynthesisForCrucible(blockMetaData.listElemental, (int)itemData.itemId);
+            if (canSynthesis)
+            {
+                //减少水
+                blockMetaData.waterLevel--;
+                if (blockMetaData.waterLevel < 0)
+                    blockMetaData.waterLevel = 0;
+                //减少元素
+
+                //生成道具
+                ItemDropBean itemDropData = new ItemDropBean(itemData, ItemDropStateEnum.DropPick, blockWorldPosition + new Vector3(0.5f, 1.1f, 0.5f), Vector3.up * 1.5f);
+                ItemsHandler.Instance.CreateItemCptDrop(itemDropData,(drop)=> 
+                {
+                    drop.canInteractiveBlock = false;
+                });
+
+
+                blockData.SetBlockMeta(blockMetaData);
+                Chunk targetChunk = WorldCreateHandler.Instance.manager.GetChunkForWorldPosition(blockWorldPosition);
+                targetChunk.isSaveData = true;
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /// <summary>
     /// 增加元素
     /// </summary>
     /// <param name="listElemental"></param>
@@ -94,6 +131,7 @@ public class BlockTypeCrucible : Block
         {
             blockMetaData.AddElemental(listElemental);
         }
+        blockData.SetBlockMeta(blockMetaData);
         targetChunk.isSaveData = true;
 
         bool isBoiling = CheckIsBoiling(targetChunk, blockWorldPosition);
@@ -116,6 +154,11 @@ public class BlockTypeCrucible : Block
         blockMetaData = blockData.GetBlockMeta<BlockMetaCrucible>();
         if (blockMetaData == null)
             blockMetaData = new BlockMetaCrucible();
+    }
+    public void GeteCrucibleData(Vector3Int blockWorldPosition, out BlockBean blockData, out BlockMetaCrucible blockMetaData)
+    {
+        WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(blockWorldPosition, out Block targetBlock, out BlockDirectionEnum blockDirection, out Chunk targetChunk);
+        GeteCrucibleData(targetChunk, blockDirection, blockWorldPosition, out blockData, out blockMetaData);
     }
 
 

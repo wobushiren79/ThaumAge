@@ -6,6 +6,8 @@ using UnityEngine;
 public partial class ItemsSynthesisBean
 {
     protected List<ItemsArrayBean> listMaterials;
+    protected Dictionary<ElementalTypeEnum, int> dicElemental;
+
 
     /// <summary>
     /// 检测是否已经解锁该合成
@@ -24,6 +26,56 @@ public partial class ItemsSynthesisBean
                 return false;
         }
         return true;
+    }
+
+    /// <summary>
+    /// 检测坩埚的合成
+    /// </summary>
+    /// <returns></returns>
+    public bool CheckSynthesisForCrucible(List<NumberBean> listHasElemental, int synthesisBeforeId)
+    {
+        //如果不是这个道具
+        if (synthesisBeforeId != int.Parse(materials))
+        {
+            return false;
+        }
+        if (dicElemental == null)
+        {
+            dicElemental = new Dictionary<ElementalTypeEnum, int>();
+            string[] listElementalData = elemental.Split('&');
+            for (int i = 0; i < listElementalData.Length; i++)
+            {
+                string itemElementalDataStr = listElementalData[i];
+                string[] elementalData = itemElementalDataStr.Split(':');
+                if (elementalData.Length == 1)
+                {
+                    dicElemental.Add(EnumExtension.GetEnum<ElementalTypeEnum>(elementalData[0]), 1);
+                }
+                else if (elementalData.Length == 2)
+                {
+                    dicElemental.Add(EnumExtension.GetEnum<ElementalTypeEnum>(elementalData[0]), int.Parse(elementalData[1]));
+                }
+            }
+        }
+        bool hasEnoughElemental = true;
+        foreach (var itemElemental in dicElemental)
+        {
+            for (int i = 0; i < listHasElemental.Count; i++)
+            {
+                NumberBean itemHasElemental = listHasElemental[i];
+                if (itemHasElemental.id == (int)itemElemental.Key)
+                {
+                    if (itemHasElemental.number < itemElemental.Value)
+                    {
+                        hasEnoughElemental = false;
+                        break;
+                    }
+                }
+            }
+            if (!hasEnoughElemental)
+                break;
+        }
+        return hasEnoughElemental;
     }
 
     /// <summary>
@@ -47,7 +99,7 @@ public partial class ItemsSynthesisBean
                 {
                     hasMaterial = true;
                     break;
-                }   
+                }
             }
             if (hasMaterial == false)
                 return false;
@@ -59,7 +111,7 @@ public partial class ItemsSynthesisBean
     /// 检测合成类型 
     /// </summary>
     /// <param name="types"></param>
-    public bool CheckSynthesisType(ItemsSynthesisTypeEnum itemsSynthesisType,out int[] currentTypes)
+    public bool CheckSynthesisType(ItemsSynthesisTypeEnum itemsSynthesisType, out int[] currentTypes)
     {
         currentTypes = null;
         if (type_synthesis.IsNull())

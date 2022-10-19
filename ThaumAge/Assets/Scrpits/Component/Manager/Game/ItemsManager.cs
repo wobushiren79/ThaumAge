@@ -17,6 +17,8 @@ public class ItemsManager : BaseManager,
     protected Dictionary<long, ItemsSynthesisBean> dicItemsSynthesis = new();
     //道具信息列表
     protected List<ItemsInfoBean> listItemsInfo = new();
+    //坩埚的数据
+    protected List<ItemsSynthesisBean> listItemsSynthesisForCrucible;
 
     //注册道具列表
     protected Item[] arrayItemRegister = new Item[EnumExtension.GetEnumMaxIndex<ItemsTypeEnum>() + 1];
@@ -125,6 +127,23 @@ public class ItemsManager : BaseManager,
             }
         }
         return listData;
+    }
+
+    public List<ItemsSynthesisBean> GetItemsSynthesisForCrucible()
+    {
+        if (listItemsSynthesisForCrucible.IsNull())
+        {
+            listItemsSynthesisForCrucible = new List<ItemsSynthesisBean>();
+            foreach (var itemData in dicItemsSynthesis)
+            {
+                ItemsSynthesisBean itemValue = itemData.Value;
+                if (itemValue.type_synthesis.Equals("21"))
+                {
+                    listItemsSynthesisForCrucible.Add(itemValue);
+                }
+            }
+        }
+        return listItemsSynthesisForCrucible;
     }
 
     /// <summary>

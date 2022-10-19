@@ -19,6 +19,8 @@ public class ItemCptDrop : BaseMonoBehaviour
     //存在时间
     public float timeForCreate = 0;
 
+    //是否能和方块交互（用于和一些特殊方块 比如坩埚交互）
+    public bool canInteractiveBlock = true;
     public void Awake()
     {
         srIcon = GetComponent<SpriteRenderer>();

@@ -12,11 +12,14 @@ using System;
 		public string results;
 		/// <summary>
 		///资源（&分隔不同材料） （:分隔道具数量） （|分隔可替换的材料）
-
 		/// </summary>
 		public string materials;
 		/// <summary>
-		///合成类型(用|分割) 0自身  1基础制造台 11神秘制造台
+		///消耗元素
+		/// </summary>
+		public string elemental;
+		/// <summary>
+		///合成类型(用|分割) 0自身  1基础制造台 11神秘制造台 21坩埚
 		/// </summary>
 		public string type_synthesis;
 		/// <summary>
