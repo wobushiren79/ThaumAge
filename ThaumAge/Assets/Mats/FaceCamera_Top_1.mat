@@ -18,18 +18,25 @@ MonoBehaviour:
     m_Values: 
 --- !u!21 &2100000
 Material:
-  serializedVersion: 6
+  serializedVersion: 8
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: FaceCamera_Top_1
   m_Shader: {fileID: -6465566751694194690, guid: 07f3105d19d89af4d9a59c6ac3a11c4b, type: 3}
-  m_ShaderKeywords: _ENABLE_FOG_ON_TRANSPARENT _SURFACE_TYPE_TRANSPARENT
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords:
+  - _ALPHATEST_ON
+  - _ALPHATOMASK_ON
+  - _ENABLE_FOG_ON_TRANSPARENT
+  - _SURFACE_TYPE_TRANSPARENT
+  m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 1
   m_DoubleSidedGI: 0
-  m_CustomRenderQueue: 3000
+  m_CustomRenderQueue: 3001
   stringTagMap:
     MotionVector: User
     RenderType: Transparent
@@ -39,6 +46,7 @@ Material:
   - TransparentBackface
   - RayTracingPrepass
   - MOTIONVECTORS
+  m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
@@ -149,14 +157,15 @@ Material:
     - _ATDistance: 1
     - _AddPrecomputedVelocity: 0
     - _AlbedoAffectEmissive: 0
+    - _AlphaClip: 0.1
     - _AlphaCutoff: 0.5
-    - _AlphaCutoffEnable: 0
+    - _AlphaCutoffEnable: 1
     - _AlphaCutoffPostpass: 0.5
     - _AlphaCutoffPrepass: 0.5
     - _AlphaCutoffShadow: 0.5
     - _AlphaDstBlend: 10
     - _AlphaSrcBlend: 1
-    - _AlphaToMask: 0
+    - _AlphaToMask: 1
     - _AlphaToMaskInspectorValue: 1
     - _Anisotropy: 0
     - _BlendMode: 0
@@ -245,7 +254,7 @@ Material:
     - _TransparentCullMode: 2
     - _TransparentDepthPostpassEnable: 0
     - _TransparentDepthPrepassEnable: 0
-    - _TransparentSortPriority: 0
+    - _TransparentSortPriority: 1
     - _TransparentWritingMotionVec: 0
     - _TransparentZWrite: 1
     - _UVBase: 0
@@ -254,7 +263,7 @@ Material:
     - _UseEmissiveIntensity: 0
     - _UseShadowThreshold: 0
     - _ZTestDepthEqualForOpaque: 8
-    - _ZTestGBuffer: 4
+    - _ZTestGBuffer: 3
     - _ZTestTransparent: 8
     - _ZWrite: 1
     m_Colors:

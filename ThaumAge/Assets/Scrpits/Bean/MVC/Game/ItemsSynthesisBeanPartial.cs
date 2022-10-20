@@ -8,6 +8,31 @@ public partial class ItemsSynthesisBean
     protected List<ItemsArrayBean> listMaterials;
     protected Dictionary<ElementalTypeEnum, int> dicElemental;
 
+    /// <summary>
+    /// 获取元素
+    /// </summary>
+    public Dictionary<ElementalTypeEnum, int> GetElemental()
+    {
+        if (dicElemental == null)
+        {
+            dicElemental = new Dictionary<ElementalTypeEnum, int>();
+            string[] listElementalData = elemental.Split('&');
+            for (int i = 0; i < listElementalData.Length; i++)
+            {
+                string itemElementalDataStr = listElementalData[i];
+                string[] elementalData = itemElementalDataStr.Split(':');
+                if (elementalData.Length == 1)
+                {
+                    dicElemental.Add(EnumExtension.GetEnum<ElementalTypeEnum>(elementalData[0]), 1);
+                }
+                else if (elementalData.Length == 2)
+                {
+                    dicElemental.Add(EnumExtension.GetEnum<ElementalTypeEnum>(elementalData[0]), int.Parse(elementalData[1]));
+                }
+            }
+        }
+        return dicElemental;
+    }
 
     /// <summary>
     /// 检测是否已经解锁该合成
@@ -39,24 +64,7 @@ public partial class ItemsSynthesisBean
         {
             return false;
         }
-        if (dicElemental == null)
-        {
-            dicElemental = new Dictionary<ElementalTypeEnum, int>();
-            string[] listElementalData = elemental.Split('&');
-            for (int i = 0; i < listElementalData.Length; i++)
-            {
-                string itemElementalDataStr = listElementalData[i];
-                string[] elementalData = itemElementalDataStr.Split(':');
-                if (elementalData.Length == 1)
-                {
-                    dicElemental.Add(EnumExtension.GetEnum<ElementalTypeEnum>(elementalData[0]), 1);
-                }
-                else if (elementalData.Length == 2)
-                {
-                    dicElemental.Add(EnumExtension.GetEnum<ElementalTypeEnum>(elementalData[0]), int.Parse(elementalData[1]));
-                }
-            }
-        }
+        Dictionary<ElementalTypeEnum, int> dicElemental = GetElemental();
         bool hasEnoughElemental = true;
         foreach (var itemElemental in dicElemental)
         {

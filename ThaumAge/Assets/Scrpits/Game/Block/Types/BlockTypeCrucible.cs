@@ -65,7 +65,9 @@ public class BlockTypeCrucible : Block
                 if (blockMetaData.waterLevel < 0)
                     blockMetaData.waterLevel = 0;
                 //减少元素
-
+                Dictionary<ElementalTypeEnum, int> dicElemental = itemSynthesisData.GetElemental();
+                blockMetaData.SubElemental(dicElemental);
+                EventHandler.Instance.TriggerEvent(EventsInfo.BlockTypeCrucible_UpdateElemental, blockWorldPosition);
                 //生成道具
                 ItemDropBean itemDropData = new ItemDropBean(itemData, ItemDropStateEnum.DropPick, blockWorldPosition + new Vector3(0.5f, 1.1f, 0.5f), Vector3.up * 1.5f);
                 ItemsHandler.Instance.CreateItemCptDrop(itemDropData,(drop)=> 
@@ -106,6 +108,7 @@ public class BlockTypeCrucible : Block
         if (targetChunk != null && targetBlock != null)
         {
             SaveCrucibleData(targetChunk, targetBlockDirection, blockWorldPosition, listElemental: listElemental);
+            EventHandler.Instance.TriggerEvent(EventsInfo.BlockTypeCrucible_UpdateElemental, blockWorldPosition);
             return true;
         }
         return false;

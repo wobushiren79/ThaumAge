@@ -22,4 +22,6 @@ public static class EventsInfo
 
     public static readonly string UIBuildingEditorCreate_SelectChange = "UIBuildingEditorCreate_SelectChange";//建造模式 选择方块
 
+    public static readonly string BlockTypeCrucible_UpdateElemental = "BlockTypeCrucible_UpdateElemental";//更新元素
+
 }

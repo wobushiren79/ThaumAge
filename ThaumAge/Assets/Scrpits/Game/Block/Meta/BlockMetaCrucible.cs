@@ -7,7 +7,36 @@ public class BlockMetaCrucible : BlockMetaBase
     public int waterLevel;
     public List<NumberBean> listElemental;
 
+    /// <summary>
+    /// 减少元素
+    /// </summary>
+    /// <param name="dicSubElemental"></param>
+    public void SubElemental(Dictionary<ElementalTypeEnum, int> dicSubElemental)
+    {
+        foreach (var itemData in dicSubElemental)
+        {
+            for (int i = 0; i < listElemental.Count; i++)
+            {
+                var itemHasElemental = listElemental[i];
+                if (itemHasElemental.id == (long)itemData.Key)
+                {
+                    itemHasElemental.number -= itemData.Value;
+                    if (itemHasElemental.number < 0)
+                        itemHasElemental.number = 0;
+                    if (itemHasElemental.number == 0)
+                    {
+                        listElemental.Remove(itemHasElemental);
+                    }
+                    break;
+                }
+            }
+        }
+    }
 
+    /// <summary>
+    /// 增加元素
+    /// </summary>
+    /// <param name="addListElemental"></param>
     public void AddElemental(List<NumberBean> addListElemental)
     {
         if (listElemental.IsNull())

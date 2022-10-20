@@ -1,4 +1,6 @@
-﻿using UnityEditor;
+﻿using System.Collections.Generic;
+using TMPro;
+using UnityEditor;
 using UnityEngine;
 
 public class PlayerTargetBlock : BaseMonoBehaviour
@@ -7,21 +9,49 @@ public class PlayerTargetBlock : BaseMonoBehaviour
     public GameObject objInteractive;
     public GameObject objTargetBlock;
     public GameObject objTargetCenterBlock;
+    //元素显示
+    public GameObject objElementalContainer;
+    public GameObject objElementalItemModel;
+    protected List<GameObject> listElementalItemObj = new List<GameObject>();
 
     protected MeshFilter meshFilter;
     protected MeshRenderer meshRenderer;
 
     protected Vector3Int lastWorldPosition = Vector3Int.one * int.MaxValue;
     protected bool isShow = true;
+    protected bool isShowElemental = false;
+
     public void Awake()
     {
+        EventHandler.Instance.RegisterEvent<Vector3Int>(EventsInfo.BlockTypeCrucible_UpdateElemental, EventForUpdateElemental);
+        objElementalItemModel.ShowObj(false);
         meshFilter = objTargetBlock.GetComponent<MeshFilter>();
         meshRenderer = objTargetBlock.GetComponent<MeshRenderer>();
     }
+
+    public void Update()
+    {
+        if (isShowElemental)
+        {
+            Player player = GameHandler.Instance.manager.player;
+            objElementalContainer.transform.LookAt(player.transform);
+        }
+    }
+
+    private void OnDestroy()
+    {
+        for (int i = 0; i < listElementalItemObj.Count; i++)
+        {
+            Destroy(listElementalItemObj[i]);
+        }
+        listElementalItemObj.Clear();
+        EventHandler.Instance.UnRegisterEvent<Vector3Int>(EventsInfo.BlockTypeCrucible_UpdateElemental, EventForUpdateElemental);
+    }
+
     public void Show(Vector3Int worldPosition, Block block, bool isInteractive)
     {
-        if (!isShow) return;
-
+        if (!isShow)
+            return;
         gameObject.SetActive(true);
         //展示文本互动提示
         objInteractive.ShowObj(isInteractive);
@@ -33,6 +63,12 @@ public class PlayerTargetBlock : BaseMonoBehaviour
             return;
         }
         lastWorldPosition = worldPosition;
+        //先隐藏所有的元素
+        foreach (var itemElementalObj in listElementalItemObj)
+        {
+            itemElementalObj.ShowObj(false);
+        }
+        isShowElemental = false;
 
         //设置方向
         WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(worldPosition, out Block targetBlock, out BlockDirectionEnum targetDirection, out Chunk targetChunk);
@@ -65,9 +101,75 @@ public class PlayerTargetBlock : BaseMonoBehaviour
             BlockMetaBaseLink oldeBlockMetaLinkData = Block.FromMetaData<BlockMetaBaseLink>(oldBlockData.meta);
             objTargetCenterBlock.transform.position = oldeBlockMetaLinkData.GetBasePosition() + new Vector3(0.5f, 0.5f, 0.5f);
         }
+        else if (block.blockType == BlockTypeEnum.Crucible)
+        {
+            ShowElemental(worldPosition);
+            objTargetCenterBlock.transform.localPosition = new Vector3(0.5f, 0.5f, 0.5f);
+        }
         else
         {
             objTargetCenterBlock.transform.localPosition = new Vector3(0.5f, 0.5f, 0.5f);
+        }
+    }
+
+    public void ShowElemental(Vector3Int worldPosition)
+    {
+        WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(worldPosition, out Block targetBlock, out BlockDirectionEnum targetDirection, out Chunk targetChunk);
+        //如果是坩埚 则需要展示所拥有的元素
+        BlockTypeCrucible blockTypeCrucible = targetBlock as BlockTypeCrucible;
+        blockTypeCrucible.GeteCrucibleData(targetChunk, targetDirection, worldPosition, out BlockBean blockData, out BlockMetaCrucible blockMetaData);
+
+        //获取这个方块的元素信息 
+        List<NumberBean> listElemental = blockMetaData.listElemental;
+        if (listElemental.IsNull())
+            return;
+        isShowElemental = true;
+
+        int index = 0;
+        float startX = 0;
+        //如果是双数
+        if (listElemental.Count % 2 == 0)
+        {
+            startX = (listElemental.Count / 2f) - 0.5f;
+        }
+        //如果是单数
+        else
+        {
+            startX = (listElemental.Count / 2f) - 0.5f;
+        }
+        foreach (var itemElemental in listElemental)
+        {
+            if (itemElemental.number == 0)
+            {
+                continue;
+            }
+            GameObject objElemental;
+            if (index < listElementalItemObj.Count)
+            {
+                objElemental = listElementalItemObj[index];
+            }
+            else
+            {
+                objElemental = Instantiate(objElementalContainer, objElementalItemModel);
+                listElementalItemObj.Add(objElemental);
+            }
+            objElemental.transform.localPosition = new Vector3(startX - index, 0, 0);
+            //获取元素信息
+            ElementalInfoBean elementalInfo = GameInfoHandler.Instance.manager.GetElementalInfo((ElementalTypeEnum)itemElemental.id);
+
+            SpriteRenderer srIcon = objElemental.GetComponent<SpriteRenderer>();
+            TextMeshPro tvNumber = objElemental.transform.Find("ItemElementalNum").GetComponent<TextMeshPro>();
+
+            tvNumber.text = $"{itemElemental.number}";
+            IconHandler.Instance.manager.GetUISpriteByName(elementalInfo.icon_key, (iconSP) =>
+             {
+                 objElemental.ShowObj(true);
+                 srIcon.sprite = iconSP;
+
+                 ColorUtility.TryParseHtmlString($"#{elementalInfo.color}", out Color ivColor);
+                 srIcon.material.SetColor("_Color", ivColor);
+             });
+            index++;
         }
     }
 
@@ -90,6 +192,18 @@ public class PlayerTargetBlock : BaseMonoBehaviour
         else
         {
             gameObject.SetActive(false);
+        }
+    }
+
+    /// <summary>
+    /// 事件-元素更新
+    /// </summary>
+    /// <param name="worldPosition"></param>
+    public void EventForUpdateElemental(Vector3Int worldPosition)
+    {
+        if (isShowElemental && worldPosition == lastWorldPosition)
+        {
+            ShowElemental(worldPosition);
         }
     }
 }
