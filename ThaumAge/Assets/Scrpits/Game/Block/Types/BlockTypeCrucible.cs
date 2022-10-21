@@ -18,7 +18,11 @@ public class BlockTypeCrucible : Block
         //保存坩埚数据
         Vector3Int blockLocalPosition = targetWorldPosition - targetChunk.chunkData.positionForWorld;
         BlockDirectionEnum blockDirection = targetChunk.chunkData.GetBlockDirection(blockLocalPosition.x, blockLocalPosition.y, blockLocalPosition.z);
-        SaveCrucibleData(targetChunk, blockDirection, targetWorldPosition, 0, true);
+
+        GeteCrucibleData(targetChunk, blockDirection, targetWorldPosition, out BlockBean blockData, out BlockMetaCrucible blockMetaData);
+        SaveCrucibleData(targetChunk,  targetWorldPosition, blockData, blockMetaData, 0);
+
+        EventHandler.Instance.TriggerEvent(EventsInfo.BlockTypeCrucible_UpdateElemental, targetWorldPosition);
     }
 
     /// <summary>
@@ -39,7 +43,8 @@ public class BlockTypeCrucible : Block
                 itemMetaBuckets.itemIdForSomething = 0;
                 itemData.SetMetaData(itemMetaBuckets);
                 //保存坩埚数据
-                SaveCrucibleData(targetChunk, targetBlockDirection, blockWorldPosition, 5);
+                GeteCrucibleData(targetChunk, targetBlockDirection, blockWorldPosition, out BlockBean blockData, out BlockMetaCrucible blockMetaData);
+                SaveCrucibleData(targetChunk, blockWorldPosition, blockData, blockMetaData, 5);
                 return true;
             }
         }
@@ -50,39 +55,50 @@ public class BlockTypeCrucible : Block
     /// 开始合成
     /// </summary>
     /// <returns></returns>
-    public bool StartSynthesis(Vector3Int blockWorldPosition, ItemsBean itemData)
+    public void StartSynthesis(Vector3Int blockWorldPosition, ItemsBean itemData,out int numberSynthesis)
     {
+        numberSynthesis = 0;
         GeteCrucibleData(blockWorldPosition, out BlockBean blockData, out BlockMetaCrucible blockMetaData);
         List<ItemsSynthesisBean> listSynthesis = ItemsHandler.Instance.manager.GetItemsSynthesisForCrucible();
         for (int i = 0; i < listSynthesis.Count; i++)
         {
             ItemsSynthesisBean itemSynthesisData = listSynthesis[i];
-            bool canSynthesis = itemSynthesisData.CheckSynthesisForCrucible(blockMetaData.listElemental, (int)itemData.itemId);
-            if (canSynthesis)
+            itemSynthesisData.CheckSynthesisForCrucible(blockMetaData.listElemental, itemData,out numberSynthesis);
+            if (numberSynthesis > 0)
             {
                 //减少水
                 blockMetaData.waterLevel--;
                 if (blockMetaData.waterLevel < 0)
                     blockMetaData.waterLevel = 0;
-                //减少元素
+
+                //减少元素 * numberSynthesis
                 Dictionary<ElementalTypeEnum, int> dicElemental = itemSynthesisData.GetElemental();
-                blockMetaData.SubElemental(dicElemental);
+                blockMetaData.SubElemental(dicElemental, numberSynthesis);
                 EventHandler.Instance.TriggerEvent(EventsInfo.BlockTypeCrucible_UpdateElemental, blockWorldPosition);
-                //生成道具
-                ItemDropBean itemDropData = new ItemDropBean(itemData, ItemDropStateEnum.DropPick, blockWorldPosition + new Vector3(0.5f, 1.1f, 0.5f), Vector3.up * 1.5f);
+
+                //生成道具 * numberSynthesis
+                itemSynthesisData.GetSynthesisResult(out long itemIdSynthesisResult, out int itemNumberSynthesisResult);
+                ItemsBean itemSynthesisResult = new ItemsBean(itemIdSynthesisResult, itemNumberSynthesisResult * numberSynthesis);
+
+                ItemDropBean itemDropData = new ItemDropBean(itemSynthesisResult, ItemDropStateEnum.DropPick, blockWorldPosition + new Vector3(0.5f, 1.1f, 0.5f), Vector3.up * 1.5f);
                 ItemsHandler.Instance.CreateItemCptDrop(itemDropData,(drop)=> 
                 {
                     drop.canInteractiveBlock = false;
                 });
 
-
                 blockData.SetBlockMeta(blockMetaData);
+
                 Chunk targetChunk = WorldCreateHandler.Instance.manager.GetChunkForWorldPosition(blockWorldPosition);
-                targetChunk.isSaveData = true;
-                return true;
+
+                SaveCrucibleData(targetChunk, blockWorldPosition, blockData, blockMetaData);
+                //播放特效
+                PlaySynthesisEffect(blockWorldPosition + new Vector3(0.5f, 1f, 0.5f));
+
+
+                return;
             }
         }
-        return false;
+        return;
     }
 
     /// <summary>
@@ -107,8 +123,11 @@ public class BlockTypeCrucible : Block
         }
         if (targetChunk != null && targetBlock != null)
         {
-            SaveCrucibleData(targetChunk, targetBlockDirection, blockWorldPosition, listElemental: listElemental);
+            SaveCrucibleData(targetChunk, blockWorldPosition, blockData, blockMetaData, addListElemental: listElemental);
             EventHandler.Instance.TriggerEvent(EventsInfo.BlockTypeCrucible_UpdateElemental, blockWorldPosition);
+
+            float waterPlaneY = GetWaterLevelY(blockMetaData.waterLevel);
+            PlayAddElementalEffect(blockWorldPosition + new Vector3(0.5f, 0.5f + waterPlaneY, 0.5f));
             return true;
         }
         return false;
@@ -117,22 +136,25 @@ public class BlockTypeCrucible : Block
     /// <summary>
     /// 设置坩埚数据
     /// </summary>
-    public void SaveCrucibleData(Chunk targetChunk, BlockDirectionEnum targetBlockDirection, Vector3Int blockWorldPosition,
-        int waterLevel = -1, bool isCleanElemental = false, List<NumberBean> listElemental = null)
+    public void SaveCrucibleData(Chunk targetChunk, Vector3Int blockWorldPosition,  BlockBean blockData,  BlockMetaCrucible blockMetaData,
+        int waterLevel = -1, bool isCleanElemental = false, List<NumberBean> addListElemental = null)
     {
-        GeteCrucibleData(targetChunk, targetBlockDirection, blockWorldPosition, out BlockBean blockData, out BlockMetaCrucible blockMetaData);
         //是否设置水量
         if (waterLevel != -1)
             blockMetaData.waterLevel = waterLevel;
-        blockData.meta = blockMetaData.ToJson();
         //是否清除元素
         if (isCleanElemental && !blockMetaData.listElemental.IsNull())
         {
             blockMetaData.listElemental.Clear();
         }
-        if (!listElemental.IsNull())
+        if (!addListElemental.IsNull())
         {
-            blockMetaData.AddElemental(listElemental);
+            blockMetaData.AddElemental(addListElemental);
+        }
+        //如果没有水了。也要清除元素
+        if (blockMetaData.waterLevel == 0 && !blockMetaData.listElemental.IsNull())
+        {
+            blockMetaData.listElemental.Clear();
         }
         blockData.SetBlockMeta(blockMetaData);
         targetChunk.isSaveData = true;
@@ -232,32 +254,15 @@ public class BlockTypeCrucible : Block
         {
             return;
         }
-
         Transform tfWaterPlane = objBlock.transform.Find("WaterPlane");
         Transform tfBoiling = objBlock.transform.Find("WaterPlane/Effect_WaterBoiling_1");
-        float waterPlaneY = 0;
-        switch (level)
+        float waterPlaneY = GetWaterLevelY(level);
+        if (level == 0)
         {
-            case 0:
-                tfWaterPlane.ShowObj(false);
-                tfBoiling.ShowObj(false);
-                tfWaterPlane.DOKill();
-                return;
-            case 1:
-                waterPlaneY = 0.05f;
-                break;
-            case 2:
-                waterPlaneY = 0.1f;
-                break;
-            case 3:
-                waterPlaneY = 0.2f;
-                break;
-            case 4:
-                waterPlaneY = 0.3f;
-                break;
-            case 5:
-                waterPlaneY = 0.4f;
-                break;
+            tfWaterPlane.ShowObj(false);
+            tfBoiling.ShowObj(false);
+            tfWaterPlane.DOKill();
+            return;
         }
         tfWaterPlane.DOLocalMoveY(waterPlaneY, 1);
         tfWaterPlane.ShowObj(true);
@@ -269,5 +274,54 @@ public class BlockTypeCrucible : Block
         {
             tfBoiling.ShowObj(false);
         }
+    }
+    /// <summary>
+    /// 获取不同等级水位高度
+    /// </summary>
+    protected float GetWaterLevelY(int level)
+    {
+        switch (level)
+        {
+            case 0:
+                return 0 ;
+            case 1:
+                return 0.05f;
+            case 2:
+                return 0.1f;
+            case 3:
+                return 0.2f;
+            case 4:
+                return 0.3f;
+            case 5:
+                return 0.4f;
+            default:
+                return 0;
+        }
+    }
+
+    public void PlayAddElementalEffect(Vector3 position)
+    {
+        EffectBean effectData = new EffectBean();
+        effectData.effectName = EffectInfo.Effect_WaterBoiling_2;
+        effectData.effectPosition = position;
+        effectData.timeForShow = 3;
+        EffectHandler.Instance.ShowEffect(effectData, (effect)=> 
+        { 
+        
+        
+        });
+    }
+
+    public void PlaySynthesisEffect(Vector3 position)
+    {
+        EffectBean effectData = new EffectBean();
+        effectData.effectName = EffectInfo.Effect_Smoke_3;
+        effectData.effectPosition = position;
+        effectData.timeForShow = 5;
+        EffectHandler.Instance.ShowEffect(effectData, (effect) =>
+        {
+
+
+        });
     }
 }

@@ -10,7 +10,7 @@ public class BlockTypeCrucibleComponent : BlockTypeComponent
     {
         if (other.gameObject.layer == LayerInfo.Items)
         {
-            GetBlock(out Block targetBlock,out Chunk targetChunk);
+            GetBlock(out Block targetBlock, out Chunk targetChunk);
             if (targetChunk != null && targetBlock != null)
             {
                 if (targetBlock is BlockTypeCrucible blockTypeCrucible)
@@ -23,27 +23,34 @@ public class BlockTypeCrucibleComponent : BlockTypeComponent
                         return;
                     ItemsInfoBean itemsInfo = itemCptDrop.itemsInfo;
                     //首先判断这个道具是否满足转换条件
-                    bool canSynthesis = blockTypeCrucible.StartSynthesis(blockWorldPosition, itemCptDrop.itemDropData.itemData);
-                    if (canSynthesis)
+                    ItemsBean itemData = itemCptDrop.itemDropData.itemData;
+                    blockTypeCrucible.StartSynthesis(blockWorldPosition, itemData, out int numberSynthesis);
+                    if (numberSynthesis > 0)
                     {
-
-                    }
-                    else
-                    {
-                        //如果不能转换 则直接变成元素
-                        Dictionary<ElementalTypeEnum, int> dicElementalData = itemsInfo.GetAllElemental();
-                        List<NumberBean> listElementalData = new List<NumberBean>();
-
-                        foreach (var itemData in dicElementalData)
-                        {
-                            listElementalData.Add(new NumberBean((int)itemData.Key, itemData.Value));
-                        }
-                        //添加元素
-                        bool isAddElementalSuccess = blockTypeCrucible.AddElemental(blockWorldPosition, listElementalData);
-                        if (isAddElementalSuccess)
+                        if (numberSynthesis >= itemData.number)
                         {
                             Destroy(other.gameObject);
+                            return;
                         }
+                        else
+                        {
+                            itemData.number -= numberSynthesis;
+                        }
+                        blockTypeCrucible.PlaySynthesisEffect(blockWorldPosition + new Vector3(0.5f, 0.5f, 0.5f));
+                    }
+                    //如果不能转换 则直接变成元素
+                    Dictionary<ElementalTypeEnum, int> dicElementalData = itemsInfo.GetAllElemental();
+                    List<NumberBean> listElementalData = new List<NumberBean>();
+
+                    foreach (var itemElementalData in dicElementalData)
+                    {
+                        listElementalData.Add(new NumberBean((int)itemElementalData.Key, itemElementalData.Value * itemData.number));
+                    }
+                    //添加元素
+                    bool isAddElementalSuccess = blockTypeCrucible.AddElemental(blockWorldPosition, listElementalData);
+                    if (isAddElementalSuccess)
+                    {
+                        Destroy(other.gameObject);
                     }
                 }
             }

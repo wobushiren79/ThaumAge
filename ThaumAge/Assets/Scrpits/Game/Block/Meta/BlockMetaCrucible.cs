@@ -11,7 +11,7 @@ public class BlockMetaCrucible : BlockMetaBase
     /// 减少元素
     /// </summary>
     /// <param name="dicSubElemental"></param>
-    public void SubElemental(Dictionary<ElementalTypeEnum, int> dicSubElemental)
+    public void SubElemental(Dictionary<ElementalTypeEnum, int> dicSubElemental,int number = 1)
     {
         foreach (var itemData in dicSubElemental)
         {
@@ -20,7 +20,7 @@ public class BlockMetaCrucible : BlockMetaBase
                 var itemHasElemental = listElemental[i];
                 if (itemHasElemental.id == (long)itemData.Key)
                 {
-                    itemHasElemental.number -= itemData.Value;
+                    itemHasElemental.number -= (itemData.Value * number);
                     if (itemHasElemental.number < 0)
                         itemHasElemental.number = 0;
                     if (itemHasElemental.number == 0)

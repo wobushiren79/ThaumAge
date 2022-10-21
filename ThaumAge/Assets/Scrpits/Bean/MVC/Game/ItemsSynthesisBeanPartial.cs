@@ -57,33 +57,45 @@ public partial class ItemsSynthesisBean
     /// 检测坩埚的合成
     /// </summary>
     /// <returns></returns>
-    public bool CheckSynthesisForCrucible(List<NumberBean> listHasElemental, int synthesisBeforeId)
+    public void CheckSynthesisForCrucible(List<NumberBean> listHasElemental, ItemsBean itemData, out int numberSynthesis)
     {
+        numberSynthesis = 0;
         //如果不是这个道具
-        if (synthesisBeforeId != int.Parse(materials))
+        if (itemData.itemId != int.Parse(materials))
         {
-            return false;
+            return;
         }
         Dictionary<ElementalTypeEnum, int> dicElemental = GetElemental();
-        bool hasEnoughElemental = true;
-        foreach (var itemElemental in dicElemental)
+
+        for (int n = 0; n < itemData.number; n++)
         {
-            for (int i = 0; i < listHasElemental.Count; i++)
+            bool hasEnoughElemental = true;
+            foreach (var itemElemental in dicElemental)
             {
-                NumberBean itemHasElemental = listHasElemental[i];
-                if (itemHasElemental.id == (int)itemElemental.Key)
+                bool hasEnoughElementalItem = false;
+                for (int i = 0; i < listHasElemental.Count; i++)
                 {
-                    if (itemHasElemental.number < itemElemental.Value)
+                    NumberBean itemHasElemental = listHasElemental[i];
+                    if (itemHasElemental.id == (int)itemElemental.Key)
                     {
-                        hasEnoughElemental = false;
-                        break;
+                        if (itemHasElemental.number >= itemElemental.Value * (numberSynthesis + 1))
+                        {
+                            hasEnoughElementalItem = true;
+                            break;
+                        }
                     }
                 }
+                if (!hasEnoughElementalItem)
+                {
+                    hasEnoughElemental = false;
+                    break;
+                }
             }
-            if (!hasEnoughElemental)
+            if (hasEnoughElemental)
+                numberSynthesis++;
+            else
                 break;
         }
-        return hasEnoughElemental;
     }
 
     /// <summary>

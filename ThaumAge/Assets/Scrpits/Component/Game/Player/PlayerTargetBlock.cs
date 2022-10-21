@@ -122,7 +122,14 @@ public class PlayerTargetBlock : BaseMonoBehaviour
         //获取这个方块的元素信息 
         List<NumberBean> listElemental = blockMetaData.listElemental;
         if (listElemental.IsNull())
+        {
+            foreach (var itemElementalObj in listElementalItemObj)
+            {
+                itemElementalObj.ShowObj(false);
+            }
+            isShowElemental = false;
             return;
+        }
         isShowElemental = true;
 
         int index = 0;
@@ -201,9 +208,12 @@ public class PlayerTargetBlock : BaseMonoBehaviour
     /// <param name="worldPosition"></param>
     public void EventForUpdateElemental(Vector3Int worldPosition)
     {
-        if (isShowElemental && worldPosition == lastWorldPosition)
+        this.WaitExecuteSeconds(0.1f,()=> 
         {
-            ShowElemental(worldPosition);
-        }
+            if (worldPosition == lastWorldPosition)
+            {
+                ShowElemental(worldPosition);
+            }
+        });
     }
 }

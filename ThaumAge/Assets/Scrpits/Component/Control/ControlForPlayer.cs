@@ -443,9 +443,15 @@ public class ControlForPlayer : ControlForBase
         ItemsHandler.Instance.CreateItemCptDrop(itemDropData);
 
         //扣除道具
-        userData.AddItems(itemData, -1);
+        int itemNumber = userData.AddItems(itemData, -1);
         //刷新UI
         UIHandler.Instance.RefreshUI();
+
+        if (itemNumber == 0)
+        {
+            //刷新手上物品
+            GameHandler.Instance.manager.player.RefreshHandItem();
+        }
     }
 
     /// <summary>
