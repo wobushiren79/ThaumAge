@@ -157,6 +157,36 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ef94b80e1b393614bb590b1263dd9c9e
+    m_Address: Assets/Audio/Sound/audio_sound_water_5.wav
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 9a38f8d46e8377e44bc66901d67ec2f7
+    m_Address: Assets/Audio/Sound/audio_sound_water_4.wav
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: dd9b55dadff20a64f943f70cbdb4ae0b
+    m_Address: Assets/Audio/Sound/audio_sound_water_3.wav
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: c5e1627def9686345a05cbf94f16fe1a
+    m_Address: Assets/Audio/Sound/audio_sound_show_3.wav
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 7bdfd1bc0e20ddf45b3e6f6c14d3810b
+    m_Address: Assets/Audio/Sound/audio_sound_water_6.wav
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 2751f87ae0930a846af5d8bdc3f7ca4f
+    m_Address: Assets/Audio/Sound/audio_sound_show_2.wav
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: fd6114d87f1af534fbf270c47c0f10bf, type: 2}
   m_SchemaSet:

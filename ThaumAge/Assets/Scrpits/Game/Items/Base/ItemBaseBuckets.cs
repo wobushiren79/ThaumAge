@@ -129,7 +129,7 @@ public class ItemBaseBuckets : Item
             itemData.SetMetaData(itemMetaBuckets);
 
             ///播放音效
-            PlayItemSoundUseR(itemData);
+            AudioHandler.Instance.PlaySound(704);
 
             UIHandler.Instance.RefreshUI();
         }
@@ -150,6 +150,7 @@ public class ItemBaseBuckets : Item
             bool isSetSuccess = targetBlock.SetItems(targetChunk, targetBlock, targetBlockDirection,targetPosition, itemData);
             if (isSetSuccess)
             {
+                AudioHandler.Instance.PlaySound(705);
                 UIHandler.Instance.RefreshUI();
                 return;
             }
@@ -182,6 +183,7 @@ public class ItemBaseBuckets : Item
             itemData.SetMetaData(itemMetaBuckets);
 
             UIHandler.Instance.RefreshUI();
+            AudioHandler.Instance.PlaySound(705);
         }
     }
 }
