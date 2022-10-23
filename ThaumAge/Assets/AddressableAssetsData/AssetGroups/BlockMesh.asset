@@ -222,6 +222,18 @@ MonoBehaviour:
     - BlockMeshData
     - BlockMesh
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 07d74a55ccea0ab4880ef13428f75a01
+    m_Address: Assets/Prefabs/BlockMeshData/BlockTableStone.txt
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - BlockMesh
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: fb19fa06530656447a62b8dd4ad045af
+    m_Address: Assets/Prefabs/BlockMeshData/BlockTableWooden.txt
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - BlockMesh
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: fd6114d87f1af534fbf270c47c0f10bf, type: 2}
   m_SchemaSet:

@@ -150,7 +150,8 @@ public enum BlockTypeEnum
     FenceWooden = 6351,//Ä¾ÖÆÕ¤À¸
     FenceDoorWooden = 6361,//Ä¾ÖÆÕ¤À¸ÃÅ
     Bonfire = 6371,//óô»ð
-
+    TableWooden = 6381,//Ä¾×À
+    TableStone = 6382,//Ê¯×À
     BedWooden = 6901,//´²
 
 
