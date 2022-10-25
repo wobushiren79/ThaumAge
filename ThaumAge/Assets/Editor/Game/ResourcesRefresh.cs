@@ -119,7 +119,7 @@ public class ResourcesRefresh : Editor
     {
         //注： 如果是超过2048的图片 需要选用其他的压缩格式
         BlockEditorWindow.CreateBlockModel(2048, BlockEditorWindow.Path_FBX_BlockModelCustom, $"{BlockEditorWindow.Path_BlockTexturesMat}", "BlockCustom", BlockEditorWindow.Path_BlockMatCustom,
-            isCreateTransparent : true,pathMatBlockTransparent : BlockEditorWindow.Path_BlockMatCustomTransparent);
+            isCreateTransparent: true, pathMatBlockTransparent: BlockEditorWindow.Path_BlockMatCustomTransparent);
         BlockEditorWindow.CreateBlockMeshData();
     }
 
@@ -130,13 +130,22 @@ public class ResourcesRefresh : Editor
         BlockEditorWindow.CreateBlockModel(2048, BlockEditorWindow.Path_FBX_BlockModelCommon, $"{BlockEditorWindow.Path_BlockTexturesMat}", "BlockCommon", BlockEditorWindow.Path_BlockMatCommon);
     }
 
-    [MenuItem("工具/资源/刷新FBX资源（装备）")]
+
+    protected static string equipPath = "Assets/Art/FBX/Equip";
+    protected static string equipModelPath = "Assets/Prefabs/Model/Character/Equip";
+    [MenuItem("工具/资源/刷新FBX资源（装备）大小为16")]
     public static void RefreshFBXForEquip()
     {
-        string equipPath = "Assets/Art/FBX/Equip";
-        string equipModelPath = "Assets/Prefabs/Model/Character/Equip";
         CreateFBXMatAndSet(equipPath);
         CreateModelGameObject(equipPath, equipModelPath);
+        EditorUtil.RefreshAsset();
+    }
+
+    [MenuItem("工具/资源/刷新FBX资源（装备）大小为32")]
+    public static void RefreshFBXForEquipX2()
+    {
+        CreateFBXMatAndSet(equipPath);
+        CreateModelGameObject(equipPath, equipModelPath, 32);
         EditorUtil.RefreshAsset();
     }
 
@@ -146,7 +155,7 @@ public class ResourcesRefresh : Editor
         string hairPath = "Assets/Art/FBX/Character/Hair";
         string hairModelPath = "Assets/Prefabs/Model/Character/Hair";
         Material objMat = EditorUtil.GetAssetByPath<Material>($"{hairPath}/Hair_Mat_1.mat");
-        CreateModelGameObject(hairPath, hairModelPath, objMat);
+        CreateModelGameObject(hairPath, hairModelPath, 16, objMat);
         EditorUtil.RefreshAsset();
     }
 
@@ -217,9 +226,8 @@ public class ResourcesRefresh : Editor
         }
     }
 
-    protected static void CreateModelGameObject(string sourcePath, string createPath, Material targetMat = null)
+    protected static void CreateModelGameObject(string sourcePath, string createPath, int size = 16, Material targetMat = null)
     {
-
         //获取文件价目录下的所有文件
         FileInfo[] fileInfos = FileUtil.GetFilesByPath(sourcePath);
         for (int i = 0; i < fileInfos.Length; i++)
@@ -245,8 +253,15 @@ public class ResourcesRefresh : Editor
             GameObject objFBXModel = EditorUtil.GetAssetByPath<GameObject>($"{sourcePath}/{file.Name}");
             GameObject objFBX = Instantiate(objFBXModel);
             objFBX.name = $"{objName}FBX";
-            objFBX.transform.localEulerAngles = new Vector3(0, 0, 0);
-            objFBX.transform.localScale = new Vector3(0.03125f, 0.03125f, 0.03125f);
+            objFBX.transform.localEulerAngles = new Vector3(0, 180, 0);
+            if (size == 16)
+            {
+                objFBX.transform.localScale = new Vector3(0.03125f, 0.03125f, 0.03125f);
+            }
+            else if (size == 32)
+            {
+                objFBX.transform.localScale = new Vector3(0.03125f / 2f, 0.03125f / 2f, 0.03125f / 2f);
+            }
             objFBX.transform.localPosition = new Vector3(0, 0, 0);
             objFBX.transform.parent = objModel.transform;
 

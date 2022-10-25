@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?><COLLADA xmlns="http://www.collada.org/2005/11/COLLADASchema" version="1.4.1">
+    <asset>
+        <contributor>
+            <author>VoxelShop User</author>
+            <authoring_tool>VoxelShop V1.8.22
+</authoring_tool>
+        </contributor>
+        <created>2022-10-25T22:48:33</created>
+        <modified>2022-10-25T22:48:33</modified>
+        <unit meter="1" name="meter"/>
+        <up_axis>Y_UP</up_axis>
+    </asset>
+    <library_images>
+        <image id="TraineeMagicTrousers_texture0-image" name="TraineeMagicTrousers_texture0-image">
+            <init_from>file://TraineeMagicTrousers_texture0.png</init_from>
+        </image>
+    </library_images>
+    <library_effects>
+        <effect id="lambert0-fx">
+            <profile_COMMON>
+                <newparam sid="TraineeMagicTrousers_texture0-surface">
+                    <surface type="2D">
+                        <init_from>TraineeMagicTrousers_texture0-image</init_from>
+                    </surface>
+                </newparam>
+                <newparam sid="TraineeMagicTrousers_texture0-sampler">
+                    <sampler2D>
+                        <source>TraineeMagicTrousers_texture0-surface</source>
+                        <wrap_s>WRAP</wrap_s>
+                        <wrap_t>WRAP</wrap_t>
+                        <minfilter>NEAREST</minfilter>
+                        <magfilter>NEAREST</magfilter>
+                    </sampler2D>
+                </newparam>
+                <technique sid="common">
+                    <lambert>
+                        <emission>
+                            <color>0 0 0 1</color>
+                        </emission>
+                        <ambient>
+                            <color>0 0 0 1</color>
+                        </ambient>
+                        <diffuse>
+                            <texture texcoord="TEX0" texture="TraineeMagicTrousers_texture0-sampler"/>
+                        </diffuse>
+                    </lambert>
+                </technique>
+            </profile_COMMON>
+        </effect>
+    </library_effects>
+    <library_materials>
+        <material id="lambert0-material" name="lambert0">
+            <instance_effect url="#lambert0-fx"/>
+        </material>
+    </library_materials>
+    <library_geometries>
+        <geometry id="Plane-tex-mesh-0" name="Plane-tex">
+            <mesh>
+                <source id="Plane-tex-mesh-0-positions">
+                    <float_array count="24" id="Plane-tex-mesh-0-positions-array">-16 30 6 -16 12 -6 -16 12 6 -16 30 -6 -4 30 6 -4 12 -6 -4 12 6 -4 30 -6</float_array>
+                    <technique_common>
+                        <accessor count="8" source="#Plane-tex-mesh-0-positions-array" stride="3">
+                            <param name="X" type="float"/>
+                            <param name="Y" type="float"/>
+                            <param name="Z" type="float"/>
+                        </accessor>
+                    </technique_common>
+                </source>
+                <source id="Plane-tex-mesh-0-uvs">
+                    <float_array count="48" id="Plane-tex-mesh-0-uvs-array">0.18755549 0.87501436 0.32809725 0.9062212 0.32809725 0.87501436 0.406223 0.9687185 0.406223 0.92189074 0.26567897 0.92189074 0.1875221 0.9062279 0.2187058 0.9062279 0.1875221 0.87504417 0.4374585 0.96872663 0.40627077 0.92192173 0.40627077 0.96872663 0.3437831 0.9062235 0.39060843 0.9062235 0.39060843 0.812553 0.3280695 0.90623564 0.18752775 0.90623564 0.18752775 0.8750288 0.17184801 0.8125315 0.031303987 0.85935926 0.17184801 0.85935926 0.17182931 0.87502134 0.031272847 0.87502134 0.031272847 0.9687074</float_array>
+                    <technique_common>
+                        <accessor count="24" source="#Plane-tex-mesh-0-uvs-array" stride="2">
+                            <param name="S" type="float"/>
+                            <param name="T" type="float"/>
+                        </accessor>
+                    </technique_common>
+                </source>
+                <vertices id="Plane-tex-mesh-0-vertices">
+                    <input semantic="POSITION" source="#Plane-tex-mesh-0-positions"/>
+                </vertices>
+                <triangles count="12" material="Plane-tex-mesh-0-lambert0-material">
+                    <input offset="0" semantic="VERTEX" source="#Plane-tex-mesh-0-vertices"/>
+                    <input offset="1" semantic="TEXCOORD" set="0" source="#Plane-tex-mesh-0-uvs"/>
+                    <p>0 0 1 1 2 2 0 3 3 4 1 5 5 1 4 0 6 2 7 4 4 3 5 5 1 7 6 6 2 8 5 7 6 6 1 8 4 9 3 10 0 11 4 12 7 13 3 14 6 1 0 0 2 2 6 15 4 16 0 17 3 19 5 18 1 20 7 22 5 21 3 23</p>
+                </triangles>
+            </mesh>
+        </geometry>
+    </library_geometries>
+    <library_visual_scenes>
+        <visual_scene id="Scene" name="Scene">
+            <node id="traineemagictrousers.merged" name="TraineeMagicTrousers.Merged" type="NODE">
+                <translate sid="location">10.0 -0.0 0.0</translate>
+                <rotate sid="rotationZ">0 0 1 0</rotate>
+                <rotate sid="rotationY">0 1 0 0</rotate>
+                <rotate sid="rotationX">1 0 0 0</rotate>
+                <scale sid="scale">1.0 1.0 1.0</scale>
+                <instance_geometry name="Merged" sid="traineemagictrousers.merged" url="#Plane-tex-mesh-0">
+                    <bind_material>
+                        <technique_common>
+                            <instance_material symbol="lambert0-material" target="#lambert0-material">
+                                <bind_vertex_input input_semantic="TEXCOORD" input_set="0" semantic="TEX0"/>
+                            </instance_material>
+                        </technique_common>
+                    </bind_material>
+                </instance_geometry>
+            </node>
+        </visual_scene>
+    </library_visual_scenes>
+    <scene>
+        <instance_visual_scene url="#Scene"/>
+    </scene>
+</COLLADA>

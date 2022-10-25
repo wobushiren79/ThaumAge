@@ -5,10 +5,10 @@
             <authoring_tool>VoxelShop V1.8.22
 </authoring_tool>
         </contributor>
-        <created>2022-06-19T21:00:41</created>
-        <modified>2022-06-19T21:00:41</modified>
+        <created>2022-10-25T23:13:33</created>
+        <modified>2022-10-25T23:13:33</modified>
         <unit meter="1" name="meter"/>
-        <up_axis>Z_UP</up_axis>
+        <up_axis>Y_UP</up_axis>
     </asset>
     <library_images>
         <image id="WitchClothes_1_texture0-image" name="WitchClothes_1_texture0-image">
@@ -57,7 +57,7 @@
         <geometry id="Plane-tex-mesh-0" name="Plane-tex">
             <mesh>
                 <source id="Plane-tex-mesh-0-positions">
-                    <float_array count="24" id="Plane-tex-mesh-0-positions-array">-19 -3 33 -19 5 27 -19 -3 27 -19 5 33 -7 -3 33 -7 5 27 -7 -3 27 -7 5 33</float_array>
+                    <float_array count="24" id="Plane-tex-mesh-0-positions-array">-40 68 8 -40 56 -8 -40 56 8 -40 68 -8 -16 68 8 -16 56 -8 -16 56 8 -16 68 -8</float_array>
                     <technique_common>
                         <accessor count="8" source="#Plane-tex-mesh-0-positions-array" stride="3">
                             <param name="X" type="float"/>
@@ -89,7 +89,7 @@
     <library_visual_scenes>
         <visual_scene id="Scene" name="Scene">
             <node id="witchclothes_1.merged" name="WitchClothes_1.Merged" type="NODE">
-                <translate sid="location">-0.0 -0.0 -0.0</translate>
+                <translate sid="location">28.0 -0.0 0.0</translate>
                 <rotate sid="rotationZ">0 0 1 0</rotate>
                 <rotate sid="rotationY">0 1 0 0</rotate>
                 <rotate sid="rotationX">1 0 0 0</rotate>

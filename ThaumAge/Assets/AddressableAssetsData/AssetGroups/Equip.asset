@@ -35,12 +35,6 @@ MonoBehaviour:
     m_SerializedLabels:
     - Equip
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: d65f616718710af49a9d5c79da36e89c
-    m_Address: Assets/Prefabs/Model/Character/Equip/WitchHead.prefab
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - Equip
-    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 0669b7d96578ffd419dad88a4ed57268
     m_Address: Assets/Prefabs/Model/Character/Hair/Hair_1.prefab
     m_ReadOnly: 0
@@ -121,6 +115,48 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: bcf040d4fad5b9742919f2a94572720f
     m_Address: Assets/Prefabs/Model/Character/Equip/GogglesOfRevealing.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Equip
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 5f7a670fdfe21994b8f2123b67be3394
+    m_Address: Assets/Prefabs/Model/Character/Equip/TraineeResearchShoes.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Equip
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 449cd0486dcdc834ebbe5767d5ba056b
+    m_Address: Assets/Prefabs/Model/Character/Equip/TraineeResearchRobe_1.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Equip
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 16dfec66bbb1ea44aa51a674375a8b07
+    m_Address: Assets/Prefabs/Model/Character/Equip/TraineeResearchRobe.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Equip
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 47d411ab24818e0449260fc611df51e3
+    m_Address: Assets/Prefabs/Model/Character/Equip/TraineeMagicRobe.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Equip
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ab170b9ad860d3c48b23e350462eca3b
+    m_Address: Assets/Prefabs/Model/Character/Equip/TraineeMagicRobe_1.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Equip
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 0d0a32655ced6ec4d9dfe8855a7dcd16
+    m_Address: Assets/Prefabs/Model/Character/Equip/TraineeMagicShoes.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Equip
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 62d103c99b97ccf48b40e4eca1ff5e06
+    m_Address: Assets/Prefabs/Model/Character/Equip/TraineeMagicTrousers.prefab
     m_ReadOnly: 0
     m_SerializedLabels:
     - Equip

@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?><COLLADA xmlns="http://www.collada.org/2005/11/COLLADASchema" version="1.4.1">
+    <asset>
+        <contributor>
+            <author>VoxelShop User</author>
+            <authoring_tool>VoxelShop V1.8.22
+</authoring_tool>
+        </contributor>
+        <created>2022-10-25T23:25:17</created>
+        <modified>2022-10-25T23:25:17</modified>
+        <unit meter="1" name="meter"/>
+        <up_axis>Y_UP</up_axis>
+    </asset>
+    <library_images>
+        <image id="BlockArmorStand_texture0-image" name="BlockArmorStand_texture0-image">
+            <init_from>file://BlockArmorStand_texture0.png</init_from>
+        </image>
+    </library_images>
+    <library_effects>
+        <effect id="lambert0-fx">
+            <profile_COMMON>
+                <newparam sid="BlockArmorStand_texture0-surface">
+                    <surface type="2D">
+                        <init_from>BlockArmorStand_texture0-image</init_from>
+                    </surface>
+                </newparam>
+                <newparam sid="BlockArmorStand_texture0-sampler">
+                    <sampler2D>
+                        <source>BlockArmorStand_texture0-surface</source>
+                        <wrap_s>WRAP</wrap_s>
+                        <wrap_t>WRAP</wrap_t>
+                        <minfilter>NEAREST</minfilter>
+                        <magfilter>NEAREST</magfilter>
+                    </sampler2D>
+                </newparam>
+                <technique sid="common">
+                    <lambert>
+                        <emission>
+                            <color>0 0 0 1</color>
+                        </emission>
+                        <ambient>
+                            <color>0 0 0 1</color>
+                        </ambient>
+                        <diffuse>
+                            <texture texcoord="TEX0" texture="BlockArmorStand_texture0-sampler"/>
+                        </diffuse>
+                    </lambert>
+                </technique>
+            </profile_COMMON>
+        </effect>
+    </library_effects>
+    <library_materials>
+        <material id="lambert0-material" name="lambert0">
+            <instance_effect url="#lambert0-fx"/>
+        </material>
+    </library_materials>
+    <library_geometries>
+        <geometry id="Plane-tex-mesh-0" name="Plane-tex">
+            <mesh>
+                <source id="Plane-tex-mesh-0-positions">
+                    <float_array count="120" id="Plane-tex-mesh-0-positions-array">-6 92 6 -6 68 -6 -6 68 6 -6 92 -6 -6 36 6 -6 4 -6 -6 4 6 -6 36 -6 -10 110 10 -10 92 -10 -10 92 10 -10 110 -10 -10 68 8 -10 36 -8 -10 36 8 -10 68 -8 -32 4 32 -32 0 -32 -32 0 32 -32 4 -32 6 92 6 6 68 -6 6 68 6 6 92 -6 6 36 6 6 4 -6 6 4 6 6 36 -6 10 110 10 10 92 -10 10 92 10 10 110 -10 10 68 8 10 36 -8 10 36 8 10 68 -8 32 4 32 32 0 -32 32 0 32 32 4 -32</float_array>
+                    <technique_common>
+                        <accessor count="40" source="#Plane-tex-mesh-0-positions-array" stride="3">
+                            <param name="X" type="float"/>
+                            <param name="Y" type="float"/>
+                            <param name="Z" type="float"/>
+                        </accessor>
+                    </technique_common>
+                </source>
+                <source id="Plane-tex-mesh-0-uvs">
+                    <float_array count="156" id="Plane-tex-mesh-0-uvs-array">0.042979203 0.98435175 0.06638534 0.9687616 0.042979203 0.9687616 0.042989656 0.9843634 0.0663958 0.9843634 0.0663958 0.96877325 0.13841408 0.96702534 0.15847152 0.98435205 0.15847152 0.96702534 0.044280592 0.9843506 0.06508464 0.9687622 0.044280592 0.9687622 0.044290356 0.9843628 0.065094404 0.9843628 0.065094404 0.9687744 0.06251105 0.49998894 0.0781029 0.49998894 0.06251105 0.48439708 0.062508516 0.48439002 0.079162404 0.98434496 0.079162404 0.48439002 0.06444267 0.9687616 0.06054165 0.98435175 0.044937555 0.9687616 0.06252154 0.93748564 0.075886704 0.93748564 0.08034176 0.9219037 0.04947113 0.8593884 0.028659232 0.8593884 0.04686964 0.8905982 0.031278845 0.92446953 0.062485576 0.921869 0.062485576 0.9062656 0.06054165 0.96877325 0.06444267 0.9843634 0.044937555 0.9843634 0.075886704 0.92188936 0.06252154 0.92188936 0.08034176 0.9374713 0.093737796 0.9374902 0.0625244 0.9343701 0.093737796 0.92188966 0.06251483 0.9374827 0.06251483 0.9257862 0.093720354 0.92188734 0.093737796 0.9218848 0.093737796 0.93748534 0.0625244 0.9250049 0.093720354 0.93748766 0.06251483 0.9335888 0.06251483 0.9218923 0.08095758 0.93748677 0.06251666 0.93115056 0.08095758 0.92188996 0.06251443 0.9374786 0.06251443 0.9325598 0.08093705 0.9219024 0.08095758 0.92188823 0.08095758 0.93748504 0.06251666 0.92822444 0.08093705 0.9374726 0.06251443 0.9268152 0.06251443 0.9218964 0.15819268 0.98435175 0.13869278 0.9670255 0.15819268 0.9670255 0.15818222 0.9670255 0.13868232 0.9670255 0.13868232 0.98435175 0.06443437 0.9687625 0.04493125 0.98435 0.04493125 0.9687625 0.06444375 0.968775 0.06444375 0.9843625 0.044940624 0.9843625 0.15846092 0.96702534 0.13840348 0.96702534 0.13840348 0.98435205</float_array>
+                    <technique_common>
+                        <accessor count="78" source="#Plane-tex-mesh-0-uvs-array" stride="2">
+                            <param name="S" type="float"/>
+                            <param name="T" type="float"/>
+                        </accessor>
+                    </technique_common>
+                </source>
+                <vertices id="Plane-tex-mesh-0-vertices">
+                    <input semantic="POSITION" source="#Plane-tex-mesh-0-positions"/>
+                </vertices>
+                <triangles count="76" material="Plane-tex-mesh-0-lambert0-material">
+                    <input offset="0" semantic="VERTEX" source="#Plane-tex-mesh-0-vertices"/>
+                    <input offset="1" semantic="TEXCOORD" set="0" source="#Plane-tex-mesh-0-uvs"/>
+                    <p>0 0 1 1 2 2 0 3 3 4 1 5 4 0 5 1 6 2 4 3 7 4 5 5 8 6 9 7 10 8 8 7 11 8 9 6 12 9 13 10 14 11 12 12 15 13 13 14 16 15 17 16 18 17 16 15 19 16 17 17 21 1 20 0 22 2 23 4 20 3 21 5 25 1 24 0 26 2 27 4 24 3 25 5 29 7 28 6 30 8 31 8 28 7 29 6 33 10 32 9 34 11 35 13 32 12 33 14 37 16 36 15 38 17 39 16 36 15 37 17 17 19 38 18 18 20 37 20 38 19 17 18 24 22 34 21 14 23 4 25 24 24 14 26 33 28 34 27 24 29 13 28 4 29 14 27 27 31 33 30 24 32 7 31 4 32 13 30 33 34 27 33 13 35 27 37 7 36 13 38 20 40 30 39 10 41 0 43 20 42 10 44 29 46 30 45 20 47 9 46 0 47 10 45 23 49 29 48 20 50 3 49 0 50 9 48 29 39 23 40 9 41 23 42 3 43 9 44 36 51 26 52 16 53 26 54 6 55 16 56 36 57 39 58 26 59 6 59 19 58 16 57 39 60 25 61 26 62 6 62 5 61 19 60 25 52 39 51 19 53 5 55 25 54 19 56 32 21 22 22 12 23 22 24 2 25 12 26 32 27 35 28 22 29 2 29 15 28 12 27 35 30 21 31 22 32 2 32 1 31 15 30 21 33 35 34 15 35 1 36 21 37 15 38 28 63 11 64 8 65 28 66 31 67 11 68 26 1 4 0 6 2 26 5 24 4 4 3 22 1 0 0 2 2 22 5 20 4 0 3 34 69 12 70 14 71 34 72 32 73 12 74 30 7 8 6 10 8 30 75 28 76 8 77 38 15 16 16 18 17 38 15 36 16 16 17 7 0 25 1 5 2 27 4 25 5 7 3 3 0 21 1 1 2 23 4 21 5 3 3 15 70 33 69 13 71 35 73 33 72 15 74 11 6 29 7 9 8 31 76 29 75 11 77 19 16 37 15 17 17 39 16 37 15 19 17</p>
+                </triangles>
+            </mesh>
+        </geometry>
+    </library_geometries>
+    <library_visual_scenes>
+        <visual_scene id="Scene" name="Scene">
+            <node id="blockarmorstand.merged" name="BlockArmorStand.Merged" type="NODE">
+                <translate sid="location">-0.0 -0.0 0.0</translate>
+                <rotate sid="rotationZ">0 0 1 0</rotate>
+                <rotate sid="rotationY">0 1 0 0</rotate>
+                <rotate sid="rotationX">1 0 0 0</rotate>
+                <scale sid="scale">1.0 1.0 1.0</scale>
+                <instance_geometry name="Merged" sid="blockarmorstand.merged" url="#Plane-tex-mesh-0">
+                    <bind_material>
+                        <technique_common>
+                            <instance_material symbol="lambert0-material" target="#lambert0-material">
+                                <bind_vertex_input input_semantic="TEXCOORD" input_set="0" semantic="TEX0"/>
+                            </instance_material>
+                        </technique_common>
+                    </bind_material>
+                </instance_geometry>
+            </node>
+        </visual_scene>
+    </library_visual_scenes>
+    <scene>
+        <instance_visual_scene url="#Scene"/>
+    </scene>
+</COLLADA>
