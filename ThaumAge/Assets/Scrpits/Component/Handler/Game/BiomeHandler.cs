@@ -18,6 +18,7 @@ public class BiomeHandler : BaseHandler<BiomeHandler, BiomeManager>
         int seed = WorldCreateHandler.Instance.manager.GetWorldSeed();
         offsetBiome = Random.value * 1000;
         fastNoise = new FastNoise(seed);
+        SimplexNoiseUtil.Seed = seed;
     }
 
     /// <summary>

@@ -424,6 +424,7 @@ public class Chunk
                     //如果是空 则跳过
                     if (blockType == BlockTypeEnum.None)
                         continue;
+
                     Block block = BlockHandler.Instance.manager.GetRegisterBlock(blockType);
                     //添加方块
                     chunkData.SetBlockForLocal(x, y, z, block, BlockDirectionEnum.UpForward);
