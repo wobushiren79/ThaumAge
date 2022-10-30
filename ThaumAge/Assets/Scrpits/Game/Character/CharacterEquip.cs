@@ -15,6 +15,9 @@ public class CharacterEquip : CharacterBase
     //衣服袖子容器
     public GameObject objClothesRContainer;
     public GameObject objClothesLContainer;
+    //裤子容器
+    public GameObject objTrousersLContainer;
+    public GameObject objTrousersRContainer;
 
     public bool isShowHead = true;
 
@@ -34,6 +37,9 @@ public class CharacterEquip : CharacterBase
 
         objClothesRContainer = character.characterClothesRight;
         objClothesLContainer = character.characterClothesLeft;
+
+        objTrousersLContainer = character.characterTrousersL;
+        objTrousersRContainer = character.characterTrousersR;
     }
 
     /// <summary>
@@ -48,6 +54,7 @@ public class CharacterEquip : CharacterBase
         ChangeEquip(EquipTypeEnum.Hats, characterEquipData.hats);
         ChangeEquip(EquipTypeEnum.Clothes, characterEquipData.clothes);
         ChangeEquip(EquipTypeEnum.Shoes, characterEquipData.shoes);
+        ChangeEquip(EquipTypeEnum.Trousers, characterEquipData.trousers);
     }
 
     /// <summary>
@@ -89,6 +96,8 @@ public class CharacterEquip : CharacterBase
                 ChangeEquipDetails(equipId, objShoesLContainer, new List<GameObject>() { objShoesRContainer }, callBack: callBack, callBackModelRemark: callBackModelRemark);
                 return;
             case EquipTypeEnum.Trousers://裤子
+                characterEquipData.trousers = equipData;
+                ChangeEquipDetails(equipId, objTrousersLContainer, new List<GameObject>() { objTrousersRContainer }, callBack: callBack, callBackModelRemark: callBackModelRemark);
                 return;
             case EquipTypeEnum.Headwear://头饰
                 return;

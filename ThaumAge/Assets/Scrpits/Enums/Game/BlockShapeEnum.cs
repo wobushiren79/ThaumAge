@@ -9,6 +9,7 @@ public enum BlockShapeEnum
     CubeCuboid = 3,//长方体方块
     CubeLeaves = 4,//树叶方块
     CubeHalf = 5,//一半
+    CubeAround = 6,//材质连接的方块（例子：玻璃的连接）
 
     Stairs = 11,//楼梯
     Face = 21,//一个面

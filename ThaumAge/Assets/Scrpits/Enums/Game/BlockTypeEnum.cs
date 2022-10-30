@@ -28,6 +28,7 @@ public enum BlockTypeEnum
     OreGold = 904,//金矿
     OreTin = 905,//锡矿
     OreAluminum = 906,//铝矿
+    OreZinc = 907,//锌矿
 
     ElementalCrystalMetal = 991,//金元素水晶
     ElementalCrystalWood = 992,//木元素水晶

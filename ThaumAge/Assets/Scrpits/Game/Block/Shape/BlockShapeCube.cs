@@ -140,49 +140,46 @@ public class BlockShapeCube : BlockShape
     /// <param name="tris"></param>
     public override void BuildBlock(Chunk chunk, Vector3Int localPosition)
     {
-        if (block.blockType != BlockTypeEnum.None)
+        //只有在能旋转的时候才去查询旋转方向
+        BlockDirectionEnum direction = BlockDirectionEnum.UpForward;
+        if (block.blockInfo.rotate_state != 0)
         {
-            //只有在能旋转的时候才去查询旋转方向
-            BlockDirectionEnum direction = BlockDirectionEnum.UpForward;
-            if (block.blockInfo.rotate_state != 0)
-            {
-                direction = chunk.chunkData.GetBlockDirection(localPosition.x, localPosition.y, localPosition.z);
-            }
-            //Left
-            if (CheckNeedBuildFace(chunk, localPosition, direction, DirectionEnum.Left))
-            {
-                BuildFace(chunk, localPosition, direction, DirectionEnum.Left, vertsAddLeft, uvsAddLeft, colorsAddCube, trisAddCube);
-            }
+            direction = chunk.chunkData.GetBlockDirection(localPosition.x, localPosition.y, localPosition.z);
+        }
+        //Left
+        if (CheckNeedBuildFace(chunk, localPosition, direction, DirectionEnum.Left))
+        {
+            BuildFace(chunk, localPosition, direction, DirectionEnum.Left, vertsAddLeft, uvsAddLeft, colorsAddCube, trisAddCube);
+        }
 
-            //Right
-            if (CheckNeedBuildFace(chunk, localPosition, direction, DirectionEnum.Right))
-            {
-                BuildFace(chunk, localPosition, direction, DirectionEnum.Right, vertsAddRight, uvsAddRight, colorsAddCube, trisAddCube);
-            }
+        //Right
+        if (CheckNeedBuildFace(chunk, localPosition, direction, DirectionEnum.Right))
+        {
+            BuildFace(chunk, localPosition, direction, DirectionEnum.Right, vertsAddRight, uvsAddRight, colorsAddCube, trisAddCube);
+        }
 
-            //Bottom
-            if (CheckNeedBuildFace(chunk, localPosition, direction, DirectionEnum.Down))
-            {
-                BuildFace(chunk, localPosition, direction, DirectionEnum.Down, vertsAddDown, uvsAddDown, colorsAddCube, trisAddCube);
-            }
+        //Bottom
+        if (CheckNeedBuildFace(chunk, localPosition, direction, DirectionEnum.Down))
+        {
+            BuildFace(chunk, localPosition, direction, DirectionEnum.Down, vertsAddDown, uvsAddDown, colorsAddCube, trisAddCube);
+        }
 
-            //Top
-            if (CheckNeedBuildFace(chunk, localPosition, direction, DirectionEnum.UP))
-            {
-                BuildFace(chunk, localPosition, direction, DirectionEnum.UP, vertsAddUp, uvsAddUp, colorsAddCube, trisAddCube);
-            }
+        //Top
+        if (CheckNeedBuildFace(chunk, localPosition, direction, DirectionEnum.UP))
+        {
+            BuildFace(chunk, localPosition, direction, DirectionEnum.UP, vertsAddUp, uvsAddUp, colorsAddCube, trisAddCube);
+        }
 
-            //Forward
-            if (CheckNeedBuildFace(chunk, localPosition, direction, DirectionEnum.Forward))
-            {
-                BuildFace(chunk, localPosition, direction, DirectionEnum.Forward, vertsAddForward, uvsAddForward, colorsAddCube, trisAddCube);
-            }
+        //Forward
+        if (CheckNeedBuildFace(chunk, localPosition, direction, DirectionEnum.Forward))
+        {
+            BuildFace(chunk, localPosition, direction, DirectionEnum.Forward, vertsAddForward, uvsAddForward, colorsAddCube, trisAddCube);
+        }
 
-            //Back
-            if (CheckNeedBuildFace(chunk, localPosition, direction, DirectionEnum.Back))
-            {
-                BuildFace(chunk, localPosition, direction, DirectionEnum.Back, vertsAddBack, uvsAddBack, colorsAddCube, trisAddCube);
-            }
+        //Back
+        if (CheckNeedBuildFace(chunk, localPosition, direction, DirectionEnum.Back))
+        {
+            BuildFace(chunk, localPosition, direction, DirectionEnum.Back, vertsAddBack, uvsAddBack, colorsAddCube, trisAddCube);
         }
     }
 
