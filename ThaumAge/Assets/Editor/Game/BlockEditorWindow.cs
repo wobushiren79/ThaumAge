@@ -437,8 +437,10 @@ public class BlockEditorWindow : EditorWindow
                 meshFilterModel = tfModel.GetComponentInChildren<MeshFilter>();
             }
             MeshDataCustom meshData = null;
+            float modelSize = 0.03125f;
             if (meshFilterModel != null)
             {
+                modelSize = meshFilterModel.transform.localScale.x;
                 Vector3 offsetPosition = new Vector3(0.5f, 0f, 0.5f);
                 if (tfModel != null)
                 {
@@ -447,7 +449,7 @@ public class BlockEditorWindow : EditorWindow
                 }
                 if (meshFilterModel.sharedMesh != null)
                 {
-                    meshData = new MeshDataCustom(colliderModel, meshFilterModel.sharedMesh, 0.03125f, offsetPosition, meshFilterModel.transform.localEulerAngles);
+                    meshData = new MeshDataCustom(colliderModel, meshFilterModel.sharedMesh, modelSize, offsetPosition, meshFilterModel.transform.localEulerAngles);
                 }
                 else
                 {
@@ -456,7 +458,7 @@ public class BlockEditorWindow : EditorWindow
             }
             else
             {
-                meshData = new MeshDataCustom(colliderModel, 0.03125f, new Vector3(0.5f, 0f, 0.5f), Vector3.zero);
+                meshData = new MeshDataCustom(colliderModel, modelSize, new Vector3(0.5f, 0f, 0.5f), Vector3.zero);
             }
             //获取Other
             List<Mesh> listMesh0ther = new List<Mesh>(); ;
@@ -476,7 +478,7 @@ public class BlockEditorWindow : EditorWindow
                     Vector3 offsetPosition = new Vector3(0.5f, 0f, 0.5f);
                     offsetPosition += (tfOther.localPosition - new Vector3(0.5f, 0.5f, 0.5f));
                     offsetPosition += meshFiltertfOther.transform.localPosition + new Vector3(0f, 0.5f, 0f);
-                    listSizeOther.Add(0.03125f);
+                    listSizeOther.Add(modelSize);
                     listOffsetOther.Add(offsetPosition);
                     listMesh0ther.Add(meshFiltertfOther.sharedMesh);
                     listRotateOther.Add(meshFiltertfOther.transform.localEulerAngles);

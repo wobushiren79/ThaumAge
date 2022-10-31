@@ -65,15 +65,26 @@ public class ItemsInfoBean : BaseBean
     /// 获取握住数据
     /// </summary>
     /// <param name="rotate"></param>
-    public bool GetHoldData(out Vector3 rotate)
+    public bool GetHoldData(out Vector3 rotate,out Vector3 position)
     {
+        rotate = Vector3.zero;
+        position = new Vector3(0, 0, 0.25f);
+
         if (hold_data.IsNull())
         {
-            rotate = Vector3.zero;
             return false;
         }
-        float[] rotateData = hold_data.SplitForArrayFloat(',');
+        string[] holdDataList = hold_data.SplitForArrayStr('&');
+
+        float[] rotateData = holdDataList[0].SplitForArrayFloat(',');
         rotate = new Vector3(rotateData[0], rotateData[1], rotateData[2]);
+
+        if (holdDataList.Length == 2)
+        {
+            float[] positionData = holdDataList[1].SplitForArrayFloat(',');
+            position = new Vector3(positionData[0], positionData[1], positionData[2]);
+        }
+
         return true;
     }
 

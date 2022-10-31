@@ -240,6 +240,12 @@ MonoBehaviour:
     m_SerializedLabels:
     - BlockMesh
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 97ccd807e7fc63e48840780729a38766
+    m_Address: Assets/Prefabs/BlockMeshData/BlockMagicInstrumentAssemblyTable.txt
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - BlockMesh
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: fd6114d87f1af534fbf270c47c0f10bf, type: 2}
   m_SchemaSet:

@@ -139,6 +139,7 @@ public enum BlockTypeEnum
     CrankWooden = 6155,//木制曲柄
     GrinderSimple = 6156,//简易研磨机
 
+    MagicInstrumentAssemblyTable = 6160,//法器组装台
     Crucible = 6161,//坩埚
     ResearchTable = 6162,//研究台
     Box = 6201,//箱子
@@ -154,7 +155,7 @@ public enum BlockTypeEnum
     TableWooden = 6381,//木桌
     TableStone = 6382,//石桌
     BedWooden = 6901,//床
-
+    ArmorStand = 6981,//衣架
 
     TombstoneRare = 6998,//墓碑稀有
     Tombstone = 6999,//墓碑

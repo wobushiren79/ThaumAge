@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &4851701311712900241
+--- !u!1 &6359151871246393634
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,38 +8,38 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 1076369125196472571}
-  - component: {fileID: 6674328761132877979}
-  - component: {fileID: 7440260600626804467}
+  - component: {fileID: 4082393241004560663}
+  - component: {fileID: 3055339197167056208}
+  - component: {fileID: 6864517729931647127}
   m_Layer: 0
-  m_Name: BlockBedWooden
+  m_Name: BlockMagicInstrumentAssemblyTable
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &1076369125196472571
+--- !u!4 &4082393241004560663
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4851701311712900241}
+  m_GameObject: {fileID: 6359151871246393634}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: -0.5, z: 0}
   m_LocalScale: {x: 0.03125, y: 0.03125, z: 0.03125}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!23 &6674328761132877979
+--- !u!23 &3055339197167056208
 MeshRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4851701311712900241}
+  m_GameObject: {fileID: 6359151871246393634}
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
@@ -75,11 +75,11 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!33 &7440260600626804467
+--- !u!33 &6864517729931647127
 MeshFilter:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4851701311712900241}
-  m_Mesh: {fileID: 4300000, guid: 3356d30d92bd2244fa2cb3d5c22dfa82, type: 2}
+  m_GameObject: {fileID: 6359151871246393634}
+  m_Mesh: {fileID: 4300000, guid: 7b8950a8bf5dd194c9b229407c41640d, type: 2}

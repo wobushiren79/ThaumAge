@@ -46,7 +46,7 @@ public class TextureUtil
     /// <param name="filterMode">适配模式</param>
     /// <param name="isSameWH">是否相同宽高</param>
     /// <returns></returns>
-    public static Texture2D SpriteToTexture2D(Sprite sprite, FilterMode filterMode = FilterMode.Point,bool isSameWH = false)
+    public static Texture2D SpriteToTexture2D(Sprite sprite, FilterMode filterMode = FilterMode.Point, bool isSameWH = false)
     {
         try
         {
@@ -66,9 +66,9 @@ public class TextureUtil
 
                 Color[] pixels = sprite.texture.GetPixels
                     (
-                        (int)(sprite.textureRect.x),                                         
-                        (int)(sprite.textureRect.y),                                                
-                        (int)(sprite.textureRect.width),                                              
+                        (int)(sprite.textureRect.x),
+                        (int)(sprite.textureRect.y),
+                        (int)(sprite.textureRect.width),
                         (int)(sprite.textureRect.height)
                     );
                 //如果大小不对 则需要调整pixel的位置
@@ -80,12 +80,12 @@ public class TextureUtil
                     if (sprite.rect.width > sprite.rect.height)
                     {
                         //如果原图 W>H
-                        texture.SetPixels(0, offset/2, (int)sprite.rect.width, (int)sprite.rect.height, pixels);
+                        texture.SetPixels(0, offset / 2, (int)sprite.rect.width, (int)sprite.rect.height, pixels);
                     }
                     else
-                    {  
+                    {
                         //如果原图 H>W
-                        texture.SetPixels(offset/2, 0, (int)sprite.rect.width, (int)sprite.rect.height, pixels);
+                        texture.SetPixels(offset / 2, 0, (int)sprite.rect.width, (int)sprite.rect.height, pixels);
                     }
                 }
                 else
@@ -103,6 +103,47 @@ public class TextureUtil
         catch
         {
             return sprite.texture;
+        }
+    }
+
+    public static Texture2D SpriteToTexture2D(Sprite[] arraySprite, FilterMode filterMode = FilterMode.Point)
+    {
+        Texture2D texture = new Texture2D((int)arraySprite[0].rect.width, (int)arraySprite[0].rect.height, TextureFormat.RGBA32, false);
+        //默认设置所有的像素为透明
+        Color[] pixels = new Color[texture.width * texture.height];
+        try
+        {
+            for (int i = 0; i < arraySprite.Length; i++)
+            {
+                Sprite itemSprite = arraySprite[i];
+                if (itemSprite.rect.width != itemSprite.texture.width)
+                {
+                    Color[] pixelsItem = itemSprite.texture.GetPixels
+                    (
+                            (int)(itemSprite.textureRect.x),
+                            (int)(itemSprite.textureRect.y),
+                            (int)(itemSprite.textureRect.width),
+                            (int)(itemSprite.textureRect.height)
+                    );
+                    for (int p = 0; p < pixels.Length; p++)
+                    {
+                        Color itemColor = pixelsItem[p];
+                        if (itemColor.a == 0)
+                        {
+                            continue;
+                        }
+                        pixels[p] = itemColor;
+                    }
+                }
+            }
+            texture.SetPixels(pixels);
+            texture.filterMode = filterMode;
+            texture.Apply();
+            return texture;
+        }
+        catch
+        {
+            return texture;
         }
     }
 

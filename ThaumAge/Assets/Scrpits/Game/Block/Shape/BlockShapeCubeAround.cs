@@ -10,6 +10,24 @@ public class BlockShapeCubeAround : BlockShapeCube
     }
 
     /// <summary>
+    /// 检测是否生成面
+    /// </summary>
+    /// <returns></returns>
+    protected override bool CheckNeedBuildFaceDef(Block closeBlock, Chunk closeBlockChunk, Vector3Int closeLocalPosition, DirectionEnum closeDirection)
+    {
+        BlockShapeEnum blockShape = closeBlock.blockInfo.GetBlockShape();
+        switch (blockShape)
+        {
+            case BlockShapeEnum.Cube:
+            case BlockShapeEnum.CubeTransparent:
+            case BlockShapeEnum.CubeAround:
+                return false;
+            default:
+                return true;
+        }
+    }
+
+    /// <summary>
     /// 获取周围方块类型  
     /// </summary>
     /// <param name="chunk"></param>
@@ -19,14 +37,15 @@ public class BlockShapeCubeAround : BlockShapeCube
     /// 左右上下
     /// 1111 四周都有
     /// </returns>
-    public int GetAroundBlockType(Chunk chunk, Vector3Int localPosition)
+    public int GetAroundBlockType(Chunk chunk, Vector3Int localPosition,
+        DirectionEnum leftDirection, DirectionEnum rightDirection, DirectionEnum upDirection, DirectionEnum downDirection)
     {
         int blockType = 0;
         //获取上下左右4个方向的方块
-        block.GetCloseBlockByDirection(chunk, localPosition, DirectionEnum.Left, out Block leftBlock, out Chunk leftChunk, out Vector3Int leftBlockLocalPosition);
-        block.GetCloseBlockByDirection(chunk, localPosition, DirectionEnum.Right, out Block rightBlock, out Chunk rightChunk, out Vector3Int rightBlockLocalPosition);
-        block.GetCloseBlockByDirection(chunk, localPosition, DirectionEnum.UP, out Block upBlock, out Chunk upChunk, out Vector3Int upBlockLocalPosition);
-        block.GetCloseBlockByDirection(chunk, localPosition, DirectionEnum.Down, out Block downBlock, out Chunk downChunk, out Vector3Int downBlockLocalPosition);
+        block.GetCloseBlockByDirection(chunk, localPosition, leftDirection, out Block leftBlock, out Chunk leftChunk, out Vector3Int leftBlockLocalPosition);
+        block.GetCloseBlockByDirection(chunk, localPosition, rightDirection, out Block rightBlock, out Chunk rightChunk, out Vector3Int rightBlockLocalPosition);
+        block.GetCloseBlockByDirection(chunk, localPosition, upDirection, out Block upBlock, out Chunk upChunk, out Vector3Int upBlockLocalPosition);
+        block.GetCloseBlockByDirection(chunk, localPosition, downDirection, out Block downBlock, out Chunk downChunk, out Vector3Int downBlockLocalPosition);
 
         if (leftChunk != null && leftBlock != null && leftBlock.blockType == block.blockType)
         {
@@ -47,54 +66,155 @@ public class BlockShapeCubeAround : BlockShapeCube
         return blockType;
     }
 
-    /// <summary>
-    /// 构建方块的六个面
-    /// </summary>
-    public override void BuildBlock(Chunk chunk, Vector3Int localPosition)
+    public override void BaseAddVertsUVsColors(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction, DirectionEnum face, Vector3[] vertsAdd, Vector2[] uvsAdd, Color[] colorsAdd)
     {
-        //只有在能旋转的时候才去查询旋转方向
-        BlockDirectionEnum direction = BlockDirectionEnum.UpForward;
-
-        int blockAroundType = GetAroundBlockType(chunk, localPosition);
-
-        if (block.blockInfo.rotate_state != 0)
+        Vector2[] uvsAddNew;
+        int blockAroundType;
+        Vector2 uvStart;
+        switch (face) 
         {
-            direction = chunk.chunkData.GetBlockDirection(localPosition.x, localPosition.y, localPosition.z);
+            case DirectionEnum.Left:
+                blockAroundType = GetAroundBlockType(chunk, localPosition,DirectionEnum.Back,DirectionEnum.Forward,DirectionEnum.UP,DirectionEnum.Down);
+                uvStart = GetUVStartPosition(block, blockAroundType);
+                uvsAddNew = new Vector2[]
+                {
+                    new Vector2(uvStart.x ,uvStart.y + uvWidth),
+                    new Vector2(uvStart.x + uvWidth,uvStart.y + uvWidth),
+                    new Vector2(uvStart.x + uvWidth ,uvStart.y),
+                    new Vector2(uvStart.x ,uvStart.y)
+                };
+                break;
+            case DirectionEnum.Right:
+                blockAroundType = GetAroundBlockType(chunk, localPosition, DirectionEnum.Forward, DirectionEnum.Back, DirectionEnum.UP, DirectionEnum.Down);
+                uvStart = GetUVStartPosition(block, blockAroundType);
+                uvsAddNew = new Vector2[]
+                {
+                    new Vector2(uvStart.x,uvStart.y),
+                    new Vector2(uvStart.x,uvStart.y + uvWidth),
+                    new Vector2(uvStart.x+ uvWidth,uvStart.y+ uvWidth),
+                    new Vector2(uvStart.x+ uvWidth,uvStart.y)
+                };
+                break;
+            case DirectionEnum.UP:
+                blockAroundType = GetAroundBlockType(chunk, localPosition, DirectionEnum.Left, DirectionEnum.Right, DirectionEnum.Back, DirectionEnum.Forward);
+                uvStart = GetUVStartPosition(block, blockAroundType);
+                uvsAddNew = new Vector2[]
+                {
+                    new Vector2(uvStart.x,uvStart.y),
+                    new Vector2(uvStart.x,uvStart.y + uvWidth),
+                    new Vector2(uvStart.x + uvWidth,uvStart.y+ uvWidth),
+                    new Vector2(uvStart.x + uvWidth,uvStart.y)
+                };
+                break;
+            case DirectionEnum.Down:
+                blockAroundType = GetAroundBlockType(chunk, localPosition, DirectionEnum.Left, DirectionEnum.Right, DirectionEnum.Forward, DirectionEnum.Back);
+                uvStart = GetUVStartPosition(block, blockAroundType);
+                uvsAddNew = new Vector2[]
+                {
+                    new Vector2(uvStart.x+ uvWidth,uvStart.y+ uvWidth),
+                    new Vector2(uvStart.x,uvStart.y + uvWidth),
+                    new Vector2(uvStart.x,uvStart.y),
+                    new Vector2(uvStart.x+ uvWidth,uvStart.y)
+                };
+                break;
+            case DirectionEnum.Forward:
+                blockAroundType = GetAroundBlockType(chunk, localPosition, DirectionEnum.Left, DirectionEnum.Right, DirectionEnum.UP, DirectionEnum.Down);
+                uvStart = GetUVStartPosition(block, blockAroundType);
+                uvsAddNew = new Vector2[]
+                {
+                    new Vector2(uvStart.x,uvStart.y),
+                    new Vector2(uvStart.x,uvStart.y + uvWidth),
+                    new Vector2(uvStart.x+ uvWidth,uvStart.y+ uvWidth),
+                    new Vector2(uvStart.x+ uvWidth,uvStart.y)
+                };
+                break;
+            case DirectionEnum.Back:
+                blockAroundType = GetAroundBlockType(chunk, localPosition, DirectionEnum.Right, DirectionEnum.Left, DirectionEnum.UP, DirectionEnum.Down);
+                uvStart = GetUVStartPosition(block, blockAroundType);
+                uvsAddNew = new Vector2[]
+                {
+                    new Vector2(uvStart.x ,uvStart.y + uvWidth),
+                    new Vector2(uvStart.x + uvWidth,uvStart.y + uvWidth),
+                    new Vector2(uvStart.x + uvWidth ,uvStart.y),
+                    new Vector2(uvStart.x ,uvStart.y)
+                };
+                break;
+            default:
+                uvsAddNew = new Vector2[0];
+                break;
         }
-        //Left
-        if (CheckNeedBuildFace(chunk, localPosition, direction, DirectionEnum.Left))
-        {
-            BuildFace(chunk, localPosition, direction, DirectionEnum.Left, vertsAddLeft, uvsAddLeft, colorsAddCube, trisAddCube);
-        }
+        base.BaseAddVertsUVsColors(chunk, localPosition, direction, face, vertsAdd, uvsAddNew, colorsAdd);
+    }
 
-        //Right
-        if (CheckNeedBuildFace(chunk, localPosition, direction, DirectionEnum.Right))
+    /// <summary>
+    /// 获取起始UV
+    /// </summary>
+    /// <param name="buildDirection"></param>
+    /// <returns></returns>
+    public virtual Vector2 GetUVStartPosition(Block block,int aroundBlockType)
+    {
+        Vector2Int[] arrayUVData = block.blockInfo.GetUVPosition();
+        int index = 0;
+        switch (aroundBlockType)
         {
-            BuildFace(chunk, localPosition, direction, DirectionEnum.Right, vertsAddRight, uvsAddRight, colorsAddCube, trisAddCube);
-        }
+            case 1111:
+                index = 0;
+                break;
 
-        //Bottom
-        if (CheckNeedBuildFace(chunk, localPosition, direction, DirectionEnum.Down))
-        {
-            BuildFace(chunk, localPosition, direction, DirectionEnum.Down, vertsAddDown, uvsAddDown, colorsAddCube, trisAddCube);
-        }
+            case 0111:
+                index = 1;
+                break;
+            case 1011:
+                index = 2;
+                break;
+            case 1101:
+                index = 3;
+                break;
+            case 1110:
+                index = 4;
+                break;
 
-        //Top
-        if (CheckNeedBuildFace(chunk, localPosition, direction, DirectionEnum.UP))
-        {
-            BuildFace(chunk, localPosition, direction, DirectionEnum.UP, vertsAddUp, uvsAddUp, colorsAddCube, trisAddCube);
-        }
+            case 0011:
+                index = 5;
+                break;
+            case 1100:
+                index = 6;
+                break;
 
-        //Forward
-        if (CheckNeedBuildFace(chunk, localPosition, direction, DirectionEnum.Forward))
-        {
-            BuildFace(chunk, localPosition, direction, DirectionEnum.Forward, vertsAddForward, uvsAddForward, colorsAddCube, trisAddCube);
-        }
+            case 0101:
+                index = 7;
+                break;
 
-        //Back
-        if (CheckNeedBuildFace(chunk, localPosition, direction, DirectionEnum.Back))
-        {
-            BuildFace(chunk, localPosition, direction, DirectionEnum.Back, vertsAddBack, uvsAddBack, colorsAddCube, trisAddCube);
+            case 1001:
+                index = 8;
+                break;
+            case 1010:
+                index = 9;
+                break;
+            case 0110:
+                index = 10;
+                break;
+
+
+
+            case 1000:
+                index = 11;
+                break;
+            case 0100:
+                index = 12;
+                break;
+            case 0010:
+                index = 13;
+                break;
+            case 0001:
+                index = 14;
+                break;
+
+            case 0:
+                index = 15;
+                break;
         }
+        Vector2 uvStartPosition = new Vector2(uvWidth * arrayUVData[index].y, uvWidth * arrayUVData[index].x);
+        return uvStartPosition;
     }
 }

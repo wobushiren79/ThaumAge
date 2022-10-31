@@ -70,7 +70,7 @@ public class Player : BaseMonoBehaviour
         userData.userExitPosition.GetWorldPosition(out WorldTypeEnum worldType, out Vector3 worldPosition);
         if (worldPosition.y <= 0 && worldPosition.x == 0 && worldPosition.z == 0)
         {
-            int maxHeight = WorldCreateHandler.Instance.manager.GetMaxHeightForWorldPosition(0,0);
+            int maxHeight = WorldCreateHandler.Instance.manager.GetMaxHeightForWorldPosition(0, 0);
             worldPosition.y = maxHeight;
             worldPosition.x = 0.5f;
             worldPosition.z = 0.5f;
@@ -155,7 +155,7 @@ public class Player : BaseMonoBehaviour
     {
         UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();
         ItemsBean itemsData = userData.GetItemsFromShortcut();
-        character.CharacterItems.ChangeRightHandItem(itemsData.itemId);
+        character.CharacterItems.ChangeRightHandItem(itemsData);
     }
 
     /// <summary>

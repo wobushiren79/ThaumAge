@@ -20,24 +20,26 @@ public class CharacterItems : CharacterBase
     /// <summary>
     /// 改变右手握住的东西
     /// </summary>
-    public void ChangeRightHandItem(long itemId)
+    public void ChangeRightHandItem(ItemsBean itemsData)
     {
-        if (curItemID == itemId)
+        if (itemsData == null)
             return;
-        this.curItemID = itemId;
-        ItemsInfoBean itemsInfo = ItemsHandler.Instance.manager.GetItemsInfoById(itemId);
+        if (curItemID == itemsData.itemId)
+            return;
+        this.curItemID = itemsData.itemId;
+        ItemsInfoBean itemsInfo = ItemsHandler.Instance.manager.GetItemsInfoById(itemsData.itemId);
         if (itemsInfo == null || itemsInfo.id == 0)
         {
             itemHoldRight.ShowObj(false);
             return;
         }
 
-        itemHoldRight?.SetItem(itemsInfo);
+        itemHoldRight?.SetItem(itemsData, itemsInfo);
 
-        if (itemsInfo.GetHoldData(out Vector3 holdRotate))
+        if (itemsInfo.GetHoldData(out Vector3 holdRotate,out Vector3 holdPosition))
         {
             itemHoldRight.transform.localEulerAngles = holdRotate;
-            itemHoldRight.transform.localPosition = new Vector3(0, 0, 0.25f);
+            itemHoldRight.transform.localPosition = holdPosition;
         }
         else
         {

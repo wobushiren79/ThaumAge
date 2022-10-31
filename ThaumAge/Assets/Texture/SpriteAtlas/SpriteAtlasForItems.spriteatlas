@@ -65,6 +65,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: ec1ee97010ac57347ad357a92e23f314, type: 3}
   - {fileID: 21300000, guid: 30b4bb7026044aa48befaab021e834fd, type: 3}
   - {fileID: 21300000, guid: 7580e780e0e77a948a876c1951464202, type: 3}
+  - {fileID: 21300000, guid: 3e8943a0f2d1c0341a9c2ddb39b431b9, type: 3}
   - {fileID: 21300000, guid: 96f539b07da7e7c4395175588a293fd3, type: 3}
   - {fileID: 21300000, guid: a5a18ff04ce150042bf6e238f46a67c3, type: 3}
   - {fileID: 21300000, guid: 97baaa115d6ecd547a9da8a5c6f5b2a4, type: 3}
@@ -105,6 +106,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: de6eff432ea613e49a81634a52fb6f5d, type: 3}
   - {fileID: 21300000, guid: 2fc24c734ce96c3478533cbc87811324, type: 3}
   - {fileID: 21300000, guid: cfe2ad73c098e5a4ea756380dc934bdc, type: 3}
+  - {fileID: 21300000, guid: 1dd47f73a747a7345a0981072e732ac6, type: 3}
   - {fileID: 21300000, guid: adf8b083032b4684dae1fb12b3822d25, type: 3}
   - {fileID: 21300000, guid: b0c21183f57fa85488bf501cbdfa646f, type: 3}
   - {fileID: 21300000, guid: 03f76883a55541b45a83e0c44fb6f36e, type: 3}
@@ -333,6 +335,7 @@ SpriteAtlas:
   - icon_item_1080211_1
   - icon_item_1080105
   - icon_item_990102
+  - icon_item_106160
   - icon_item_1010002
   - icon_item_100900
   - icon_item_103091
@@ -373,6 +376,7 @@ SpriteAtlas:
   - icon_item_1080107
   - icon_item_100902
   - icon_item_100009
+  - icon_item_106981
   - icon_item_310201
   - icon_item_102006
   - icon_item_109001

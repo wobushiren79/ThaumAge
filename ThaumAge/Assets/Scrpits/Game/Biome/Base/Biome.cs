@@ -33,6 +33,10 @@ public class Biome
     public static float oreAluminumSize = 0.05f;//铝
     public static float oreAluminumOdds = 0.1f;
 
+    public static int oreZincOffsetX = 70000;//锌
+    public static float oreZincSize = 0.05f;//锌
+    public static float oreZincOdds = 0.1f;
+
     public Biome(BiomeTypeEnum biomeType)
     {
         this.biomeType = biomeType;
@@ -44,7 +48,11 @@ public class Biome
     /// </summary>
     public BlockTypeEnum InitBiomeBlock(Chunk chunk, Vector3Int localPos, ChunkTerrainData chunkTerrainData)
     {
-        if (localPos.y > chunkTerrainData.maxHeight)
+        if (localPos.y == 0)
+        {
+            return BlockTypeEnum.Foundation;
+        }
+        else if (localPos.y > chunkTerrainData.maxHeight)
         {
             return GetBlockForMaxHeightUp(chunk, localPos, chunkTerrainData);
         }
@@ -101,6 +109,12 @@ public class Biome
             if (oreAluminum < oreAluminumOdds)
             {
                 return BlockTypeEnum.OreAluminum;
+            }
+
+            float oreZinc  = SimplexNoiseUtil.CalcPixel3D(worldX + oreZincOffsetX, localPos.y, worldZ, oreZincSize);
+            if (oreZinc < oreZincOdds)
+            {
+                return BlockTypeEnum.OreZinc;
             }
             return GetBlockForMaxHeightDown(chunk, localPos, chunkTerrainData);
         }

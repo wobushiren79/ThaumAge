@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using UnityEditor;
 using UnityEngine;
@@ -343,16 +344,14 @@ public class Item
     /// <summary>
     /// 设置道具图标
     /// </summary>
-    /// <param name="ivTarget"></param>
-    /// <param name="itemsInfo"></param>
     public virtual void SetItemIcon(Image ivTarget, ItemsBean itemData, ItemsInfoBean itemsInfo)
     {
+        CptUtil.RemoveChildsByActive(ivTarget.transform);
         SetItemIcon(ivTarget, itemsInfo);
     }
 
     public static void SetItemIcon(Image ivTarget, ItemsInfoBean itemsInfo)
     {
-        CptUtil.RemoveChildsByActive(ivTarget.transform);
         IconHandler.Instance.manager.GetItemsSpriteByName(itemsInfo.icon_key, (spIcon) =>
         {
             if (spIcon == null)
@@ -374,5 +373,17 @@ public class Item
         {
             ivTarget.color = itemsInfo.GetItemsColor();
         }
+    }
+
+    /// <summary>
+    /// 获取道具图标贴图
+    /// </summary>
+    public virtual void GetItemIconTex(ItemsBean itemData, ItemsInfoBean itemsInfo, Action<Texture2D> callBack)
+    {
+        ItemsHandler.Instance.manager.GetItemsIconById(itemsInfo.id, (data) =>
+        {
+            Texture2D itemTex = TextureUtil.SpriteToTexture2D(data);
+            callBack?.Invoke(itemTex);
+        });
     }
 }

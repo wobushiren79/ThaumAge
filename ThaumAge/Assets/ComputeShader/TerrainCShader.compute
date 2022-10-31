@@ -347,8 +347,7 @@ void CSMain (uint3 id : SV_DispatchThreadID,uint3 gid:SV_GROUPID,uint index:SV_G
     GetHexagonBiomeIndex(itemTerraninData.position.x, itemTerraninData.position.y, BiomeSize,sqrt(3) * 0.5  * BiomeSize,
          disMinPosIndex, disMin, disMinPos,
          disSecondPosIndex, disSecond, disSecondPos);
-    //随机获取生态
-    
+    //随机获取生态  
     int randomBiomeIndexMin = RandomIntMinMax(RandomSeed , disMinPosIndex.x , disMinPosIndex.y , 0 , BiomeNum);
     int randomBiomeIndexSecond = RandomIntMinMax(RandomSeed, disSecondPosIndex.x, disSecondPosIndex.y, 0, BiomeNum);
 
