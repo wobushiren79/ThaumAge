@@ -6,7 +6,7 @@ using UnityEngine;
 public class ChunkSaveBean : BaseBean
 {
     //世界类型
-    public int workdType = 0;
+    public int worldType = 0;
     //所属账号
     public string userId;
     //chunk坐标
@@ -67,8 +67,8 @@ public class ChunkSaveBean : BaseBean
             dicBlockData.Remove(index);
     }
 
-    public WorldTypeEnum GetWorkType()
+    public WorldTypeEnum GetWorldType()
     {
-        return (WorldTypeEnum)workdType;
+        return (WorldTypeEnum)worldType;
     }
 }

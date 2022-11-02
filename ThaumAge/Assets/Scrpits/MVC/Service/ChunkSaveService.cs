@@ -37,7 +37,7 @@ public class ChunkSaveService : BaseDataStorage<ChunkSaveBean>
     /// <param name="gameConfig"></param>
     public void UpdateData(ChunkSaveBean data)
     {
-        WorldTypeEnum worldType = data.GetWorkType();
+        WorldTypeEnum worldType = data.GetWorldType();
         string worldName = saveFileName + "_" + EnumExtension.GetEnumName(worldType);
         string fileName = "w_" + data.position.x + "_" + data.position.z;
         FileUtil.CreateDirectory(dataStoragePath + "/" + data.userId);

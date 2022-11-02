@@ -330,10 +330,10 @@ SpriteAtlas:
   - icon_item_108056
   - icon_item_200005
   - icon_item_107103
-  - icon_item_1080106
+  - icon_item_4380106
   - icon_item_102211
-  - icon_item_1080211_1
-  - icon_item_1080105
+  - icon_item_4280211_1
+  - icon_item_4380105
   - icon_item_990102
   - icon_item_106160
   - icon_item_1010002
@@ -347,11 +347,11 @@ SpriteAtlas:
   - icon_item_10000031
   - icon_item_106111
   - icon_item_2900001
-  - icon_item_1080104
+  - icon_item_4380104
   - icon_item_310021
   - icon_item_310101
-  - icon_item_1080205_1
-  - icon_item_1080211
+  - icon_item_4280205_1
+  - icon_item_4280211
   - icon_item_108052
   - icon_item_2100001
   - icon_item_108003
@@ -373,7 +373,7 @@ SpriteAtlas:
   - icon_item_910107
   - icon_item_106162
   - icon_item_100003
-  - icon_item_1080107
+  - icon_item_4380107
   - icon_item_100902
   - icon_item_100009
   - icon_item_106981
@@ -399,7 +399,7 @@ SpriteAtlas:
   - icon_item_1200012
   - icon_item_990108
   - icon_item_10110021
-  - icon_item_1080204
+  - icon_item_4280204
   - icon_item_990106
   - icon_item_10000041
   - icon_item_1010003
@@ -424,7 +424,7 @@ SpriteAtlas:
   - icon_item_1089001
   - icon_item_103202
   - icon_item_108201
-  - icon_item_1080101
+  - icon_item_4380101
   - icon_item_100104
   - icon_item_100103
   - icon_item_101005
@@ -436,7 +436,7 @@ SpriteAtlas:
   - icon_item_106201
   - icon_item_101004
   - icon_item_100006
-  - icon_item_1080206
+  - icon_item_4280206
   - icon_item_108057
   - icon_item_106322
   - icon_item_106341
@@ -448,13 +448,13 @@ SpriteAtlas:
   - icon_item_106999
   - icon_item_104001
   - icon_item_300004
-  - icon_item_1080208_1
+  - icon_item_4280208_1
   - icon_item_200004
   - icon_item_105806
   - icon_item_2200001
   - icon_item_107102
   - icon_item_309001
-  - icon_item_1080103
+  - icon_item_4380103
   - icon_item_108054
   - icon_item_108204
   - icon_item_106301
@@ -462,7 +462,7 @@ SpriteAtlas:
   - icon_item_10110032
   - icon_item_991005
   - icon_item_108301
-  - icon_item_1080102
+  - icon_item_4380102
   - icon_item_310012
   - icon_item_910102
   - icon_item_100102
@@ -470,17 +470,17 @@ SpriteAtlas:
   - icon_item_103001
   - icon_item_310032
   - icon_item_102004
-  - icon_item_1080202_1
+  - icon_item_4280202_1
   - icon_item_900201
   - icon_item_310031
   - icon_item_1200044
   - icon_item_103201
   - icon_item_2300001
-  - icon_item_1080207_1
-  - icon_item_1080208
+  - icon_item_4280207_1
+  - icon_item_4280208
   - icon_item_100008
-  - icon_item_1080206_1
-  - icon_item_1080202
+  - icon_item_4280206_1
+  - icon_item_4280202
   - icon_item_991001
   - icon_item_108105
   - icon_item_108002
@@ -507,26 +507,26 @@ SpriteAtlas:
   - icon_item_108205
   - icon_item_buckets_water
   - icon_item_101007
-  - icon_item_1080207
+  - icon_item_4280207
   - icon_item_1200041
   - icon_item_108103
-  - icon_item_1080205
+  - icon_item_4280205
   - icon_item_103025
   - icon_item_106156
   - icon_item_107005
   - icon_item_990005
   - icon_item_103013
-  - icon_item_1080212_1
+  - icon_item_4280212_1
   - icon_item_103092
   - icon_item_103024
   - icon_item_100001
   - icon_item_103022
   - icon_item_300001
-  - icon_item_1080212
+  - icon_item_4280212
   - icon_item_309002
   - icon_item_103021
   - icon_item_2400001
-  - icon_item_1080203_1
+  - icon_item_4280203_1
   - icon_item_1011001
   - icon_item_200006
   - icon_item_990006
@@ -537,7 +537,7 @@ SpriteAtlas:
   - icon_item_910109
   - icon_item_103093
   - icon_item_1000002
-  - icon_item_1080204_1
+  - icon_item_4280204_1
   - icon_item_991003
   - icon_item_990112
   - icon_item_300007
@@ -555,7 +555,7 @@ SpriteAtlas:
   - icon_item_108206
   - icon_item_103002
   - icon_item_200001
-  - icon_item_1080203
+  - icon_item_4280203
   - icon_item_100004
   - icon_item_3300001
   - icon_item_108102

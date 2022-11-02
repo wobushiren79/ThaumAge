@@ -5,7 +5,7 @@ using UnityEditor;
 using UnityEngine;
 
 public class GameDataManager : BaseManager,
-    IGameConfigView, IChunkSaveView, IUserDataView, IBaseDataView
+    IGameConfigView, IChunkSaveView, IUserDataView, IBaseDataView,IBiomeSaveView
 {
     //游戏设置
     public GameConfigBean gameConfig;
@@ -15,6 +15,10 @@ public class GameDataManager : BaseManager,
     public ChunkSaveController controllerForChunkSave;
     public UserDataController controllerForUserData;
     public BaseDataController controllerForBase;
+    public BiomeSaveController controllerForBiomeSave;
+
+    //保存的生态信息
+    public Dictionary<WorldTypeEnum, BiomeSaveBean> dicBiomeSaveData = new Dictionary<WorldTypeEnum, BiomeSaveBean>();
 
     protected static object lockForSaveData = new object();
 
@@ -24,6 +28,7 @@ public class GameDataManager : BaseManager,
         controllerForChunkSave = new ChunkSaveController(this, this);
         controllerForUserData = new UserDataController(this, this);
         controllerForBase = new BaseDataController(this, this);
+        controllerForBiomeSave = new BiomeSaveController(this,this);
         controllerForGameConfig.GetGameConfigData();
     }
 
@@ -58,6 +63,9 @@ public class GameDataManager : BaseManager,
     /// </summary>
     public void UseUserData(UserDataBean userData)
     {
+        //需要先清除之前账号的数据
+        dicBiomeSaveData.Clear();
+
         this.userData = userData;
     }
 
@@ -71,6 +79,23 @@ public class GameDataManager : BaseManager,
     }
 
     /// <summary>
+    /// 获取保存的生态信息
+    /// </summary>
+    public BiomeSaveBean GetBiomeSaveData(string userId, WorldTypeEnum worldType)
+    {
+        if(dicBiomeSaveData.TryGetValue(worldType,out BiomeSaveBean biomeSaveData))
+        {
+            return biomeSaveData;
+        }
+        else
+        {
+            biomeSaveData = controllerForBiomeSave.GetBiomeSaveData(userId, worldType, null);
+            dicBiomeSaveData.Add(worldType, biomeSaveData);
+            return biomeSaveData;
+        }
+    }
+
+    /// <summary>
     /// 获取游戏设置
     /// </summary>
     /// <returns></returns>
@@ -79,6 +104,17 @@ public class GameDataManager : BaseManager,
         if (gameConfig == null)
             gameConfig = new GameConfigBean();
         return gameConfig;
+    }
+
+    /// <summary>
+    /// 保存生态数据
+    /// </summary>
+    public void SaveBiomeData()
+    {
+        foreach (var itemData in dicBiomeSaveData)
+        {
+            controllerForBiomeSave.SetBiomeSaveData(itemData.Value,null);
+        }
     }
 
     /// <summary>
@@ -196,6 +232,16 @@ public class GameDataManager : BaseManager,
     }
 
     public void GetChunkSaveFail(string failMsg, Action action)
+    {
+
+    }
+
+    public void GetBiomeSaveSuccess<T>(T data, Action<T> action)
+    {
+        action?.Invoke(data);
+    }
+
+    public void GetBiomeSaveFail(string failMsg, Action action)
     {
 
     }

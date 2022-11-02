@@ -449,7 +449,7 @@ public class Chunk
         if (chunkSaveData == null)
         {
             chunkSaveData = new ChunkSaveBean();
-            chunkSaveData.workdType = (int)WorldCreateHandler.Instance.manager.worldType;
+            chunkSaveData.worldType = (int)WorldCreateHandler.Instance.manager.worldType;
             chunkSaveData.userId = userData.userId;
             chunkSaveData.position = chunkData.positionForWorld;
         }

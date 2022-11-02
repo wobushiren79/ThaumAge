@@ -9,5 +9,7 @@ public struct ChunkTerrainData
     public int maxHeight;
     //当前生态
     public int biomeIndex;
+    //当前生态中心位置
+    public Vector2 biomePosition;
 }
 

@@ -16,5 +16,7 @@ public partial class UIGameMain
 
     public Button ui_Exit;
 
+    public Button ui_Wood;
+
 
 }

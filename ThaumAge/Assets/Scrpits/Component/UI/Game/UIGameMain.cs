@@ -23,6 +23,27 @@ public partial class UIGameMain : BaseUIComponent
         ui_Shortcuts.RefreshUI();
         //状态刷新
         ui_ViewCharacterStatus.RefreshUI();
+        //展示一些解锁UI
+        ShowUnlockUI();
+    }
+
+    /// <summary>
+    /// 展示解锁UI
+    /// </summary>
+    public void ShowUnlockUI()
+    {
+        ui_Wood.gameObject.ShowObj(false);
+        //法杖的UI
+        UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();
+        ItemsBean holdItemsData = userData.GetItemsFromShortcut();
+        if (holdItemsData.itemId != 0)
+        {
+            ItemsInfoBean holdItemInfo = ItemsHandler.Instance.manager.GetItemsInfoById(holdItemsData.itemId);
+            if(holdItemInfo.GetItemsType() == ItemsTypeEnum.Wand)
+            {
+                ui_Wood.gameObject.ShowObj(true);
+            }
+        }
     }
 
     public override void OnClickForButton(Button viewButton)
@@ -43,6 +64,10 @@ public partial class UIGameMain : BaseUIComponent
         else if (viewButton == ui_Exit)
         {
             OpenExitUI();
+        }
+        else if (viewButton == ui_Wood)
+        {
+            OpenWandMagicCore();
         }
     }
 
@@ -66,7 +91,18 @@ public partial class UIGameMain : BaseUIComponent
             case InputActionUIEnum.T:
                 OpenBookUI();
                 break;
+            case InputActionUIEnum.I:
+                OpenWandMagicCore();
+                break;
         }
+    }
+
+    /// <summary>
+    /// 打开法术核心装配界面
+    /// </summary>
+    public void OpenWandMagicCore()
+    {
+
     }
 
     /// <summary>

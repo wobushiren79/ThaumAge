@@ -8,6 +8,8 @@ struct TerraninData
     int maxHeight;
     //当前生态
     int biomeIndex;
+    //当前生态中心位置
+    float2 biomePosition;
 };
 
 struct BiomeData
@@ -42,6 +44,8 @@ int BiomeSize;
 RWStructuredBuffer<TerraninData> BufferTerraninData;
 //生态数据
 RWStructuredBuffer<BiomeData> BufferBiomeData;
+//保存的生态数据
+float4 BiomeSave[3];
 
 //unity noisemap生成算法
 float2 Unity_GradientNoise_dir(float2 p)
@@ -116,7 +120,7 @@ float TerraninCreate(int iterateNumberMax,float perlinFrequency,float perlinAmpl
     float curFrequency = perlinFrequency;
     float curAmplitude = perlinAmplitude;
 
-    int curRandomSeedOffset = RandomSeed % (BiomeSize * 7);
+    uint curRandomSeedOffset = RandomSeed % (BiomeSize * 7);
     //循环种子次数
     while(iterateNumberMax > iterateNumber)
     {
@@ -347,9 +351,37 @@ void CSMain (uint3 id : SV_DispatchThreadID,uint3 gid:SV_GROUPID,uint index:SV_G
     GetHexagonBiomeIndex(itemTerraninData.position.x, itemTerraninData.position.y, BiomeSize,sqrt(3) * 0.5  * BiomeSize,
          disMinPosIndex, disMin, disMinPos,
          disSecondPosIndex, disSecond, disSecondPos);
+
+    int randomBiomeIndexMin = -1;
+    int randomBiomeIndexSecond = -1;
+    for (int i = 0; i < 3; i ++) 
+    {
+       float4 itemData = BiomeSave[i];
+       if (itemData.z < 0) 
+       {
+           continue;
+       }
+       else 
+       {
+           if (itemData.x == disMinPosIndex.x && itemData.y == disMinPosIndex.y)
+           {
+               randomBiomeIndexMin = itemData.z;
+           }
+           if (itemData.x == disSecondPosIndex.x && itemData.y == disSecondPosIndex.y)
+           {
+               randomBiomeIndexSecond = itemData.z;
+           }
+       }
+    }
     //随机获取生态  
-    int randomBiomeIndexMin = RandomIntMinMax(RandomSeed , disMinPosIndex.x , disMinPosIndex.y , 0 , BiomeNum);
-    int randomBiomeIndexSecond = RandomIntMinMax(RandomSeed, disSecondPosIndex.x, disSecondPosIndex.y, 0, BiomeNum);
+    if (randomBiomeIndexMin == -1)
+    {
+        randomBiomeIndexMin = RandomIntMinMax(RandomSeed, disMinPosIndex.x, disMinPosIndex.y, 0, BiomeNum);
+    }
+    if (randomBiomeIndexSecond == -1)
+    {
+        randomBiomeIndexSecond = RandomIntMinMax(RandomSeed, disSecondPosIndex.x, disSecondPosIndex.y, 0, BiomeNum);
+    }
 
     itemTerraninData.biomeIndex = randomBiomeIndexMin;
 
@@ -357,6 +389,8 @@ void CSMain (uint3 id : SV_DispatchThreadID,uint3 gid:SV_GROUPID,uint index:SV_G
     BiomeData biomeData =  BufferBiomeData[randomBiomeIndexMin];
     //第二近的生态信息
     BiomeData biomeDataSecond =  BufferBiomeData[randomBiomeIndexSecond];
+    //当前生态位置
+    itemTerraninData.biomePosition = disMinPosIndex;
 
     float finalNoise0 =  TerraninCreate(
         biomeData.perlinIterateNumber0,
