@@ -12,6 +12,12 @@ public partial class UIViewBackpackList : BaseUIView
         InitData();
     }
 
+    public override void CloseUI()
+    {
+        ui_ItemList.SetCellCount(0);
+        base.CloseUI();
+    }
+
     public override void RefreshUI()
     {
         base.RefreshUI();
