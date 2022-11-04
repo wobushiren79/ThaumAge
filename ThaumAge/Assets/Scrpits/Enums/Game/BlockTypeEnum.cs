@@ -142,6 +142,7 @@ public enum BlockTypeEnum
     MagicInstrumentAssemblyTable = 6160,//法器组装台
     Crucible = 6161,//坩埚
     ResearchTable = 6162,//研究台
+    FocalManipulator = 6163,//核心镶饰台
     Box = 6201,//箱子
     SwitchesWooden = 6301,//木制开关
     TorchWooden = 6311, //木制火把
