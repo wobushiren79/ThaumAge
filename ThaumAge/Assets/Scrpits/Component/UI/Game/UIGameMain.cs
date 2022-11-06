@@ -14,6 +14,8 @@ public partial class UIGameMain : BaseUIComponent
         ui_ViewCharacterStatus.SetData(userData.characterData);
 
         base.OpenUI();
+
+        this.RegisterEvent<UIViewItemContainer, long>(EventsInfo.UIViewItemContainer_ItemChange, CallBackForShortcutsItemExchange);
     }
 
     public override void RefreshUI()
@@ -27,21 +29,24 @@ public partial class UIGameMain : BaseUIComponent
         ShowUnlockUI();
     }
 
+
     /// <summary>
     /// 展示解锁UI
     /// </summary>
     public void ShowUnlockUI()
     {
-        ui_Wood.gameObject.ShowObj(false);
+        ui_MagicCore.gameObject.ShowObj(false);
+        ui_ViewMagicCoreList.ShowObj(false);
         //法杖的UI
         UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();
         ItemsBean holdItemsData = userData.GetItemsFromShortcut();
         if (holdItemsData.itemId != 0)
         {
             ItemsInfoBean holdItemInfo = ItemsHandler.Instance.manager.GetItemsInfoById(holdItemsData.itemId);
-            if(holdItemInfo.GetItemsType() == ItemsTypeEnum.Wand)
+            if (holdItemInfo.GetItemsType() == ItemsTypeEnum.Wand)
             {
-                ui_Wood.gameObject.ShowObj(true);
+                ui_MagicCore.gameObject.ShowObj(true);
+                ui_ViewMagicCoreList.ShowObj(true);
             }
         }
     }
@@ -65,13 +70,13 @@ public partial class UIGameMain : BaseUIComponent
         {
             OpenExitUI();
         }
-        else if (viewButton == ui_Wood)
+        else if (viewButton == ui_MagicCore)
         {
-            OpenWandMagicCore();
+            OpenMagicCoreUI();
         }
     }
 
-    public override void OnInputActionForStarted(InputActionUIEnum inputName,CallbackContext callback)
+    public override void OnInputActionForStarted(InputActionUIEnum inputName, CallbackContext callback)
     {
         base.OnInputActionForStarted(inputName, callback);
         switch (inputName)
@@ -92,7 +97,7 @@ public partial class UIGameMain : BaseUIComponent
                 OpenBookUI();
                 break;
             case InputActionUIEnum.I:
-                OpenWandMagicCore();
+                OpenMagicCoreUI();
                 break;
         }
     }
@@ -100,9 +105,15 @@ public partial class UIGameMain : BaseUIComponent
     /// <summary>
     /// 打开法术核心装配界面
     /// </summary>
-    public void OpenWandMagicCore()
+    public void OpenMagicCoreUI()
     {
-
+        if (ui_MagicCore.gameObject.activeSelf)
+        {
+            //打开法术核心界面
+            UIHandler.Instance.OpenUIAndCloseOther<UIGameMagicCore>(UIEnum.GameMagicCore);
+            //播放音效
+            AudioHandler.Instance.PlaySound(1);
+        }
     }
 
     /// <summary>
@@ -161,5 +172,15 @@ public partial class UIGameMain : BaseUIComponent
             //播放音效
             AudioHandler.Instance.PlaySound(1);
         }
+    }
+
+    /// <summary>
+    /// 回调 道具修改
+    /// </summary>
+    /// <param name="uIViewItem"></param>
+    /// <param name="itemId"></param>
+    public void CallBackForShortcutsItemExchange(UIViewItemContainer uIViewItem, long itemId)
+    {
+        ShowUnlockUI();
     }
 }

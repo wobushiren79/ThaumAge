@@ -40,27 +40,6 @@ public partial class UIGameSetting : UIGameCommonNormal, IRadioGroupCallBack
         ui_Labels.SetPosition(0, true);
     }
 
-    public override void OnClickForButton(Button viewButton)
-    {
-        base.OnClickForButton(viewButton);
-        if (viewButton == ui_ViewClose) 
-        {
-            OnClickForClose();
-            AudioHandler.Instance.PlaySound(2);
-        } 
-
-    }
-
-    public override void OnInputActionForStarted(InputActionUIEnum inputType, UnityEngine.InputSystem.InputAction.CallbackContext callback)
-    {
-        base.OnInputActionForStarted(inputType, callback);
-        if (inputType == InputActionUIEnum.ESC) 
-        {
-            OnClickForClose();
-            AudioHandler.Instance.PlaySound(2);
-        } 
-    }
-
     public override void RefreshUI()
     {
         base.RefreshUI();
@@ -79,9 +58,9 @@ public partial class UIGameSetting : UIGameCommonNormal, IRadioGroupCallBack
     }
 
     /// <summary>
-    /// 点击-关闭UI
+    /// 关闭UI
     /// </summary>
-    public void OnClickForClose()
+    public override void HandleForBackGameMain()
     {
         if (SceneUtil.GetCurrentScene() == ScenesEnum.MainScene)
         {
@@ -92,7 +71,11 @@ public partial class UIGameSetting : UIGameCommonNormal, IRadioGroupCallBack
             UIHandler.Instance.OpenUIAndCloseOther<UIGameMain>(UIEnum.GameMain);
         }
         GameDataHandler.Instance.manager.SaveGameConfig();
+        //播放音效
+        AudioHandler.Instance.PlaySound(2);
     }
+
+
 
     #region 选择回调
     public void RadioButtonSelected(RadioGroupView rgView, int position, RadioButtonView rbview)

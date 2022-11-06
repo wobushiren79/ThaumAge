@@ -18,7 +18,8 @@ public class UIViewShortcuts : BaseUIView
 
     public List<UIViewItemContainer> listShortcut;
 
-
+    //是否能改变道具
+    public static bool CanChangeItem = true;
 
     public override void Awake()
     {
@@ -51,6 +52,8 @@ public class UIViewShortcuts : BaseUIView
     {
         base.OnInputActionForStarted(inputType, callback);
 
+        if (!CanChangeItem)
+            return;
         UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();
         int indexForShortcutsBefore = userData.indexForShortcuts;
         int indexForShortcuts;

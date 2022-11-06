@@ -31,14 +31,25 @@ public partial class UIGameCommonNormal : BaseUIComponent
         base.OnClickForButton(viewButton);
         if (viewButton == ui_Exit)
         {
-            HandleForBackMain();
+            HandleForBackGameMain();
+        }
+    }
+
+    public override void OnInputActionForStarted(InputActionUIEnum inputName, UnityEngine.InputSystem.InputAction.CallbackContext callback)
+    {
+        base.OnInputActionForStarted(inputName, callback);
+        switch (inputName)
+        {
+            case InputActionUIEnum.ESC:
+                HandleForBackGameMain();
+                break;
         }
     }
 
     /// <summary>
     /// 处理返回主界面
     /// </summary>
-    public virtual void HandleForBackMain()
+    public virtual void HandleForBackGameMain()
     {
         UIHandler.Instance.OpenUIAndCloseOther<UIGameMain>(UIEnum.GameMain);
         //播放音效

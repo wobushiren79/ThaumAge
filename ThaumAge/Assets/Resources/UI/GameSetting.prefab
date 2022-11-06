@@ -451,7 +451,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   uiManager: {fileID: 0}
   remarkData: 
-  ui_ViewClose: {fileID: 7673339314183286885}
+  ui_Exit: {fileID: 7673339314183286885}
   ui_Labels: {fileID: 3456505581396728970}
   ui_ViewLabel_Game: {fileID: 2976369676153254131}
   ui_ViewLabel_Display: {fileID: 5987581911641109169}
@@ -925,7 +925,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8908890466080298632, guid: 441335aec5d7c3e48a3afaaaad67ab6d, type: 3}
       propertyPath: m_Name
-      value: ViewClose
+      value: Exit
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_AddedGameObjects: []

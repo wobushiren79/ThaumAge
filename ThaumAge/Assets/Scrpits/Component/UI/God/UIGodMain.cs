@@ -32,10 +32,7 @@ public partial class UIGodMain : UIGameCommonNormal
         switch (inputType)
         {
             case InputActionUIEnum.F12:
-            case InputActionUIEnum.ESC:
-                HandleForBackMain();
-                //播放音效
-                AudioHandler.Instance.PlaySound(2);
+                HandleForBackGameMain();
                 break;
         }
     }

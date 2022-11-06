@@ -10,8 +10,16 @@ public partial class UIGameMagicCore : UIGameCommonNormal
     public override void OpenUI()
     {
         base.OpenUI();
-        //ui_Shortcuts.OpenUI();
+        UIViewShortcuts.CanChangeItem = false;
+        ui_Shortcuts.OpenUI();
         ui_ViewBackPack.OpenUI();
+        ui_ViewMagicCoreExchange.OpenUI();
+    }
+
+    public override void CloseUI()
+    {
+        base.CloseUI();
+        UIViewShortcuts.CanChangeItem = true;
     }
 
     /// <summary>
@@ -26,8 +34,6 @@ public partial class UIGameMagicCore : UIGameCommonNormal
         blockBox = block as BlockBaseBox;
         //获取方块数据
         blockData = chunk.GetBlockData(worldPosition - chunk.chunkData.positionForWorld);
-        //设置数据
-        ui_ViewBoxList.SetData(worldPosition, blockData, boxSize);
     }
 
 }

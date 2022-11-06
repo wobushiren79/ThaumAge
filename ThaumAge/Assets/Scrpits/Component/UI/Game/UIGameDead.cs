@@ -22,7 +22,7 @@ public partial class UIGameDead : UIGameExit
     /// <summary>
     /// 重生
     /// </summary>
-    public override void HandleForBackGame()
+    public override void HandleForBackGameMain()
     {
         SaveData();
         //改变场景

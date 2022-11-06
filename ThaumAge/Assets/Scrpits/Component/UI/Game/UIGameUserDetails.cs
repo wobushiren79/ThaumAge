@@ -37,10 +37,8 @@ public partial class UIGameUserDetails : UIGameCommonNormal, IRadioGroupCallBack
         base.OnInputActionForStarted(inputName, callback);
         switch (inputName)
         {
-            case InputActionUIEnum.ESC:
             case InputActionUIEnum.B:
-                HandleForBackMain();
-                AudioHandler.Instance.PlaySound(2);
+                HandleForBackGameMain();
                 break;
         }
     }

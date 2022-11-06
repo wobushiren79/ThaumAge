@@ -4,8 +4,6 @@ using UnityEngine.UI;
 
 public partial class UIGameSetting
 {
-    public Button ui_ViewClose;
-
     public RadioGroupView ui_Labels;
 
     public RadioButtonView ui_ViewLabel_Game;

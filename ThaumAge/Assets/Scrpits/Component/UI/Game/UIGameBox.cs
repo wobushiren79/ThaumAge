@@ -32,9 +32,9 @@ public partial class UIGameBox : UIGameCommonNormal
     /// <summary>
     /// 退出箱子
     /// </summary>
-    public override void HandleForBackMain()
+    public override void HandleForBackGameMain()
     {
-        base.HandleForBackMain();
+        base.HandleForBackGameMain();
         //关闭箱子
         blockBox.CloseBox(blockWorldPosition);
     }

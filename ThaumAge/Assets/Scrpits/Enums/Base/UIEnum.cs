@@ -16,15 +16,16 @@ public enum UIEnum
     GameMain = 2001,//游戏-主界面
     GameUserDetails = 2002,//游戏-用户详情
     GameBook = 2003,//游戏-书籍
+    GameSetting = 2004,//游戏-设置
     GameExit = 2009,//游戏-退出
     GameDead = 2010,//游戏-死亡
+    GameMagicCore = 2011,//游戏-法术核心装备界面
+
     GameBox = 2101,//游戏-箱子
     GameFurnaces = 2102,//游戏-熔炉
     GameSign = 2103,//游戏-牌子
     GameItemsTransition = 2104,//游戏-道具转换
-
-    GameSetting = 2999,//游戏-设置
+    GameMagicInstrumentAssembly = 2105,//法器组装台
 
     GodMain = 9001,//GM-主界面
-
 }

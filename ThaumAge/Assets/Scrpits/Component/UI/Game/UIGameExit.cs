@@ -18,26 +18,15 @@ public partial class UIGameExit : UIGameCommonNormal
         ui_BtnNameExit.text = TextHandler.Instance.GetTextById(903);
     }
 
-    public override void OnInputActionForStarted(InputActionUIEnum inputType, InputAction.CallbackContext callback)
-    {
-        base.OnInputActionForStarted(inputType, callback);
-        switch (inputType)
-        {
-            case InputActionUIEnum.ESC:
-                HandleForBackGame();
-                break;
-        }
-    }
-
     public override void OnClickForButton(Button viewButton)
     {
         if(viewButton == ui_BackGame)
         {
-            HandleForBackGame();
+            HandleForBackGameMain();
         }
         else if (viewButton == ui_BackMain)
         {
-            HandleForBackMain();
+            HandleForBackMainScene();
         }
         else if (viewButton == ui_Exit)
         {
@@ -45,19 +34,11 @@ public partial class UIGameExit : UIGameCommonNormal
         }
     }
 
-    /// <summary>
-    /// 返回游戏继续
-    /// </summary>
-    public virtual void HandleForBackGame()
-    {
-        UIHandler.Instance.OpenUIAndCloseOther<UIGameMain>(UIEnum.GameMain);
-        AudioHandler.Instance.PlaySound(1);
-    }
 
     /// <summary>
     /// 返回游戏主菜单
     /// </summary>
-    public override void HandleForBackMain()
+    public virtual void HandleForBackMainScene()
     {
         DialogBean dialogData = new DialogBean();
         dialogData.content = TextHandler.Instance.GetTextById(20003);

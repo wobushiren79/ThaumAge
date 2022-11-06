@@ -48,17 +48,6 @@ public partial class UIGameBook : UIGameCommonNormal, IRadioGroupCallBack
         SetLabels(listBookModel);
     }
 
-    public override void OnInputActionForStarted(InputActionUIEnum inputType, InputAction.CallbackContext callback)
-    {
-        base.OnInputActionForStarted(inputType, callback);
-        switch (inputType)
-        {
-            case InputActionUIEnum.ESC:
-                HandleForBackMain();
-                break;
-        }
-    }
-
     /// <summary>
     /// 设置标签
     /// </summary>
