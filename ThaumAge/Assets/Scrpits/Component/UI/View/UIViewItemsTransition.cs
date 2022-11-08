@@ -87,7 +87,7 @@ public partial class UIViewItemsTransition : BaseUIView
     /// </summary>
     public void SetBeforeItems(ItemsBean itemsData)
     {
-        ui_BeforeItems.SetData(UIViewItemContainer.ContainerType.ItemsTransition, itemsData);
+        ui_BeforeItems.SetViewItemByData(UIViewItemContainer.ContainerType.ItemsTransition, itemsData);
     }
 
     /// <summary>
@@ -95,7 +95,7 @@ public partial class UIViewItemsTransition : BaseUIView
     /// </summary>
     public void SetAfterItems(ItemsBean itemsData)
     {
-        ui_AfterItems.SetData(UIViewItemContainer.ContainerType.ItemsTransition, itemsData);
+        ui_AfterItems.SetViewItemByData(UIViewItemContainer.ContainerType.ItemsTransition, itemsData);
     }
 
     /// <summary>

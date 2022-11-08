@@ -19,6 +19,7 @@ public partial class UIViewItemContainer : BaseUIView
         God,//列表 GOD模式
         Furnaces,//熔炉
         ItemsTransition,//转换
+        Other,//其他
     }
 
     [Header("限制的物品类型")]
@@ -78,56 +79,6 @@ public partial class UIViewItemContainer : BaseUIView
     }
 
     /// <summary>
-    /// 增加道具
-    /// </summary>
-    public bool AddViewItem(ItemsBean itemsData,Vector3 createPosition)
-    {
-        //如果已经有一个了 则不能添加
-        if (GetViewItem() != null)
-            return false;
-        SetData(containerType, itemsData, viewIndex);
-        currentViewItem.rectTransform
-            .DOAnchorPos(createPosition, timeForAddViewItem)
-            .From()
-            .SetEase(Ease.OutCubic);
-        return true;
-    }
-
-    /// <summary>
-    /// 移出道具
-    /// </summary>
-    /// <returns></returns>
-    public bool RemoveViewItem()
-    {
-        //如果已经有一个了 则不能删除
-        UIViewItem viewItem = GetViewItem();
-        if (viewItem == null)
-            return false;
-        GameObject objViewItem = viewItem.gameObject;
-        viewItem.transform
-            .DOScale(0, timeForRemoveViewItem)
-            .OnComplete(()=> 
-            {
-                DestroyImmediate(objViewItem);              
-            });
-        ClearViewItem();
-        return true;
-    }
-
-    /// <summary>
-    /// 设置数据
-    /// </summary>
-    /// <param name="itemsData"></param>
-    /// <param name="viewIndex"></param>
-    public void SetData(ContainerType containerType, ItemsBean itemsData, int viewIndex = 0)
-    {
-        this.containerType = containerType;
-        this.itemsData = itemsData;
-        this.viewIndex = viewIndex;
-        SetViewItem(itemsData);
-    }
-
-    /// <summary>
     /// 设置新道具回调
     /// </summary>
     /// <param name="callBackForSetViewItem"></param>
@@ -178,17 +129,16 @@ public partial class UIViewItemContainer : BaseUIView
     /// <summary>
     /// 清空容器
     /// </summary>
-    public void ClearViewItem()
+    public void ClearViewItem(bool isDestroyViewItem = false)
     {
+        //删除原来存在的
+        if (isDestroyViewItem && currentViewItem != null && currentViewItem.gameObject != null)
+        {
+            currentViewItem.StopAnim();
+            DestroyImmediate(currentViewItem.gameObject);
+        }
         this.currentViewItem = null;
-        ClearItemsData();
-    }
 
-    /// <summary>
-    /// 清空数据
-    /// </summary>
-    public void ClearItemsData()
-    {
         itemsData.itemId = 0;
         itemsData.number = 0;
         itemsData.meta = null;
@@ -213,7 +163,7 @@ public partial class UIViewItemContainer : BaseUIView
     /// 设置容器道具
     /// </summary>
     /// <param name="uiView"></param>
-    public bool SetViewItem(UIViewItem uiView)
+    public bool SetViewItemByView(UIViewItem uiView)
     {
         this.currentViewItem = uiView;
         this.currentViewItem.originalParent = this;
@@ -232,20 +182,34 @@ public partial class UIViewItemContainer : BaseUIView
     }
 
     /// <summary>
+    /// 设置数据
+    /// </summary>
+    /// <param name="itemsData"></param>
+    /// <param name="viewIndex"></param>
+    public void SetViewItemByData(ContainerType containerType, ItemsBean itemsData, int viewIndex = 0)
+    {
+        this.containerType = containerType;
+        this.viewIndex = viewIndex;
+        SetViewItemByData(itemsData);
+    }
+
+    /// <summary>
     /// 设置容器道具 用于初始化
     /// </summary>
     /// <param name="itemsData"></param>
-    public void SetViewItem(ItemsBean itemsData)
+    public void SetViewItemByData(ItemsBean itemsData)
     {
+        this.itemsData = itemsData;
         //设置展示信息
         ui_ViewItemContainer.SetItemData(itemsData);
 
         //如果没有东西，则删除原来存在的
         if (itemsData == null || itemsData.itemId == 0)
         {
-            if (currentViewItem != null)
+            if (currentViewItem != null && currentViewItem.gameObject != null)
             {
-                Destroy(currentViewItem.gameObject);
+                currentViewItem.StopAnim();
+                DestroyImmediate(currentViewItem.gameObject);
             }
             currentViewItem = null;
             return;

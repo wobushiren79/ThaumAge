@@ -143,15 +143,7 @@ public partial class UIViewItem : BaseUIView,
     /// </summary>
     public void SetIcon(ItemsInfoBean itemsInfo)
     {
-        Item targetItem = ItemsHandler.Instance.manager.GetRegisterItem(itemsInfo.id);
-        if (targetItem == null)
-        {
-            Item.SetItemIcon(ui_IVIcon, itemsInfo);
-        }
-        else
-        {
-            targetItem.SetItemIcon(ui_IVIcon, originalParent.itemsData, itemsInfo);
-        }
+        ItemsHandler.Instance.SetItemsIconById(ui_IVIcon, itemsInfo.id, originalParent.itemsData);
     }
 
     /// <summary>
@@ -267,6 +259,7 @@ public partial class UIViewItem : BaseUIView,
                 case UIViewItemContainer.ContainerType.Box:
                 case UIViewItemContainer.ContainerType.Furnaces:
                 case UIViewItemContainer.ContainerType.ItemsTransition:
+                case UIViewItemContainer.ContainerType.Other:
                     HandleForShiftClickForBackpackAndShortcuts();
                     break;
             }
@@ -412,20 +405,21 @@ public partial class UIViewItem : BaseUIView,
         ItemDropBean itemDropData = new ItemDropBean
             (
             itemId,
-            player.transform.position + Vector3.up*1.25f,
+            player.transform.position + Vector3.up * 1.25f,
             player.transform.forward + randomFroce,
             itemNumber,
             meta,
             ItemDropStateEnum.DropNoPick
             );
         ItemsHandler.Instance.CreateItemCptDrop(itemDropData);
+
         DestroyImmediate(gameObject);
         if (originalParent != null)
         {
             //如果原容器的是本道具
             if (originalParent.GetViewItem() == this)
             {
-                originalParent.ClearItemsData();
+                originalParent.ClearViewItem();
             }
             //如果不是本道具 说明是拆分出来的 拆分的道具丢弃
             else
@@ -478,24 +472,28 @@ public partial class UIViewItem : BaseUIView,
     /// <summary>
     /// 是否忽略本身的射线检测
     /// </summary>
-    /// <param name="sp"></param>
-    /// <param name="eventCamera"></param>
     /// <returns></returns>
     public bool IsRaycastLocationValid(Vector2 sp, Camera eventCamera)
     {
         return isRaycastLocationValid;
     }
 
+
     /// <summary>
     /// 位置变换动画
     /// </summary>
-    /// <param name="target"></param>
-    /// <param name="changeTime"></param>
-    /// <param name="callBack"></param>
     protected void AnimForPositionChange(float changeTime, Action callBack)
     {
         isAnim = true;
-        rectTransform.DOKill();
+        StopAnim();    
+        //如果已经被删除
+        if (rectTransform == null|| rectTransform.gameObject == null)
+        {
+            isRaycastLocationValid = true;//设置为不能穿透
+            callBack?.Invoke();
+            isAnim = false;
+            return;
+        }
         rectTransform
             .DOAnchorPos(Vector2.zero, changeTime)
             .SetEase(Ease.OutCubic)
@@ -510,6 +508,18 @@ public partial class UIViewItem : BaseUIView,
                 callBack?.Invoke();
                 isAnim = false;
             });
+    }
+
+    /// <summary>
+    /// 暂停所有动画
+    /// </summary>
+    public void StopAnim()
+    {
+        if(rectTransform != null && rectTransform.gameObject != null)
+        {
+            rectTransform.DOComplete();
+            rectTransform.DOKill();
+        }
     }
 
     /// <summary>
@@ -530,7 +540,7 @@ public partial class UIViewItem : BaseUIView,
         UIViewItem viewItem = objOriginal.GetComponent<UIViewItem>();
         viewItem.itemNumber = copyItemNumber;
         objOriginal.transform.position = gameObject.transform.position;
-        originalParent.SetViewItem(viewItem);
+        originalParent.SetViewItemByView(viewItem);
         originalParent.itemsData.number = copyItemNumber;
         viewItem.RefreshUI();
 
@@ -567,7 +577,7 @@ public partial class UIViewItem : BaseUIView,
                     originalParent.ClearViewItem();
                 }
                 //设置新的容器
-                viewItemContainer.SetViewItem(this);
+                viewItemContainer.SetViewItemByView(this);
                 AnimForPositionChange(timeForMove, null);
             }
             else
@@ -684,12 +694,12 @@ public partial class UIViewItem : BaseUIView,
                         else
                         {
                             //如果原父级没有东西 则交换父级
-                            dargContainer.SetViewItem(viewItem);
+                            dargContainer.SetViewItemByView(viewItem);
                             //设置位置
                             viewItem.rectTransform.anchoredPosition = Vector2.zero;
                             viewItem.transform.localScale = Vector3.one;
                         }
-                        targetContainer.SetViewItem(this);
+                        targetContainer.SetViewItemByView(this);
                         //设置位置
                         transform.localScale = Vector3.one;
                         AnimForPositionChange(timeForMove, () =>

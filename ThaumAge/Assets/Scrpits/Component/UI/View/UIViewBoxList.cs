@@ -82,7 +82,7 @@ public partial class UIViewBoxList : BaseUIView
     {
         UIViewItemContainer viewItemContainer = itemCell.GetComponent<UIViewItemContainer>();
         ItemsBean itemsData = blockBoxData.items[itemCell.index];
-        viewItemContainer.SetData(UIViewItemContainer.ContainerType.Box, itemsData, itemCell.index);
+        viewItemContainer.SetViewItemByData(UIViewItemContainer.ContainerType.Box, itemsData, itemCell.index);
     }
 
     /// <summary>

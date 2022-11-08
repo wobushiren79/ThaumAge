@@ -25,7 +25,7 @@ public partial class UIPopupItemInfo : PopupShowView
         SetItemDurability();
         SetItemIcon(itemData.itemId);
         SetItemIconColor(itemsInfo.GetItemsColor());
-        SetItemName(itemsInfo.GetName());
+        SetItemName(itemData.itemId);
         SetItemDetails("");
         SetAttribute(itemsInfo);
         SetElemental(itemsInfo);
@@ -53,7 +53,7 @@ public partial class UIPopupItemInfo : PopupShowView
     /// <param name="iconSp"></param>
     public void SetItemIcon(long itemsId)
     {
-        ItemsHandler.Instance.SetItemsIconById(ui_ItemIcon, itemsId);
+        ItemsHandler.Instance.SetItemsIconById(ui_ItemIcon, itemsId, itemData);
     }
 
     /// <summary>
@@ -69,9 +69,9 @@ public partial class UIPopupItemInfo : PopupShowView
     /// 设置名字
     /// </summary>
     /// <param name="itemName"></param>
-    public void SetItemName(string itemName)
+    public void SetItemName(long itemsId)
     {
-        ui_ItemName.text = itemName;
+        ItemsHandler.Instance.SetItemsNameById(ui_ItemName, itemsId, itemData);
     }
 
     /// <summary>

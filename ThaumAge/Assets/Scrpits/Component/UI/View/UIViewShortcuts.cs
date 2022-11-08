@@ -114,7 +114,7 @@ public class UIViewShortcuts : BaseUIView
 
         for (int i = 0; i < listShortcut.Count; i++)
         {
-            listShortcut[i].SetData(UIViewItemContainer.ContainerType.Shortcuts, userData.GetItemsFromShortcut(i), i);
+            listShortcut[i].SetViewItemByData(UIViewItemContainer.ContainerType.Shortcuts, userData.GetItemsFromShortcut(i), i);
         }
 
         for (int i = 0; i < listShortcut.Count; i++)

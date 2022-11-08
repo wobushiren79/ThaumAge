@@ -111,7 +111,7 @@ public partial class UIViewFurnaces : BaseUIView
     /// </summary>
     public void SetFireItems(ItemsBean itemsData)
     {
-        ui_FireItems.SetData(UIViewItemContainer.ContainerType.Furnaces, itemsData);
+        ui_FireItems.SetViewItemByData(UIViewItemContainer.ContainerType.Furnaces, itemsData);
     }
 
     /// <summary>
@@ -119,7 +119,7 @@ public partial class UIViewFurnaces : BaseUIView
     /// </summary>
     public void SetBeforeItems(ItemsBean itemsData)
     {
-        ui_BeforeItems.SetData(UIViewItemContainer.ContainerType.Furnaces, itemsData);
+        ui_BeforeItems.SetViewItemByData(UIViewItemContainer.ContainerType.Furnaces, itemsData);
     }
 
     /// <summary>
@@ -127,7 +127,7 @@ public partial class UIViewFurnaces : BaseUIView
     /// </summary>
     public void SetAfterItems(ItemsBean itemsData)
     {
-        ui_AfterItems.SetData(UIViewItemContainer.ContainerType.Furnaces, itemsData);
+        ui_AfterItems.SetViewItemByData(UIViewItemContainer.ContainerType.Furnaces, itemsData);
     }
 
 

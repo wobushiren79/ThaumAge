@@ -79,6 +79,6 @@ public partial class UIViewBackpackList : BaseUIView
         UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();
         UIViewItemContainer viewItemContainer = itemCell.GetComponent<UIViewItemContainer>();
         ItemsBean itemsData = userData.GetItemsFromBackpack(itemCell.index);
-        viewItemContainer.SetData(UIViewItemContainer.ContainerType.Backpack, itemsData, itemCell.index);
+        viewItemContainer.SetViewItemByData(UIViewItemContainer.ContainerType.Backpack, itemsData, itemCell.index);
     }
 }

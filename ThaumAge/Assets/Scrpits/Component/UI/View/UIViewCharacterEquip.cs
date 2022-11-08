@@ -89,7 +89,7 @@ public partial class UIViewCharacterEquip : BaseUIView
         {
             ItemsBean itemData = characterEquipData.GetEquipByType(itemContainer.Key);
             itemContainer.Value.SetLimitType(itemContainer.Key);
-            itemContainer.Value.SetData(UIViewItemContainer.ContainerType.Equip, itemData);
+            itemContainer.Value.SetViewItemByData(UIViewItemContainer.ContainerType.Equip, itemData);
             itemContainer.Value.SetCallBackForSetViewItem(CallBackForSetEquip);
         }
     }

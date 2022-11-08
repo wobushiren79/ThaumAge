@@ -332,7 +332,6 @@ public class Item
     /// <summary>
     /// 获取初始化meta数据
     /// </summary>
-    /// <param name="itemId"></param>
     /// <returns></returns>
     public virtual ItemBaseMeta GetInitMetaData<T>(long itemId) where T : ItemBaseMeta
     {
@@ -346,7 +345,6 @@ public class Item
     /// </summary>
     public virtual void SetItemIcon(Image ivTarget, ItemsBean itemData, ItemsInfoBean itemsInfo)
     {
-        CptUtil.RemoveChildsByActive(ivTarget.transform);
         SetItemIcon(ivTarget, itemsInfo);
     }
 
@@ -373,6 +371,19 @@ public class Item
         {
             ivTarget.color = itemsInfo.GetItemsColor();
         }
+    }
+
+    /// <summary>
+    /// 设置道具名字
+    /// </summary>
+    public virtual void SetItemName(Text tvTarget, ItemsBean itemData, ItemsInfoBean itemsInfo)
+    {
+        SetItemName(tvTarget, itemsInfo);
+    }
+
+    public static void SetItemName(Text tvTarget, ItemsInfoBean itemsInfo)
+    {
+        tvTarget.text = itemsInfo.GetName();
     }
 
     /// <summary>

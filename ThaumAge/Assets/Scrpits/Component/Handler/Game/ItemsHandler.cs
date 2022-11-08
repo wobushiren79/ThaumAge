@@ -64,7 +64,7 @@ public class ItemsHandler : BaseHandler<ItemsHandler, ItemsManager>
     /// <summary>
     /// 创建道具发射
     /// </summary>
-    public void CreateItemLaunch(ItemLaunchBean itemLaunchData,Action<ItemCptLaunch> callBackForComplete = null)
+    public void CreateItemLaunch(ItemLaunchBean itemLaunchData, Action<ItemCptLaunch> callBackForComplete = null)
     {
         if (itemLaunchData.itemId == 0)
             return;
@@ -155,28 +155,39 @@ public class ItemsHandler : BaseHandler<ItemsHandler, ItemsManager>
     /// </summary>
     /// <param name="image"></param>
     /// <param name="id"></param>
-    public void SetItemsIconById(Image image, long id, Action<Sprite> complete = null)
+    public void SetItemsIconById(Image image, long id, ItemsBean itemsData = null)
     {
-        manager.GetItemsIconById(id, (spIcon) =>
+        CptUtil.RemoveChildsByActive(image.transform);
+        Item targetItem = manager.GetRegisterItem(id);
+        ItemsInfoBean itemsInfo = manager.GetItemsInfoById(id);
+        if (targetItem == null)
         {
-            if (spIcon == null)
-            {
-                if (image == null)
-                    return;
-                IconHandler.Instance.GetUnKnowSprite((spIcon) =>
-                {
-                    image.sprite = spIcon;
-                    complete?.Invoke(spIcon);
-                });
-            }
-            else
-            {
-                if (image == null)
-                    return;
-                image.sprite = spIcon;
-                complete?.Invoke(spIcon);
-            }
-        });
+            Item.SetItemIcon(image, itemsInfo);
+        }
+        else
+        {
+            targetItem.SetItemIcon(image, itemsData, itemsInfo);
+        }
+    }
+
+    /// <summary>
+    /// 通过ID设置道具的名字
+    /// </summary>
+    /// <param name="tvName"></param>
+    /// <param name="id"></param>
+    /// <param name="itemsData"></param>
+    public void SetItemsNameById(Text tvName,long id, ItemsBean itemsData = null)
+    {
+        Item targetItem = manager.GetRegisterItem(id);
+        ItemsInfoBean itemsInfo = manager.GetItemsInfoById(id);
+        if (targetItem == null)
+        {
+            Item.SetItemName(tvName, itemsInfo);
+        }
+        else
+        {
+            targetItem.SetItemName(tvName, itemsData, itemsInfo);
+        }
     }
 
     public void SetItemsIconById(SpriteRenderer image, long id, Action<Sprite> complete = null)

@@ -8,11 +8,8 @@ public class ItemClassWand : Item
     /// <summary>
     /// 设置道具图标
     /// </summary>
-    /// <param name="ivTarget"></param>
-    /// <param name="itemsInfo"></param>
     public override void SetItemIcon(Image ivTarget, ItemsBean itemData, ItemsInfoBean itemsInfo)
     {
-        CptUtil.RemoveChildsByActive(ivTarget.transform);
         ItemMetaWand itemMetaBuckets = itemData.GetMetaData<ItemMetaWand>();
         //设置杖柄
         if (itemMetaBuckets.rodId != 0)
@@ -48,6 +45,18 @@ public class ItemClassWand : Item
                 }
             });
         }
+    }
+
+    /// <summary>
+    /// 设置名字
+    /// </summary>
+    public override void SetItemName(Text tvTarget, ItemsBean itemData, ItemsInfoBean itemsInfo)
+    {
+        ItemMetaWand itemMetaBuckets = itemData.GetMetaData<ItemMetaWand>();
+        ItemsInfoBean capInfo = ItemsHandler.Instance.manager.GetItemsInfoById(itemMetaBuckets.capId);
+        ItemsInfoBean rodInfo = ItemsHandler.Instance.manager.GetItemsInfoById(itemMetaBuckets.rodId);
+        string name = $"{capInfo.GetName()}{rodInfo.GetName()}{itemsInfo.GetName()}";
+        tvTarget.text = name;
     }
 
 
