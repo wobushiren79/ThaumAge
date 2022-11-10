@@ -3,9 +3,7 @@ using UnityEngine;
 
 public partial class UIGameMagicCore : UIGameCommonNormal
 {
-    protected BlockBaseBox blockBox;
-    protected BlockBean blockData;
-    protected Vector3Int blockWorldPosition;
+    protected ItemsBean itemData;
 
     public override void OpenUI()
     {
@@ -26,14 +24,10 @@ public partial class UIGameMagicCore : UIGameCommonNormal
     /// 设置数据
     /// </summary>
     /// <param name="worldPosition"></param>
-    public void SetData(Vector3Int worldPosition, int boxSize)
+    public void SetData(ItemsBean itemData)
     {
-        this.blockWorldPosition = worldPosition;
-        //获取对应方块
-        WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(worldPosition, out Block block, out Chunk chunk);
-        blockBox = block as BlockBaseBox;
-        //获取方块数据
-        blockData = chunk.GetBlockData(worldPosition - chunk.chunkData.positionForWorld);
+        this.itemData = itemData;
+        ui_ViewMagicCoreExchange.SetData(itemData);
     }
 
 }

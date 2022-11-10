@@ -108,11 +108,22 @@ public partial class UIGameMain : BaseUIComponent
     public void OpenMagicCoreUI()
     {
         if (ui_MagicCore.gameObject.activeSelf)
-        {
-            //打开法术核心界面
-            UIHandler.Instance.OpenUIAndCloseOther<UIGameMagicCore>(UIEnum.GameMagicCore);
-            //播放音效
-            AudioHandler.Instance.PlaySound(1);
+        {        
+            //法杖的UI
+            UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();
+            ItemsBean holdItemsData = userData.GetItemsFromShortcut();
+            if (holdItemsData.itemId != 0)
+            {
+                ItemsInfoBean holdItemInfo = ItemsHandler.Instance.manager.GetItemsInfoById(holdItemsData.itemId);
+                if (holdItemInfo.GetItemsType() == ItemsTypeEnum.Wand)
+                {
+                    //打开法术核心界面
+                    UIGameMagicCore uiGameMagicCore = UIHandler.Instance.OpenUIAndCloseOther<UIGameMagicCore>(UIEnum.GameMagicCore);
+                    uiGameMagicCore.SetData(holdItemsData);
+                    //播放音效
+                    AudioHandler.Instance.PlaySound(1);
+                }
+            }
         }
     }
 

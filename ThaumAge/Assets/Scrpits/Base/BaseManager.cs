@@ -12,6 +12,8 @@ public class BaseManager : BaseMonoBehaviour
 
     public virtual void InitData<T>(Dictionary<long, T> dic, List<T> listData) where T : BaseBean
     {
+        if (dic == null)
+            dic = new Dictionary<long, T>();
         dic.Clear();
         for (int i = 0; i < listData.Count; i++)
         {
@@ -20,6 +22,17 @@ public class BaseManager : BaseMonoBehaviour
         }
     }
 
+    public virtual void InitData<T>(Dictionary<int, T> dic, List<T> listData) where T : BaseBean
+    {
+        if (dic == null)
+            dic = new Dictionary<int, T>();
+        dic.Clear();
+        for (int i = 0; i < listData.Count; i++)
+        {
+            T itemHairInfo = listData[i];
+            dic.Add(itemHairInfo.id, itemHairInfo);
+        }
+    }
 
     protected List<T> GetAllModel<T>(string assetBundlePath) where T : UnityEngine.Object
     {

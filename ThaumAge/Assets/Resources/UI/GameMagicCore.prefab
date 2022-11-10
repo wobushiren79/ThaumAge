@@ -113,8 +113,6 @@ MonoBehaviour:
   ui_Exit: {fileID: 452167115202649237}
   ui_ViewBackPack: {fileID: 2680596347024004302}
   ui_Shortcuts: {fileID: 3934167059900612332}
-  ui_ViewItemContainer: {fileID: 8289847615657234584}
-  ui_InstrumentIcon: {fileID: 2545481769546769503}
   ui_ViewMagicCoreExchange: {fileID: 6351156552247337549}
 --- !u!1 &7995110671360895194
 GameObject:
@@ -1316,17 +1314,6 @@ PrefabInstance:
     m_RemovedComponents: []
     m_AddedGameObjects: []
   m_SourcePrefab: {fileID: 100100000, guid: f0ac6363797e44e42ae253308bf21f0a, type: 3}
---- !u!114 &2545481769546769503 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 6743200187298289061, guid: f0ac6363797e44e42ae253308bf21f0a, type: 3}
-  m_PrefabInstance: {fileID: 9135541919346225658}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!224 &4538553282278102262 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 4628531433358288140, guid: f0ac6363797e44e42ae253308bf21f0a, type: 3}
@@ -1341,16 +1328,5 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0839c838798d4c044987ef91894d387d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &8289847615657234584 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 994313125753528674, guid: f0ac6363797e44e42ae253308bf21f0a, type: 3}
-  m_PrefabInstance: {fileID: 9135541919346225658}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1921fcc4cb70a7e498b3423861f7cba2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 

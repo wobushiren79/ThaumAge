@@ -31,6 +31,7 @@ public enum ItemsTypeEnum
     Knife = 32,//刀
     Bow = 33, //弓
 
+    MagicCore = 40,//法术核心
     Wand = 41, // 法杖
     Cap = 42,//法杖杖端
     Rod = 43,//法杖杖柄

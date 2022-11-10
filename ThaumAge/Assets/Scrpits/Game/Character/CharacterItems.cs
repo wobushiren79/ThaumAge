@@ -7,9 +7,8 @@ public class CharacterItems : CharacterBase
     public GameObject objLeftHand;
 
     public ItemCptHold itemHoldRight;
-
-    //当前的道具ID
-    protected long curItemID = long.MinValue;
+    //当前数据
+    protected ItemsBean curItemsData;
 
     public CharacterItems(CreatureCptCharacter character) : base(character)
     {
@@ -24,9 +23,10 @@ public class CharacterItems : CharacterBase
     {
         if (itemsData == null)
             return;
-        if (curItemID == itemsData.itemId)
+
+        if (curItemsData == itemsData)
             return;
-        this.curItemID = itemsData.itemId;
+        this.curItemsData = itemsData;
         ItemsInfoBean itemsInfo = ItemsHandler.Instance.manager.GetItemsInfoById(itemsData.itemId);
         if (itemsInfo == null || itemsInfo.id == 0)
         {

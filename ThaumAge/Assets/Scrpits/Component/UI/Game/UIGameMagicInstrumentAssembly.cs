@@ -27,6 +27,17 @@ public partial class UIGameMagicInstrumentAssembly : UIGameCommonNormal
         blockTypeMagicInstrumentAssemblyTable = block as BlockTypeMagicInstrumentAssemblyTable;
         //获取方块数据
         blockData = chunk.GetBlockData(worldPosition - chunk.chunkData.positionForWorld);
+        if (blockData == null)
+            return;
+        BlockMetaMagicInstrumentAssembly blockMetaMagicInstrument = blockData.GetBlockMeta<BlockMetaMagicInstrumentAssembly>();
+        if (blockMetaMagicInstrument == null)
+            return;
+        if (blockMetaMagicInstrument.capData != null)
+            ui_Cap.SetViewItemByData(blockMetaMagicInstrument.capData);
+        if (blockMetaMagicInstrument.rodData != null)
+            ui_Rod.SetViewItemByData(blockMetaMagicInstrument.rodData);
+        if (blockMetaMagicInstrument.wandData != null)
+            ui_Wand.SetViewItemByData(blockMetaMagicInstrument.wandData);
     }
 
     public override void OpenUI()
@@ -34,6 +45,14 @@ public partial class UIGameMagicInstrumentAssembly : UIGameCommonNormal
         base.OpenUI();
         ui_Shortcuts.OpenUI();
         ui_ViewBackPack.OpenUI();
+    }
+
+    public override void CloseUI()
+    {
+        ui_Wand.ClearViewItem(true, false);
+        ui_Cap.ClearViewItem(true, false);
+        ui_Rod.ClearViewItem(true, false);
+        base.CloseUI();
     }
 
     public override void RefreshUI()
@@ -66,6 +85,7 @@ public partial class UIGameMagicInstrumentAssembly : UIGameCommonNormal
         }
         if (itemCap == null || itemRod == null)
         {
+            SaveBlockData();
             //如果杖端和杖柄其中一个没有 那也不合成
             return;
         }
@@ -78,7 +98,48 @@ public partial class UIGameMagicInstrumentAssembly : UIGameCommonNormal
         itemsWand.SetMetaData(itemMetaWand);
 
         ui_Wand.SetViewItemByData(itemsWand);
-        ui_Cap.ClearViewItem(true);
-        ui_Rod.ClearViewItem(true);
+        ui_Cap.ClearViewItem(true, false);
+        ui_Rod.ClearViewItem(true, false);
+        SaveBlockData();
+
+        AudioHandler.Instance.PlaySound(201);
+    }
+
+    public void SaveBlockData()
+    {
+        //获取对应方块
+        WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(blockWorldPosition, out Block block, out BlockDirectionEnum blockDirection, out Chunk chunk);
+        //获取方块数据
+        Vector3Int blockLocalPosition = blockWorldPosition - chunk.chunkData.positionForWorld;
+        blockData = chunk.GetBlockData(blockLocalPosition);
+        if (blockData == null)
+        {
+            blockData = new BlockBean(blockLocalPosition, block.blockType, blockDirection);
+        }
+        BlockMetaMagicInstrumentAssembly blockMetaMagicInstrument = blockData.GetBlockMeta<BlockMetaMagicInstrumentAssembly>();
+        if (blockMetaMagicInstrument == null)
+        {
+            blockMetaMagicInstrument = new BlockMetaMagicInstrumentAssembly();
+        }
+        //先清除所有数据
+        blockMetaMagicInstrument.ClearData();
+
+        UIViewItem itemWand = ui_Wand.GetViewItem();
+        UIViewItem itemCap = ui_Cap.GetViewItem();
+        UIViewItem itemRod = ui_Rod.GetViewItem();
+        if (itemWand != null)
+        {
+            blockMetaMagicInstrument.wandData = ui_Wand.itemsData;
+        }
+        if (itemCap != null)
+        {
+            blockMetaMagicInstrument.capData = ui_Cap.itemsData;
+        }
+        if (itemRod != null)
+        {
+            blockMetaMagicInstrument.rodData = ui_Rod.itemsData;
+        }
+        blockData.SetBlockMeta(blockMetaMagicInstrument);
+        chunk.SetBlockData(blockData, true);
     }
 }

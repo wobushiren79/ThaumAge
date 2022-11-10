@@ -15,7 +15,7 @@ using System;
 		/// </summary>
 		public string materials;
 		/// <summary>
-		///消耗元素
+		///消耗元素（& 分割不同元素 ：分割道具数量）
 		/// </summary>
 		public string elemental;
 		/// <summary>

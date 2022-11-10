@@ -129,7 +129,7 @@ public partial class UIViewItemContainer : BaseUIView
     /// <summary>
     /// 清空容器
     /// </summary>
-    public void ClearViewItem(bool isDestroyViewItem = false)
+    public void ClearViewItem(bool isDestroyViewItem = false,bool isCallBack = true)
     {
         //删除原来存在的
         if (isDestroyViewItem && currentViewItem != null && currentViewItem.gameObject != null)
@@ -146,8 +146,11 @@ public partial class UIViewItemContainer : BaseUIView
         //设置展示信息
         ui_ViewItemContainer.SetItemData(itemsData);
         //设置回调
-        callBackForSetViewItem?.Invoke(this, itemsData);
-        this.TriggerEvent(EventsInfo.UIViewItemContainer_ItemChange, this, itemsData.itemId);
+        if (isCallBack)
+        {
+            callBackForSetViewItem?.Invoke(this, itemsData);
+            this.TriggerEvent(EventsInfo.UIViewItemContainer_ItemChange, this, itemsData.itemId);
+        }
     }
 
     /// <summary>
