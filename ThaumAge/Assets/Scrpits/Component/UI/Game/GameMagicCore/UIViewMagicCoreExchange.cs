@@ -1,11 +1,13 @@
-﻿using UnityEditor;
+﻿using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 public partial class UIViewMagicCoreExchange : BaseUIView
 {
     protected ItemsBean itemData;
+    protected ItemMetaWand itemMetaWand;
 
-
+    protected List<UIViewItemContainer> listMagicCoreItem = new List<UIViewItemContainer>();
     public override void Awake()
     {
         base.Awake();
@@ -25,7 +27,7 @@ public partial class UIViewMagicCoreExchange : BaseUIView
     public void SetData(ItemsBean itemData)
     {
         this.itemData = itemData;
-        ItemMetaWand itemMetaWand = itemData.GetMetaData<ItemMetaWand>();
+        itemMetaWand = itemData.GetMetaData<ItemMetaWand>();
         SetInstrumentIcon();
         SetListMagicCore(itemMetaWand);
     }
@@ -43,6 +45,7 @@ public partial class UIViewMagicCoreExchange : BaseUIView
     /// </summary>
     public void SetListMagicCore(ItemMetaWand itemMetaWand)
     {
+        listMagicCoreItem.Clear();
         ui_MagicCoreListContainer.DestroyAllChild(true);
         MagicInstrumentInfoBean magicInstrumentInfo = GameInfoHandler.Instance.manager.GetMagicInstrumentInfo(itemMetaWand.capId);
         for (int i = 0; i < magicInstrumentInfo.magic_core_num; i++)
@@ -51,24 +54,49 @@ public partial class UIViewMagicCoreExchange : BaseUIView
             objItem.ShowObj(true);
             UIViewItemContainer uiViewItemContainer = objItem.GetComponent<UIViewItemContainer>();
 
-            ItemsBean itemData;
+            ItemsBean itemMagicCoreData;
             if (itemMetaWand.listMagicCore.IsNull())
             {
-                itemData = new ItemsBean();
+                itemMagicCoreData = new ItemsBean();
             }
             else
             {
                 if (i >= itemMetaWand.listMagicCore.Count)
                 {
-                    itemData = new ItemsBean();
+                    itemMagicCoreData = new ItemsBean();
                 }
                 else
                 {
-                    itemData = itemMetaWand.listMagicCore[i];
+                    itemMagicCoreData = itemMetaWand.listMagicCore[i];
                 }
             }
-            uiViewItemContainer.SetViewItemByData(UIViewItemContainer.ContainerType.Other, itemData);
+            uiViewItemContainer.SetViewItemByData(UIViewItemContainer.ContainerType.Other, itemMagicCoreData);
             uiViewItemContainer.SetLimitType(ItemsTypeEnum.MagicCore);
+            uiViewItemContainer.SetCallBackForSetViewItem(CallBackForMagicItemChange);
+            listMagicCoreItem.Add(uiViewItemContainer);
         }
+    }
+
+    /// <summary>
+    /// 改变核心回调
+    /// </summary>
+    public void CallBackForMagicItemChange(UIViewItemContainer changeViewItem, ItemsBean changeItemData)
+    {
+        if (itemMetaWand.listMagicCore == null)
+            itemMetaWand.listMagicCore = new List<ItemsBean>();
+        itemMetaWand.listMagicCore.Clear();
+
+        for (int i = 0; i < listMagicCoreItem.Count; i++)
+        {
+            var tempItem = listMagicCoreItem[i];
+            if (tempItem.itemsData != null)
+            {
+                itemMetaWand.listMagicCore.Add(tempItem.itemsData);
+            }
+        }
+
+        itemData.SetMetaData(itemMetaWand);
+        //刷新UI
+        this.TriggerEvent(EventsInfo.UIViewShortcutsMagic_InitData);
     }
 }

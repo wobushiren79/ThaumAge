@@ -11,6 +11,7 @@ public partial class UIGameMagicCore : UIGameCommonNormal
         UIViewShortcuts.CanChangeItem = false;
         ui_Shortcuts.OpenUI();
         ui_ViewBackPack.OpenUI();
+        ui_ViewShortcutsMagic.OpenUI();
         ui_ViewMagicCoreExchange.OpenUI();
     }
 

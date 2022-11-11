@@ -36,7 +36,7 @@ public partial class UIGameMain : BaseUIComponent
     public void ShowUnlockUI()
     {
         ui_MagicCore.gameObject.ShowObj(false);
-        ui_ViewMagicCoreList.ShowObj(false);
+        ui_ViewShortcutsMagic.CloseUI();
         //·¨ÕÈµÄUI
         UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();
         ItemsBean holdItemsData = userData.GetItemsFromShortcut();
@@ -46,7 +46,7 @@ public partial class UIGameMain : BaseUIComponent
             if (holdItemInfo.GetItemsType() == ItemsTypeEnum.Wand)
             {
                 ui_MagicCore.gameObject.ShowObj(true);
-                ui_ViewMagicCoreList.ShowObj(true);
+                ui_ViewShortcutsMagic.OpenUI();
             }
         }
     }

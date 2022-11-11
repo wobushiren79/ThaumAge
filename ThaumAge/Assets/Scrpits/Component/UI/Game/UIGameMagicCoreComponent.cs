@@ -10,5 +10,7 @@ public partial class UIGameMagicCore
 
     public UIViewMagicCoreExchange ui_ViewMagicCoreExchange;
 
+    public UIViewShortcutsMagic ui_ViewShortcutsMagic;
+
 
 }

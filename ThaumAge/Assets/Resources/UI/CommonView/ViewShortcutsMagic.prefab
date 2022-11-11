@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 2012075427007493972}
   - component: {fileID: 1148505759763559971}
   m_Layer: 5
-  m_Name: ViewMagicCoreList
+  m_Name: ViewShortcutsMagic
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -133,6 +133,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rectTransform: {fileID: 0}
+  ui_ViewMagicItem: {fileID: 7515497475590666486}
 --- !u!1001 &5523099984018702923
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -227,7 +228,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6446307550733764763, guid: 3bdbe729747cf064184b7ae040d04841, type: 3}
       propertyPath: m_Name
-      value: ViewMagicCoreItem
+      value: ViewMagicItem
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_AddedGameObjects: []
@@ -237,3 +238,14 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 5014176916814489217, guid: 3bdbe729747cf064184b7ae040d04841, type: 3}
   m_PrefabInstance: {fileID: 5523099984018702923}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &7515497475590666486 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2659823144017836733, guid: 3bdbe729747cf064184b7ae040d04841, type: 3}
+  m_PrefabInstance: {fileID: 5523099984018702923}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 36d25fbad0259fe43885d75767a2adf3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

@@ -114,6 +114,7 @@ MonoBehaviour:
   ui_ViewBackPack: {fileID: 2680596347024004302}
   ui_Shortcuts: {fileID: 3934167059900612332}
   ui_ViewMagicCoreExchange: {fileID: 6351156552247337549}
+  ui_ViewShortcutsMagic: {fileID: 4736804790907566358}
 --- !u!1 &7995110671360895194
 GameObject:
   m_ObjectHideFlags: 0
@@ -491,11 +492,22 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4523258269661526345, guid: 0b329aef73ced4f498f6eca145bb51e7, type: 3}
       propertyPath: m_Name
-      value: ViewMagicCoreList
+      value: ViewShortcutsMagic
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_AddedGameObjects: []
   m_SourcePrefab: {fileID: 100100000, guid: 0b329aef73ced4f498f6eca145bb51e7, type: 3}
+--- !u!114 &4736804790907566358 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1148505759763559971, guid: 0b329aef73ced4f498f6eca145bb51e7, type: 3}
+  m_PrefabInstance: {fileID: 5642110086967693109}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37acac3045e845442b373db6c9568f51, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!224 &6639543648592318920 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 1326495900617432829, guid: 0b329aef73ced4f498f6eca145bb51e7, type: 3}

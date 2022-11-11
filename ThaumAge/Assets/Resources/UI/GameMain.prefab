@@ -71,8 +71,8 @@ MonoBehaviour:
   ui_Book: {fileID: 8456432460259482156}
   ui_ViewCharacterStatus: {fileID: 4715422937092708320}
   ui_Exit: {fileID: 1314059350667440297}
-  ui_ViewMagicCoreList: {fileID: 6290327114590227957}
   ui_MagicCore: {fileID: 9195039081760900761}
+  ui_ViewShortcutsMagic: {fileID: 6290327114590227957}
 --- !u!1 &6651213862230659601
 GameObject:
   m_ObjectHideFlags: 0
@@ -1267,7 +1267,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4523258269661526345, guid: 0b329aef73ced4f498f6eca145bb51e7, type: 3}
       propertyPath: m_Name
-      value: ViewMagicCoreList
+      value: ViewShortcutsMagic
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_AddedGameObjects: []
