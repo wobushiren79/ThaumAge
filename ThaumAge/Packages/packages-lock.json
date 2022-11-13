@@ -56,7 +56,7 @@
       "url": "https://packages.unity.cn"
     },
     "com.unity.ide.rider": {
-      "version": "3.0.15",
+      "version": "3.0.16",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -185,7 +185,7 @@
       "url": "https://packages.unity.cn"
     },
     "com.unity.timeline": {
-      "version": "1.7.1",
+      "version": "1.7.2",
       "depth": 0,
       "source": "registry",
       "dependencies": {

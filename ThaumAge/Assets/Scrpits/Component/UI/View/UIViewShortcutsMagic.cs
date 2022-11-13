@@ -38,6 +38,8 @@ public partial class UIViewShortcutsMagic : BaseUIView
                 for (int i = 0; i < itemMetaData.listMagicCore.Count; i++)
                 {
                     ItemsBean itemDataMagicCore= itemMetaData.listMagicCore[i];
+
+
                     if (itemDataMagicCore.itemId == 0)
                         continue;
                     GameObject objItem = Instantiate(gameObject, ui_ViewMagicItem.gameObject);

@@ -256,6 +256,7 @@ public partial class UIViewItem : BaseUIView,
                     HandleForShiftClickForBoxAndShortcuts();
                     break;
                 //如果是箱子里的东西
+                case UIViewItemContainer.ContainerType.None:
                 case UIViewItemContainer.ContainerType.Box:
                 case UIViewItemContainer.ContainerType.Furnaces:
                 case UIViewItemContainer.ContainerType.ItemsTransition:

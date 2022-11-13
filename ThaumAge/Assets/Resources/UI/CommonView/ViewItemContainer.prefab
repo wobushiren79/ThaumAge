@@ -187,11 +187,14 @@ MonoBehaviour:
   listLimitTypes: 
   containerType: 0
   viewIndex: 0
+  itemsData:
+    itemId: 0
+    number: 0
+    meta: 
   ui_IVBackground: {fileID: 5997811799174784006}
   ui_ViewItemModel: {fileID: 853812645625611826}
   ui_ViewItemContainer: {fileID: 2150536219590078621}
-  ui_Hint: {fileID: 0}
-  ui_Select: {fileID: 0}
+  ui_Select: {fileID: 2116562758674093897}
 --- !u!114 &1838468551770532053
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -251,7 +254,10 @@ MonoBehaviour:
   rectTransform: {fileID: 0}
   btnTarget: {fileID: 1838468551770532053}
   popupType: 0
-  itemId: 0
+  itemData:
+    itemId: 0
+    number: 0
+    meta: 
 --- !u!1 &6963130189900713711
 GameObject:
   m_ObjectHideFlags: 0

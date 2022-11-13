@@ -33,7 +33,7 @@ public partial class UIViewItemContainer : BaseUIView
     protected UIViewItem currentViewItem;
     //容器指向的数据
     [HideInInspector]
-    public ItemsBean itemsData;
+    public ItemsBean itemsData = new ItemsBean();
 
     //放置新道具回调
     protected Action<UIViewItemContainer, ItemsBean> callBackForSetViewItem;
@@ -202,12 +202,15 @@ public partial class UIViewItemContainer : BaseUIView
     /// <param name="itemsData"></param>
     public void SetViewItemByData(ItemsBean itemsData)
     {
+        if (itemsData == null)
+            itemsData = new ItemsBean();
+
         this.itemsData = itemsData;
         //设置展示信息
         ui_ViewItemContainer.SetItemData(itemsData);
 
         //如果没有东西，则删除原来存在的
-        if (itemsData == null || itemsData.itemId == 0)
+        if (itemsData.itemId == 0)
         {
             if (currentViewItem != null && currentViewItem.gameObject != null)
             {
