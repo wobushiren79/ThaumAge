@@ -50,6 +50,15 @@ public class BlockTypeFocalManipulator : Block
             blockMetaData.workPro = 0;
             chunk.UnRegisterEventUpdate(localPosition, TimeUpdateEventTypeEnum.Sec);
             AudioHandler.Instance.PlaySound(1101);
+
+            //展示粒子效果
+            GameObject objEffect = SetWorkEffect(localPosition + chunk.chunkData.positionForWorld, false);
+
+            EffectBean effectData = new EffectBean();
+            effectData.effectName = EffectInfo.Effect_Smoke_3;
+            effectData.effectPosition = objEffect.transform.position;
+            effectData.timeForShow = 5;
+            EffectHandler.Instance.ShowEffect(effectData);
         }
 
         blockData.SetBlockMeta(blockMetaData);
@@ -69,6 +78,20 @@ public class BlockTypeFocalManipulator : Block
         targetChunk.RegisterEventUpdate(blockLocalPosition, TimeUpdateEventTypeEnum.Sec);
         EventBlockUpdateForSec(targetChunk, worldPosition - targetChunk.chunkData.positionForWorld);
         AudioHandler.Instance.PlaySound(1103);
+
+        //展示粒子效果
+        SetWorkEffect(worldPosition, true);
+    }
+
+    /// <summary>
+    /// 展示工作粒子效果
+    /// </summary>
+    public GameObject SetWorkEffect(Vector3Int worldPosition,bool isShow)
+    {
+        GameObject objBlock = GetBlockObj(worldPosition);
+        Transform tfEffect = objBlock.transform.Find("Effect");
+        tfEffect.ShowObj(isShow);
+        return tfEffect.gameObject;
     }
 
     /// <summary>

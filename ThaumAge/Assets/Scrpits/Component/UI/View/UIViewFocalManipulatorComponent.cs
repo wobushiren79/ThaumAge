@@ -8,8 +8,6 @@ public partial class UIViewFocalManipulator
 
     public Slider ui_ChangePro;
 
-    public SelectView ui_ViewSelectChange_2;
-
     public UIViewItemShow ui_ViewItemShow;
 
     public RectTransform ui_MaterialContainer;
@@ -21,6 +19,20 @@ public partial class UIViewFocalManipulator
     public Text ui_MaterialTitle;
 
     public UIViewItemContainer ui_ItemMagicCore;
+
+    public SelectView ui_Option_Element;
+
+    public SelectView ui_Option_CreateWay;
+
+    public SelectView ui_Option_Range;
+
+    public SelectView ui_Option_Scope;
+
+    public SelectView ui_Option_Power;
+
+    public SelectView ui_Option_MagicPay;
+
+    public Text ui_SubmitTex;
 
 
 }

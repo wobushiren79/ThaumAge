@@ -2,6 +2,7 @@
 using UnityEngine;
 using DG.Tweening;
 using UnityEngine.UI;
+using System.Collections.Generic;
 
 public partial class UIViewFocalManipulator : BaseUIView
 {
@@ -12,6 +13,7 @@ public partial class UIViewFocalManipulator : BaseUIView
     public override void Awake()
     {
         base.Awake();
+        ui_ViewItemShow.ShowObj(false);
         ui_ItemMagicCore.SetCallBackForSetViewItem(CallBackForItemChange);
     }
 
@@ -20,6 +22,22 @@ public partial class UIViewFocalManipulator : BaseUIView
         base.OpenUI();
         //事件通知更新
         this.RegisterEvent<Vector3Int>(EventsInfo.BlockTypeFocalManipulator_UpdateWork, CallBackForBlockUpdate);
+    }
+
+    public override void RefreshUI()
+    {
+        base.RefreshUI();
+        ui_SubmitTex.text = TextHandler.Instance.GetTextById(500);
+
+        ui_OptionsTitle.text = TextHandler.Instance.GetTextById(501);
+        ui_MaterialTitle.text = TextHandler.Instance.GetTextById(502);
+
+        ui_Option_Element.SetTitle(TextHandler.Instance.GetTextById(503));
+        ui_Option_CreateWay.SetTitle(TextHandler.Instance.GetTextById(504));
+        ui_Option_Range.SetTitle(TextHandler.Instance.GetTextById(505));
+        ui_Option_Scope.SetTitle(TextHandler.Instance.GetTextById(506));
+        ui_Option_Power.SetTitle(TextHandler.Instance.GetTextById(507));
+        ui_Option_MagicPay.SetTitle(TextHandler.Instance.GetTextById(508));
     }
 
     public override void CloseUI()
@@ -44,6 +62,23 @@ public partial class UIViewFocalManipulator : BaseUIView
             blockMetaData = new BlockMetaFocalManipulator();
 
         ui_ItemMagicCore.SetViewItemByData(blockMetaData.itemMagicCore);
+    }
+
+    /// <summary>
+    /// 设置选项
+    /// </summary>
+    public void SetOptions()
+    {
+      
+    }
+
+    /// <summary>
+    /// 设置材料
+    /// </summary>
+    public void SetMaterials()
+    {
+        ui_MaterialContainer.DestroyAllChild(true);
+
     }
 
     public override void OnClickForButton(Button viewButton)
