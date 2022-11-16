@@ -36,32 +36,5 @@ public class UITextController : BaseMVCController<UITextModel, IUITextView>
         }
     }
 
-    /// <summary>
-    /// 根据ID获取文字内容
-    /// </summary>
-    /// <param name="id"></param>
-    /// <returns></returns>
-    public string GetTextById(long id)
-    {
-        if (dicText == null)
-            return null;
-        if (dicText.TryGetValue(id, out UITextBean value))
-        {
-            GameConfigBean gameConfig = GameDataHandler.Instance.manager.GetGameConfig();
-            switch (gameConfig.GetLanguage())
-            {
-                case LanguageEnum.cn:
-                    return value.content_cn;
-                case LanguageEnum.en:
-                    return value.content_en;
-            }
-            return null;
-        }
-        else
-        {
-            LogUtil.LogError("没有找到ID为" + id + "的UI内容");
-            return null;
-        }
-    }
 
 }
