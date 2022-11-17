@@ -15,7 +15,7 @@ public class GameLauncher : BaseLauncher
         base.Launch();
         IconHandler.Instance.InitData();
         //打开主UI
-        UIHandler.Instance.OpenUIAndCloseOther<UILoading>(UIEnum.Loading);
+        UIHandler.Instance.OpenUIAndCloseOther<UILoading>();
         //初始化摄像头数据
         CameraHandler.Instance.InitGameCameraData();
         //加载资源
@@ -75,7 +75,7 @@ public class GameLauncher : BaseLauncher
         //修改光照
         LightHandler.Instance.InitLight();
         //打开主UI
-        UIHandler.Instance.OpenUIAndCloseOther<UIGameMain>(UIEnum.GameMain);
+        UIHandler.Instance.OpenUIAndCloseOther<UIGameMain>();
     }
 
 }

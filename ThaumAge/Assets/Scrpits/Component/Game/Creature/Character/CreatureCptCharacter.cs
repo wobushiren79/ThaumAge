@@ -115,7 +115,7 @@ public class CreatureCptCharacter : CreatureCptBase
                 UIHandler.Instance.RefreshUI();
             }
             //弹出死亡UI
-            UIHandler.Instance.OpenUI<UIGameDead>(UIEnum.GameDead);
+            UIHandler.Instance.OpenUI<UIGameDead>();
             //关闭控制
             GameControlHandler.Instance.manager.controlForPlayer.EnabledControl(false);
             GameDataHandler.Instance.WaitExecuteEndOfFrame(30, () =>

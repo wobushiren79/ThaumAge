@@ -51,7 +51,7 @@ public partial class UIGameCommonNormal : BaseUIComponent
     /// </summary>
     public virtual void HandleForBackGameMain()
     {
-        UIHandler.Instance.OpenUIAndCloseOther<UIGameMain>(UIEnum.GameMain);
+        UIHandler.Instance.OpenUIAndCloseOther<UIGameMain>();
         //≤•∑≈“Ù–ß
         AudioHandler.Instance.PlaySound(2);
     }

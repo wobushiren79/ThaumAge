@@ -555,7 +555,7 @@ GameObject:
   - component: {fileID: 5851314731992454104}
   - component: {fileID: 4612707227568797608}
   m_Layer: 5
-  m_Name: GameBook
+  m_Name: UIGameBook
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

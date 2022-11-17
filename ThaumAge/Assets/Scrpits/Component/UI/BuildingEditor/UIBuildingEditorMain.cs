@@ -18,6 +18,6 @@ public partial class UIBuildingEditorMain : BaseUIComponent
     /// </summary>
     public void OnClickForCreate()
     {
-        UIHandler.Instance.OpenUIAndCloseOther<UIBuildingEditorCreate>(UIEnum.BuildingEditorCreate);
+        UIHandler.Instance.OpenUIAndCloseOther<UIBuildingEditorCreate>();
     }
 }

@@ -5,7 +5,7 @@ public class BlockTypeMagicInstrumentAssemblyTable : Block
 {
     public override void Interactive(GameObject user, Vector3Int worldPosition, BlockDirectionEnum direction)
     {
-        var uiMagicInstrumentAssembly =  UIHandler.Instance.OpenUIAndCloseOther<UIGameMagicInstrumentAssembly>(UIEnum.GameMagicInstrumentAssembly);
+        var uiMagicInstrumentAssembly =  UIHandler.Instance.OpenUIAndCloseOther<UIGameMagicInstrumentAssembly>();
         uiMagicInstrumentAssembly.SetData(worldPosition);
         AudioHandler.Instance.PlaySound(1);
     }

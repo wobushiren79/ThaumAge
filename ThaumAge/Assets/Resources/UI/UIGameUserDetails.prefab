@@ -227,7 +227,7 @@ GameObject:
   - component: {fileID: 4370333408960693632}
   - component: {fileID: 6197626307870961370}
   m_Layer: 5
-  m_Name: GameUserDetails
+  m_Name: UIGameUserDetails
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

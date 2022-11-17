@@ -294,7 +294,7 @@ GameObject:
   - component: {fileID: 5851314731992454104}
   - component: {fileID: 5486091061510014033}
   m_Layer: 5
-  m_Name: GameMagicInstrumentAssembly
+  m_Name: UIGameMagicInstrumentAssembly
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

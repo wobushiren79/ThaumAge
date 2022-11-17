@@ -214,7 +214,7 @@ GameObject:
   - component: {fileID: 4370333408960693632}
   - component: {fileID: 1042317267850393425}
   m_Layer: 5
-  m_Name: BuildingEditorMain
+  m_Name: UIBuildingEditorMain
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

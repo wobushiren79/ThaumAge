@@ -175,7 +175,7 @@ public class ControlForPlayer : ControlForBase
             return;
         if (!isActiveAndEnabled)
             return;
-        UIGameUserDetails uiGameUserDetails = UIHandler.Instance.OpenUIAndCloseOther<UIGameUserDetails>(UIEnum.GameUserDetails);
+        UIGameUserDetails uiGameUserDetails = UIHandler.Instance.OpenUIAndCloseOther<UIGameUserDetails>();
         uiGameUserDetails.ui_ViewSynthesis.SetData(ItemsSynthesisTypeEnum.Self,Vector3Int.zero);
     }
 

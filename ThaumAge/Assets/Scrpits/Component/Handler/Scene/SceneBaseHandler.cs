@@ -13,7 +13,7 @@ public class SceneBaseHandler<H, M> : BaseHandler<H, M>
     public void ChangeScene(ScenesEnum scenes)
     {
         //打开加载UI
-        UIHandler.Instance.OpenUIAndCloseOther<UILoading>(UIEnum.Loading);
+        UIHandler.Instance.OpenUIAndCloseOther<UILoading>();
         //删除世界数据
         WorldCreateHandler.Instance.ClearWorld();
         //因为场景处理器只在本场景使用，所以跳转之后可以删除

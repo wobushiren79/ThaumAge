@@ -12,7 +12,7 @@ public class BlockTypeCraftingTableSimple : Block
         //只有player才能打开
         if (user == null || user.GetComponent<Player>() == null)
             return;
-        UIGameUserDetails uiGameUserDetails = UIHandler.Instance.OpenUIAndCloseOther<UIGameUserDetails>(UIEnum.GameUserDetails);
+        UIGameUserDetails uiGameUserDetails = UIHandler.Instance.OpenUIAndCloseOther<UIGameUserDetails>();
         uiGameUserDetails.ui_ViewSynthesis.SetData(ItemsSynthesisTypeEnum.Base,worldPosition);
         uiGameUserDetails.SetSelectType(1);
     }

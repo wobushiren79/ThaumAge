@@ -8,7 +8,7 @@ public class BlockBaseSign : Block
     {
         base.Interactive(user, worldPosition, direction);
         //打开UI
-        UIGameSign uiGameSign = UIHandler.Instance.OpenUIAndCloseOther<UIGameSign>(UIEnum.GameSign);
+        UIGameSign uiGameSign = UIHandler.Instance.OpenUIAndCloseOther<UIGameSign>();
         uiGameSign.SetData(worldPosition);
     }
 

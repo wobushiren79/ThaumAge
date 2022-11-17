@@ -65,7 +65,7 @@ public partial class UIMainUserData : BaseUIComponent
     /// </summary>
     public void HandleForBackStartUI()
     {
-        UIMainStart uiMainStart = UIHandler.Instance.OpenUIAndCloseOther<UIMainStart>(UIEnum.MainStart);
+        UIMainStart uiMainStart = UIHandler.Instance.OpenUIAndCloseOther<UIMainStart>();
     }
 
     /// <summary>

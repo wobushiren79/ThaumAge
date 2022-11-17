@@ -11,7 +11,7 @@ public class BlockBaseBox : Block
         if (user == null || user.GetComponent<Player>() == null)
             return;
         //打开箱子UI
-        UIGameBox uiGameBox = UIHandler.Instance.OpenUIAndCloseOther<UIGameBox>(UIEnum.GameBox);
+        UIGameBox uiGameBox = UIHandler.Instance.OpenUIAndCloseOther<UIGameBox>();
         uiGameBox.SetData(worldPosition, boxSize);
         //打开盒子
         OpenBox(worldPosition);

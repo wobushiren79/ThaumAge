@@ -256,7 +256,7 @@ public partial class UIMainCreate : BaseUIComponent,
     public void HandleForBack()
     {
         //打开用户存档界面
-        UIHandler.Instance.OpenUIAndCloseOther<UIMainUserData>(UIEnum.MainUserData);
+        UIHandler.Instance.OpenUIAndCloseOther<UIMainUserData>();
         //还原摄像头
         SceneMainHandler.Instance.ChangeCameraByIndex(0);
         //还原角色角度

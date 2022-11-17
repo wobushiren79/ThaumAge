@@ -64,11 +64,11 @@ public partial class UIGameSetting : UIGameCommonNormal, IRadioGroupCallBack
     {
         if (SceneUtil.GetCurrentScene() == ScenesEnum.MainScene)
         {
-            UIHandler.Instance.OpenUIAndCloseOther<UIMainStart>(UIEnum.MainStart);
+            UIHandler.Instance.OpenUIAndCloseOther<UIMainStart>();
         }
         else if (SceneUtil.GetCurrentScene() == ScenesEnum.GameScene)
         {
-            UIHandler.Instance.OpenUIAndCloseOther<UIGameMain>(UIEnum.GameMain);
+            UIHandler.Instance.OpenUIAndCloseOther<UIGameMain>();
         }
         GameDataHandler.Instance.manager.SaveGameConfig();
         //播放音效

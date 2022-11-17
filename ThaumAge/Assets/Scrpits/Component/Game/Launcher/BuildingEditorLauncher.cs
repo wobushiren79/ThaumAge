@@ -12,7 +12,7 @@ public class BuildingEditorLauncher : BaseLauncher
         GameHandler.Instance.LoadGameResources(() =>
         {
             //打开UI
-            UIHandler.Instance.OpenUIAndCloseOther<UIBuildingEditorMain>(UIEnum.BuildingEditorMain);
+            UIHandler.Instance.OpenUIAndCloseOther<UIBuildingEditorMain>();
         });
     }
 }

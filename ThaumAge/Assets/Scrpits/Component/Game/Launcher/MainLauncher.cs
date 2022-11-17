@@ -15,7 +15,7 @@ public class MainLauncher : BaseLauncher
         base.Launch();
         IconHandler.Instance.InitData();
 
-        UIHandler.Instance.OpenUIAndCloseOther<UILoading>(UIEnum.Loading);
+        UIHandler.Instance.OpenUIAndCloseOther<UILoading>();
 
         GameHandler.Instance.LoadGameResources(() =>
         {
@@ -53,6 +53,6 @@ public class MainLauncher : BaseLauncher
         //修改光照
         LightHandler.Instance.InitLight();
         //打开主UI
-        UIHandler.Instance.OpenUIAndCloseOther<UIMainStart>(UIEnum.MainStart);
+        UIHandler.Instance.OpenUIAndCloseOther<UIMainStart>();
     }
 }

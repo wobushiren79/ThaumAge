@@ -118,7 +118,7 @@ public partial class UIGameMain : BaseUIComponent
                 if (holdItemInfo.GetItemsType() == ItemsTypeEnum.Wand)
                 {
                     //打开法术核心界面
-                    UIGameMagicCore uiGameMagicCore = UIHandler.Instance.OpenUIAndCloseOther<UIGameMagicCore>(UIEnum.GameMagicCore);
+                    UIGameMagicCore uiGameMagicCore = UIHandler.Instance.OpenUIAndCloseOther<UIGameMagicCore>();
                     uiGameMagicCore.SetData(holdItemsData);
                     //播放音效
                     AudioHandler.Instance.PlaySound(1);
@@ -133,7 +133,7 @@ public partial class UIGameMain : BaseUIComponent
     public void OpenUserDetailsUI()
     {
         //打开用户详情
-        UIHandler.Instance.OpenUIAndCloseOther<UIGameUserDetails>(UIEnum.GameUserDetails);
+        UIHandler.Instance.OpenUIAndCloseOther<UIGameUserDetails>();
         //播放音效
         AudioHandler.Instance.PlaySound(1);
     }
@@ -144,7 +144,7 @@ public partial class UIGameMain : BaseUIComponent
     public void OpenBookUI()
     {
         //打开魔法书
-        UIHandler.Instance.OpenUIAndCloseOther<UIGameBook>(UIEnum.GameBook);
+        UIHandler.Instance.OpenUIAndCloseOther<UIGameBook>();
         //播放音效
         AudioHandler.Instance.PlaySound(1);
     }
@@ -155,7 +155,7 @@ public partial class UIGameMain : BaseUIComponent
     public void OpenSettingUI()
     {
         //打开设置
-        UIHandler.Instance.OpenUIAndCloseOther<UIGameSetting>(UIEnum.GameSetting);
+        UIHandler.Instance.OpenUIAndCloseOther<UIGameSetting>();
         //播放音效
         AudioHandler.Instance.PlaySound(1);
     }
@@ -166,7 +166,7 @@ public partial class UIGameMain : BaseUIComponent
     public void OpenExitUI()
     {
         //打开离开
-        UIHandler.Instance.OpenUIAndCloseOther<UIGameExit>(UIEnum.GameExit);
+        UIHandler.Instance.OpenUIAndCloseOther<UIGameExit>();
         //播放音效
         AudioHandler.Instance.PlaySound(1);
     }
@@ -179,7 +179,7 @@ public partial class UIGameMain : BaseUIComponent
         if (ProjectConfigInfo.BUILD_TYPE == ProjectBuildTypeEnum.Debug)
         {
             //打开GM菜单
-            UIHandler.Instance.OpenUIAndCloseOther<UIGodMain>(UIEnum.GodMain);
+            UIHandler.Instance.OpenUIAndCloseOther<UIGodMain>();
             //播放音效
             AudioHandler.Instance.PlaySound(1);
         }

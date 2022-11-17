@@ -165,7 +165,7 @@ public partial class UIListItemMainUserData : BaseUIView
     /// </summary>
     public void HandleForCreate()
     {
-        UIMainCreate uiCreate = UIHandler.Instance.OpenUIAndCloseOther<UIMainCreate>(UIEnum.MainCreate);
+        UIMainCreate uiCreate = UIHandler.Instance.OpenUIAndCloseOther<UIMainCreate>();
         uiCreate.SetUserDataIndex(userDataIndex);
 
         //设施摄像头
