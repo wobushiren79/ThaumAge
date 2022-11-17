@@ -73,3 +73,35 @@ public partial class BookModelDetailsInfoBean
         return listUnlockItem;
     }
 }
+
+public partial class BookModelDetailsInfoCfg
+{
+    //流程书详情(按模块)
+    protected static Dictionary<int, List<BookModelDetailsInfoBean>> dicBookModelDetailsInfo;
+
+    public static List<BookModelDetailsInfoBean> GetItemDataByModel(int modelId)
+    {
+        if (dicBookModelDetailsInfo == null)
+        {
+            dicBookModelDetailsInfo = new Dictionary<int, List<BookModelDetailsInfoBean>>();
+            Dictionary<long, BookModelDetailsInfoBean> dicData = GetAllData();
+            foreach (var itemData in dicData)
+            {
+                var itemDataValue = itemData.Value;
+                if (dicBookModelDetailsInfo.TryGetValue(itemDataValue.model_id, out List<BookModelDetailsInfoBean> listItemData))
+                {
+                    listItemData.Add(itemDataValue);
+                }
+                else
+                {
+                    dicBookModelDetailsInfo.Add(itemDataValue.model_id, new List<BookModelDetailsInfoBean>() { itemDataValue });
+                }
+            }
+        }
+        if (dicBookModelDetailsInfo.TryGetValue(modelId, out var listData))
+        {
+            return listData;
+        }
+        return null;
+    }
+}

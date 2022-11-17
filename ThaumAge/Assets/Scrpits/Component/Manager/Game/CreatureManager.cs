@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-public class CreatureManager : BaseManager,
-    ICharacterInfoView,ICreatureInfoView
+public class CreatureManager : BaseManager,ICharacterInfoView
 {
     public readonly string pathHair = "Assets/Prefabs/Model/Character/Hair";
     public readonly string pathEye = "Assets/Texture/Character/Eye";
@@ -30,13 +29,10 @@ public class CreatureManager : BaseManager,
     public Dictionary<long, CharacterInfoBean> dicCharacterSkinInfo = new Dictionary<long, CharacterInfoBean>();
 
     //生物列表
-    public Dictionary<long, CreatureInfoBean> dicCreatureInfo = new Dictionary<long, CreatureInfoBean>();
     public Dictionary<string, GameObject> dicCreatureModel = new Dictionary<string, GameObject>();
 
     //角色数据控制器
     protected CharacterInfoController controllerForCharacterInfo;
-    //生物数据控制器
-    protected CreatureInfoController controllerForCreatureInfo;
 
     //生物血条模型
     protected GameObject modelForLifeProgress;
@@ -48,19 +44,8 @@ public class CreatureManager : BaseManager,
         controllerForCharacterInfo.GetAllCharacterInfoEyeData(InitCharacterInfoEye);
         controllerForCharacterInfo.GetAllCharacterInfoMouthData(InitCharacterInfoMouth);
         controllerForCharacterInfo.GetAllCharacterInfoSkinData(InitCharacterInfoSkin);
-
-        controllerForCreatureInfo = new CreatureInfoController(this,this);
-        controllerForCreatureInfo.GetAllCreatureInfoData(InitCreatureInfo);
     }
 
-    /// <summary>
-    /// 初始化所有生物信息
-    /// </summary>
-    /// <param name="listData"></param>
-    protected void InitCreatureInfo(List<CreatureInfoBean> listData)
-    {
-        InitData(dicCreatureInfo, listData);
-    }
 
     /// <summary>
     /// 初始化角色发型信息
@@ -118,16 +103,6 @@ public class CreatureManager : BaseManager,
     public CharacterInfoBean GetCharacterInfoHair(long id)
     {
         return GetDataById(id, dicCharacterHairInfo);
-    }
-
-    /// <summary>
-    /// 获取生物信息
-    /// </summary>
-    /// <param name="id"></param>
-    /// <returns></returns>
-    public CreatureInfoBean GetCreatureInfo(long id)
-    {
-        return GetDataById(id, dicCreatureInfo);
     }
 
     /// <summary>

@@ -8,6 +8,7 @@ public partial class UIGameBook : UIGameCommonNormal, IRadioGroupCallBack
 {
     protected List<RadioButtonView> listLabels = new List<RadioButtonView>();
     protected List<BookModelInfoBean> listBookModel;
+
     protected int labelIndex = 0;
     public override void Awake()
     {
@@ -35,7 +36,13 @@ public partial class UIGameBook : UIGameCommonNormal, IRadioGroupCallBack
 
     public void InitData()
     {
-        listBookModel = GameInfoHandler.Instance.manager.GetUnLockBookModelInfo();
+        var dicAllBookData = BookModelInfoCfg.GetAllData();
+        listBookModel = new List<BookModelInfoBean>();
+        foreach ( var itemData in dicAllBookData)
+        {
+            listBookModel.Add(itemData.Value);
+        }
+
         SetLabels(listBookModel);
         ui_Labels.SetPosition(labelIndex, true);
     }

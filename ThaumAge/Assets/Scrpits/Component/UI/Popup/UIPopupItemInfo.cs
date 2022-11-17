@@ -136,7 +136,7 @@ public partial class UIPopupItemInfo : PopupShowView
         Dictionary<ElementalTypeEnum, int>  dicElemental = itemsInfo.GetAllElemental();
         foreach (var itemElemental in dicElemental)
         {
-            ElementalInfoBean elementalInfo = GameInfoHandler.Instance.manager.GetElementalInfo(itemElemental.Key);
+            ElementalInfoBean elementalInfo = ElementalInfoCfg.GetItemData(itemElemental.Key);
             GameObject objItem = Instantiate(ui_Elemental.gameObject, ui_ItemElement.gameObject);
 
             Text tvContent = objItem.transform.Find("ElementNum").GetComponent<Text>();

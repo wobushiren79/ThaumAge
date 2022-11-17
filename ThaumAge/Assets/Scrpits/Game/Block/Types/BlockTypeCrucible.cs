@@ -59,7 +59,7 @@ public class BlockTypeCrucible : Block
     {
         numberSynthesis = 0;
         GeteCrucibleData(blockWorldPosition, out BlockBean blockData, out BlockMetaCrucible blockMetaData);
-        List<ItemsSynthesisBean> listSynthesis = ItemsHandler.Instance.manager.GetItemsSynthesisForCrucible();
+        List<ItemsSynthesisBean> listSynthesis = ItemsSynthesisCfg.GetItemsSynthesisForCrucible();
         for (int i = 0; i < listSynthesis.Count; i++)
         {
             ItemsSynthesisBean itemSynthesisData = listSynthesis[i];

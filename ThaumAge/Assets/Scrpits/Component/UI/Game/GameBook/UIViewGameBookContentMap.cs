@@ -75,7 +75,7 @@ public partial class UIViewGameBookContentMap : BaseUIView
         }
         listMapItem.Clear();
         //获取数据
-        var listBookModelInfoDetails = GameInfoHandler.Instance.manager.GetBookModelDetailsById(bookModelInfo.id);
+        var listBookModelInfoDetails = BookModelDetailsInfoCfg.GetItemDataByModel(bookModelInfo.id);
         for (int i = 0; i < listBookModelInfoDetails.Count; i++)
         {
             var itemData = listBookModelInfoDetails[i];

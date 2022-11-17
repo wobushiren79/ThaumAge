@@ -162,7 +162,7 @@ public class PlayerTargetBlock : BaseMonoBehaviour
             }
             objElemental.transform.localPosition = new Vector3(startX - index, 0, 0);
             //获取元素信息
-            ElementalInfoBean elementalInfo = GameInfoHandler.Instance.manager.GetElementalInfo((ElementalTypeEnum)itemElemental.id);
+            ElementalInfoBean elementalInfo = ElementalInfoCfg.GetItemData(itemElemental.id);
 
             SpriteRenderer srIcon = objElemental.GetComponent<SpriteRenderer>();
             TextMeshPro tvNumber = objElemental.transform.Find("ItemElementalNum").GetComponent<TextMeshPro>();

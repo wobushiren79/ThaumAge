@@ -6,7 +6,7 @@ public partial class BookModelDetailsInfoBean : BaseBean
 	/// <summary>
 	///模块ID
 	/// </summary>
-	public long model_id;
+	public int model_id;
 	/// <summary>
 	///图标（图集0UI 1Item 3Sky，名字）
 	/// </summary>

@@ -5,20 +5,14 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ItemsManager : BaseManager,
-    IItemsInfoView, IItemsSynthesisView
+public class ItemsManager : BaseManager,IItemsInfoView
 {
     protected ItemsInfoController controllerForItems;
-    protected ItemsSynthesisController controllerForSynthesis;
 
     //道具信息列表
     protected Dictionary<long, ItemsInfoBean> dicItemsInfo = new();
-    //道具合成列表
-    protected Dictionary<long, ItemsSynthesisBean> dicItemsSynthesis = new();
     //道具信息列表
     protected List<ItemsInfoBean> listItemsInfo = new();
-    //坩埚的数据
-    protected List<ItemsSynthesisBean> listItemsSynthesisForCrucible;
 
     //注册道具列表
     protected Item[] arrayItemRegister = new Item[EnumExtension.GetEnumMaxIndex<ItemsTypeEnum>() + 1];
@@ -42,9 +36,6 @@ public class ItemsManager : BaseManager,
     {
         controllerForItems = new ItemsInfoController(this, this);
         controllerForItems.GetAllItemsInfoData(InitItemsInfo);
-
-        controllerForSynthesis = new ItemsSynthesisController(this, this);
-        controllerForSynthesis.GetAllItemsSynthesisData(InitItemsSynthesis);
     }
 
     /// <summary>
@@ -67,83 +58,6 @@ public class ItemsManager : BaseManager,
             .ToList();
         InitData(dicItemsInfo, listItemsInfo);
         RegisterItem();
-    }
-
-    /// <summary>
-    /// 初始化道具合成数据
-    /// </summary>
-    /// <param name="listItemsSynthesis"></param>
-    public void InitItemsSynthesis(List<ItemsSynthesisBean> listItemsSynthesis)
-    {
-        InitData(dicItemsSynthesis, listItemsSynthesis);
-    }
-
-    /// <summary>
-    /// 获取道具合成数据
-    /// </summary>
-    /// <param name="synthesisId"></param>
-    /// <returns></returns>
-    public ItemsSynthesisBean GetItemsSynthesis(long synthesisId)
-    {
-        return GetDataById(synthesisId, dicItemsSynthesis);
-    }
-
-    /// <summary>
-    /// 通过类型获取道具合成数据
-    /// </summary>
-    /// <param name="type"></param>
-    /// <returns></returns>
-    public List<ItemsSynthesisBean> GetItemsSynthesisByType(ItemsSynthesisTypeEnum itemsSynthesisType)
-    {
-        List<ItemsSynthesisBean> listData = new List<ItemsSynthesisBean>();
-        foreach (var itemData in dicItemsSynthesis)
-        {
-            ItemsSynthesisBean itemValue = itemData.Value;
-            //检测是否包含该类型的合成
-            if (itemValue.CheckSynthesisType(itemsSynthesisType,out int[] itemSynthesisTypes))
-            {
-                bool hasSelf = false;
-                foreach (var itemDataType in itemSynthesisTypes)
-                {
-                    //如果是默认的 那不用判断是否解锁 默认解锁
-                    if (itemDataType == (int)ItemsSynthesisTypeEnum.Self)
-                    {
-                        hasSelf = true;
-                        break;
-                    }
-                }
-                if (hasSelf)
-                {
-
-                }
-                else
-                {
-                    //检测是否解锁该合成
-                    bool isUnlockSynthesis = itemValue.CheckIsUnlockSynthesis();
-                    if (isUnlockSynthesis == false)
-                        continue;
-                }
-                listData.Add(itemValue);
-            }
-        }
-        return listData;
-    }
-
-    public List<ItemsSynthesisBean> GetItemsSynthesisForCrucible()
-    {
-        if (listItemsSynthesisForCrucible.IsNull())
-        {
-            listItemsSynthesisForCrucible = new List<ItemsSynthesisBean>();
-            foreach (var itemData in dicItemsSynthesis)
-            {
-                ItemsSynthesisBean itemValue = itemData.Value;
-                if (itemValue.type_synthesis.Equals("21"))
-                {
-                    listItemsSynthesisForCrucible.Add(itemValue);
-                }
-            }
-        }
-        return listItemsSynthesisForCrucible;
     }
 
     /// <summary>
@@ -361,16 +275,6 @@ public class ItemsManager : BaseManager,
     }
 
     public void GetItemsInfoFail(string failMsg, Action action)
-    {
-
-    }
-
-    public void GetItemsSynthesisSuccess<T>(T data, Action<T> action)
-    {
-        action?.Invoke(data);
-    }
-
-    public void GetItemsSynthesisFail(string failMsg, Action action)
     {
 
     }

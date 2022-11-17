@@ -173,3 +173,69 @@ public partial class ItemsSynthesisBean
         }
     }
 }
+
+public partial class ItemsSynthesisCfg
+{   
+    //坩埚的数据
+    protected static List<ItemsSynthesisBean> listItemsSynthesisForCrucible;
+
+    /// <summary>
+    /// 通过类型获取道具合成数据
+    /// </summary>
+    /// <param name="type"></param>
+    /// <returns></returns>
+    public static List<ItemsSynthesisBean> GetItemsSynthesisByType(ItemsSynthesisTypeEnum itemsSynthesisType)
+    {
+        List<ItemsSynthesisBean> listData = new List<ItemsSynthesisBean>();
+        var dicItemsSynthesis = GetAllData();
+        foreach (var itemData in dicItemsSynthesis)
+        {
+            ItemsSynthesisBean itemValue = itemData.Value;
+            //检测是否包含该类型的合成
+            if (itemValue.CheckSynthesisType(itemsSynthesisType, out int[] itemSynthesisTypes))
+            {
+                bool hasSelf = false;
+                foreach (var itemDataType in itemSynthesisTypes)
+                {
+                    //如果是默认的 那不用判断是否解锁 默认解锁
+                    if (itemDataType == (int)ItemsSynthesisTypeEnum.Self)
+                    {
+                        hasSelf = true;
+                        break;
+                    }
+                }
+                if (hasSelf)
+                {
+
+                }
+                else
+                {
+                    //检测是否解锁该合成
+                    bool isUnlockSynthesis = itemValue.CheckIsUnlockSynthesis();
+                    if (isUnlockSynthesis == false)
+                        continue;
+                }
+                listData.Add(itemValue);
+            }
+        }
+        return listData;
+    }
+
+    public static List<ItemsSynthesisBean> GetItemsSynthesisForCrucible()
+    {
+        if (listItemsSynthesisForCrucible.IsNull())
+        {
+            listItemsSynthesisForCrucible = new List<ItemsSynthesisBean>();
+            var dicItemsSynthesis = GetAllData();
+            foreach (var itemData in dicItemsSynthesis)
+            {
+                ItemsSynthesisBean itemValue = itemData.Value;
+                if (itemValue.type_synthesis.Equals("21"))
+                {
+                    listItemsSynthesisForCrucible.Add(itemValue);
+                }
+            }
+        }
+        return listItemsSynthesisForCrucible;
+    }
+}

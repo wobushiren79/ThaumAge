@@ -74,7 +74,7 @@ public partial class UIViewSynthesis : BaseUIView
     public override void RefreshUI()
     {
         base.RefreshUI();
-        listSynthesisData = ItemsHandler.Instance.manager.GetItemsSynthesisByType(itemsSynthesisType);
+        listSynthesisData = ItemsSynthesisCfg.GetItemsSynthesisByType(itemsSynthesisType);
         ui_SynthesisList.SetCellCount(listSynthesisData.Count);
         RefreshMaterials();
         RefreshUIText();

@@ -8,7 +8,7 @@ public class CreatureHandler : BaseHandler<CreatureHandler, CreatureManager>
     /// </summary>
     public void CreateCreature(long creatureId, Vector3 position)
     {
-        CreatureInfoBean creatureInfo = manager.GetCreatureInfo(creatureId);
+        CreatureInfoBean creatureInfo = CreatureInfoCfg.GetItemData(creatureId);
         if (creatureInfo == null)
             return;
         manager.GetCreatureModel(creatureInfo.model_name, (data) =>

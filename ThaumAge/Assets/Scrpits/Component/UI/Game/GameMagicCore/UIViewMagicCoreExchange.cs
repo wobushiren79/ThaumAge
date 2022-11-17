@@ -47,7 +47,7 @@ public partial class UIViewMagicCoreExchange : BaseUIView
     {
         listMagicCoreItem.Clear();
         ui_MagicCoreListContainer.DestroyAllChild(true);
-        MagicInstrumentInfoBean magicInstrumentInfo = GameInfoHandler.Instance.manager.GetMagicInstrumentInfo(itemMetaWand.capId);
+        MagicInstrumentInfoBean magicInstrumentInfo = MagicInstrumentInfoCfg.GetItemData(itemMetaWand.capId);
         for (int i = 0; i < magicInstrumentInfo.magic_core_num; i++)
         {
             GameObject objItem = Instantiate(ui_MagicCoreListContainer.gameObject, ui_ViewItemContainer.gameObject);
