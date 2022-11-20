@@ -47,9 +47,10 @@ public class BlockTypeFocalManipulator : Block
         blockMetaData.workPro += 0.1f;
         if (blockMetaData.workPro >= 1)
         {
+            blockMetaData.itemMagicCore = blockMetaData.itemMagicCoreWorkTemp;
             blockMetaData.workPro = 0;
             chunk.UnRegisterEventUpdate(localPosition, TimeUpdateEventTypeEnum.Sec);
-            AudioHandler.Instance.PlaySound(1101);
+            AudioHandler.Instance.PlaySound(1101, localPosition+chunk.chunkData.positionForWorld);
 
             //展示粒子效果
             GameObject objEffect = SetWorkEffect(localPosition + chunk.chunkData.positionForWorld, false);
@@ -76,8 +77,8 @@ public class BlockTypeFocalManipulator : Block
     {
         Vector3Int blockLocalPosition = worldPosition - targetChunk.chunkData.positionForWorld;
         targetChunk.RegisterEventUpdate(blockLocalPosition, TimeUpdateEventTypeEnum.Sec);
-        EventBlockUpdateForSec(targetChunk, worldPosition - targetChunk.chunkData.positionForWorld);
-        AudioHandler.Instance.PlaySound(1103);
+        //EventBlockUpdateForSec(targetChunk, worldPosition - targetChunk.chunkData.positionForWorld);
+        AudioHandler.Instance.PlaySound(1103, worldPosition);
 
         //展示粒子效果
         SetWorkEffect(worldPosition, true);
@@ -86,7 +87,7 @@ public class BlockTypeFocalManipulator : Block
     /// <summary>
     /// 展示工作粒子效果
     /// </summary>
-    public GameObject SetWorkEffect(Vector3Int worldPosition,bool isShow)
+    public GameObject SetWorkEffect(Vector3Int worldPosition, bool isShow)
     {
         GameObject objBlock = GetBlockObj(worldPosition);
         Transform tfEffect = objBlock.transform.Find("Effect");

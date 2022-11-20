@@ -32,7 +32,6 @@ public partial class ItemsSynthesisCfg : BaseCfg<long, ItemsSynthesisBean>
 {
 	public static string fileName = "ItemsSynthesis";
 	protected static Dictionary<long, ItemsSynthesisBean> dicData = null;
-
 	public static Dictionary<long, ItemsSynthesisBean> GetAllData()
 	{
 		if (dicData == null)

@@ -106,7 +106,7 @@ MonoBehaviour:
       m_Calls: []
   m_Sprite: {fileID: 21300000, guid: 6c85ccde3337d784b88d46781c858b7b, type: 3}
   m_Type: 0
-  m_PreserveAspect: 0
+  m_PreserveAspect: 1
   m_FillCenter: 1
   m_FillMethod: 4
   m_FillAmount: 1
@@ -162,7 +162,7 @@ RectTransform:
   - {fileID: 5941379287879098454}
   - {fileID: 7938456381454188560}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -199,17 +199,23 @@ MonoBehaviour:
     name_cn: 
     name_en: 
     icon_key: 
+    icon_color: 
     items_type: 0
     type_id: 0
     max_number: 0
     model_name: 
+    model_remark_name: 
     tex_name: 
-    life: 0
     cd_use: 0
-    atk: 0
+    attribute_data: 
     range_damage: 
     anim_use: 
     hold_data: 
+    link_class: 
+    fire_items: 
+    grind_items: 
+    sound_use: 
+    elementals: 
   originalParent: {fileID: 0}
   ui_IVIcon: {fileID: 0}
   ui_TVNumber: {fileID: 0}

@@ -1,6 +1,7 @@
 ﻿using UnityEditor;
 using UnityEngine;
 using System;
+using System.Collections.Generic;
 
 [Serializable]
 public class ItemsBean 
@@ -48,6 +49,34 @@ public class ItemsBean
         T data = JsonUtil.FromJson<T>(meta);
         return data;
     }
+
+    /// <summary>
+    /// 获取列表数据
+    /// </summary>
+    /// <param name="listDataStr"></param>
+    /// <returns></returns>
+    public static List<ItemsBean> GetListItemsArrayBean(string listDataStr)
+    {
+        List<ItemsBean> listData = new List<ItemsBean>();
+        string[] listItemsData = listDataStr.SplitForArrayStr('&');
+        for (int i = 0; i < listItemsData.Length; i++)
+        {
+            string itemData1 = listItemsData[i];
+            string[] itemData2 = itemData1.SplitForArrayStr(':');
+            long itemIds = long.Parse(itemData2[0]);
+
+            if (itemData2.Length == 1)
+            {
+                listData.Add(new ItemsBean(itemIds, 1));
+            }
+            else
+            {
+                listData.Add(new ItemsBean(itemIds, int.Parse(itemData2[1])));
+            }
+        }
+        return listData;
+    }
+
 
     public static T GetMetaData<T>(string meta) where T : ItemBaseMeta
     {

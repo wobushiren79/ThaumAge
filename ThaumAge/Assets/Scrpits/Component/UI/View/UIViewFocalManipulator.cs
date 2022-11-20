@@ -4,17 +4,50 @@ using DG.Tweening;
 using UnityEngine.UI;
 using System.Collections.Generic;
 
-public partial class UIViewFocalManipulator : BaseUIView
+public partial class UIViewFocalManipulator : BaseUIView, SelectView.ICallBack
 {
     protected BlockBean blockData;
     protected BlockMetaFocalManipulator blockMetaData;
     protected Vector3Int blockWorldPosition;
 
+    //元素选项
+    protected List<ResearchInfoBean> listElementsOptionsInfo = new List<ResearchInfoBean>();
+    protected List<string> listElementsOptionsName = new List<string>();
+    protected int indexSelectElements;
+    //法术生成选项
+    protected List<ResearchInfoBean> listCreateOptionsInfo = new List<ResearchInfoBean>();
+    protected List<string> listCreateOptionsName = new List<string>();
+    protected int indexSelectCreate;
+    //射程选项
+    protected List<ResearchInfoBean> listRangeOptionsInfo = new List<ResearchInfoBean>();
+    protected List<string> listRangeOptionsName = new List<string>();
+    protected int indexSelectRange;
+    //范围选项
+    protected List<ResearchInfoBean> listScopeOptionsInfo = new List<ResearchInfoBean>();
+    protected List<string> listScopeOptionsName = new List<string>();
+    protected int indexSelectScope;
+    //威力选项
+    protected List<ResearchInfoBean> listPowerOptionsInfo = new List<ResearchInfoBean>();
+    protected List<string> listPowerOptionsName = new List<string>();
+    protected int indexSelectPower;
+    //魔法消耗选项
+    protected List<ResearchInfoBean> listMagicPayOptionsInfo = new List<ResearchInfoBean>();
+    protected List<string> listMagicPayOptionsName = new List<string>();
+    protected int indexSelectMagicPay;
+
+    //选择的材料数据
+    protected List<ItemsBean> listSelectMaterialsData = new List<ItemsBean>();
+
     public override void Awake()
     {
         base.Awake();
-        ui_ViewItemShow.ShowObj(false);
         ui_ItemMagicCore.SetCallBackForSetViewItem(CallBackForItemChange);
+        ui_Option_Element.SetCallBack(this);
+        ui_Option_CreateWay.SetCallBack(this);
+        ui_Option_Range.SetCallBack(this);
+        ui_Option_Scope.SetCallBack(this);
+        ui_Option_Power.SetCallBack(this);
+        ui_Option_MagicPay.SetCallBack(this);
     }
 
     public override void OpenUI()
@@ -62,23 +95,165 @@ public partial class UIViewFocalManipulator : BaseUIView
             blockMetaData = new BlockMetaFocalManipulator();
 
         ui_ItemMagicCore.SetViewItemByData(blockMetaData.itemMagicCore);
+
+        //设置选项
+        InitOptions();
     }
 
     /// <summary>
     /// 设置选项
     /// </summary>
-    public void SetOptions()
+    public void InitOptions()
     {
-      
+        InitOptionsForElements();
+        InitOptionsForCreate();
+        InitOptionsForRange();
+        InitOptionsForScope();
+        InitOptionsForPower();
+        InitOptionsForMagicPay();
+
+        ui_Option_Element.SetPosition(0);
+        ui_Option_CreateWay.SetPosition(0);
+        ui_Option_Range.SetPosition(0);
+        ui_Option_Scope.SetPosition(0);
+        ui_Option_Power.SetPosition(0);
     }
 
+    protected void GetOptionsData(int researchType, List<ResearchInfoBean> listTargetData, List<string> listTargetDataName)
+    {
+        List<ResearchInfoBean> listData = ResearchInfoCfg.GetResearchInfoByType(researchType);
+        listTargetData.Clear();
+        listTargetDataName.Clear();
+        for (int i = 0; i < listData.Count; i++)
+        {
+            var itemData = listData[i];
+            if (itemData.need_unlock == 0)
+            {
+                listTargetDataName.Add(itemData.GetName());
+                listTargetData.Add(itemData);
+                continue;
+            }
+            else
+            {
+                //判断是否解锁
+                listTargetDataName.Add(itemData.GetName());
+                listTargetData.Add(itemData);
+            }
+        }
+    }
+
+    /// <summary>
+    /// 法术元素选项
+    /// </summary>
+    public void InitOptionsForElements()
+    {
+        GetOptionsData(1, listElementsOptionsInfo, listElementsOptionsName);
+        ui_Option_Element.SetListData(listElementsOptionsName);
+    }
+
+    /// <summary>
+    /// 法术生成选项
+    /// </summary>
+    public void InitOptionsForCreate()
+    {
+        GetOptionsData(2, listCreateOptionsInfo, listCreateOptionsName);
+        ui_Option_CreateWay.SetListData(listCreateOptionsName);
+    }
+
+    /// <summary>
+    ///  //射程选项
+    /// </summary>
+    public void InitOptionsForRange()
+    {
+        GetOptionsData(3, listRangeOptionsInfo, listRangeOptionsName);
+        ui_Option_Range.SetListData(listRangeOptionsName);
+    }
+
+    /// <summary>
+    /// 范围选项
+    /// </summary>
+    public void InitOptionsForScope()
+    {
+        GetOptionsData(4, listScopeOptionsInfo, listScopeOptionsName);
+        ui_Option_Scope.SetListData(listScopeOptionsName);
+    }
+
+    /// <summary>
+    /// 威力选项
+    /// </summary>
+    public void InitOptionsForPower()
+    {
+        GetOptionsData(5, listPowerOptionsInfo, listPowerOptionsName);
+        ui_Option_Power.SetListData(listPowerOptionsName);
+    }
+
+
+    /// <summary>
+    /// 魔法消耗选项
+    /// </summary>
+    public void InitOptionsForMagicPay()
+    {
+        //暂时取消魔法消耗
+        ui_Option_MagicPay.ShowObj(false);
+    }
+
+    //是否正在设置材质
+    protected bool isSetMaterials = false;
     /// <summary>
     /// 设置材料
     /// </summary>
     public void SetMaterials()
     {
-        ui_MaterialContainer.DestroyAllChild(true);
+        if (isSetMaterials)
+            return;
+        isSetMaterials = true;
 
+        listSelectMaterialsData.Clear();
+        var itemElements = listElementsOptionsInfo[indexSelectElements];
+        HandleMaterialsList(listSelectMaterialsData, ItemsBean.GetListItemsArrayBean(itemElements.materials));
+
+        var itemCreate = listCreateOptionsInfo[indexSelectCreate];
+        HandleMaterialsList(listSelectMaterialsData, ItemsBean.GetListItemsArrayBean(itemCreate.materials));
+
+        var itemRange = listRangeOptionsInfo[indexSelectRange];
+        HandleMaterialsList(listSelectMaterialsData, ItemsBean.GetListItemsArrayBean(itemRange.materials));
+
+        var itemScope = listScopeOptionsInfo[indexSelectScope];
+        HandleMaterialsList(listSelectMaterialsData, ItemsBean.GetListItemsArrayBean(itemScope.materials));
+
+        var itemPower = listPowerOptionsInfo[indexSelectPower];
+        HandleMaterialsList(listSelectMaterialsData, ItemsBean.GetListItemsArrayBean(itemPower.materials));
+
+        //var itemMagicPay = listMagicPayOptionsInfo[indexSelectMagicPay];
+        //HandleMaterialsList(listSelectMaterialsData, ItemsBean.GetListItemsArrayBean(itemMagicPay.materials));
+
+        //延迟一帧。防止多次设置
+        this.WaitExecuteEndOfFrame(1, () =>
+        {
+            ui_ViewMaterialsShow.SetData(listSelectMaterialsData);
+            isSetMaterials = false;
+        });
+    }
+
+    protected void HandleMaterialsList(List<ItemsBean> listMaterialsData, List<ItemsBean> listTargetData)
+    {
+        for (int i = 0; i < listTargetData.Count; i++)
+        {
+            ItemsBean itemTarget = listTargetData[i];
+            bool hasData = false;
+            for (int f = 0; f < listMaterialsData.Count; f++)
+            {
+                ItemsBean itemMaterials = listMaterialsData[f];
+                if (itemTarget.itemId == itemMaterials.itemId)
+                {
+                    hasData = true;
+                    itemMaterials.number += itemTarget.number;
+                    break;
+                }
+            }
+            if (!hasData)
+                listMaterialsData.Add(itemTarget);
+        }
     }
 
     public override void OnClickForButton(Button viewButton)
@@ -95,14 +270,39 @@ public partial class UIViewFocalManipulator : BaseUIView
     /// </summary>
     public void HandleForSubmit()
     {
+        AudioHandler.Instance.PlaySound(1);
         //生成特效
         if (blockMetaData.workPro != 0)
             return;
+        UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();
+
+        for (int i = 0; i < listSelectMaterialsData.Count; i++)
+        {
+            var itemMaterial = listSelectMaterialsData[i];
+            //如果没有足够的道具
+            if (!userData.HasEnoughItem(itemMaterial.itemId, itemMaterial.number))
+            {
+                UIHandler.Instance.ToastHint<ToastView>(TextHandler.Instance.GetTextById(30002));
+                return;
+            }
+        }
         //获取对应方块
         WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(blockWorldPosition, out Block block, out Chunk chunk);
         if (chunk == null || block == null || block.blockType != BlockTypeEnum.FocalManipulator)
             return;
         var blockFocalManipulator = block as BlockTypeFocalManipulator;
+
+        //设置相关数据
+        ItemMetaMagicCore itemMetaMagic = new ItemMetaMagicCore();
+
+        blockMetaData.itemMagicCoreWorkTemp.itemId = blockMetaData.itemMagicCore.itemId;
+        blockMetaData.itemMagicCoreWorkTemp.number = blockMetaData.itemMagicCore.number;
+        blockMetaData.itemMagicCoreWorkTemp.SetMetaData(itemMetaMagic);
+
+        blockMetaData.workPro = 0.01f;
+        blockData.SetBlockMeta(blockMetaData);
+        chunk.SetBlockData(blockData);
+
         blockFocalManipulator.StartWork(chunk, blockWorldPosition);
     }
 
@@ -168,4 +368,36 @@ public partial class UIViewFocalManipulator : BaseUIView
         chunk.SetBlockData(blockData);
     }
 
+    #region 选择回调
+    public void ChangeSelectPosition(SelectView selectView, int position)
+    {
+
+        if (selectView == ui_Option_Element)
+        {
+            indexSelectElements = position;
+        }
+        else if (selectView == ui_Option_CreateWay)
+        {
+            indexSelectCreate = position;
+        }
+        else if (selectView == ui_Option_Range)
+        {
+            indexSelectRange = position;
+        }
+        else if (selectView == ui_Option_Scope)
+        {
+            indexSelectScope = position;
+        }
+        else if (selectView == ui_Option_Power)
+        {
+            indexSelectPower = position;
+        }
+        else if (selectView == ui_Option_MagicPay)
+        {
+            indexSelectMagicPay = position;
+        }
+
+        SetMaterials();
+    }
+    #endregion
 }
