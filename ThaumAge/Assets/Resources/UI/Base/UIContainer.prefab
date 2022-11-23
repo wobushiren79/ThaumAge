@@ -714,7 +714,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5851314731992454111, guid: 34c67037ac271074aa4adceef66fb85c, type: 3}
       propertyPath: m_Name
-      value: ToastList
+      value: UIToastList
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_AddedGameObjects: []

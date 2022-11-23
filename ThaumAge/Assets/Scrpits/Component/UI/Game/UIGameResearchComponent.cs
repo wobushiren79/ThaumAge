@@ -14,5 +14,9 @@ public partial class UIGameResearch
 
     public UIViewShortcuts ui_Shortcuts;
 
+    public UIViewMaterialsShow ui_ViewMaterialsShow;
+
+    public RadioButtonView ui_TypeFocalManipulator;
+
 
 }

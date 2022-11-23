@@ -89,6 +89,7 @@ GameObject:
   - component: {fileID: 1096795461852377434}
   - component: {fileID: 8738015049296411548}
   - component: {fileID: 7235694769505785272}
+  - component: {fileID: 683017224628098250}
   m_Layer: 5
   m_Name: ViewLabel_2
   m_TagString: Untagged
@@ -221,3 +222,18 @@ MonoBehaviour:
   rbImage: {fileID: 1096795461852377434}
   rbText: {fileID: 0}
   isSelect: 1
+--- !u!114 &683017224628098250
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3168430279268376507}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 72d557dddcdc7324f9ebac0fbd4be0c5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rectTransform: {fileID: 3699340285375713444}
+  btnTarget: {fileID: 8738015049296411548}
+  popupType: 0

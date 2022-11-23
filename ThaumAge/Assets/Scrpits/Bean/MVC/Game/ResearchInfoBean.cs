@@ -8,6 +8,18 @@ public partial class ResearchInfoBean : BaseBean
 	/// </summary>
 	public int type_research;
 	/// <summary>
+	///图标
+	/// </summary>
+	public string icon_key;
+	/// <summary>
+	///花费事件
+	/// </summary>
+	public int time;
+	/// <summary>
+	///解锁前置研究
+	/// </summary>
+	public string unlock_pre_research;
+	/// <summary>
 	///是否需要解锁 0不需要 1需要
 	/// </summary>
 	public int need_unlock;

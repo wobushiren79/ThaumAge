@@ -96,7 +96,7 @@ GameObject:
   - component: {fileID: 5851314731992454104}
   - component: {fileID: 4834133700431000596}
   m_Layer: 5
-  m_Name: ToastList
+  m_Name: UIToastList
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

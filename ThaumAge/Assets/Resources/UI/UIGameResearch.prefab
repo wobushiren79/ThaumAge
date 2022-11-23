@@ -721,6 +721,8 @@ MonoBehaviour:
   ui_ViewItemResearch: {fileID: 8230480751338697197}
   ui_ViewBackPack: {fileID: 2680596347024004302}
   ui_Shortcuts: {fileID: 3934167059900612332}
+  ui_ViewMaterialsShow: {fileID: 4365581385485022672}
+  ui_TypeFocalManipulator: {fileID: 2078449293201362668}
 --- !u!1 &7779312527482599325
 GameObject:
   m_ObjectHideFlags: 0
@@ -1490,6 +1492,17 @@ PrefabInstance:
     m_RemovedComponents: []
     m_AddedGameObjects: []
   m_SourcePrefab: {fileID: 100100000, guid: 2f3f53bd80cd3db4791a16f850cc2f46, type: 3}
+--- !u!114 &4365581385485022672 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8906391803781225370, guid: 2f3f53bd80cd3db4791a16f850cc2f46, type: 3}
+  m_PrefabInstance: {fileID: 5119595569357057610}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5420177165cd7894893218107ca4a86c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!224 &6336556807334412791 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 1216972264540516285, guid: 2f3f53bd80cd3db4791a16f850cc2f46, type: 3}

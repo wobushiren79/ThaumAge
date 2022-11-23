@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 4171790335418620463}
   - component: {fileID: 825952051078767263}
   m_Layer: 5
-  m_Name: DialogItemOptions
+  m_Name: UIDialogItemOptions
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
