@@ -22,9 +22,9 @@ public partial class UIViewSynthesisMaterial : BaseUIView
         base.OnDestroy();
     }
 
-    public override void RefreshUI()
+    public override void RefreshUI(bool isOpenInit = false)
     {
-        base.RefreshUI();
+        base.RefreshUI(isOpenInit);
         if (materialsData == null)
             return;
         SetCanHasItems(materialsData.itemIds, materialsData.itemNumber);

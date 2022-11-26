@@ -13,6 +13,24 @@ public partial class UIGameFocalManipulator : UIGameCommonNormal
         ui_ViewFocalManipulator.OpenUI();
     }
 
+    public override void CloseUI()
+    {
+        base.CloseUI();
+        ui_Shortcuts.CloseUI();
+        ui_ViewBackPack.CloseUI();
+        ui_ViewFocalManipulator.CloseUI();
+    }
+
+    public override void RefreshUI(bool isOpenInit = false)
+    {
+        base.RefreshUI(isOpenInit);
+        if (isOpenInit)
+            return;
+        ui_Shortcuts.RefreshUI();
+        ui_ViewBackPack.RefreshUI();
+        ui_ViewFocalManipulator.RefreshUI();
+    }
+
     /// <summary>
     /// 设置数据
     /// </summary>

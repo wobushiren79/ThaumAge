@@ -4,15 +4,19 @@ using System.Collections.Generic;
 public partial class ResearchInfoBean : BaseBean
 {
 	/// <summary>
-	///类型 1镶嵌（元素）2镶嵌（生成）3镶嵌（射程）4镶嵌（范围）5镶嵌（威力）6镶嵌（消耗）
+	///类型 1.法术核心镶嵌
 	/// </summary>
 	public int type_research;
+	/// <summary>
+	///具体类型
+	/// </summary>
+	public int type_details;
 	/// <summary>
 	///图标
 	/// </summary>
 	public string icon_key;
 	/// <summary>
-	///花费事件
+	///花费时间
 	/// </summary>
 	public int time;
 	/// <summary>
@@ -24,9 +28,25 @@ public partial class ResearchInfoBean : BaseBean
 	/// </summary>
 	public int need_unlock;
 	/// <summary>
+	///解锁资源（&分隔不同材料） （:分隔道具数量） （|分隔可替换的材料）
+	/// </summary>
+	public string unlock_materials;
+	/// <summary>
 	///资源（&分隔不同材料） （:分隔道具数量） （|分隔可替换的材料）
 	/// </summary>
 	public string materials;
+	/// <summary>
+	///研究数据
+	/// </summary>
+	public string data_research;
+	/// <summary>
+	///内容描述中文
+	/// </summary>
+	public string content_cn;
+	/// <summary>
+	///内容描述英文
+	/// </summary>
+	public string content_en;
 	/// <summary>
 	///备注
 	/// </summary>

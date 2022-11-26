@@ -22,9 +22,9 @@ public partial class UIViewItemShow : BaseUIView
         RefreshUI();
     }
 
-    public override void RefreshUI()
+    public override void RefreshUI(bool isOpenInit = false)
     {
-        base.RefreshUI();
+        base.RefreshUI(isOpenInit);
         SetIcon(itemsData);
         SetNumber(itemsData.number);
     }

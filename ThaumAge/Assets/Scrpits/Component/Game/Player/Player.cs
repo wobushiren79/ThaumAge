@@ -108,7 +108,7 @@ public class Player : BaseMonoBehaviour
     }
 
     /// <summary>
-    /// 处理-用户数据
+    /// 处理-用户数据（每一秒刷新一次）
     /// </summary>
     public void HandleForUserData()
     {
@@ -125,6 +125,12 @@ public class Player : BaseMonoBehaviour
             //按比例减少
             int maxHealth = characterData.GetAttributeValue(AttributeTypeEnum.Health);
             creatureStatus.HealthChange(Mathf.RoundToInt(-maxHealth * 0.1f));
+        }
+        //刷新研究进度
+        bool hasResearchProgressChange = userData.userAchievement.ResearchProgressChange(1);
+        if (hasResearchProgressChange)
+        {
+            EventHandler.Instance.TriggerEvent(EventsInfo.CharacterStatus_ResearchChange);
         }
         //刷新UI
         EventHandler.Instance.TriggerEvent(EventsInfo.CharacterStatus_StatusChange);

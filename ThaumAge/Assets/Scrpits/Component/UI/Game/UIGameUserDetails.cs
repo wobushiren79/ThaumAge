@@ -22,14 +22,27 @@ public partial class UIGameUserDetails : UIGameCommonNormal, IRadioGroupCallBack
     {
         base.OpenUI();
         ui_ViewBackPack.OpenUI();
+        ui_Shortcuts.OpenUI();
         ui_Labels.SetPosition(0, true);
     }
 
-    public override void RefreshUI()
+    public override void CloseUI()
     {
-        base.RefreshUI();
-        ui_Shortcuts.RefreshUI();
-        SetText();
+        base.CloseUI();
+        ui_ViewBackPack.CloseUI();
+        ui_Shortcuts.CloseUI();
+    }
+
+    public override void RefreshUI(bool isOpenInit)
+    {
+        base.RefreshUI(isOpenInit);
+        ui_LabelEquipContent.text = TextHandler.Instance.GetTextById(301);
+        ui_LabelSynthesisContent.text = TextHandler.Instance.GetTextById(302);
+
+        if (isOpenInit)
+            return;
+        ui_ViewBackPack.RefreshUI(isOpenInit);
+        ui_Shortcuts.RefreshUI(isOpenInit);
     }
 
     public override void OnInputActionForStarted(InputActionUIEnum inputName, UnityEngine.InputSystem.InputAction.CallbackContext callback)
@@ -50,12 +63,6 @@ public partial class UIGameUserDetails : UIGameCommonNormal, IRadioGroupCallBack
     public void SetSelectType(int selectType)
     {
         ui_Labels.SetPosition(selectType, true);
-    }
-
-    public void SetText()
-    {
-        ui_LabelEquipContent.text = TextHandler.Instance.GetTextById(301);
-        ui_LabelSynthesisContent.text = TextHandler.Instance.GetTextById(302);
     }
 
     public void RadioButtonSelected(RadioGroupView rgView, int position, RadioButtonView rbview)

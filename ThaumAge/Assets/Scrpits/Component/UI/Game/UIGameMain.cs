@@ -14,19 +14,31 @@ public partial class UIGameMain : BaseUIComponent
         ui_ViewCharacterStatus.SetData(userData.characterData);
 
         base.OpenUI();
-
         this.RegisterEvent<UIViewItemContainer, long>(EventsInfo.UIViewItemContainer_ItemChange, CallBackForShortcutsItemExchange);
+
+        ui_Shortcuts.OpenUI();
+        ui_ViewCharacterStatus.OpenUI();
     }
 
-    public override void RefreshUI()
+    public override void RefreshUI(bool isOpenInit = false)
     {
-        base.RefreshUI();
+        base.RefreshUI(isOpenInit);
+
+        //展示一些解锁UI
+        ShowUnlockUI();
+        if (isOpenInit)
+            return;
         //道具刷新
         ui_Shortcuts.RefreshUI();
         //状态刷新
         ui_ViewCharacterStatus.RefreshUI();
-        //展示一些解锁UI
-        ShowUnlockUI();
+    }
+
+    public override void CloseUI()
+    {
+        base.CloseUI();
+        ui_Shortcuts.CloseUI();
+        ui_ViewCharacterStatus.CloseUI();
     }
 
 

@@ -21,7 +21,7 @@ public partial class UIListItemMainUserData : BaseUIView
     }
 
 
-    public override void RefreshUI()
+    public override void RefreshUI(bool isOpenInit = false)
     {
         base.RefreshUI();
         SetUIText();

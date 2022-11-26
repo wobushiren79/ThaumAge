@@ -8,7 +8,7 @@ public partial class UIViewCharacterStatusShow : BaseUIView
     public override void Awake()
     {
         base.Awake();
-        EventHandler.Instance.RegisterEvent(EventsInfo.CharacterStatus_StatusChange, RefreshUI);
+        EventHandler.Instance.RegisterEvent(EventsInfo.CharacterStatus_StatusChange, EventForStatusChange);
     }
 
     /// <summary>
@@ -19,9 +19,9 @@ public partial class UIViewCharacterStatusShow : BaseUIView
         this.characterData = characterData;
     }
 
-    public override void RefreshUI()
+    public override void RefreshUI(bool isOpenInit = false)
     {
-        base.RefreshUI();
+        base.RefreshUI(isOpenInit);
         if (characterData == null)
             return;
 
@@ -81,4 +81,13 @@ public partial class UIViewCharacterStatusShow : BaseUIView
     {
         ui_ViewCharacterStatusPro_Air.SetData(air, maxAir);
     }
+
+    /// <summary>
+    /// 事件-状态更新
+    /// </summary>
+    public void EventForStatusChange()
+    {
+        RefreshUI();
+    }
+
 }

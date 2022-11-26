@@ -15,10 +15,9 @@ public partial class UIMainMaker : BaseUIComponent
         }
 
     }
-
-    public override void RefreshUI()
+    public override void RefreshUI(bool isOpenInit = false)
     {
-        base.RefreshUI();
+        base.RefreshUI(isOpenInit);
         SetUIText();
     }
 

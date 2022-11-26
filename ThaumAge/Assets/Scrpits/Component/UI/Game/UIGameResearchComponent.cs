@@ -18,5 +18,9 @@ public partial class UIGameResearch
 
     public RadioButtonView ui_TypeFocalManipulator;
 
+    public Button ui_ResearchBtn;
+
+    public Text ui_ResearchBtnTex;
+
 
 }

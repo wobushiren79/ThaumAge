@@ -34,6 +34,15 @@ public partial class UIGameBook : UIGameCommonNormal, IRadioGroupCallBack
         ui_ViewGameBookShowDetails.CloseUI();
     }
 
+    public override void RefreshUI(bool isOpenInit = false)
+    {
+        base.RefreshUI(isOpenInit);
+        if (isOpenInit)
+            return;
+        ui_ViewGameBookContentMap.RefreshUI();
+        ui_ViewGameBookShowDetails.RefreshUI();
+    }
+
     public void InitData()
     {
         var dicAllBookData = BookModelInfoCfg.GetAllData();

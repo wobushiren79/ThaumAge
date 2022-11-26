@@ -42,9 +42,9 @@ public class UIViewShortcuts : BaseUIView
         }
     }
 
-    public override void RefreshUI()
+    public override void RefreshUI(bool isOpenInit = false)
     {
-        base.RefreshUI();
+        base.RefreshUI(isOpenInit);
         InitShortcuts();
     }
 
@@ -101,7 +101,7 @@ public class UIViewShortcuts : BaseUIView
         }
         userData.SetShortcuts(indexForShortcuts);
         GameHandler.Instance.manager.player.RefreshHandItem();
-        RefreshUI();
+        InitSelect();
     }
 
 
@@ -111,12 +111,16 @@ public class UIViewShortcuts : BaseUIView
     public void InitShortcuts()
     {
         UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();
-
         for (int i = 0; i < listShortcut.Count; i++)
         {
             listShortcut[i].SetViewItemByData(UIViewItemContainer.ContainerType.Shortcuts, userData.GetItemsFromShortcut(i), i);
         }
+        InitSelect();
+    }
 
+    public void InitSelect()
+    {
+        UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();
         for (int i = 0; i < listShortcut.Count; i++)
         {
             UIViewItemContainer uiViewItem = listShortcut[i];

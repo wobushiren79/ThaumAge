@@ -289,6 +289,20 @@ public class UserDataBean
         }
     }
 
+    public bool HasEnoughItem(List<ItemsBean> listItemData)
+    {
+        for (int i = 0; i < listItemData.Count; i++)
+        {
+            var itemMaterial = listItemData[i];
+            //如果没有足够的道具
+            if (!HasEnoughItem(itemMaterial.itemId, itemMaterial.number))
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
 
     /// <summary>
     /// 检测身上道具数量
@@ -296,10 +310,10 @@ public class UserDataBean
     /// <param name="itemsId"></param>
     /// <param name="type">0全部 1状态栏 2背包</param>
     /// <returns></returns>
-    public int CheckItemNumber(long itemsId,int type = 0)
+    public int CheckItemNumber(long itemsId, int type = 0)
     {
         ItemsBean[] allItems = new ItemsBean[0];
-        switch (type) 
+        switch (type)
         {
             case 0:
                 allItems = GetAllItems();
@@ -359,5 +373,14 @@ public class UserDataBean
             }
         }
         return itemsNum;
+    }
+    
+    public void RemoveItem(List<ItemsBean> listItemData)
+    {
+        for (int i = 0; i < listItemData.Count; i++)
+        {
+            var itemData = listItemData[i];
+            RemoveItem(itemData.itemId, itemData.number);
+        }
     }
 }

@@ -5,9 +5,9 @@ using UnityEngine.UI;
 
 public partial class UIGameExit : UIGameCommonNormal
 {
-    public override void RefreshUI()
+    public override void RefreshUI(bool isOpenInit = false)
     {
-        base.RefreshUI();
+        base.RefreshUI(isOpenInit);
         InitUIData();
     }
 

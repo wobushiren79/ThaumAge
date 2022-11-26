@@ -19,6 +19,22 @@ public partial class UIGameMagicCore : UIGameCommonNormal
     {
         base.CloseUI();
         UIViewShortcuts.CanChangeItem = true;
+
+        ui_Shortcuts.CloseUI();
+        ui_ViewBackPack.CloseUI();
+        ui_ViewShortcutsMagic.CloseUI();
+        ui_ViewMagicCoreExchange.CloseUI();
+    }
+
+    public override void RefreshUI(bool isOpenInit = false)
+    {
+        base.RefreshUI(isOpenInit);
+        if (isOpenInit)
+            return;
+        ui_Shortcuts.RefreshUI();
+        ui_ViewBackPack.RefreshUI();
+        ui_ViewShortcutsMagic.RefreshUI();
+        ui_ViewMagicCoreExchange.RefreshUI();
     }
 
     /// <summary>

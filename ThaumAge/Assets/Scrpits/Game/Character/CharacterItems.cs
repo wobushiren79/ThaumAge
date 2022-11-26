@@ -22,10 +22,20 @@ public class CharacterItems : CharacterBase
     public void ChangeRightHandItem(ItemsBean itemsData)
     {
         if (itemsData == null)
+        {
+            itemHoldRight.ShowObj(false);
             return;
+        }
 
         if (curItemsData == itemsData)
+        {
+            if (itemsData.itemId == 0)
+            {
+                itemHoldRight.ShowObj(false);
+            }
             return;
+        }
+
         this.curItemsData = itemsData;
         ItemsInfoBean itemsInfo = ItemsHandler.Instance.manager.GetItemsInfoById(itemsData.itemId);
         if (itemsInfo == null || itemsInfo.id == 0)

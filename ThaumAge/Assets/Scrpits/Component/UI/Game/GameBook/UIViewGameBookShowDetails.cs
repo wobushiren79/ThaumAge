@@ -13,9 +13,9 @@ public partial class UIViewGameBookShowDetails : BaseUIView
         RegisterEvent(EventsInfo.UIGameBook_MapItemClean, EventForMapItemClean);
     }
 
-    public override void RefreshUI()
+    public override void RefreshUI(bool isOpenInit = false)
     {
-        base.RefreshUI();
+        base.RefreshUI(isOpenInit);
         ui_Null.text = TextHandler.Instance.GetTextById(10);
     }
 

@@ -71,9 +71,10 @@ public partial class UIViewSynthesis : BaseUIView
         ResetAnimArcaneTable();
     }
 
-    public override void RefreshUI()
+    public override void RefreshUI(bool isOpenInit = false)
     {
-        base.RefreshUI();
+        base.RefreshUI(isOpenInit);
+
         listSynthesisData = ItemsSynthesisCfg.GetItemsSynthesisByType(itemsSynthesisType);
         ui_SynthesisList.SetCellCount(listSynthesisData.Count);
         RefreshMaterials();

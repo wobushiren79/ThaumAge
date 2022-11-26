@@ -200,7 +200,7 @@ public partial class UIViewItemContainer : BaseUIView
     /// 设置容器道具 用于初始化
     /// </summary>
     /// <param name="itemsData"></param>
-    public void SetViewItemByData(ItemsBean itemsData)
+    public void SetViewItemByData(ItemsBean itemsData, bool isCallBack = true)
     {
         if (itemsData == null)
             itemsData = new ItemsBean();
@@ -233,8 +233,11 @@ public partial class UIViewItemContainer : BaseUIView
         }
         currentViewItem.SetData(itemsData.itemId, itemsData.number, itemsData.meta);
 
-        callBackForSetViewItem?.Invoke(this, itemsData);
-        this.TriggerEvent(EventsInfo.UIViewItemContainer_ItemChange, this, itemsData.itemId);
+        if (isCallBack)
+        {
+            callBackForSetViewItem?.Invoke(this, itemsData);
+            this.TriggerEvent(EventsInfo.UIViewItemContainer_ItemChange, this, itemsData.itemId);
+        }
     }
 
 

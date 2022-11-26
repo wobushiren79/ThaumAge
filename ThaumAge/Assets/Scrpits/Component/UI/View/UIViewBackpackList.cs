@@ -18,9 +18,9 @@ public partial class UIViewBackpackList : BaseUIView
         base.CloseUI();
     }
 
-    public override void RefreshUI()
+    public override void RefreshUI(bool isOpenInit = false)
     {
-        base.RefreshUI();
+        base.RefreshUI(isOpenInit);
         ui_ItemList.RefreshAllCells();
     }
 

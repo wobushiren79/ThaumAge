@@ -24,9 +24,9 @@ public partial class UIMainUserData : BaseUIComponent
         base.Awake();
     }
 
-    public override void RefreshUI()
+    public override void RefreshUI(bool isOpenInit = false)
     {
-        base.RefreshUI();
+        base.RefreshUI(isOpenInit);
         GameDataHandler.Instance.manager.GetAllUserData(SetUserData);
     }
 

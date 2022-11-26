@@ -49,17 +49,24 @@ public partial class UIGameMagicInstrumentAssembly : UIGameCommonNormal
 
     public override void CloseUI()
     {
+        ui_Shortcuts.CloseUI();
+        ui_ViewBackPack.CloseUI();
+
         ui_Wand.ClearViewItem(true, false);
         ui_Cap.ClearViewItem(true, false);
         ui_Rod.ClearViewItem(true, false);
         base.CloseUI();
     }
 
-    public override void RefreshUI()
+    public override void RefreshUI(bool isOpenInit = false)
     {
-        base.RefreshUI();
+        base.RefreshUI(isOpenInit);
         ui_CapHint.text = TextHandler.Instance.GetTextById(1042);
         ui_RodHint.text = TextHandler.Instance.GetTextById(1043);
+        if (isOpenInit)
+            return;
+        ui_Shortcuts.RefreshUI();
+        ui_ViewBackPack.RefreshUI();
     }
 
     public void CallBackForItemChange(UIViewItemContainer viewContainer, ItemsBean itemData)

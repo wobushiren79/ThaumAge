@@ -50,16 +50,9 @@ public partial class UIViewFocalManipulator : BaseUIView, SelectView.ICallBack
         ui_Option_MagicPay.SetCallBack(this);
     }
 
-    public override void OpenUI()
+    public override void RefreshUI(bool isOpenInit = false)
     {
-        base.OpenUI();
-        //事件通知更新
-        this.RegisterEvent<Vector3Int>(EventsInfo.BlockTypeFocalManipulator_UpdateWork, CallBackForBlockUpdate);
-    }
-
-    public override void RefreshUI()
-    {
-        base.RefreshUI();
+        base.RefreshUI(isOpenInit);
         ui_SubmitTex.text = TextHandler.Instance.GetTextById(500);
 
         ui_OptionsTitle.text = TextHandler.Instance.GetTextById(501);
@@ -76,7 +69,7 @@ public partial class UIViewFocalManipulator : BaseUIView, SelectView.ICallBack
     public override void CloseUI()
     {
         base.CloseUI();
-        ui_ItemMagicCore.ClearViewItem();
+        ui_ChangePro.value = 0;
     }
 
     /// <summary>
@@ -94,10 +87,13 @@ public partial class UIViewFocalManipulator : BaseUIView, SelectView.ICallBack
         if (blockMetaData == null)
             blockMetaData = new BlockMetaFocalManipulator();
 
-        ui_ItemMagicCore.SetViewItemByData(blockMetaData.itemMagicCore);
+        ui_ItemMagicCore.SetViewItemByData(blockMetaData.itemMagicCore,false);
 
         //设置选项
         InitOptions();
+
+        //事件通知更新
+        this.RegisterEvent<Vector3Int>(EventsInfo.BlockTypeFocalManipulator_UpdateWork, CallBackForBlockUpdate);
     }
 
     /// <summary>
@@ -119,9 +115,9 @@ public partial class UIViewFocalManipulator : BaseUIView, SelectView.ICallBack
         ui_Option_Power.SetPosition(0);
     }
 
-    protected void GetOptionsData(int researchType, List<ResearchInfoBean> listTargetData, List<string> listTargetDataName)
+    protected void GetOptionsData(int researchDetailsType, List<ResearchInfoBean> listTargetData, List<string> listTargetDataName)
     {
-        List<ResearchInfoBean> listData = ResearchInfoCfg.GetResearchInfoByType(researchType);
+        List<ResearchInfoBean> listData = ResearchInfoCfg.GetResearchInfoByType(1, researchDetailsType);
         listTargetData.Clear();
         listTargetDataName.Clear();
         for (int i = 0; i < listData.Count; i++)
@@ -136,8 +132,13 @@ public partial class UIViewFocalManipulator : BaseUIView, SelectView.ICallBack
             else
             {
                 //判断是否解锁
-                listTargetDataName.Add(itemData.GetName());
-                listTargetData.Add(itemData);
+                UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();
+                bool isUnlock = userData.userAchievement.CheckUnlockResearch(itemData.id);
+                if (isUnlock)
+                {
+                    listTargetDataName.Add(itemData.GetName());
+                    listTargetData.Add(itemData);
+                }
             }
         }
     }
@@ -275,17 +276,16 @@ public partial class UIViewFocalManipulator : BaseUIView, SelectView.ICallBack
         if (blockMetaData.workPro != 0)
             return;
         UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();
-
-        for (int i = 0; i < listSelectMaterialsData.Count; i++)
+        //检测是否有足够的材料
+        bool hasEnoughItem = userData.HasEnoughItem(listSelectMaterialsData);
+        if (!hasEnoughItem)
         {
-            var itemMaterial = listSelectMaterialsData[i];
-            //如果没有足够的道具
-            if (!userData.HasEnoughItem(itemMaterial.itemId, itemMaterial.number))
-            {
-                UIHandler.Instance.ToastHint<ToastView>(TextHandler.Instance.GetTextById(30002));
-                return;
-            }
+            UIHandler.Instance.ToastHint<ToastView>(TextHandler.Instance.GetTextById(30002));
+            return;
         }
+        //扣除材料
+        userData.RemoveItem(listSelectMaterialsData);
+
         //获取对应方块
         WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(blockWorldPosition, out Block block, out Chunk chunk);
         if (chunk == null || block == null || block.blockType != BlockTypeEnum.FocalManipulator)
@@ -294,6 +294,17 @@ public partial class UIViewFocalManipulator : BaseUIView, SelectView.ICallBack
 
         //设置相关数据
         ItemMetaMagicCore itemMetaMagic = new ItemMetaMagicCore();
+        var dataElemental = listElementsOptionsInfo[indexSelectElements];
+        var dataCreate = listCreateOptionsInfo[indexSelectCreate];
+        var dataRange = listRangeOptionsInfo[indexSelectRange];
+        var dataScope = listScopeOptionsInfo[indexSelectScope];
+        var dataPower = listScopeOptionsInfo[indexSelectPower];
+
+        itemMetaMagic.elemental = int.Parse(dataElemental.data_research);
+        itemMetaMagic.create = int.Parse(dataCreate.data_research);
+        itemMetaMagic.range = int.Parse(dataRange.data_research);
+        itemMetaMagic.scope = int.Parse(dataScope.data_research);
+        itemMetaMagic.power = int.Parse(dataPower.data_research);
 
         blockMetaData.itemMagicCoreWorkTemp.itemId = blockMetaData.itemMagicCore.itemId;
         blockMetaData.itemMagicCoreWorkTemp.number = blockMetaData.itemMagicCore.number;
@@ -304,6 +315,8 @@ public partial class UIViewFocalManipulator : BaseUIView, SelectView.ICallBack
         chunk.SetBlockData(blockData);
 
         blockFocalManipulator.StartWork(chunk, blockWorldPosition);
+        //刷新UI
+        UIHandler.Instance.RefreshUI();
     }
 
     /// <summary>
@@ -347,7 +360,6 @@ public partial class UIViewFocalManipulator : BaseUIView, SelectView.ICallBack
             return;
         ui_ChangePro.value = blockMetaData.workPro;
     }
-
 
     /// <summary>
     /// 保存数据

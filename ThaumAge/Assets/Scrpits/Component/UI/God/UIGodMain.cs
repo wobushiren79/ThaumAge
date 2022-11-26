@@ -14,16 +14,24 @@ public partial class UIGodMain : UIGameCommonNormal
         ui_ItemList.AddCellListener(OnCellForItem);
     }
 
-    public override void RefreshUI()
-    {
-        base.RefreshUI();
-        ui_Shortcuts.RefreshUI();
-    }
-
     public override void OpenUI()
     {
         base.OpenUI();
+        ui_Shortcuts.OpenUI();
         InitData();
+    }
+    public override void CloseUI()
+    {
+        base.CloseUI();
+        ui_Shortcuts.CloseUI();
+    }
+
+    public override void RefreshUI(bool isOpenInit)
+    {
+        base.RefreshUI(isOpenInit);
+        if (isOpenInit)
+            return;
+        ui_Shortcuts.RefreshUI(isOpenInit);
     }
 
     public override void OnInputActionForStarted(InputActionUIEnum inputType, UnityEngine.InputSystem.InputAction.CallbackContext callback)

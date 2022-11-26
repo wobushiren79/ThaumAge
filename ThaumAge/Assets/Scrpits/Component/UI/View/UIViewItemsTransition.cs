@@ -50,9 +50,9 @@ public partial class UIViewItemsTransition : BaseUIView
 
 
 
-    public override void RefreshUI()
+    public override void RefreshUI(bool isOpenInit = false)
     {
-        base.RefreshUI();
+        base.RefreshUI(isOpenInit);
 
         blockMetaData = Block.FromMetaData<BlockMetaItemsTransition>(blockData.meta);
 

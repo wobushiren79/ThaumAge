@@ -35,9 +35,9 @@ public partial class UIMainStart : BaseUIComponent
         } 
     }
 
-    public override void RefreshUI()
+    public override void RefreshUI(bool isOpenInit = false)
     {
-        base.RefreshUI();
+        base.RefreshUI(isOpenInit);
         SetUIText();
     }
 

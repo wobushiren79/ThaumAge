@@ -723,6 +723,8 @@ MonoBehaviour:
   ui_Shortcuts: {fileID: 3934167059900612332}
   ui_ViewMaterialsShow: {fileID: 4365581385485022672}
   ui_TypeFocalManipulator: {fileID: 2078449293201362668}
+  ui_ResearchBtn: {fileID: 1469608211060937553}
+  ui_ResearchBtnTex: {fileID: 2537355772175503043}
 --- !u!1 &7779312527482599325
 GameObject:
   m_ObjectHideFlags: 0
@@ -1015,7 +1017,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Content: {fileID: 1993720059323625534}
-  m_Horizontal: 1
+  m_Horizontal: 0
   m_Vertical: 1
   m_MovementType: 1
   m_Elasticity: 0.1
@@ -1344,6 +1346,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4439039922471966190, guid: 35c7f725d7a64494d895657f557a4a1b, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6391668011796425447, guid: 35c7f725d7a64494d895657f557a4a1b, type: 3}
+      propertyPath: m_Transition
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7888077619482609579, guid: 35c7f725d7a64494d895657f557a4a1b, type: 3}

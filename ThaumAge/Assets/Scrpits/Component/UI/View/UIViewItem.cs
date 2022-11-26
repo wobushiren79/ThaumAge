@@ -61,9 +61,9 @@ public partial class UIViewItem : BaseUIView,
     /// <summary>
     /// 刷新UI
     /// </summary>
-    public override void RefreshUI()
+    public override void RefreshUI(bool isOpenInit = false)
     {
-        base.RefreshUI();
+        base.RefreshUI(isOpenInit);
         if (itemsInfo != null && itemId != 0)
         {
             SetIcon(itemsInfo);

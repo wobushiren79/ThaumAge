@@ -40,17 +40,10 @@ public partial class UIGameSetting : UIGameCommonNormal, IRadioGroupCallBack
         ui_Labels.SetPosition(0, true);
     }
 
-    public override void RefreshUI()
+    public override void RefreshUI(bool isOpenInit = false)
     {
-        base.RefreshUI();
-        SetTextUI();
-    }
+        base.RefreshUI(isOpenInit);
 
-    /// <summary>
-    /// 设置文字
-    /// </summary>
-    public void SetTextUI()
-    {
         ui_LabelGameContent.text = TextHandler.Instance.GetTextById(21);
         ui_LabelDisplayContent.text = TextHandler.Instance.GetTextById(22);
         ui_LabelAudioContent.text = TextHandler.Instance.GetTextById(23);

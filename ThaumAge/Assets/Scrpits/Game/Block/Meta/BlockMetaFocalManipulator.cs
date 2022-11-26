@@ -3,10 +3,10 @@ using UnityEngine;
 
 public class BlockMetaFocalManipulator : BlockMetaBase
 {
-    public ItemsBean itemMagicCore;
+    public ItemsBean itemMagicCore = new ItemsBean();
 
     //临时存储的数据 用于完成后赋值
-    public ItemsBean itemMagicCoreWorkTemp;
+    public ItemsBean itemMagicCoreWorkTemp = new ItemsBean();
     //改变进度
     public float workPro;
 }

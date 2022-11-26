@@ -15,6 +15,7 @@ public class BlockBaseBox : Block
         uiGameBox.SetData(worldPosition, boxSize);
         //打开盒子
         OpenBox(worldPosition);
+        AudioHandler.Instance.PlaySound(1);
     }
 
     public virtual void OpenBox(Vector3Int worldPosition)
