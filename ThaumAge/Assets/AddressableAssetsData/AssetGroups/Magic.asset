@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: Magic
+  m_EditorClassIdentifier: 
+  m_GroupName: Magic
+  m_Data:
+    m_SerializedData: []
+  m_GUID: 1e7f4250779840a41ad7b16cd949f63b
+  m_SerializeEntries:
+  - m_GUID: 8d59d714168488f40aca2568ed3222fa
+    m_Address: Assets/Prefabs/Model/Magic/Magic_FireBall_1.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: fd6114d87f1af534fbf270c47c0f10bf, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: cd9fccfc30b154e4abfbd8a83621f76c, type: 2}
+    - {fileID: 11400000, guid: 97f8eea4d98e4e24aaabc521ec9877a6, type: 2}
