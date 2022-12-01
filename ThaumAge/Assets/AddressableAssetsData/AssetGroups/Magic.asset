@@ -17,8 +17,28 @@ MonoBehaviour:
     m_SerializedData: []
   m_GUID: 1e7f4250779840a41ad7b16cd949f63b
   m_SerializeEntries:
+  - m_GUID: ae3aa7d51d10d9d499327a8c1a9373e5
+    m_Address: Assets/Prefabs/Game/Magic/Magic_MetalBall_1.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: d3462789cf42f5042b26de02e3a93c55
+    m_Address: Assets/Prefabs/Game/Magic/Magic_WaterBall_1.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e5b472be99238184f91c091dd9673406
+    m_Address: Assets/Prefabs/Game/Magic/Magic_WoodBall_1.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 8d59d714168488f40aca2568ed3222fa
-    m_Address: Assets/Prefabs/Model/Magic/Magic_FireBall_1.prefab
+    m_Address: Assets/Prefabs/Game/Magic/Magic_FireBall_1.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 6bbada6ecc771a34b9f86f6f469e306d
+    m_Address: Assets/Prefabs/Game/Magic/Magic_EarthBall_1.prefab
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
