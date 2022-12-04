@@ -14,4 +14,5 @@ public class LayerInfo
     public static int RenderCamera = LayerMask.NameToLayer("RenderCamera");
     public static int Obstacles = LayerMask.NameToLayer("Obstacles");
     public static int BuildingEditor = LayerMask.NameToLayer("BuildingEditor");
+    public static int Magic = LayerMask.NameToLayer("Magic");
 }

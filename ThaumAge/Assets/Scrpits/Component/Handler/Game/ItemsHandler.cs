@@ -84,7 +84,7 @@ public class ItemsHandler : BaseHandler<ItemsHandler, ItemsManager>
     {
         StartCoroutine(CreateItemCptDropList(itemDatas, itemDropState, dropPosition, Vector3.zero));
     }
-    public IEnumerator CreateItemCptDropList(List<ItemsBean> itemDatas, ItemDropStateEnum itemCptDropState, Vector3 dropPosition, Vector3 dropDirection)
+    protected IEnumerator CreateItemCptDropList(List<ItemsBean> itemDatas, ItemDropStateEnum itemCptDropState, Vector3 dropPosition, Vector3 dropDirection)
     {
         for (int i = 0; i < itemDatas.Count; i++)
         {
@@ -95,7 +95,7 @@ public class ItemsHandler : BaseHandler<ItemsHandler, ItemsManager>
     }
 
     /// <summary>
-    ///  创建掉落道具实例
+    /// 创建道具掉落
     /// </summary>
     public void CreateItemCptDrop(ItemDropBean itemDropData, Action<ItemCptDrop> callBackForComplete = null)
     {
@@ -110,11 +110,11 @@ public class ItemsHandler : BaseHandler<ItemsHandler, ItemsManager>
         });
 
         //播放道具掉落音效
-        AudioHandler.Instance.PlaySound(503);
+        AudioHandler.Instance.PlaySound(503, itemDropData.dropPosition);
     }
 
     /// <summary>
-    /// 创建道具掉落
+    /// 创建道具掉落（用于方块）
     /// </summary>
     public void CreateItemCptDrop(Block targetBlock, Chunk targetChunk, Vector3Int targetWorldPosition)
     {

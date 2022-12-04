@@ -43,11 +43,6 @@ public class Player : BaseMonoBehaviour
         }
     }
 
-    public void OnDestroy()
-    {
-        CancelInvoke();
-    }
-
     /// <summary>
     /// 更新数据
     /// </summary>

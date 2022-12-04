@@ -14,14 +14,17 @@ public class WorldCreateManager : BaseManager
 
     //所有待修改的区块 用于场景初始化
     public ConcurrentQueue<Chunk> listUpdateChunkInit = new ConcurrentQueue<Chunk>();
-    //所有待修改的区块 用于修改
-    public ConcurrentQueue<Chunk> listUpdateChunkEditor = new ConcurrentQueue<Chunk>();
+    //所有待修改的区块 用于修改 异步
+    public ConcurrentQueue<Chunk> listUpdateChunkEditorAsync = new ConcurrentQueue<Chunk>();
+    //所有待修改的区块 用于修改 同步
+    public ConcurrentQueue<Chunk> listUpdateChunkEditorSync = new ConcurrentQueue<Chunk>();
 
     //待绘制的区块 用于场景初始化
     public ConcurrentQueue<Chunk> listUpdateDrawChunkInit = new ConcurrentQueue<Chunk>();
-    //待绘制的区块 用于修改
-    public ConcurrentQueue<Chunk> listUpdateDrawChunkEditor = new ConcurrentQueue<Chunk>();
-
+    //待绘制的区块 用于修改 异步
+    public ConcurrentQueue<Chunk> listUpdateDrawChunkEditorAsync = new ConcurrentQueue<Chunk>();
+    //待绘制的区块 用于修改 同步
+    public ConcurrentQueue<Chunk> listUpdateDrawChunkEditorSync = new ConcurrentQueue<Chunk>();
 
     //世界种子
     protected int worldSeed;
@@ -114,7 +117,7 @@ public class WorldCreateManager : BaseManager
     /// 增加需要更新的区块
     /// </summary>
     /// <param name="chunk"></param>
-    /// <param name="type">0场景创建 1创景编辑</param>
+    /// <param name="type">0场景创建 1场景编辑异步 2场景编辑同步</param>
     public void AddUpdateChunk(Chunk chunk, int type)
     {
         if (chunk == null || !chunk.isActive|| !chunk.isInit)
@@ -128,9 +131,16 @@ public class WorldCreateManager : BaseManager
         }
         else if (type == 1)
         {
-            if (!listUpdateChunkEditor.Contains(chunk))
+            if (!listUpdateChunkEditorAsync.Contains(chunk))
             {
-                listUpdateChunkEditor.Enqueue(chunk);
+                listUpdateChunkEditorAsync.Enqueue(chunk);
+            }
+        }
+        else if (type == 2)
+        {
+            if (!listUpdateChunkEditorSync.Contains(chunk))
+            {
+                listUpdateChunkEditorSync.Enqueue(chunk);
             }
         }
     }
@@ -151,9 +161,16 @@ public class WorldCreateManager : BaseManager
         }
         else if (type == 1)
         {
-            if (!listUpdateDrawChunkEditor.Contains(chunk))
+            if (!listUpdateDrawChunkEditorAsync.Contains(chunk))
             {
-                listUpdateDrawChunkEditor.Enqueue(chunk);
+                listUpdateDrawChunkEditorAsync.Enqueue(chunk);
+            }
+        }
+        else if (type == 2)
+        {
+            if (!listUpdateDrawChunkEditorSync.Contains(chunk))
+            {
+                listUpdateDrawChunkEditorSync.Enqueue(chunk);
             }
         }
     }
@@ -358,7 +375,7 @@ public class WorldCreateManager : BaseManager
     {
         foreach (var itemChunk in dicChunk.Values)
         {
-            itemChunk.BuildChunkForAsync(null);
+            itemChunk.StartBuildChunk(null,true);
         }
     }
 }

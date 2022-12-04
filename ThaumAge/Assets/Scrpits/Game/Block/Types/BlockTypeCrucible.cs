@@ -94,7 +94,7 @@ public class BlockTypeCrucible : Block
                 //播放特效
                 PlaySynthesisEffect(blockWorldPosition + new Vector3(0.5f, 1f, 0.5f));
 
-                AudioHandler.Instance.PlaySound(1103);
+                AudioHandler.Instance.PlaySound(1103, blockWorldPosition);
                 return;
             }
         }
@@ -128,7 +128,7 @@ public class BlockTypeCrucible : Block
 
             float waterPlaneY = GetWaterLevelY(blockMetaData.waterLevel);
             PlayAddElementalEffect(blockWorldPosition + new Vector3(0.5f, 0.5f + waterPlaneY, 0.5f));
-            AudioHandler.Instance.PlaySound(703);
+            AudioHandler.Instance.PlaySound(703, blockWorldPosition);
             return true;
         }
         return false;

@@ -242,7 +242,7 @@ public class Chunk
     /// <summary>
     /// 异步构建chunk
     /// </summary>
-    public async void BuildChunkForAsync(Action callBackForComplete)
+    public async void StartBuildChunk(Action callBackForComplete, bool isAsync)
     {
         //只有初始化之后的chunk才能刷新
         if (!isInit)
@@ -254,48 +254,34 @@ public class Chunk
         if (isBuildChunk)
             return;
         isBuildChunk = true;
-        await Task.Run(() =>
+        if (isAsync)
+        {
+            await Task.Run(() =>
+            {
+                //遍历chunk, 生成其中的每一个Block
+                try
+                {
+                    lock (lockForBlcok)
+                    {
+                        BuildChunk();
+                    }
+                }
+                catch (Exception e)
+                {
+                    LogUtil.LogError("BuildChunkForAsync:" + e.ToString());
+                }
+                finally
+                {
+
+                }
+            });
+        }
+        else
         {
             //遍历chunk, 生成其中的每一个Block
             try
             {
-                lock (lockForBlcok)
-                {
-#if UNITY_EDITOR
-                    Stopwatch stopwatch = TimeUtil.GetMethodTimeStart();
-#endif
-                    chunkMeshData = new ChunkMeshData();
-
-                    chunkData.InitRoundChunk();
-
-                    //遍历每一个子区块
-                    for (int i = 0; i < chunkData.chunkSectionDatas.Length; i++)
-                    {
-                        ChunkSectionData chunkSection = chunkData.chunkSectionDatas[i];
-                        if (!chunkSection.IsRender())
-                            continue;
-
-                        for (int x = 0; x < chunkSection.sectionSize; x++)
-                        {
-                            for (int y = 0; y < chunkSection.sectionSize; y++)
-                            {
-                                for (int z = 0; z < chunkSection.sectionSize; z++)
-                                {
-                                    Block block = chunkData.GetBlockForLocal(x, y + chunkSection.yBase, z); ;
-                                    if (block == null || block.blockType == BlockTypeEnum.None)
-                                        continue;
-                                    Vector3Int localPosition = new Vector3Int(x, y + chunkSection.yBase, z);
-                                    block.BuildBlock(this, localPosition);
-                                    block.InitBlock(this, localPosition, 0);
-                                }
-                            }
-                        }
-                    }
-#if UNITY_EDITOR
-                    TimeUtil.GetMethodTimeEnd("Time_BuildChunkForAsync:", stopwatch);
-#endif
-                }
-
+                BuildChunk();
             }
             catch (Exception e)
             {
@@ -305,10 +291,47 @@ public class Chunk
             {
 
             }
-        });
+        }
+
         isBuildChunk = false;
         callBackForComplete?.Invoke();
     }
+
+    protected void BuildChunk()
+    {
+#if UNITY_EDITOR
+        Stopwatch stopwatch = TimeUtil.GetMethodTimeStart();
+#endif
+        chunkMeshData = new ChunkMeshData();
+        chunkData.InitRoundChunk();
+        //遍历每一个子区块
+        for (int i = 0; i < chunkData.chunkSectionDatas.Length; i++)
+        {
+            ChunkSectionData chunkSection = chunkData.chunkSectionDatas[i];
+            if (!chunkSection.IsRender())
+                continue;
+
+            for (int x = 0; x < chunkSection.sectionSize; x++)
+            {
+                for (int y = 0; y < chunkSection.sectionSize; y++)
+                {
+                    for (int z = 0; z < chunkSection.sectionSize; z++)
+                    {
+                        Block block = chunkData.GetBlockForLocal(x, y + chunkSection.yBase, z); ;
+                        if (block == null || block.blockType == BlockTypeEnum.None)
+                            continue;
+                        Vector3Int localPosition = new Vector3Int(x, y + chunkSection.yBase, z);
+                        block.BuildBlock(this, localPosition);
+                        block.InitBlock(this, localPosition, 0);
+                    }
+                }
+            }
+        }
+#if UNITY_EDITOR
+        TimeUtil.GetMethodTimeEnd("Time_BuildChunkForAsync:", stopwatch);
+#endif
+    }
+
 
     public void GetBlockForWorld(Vector3Int blockWorldPosition, out Block block, out BlockDirectionEnum direction, out Chunk chunk)
     {
@@ -359,12 +382,14 @@ public class Chunk
     /// <summary>
     /// 设置方块
     /// </summary>
-    public void SetBlockForWorld(Vector3Int worldPosition, BlockTypeEnum blockType, BlockDirectionEnum direction = BlockDirectionEnum.UpForward, string meta = null, bool isRefreshMesh = true, bool isSaveData = true, bool isRefreshBlockRange = true)
+    public void SetBlockForWorld(Vector3Int worldPosition, BlockTypeEnum blockType, 
+        BlockDirectionEnum direction = BlockDirectionEnum.UpForward, string meta = null, bool isRefreshMesh = true, bool isSaveData = true, bool isRefreshBlockRange = true, int updateChunkType = 1)
     {
         Vector3Int blockLocalPosition = worldPosition - chunkData.positionForWorld;
-        SetBlockForLocal(blockLocalPosition, blockType, direction, meta, isRefreshMesh, isSaveData, isRefreshBlockRange);
+        SetBlockForLocal(blockLocalPosition, blockType, direction, meta, isRefreshMesh, isSaveData, isRefreshBlockRange, updateChunkType);
     }
-    public void SetBlockForLocal(Vector3Int localPosition, BlockTypeEnum blockType, BlockDirectionEnum direction = BlockDirectionEnum.UpForward, string meta = null, bool isRefreshMesh = true, bool isSaveData = true, bool isRefreshBlockRange = true)
+    public void SetBlockForLocal(Vector3Int localPosition, BlockTypeEnum blockType, 
+        BlockDirectionEnum direction = BlockDirectionEnum.UpForward, string meta = null, bool isRefreshMesh = true, bool isSaveData = true, bool isRefreshBlockRange = true,int updateChunkType = 1)
     {
         if (localPosition.y > chunkData.chunkHeight)
             return;
@@ -390,7 +415,7 @@ public class Chunk
         //刷新blockMesh
         if (isRefreshMesh)
         {
-            WorldCreateHandler.Instance.manager.AddUpdateChunk(this, 1);
+            WorldCreateHandler.Instance.manager.AddUpdateChunk(this, updateChunkType);
         }
         //初始化方块(放再这里是等处理完数据和mesh之后再初始化)
         newBlock.InitBlock(this, localPosition, 1);

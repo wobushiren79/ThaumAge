@@ -50,9 +50,6 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
     /// <summary>
     /// 建造区块
     /// </summary>
-    /// <param name="position"></param>
-    /// <param name="callBackForCreateData">是否成功创建数据回调</param>
-    /// <param name="isActive">是否激活</param>
     public Chunk CreateChunk(Vector3Int position, bool isActive = true, Action<Chunk> callBackForCreateData = null)
     {
         Chunk chunk;
@@ -128,9 +125,6 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
     /// <summary>
     /// 根据中心位置创建区域chunk
     /// </summary>
-    /// <param name="centerPosition"></param>
-    /// <param name="range"></param>
-    /// <param name="callback"></param>
     public void CreateChunkRangeForCenterPosition(Vector3Int centerPosition, int range, bool isInit, Action callBackForComplete)
     {
         manager.worldRefreshRange = range;
@@ -177,9 +171,6 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
     /// <summary>
     /// 删除范围外的所有区块
     /// </summary>
-    /// <param name="centerPosition"></param>
-    /// <param name="range"></param>
-    /// <param name="callBackForComplete"></param>
     public void DestroyChunkRangeForCenterPosition(Vector3Int centerPosition, int range, Action callBackForComplete)
     {
         Vector3Int maxPosition = manager.widthChunk * range * new Vector3Int(1, 0, 1) + centerPosition;
@@ -227,9 +218,6 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
     /// <summary>
     /// 通过角色的坐标 创建一定范围内的区块
     /// </summary>
-    /// <param name="position"></param>
-    /// <param name="range"></param>
-    /// <param name="callBackForComplete"></param>
 
     public void CreateChunkRangeForWorldPostion(Vector3 position, int range, Action callBackForComplete)
     {
@@ -240,9 +228,6 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
     /// <summary>
     /// 通过角色的坐标 删除一定范围外的区块
     /// </summary>
-    /// <param name="position"></param>
-    /// <param name="range"></param>
-    /// <param name="callBackForComplete"></param>
     public void DestroyChunkRangeForWorldPosition(Vector3 position, int range, Action callBackForComplete)
     {
         Vector3Int centerPosition = GetChunkCenterPositionByWorldPosition(position);
@@ -252,8 +237,6 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
     /// <summary>
     /// 通过角色的世界坐标 获取所在区块的中心坐标
     /// </summary>
-    /// <param name="position"></param>
-    /// <returns></returns>
     public Vector3Int GetChunkCenterPositionByWorldPosition(Vector3 position)
     {
         int positionX = (int)(position.x / manager.widthChunk) * manager.widthChunk;
@@ -273,28 +256,36 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
             //因为是更新数据完成之后再加的列表 所以可以直接开始绘制
             while (manager.listUpdateDrawChunkInit.TryDequeue(out Chunk updateDrawChunk))
             {
-                if (updateDrawChunk != null && updateDrawChunk.isInit)
+                if (updateDrawChunk != null && updateDrawChunk.isInit && !updateDrawChunk.isBuildChunk)
                 {
-                    if (!updateDrawChunk.isBuildChunk)
-                    {
-                        updateDrawChunk.chunkComponent.DrawMesh();
-                    }
+                    updateDrawChunk.chunkComponent.DrawMesh();
                 }
             }
         }
-        if (manager.listUpdateDrawChunkEditor.Count > 0)
-        {
-            //按照顺序依次渲染 编辑的区块 
-            manager.listUpdateDrawChunkEditor.TryPeek(out Chunk updateDrawChunk);
-            if (updateDrawChunk != null && updateDrawChunk.isInit)
+        //编辑的区块 异步
+        if (manager.listUpdateDrawChunkEditorAsync.Count > 0)
+        {     
+            //按照顺序依次渲染 等待数据生成完毕
+            manager.listUpdateDrawChunkEditorAsync.TryPeek(out Chunk updateDrawChunk);
+            if (updateDrawChunk != null && updateDrawChunk.isInit && !updateDrawChunk.isBuildChunk)
             {
-                if (!updateDrawChunk.isBuildChunk)
+                if (manager.listUpdateDrawChunkEditorAsync.TryDequeue(out updateDrawChunk))
                 {
-                    if (manager.listUpdateDrawChunkEditor.TryDequeue(out updateDrawChunk))
-                    {
-                        //构建修改过的区块
-                        updateDrawChunk.chunkComponent.DrawMesh();
-                    }
+                    //构建修改过的区块
+                    updateDrawChunk.chunkComponent.DrawMesh();
+                }
+            }
+        }
+        //编辑的区块 同步
+        if (manager.listUpdateDrawChunkEditorSync.Count > 0)
+        {
+            //渲染
+            while (manager.listUpdateDrawChunkEditorSync.TryDequeue(out Chunk updateDrawChunk))
+            {
+                if (updateDrawChunk != null && updateDrawChunk.isInit && !updateDrawChunk.isBuildChunk)
+                {
+                    //构建修改过的区块
+                    updateDrawChunk.chunkComponent.DrawMesh();
                 }
             }
         }
@@ -320,17 +311,18 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
                     //当更新完数据之后再添加到绘制列表
                     manager.AddUpdateDrawChunk(updateChunk, 0);
                 };
-                updateChunk.BuildChunkForAsync(callBackForComplete);
+                updateChunk.StartBuildChunk(callBackForComplete,true);
                 //优化处理 每帧只处理5次的异步生成
                 numberLoop++;
                 if (numberLoop >= 5)
                     break;
             }
         }
-        if (manager.listUpdateChunkEditor.Count > 0)
+        //处理异步更新的chunk
+        if (manager.listUpdateChunkEditorAsync.Count > 0)
         {
             //处理实时更新的chunk
-            while (manager.listUpdateChunkEditor.TryDequeue(out Chunk updateChunk))
+            while (manager.listUpdateChunkEditorAsync.TryDequeue(out Chunk updateChunk))
             {
                 if (updateChunk == null || !updateChunk.isInit || updateChunk.isDrawMesh)
                 {
@@ -338,7 +330,24 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
                 }
                 //因为需要按顺序排序 所以先添加到绘制列表
                 manager.AddUpdateDrawChunk(updateChunk, 1);
-                updateChunk.BuildChunkForAsync(null);
+                //异步生成数据
+                updateChunk.StartBuildChunk(null,true);
+            }
+        }
+        //处理同步更新的chunk
+        if (manager.listUpdateChunkEditorSync.Count > 0)
+        {
+            //处理实时更新的chunk
+            while (manager.listUpdateChunkEditorSync.TryDequeue(out Chunk updateChunk))
+            {
+                if (updateChunk == null || !updateChunk.isInit || updateChunk.isDrawMesh)
+                {
+                    continue;
+                }
+                //同步生成数据
+                updateChunk.StartBuildChunk(null,false);
+                //添加到绘制列表
+                manager.AddUpdateDrawChunk(updateChunk, 2);
             }
         }
     }
@@ -395,5 +404,46 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
         if (manager.listUpdateDrawChunkInit.Count > 0)
             return false;
         return true;
+    }
+
+
+    /// <summary>
+    /// 破坏指定点周围的方块
+    /// </summary>
+    /// <param name="breakPosition">破坏位置</param>
+    /// <param name="range">破坏半径</param>
+    /// <param name="breakShape">破坏形状  0方形 1圆形 </param>
+    public void BreakBlockRange(Vector3 breakPosition, int range, int breakShape = 0)
+    {
+        Vector3Int breakPositionInt = Vector3Int.FloorToInt(breakPosition);
+        manager.GetBlockForWorldPosition(breakPositionInt, out Block targetBlock, out Chunk targetChunk);
+        if (targetChunk == null)
+            return;
+        for (int x = -range; x <= range; x++)
+        {
+            for (int y = -range; y <= range; y++)
+            {
+                for (int z = -range; z <= range; z++)
+                {
+                    Vector3Int offsetPosition = new Vector3Int(x, y, z);
+                    //判断是否是一个圆
+                    if (breakShape == 1 && Vector3Int.Distance(offsetPosition, Vector3Int.zero) > range)
+                    {
+                        continue;
+                    }
+                    Vector3Int itemWorldPosition = breakPositionInt + offsetPosition;
+                    manager.GetBlockForWorldPosition(itemWorldPosition, out Block itemBlock, out Chunk itemChunk);
+                    if (itemChunk == null || itemBlock == null || itemBlock.blockType == BlockTypeEnum.None)
+                    {
+                        continue;
+                    }
+                    Vector3Int localItemBlockPosition = itemWorldPosition - itemChunk.chunkData.positionForWorld;
+                    //采用同步更新区块的方式，防止前后更新差产生的镂空
+                    itemChunk.SetBlockForLocal(localItemBlockPosition, BlockTypeEnum.None,updateChunkType : 2);
+                    //创建掉落物
+                    ItemsHandler.Instance.CreateItemCptDrop(itemBlock, itemChunk, itemWorldPosition);
+                }
+            }
+        }
     }
 }

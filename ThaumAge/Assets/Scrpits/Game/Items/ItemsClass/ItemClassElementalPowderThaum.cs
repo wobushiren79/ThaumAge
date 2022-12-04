@@ -32,7 +32,7 @@ public class ItemClassElementalPowderThaum : Item
             //刷新UI
             UIHandler.Instance.RefreshUI();
             //播放音效
-            AudioHandler.Instance.PlaySound(1101);
+            AudioHandler.Instance.PlaySound(1101, targetPosition);
         }
     }
 
@@ -53,7 +53,7 @@ public class ItemClassElementalPowderThaum : Item
             {
                 taragetChunk.SetBlockForLocal(targetPosition - taragetChunk.chunkData.positionForWorld, BlockTypeEnum.CraftingTableArcane, targetBlockDirection);
                 //播放音效
-                AudioHandler.Instance.PlaySound(3);
+                AudioHandler.Instance.PlaySound(3, targetPosition);
             }
         });
         //播放粒子特效

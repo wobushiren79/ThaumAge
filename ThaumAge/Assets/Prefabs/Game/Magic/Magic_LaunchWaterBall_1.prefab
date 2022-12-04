@@ -10,8 +10,9 @@ GameObject:
   m_Component:
   - component: {fileID: 843507838786149312}
   - component: {fileID: 843507838786149313}
-  m_Layer: 0
-  m_Name: Magic_WaterBall_1
+  - component: {fileID: 1781942165504107104}
+  m_Layer: 15
+  m_Name: Magic_LaunchWaterBall_1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -41,11 +42,27 @@ SphereCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 843507838786149314}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.1
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!54 &1781942165504107104
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 843507838786149314}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 0
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 112
+  m_CollisionDetection: 0
 --- !u!1 &843507839052850443
 GameObject:
   m_ObjectHideFlags: 0
@@ -57,7 +74,7 @@ GameObject:
   - component: {fileID: 843507839052850442}
   - component: {fileID: 843507839052850440}
   - component: {fileID: 843507839052850441}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: Effect
   m_TagString: Untagged
   m_Icon: {fileID: 0}
