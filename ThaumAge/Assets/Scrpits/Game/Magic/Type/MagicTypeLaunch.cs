@@ -33,4 +33,50 @@ public class MagicTypeLaunch : MagicTypeBase
         //播放发射音效
         AudioHandler.Instance.PlaySound(52, magicData.createPosition);
     }
+
+    /// <summary>
+    /// 处理和方块的碰撞
+    /// </summary>
+    /// <param name="magicCpt"></param>
+    /// <param name="collider"></param>
+    public override void HandleForTriggerBlock(MagicCpt magicCpt, Collider collider)
+    {
+        ElementalTypeEnum elementalType = magicData.GetElementalType();
+        //获取碰撞点
+        Vector3 closePosition = collider.bounds.ClosestPoint(magicCpt.transform.position);
+        switch (elementalType)  
+        {
+            case ElementalTypeEnum.Metal:
+                //波坏地形
+                WorldCreateHandler.Instance.SetBlockRange(closePosition, range: 2, setShape: 1);
+                //播放爆炸音效
+                AudioHandler.Instance.PlaySound(151, closePosition);
+                break;
+            case ElementalTypeEnum.Wood:
+
+                break;
+            case ElementalTypeEnum.Water:
+                //在空气方块里生成水
+                WorldCreateHandler.Instance.SetBlockRange(closePosition,blockType: BlockTypeEnum.Water, range: 2, setShape: 1,isOnlySetAir:true);
+                break;
+            case ElementalTypeEnum.Fire:
+
+                break;
+            case ElementalTypeEnum.Earth:
+                //在空气方块里生成土
+                WorldCreateHandler.Instance.SetBlockRange(closePosition, blockType: BlockTypeEnum.Dirt, range: 2, setShape: 1, isOnlySetAir: true);
+                break;
+        }
+    }
+
+
+    /// <summary>
+    /// 处理和生物的碰撞
+    /// </summary>
+    /// <param name="magicCpt"></param>
+    /// <param name="collider"></param>
+    public override void HandleForTriggerCreature(MagicCpt magicCpt, Collider collider)
+    {
+
+    }
 }

@@ -46,25 +46,25 @@ public class BlockHandler : BaseHandler<BlockHandler, BlockManager>
         }
         else
         {
-            BlockCptBreak BlockCptBreak;
+            BlockCptBreak blockCptBreak;
 
             if (listBreakBlockIdle.Count > 0)
             {
-                BlockCptBreak = listBreakBlockIdle.Dequeue();
-                BlockCptBreak.SetData(block, worldPosition);
-                BlockCptBreak.ShowObj(true);
-                dicBreakBlock.Add(worldPosition, BlockCptBreak);
+                blockCptBreak = listBreakBlockIdle.Dequeue();
+                blockCptBreak.SetData(block, worldPosition);
+                blockCptBreak.ShowObj(true);
+                dicBreakBlock.Add(worldPosition, blockCptBreak);
             }
             else
             {
                 //创建破碎效果
                 GameObject objBlockBreak = Instantiate(gameObject, manager.blockBreakModel);
-                BlockCptBreak = objBlockBreak.GetComponent<BlockCptBreak>();
-                BlockCptBreak.SetData(block, worldPosition);
-                dicBreakBlock.Add(worldPosition, BlockCptBreak);
+                blockCptBreak = objBlockBreak.GetComponent<BlockCptBreak>();
+                blockCptBreak.SetData(block, worldPosition);
+                dicBreakBlock.Add(worldPosition, blockCptBreak);
             }
-            BlockCptBreak.Break(damage);
-            return BlockCptBreak;
+            blockCptBreak.Break(damage);
+            return blockCptBreak;
         }
     }
 

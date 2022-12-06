@@ -14,7 +14,7 @@ public class Test : BaseMonoBehaviour
     {
         if (GUILayout.Button("Fire"))
         {
-            magicData.createPosition = new Vector3(UnityEngine.Random.Range(-10,10), magicData.createPosition.y, UnityEngine.Random.Range(-10, 10));
+            //magicData.createPosition = new Vector3(UnityEngine.Random.Range(-10,10), magicData.createPosition.y, UnityEngine.Random.Range(-10, 10));
             MagicHandler.Instance.CreateMagic(magicData);
         }
     }

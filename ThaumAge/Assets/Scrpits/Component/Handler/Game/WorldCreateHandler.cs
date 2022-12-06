@@ -407,15 +407,18 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
     }
 
 
+
     /// <summary>
-    /// 破坏指定点周围的方块
+    /// 设置指定点周围的方块
     /// </summary>
-    /// <param name="breakPosition">破坏位置</param>
-    /// <param name="range">破坏半径</param>
-    /// <param name="breakShape">破坏形状  0方形 1圆形 </param>
-    public void BreakBlockRange(Vector3 breakPosition, int range, int breakShape = 0)
+    /// <param name="centerPosition">设置位置</param>
+    /// <param name="range">设置半径</param>
+    /// <param name="setShape">设置形状  0方形 1圆形 </param>
+    /// <param name="blockType"></param>
+    /// <param name="isOnlySetAir">是否只设置空气，忽略其他的方块</param>
+    public void SetBlockRange(Vector3 centerPosition, BlockTypeEnum blockType = BlockTypeEnum.None, int range = 1, int setShape = 0, bool isOnlySetAir = false)
     {
-        Vector3Int breakPositionInt = Vector3Int.FloorToInt(breakPosition);
+        Vector3Int breakPositionInt = Vector3Int.FloorToInt(centerPosition);
         manager.GetBlockForWorldPosition(breakPositionInt, out Block targetBlock, out Chunk targetChunk);
         if (targetChunk == null)
             return;
@@ -427,21 +430,47 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
                 {
                     Vector3Int offsetPosition = new Vector3Int(x, y, z);
                     //判断是否是一个圆
-                    if (breakShape == 1 && Vector3Int.Distance(offsetPosition, Vector3Int.zero) > range)
+                    if (setShape == 1 && Vector3Int.Distance(offsetPosition, Vector3Int.zero) > range)
                     {
                         continue;
                     }
                     Vector3Int itemWorldPosition = breakPositionInt + offsetPosition;
                     manager.GetBlockForWorldPosition(itemWorldPosition, out Block itemBlock, out Chunk itemChunk);
-                    if (itemChunk == null || itemBlock == null || itemBlock.blockType == BlockTypeEnum.None)
+                    if (itemChunk == null || itemBlock == null)
                     {
                         continue;
                     }
-                    Vector3Int localItemBlockPosition = itemWorldPosition - itemChunk.chunkData.positionForWorld;
-                    //采用同步更新区块的方式，防止前后更新差产生的镂空
-                    itemChunk.SetBlockForLocal(localItemBlockPosition, BlockTypeEnum.None,updateChunkType : 2);
-                    //创建掉落物
-                    ItemsHandler.Instance.CreateItemCptDrop(itemBlock, itemChunk, itemWorldPosition);
+                    //如果是设置空气方块 说明是置空
+                    if (blockType == BlockTypeEnum.None)
+                    {
+                        //如果目标位置是空气 则不用设置了
+                        if (itemBlock.blockType == BlockTypeEnum.None)
+                        {
+                            continue;
+                        }
+                        Vector3Int localItemBlockPosition = itemWorldPosition - itemChunk.chunkData.positionForWorld;
+                        //采用同步更新区块的方式，防止前后更新差产生的镂空
+                        itemChunk.SetBlockForLocal(localItemBlockPosition, blockType, updateChunkType: 2);
+                        //创建掉落物
+                        ItemsHandler.Instance.CreateItemCptDrop(itemBlock, itemChunk, itemWorldPosition);
+                    }
+                    else
+                    {
+                        Vector3Int localItemBlockPosition = itemWorldPosition - itemChunk.chunkData.positionForWorld;
+                        if (isOnlySetAir)
+                        {
+                            if (itemBlock.blockType == BlockTypeEnum.None)
+                            {
+                                //采用同步更新区块的方式，防止前后更新差产生的镂空
+                                itemChunk.SetBlockForLocal(localItemBlockPosition, blockType, updateChunkType: 2);
+                            }
+                        }
+                        else
+                        {
+                            //采用同步更新区块的方式，防止前后更新差产生的镂空
+                            itemChunk.SetBlockForLocal(localItemBlockPosition, blockType, updateChunkType: 2);
+                        }
+                    }
                 }
             }
         }

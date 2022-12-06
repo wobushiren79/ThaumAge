@@ -69,15 +69,21 @@ public class BlockCptBreak : BaseMonoBehaviour
     /// 破碎方块
     /// </summary>
     /// <param name="damage"></param>
-    public void Break(int damage, bool isPlayEffect = true)
+    public void Break(int damage)
     {
         //重置刷新时间
         timeForUpdate = 0;
 
         //生命值扣除
         blockLife -= damage;
-        if (blockLife < 0) blockLife = 0;
-        else if (blockLife > block.blockInfo.life) blockLife = block.blockInfo.life;
+        if (blockLife < 0)
+        {
+            blockLife = 0;
+        }
+        else if (blockLife > block.blockInfo.life) 
+        {
+            blockLife = block.blockInfo.life;
+        }
 
         float breakPro;
         if (block.blockInfo.life != 0)
@@ -89,12 +95,6 @@ public class BlockCptBreak : BaseMonoBehaviour
             breakPro = 1;
         }
         SetBreakPro(breakPro);
-
-        //播放粒子特效
-        if (isPlayEffect)
-        {
-            PlayBlockCptBreakEffect(block, worldPosition);
-        }
 
         WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(worldPosition, out Block targetBlock, out BlockDirectionEnum targetDirection, out Chunk targetChunk);
         Vector3Int localPosition = worldPosition - targetChunk.chunkData.positionForWorld;
@@ -129,7 +129,7 @@ public class BlockCptBreak : BaseMonoBehaviour
     public void Reply(float pro)
     {
         int life = Mathf.CeilToInt(block.blockInfo.life * pro);
-        Break(-life, false);
+        Break(-life);
         //如果生命值回满了
         if (blockLife >= block.blockInfo.life)
         {

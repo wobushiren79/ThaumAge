@@ -206,7 +206,9 @@ public class Item
             ItemsHandler.Instance.CreateItemCptDrop(targetBlock, targetChunk, targetPosition);
             //移除该方块
             targetChunk.RemoveBlockForWorld(targetPosition);
-
+            //创建粒子特效
+            BlockCptBreak.PlayBlockCptBreakEffect(targetBlock, targetPosition);
+            //播放破碎音效
             PlayItemDropSound(itemsData);
         }
         else

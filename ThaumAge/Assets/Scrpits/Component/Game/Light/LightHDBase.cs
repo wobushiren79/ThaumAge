@@ -15,6 +15,7 @@ public class LightHDBase : BaseMonoBehaviour
             hdAdditionalLightData.SetShadowResolutionLevel(gameConfig.shadowResolutionLevel);
             hdAdditionalLightData.slopeBias = 0;
             hdAdditionalLightData.normalBias = 5;
+            hdAdditionalLightData.preserveCachedShadow = true;
             //添加数据
             LightHandler.Instance.manager.AddHDLightData(hdAdditionalLightData);
         }

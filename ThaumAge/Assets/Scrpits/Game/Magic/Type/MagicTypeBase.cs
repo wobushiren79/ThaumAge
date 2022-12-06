@@ -57,23 +57,21 @@ public class MagicTypeBase
         int colliderLayer = collider.gameObject.layer;
         if (colliderLayer == LayerInfo.ChunkCollider)
         {
-            HandleForTriggerBlock(magicCpt,collider);
+            HandleForTriggerBlock(magicCpt, collider);
         }
         else if (colliderLayer == LayerInfo.Items)
         {
+            //暂时不处理
             HandleForTriggerItem(magicCpt, collider);
         }
         else if (colliderLayer == LayerInfo.Magic)
-        {
-
+        { 
+            //暂时不处理
+            HandleForTriggerMagic(magicCpt, collider);
         }
-        else if (colliderLayer == LayerInfo.Character)
+        else if (colliderLayer == LayerInfo.Character || colliderLayer == LayerInfo.Creature)
         {
-
-        }
-        else if (colliderLayer == LayerInfo.Creature)
-        {
-
+            HandleForTriggerCreature( magicCpt,  collider);
         }
         DestoryMagic();
     }
@@ -85,15 +83,46 @@ public class MagicTypeBase
     public virtual void HandleForTriggerBlock(MagicCpt magicCpt, Collider collider)
     {
         Vector3 closePosition = collider.bounds.ClosestPoint(magicCpt.transform.position);
-        WorldCreateHandler.Instance.BreakBlockRange(closePosition, 2, 1);
+        WorldCreateHandler.Instance.SetBlockRange(closePosition, range: 2, setShape: 1);
         //播放爆炸音效
         AudioHandler.Instance.PlaySound(151, closePosition);
     }
 
+    /// <summary>
+    /// 处理和道具碰撞（默认摧毁）
+    /// </summary>
+    /// <param name="magicCpt"></param>
+    /// <param name="collider"></param>
     public virtual void HandleForTriggerItem(MagicCpt magicCpt, Collider collider)
     {
         Vector3 closePosition = collider.bounds.ClosestPoint(magicCpt.transform.position);
-        WorldCreateHandler.Instance.BreakBlockRange(closePosition, 2, 1);
+        WorldCreateHandler.Instance.SetBlockRange(closePosition, range: 2, setShape: 1);
+        //播放爆炸音效
+        AudioHandler.Instance.PlaySound(151, closePosition);
+    }
+
+    /// <summary>
+    /// 处理和魔法碰撞（默认摧毁）
+    /// </summary>
+    /// <param name="magicCpt"></param>
+    /// <param name="collider"></param>
+    public virtual void HandleForTriggerMagic(MagicCpt magicCpt, Collider collider)
+    {
+        Vector3 closePosition = collider.bounds.ClosestPoint(magicCpt.transform.position);
+        WorldCreateHandler.Instance.SetBlockRange(closePosition, range: 2, setShape: 1);
+        //播放爆炸音效
+        AudioHandler.Instance.PlaySound(151, closePosition);
+    }
+
+    /// <summary>
+    /// 处理和生物的碰撞（默认摧毁）
+    /// </summary>
+    /// <param name="magicCpt"></param>
+    /// <param name="collider"></param>
+    public virtual void HandleForTriggerCreature(MagicCpt magicCpt, Collider collider)
+    {
+        Vector3 closePosition = collider.bounds.ClosestPoint(magicCpt.transform.position);
+        WorldCreateHandler.Instance.SetBlockRange(closePosition, range: 2, setShape: 1);
         //播放爆炸音效
         AudioHandler.Instance.PlaySound(151, closePosition);
     }

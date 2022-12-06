@@ -188,9 +188,9 @@ public class BlockTypeCrucible : Block
     }
 
 
-    public override void RefreshBlock(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction)
+    public override void RefreshBlock(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction, int updateChunkType = 1)
     {
-        base.RefreshBlock(chunk, localPosition, direction);
+        base.RefreshBlock(chunk, localPosition, direction, updateChunkType);
         chunk.RegisterEventUpdate(localPosition, TimeUpdateEventTypeEnum.Sec);
     }
 

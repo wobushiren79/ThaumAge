@@ -19,9 +19,9 @@ public class BlockBaseLiquid : Block
     /// <param name="chunk"></param>
     /// <param name="localPosition"></param>
     /// <param name="direction"></param>
-    public override void RefreshBlock(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction)
+    public override void RefreshBlock(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction, int updateChunkType = 1)
     {
-        base.RefreshBlock(chunk, localPosition, direction);
+        base.RefreshBlock(chunk, localPosition, direction, updateChunkType);
         //刷新的时候注册事件 
         RegisterEventUpdate(chunk, localPosition);
     }

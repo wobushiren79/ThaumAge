@@ -4,9 +4,9 @@ using UnityEngine;
 public class BlockBasePlough : Block
 {
 
-    public override void RefreshBlock(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction)
+    public override void RefreshBlock(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction, int updateChunkType = 1)
     {
-        base.RefreshBlock(chunk, localPosition, direction);
+        base.RefreshBlock(chunk, localPosition, direction, updateChunkType);
         GetCloseBlockByDirection(chunk, localPosition, DirectionEnum.UP, 
             out Block blockClose, out Chunk blockChunkClose, out Vector3Int closeLocalPositionClose);
         if (blockClose != null && blockClose.blockType != BlockTypeEnum.None)

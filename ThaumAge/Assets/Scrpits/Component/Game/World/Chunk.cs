@@ -372,11 +372,11 @@ public class Chunk
     /// <param name="position"></param>
     public void RemoveBlockForWorld(Vector3Int worldPosition, bool isSaveData = true)
     {
-        SetBlockForWorld(worldPosition, BlockTypeEnum.None, isSaveData: isSaveData);
+        SetBlockForWorld(worldPosition, BlockTypeEnum.None, isSaveData: isSaveData, updateChunkType : 2);
     }
     public void RemoveBlockForLocal(Vector3Int localPosition, bool isSaveData = true)
     {
-        SetBlockForLocal(localPosition, BlockTypeEnum.None, isSaveData: isSaveData);
+        SetBlockForLocal(localPosition, BlockTypeEnum.None, isSaveData: isSaveData, updateChunkType : 2);
     }
 
     /// <summary>
@@ -422,7 +422,7 @@ public class Chunk
         //刷新六个方向的方块
         if (isRefreshBlockRange)
         {
-            newBlock.RefreshBlockRange(this, localPosition, direction);
+            newBlock.RefreshBlockRange(this, localPosition, direction, updateChunkType);
         }
     }
 
