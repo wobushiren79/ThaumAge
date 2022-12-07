@@ -9,8 +9,12 @@ public class MagicBean
     public int magicType;
     //元素
     public int element;
+    //魔法大小
+    public float magicSize;
     //魔法移动速度
     public float magicSpeed;
+    //魔法影响范围
+    public int magicAffectRange;
     //创建位置
     public Vector3 createPosition;
     //发射方向

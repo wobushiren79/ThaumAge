@@ -82,10 +82,8 @@ public class MagicTypeBase
     /// <param name="collider"></param>
     public virtual void HandleForTriggerBlock(MagicCpt magicCpt, Collider collider)
     {
-        Vector3 closePosition = collider.bounds.ClosestPoint(magicCpt.transform.position);
-        WorldCreateHandler.Instance.SetBlockRange(closePosition, range: 2, setShape: 1);
-        //播放爆炸音效
-        AudioHandler.Instance.PlaySound(151, closePosition);
+
+
     }
 
     /// <summary>
@@ -95,10 +93,7 @@ public class MagicTypeBase
     /// <param name="collider"></param>
     public virtual void HandleForTriggerItem(MagicCpt magicCpt, Collider collider)
     {
-        Vector3 closePosition = collider.bounds.ClosestPoint(magicCpt.transform.position);
-        WorldCreateHandler.Instance.SetBlockRange(closePosition, range: 2, setShape: 1);
-        //播放爆炸音效
-        AudioHandler.Instance.PlaySound(151, closePosition);
+
     }
 
     /// <summary>
@@ -108,10 +103,7 @@ public class MagicTypeBase
     /// <param name="collider"></param>
     public virtual void HandleForTriggerMagic(MagicCpt magicCpt, Collider collider)
     {
-        Vector3 closePosition = collider.bounds.ClosestPoint(magicCpt.transform.position);
-        WorldCreateHandler.Instance.SetBlockRange(closePosition, range: 2, setShape: 1);
-        //播放爆炸音效
-        AudioHandler.Instance.PlaySound(151, closePosition);
+
     }
 
     /// <summary>
@@ -121,9 +113,6 @@ public class MagicTypeBase
     /// <param name="collider"></param>
     public virtual void HandleForTriggerCreature(MagicCpt magicCpt, Collider collider)
     {
-        Vector3 closePosition = collider.bounds.ClosestPoint(magicCpt.transform.position);
-        WorldCreateHandler.Instance.SetBlockRange(closePosition, range: 2, setShape: 1);
-        //播放爆炸音效
-        AudioHandler.Instance.PlaySound(151, closePosition);
+
     }
 }

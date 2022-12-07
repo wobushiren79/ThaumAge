@@ -17,4 +17,5 @@ public class MagicCpt : BaseMonoBehaviour
     {
         actionForTriggerEnter?.Invoke(this, other);
     }
+
 }

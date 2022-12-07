@@ -264,7 +264,7 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
         }
         //编辑的区块 异步
         if (manager.listUpdateDrawChunkEditorAsync.Count > 0)
-        {     
+        {
             //按照顺序依次渲染 等待数据生成完毕
             manager.listUpdateDrawChunkEditorAsync.TryPeek(out Chunk updateDrawChunk);
             if (updateDrawChunk != null && updateDrawChunk.isInit && !updateDrawChunk.isBuildChunk)
@@ -311,7 +311,7 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
                     //当更新完数据之后再添加到绘制列表
                     manager.AddUpdateDrawChunk(updateChunk, 0);
                 };
-                updateChunk.StartBuildChunk(callBackForComplete,true);
+                updateChunk.StartBuildChunk(callBackForComplete, true);
                 //优化处理 每帧只处理5次的异步生成
                 numberLoop++;
                 if (numberLoop >= 5)
@@ -331,7 +331,7 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
                 //因为需要按顺序排序 所以先添加到绘制列表
                 manager.AddUpdateDrawChunk(updateChunk, 1);
                 //异步生成数据
-                updateChunk.StartBuildChunk(null,true);
+                updateChunk.StartBuildChunk(null, true);
             }
         }
         //处理同步更新的chunk
@@ -345,7 +345,7 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
                     continue;
                 }
                 //同步生成数据
-                updateChunk.StartBuildChunk(null,false);
+                updateChunk.StartBuildChunk(null, false);
                 //添加到绘制列表
                 manager.AddUpdateDrawChunk(updateChunk, 2);
             }
@@ -416,7 +416,7 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
     /// <param name="setShape">设置形状  0方形 1圆形 </param>
     /// <param name="blockType"></param>
     /// <param name="isOnlySetAir">是否只设置空气，忽略其他的方块</param>
-    public void SetBlockRange(Vector3 centerPosition, BlockTypeEnum blockType = BlockTypeEnum.None, int range = 1, int setShape = 0, bool isOnlySetAir = false)
+    public void SetBlockRange(Vector3 centerPosition, BlockTypeEnum blockType = BlockTypeEnum.None, int range = 1, int setShape = 0, bool isOnlySetAir = false, float createDrapRate = 1)
     {
         Vector3Int breakPositionInt = Vector3Int.FloorToInt(centerPosition);
         manager.GetBlockForWorldPosition(breakPositionInt, out Block targetBlock, out Chunk targetChunk);
@@ -452,7 +452,10 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
                         //采用同步更新区块的方式，防止前后更新差产生的镂空
                         itemChunk.SetBlockForLocal(localItemBlockPosition, blockType, updateChunkType: 2);
                         //创建掉落物
-                        ItemsHandler.Instance.CreateItemCptDrop(itemBlock, itemChunk, itemWorldPosition);
+                        if (createDrapRate > 0 && UnityEngine.Random.Range(0f, 1f) <= createDrapRate)
+                        {
+                            ItemsHandler.Instance.CreateItemCptDrop(itemBlock, itemChunk, itemWorldPosition);
+                        }
                     }
                     else
                     {

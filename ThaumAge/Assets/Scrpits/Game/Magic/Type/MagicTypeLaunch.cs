@@ -1,6 +1,6 @@
 ﻿using UnityEditor;
 using UnityEngine;
-
+using UnityEngine.VFX;
 
 public class MagicTypeLaunch : MagicTypeBase
 {
@@ -17,6 +17,20 @@ public class MagicTypeLaunch : MagicTypeBase
     }
 
     /// <summary>
+    /// 设置魔法大小
+    /// </summary>
+    /// <param name="magicCpt"></param>
+    /// <param name="magicSize"></param>
+    public virtual void SetMagicSize(MagicCpt magicCpt,float magicSize)
+    {
+        SphereCollider sphereCollider = magicCpt.GetComponent<SphereCollider>();
+        sphereCollider.radius = magicData.magicSize;
+
+        VisualEffect visualEffect = magicCpt.GetComponentInChildren<VisualEffect>();
+        visualEffect.SetFloat("Size", magicSize);
+    }
+
+    /// <summary>
     /// 回调 创建魔法预制成功后
     /// </summary>
     /// <param name="objMagic"></param>
@@ -24,6 +38,8 @@ public class MagicTypeLaunch : MagicTypeBase
     {
         //获取魔法预制
         MagicCpt magicCpt = objMagic.GetComponent<MagicCpt>();
+        //设置大小
+        SetMagicSize(magicCpt, magicData.magicSize);
         //设置碰撞回调
         magicCpt.actionForTriggerEnter += CallBackForMagicTriggerEnter;
         //向指定方向发射
@@ -48,7 +64,7 @@ public class MagicTypeLaunch : MagicTypeBase
         {
             case ElementalTypeEnum.Metal:
                 //波坏地形
-                WorldCreateHandler.Instance.SetBlockRange(closePosition, range: 2, setShape: 1);
+                WorldCreateHandler.Instance.SetBlockRange(closePosition, range: magicData.magicAffectRange, setShape: 1,createDrapRate : 0.1f);
                 //播放爆炸音效
                 AudioHandler.Instance.PlaySound(151, closePosition);
                 break;
@@ -57,14 +73,14 @@ public class MagicTypeLaunch : MagicTypeBase
                 break;
             case ElementalTypeEnum.Water:
                 //在空气方块里生成水
-                WorldCreateHandler.Instance.SetBlockRange(closePosition,blockType: BlockTypeEnum.Water, range: 2, setShape: 1,isOnlySetAir:true);
+                WorldCreateHandler.Instance.SetBlockRange(closePosition,blockType: BlockTypeEnum.Water, range: magicData.magicAffectRange, setShape: 1,isOnlySetAir:true);
                 break;
             case ElementalTypeEnum.Fire:
 
                 break;
             case ElementalTypeEnum.Earth:
                 //在空气方块里生成土
-                WorldCreateHandler.Instance.SetBlockRange(closePosition, blockType: BlockTypeEnum.Dirt, range: 2, setShape: 1, isOnlySetAir: true);
+                WorldCreateHandler.Instance.SetBlockRange(closePosition, blockType: BlockTypeEnum.Dirt, range: magicData.magicAffectRange, setShape: 1, isOnlySetAir: true);
                 break;
         }
     }
