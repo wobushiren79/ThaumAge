@@ -9,12 +9,14 @@ public class MagicTypeBase
 
     //存在生命周期
     protected int timeForLife = 0;
-
+    //是否删除
+    protected bool isDestory = false;
     /// <summary>
     /// 设置数据
     /// </summary>
     public virtual void SetData(MagicBean magicData)
     {
+        isDestory = false;
         this.magicData = magicData;
     }
 
@@ -36,6 +38,7 @@ public class MagicTypeBase
     /// </summary>
     public virtual void DestoryMagic()
     {
+        isDestory = true;
         for (int i = 0; i < listMagicObj.Count; i++)
         {
             GameObject objMagicCpt = listMagicObj[i];
@@ -51,6 +54,8 @@ public class MagicTypeBase
     /// <param name="collider"></param>
     public virtual void CallBackForMagicTriggerEnter(MagicCpt magicCpt, Collider collider)
     {
+        if (isDestory)
+            return;
         if (collider == null)
             return;
 
@@ -65,15 +70,14 @@ public class MagicTypeBase
             HandleForTriggerItem(magicCpt, collider);
         }
         else if (colliderLayer == LayerInfo.Magic)
-        { 
+        {
             //暂时不处理
             HandleForTriggerMagic(magicCpt, collider);
         }
         else if (colliderLayer == LayerInfo.Character || colliderLayer == LayerInfo.Creature)
         {
-            HandleForTriggerCreature( magicCpt,  collider);
+            HandleForTriggerCreature(magicCpt, collider);
         }
-        DestoryMagic();
     }
 
     /// <summary>
@@ -82,8 +86,7 @@ public class MagicTypeBase
     /// <param name="collider"></param>
     public virtual void HandleForTriggerBlock(MagicCpt magicCpt, Collider collider)
     {
-
-
+        DestoryMagic();
     }
 
     /// <summary>
@@ -93,7 +96,7 @@ public class MagicTypeBase
     /// <param name="collider"></param>
     public virtual void HandleForTriggerItem(MagicCpt magicCpt, Collider collider)
     {
-
+        DestoryMagic();
     }
 
     /// <summary>
@@ -103,7 +106,7 @@ public class MagicTypeBase
     /// <param name="collider"></param>
     public virtual void HandleForTriggerMagic(MagicCpt magicCpt, Collider collider)
     {
-
+        DestoryMagic();
     }
 
     /// <summary>
@@ -113,6 +116,6 @@ public class MagicTypeBase
     /// <param name="collider"></param>
     public virtual void HandleForTriggerCreature(MagicCpt magicCpt, Collider collider)
     {
-
+        DestoryMagic();
     }
 }

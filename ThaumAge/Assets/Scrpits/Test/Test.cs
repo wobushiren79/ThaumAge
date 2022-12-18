@@ -1,20 +1,18 @@
 ﻿
-using System.Diagnostics;
-using Unity.Collections;
-using Unity.Jobs;
-using Unity.Mathematics;
 using UnityEngine;
-using Unity.Burst;
-using System.Collections.Generic;
-using DG.Tweening;
 public class Test : BaseMonoBehaviour
 {
     public MagicBean magicData;
-    private void OnGUI()
+
+    public void Update()
     {
-        if (GUILayout.Button("Fire"))
+        if (Input.GetKeyUp(KeyCode.F))
         {
-            //magicData.createPosition = new Vector3(UnityEngine.Random.Range(-10,10), magicData.createPosition.y, UnityEngine.Random.Range(-10, 10));
+            Debug.Log("tEST1");
+            Player player = GameHandler.Instance.manager.player;
+            magicData.createPosition = player.transform.position + Vector3.up;
+            magicData.direction = Camera.main.transform.forward;
+            magicData.createTargetId = player.gameObject.GetInstanceID();
             MagicHandler.Instance.CreateMagic(magicData);
         }
     }

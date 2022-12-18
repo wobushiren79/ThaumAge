@@ -8,6 +8,8 @@ public class SceneElementManager : BaseManager
     protected SceneElementClouds _clouds;
     protected SceneElementRain _rain;
 
+    protected GameObject _objBlockFire;
+
     public SceneElementStar star
     {
         get
@@ -59,6 +61,20 @@ public class SceneElementManager : BaseManager
             return _rain;
         }
     }
+
+    public GameObject objBlockFire
+    {
+        get
+        {
+            if (_objBlockFire == null)
+            {
+                _objBlockFire = LoadAddressablesUtil.LoadAssetSync<GameObject>("Assets/Prefabs/Game/Element/SceneElementBlockFire.prefab");
+            }
+            return _objBlockFire;
+        }
+    }
+
+
 
     public void SetRainActive(bool active)
     {

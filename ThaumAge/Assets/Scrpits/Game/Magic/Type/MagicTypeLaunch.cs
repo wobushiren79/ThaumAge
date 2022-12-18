@@ -76,13 +76,18 @@ public class MagicTypeLaunch : MagicTypeBase
                 WorldCreateHandler.Instance.SetBlockRange(closePosition,blockType: BlockTypeEnum.Water, range: magicData.magicAffectRange, setShape: 1,isOnlySetAir:true);
                 break;
             case ElementalTypeEnum.Fire:
-
+                //生成火
+                SceneElementBlockBean sceneElementBlockData = new SceneElementBlockBean();
+                sceneElementBlockData.position = Vector3Int.FloorToInt(closePosition);
+                sceneElementBlockData.elementalType = (int)ElementalTypeEnum.Fire;
+                SceneElementHandler.Instance.CreateSceneElementBlock(sceneElementBlockData);
                 break;
             case ElementalTypeEnum.Earth:
                 //在空气方块里生成土
                 WorldCreateHandler.Instance.SetBlockRange(closePosition, blockType: BlockTypeEnum.Dirt, range: magicData.magicAffectRange, setShape: 1, isOnlySetAir: true);
                 break;
         }
+        DestoryMagic();
     }
 
 
@@ -93,6 +98,33 @@ public class MagicTypeLaunch : MagicTypeBase
     /// <param name="collider"></param>
     public override void HandleForTriggerCreature(MagicCpt magicCpt, Collider collider)
     {
+        //不会伤害到自己
+        int colliderObjInstanceID = collider.gameObject.GetInstanceID();
+        if (magicData.createTargetId == colliderObjInstanceID)
+        {
+            return;
+        }
+        ElementalTypeEnum elementalType = magicData.GetElementalType();
+        //获取碰撞点
+        Vector3 closePosition = collider.bounds.ClosestPoint(magicCpt.transform.position);
+        switch (elementalType)
+        {
+            case ElementalTypeEnum.Metal:
+                //波坏地形
+                WorldCreateHandler.Instance.SetBlockRange(closePosition, range: magicData.magicAffectRange, setShape: 1, createDrapRate: 0.1f);
+                //播放爆炸音效
+                AudioHandler.Instance.PlaySound(151, closePosition);
+                break;
+            case ElementalTypeEnum.Wood:
 
+                break;
+            case ElementalTypeEnum.Water:
+                break;
+            case ElementalTypeEnum.Fire:
+                break;
+            case ElementalTypeEnum.Earth:
+                break;
+        }
+        DestoryMagic();
     }
 }

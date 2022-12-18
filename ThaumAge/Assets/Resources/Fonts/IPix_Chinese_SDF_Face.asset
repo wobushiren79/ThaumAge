@@ -131,15 +131,15 @@ Material:
     - _StencilOp: 0
     - _StencilReadMask: 255
     - _StencilRef: 0
-    - _StencilRefDepth: 0
+    - _StencilRefDepth: 1
     - _StencilRefDistortionVec: 4
     - _StencilRefGBuffer: 2
-    - _StencilRefMV: 32
+    - _StencilRefMV: 33
     - _StencilWriteMask: 6
-    - _StencilWriteMaskDepth: 8
+    - _StencilWriteMaskDepth: 9
     - _StencilWriteMaskDistortionVec: 4
-    - _StencilWriteMaskGBuffer: 14
-    - _StencilWriteMaskMV: 40
+    - _StencilWriteMaskGBuffer: 15
+    - _StencilWriteMaskMV: 41
     - _SurfaceType: 1
     - _TextureHeight: 512
     - _TextureWidth: 512
@@ -209,6 +209,7 @@ MonoBehaviour:
     m_StyleName: Regular
     m_PointSize: 64
     m_Scale: 1
+    m_UnitsPerEM: 2816
     m_LineHeight: 69.76
     m_AscentLine: 51.2
     m_CapLine: 44
@@ -2679,7 +2680,8 @@ Texture2D:
   m_MipCount: 1
   m_IsReadable: 0
   m_IsPreProcessed: 0
-  m_IgnoreMasterTextureLimit: 0
+  m_IgnoreMipmapLimit: 0
+  m_MipmapLimitGroupName: 
   m_StreamingMipmaps: 0
   m_StreamingMipmapsPriority: 0
   m_VTOnly: 0
