@@ -47,7 +47,12 @@ public partial class UIViewMagicCoreExchange : BaseUIView
     {
         listMagicCoreItem.Clear();
         ui_MagicCoreListContainer.DestroyAllChild(true);
-        MagicInstrumentInfoBean magicInstrumentInfo = MagicInstrumentInfoCfg.GetItemData(itemMetaWand.capId);
+        MagicInstrumentInfoBean magicInstrumentInfo = MagicInstrumentInfoCfg.GetItemDataByItemId(itemMetaWand.capId);
+        if (magicInstrumentInfo == null)
+        {
+            Debug.LogError($"没有找到杖端ID为{itemMetaWand.capId}的法器数据");
+            return;
+        }
         for (int i = 0; i < magicInstrumentInfo.magic_core_num; i++)
         {
             GameObject objItem = Instantiate(ui_MagicCoreListContainer.gameObject, ui_ViewItemContainer.gameObject);

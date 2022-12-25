@@ -139,7 +139,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
-    serializedVersion: 2
+    serializedVersion: 3
     m_TransformParent: {fileID: 1326495900617432829}
     m_Modifications:
     - target: {fileID: 5014176916814489217, guid: 3bdbe729747cf064184b7ae040d04841, type: 3}
@@ -231,7 +231,9 @@ PrefabInstance:
       value: ViewMagicItem
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
     m_AddedGameObjects: []
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3bdbe729747cf064184b7ae040d04841, type: 3}
 --- !u!224 &662048364427633866 stripped
 RectTransform:

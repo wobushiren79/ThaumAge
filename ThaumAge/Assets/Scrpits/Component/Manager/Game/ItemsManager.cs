@@ -15,6 +15,7 @@ public class ItemsManager : BaseManager,IItemsInfoView
     protected List<ItemsInfoBean> listItemsInfo = new();
 
     //注册道具列表
+    protected Item itemDef;
     protected Item[] arrayItemRegister = new Item[EnumExtension.GetEnumMaxIndex<ItemsTypeEnum>() + 1];
     protected Dictionary<long, Item> dicItemRegisterForId = new Dictionary<long, Item>();
 
@@ -223,7 +224,7 @@ public class ItemsManager : BaseManager,IItemsInfoView
         {
             return GetRegisterItem(itemsType);
         }
-        return null;
+        return itemDef;
     }
 
     /// <summary>
@@ -257,6 +258,7 @@ public class ItemsManager : BaseManager,IItemsInfoView
             }
             RegisterItem(itemsType, item);
         }
+        itemDef = new Item();
     }
 
     public void RegisterItem(ItemsTypeEnum itemsType, Item item)

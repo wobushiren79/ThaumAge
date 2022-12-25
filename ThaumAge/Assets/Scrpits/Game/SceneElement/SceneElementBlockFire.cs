@@ -48,7 +48,7 @@ public class SceneElementBlockFire : SceneElementBlockBase
             HandleForItemBlock(firePosition + Vector3Int.left);
             HandleForItemBlock(firePosition + Vector3Int.right);
             HandleForItemBlock(firePosition + Vector3Int.up);
-            HandleForItemBlock(firePosition + Vector3Int.down);
+            //HandleForItemBlock(firePosition + Vector3Int.down);
             HandleForItemBlock(firePosition + Vector3Int.forward);
             HandleForItemBlock(firePosition + Vector3Int.back);
         }

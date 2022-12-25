@@ -6,5 +6,7 @@ public partial class UIViewMagicItem
 {
     public Image ui_Icon;
 
+    public Image ui_Select;
+
 
 }

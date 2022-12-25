@@ -345,12 +345,12 @@ public class Item
     /// <summary>
     /// 设置道具图标
     /// </summary>
-    public virtual void SetItemIcon(Image ivTarget, ItemsBean itemData, ItemsInfoBean itemsInfo)
+    public virtual void SetItemIcon(ItemsBean itemData, ItemsInfoBean itemsInfo, Image ivTarget = null, SpriteRenderer srTarget = null)
     {
-        SetItemIcon(ivTarget, itemsInfo);
+        SetItemIcon(this, itemData, itemsInfo, ivTarget, srTarget);
     }
 
-    public static void SetItemIcon(Image ivTarget, ItemsInfoBean itemsInfo)
+    public static void SetItemIcon(Item item, ItemsBean itemData, ItemsInfoBean itemsInfo, Image ivTarget = null, SpriteRenderer srTarget = null)
     {
         IconHandler.Instance.manager.GetItemsSpriteByName(itemsInfo.icon_key, (spIcon) =>
         {
@@ -362,16 +362,31 @@ public class Item
                     {
                         ivTarget.sprite = spIcon;
                     }
+                    if (srTarget != null)
+                    {
+                        srTarget.sprite = spIcon;
+                    }
                 });
             }
-            if (ivTarget != null)
+            else
             {
-                ivTarget.sprite = spIcon;
+                if (ivTarget != null)
+                {
+                    ivTarget.sprite = spIcon;
+                }
+                if (srTarget != null)
+                {
+                    srTarget.sprite = spIcon;
+                }
             }
         });
         if (ivTarget != null)
         {
-            ivTarget.color = itemsInfo.GetItemsColor();
+            ivTarget.color = item.GetItemIconColor(itemData, itemsInfo);
+        }
+        if (srTarget != null)
+        {
+            srTarget.color = item.GetItemIconColor(itemData, itemsInfo);
         }
     }
 
@@ -398,5 +413,14 @@ public class Item
             Texture2D itemTex = TextureUtil.SpriteToTexture2D(data);
             callBack?.Invoke(itemTex);
         });
+    }
+
+    /// <summary>
+    /// 获取道具图标颜色
+    /// </summary>
+    /// <returns></returns>
+    public virtual Color GetItemIconColor(ItemsBean itemData, ItemsInfoBean itemsInfo)
+    {
+        return itemsInfo.GetItemsColor();
     }
 }

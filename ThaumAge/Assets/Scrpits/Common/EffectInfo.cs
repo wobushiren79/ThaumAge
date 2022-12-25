@@ -16,7 +16,8 @@ public class EffectInfo
     public readonly static string Effect_Water_1 = "Effect_Water_1";
     //转换特效
     public readonly static string Effect_Change_1 = "Effect_Change_1";
-
+    //爆炸特效
+    public readonly static string Effect_Boom_1 = "Effect_Boom_1";
     //水泡特效
     public readonly static string Effect_WaterBoiling_2 = "Effect_WaterBoiling_2";
     //烟雾特效

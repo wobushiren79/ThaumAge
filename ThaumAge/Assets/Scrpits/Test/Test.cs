@@ -13,6 +13,7 @@ public class Test : BaseMonoBehaviour
             magicData.createPosition = player.transform.position + Vector3.up;
             magicData.direction = Camera.main.transform.forward;
             magicData.createTargetId = player.gameObject.GetInstanceID();
+            magicData.createTargetObj = player.gameObject;
             MagicHandler.Instance.CreateMagic(magicData);
         }
     }

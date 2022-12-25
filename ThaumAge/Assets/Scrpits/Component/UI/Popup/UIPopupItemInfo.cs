@@ -144,7 +144,7 @@ public partial class UIPopupItemInfo : PopupShowView
 
             IconHandler.Instance.manager.GetUISpriteByName(elementalInfo.icon_key,(Sprite iconSp) =>
             {
-                ColorUtility.TryParseHtmlString($"#{elementalInfo.color}", out Color ivColor);
+                ColorUtility.TryParseHtmlString($"{elementalInfo.color}", out Color ivColor);
                 ivIcon.sprite = iconSp;
                 ivIcon.color = ivColor;
             });

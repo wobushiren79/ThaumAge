@@ -160,14 +160,7 @@ public class ItemsHandler : BaseHandler<ItemsHandler, ItemsManager>
         CptUtil.RemoveChildsByActive(image.transform);
         Item targetItem = manager.GetRegisterItem(id);
         ItemsInfoBean itemsInfo = manager.GetItemsInfoById(id);
-        if (targetItem == null)
-        {
-            Item.SetItemIcon(image, itemsInfo);
-        }
-        else
-        {
-            targetItem.SetItemIcon(image, itemsData, itemsInfo);
-        }
+        targetItem.SetItemIcon(itemsData, itemsInfo, image);
     }
 
     /// <summary>
@@ -176,18 +169,11 @@ public class ItemsHandler : BaseHandler<ItemsHandler, ItemsManager>
     /// <param name="tvName"></param>
     /// <param name="id"></param>
     /// <param name="itemsData"></param>
-    public void SetItemsNameById(Text tvName,long id, ItemsBean itemsData = null)
+    public void SetItemsNameById(Text tvName, long id, ItemsBean itemsData = null)
     {
         Item targetItem = manager.GetRegisterItem(id);
         ItemsInfoBean itemsInfo = manager.GetItemsInfoById(id);
-        if (targetItem == null)
-        {
-            Item.SetItemName(tvName, itemsInfo);
-        }
-        else
-        {
-            targetItem.SetItemName(tvName, itemsData, itemsInfo);
-        }
+        targetItem.SetItemName(tvName, itemsData, itemsInfo);
     }
 
     public void SetItemsIconById(SpriteRenderer image, long id, Action<Sprite> complete = null)

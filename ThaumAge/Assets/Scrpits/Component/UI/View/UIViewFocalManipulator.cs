@@ -275,6 +275,12 @@ public partial class UIViewFocalManipulator : BaseUIView, SelectView.ICallBack
         //生成特效
         if (blockMetaData.workPro != 0)
             return;
+        //判断是否有放入核心
+        if (blockMetaData.itemMagicCore == null || blockMetaData.itemMagicCore.itemId == 0)
+        {
+            UIHandler.Instance.ToastHint<ToastView>(TextHandler.Instance.GetTextById(30009));
+            return;
+        }
         UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();
         //检测是否有足够的材料
         bool hasEnoughItem = userData.HasEnoughItem(listSelectMaterialsData);
@@ -334,7 +340,7 @@ public partial class UIViewFocalManipulator : BaseUIView, SelectView.ICallBack
         //重置工作进度
         blockMetaData.workPro = 0;
         ui_ChangePro.value = 0;
-
+        //设置一下核心
         var blockFocalManipulator = block as BlockTypeFocalManipulator;
         blockFocalManipulator.SetMagicCore(blockWorldPosition, changeItemData);
         SaveBlockData(chunk);
@@ -359,6 +365,11 @@ public partial class UIViewFocalManipulator : BaseUIView, SelectView.ICallBack
         if (blockMetaData == null)
             return;
         ui_ChangePro.value = blockMetaData.workPro;
+        //如果进度为0 说明工作已经结束，需要刷新一下UI
+        if (ui_ChangePro.value == 0)
+        {
+            ui_ItemMagicCore.SetViewItemByData(blockMetaData.itemMagicCore, false);
+        }
     }
 
     /// <summary>

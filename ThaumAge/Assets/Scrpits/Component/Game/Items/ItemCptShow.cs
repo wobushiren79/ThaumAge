@@ -23,7 +23,9 @@ public class ItemCptShow : BaseMonoBehaviour
             //设置材质的贴图
             meshRenderer.material.mainTexture = itemTex;
             //获取道具的mesh
-            MeshUtil.MeshUtilData meshUtilData = new MeshUtil.MeshUtilData(itemTex, itemsInfo.GetItemsColor());
+            MeshUtil.MeshUtilData meshUtilData;
+            Color colorItem = item.GetItemIconColor(itemData, itemsInfo);
+            meshUtilData = new MeshUtil.MeshUtilData(itemTex, colorItem);
             Mesh picMesh = MeshUtil.GenerateMeshPicture(meshUtilData);
             meshFilter.mesh = picMesh;
             //设置对应颜色

@@ -23,7 +23,7 @@ public class ItemCptDrop : BaseMonoBehaviour
     public bool canInteractiveBlock = true;
     public void Awake()
     {
-        srIcon = GetComponent<SpriteRenderer>();
+        srIcon = GetComponentInChildren<SpriteRenderer>();
         rbItem = GetComponent<Rigidbody>();
         colliderItem = GetComponent<Collider>();
         InvokeRepeating("UpdateItemData", 1, 1);
@@ -77,9 +77,15 @@ public class ItemCptDrop : BaseMonoBehaviour
         this.itemDropData = itemDropData;
         itemsInfo = ItemsHandler.Instance.manager.GetItemsInfoById(itemDropData.itemData.itemId);
         transform.position = itemDropData.dropPosition;
+
+        Item item = ItemsHandler.Instance.manager.GetRegisterItem(itemsInfo.id);
+
         //设置头像
-        SetIcon(itemDropData.itemData.itemId);
-        SetIconColor(itemsInfo.GetItemsColor());
+        item.SetItemIcon(itemDropData.itemData, itemsInfo, srTarget: srIcon);
+
+        Color itemColor = item.GetItemIconColor(itemDropData.itemData, itemsInfo);
+        SetIconColor(itemColor);
+
         //增加一个跳动的力
         //随机方向
         if (itemDropData.dropDirection == Vector3.zero)
@@ -98,15 +104,6 @@ public class ItemCptDrop : BaseMonoBehaviour
         disForItemsDestory = gameInitData.disForItemsDestory;
         disForDropNoPick = gameInitData.disForDropNoPick;
         timeForCreate = 0;
-    }
-
-    /// <summary>
-    /// 设置图标
-    /// </summary>
-    /// <param name="itemId"></param>
-    public void SetIcon(long itemId)
-    {
-        ItemsHandler.Instance.SetItemsIconById(srIcon, itemId);
     }
 
     /// <summary>

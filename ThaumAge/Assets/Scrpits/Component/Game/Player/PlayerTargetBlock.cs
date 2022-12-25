@@ -173,7 +173,7 @@ public class PlayerTargetBlock : BaseMonoBehaviour
                  objElemental.ShowObj(true);
                  srIcon.sprite = iconSP;
 
-                 ColorUtility.TryParseHtmlString($"#{elementalInfo.color}", out Color ivColor);
+                 ColorUtility.TryParseHtmlString($"{elementalInfo.color}", out Color ivColor);
                  srIcon.material.SetColor("_Color", ivColor);
              });
             index++;

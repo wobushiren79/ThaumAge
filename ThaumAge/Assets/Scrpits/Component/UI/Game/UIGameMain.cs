@@ -14,7 +14,9 @@ public partial class UIGameMain : BaseUIComponent
         ui_ViewCharacterStatus.SetData(userData.characterData);
 
         base.OpenUI();
+
         this.RegisterEvent<UIViewItemContainer, long>(EventsInfo.UIViewItemContainer_ItemChange, CallBackForShortcutsItemExchange);
+        this.RegisterEvent<int>(EventsInfo.UIViewShortcuts_ChangeSelect, CallBackForShortcutsChangeSelect);
 
         ui_Shortcuts.OpenUI();
         ui_ViewCharacterStatus.OpenUI();
@@ -200,9 +202,15 @@ public partial class UIGameMain : BaseUIComponent
     /// <summary>
     /// 回调 道具修改
     /// </summary>
-    /// <param name="uIViewItem"></param>
-    /// <param name="itemId"></param>
     public void CallBackForShortcutsItemExchange(UIViewItemContainer uIViewItem, long itemId)
+    {
+        ShowUnlockUI();
+    }
+
+    /// <summary>
+    /// 回调 道具切换
+    /// </summary>
+    public void CallBackForShortcutsChangeSelect(int selectIndex)
     {
         ShowUnlockUI();
     }

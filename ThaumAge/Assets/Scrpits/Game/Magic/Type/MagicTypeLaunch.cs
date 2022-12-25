@@ -65,11 +65,8 @@ public class MagicTypeLaunch : MagicTypeBase
             case ElementalTypeEnum.Metal:
                 //波坏地形
                 WorldCreateHandler.Instance.SetBlockRange(closePosition, range: magicData.magicAffectRange, setShape: 1,createDrapRate : 0.1f);
-                //播放爆炸音效
-                AudioHandler.Instance.PlaySound(151, closePosition);
                 break;
             case ElementalTypeEnum.Wood:
-
                 break;
             case ElementalTypeEnum.Water:
                 //在空气方块里生成水
@@ -87,7 +84,7 @@ public class MagicTypeLaunch : MagicTypeBase
                 WorldCreateHandler.Instance.SetBlockRange(closePosition, blockType: BlockTypeEnum.Dirt, range: magicData.magicAffectRange, setShape: 1, isOnlySetAir: true);
                 break;
         }
-        DestoryMagic();
+        HitTargetEnd(closePosition);
     }
 
 
@@ -104,6 +101,13 @@ public class MagicTypeLaunch : MagicTypeBase
         {
             return;
         }
+        CreatureCptBase creatureCpt = collider.GetComponent<CreatureCptBase>();
+        if (creatureCpt == null)
+            return;
+        
+        DamageBean damageData = new DamageBean(1);
+        creatureCpt.UnderAttack(magicData.createTargetObj, damageData);
+
         ElementalTypeEnum elementalType = magicData.GetElementalType();
         //获取碰撞点
         Vector3 closePosition = collider.bounds.ClosestPoint(magicCpt.transform.position);
@@ -125,6 +129,23 @@ public class MagicTypeLaunch : MagicTypeBase
             case ElementalTypeEnum.Earth:
                 break;
         }
+        HitTargetEnd(closePosition);
+    }
+
+    /// <summary>
+    /// 命中目标之后
+    /// </summary>
+    protected void HitTargetEnd(Vector3 hitPosition)
+    {
+        //播放爆炸音效
+        AudioHandler.Instance.PlaySound(151, hitPosition);
+        //播放爆炸粒子特效
+        EffectBean effectData = new EffectBean();
+        effectData.effectName = EffectInfo.Effect_Boom_1;
+        effectData.effectPosition = hitPosition;
+        effectData.timeForShow = 0.5f;
+        EffectHandler.Instance.ShowEffect(effectData);
+        //删除魔法
         DestoryMagic();
     }
 }

@@ -566,6 +566,78 @@ public partial class @GameInputActions : IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
+                    ""name"": ""F1"",
+                    ""type"": ""Button"",
+                    ""id"": ""f6e537ba-3a8f-471e-9f6f-a3b4dfafb775"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""F2"",
+                    ""type"": ""Button"",
+                    ""id"": ""5500924d-44ad-4218-bf78-82e1b980e3d0"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""F3"",
+                    ""type"": ""Button"",
+                    ""id"": ""69d32d55-795e-4b2c-98c0-0aa857d4e274"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""F4"",
+                    ""type"": ""Button"",
+                    ""id"": ""77810c9c-ef5f-4bcf-8285-c106d2ae77b6"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""F5"",
+                    ""type"": ""Button"",
+                    ""id"": ""8a0859bf-533a-4a0b-ba79-5707c7ef8661"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""F6"",
+                    ""type"": ""Button"",
+                    ""id"": ""c4a9b248-63e3-4ab2-9446-fbd71a189857"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""F7"",
+                    ""type"": ""Button"",
+                    ""id"": ""87666144-5089-477b-b3a8-f0b005130187"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""F8"",
+                    ""type"": ""Button"",
+                    ""id"": ""5a1ca64b-7820-4601-8283-a14b5d04e679"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
                     ""name"": ""F12"",
                     ""type"": ""Button"",
                     ""id"": ""e13a7001-5d49-439c-b893-7e8f67b19c0f"",
@@ -907,17 +979,6 @@ public partial class @GameInputActions : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": ""XR"",
                     ""action"": ""TrackedDeviceOrientation"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""df9f3c67-d625-4f15-b966-ecddc63527fc"",
-                    ""path"": ""<Keyboard>/f12"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard&Mouse"",
-                    ""action"": ""F12"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -1294,6 +1355,105 @@ public partial class @GameInputActions : IInputActionCollection2, IDisposable
                     ""action"": ""I"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""5a2e52c0-cc92-4dc6-8094-5b64b9fc533d"",
+                    ""path"": ""<Keyboard>/f1"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""F1"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""f07deed8-3cf6-480c-a4fa-558776238c0f"",
+                    ""path"": ""<Keyboard>/f2"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""F2"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""46ff8b3f-0085-45e4-8c65-6161f684ad66"",
+                    ""path"": ""<Keyboard>/f3"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""F3"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c0662319-952a-485d-a6cf-2334c408d83e"",
+                    ""path"": ""<Keyboard>/f4"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""F4"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""9f808d42-c268-450e-95c8-6ed374e1e9fd"",
+                    ""path"": ""<Keyboard>/f5"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""F5"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""280d137a-c026-4f3b-9533-03e3d7dae42e"",
+                    ""path"": ""<Keyboard>/f6"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""F6"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""736b3cda-4f27-46c8-a9d1-f08447f7ec1e"",
+                    ""path"": ""<Keyboard>/f7"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""F7"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""da493a5d-0ca9-4a2e-82df-fc6d36cb2e88"",
+                    ""path"": ""<Keyboard>/f8"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""F8"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""df9f3c67-d625-4f15-b966-ecddc63527fc"",
+                    ""path"": ""<Keyboard>/f12"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""F12"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -1386,6 +1546,14 @@ public partial class @GameInputActions : IInputActionCollection2, IDisposable
         m_UI_RightClick = m_UI.FindAction("RightClick", throwIfNotFound: true);
         m_UI_TrackedDevicePosition = m_UI.FindAction("TrackedDevicePosition", throwIfNotFound: true);
         m_UI_TrackedDeviceOrientation = m_UI.FindAction("TrackedDeviceOrientation", throwIfNotFound: true);
+        m_UI_F1 = m_UI.FindAction("F1", throwIfNotFound: true);
+        m_UI_F2 = m_UI.FindAction("F2", throwIfNotFound: true);
+        m_UI_F3 = m_UI.FindAction("F3", throwIfNotFound: true);
+        m_UI_F4 = m_UI.FindAction("F4", throwIfNotFound: true);
+        m_UI_F5 = m_UI.FindAction("F5", throwIfNotFound: true);
+        m_UI_F6 = m_UI.FindAction("F6", throwIfNotFound: true);
+        m_UI_F7 = m_UI.FindAction("F7", throwIfNotFound: true);
+        m_UI_F8 = m_UI.FindAction("F8", throwIfNotFound: true);
         m_UI_F12 = m_UI.FindAction("F12", throwIfNotFound: true);
         m_UI_ESC = m_UI.FindAction("ESC", throwIfNotFound: true);
         m_UI_Shift = m_UI.FindAction("Shift", throwIfNotFound: true);
@@ -1596,6 +1764,14 @@ public partial class @GameInputActions : IInputActionCollection2, IDisposable
     private readonly InputAction m_UI_RightClick;
     private readonly InputAction m_UI_TrackedDevicePosition;
     private readonly InputAction m_UI_TrackedDeviceOrientation;
+    private readonly InputAction m_UI_F1;
+    private readonly InputAction m_UI_F2;
+    private readonly InputAction m_UI_F3;
+    private readonly InputAction m_UI_F4;
+    private readonly InputAction m_UI_F5;
+    private readonly InputAction m_UI_F6;
+    private readonly InputAction m_UI_F7;
+    private readonly InputAction m_UI_F8;
     private readonly InputAction m_UI_F12;
     private readonly InputAction m_UI_ESC;
     private readonly InputAction m_UI_Shift;
@@ -1630,6 +1806,14 @@ public partial class @GameInputActions : IInputActionCollection2, IDisposable
         public InputAction @RightClick => m_Wrapper.m_UI_RightClick;
         public InputAction @TrackedDevicePosition => m_Wrapper.m_UI_TrackedDevicePosition;
         public InputAction @TrackedDeviceOrientation => m_Wrapper.m_UI_TrackedDeviceOrientation;
+        public InputAction @F1 => m_Wrapper.m_UI_F1;
+        public InputAction @F2 => m_Wrapper.m_UI_F2;
+        public InputAction @F3 => m_Wrapper.m_UI_F3;
+        public InputAction @F4 => m_Wrapper.m_UI_F4;
+        public InputAction @F5 => m_Wrapper.m_UI_F5;
+        public InputAction @F6 => m_Wrapper.m_UI_F6;
+        public InputAction @F7 => m_Wrapper.m_UI_F7;
+        public InputAction @F8 => m_Wrapper.m_UI_F8;
         public InputAction @F12 => m_Wrapper.m_UI_F12;
         public InputAction @ESC => m_Wrapper.m_UI_ESC;
         public InputAction @Shift => m_Wrapper.m_UI_Shift;
@@ -1687,6 +1871,30 @@ public partial class @GameInputActions : IInputActionCollection2, IDisposable
                 @TrackedDeviceOrientation.started -= m_Wrapper.m_UIActionsCallbackInterface.OnTrackedDeviceOrientation;
                 @TrackedDeviceOrientation.performed -= m_Wrapper.m_UIActionsCallbackInterface.OnTrackedDeviceOrientation;
                 @TrackedDeviceOrientation.canceled -= m_Wrapper.m_UIActionsCallbackInterface.OnTrackedDeviceOrientation;
+                @F1.started -= m_Wrapper.m_UIActionsCallbackInterface.OnF1;
+                @F1.performed -= m_Wrapper.m_UIActionsCallbackInterface.OnF1;
+                @F1.canceled -= m_Wrapper.m_UIActionsCallbackInterface.OnF1;
+                @F2.started -= m_Wrapper.m_UIActionsCallbackInterface.OnF2;
+                @F2.performed -= m_Wrapper.m_UIActionsCallbackInterface.OnF2;
+                @F2.canceled -= m_Wrapper.m_UIActionsCallbackInterface.OnF2;
+                @F3.started -= m_Wrapper.m_UIActionsCallbackInterface.OnF3;
+                @F3.performed -= m_Wrapper.m_UIActionsCallbackInterface.OnF3;
+                @F3.canceled -= m_Wrapper.m_UIActionsCallbackInterface.OnF3;
+                @F4.started -= m_Wrapper.m_UIActionsCallbackInterface.OnF4;
+                @F4.performed -= m_Wrapper.m_UIActionsCallbackInterface.OnF4;
+                @F4.canceled -= m_Wrapper.m_UIActionsCallbackInterface.OnF4;
+                @F5.started -= m_Wrapper.m_UIActionsCallbackInterface.OnF5;
+                @F5.performed -= m_Wrapper.m_UIActionsCallbackInterface.OnF5;
+                @F5.canceled -= m_Wrapper.m_UIActionsCallbackInterface.OnF5;
+                @F6.started -= m_Wrapper.m_UIActionsCallbackInterface.OnF6;
+                @F6.performed -= m_Wrapper.m_UIActionsCallbackInterface.OnF6;
+                @F6.canceled -= m_Wrapper.m_UIActionsCallbackInterface.OnF6;
+                @F7.started -= m_Wrapper.m_UIActionsCallbackInterface.OnF7;
+                @F7.performed -= m_Wrapper.m_UIActionsCallbackInterface.OnF7;
+                @F7.canceled -= m_Wrapper.m_UIActionsCallbackInterface.OnF7;
+                @F8.started -= m_Wrapper.m_UIActionsCallbackInterface.OnF8;
+                @F8.performed -= m_Wrapper.m_UIActionsCallbackInterface.OnF8;
+                @F8.canceled -= m_Wrapper.m_UIActionsCallbackInterface.OnF8;
                 @F12.started -= m_Wrapper.m_UIActionsCallbackInterface.OnF12;
                 @F12.performed -= m_Wrapper.m_UIActionsCallbackInterface.OnF12;
                 @F12.canceled -= m_Wrapper.m_UIActionsCallbackInterface.OnF12;
@@ -1781,6 +1989,30 @@ public partial class @GameInputActions : IInputActionCollection2, IDisposable
                 @TrackedDeviceOrientation.started += instance.OnTrackedDeviceOrientation;
                 @TrackedDeviceOrientation.performed += instance.OnTrackedDeviceOrientation;
                 @TrackedDeviceOrientation.canceled += instance.OnTrackedDeviceOrientation;
+                @F1.started += instance.OnF1;
+                @F1.performed += instance.OnF1;
+                @F1.canceled += instance.OnF1;
+                @F2.started += instance.OnF2;
+                @F2.performed += instance.OnF2;
+                @F2.canceled += instance.OnF2;
+                @F3.started += instance.OnF3;
+                @F3.performed += instance.OnF3;
+                @F3.canceled += instance.OnF3;
+                @F4.started += instance.OnF4;
+                @F4.performed += instance.OnF4;
+                @F4.canceled += instance.OnF4;
+                @F5.started += instance.OnF5;
+                @F5.performed += instance.OnF5;
+                @F5.canceled += instance.OnF5;
+                @F6.started += instance.OnF6;
+                @F6.performed += instance.OnF6;
+                @F6.canceled += instance.OnF6;
+                @F7.started += instance.OnF7;
+                @F7.performed += instance.OnF7;
+                @F7.canceled += instance.OnF7;
+                @F8.started += instance.OnF8;
+                @F8.performed += instance.OnF8;
+                @F8.canceled += instance.OnF8;
                 @F12.started += instance.OnF12;
                 @F12.performed += instance.OnF12;
                 @F12.canceled += instance.OnF12;
@@ -1919,6 +2151,14 @@ public partial class @GameInputActions : IInputActionCollection2, IDisposable
         void OnRightClick(InputAction.CallbackContext context);
         void OnTrackedDevicePosition(InputAction.CallbackContext context);
         void OnTrackedDeviceOrientation(InputAction.CallbackContext context);
+        void OnF1(InputAction.CallbackContext context);
+        void OnF2(InputAction.CallbackContext context);
+        void OnF3(InputAction.CallbackContext context);
+        void OnF4(InputAction.CallbackContext context);
+        void OnF5(InputAction.CallbackContext context);
+        void OnF6(InputAction.CallbackContext context);
+        void OnF7(InputAction.CallbackContext context);
+        void OnF8(InputAction.CallbackContext context);
         void OnF12(InputAction.CallbackContext context);
         void OnESC(InputAction.CallbackContext context);
         void OnShift(InputAction.CallbackContext context);

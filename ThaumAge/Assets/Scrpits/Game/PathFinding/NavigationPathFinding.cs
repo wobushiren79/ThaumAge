@@ -39,7 +39,7 @@ public class NavigationPathFinding : BaseMonoBehaviour
         navMeshBuildSettings.agentClimb = 1.5f;
         navMeshBuildSettings.agentSlope = 60;
         navMeshBuildSettings.agentHeight = 1.8f;
-        
+        //navMeshBuildSettings.voxelSize = 0.125f;
         navMeshInstance = NavMesh.AddNavMeshData(navMeshData);
         worldBounds = new Bounds();
     }
@@ -63,7 +63,7 @@ public class NavigationPathFinding : BaseMonoBehaviour
     {
         if (navMeshSources.TryGetValue(chunk.chunkData.positionForWorld,out NavMeshBuildSource source))
         {
-            source.size = new Vector3(chunk.chunkData.chunkWidth, chunk.chunkData.chunkHeight + 1, chunk.chunkData.chunkWidth);
+            source.size = new Vector3(chunk.chunkData.chunkWidth, chunk.chunkData.chunkHeight, chunk.chunkData.chunkWidth);
             source.sourceObject = chunk.chunkComponent.chunkMeshCollider;
             source.transform = chunk.chunkComponent.transform.localToWorldMatrix;
         }
@@ -71,14 +71,14 @@ public class NavigationPathFinding : BaseMonoBehaviour
         {
             NavMeshBuildSource sourceNew = new NavMeshBuildSource();
             sourceNew.shape = NavMeshBuildSourceShape.Mesh;
-            sourceNew.size = new Vector3(chunk.chunkData.chunkWidth, chunk.chunkData.chunkHeight + 1, chunk.chunkData.chunkWidth);
+            sourceNew.size = new Vector3(chunk.chunkData.chunkWidth, chunk.chunkData.chunkHeight, chunk.chunkData.chunkWidth);
             sourceNew.sourceObject = chunk.chunkComponent.chunkMeshCollider;
             sourceNew.transform = chunk.chunkComponent.transform.localToWorldMatrix;
             sourceNew.area = 0;
             navMeshSources.Add(chunk.chunkData.positionForWorld, sourceNew);
         }
         worldBounds.Encapsulate(chunk.chunkComponent.meshRenderer.bounds);
-        worldBounds.Expand(0.01f);
+        //worldBounds.Expand(0.01f);
         navMeshHasNewData = true;
     }
 

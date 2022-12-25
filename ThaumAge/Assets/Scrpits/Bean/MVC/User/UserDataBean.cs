@@ -43,6 +43,8 @@ public class UserDataBean
     public ItemsBean[] listShortcutsItems = new ItemsBean[10];
     //背包道具
     public ItemsBean[] listBackpack = new ItemsBean[7 * 7];
+    //魔法快捷栏位置
+    public int indexForShortcutsMagic = 0;
 
     /// <summary>
     /// 增加道具

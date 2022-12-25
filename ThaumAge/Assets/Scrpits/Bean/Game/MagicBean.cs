@@ -7,6 +7,7 @@ public class MagicBean
 {
     //创建目标
     public int createTargetId;
+    public GameObject createTargetObj;
 
     //创建方式
     public int magicType;
@@ -26,6 +27,30 @@ public class MagicBean
     public int lifeTime = 60;
     //射程
     public float range = 0;
+
+
+    public MagicBean()
+    {
+
+    }
+
+    public MagicBean(ItemMetaMagicCore itemMetaMagicCore)
+    {
+        if (itemMetaMagicCore == null)
+            return;
+        //元素
+        element = itemMetaMagicCore.elemental;
+        //创建方式
+        magicType = itemMetaMagicCore.create;
+        //射程
+        range = itemMetaMagicCore.range + 5;
+        //范围
+        magicAffectRange = itemMetaMagicCore.scope;
+
+        magicSize = 0.1f;
+        magicSpeed = 5;
+    }
+
     /// <summary>
     /// 获取魔法类型
     /// </summary>

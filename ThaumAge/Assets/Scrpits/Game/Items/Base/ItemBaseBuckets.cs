@@ -23,9 +23,9 @@ public class ItemBaseBuckets : Item
     /// </summary>
     /// <param name="ivTarget"></param>
     /// <param name="itemsInfo"></param>
-    public override void SetItemIcon(Image ivTarget, ItemsBean itemData, ItemsInfoBean itemsInfo)
+    public override void SetItemIcon(ItemsBean itemData, ItemsInfoBean itemsInfo, Image ivTarget = null, SpriteRenderer srTarget = null)
     {
-        base.SetItemIcon(ivTarget, itemData, itemsInfo);
+        base.SetItemIcon(itemData, itemsInfo, ivTarget, srTarget);
         ItemMetaBuckets itemMetaBuckets = itemData.GetMetaData<ItemMetaBuckets>();
         //如果没有东西 则不设置
         if (itemMetaBuckets.itemIdForSomething == 0)
@@ -35,9 +35,23 @@ public class ItemBaseBuckets : Item
         //如果有东西
         else
         {
-            GameObject objIvSomething = ItemsHandler.Instance.Instantiate(ivTarget.gameObject, ivTarget.gameObject);
+            GameObject objIvSomething = null;
+            if (ivTarget != null)
+            {
+                objIvSomething = ItemsHandler.Instance.Instantiate(ivTarget.gameObject, ivTarget.gameObject);
+            }
+            if (srTarget != null)
+            {
+                objIvSomething = ItemsHandler.Instance.Instantiate(srTarget.gameObject, srTarget.gameObject);
+            }
+            if (objIvSomething == null)
+            {
+                return;
+            }
             objIvSomething.ShowObj(true);
+
             Image ivSomething = objIvSomething.GetComponent<Image>();
+            SpriteRenderer srSomething = objIvSomething.GetComponent<SpriteRenderer>();
 
             //设置图标
             ItemsInfoBean itemsInfoForSomething = ItemsHandler.Instance.manager.GetItemsInfoById(itemMetaBuckets.itemIdForSomething);
@@ -61,11 +75,24 @@ public class ItemBaseBuckets : Item
                         {
                             ivSomething.sprite = spIcon;
                         }
+                        if (srSomething != null)
+                        {
+                            srSomething.sprite = spIcon;
+                            srSomething.sortingOrder = 1;
+                        }
                     });
                 }
-                if (ivSomething != null)
+                else
                 {
-                    ivSomething.sprite = spIcon;
+                    if (ivSomething != null)
+                    {
+                        ivSomething.sprite = spIcon;
+                    }
+                    if (srSomething != null)
+                    {
+                        srSomething.sprite = spIcon;
+                        srSomething.sortingOrder = 1;
+                    }
                 }
             });
         }
@@ -139,7 +166,7 @@ public class ItemBaseBuckets : Item
     /// 放东西
     /// </summary>
     public virtual void SetSomething(ItemsBean itemData, Vector3Int targetPosition, Vector3Int closePosition)
-    {        
+    {
         //获取目标方块
         WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(targetPosition, out Block targetBlock, out BlockDirectionEnum targetBlockDirection, out Chunk targetChunk);
         if (targetChunk == null)
@@ -147,7 +174,7 @@ public class ItemBaseBuckets : Item
         if (targetBlock != null)
         {
             //首先看看能否把水桶里的水放进方块里面
-            bool isSetSuccess = targetBlock.SetItems(targetChunk, targetBlock, targetBlockDirection,targetPosition, itemData);
+            bool isSetSuccess = targetBlock.SetItems(targetChunk, targetBlock, targetBlockDirection, targetPosition, itemData);
             if (isSetSuccess)
             {
                 AudioHandler.Instance.PlaySound(705);

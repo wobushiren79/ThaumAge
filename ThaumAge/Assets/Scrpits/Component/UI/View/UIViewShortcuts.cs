@@ -102,6 +102,8 @@ public class UIViewShortcuts : BaseUIView
         userData.SetShortcuts(indexForShortcuts);
         GameHandler.Instance.manager.player.RefreshHandItem();
         InitSelect();
+        //事件通知
+        EventHandler.Instance.TriggerEvent(EventsInfo.UIViewShortcuts_ChangeSelect, indexForShortcuts);
     }
 
 

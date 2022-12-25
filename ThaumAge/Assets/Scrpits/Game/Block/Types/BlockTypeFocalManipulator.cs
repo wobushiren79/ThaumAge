@@ -60,6 +60,9 @@ public class BlockTypeFocalManipulator : Block
             effectData.effectPosition = objEffect.transform.position;
             effectData.timeForShow = 5;
             EffectHandler.Instance.ShowEffect(effectData);
+
+            //重新设置一下核心
+            SetMagicCore(localPosition + chunk.chunkData.positionForWorld, blockMetaData.itemMagicCore);
         }
 
         blockData.SetBlockMeta(blockMetaData);

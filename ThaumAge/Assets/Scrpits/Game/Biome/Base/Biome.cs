@@ -58,64 +58,64 @@ public class Biome
         }
         else
         {
-            int worldX = localPos.x + chunk.chunkData.positionForWorld.x;
-            int worldZ = localPos.z + chunk.chunkData.positionForWorld.z;
+            //int worldX = localPos.x + chunk.chunkData.positionForWorld.x;
+            //int worldZ = localPos.z + chunk.chunkData.positionForWorld.z;
 
-            float heightGradient = Mathf.Pow(Mathf.Clamp01(localPos.y / 128f), 2f);
-            //洞穴生成
-            float c1 = SimplexNoiseUtil.CalcPixel3D(worldX, localPos.y, worldZ, 0.1f);
-            float c2 = SimplexNoiseUtil.CalcPixel3D(worldX, localPos.y, worldZ, 0.04f);
-            float c3 = SimplexNoiseUtil.CalcPixel3D(worldX, localPos.y, worldZ, 0.02f);
-            float c4 = SimplexNoiseUtil.CalcPixel3D(worldX, localPos.y, worldZ, 0.01f);
+            //float heightGradient = Mathf.Pow(Mathf.Clamp01(localPos.y / 128f), 2f);
+            ////洞穴生成
+            //float c1 = SimplexNoiseUtil.CalcPixel3D(worldX, localPos.y, worldZ, 0.1f);
+            //float c2 = SimplexNoiseUtil.CalcPixel3D(worldX, localPos.y, worldZ, 0.04f);
+            //float c3 = SimplexNoiseUtil.CalcPixel3D(worldX, localPos.y, worldZ, 0.02f);
+            //float c4 = SimplexNoiseUtil.CalcPixel3D(worldX, localPos.y, worldZ, 0.01f);
 
-            c1 += (heightGradient);
-            if (c1 < .5 && c2 < .5 && c3 < .5 && c4 < .5)
-            {
-                return BlockTypeEnum.None;
-            }
+            //c1 += (heightGradient);
+            //if (c1 < .5 && c2 < .5 && c3 < .5 && c4 < .5)
+            //{
+            //    return BlockTypeEnum.None;
+            //}
 
-            //矿物生成
-            float oreCopper = SimplexNoiseUtil.CalcPixel3D(worldX + oreCopperOffsetX, localPos.y, worldZ, oreCopperSize);
-            if (oreCopper < oreCopperOdds)
-            {
-                return BlockTypeEnum.OreCopper;
-            }
+            ////矿物生成
+            //float oreCopper = SimplexNoiseUtil.CalcPixel3D(worldX + oreCopperOffsetX, localPos.y, worldZ, oreCopperSize);
+            //if (oreCopper < oreCopperOdds)
+            //{
+            //    return BlockTypeEnum.OreCopper;
+            //}
 
-            float oreIron = SimplexNoiseUtil.CalcPixel3D(worldX + oreIronOffsetX, localPos.y, worldZ, oreIronSize);
-            if (oreIron < oreIronOdds)
-            {
-                return BlockTypeEnum.OreIron;
-            }
+            //float oreIron = SimplexNoiseUtil.CalcPixel3D(worldX + oreIronOffsetX, localPos.y, worldZ, oreIronSize);
+            //if (oreIron < oreIronOdds)
+            //{
+            //    return BlockTypeEnum.OreIron;
+            //}
 
-            float oreSilver = SimplexNoiseUtil.CalcPixel3D(worldX + oreSilverOffsetX, localPos.y, worldZ, oreSilverSize);
-            if (oreSilver < oreSilverOdds)
-            {
-                return BlockTypeEnum.OreSilver;
-            }
+            //float oreSilver = SimplexNoiseUtil.CalcPixel3D(worldX + oreSilverOffsetX, localPos.y, worldZ, oreSilverSize);
+            //if (oreSilver < oreSilverOdds)
+            //{
+            //    return BlockTypeEnum.OreSilver;
+            //}
 
-            float oreGold = SimplexNoiseUtil.CalcPixel3D(worldX + oreGoldOffsetX, localPos.y, worldZ, oreGoldSize);
-            if (oreGold < oreGoldOdds)
-            {
-                return BlockTypeEnum.OreGold;
-            }
+            //float oreGold = SimplexNoiseUtil.CalcPixel3D(worldX + oreGoldOffsetX, localPos.y, worldZ, oreGoldSize);
+            //if (oreGold < oreGoldOdds)
+            //{
+            //    return BlockTypeEnum.OreGold;
+            //}
 
-            float oreTin = SimplexNoiseUtil.CalcPixel3D(worldX + oreTinOffsetX, localPos.y, worldZ, oreTinSize);
-            if (oreTin < oreTinOdds)
-            {
-                return BlockTypeEnum.OreTin;
-            }
+            //float oreTin = SimplexNoiseUtil.CalcPixel3D(worldX + oreTinOffsetX, localPos.y, worldZ, oreTinSize);
+            //if (oreTin < oreTinOdds)
+            //{
+            //    return BlockTypeEnum.OreTin;
+            //}
 
-            float oreAluminum = SimplexNoiseUtil.CalcPixel3D(worldX + oreAluminumOffsetX, localPos.y, worldZ, oreAluminumSize);
-            if (oreAluminum < oreAluminumOdds)
-            {
-                return BlockTypeEnum.OreAluminum;
-            }
+            //float oreAluminum = SimplexNoiseUtil.CalcPixel3D(worldX + oreAluminumOffsetX, localPos.y, worldZ, oreAluminumSize);
+            //if (oreAluminum < oreAluminumOdds)
+            //{
+            //    return BlockTypeEnum.OreAluminum;
+            //}
 
-            float oreZinc  = SimplexNoiseUtil.CalcPixel3D(worldX + oreZincOffsetX, localPos.y, worldZ, oreZincSize);
-            if (oreZinc < oreZincOdds)
-            {
-                return BlockTypeEnum.OreZinc;
-            }
+            //float oreZinc  = SimplexNoiseUtil.CalcPixel3D(worldX + oreZincOffsetX, localPos.y, worldZ, oreZincSize);
+            //if (oreZinc < oreZincOdds)
+            //{
+            //    return BlockTypeEnum.OreZinc;
+            //}
             return GetBlockForMaxHeightDown(chunk, localPos, chunkTerrainData);
         }
     }
