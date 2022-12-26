@@ -63,8 +63,16 @@ public partial class UIViewShortcutsMagic : BaseUIView
                 {
                     userData.indexForShortcutsMagic = listMagicItem.Count - 1;
                 }
-                this.TriggerEvent(EventsInfo.UIViewShortcutsMagic_ChangeSelect, userData.indexForShortcutsMagic);
+                if (userData.indexForShortcutsMagic < 0)
+                {
+                    userData.indexForShortcutsMagic = 0;
+                }
             }
+            else
+            {
+                userData.indexForShortcutsMagic = 0;
+            }
+            this.TriggerEvent(EventsInfo.UIViewShortcutsMagic_ChangeSelect, userData.indexForShortcutsMagic);
         }
     }
 

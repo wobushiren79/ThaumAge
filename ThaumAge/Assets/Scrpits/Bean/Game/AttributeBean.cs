@@ -29,7 +29,7 @@ public class AttributeBean
                 return "ui_life_1";
             case AttributeTypeEnum.Stamina:
                 return "ui_life_2";
-            case AttributeTypeEnum.Magic:
+            case AttributeTypeEnum.Mana:
                 return "ui_life_4";
             case AttributeTypeEnum.Saturation:
                 return "ui_life_3";
@@ -84,7 +84,7 @@ public class AttributeBean
                 return TextHandler.Instance.GetTextById(2001);
             case AttributeTypeEnum.Stamina:
                 return TextHandler.Instance.GetTextById(2002);
-            case AttributeTypeEnum.Magic:
+            case AttributeTypeEnum.Mana:
                 return TextHandler.Instance.GetTextById(2003);
             case AttributeTypeEnum.Saturation:
                 return TextHandler.Instance.GetTextById(2004);
@@ -139,8 +139,8 @@ public class AttributeBean
             case AttributeTypeEnum.Stamina:
                 totalData += creatureStatus.stamina;
                 break;
-            case AttributeTypeEnum.Magic:
-                totalData += creatureStatus.magic;
+            case AttributeTypeEnum.Mana:
+                totalData += creatureStatus.mana;
                 break;
             case AttributeTypeEnum.Saturation:
                 totalData += creatureStatus.saturation;

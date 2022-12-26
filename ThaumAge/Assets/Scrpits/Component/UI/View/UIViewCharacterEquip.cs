@@ -119,7 +119,7 @@ public partial class UIViewCharacterEquip : BaseUIView
         dicAttribute.Clear();
         CreateCharacterStatusItem(AttributeTypeEnum.Health);
         CreateCharacterStatusItem(AttributeTypeEnum.Stamina);
-        CreateCharacterStatusItem(AttributeTypeEnum.Magic);
+        CreateCharacterStatusItem(AttributeTypeEnum.Mana);
         CreateCharacterStatusItem(AttributeTypeEnum.Saturation);
         CreateCharacterStatusItem(AttributeTypeEnum.Air);
 

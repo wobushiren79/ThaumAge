@@ -10,5 +10,7 @@ public partial class UIViewItem
 
     public Slider ui_Life;
 
+    public Image ui_LifeFill;
+
 
 }

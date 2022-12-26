@@ -116,8 +116,7 @@ public class ItemClassWand : Item
         else
         {
             base.UseForPlayer(player, itemsData, itemUseType);
-        }
-        
+        }     
     }
 
     /// <summary>
@@ -134,19 +133,43 @@ public class ItemClassWand : Item
         {
             return;
         }
-
         UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();
+
         int indexSelectMagic = userData.indexForShortcutsMagic;
         if (indexSelectMagic >= itemMetaBuckets.listMagicCore.Count)
         {
             userData.indexForShortcutsMagic = itemMetaBuckets.listMagicCore.Count - 1;
             indexSelectMagic = userData.indexForShortcutsMagic;
         }
+
         ItemsBean itemMagicCoreData = itemMetaBuckets.listMagicCore[indexSelectMagic];
         ItemMetaMagicCore itemMetaMagicData = itemMagicCoreData.GetMetaData<ItemMetaMagicCore>();
 
+        //首先判断魔力是否足够
+        int manaCost = 1;
+        bool hasEnoughMagic= itemMetaBuckets.HasEnoughMana(manaCost);
+        if (!hasEnoughMagic)
+        {
+            hasEnoughMagic = userData.characterData.creatureStatus.HasEnoughMagic(manaCost);
+            if (!hasEnoughMagic)
+            {
+                return;
+            }
+            else
+            {
+                //消耗自身魔力
+                userData.characterData.creatureStatus.ManaChange(-manaCost);
+            }
+        }
+        else
+        {
+            //消耗法杖魔力
+            itemMetaBuckets.ManaChange(-manaCost);
+        }
+
+
         MagicBean magicData = new MagicBean(itemMetaMagicData);
-        magicData.createPosition = user.transform.position + Vector3.up;
+        magicData.createPosition = user.transform.position + Vector3.up * 1.5f;
         magicData.direction = Camera.main.transform.forward;
         magicData.createTargetId = user.GetInstanceID();
         magicData.createTargetObj = user;
@@ -154,5 +177,6 @@ public class ItemClassWand : Item
 
         //播放法杖使用音效
         PlayItemSoundUseR(itemData);
+
     }
 }

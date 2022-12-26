@@ -12,7 +12,7 @@ public class ItemTypeFood : Item
 
         int addSatureation = attributeData.GetAttributeValue(AttributeTypeEnum.Saturation);
         int addHealth = attributeData.GetAttributeValue(AttributeTypeEnum.Health);
-        int addMagic = attributeData.GetAttributeValue(AttributeTypeEnum.Magic);
+        int addMana = attributeData.GetAttributeValue(AttributeTypeEnum.Mana);
 
         if (user == GameHandler.Instance.manager.player.gameObject)
         {
@@ -21,7 +21,7 @@ public class ItemTypeFood : Item
 
             creatureStatus.SaturationChange(addSatureation);
             creatureStatus.HealthChange(addHealth);
-            creatureStatus.MagicChange(addMagic);
+            creatureStatus.ManaChange(addMana);
 
             //减少道具
             userData.AddItems(itemData,-1);

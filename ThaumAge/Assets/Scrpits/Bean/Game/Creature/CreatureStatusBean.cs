@@ -14,8 +14,8 @@ public class CreatureStatusBean
     public int stamina = 10;
 
     //魔力值
-    public int curMagic = 0;
-    public int magic = 0;
+    public int curMana = 0;
+    public int mana = 0;
 
     //饥饿值
     public float curSaturation = 10;
@@ -41,13 +41,29 @@ public class CreatureStatusBean
     public int damageMagic;
 
     /// <summary>
+    /// 是否有足够的魔法
+    /// </summary>
+    /// <returns></returns>
+    public bool HasEnoughMagic(int targetMagic)
+    {
+        if (curMana < targetMagic)
+        {
+            return false;
+        }
+        else
+        {
+            return true;
+        }
+    }
+
+    /// <summary>
     /// 回复所有状态
     /// </summary>
     public void ReplyAllStatus()
     {
         curHealth = health;
         curStamina = stamina;
-        curMagic = magic;
+        curMana = mana;
         curSaturation = saturation;
         curAir = air;
     }
@@ -116,18 +132,18 @@ public class CreatureStatusBean
     /// </summary>
     /// <param name="changeData"></param>
     /// <returns></returns>
-    public int MagicChange(int changeData)
+    public int ManaChange(int changeData)
     {
-        this.curMagic += changeData;
-        if (curMagic > magic)
+        this.curMana += changeData;
+        if (curMana > mana)
         {
-            curMagic = magic;
+            curMana = mana;
         }
-        if (curMagic < 0)
+        if (curMana < 0)
         {
-            curMagic = 0;
+            curMana = 0;
         }
-        return curMagic;
+        return curMana;
     }
 
 }

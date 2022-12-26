@@ -36,6 +36,7 @@ public partial class UIViewMagicItem : BaseUIView
         itemsInfo = ItemsHandler.Instance.manager.GetItemsInfoById(itemData.itemId);
         ui_Select.ShowObj(false);
         SetMagicIcon();
+        SetButtonHint();
     }
 
     /// <summary>
@@ -51,6 +52,11 @@ public partial class UIViewMagicItem : BaseUIView
             ui_Icon.sprite = sprite;
             ui_Icon.color = colorIcon;
         });
+    }
+
+    public void SetButtonHint()
+    {
+        ui_ButtonHint.text= $"F{indexMagic + 1}";
     }
 
     public void CallBackForChangeSelect(int indexSelect)

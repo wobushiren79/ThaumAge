@@ -5,7 +5,7 @@ public enum AttributeTypeEnum
 {
     Health = 1,//体力
     Stamina = 2,//耐力
-    Magic = 3,//魔力
+    Mana = 3,//魔力
     Saturation = 4,//饱食
     Air = 5,//空气
 

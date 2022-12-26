@@ -29,7 +29,7 @@ public partial class UIViewCharacterStatusShow : BaseUIView
 
         SetHealth(creatureStatus.curHealth, characterData.GetAttributeValue(AttributeTypeEnum.Health));
         SetStamina(Mathf.RoundToInt(creatureStatus.curStamina), characterData.GetAttributeValue(AttributeTypeEnum.Stamina));
-        SetMagic(creatureStatus.curMagic, characterData.GetAttributeValue(AttributeTypeEnum.Magic));
+        SetMana(creatureStatus.curMana, characterData.GetAttributeValue(AttributeTypeEnum.Mana));
         SetSaturation(Mathf.RoundToInt(creatureStatus.curSaturation), characterData.GetAttributeValue(AttributeTypeEnum.Saturation));
         SetAir(Mathf.RoundToInt(creatureStatus.curAir), characterData.GetAttributeValue(AttributeTypeEnum.Air));
     }
@@ -53,9 +53,9 @@ public partial class UIViewCharacterStatusShow : BaseUIView
     /// <summary>
     /// 设置魔力值
     /// </summary>
-    public void SetMagic(int magic, int maxMagic)
+    public void SetMana(int mana, int maxMana)
     {
-        if (maxMagic == 0)
+        if (maxMana == 0)
         {
             ui_ViewCharacterStatusPro_Magic.ShowObj(false);
         }
@@ -63,7 +63,7 @@ public partial class UIViewCharacterStatusShow : BaseUIView
         {
             ui_ViewCharacterStatusPro_Magic.ShowObj(true);
         }
-        ui_ViewCharacterStatusPro_Magic.SetData(magic, maxMagic);
+        ui_ViewCharacterStatusPro_Magic.SetData(mana, maxMana);
     }
 
     /// <summary>
