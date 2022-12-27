@@ -92,7 +92,7 @@ public class Chunk
     /// </summary>
     public void SetData(Vector3Int worldPosition, int width, int height)
     {
-        chunkData = new ChunkData(worldPosition, width, height);
+        chunkData = new ChunkData(this,worldPosition, width, height);
         chunkMeshData = new ChunkMeshData();
     }
 
@@ -224,8 +224,6 @@ public class Chunk
                     HandleForLoadBlock();
                     //初始化完成
                     isInit = true;
-                    //设置数据
-                    AddUpdateChunkForRange(0);
 #if UNITY_EDITOR
                     TimeUtil.GetMethodTimeEnd("Time_BuildChunkBlockDataForAsync:", stopwatch);
 #endif
@@ -236,6 +234,11 @@ public class Chunk
                 LogUtil.Log("CreateChunkBlockDataForAsync:" + e.ToString());
             }
         });
+        //初始化周围方块
+        chunkData.InitRoundChunk();
+        //刷新周围方块
+        AddUpdateChunkForRange(0);
+
         callBackForComplete?.Invoke(this);
     }
 
@@ -303,7 +306,6 @@ public class Chunk
         Stopwatch stopwatch = TimeUtil.GetMethodTimeStart();
 #endif
         chunkMeshData = new ChunkMeshData();
-        chunkData.InitRoundChunk();
         //遍历每一个子区块
         for (int i = 0; i < chunkData.chunkSectionDatas.Length; i++)
         {

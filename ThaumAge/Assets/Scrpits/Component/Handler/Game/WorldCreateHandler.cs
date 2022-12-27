@@ -159,7 +159,7 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
                     {
                         manager.AddUpdateChunk(successCreateChunk, 0);
                     };
-                    CreateChunk(currentPosition, callBackForCreateData: callBackForCreateChunk);
+                    Chunk createChunk = CreateChunk(currentPosition, callBackForCreateData: callBackForCreateChunk);
                 }
                 currentPosition += new Vector3Int(0, 0, manager.widthChunk);
             }

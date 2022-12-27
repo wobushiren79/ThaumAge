@@ -102,6 +102,14 @@ public partial class UIGameMagicInstrumentAssembly : UIGameCommonNormal
         ItemMetaWand itemMetaWand = new ItemMetaWand();
         itemMetaWand.capId = (int)itemCap.itemId;
         itemMetaWand.rodId = (int)itemRod.itemId;
+        //获取杖端数据
+        MagicInstrumentInfoBean capInfo = MagicInstrumentInfoCfg.GetItemDataByItemId(itemMetaWand.capId);
+        //获取杖柄数据
+        MagicInstrumentInfoBean rodInfo = MagicInstrumentInfoCfg.GetItemDataByItemId(itemMetaWand.rodId);
+        //设置魔力
+        itemMetaWand.mana = capInfo.mana_add + rodInfo.mana_add;
+        itemMetaWand.curMana = itemMetaWand.mana;
+
         itemsWand.SetMetaData(itemMetaWand);
 
         ui_Wand.SetViewItemByData(itemsWand);

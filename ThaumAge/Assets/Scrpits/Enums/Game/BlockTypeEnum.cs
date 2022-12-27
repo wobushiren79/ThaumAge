@@ -30,6 +30,14 @@ public enum BlockTypeEnum
     OreAluminum = 906,//铝矿
     OreZinc = 907,//锌矿
 
+    ElementalCrystalMetalSeed = 981,//元素水晶种子
+    ElementalCrystalWoodSeed = 982,
+    ElementalCrystalWaterSeed = 983,
+    ElementalCrystalFireSeed = 984,
+    ElementalCrystalEarthSeed = 985,
+    ElementalCrystalLightSeed = 986,
+    ElementalCrystalDarkSeed = 987,
+
     ElementalCrystalMetal = 991,//金元素水晶
     ElementalCrystalWood = 992,//木元素水晶
     ElementalCrystalWater = 993,//水元素水晶

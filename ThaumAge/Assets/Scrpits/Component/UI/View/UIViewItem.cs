@@ -81,16 +81,33 @@ public partial class UIViewItem : BaseUIView,
         int druability = attributeData.GetAttributeValue(AttributeTypeEnum.Durability);
         if (druability == 0)
         {
-            //如果没有生命值 则没有耐久
-            ui_Life.ShowObj(false);
+            //如果没有耐久属性 则检测是否有魔力
+            //检测是否是魔杖
+            if (itemsInfo.GetItemsType() == ItemsTypeEnum.Wand && !meta.IsNull())
+            {
+                ItemMetaWand itemMetaWand = ItemsBean.GetMetaData<ItemMetaWand>(meta);
+                ui_Life.value = (float)itemMetaWand.curMana / itemMetaWand.mana;
+                ui_Life.ShowObj(true);
+                //设置进度条为蓝色
+                ColorUtility.TryParseHtmlString("#005DC7", out Color colorLife);
+                ui_LifeFill.color = colorLife;
+            }
+            else
+            {
+                ui_Life.ShowObj(false);
+            }
         }
         else
         {
+            //有耐久属性
             if (!meta.IsNull())
             {
                 ItemMetaTool itemsDetails = ItemsBean.GetMetaData<ItemMetaTool>(meta);
                 ui_Life.value = (float)itemsDetails.curDurability / itemsDetails.durability;
                 ui_Life.ShowObj(true);
+                //设置进度条为红色
+                ColorUtility.TryParseHtmlString("#C70000", out Color colorLife);
+                ui_LifeFill.color = colorLife;
             }
             else
             {

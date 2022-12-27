@@ -16,6 +16,10 @@ public partial class MagicInstrumentInfoBean : BaseBean
 	/// </summary>
 	public int magic_core_num;
 	/// <summary>
+	///魔力加成
+	/// </summary>
+	public int mana_add;
+	/// <summary>
 	///备注
 	/// </summary>
 	public string remark;

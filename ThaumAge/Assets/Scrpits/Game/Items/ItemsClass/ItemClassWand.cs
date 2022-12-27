@@ -124,30 +124,30 @@ public class ItemClassWand : Item
     /// </summary>
     public override void TargetUseR(GameObject user, ItemsBean itemData, Vector3Int targetPosition, Vector3Int closePosition, BlockDirectionEnum direction)
     {
-        ItemMetaWand itemMetaBuckets = itemData.GetMetaData<ItemMetaWand>();
-        if (itemMetaBuckets.rodId == 0 || itemMetaBuckets.capId == 0)
+        ItemMetaWand itemMetaWand = itemData.GetMetaData<ItemMetaWand>();
+        if (itemMetaWand.rodId == 0 || itemMetaWand.capId == 0)
         {
             return;
         }
-        if (itemMetaBuckets.listMagicCore.IsNull())
+        if (itemMetaWand.listMagicCore.IsNull())
         {
             return;
         }
         UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();
 
         int indexSelectMagic = userData.indexForShortcutsMagic;
-        if (indexSelectMagic >= itemMetaBuckets.listMagicCore.Count)
+        if (indexSelectMagic >= itemMetaWand.listMagicCore.Count)
         {
-            userData.indexForShortcutsMagic = itemMetaBuckets.listMagicCore.Count - 1;
+            userData.indexForShortcutsMagic = itemMetaWand.listMagicCore.Count - 1;
             indexSelectMagic = userData.indexForShortcutsMagic;
         }
 
-        ItemsBean itemMagicCoreData = itemMetaBuckets.listMagicCore[indexSelectMagic];
+        ItemsBean itemMagicCoreData = itemMetaWand.listMagicCore[indexSelectMagic];
         ItemMetaMagicCore itemMetaMagicData = itemMagicCoreData.GetMetaData<ItemMetaMagicCore>();
 
         //首先判断魔力是否足够
         int manaCost = 1;
-        bool hasEnoughMagic= itemMetaBuckets.HasEnoughMana(manaCost);
+        bool hasEnoughMagic= itemMetaWand.HasEnoughMana(manaCost);
         if (!hasEnoughMagic)
         {
             hasEnoughMagic = userData.characterData.creatureStatus.HasEnoughMagic(manaCost);
@@ -159,12 +159,18 @@ public class ItemClassWand : Item
             {
                 //消耗自身魔力
                 userData.characterData.creatureStatus.ManaChange(-manaCost);
+                //刷新UI
+                EventHandler.Instance.TriggerEvent(EventsInfo.CharacterStatus_StatusChange);
             }
         }
         else
         {
             //消耗法杖魔力
-            itemMetaBuckets.ManaChange(-manaCost);
+            itemMetaWand.ManaChange(-manaCost);
+            //设置数据
+            itemData.SetMetaData(itemMetaWand);
+            //刷新UI
+            EventHandler.Instance.TriggerEvent(EventsInfo.ItemsBean_MetaChange, itemData);
         }
 
 

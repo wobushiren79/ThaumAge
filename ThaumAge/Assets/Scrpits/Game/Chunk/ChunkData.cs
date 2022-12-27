@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class ChunkData
 {
+    public Chunk chunkSelf;
     public Chunk chunkLeft;
     public Chunk chunkRight;
     public Chunk chunkForward;
@@ -16,8 +17,9 @@ public class ChunkData
     public int chunkWidth;
     public int chunkHeight;
 
-    public ChunkData(Vector3Int wPosition, int chunkWidth, int chunkHeight)
+    public ChunkData(Chunk chunkSelf, Vector3Int wPosition, int chunkWidth, int chunkHeight)
     {
+        this.chunkSelf = chunkSelf;
         this.chunkWidth = chunkWidth;
         this.chunkHeight = chunkHeight;
         this.positionForWorld = wPosition;
@@ -39,18 +41,34 @@ public class ChunkData
         if (chunkLeft == null)
         {
             chunkLeft = WorldCreateHandler.Instance.manager.GetChunk(positionForWorld + new Vector3Int(-chunkWidth, 0, 0));
+            if (chunkLeft != null && chunkLeft.chunkData != null)
+            {
+                chunkLeft.chunkData.chunkRight = chunkSelf;
+            }
         }
         if (chunkRight == null)
         {
             chunkRight = WorldCreateHandler.Instance.manager.GetChunk(positionForWorld + new Vector3Int(chunkWidth, 0, 0));
+            if (chunkRight != null && chunkRight.chunkData != null)
+            {
+                chunkRight.chunkData.chunkLeft = chunkSelf;
+            }
         }
         if (chunkForward == null)
         {
             chunkForward = WorldCreateHandler.Instance.manager.GetChunk(positionForWorld + new Vector3Int(0, 0, -chunkWidth));
+            if (chunkForward != null && chunkForward.chunkData != null)
+            {
+                chunkForward.chunkData.chunkBack = chunkSelf;
+            }
         }
         if (chunkBack == null)
         {
             chunkBack = WorldCreateHandler.Instance.manager.GetChunk(positionForWorld + new Vector3Int(0, 0, chunkWidth));
+            if (chunkBack != null && chunkBack.chunkData != null)
+            {
+                chunkBack.chunkData.chunkForward = chunkSelf;
+            }
         }
     }
 
