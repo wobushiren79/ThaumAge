@@ -159,9 +159,6 @@ public class Block
     /// <summary>
     /// 构建方块
     /// </summary>
-    /// <param name="verts"></param>
-    /// <param name="uvs"></param>
-    /// <param name="tris"></param>
     public virtual void BuildBlock(Chunk chunk, Vector3Int localPosition)
     {
         blockShape.BuildBlock(chunk, localPosition);
@@ -172,13 +169,12 @@ public class Block
         blockShape.BuildBlock(chunk, localPosition);
     }
 
-
     /// <summary>
     /// 初始化方块 异步的
     /// </summary>
     /// <param name="chunk"></param>
     /// <param name="localPosition"></param>
-    /// <param name="state">0:创建地形 1：手动设置方块</param>
+    /// <param name="state">0:第一次创建地形 1：手动设置方块 2：刷新地形</param>
     public virtual void InitBlock(Chunk chunk, Vector3Int localPosition, int state)
     {
         CreateBlockModel(chunk, localPosition);
@@ -309,6 +305,15 @@ public class Block
     }
 
     /// <summary>
+    /// 创建掉落物
+    /// </summary>
+    /// <param name="blockData"></param>
+    public virtual void CreateDropItems(BlockBean blockData = null)
+    {
+
+    }
+
+    /// <summary>
     /// 获取下标
     /// </summary>
     public static int GetIndex(Vector3Int localPosition, int chunkWidth, int chunkHeight)
@@ -329,9 +334,9 @@ public class Block
     /// <summary>
     /// 被使用
     /// </summary>
-    public virtual void TargetUseBlock(GameObject user, ItemsBean itemData, Chunk targetChunk, Vector3Int targetWorldPosition)
+    public virtual bool TargetUseBlock(GameObject user, ItemsBean itemData, Chunk targetChunk, Vector3Int targetWorldPosition)
     {
-
+        return false;
     }
 
     /// <summary>

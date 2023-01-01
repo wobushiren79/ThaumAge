@@ -46,4 +46,15 @@ public class ItemMetaMagicInstrument : ItemBaseMeta
         }
         return curMana;
     }
+
+    /// <summary>
+    /// 获取魔力进度
+    /// </summary>
+    /// <returns></returns>
+    public float GetManaPro()
+    {
+        if (mana == 0)
+            return 0;
+        return curMana / (float)mana;
+    }
 }

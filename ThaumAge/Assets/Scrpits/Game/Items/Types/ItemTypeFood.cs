@@ -3,10 +3,14 @@ using UnityEngine;
 
 public class ItemTypeFood : Item
 {
-    public override void TargetUseR(GameObject user, ItemsBean itemData, Vector3Int targetPosition, Vector3Int closePosition, BlockDirectionEnum direction)
+    public override bool TargetUseR(GameObject user, ItemsBean itemData, Vector3Int targetPosition, Vector3Int closePosition, BlockDirectionEnum direction)
     {
+        bool isBlockUseStop = base.TargetUseR(user, itemData, targetPosition, closePosition, direction);
+        if (isBlockUseStop)
+            return true;
+
         if (itemData == null)
-            return;
+            return false;
         ItemsInfoBean itemsInfo = ItemsHandler.Instance.manager.GetItemsInfoById(itemData.itemId);
         AttributeBean attributeData = itemsInfo.GetAttributeData();
 
@@ -26,11 +30,12 @@ public class ItemTypeFood : Item
             //减少道具
             userData.AddItems(itemData,-1);
             //刷新UI
-            UIHandler.Instance.RefreshUI();
+            EventHandler.Instance.TriggerEvent(EventsInfo.ItemsBean_MetaChange, itemData);
             //通知数据改变
             EventHandler.Instance.TriggerEvent(EventsInfo.CharacterStatus_StatusChange);
             //播放音效
             AudioHandler.Instance.PlaySound(101);
         }
+        return false;
     }
 }

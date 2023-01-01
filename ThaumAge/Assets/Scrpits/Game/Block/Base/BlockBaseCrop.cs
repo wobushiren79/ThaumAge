@@ -9,7 +9,8 @@ public class BlockBaseCrop : BlockBasePlant
     public override void InitBlock(Chunk chunk, Vector3Int localPosition, int state)
     {
         base.InitBlock(chunk, localPosition, state);
-        this.InitCropData(chunk, localPosition);
+        if (state == 0 || state == 1)
+            chunk.RegisterEventUpdate(localPosition, TimeUpdateEventTypeEnum.Min);
     }
 
     public override void EventBlockUpdateForMin(Chunk chunk, Vector3Int localPosition)
@@ -72,15 +73,6 @@ public class BlockBaseCrop : BlockBasePlant
             listData.Add(new ItemsBean(itemsInfo.id, 1));
         }
         return listData;
-    }
-
-    /// <summary>
-    /// 初始化植物数据
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    public void InitCropData(Chunk chunk, Vector3Int localPosition)
-    {
-        chunk.RegisterEventUpdate(localPosition, TimeUpdateEventTypeEnum.Min);
     }
 
     /// <summary>

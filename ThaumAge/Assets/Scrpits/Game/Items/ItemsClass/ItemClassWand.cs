@@ -111,27 +111,44 @@ public class ItemClassWand : Item
     {
         if (itemUseType == ItemUseTypeEnum.Right)
         {
+            //检测玩家前方是否有方块
+            if (player.playerRay.RayToChunkBlock(out RaycastHit hit, out Vector3Int targetBlockPosition))
+            {
+                ChunkComponent chunkForHit = hit.collider.GetComponentInParent<ChunkComponent>();
+                if (chunkForHit != null)
+                {
+                    //获取位置和方向
+                    player.playerRay.GetHitPositionAndDirection(hit, out Vector3Int targetPosition, out Vector3Int closePosition, out BlockDirectionEnum direction);
+                    //挖掘
+                    TargetUseR(player.gameObject, itemsData, targetPosition, closePosition, direction);
+                    return;
+                }
+            }
+            //如果没有方块则也需要触发使用
             TargetUseR(player.gameObject, itemsData, Vector3Int.zero, Vector3Int.zero, BlockDirectionEnum.None);
         }
         else
         {
             base.UseForPlayer(player, itemsData, itemUseType);
-        }     
+        }
     }
 
     /// <summary>
     /// 右键使用法杖
     /// </summary>
-    public override void TargetUseR(GameObject user, ItemsBean itemData, Vector3Int targetPosition, Vector3Int closePosition, BlockDirectionEnum direction)
+    public override bool TargetUseR(GameObject user, ItemsBean itemData, Vector3Int targetPosition, Vector3Int closePosition, BlockDirectionEnum direction)
     {
+        bool isBlockUseStop = base.TargetUseR(user, itemData, targetPosition, closePosition, direction);
+        if (isBlockUseStop)
+            return true;
         ItemMetaWand itemMetaWand = itemData.GetMetaData<ItemMetaWand>();
         if (itemMetaWand.rodId == 0 || itemMetaWand.capId == 0)
         {
-            return;
+            return false;
         }
         if (itemMetaWand.listMagicCore.IsNull())
         {
-            return;
+            return false;
         }
         UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();
 
@@ -147,13 +164,13 @@ public class ItemClassWand : Item
 
         //首先判断魔力是否足够
         int manaCost = 1;
-        bool hasEnoughMagic= itemMetaWand.HasEnoughMana(manaCost);
+        bool hasEnoughMagic = itemMetaWand.HasEnoughMana(manaCost);
         if (!hasEnoughMagic)
         {
             hasEnoughMagic = userData.characterData.creatureStatus.HasEnoughMagic(manaCost);
             if (!hasEnoughMagic)
             {
-                return;
+                return true;
             }
             else
             {
@@ -184,5 +201,6 @@ public class ItemClassWand : Item
         //播放法杖使用音效
         PlayItemSoundUseR(itemData);
 
+        return false;
     }
 }

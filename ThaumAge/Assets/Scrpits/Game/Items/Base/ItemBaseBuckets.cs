@@ -7,15 +7,19 @@ public class ItemBaseBuckets : Item
     /// <summary>
     /// 使用道具（鼠标右键）
     /// </summary>
-    public override void TargetUseR(GameObject user, ItemsBean itemData, Vector3Int targetPosition, Vector3Int closePosition, BlockDirectionEnum direction)
+    public override bool TargetUseR(GameObject user, ItemsBean itemData, Vector3Int targetPosition, Vector3Int closePosition, BlockDirectionEnum direction)
     {
+        bool isBlockUseStop = base.TargetUseR(user,  itemData,  targetPosition,  closePosition,  direction);
+        if (isBlockUseStop)
+            return true;
         ItemMetaBuckets itemMetaBuckets = itemData.GetMetaData<ItemMetaBuckets>();
         if (itemMetaBuckets.itemIdForSomething == 0)
         {
             GetSomething(itemData, targetPosition, closePosition);
-            return;
+            return false;
         }
         SetSomething(itemData, targetPosition, closePosition);
+        return false;
     }
 
     /// <summary>

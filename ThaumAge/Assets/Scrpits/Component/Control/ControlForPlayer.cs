@@ -445,8 +445,7 @@ public class ControlForPlayer : ControlForBase
         //扣除道具
         int itemNumber = userData.AddItems(itemData, -1);
         //刷新UI
-        UIHandler.Instance.RefreshUI();
-
+        EventHandler.Instance.TriggerEvent(EventsInfo.ItemsBean_MetaChange, itemData);
         if (itemNumber == 0)
         {
             //刷新手上物品

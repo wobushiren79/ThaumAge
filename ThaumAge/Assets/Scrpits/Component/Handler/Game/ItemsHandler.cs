@@ -129,6 +129,8 @@ public class ItemsHandler : BaseHandler<ItemsHandler, ItemsManager>
             List<ItemsBean> listHarvest = targetBlock.GetDropItems(blockData);
             //创建掉落物
             CreateItemCptDropList(listHarvest, ItemDropStateEnum.DropPick, targetWorldPosition + Vector3.one * 0.5f);
+
+            targetBlock.CreateDropItems(blockData);
         }
         else
         {
@@ -147,6 +149,7 @@ public class ItemsHandler : BaseHandler<ItemsHandler, ItemsManager>
                 //创建掉落物
                 CreateItemCptDropList(listDrop, ItemDropStateEnum.DropPick, targetWorldPosition + Vector3.one * 0.5f);
             }
+            targetBlock.CreateDropItems(blockData);
         }
     }
 

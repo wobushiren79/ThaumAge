@@ -283,6 +283,7 @@ SpriteAtlas:
     - 4a65652d1e0abd74fbad99feed075fc5: 21300000
     - 972ea23dc29f7324197dfad60d3268de: 21300000
     - dbb58b3d8be8c5a48888bc74d6b552fb: 21300000
+    - 9863e04da5aa75f4399f79abd58bfbcf: 21300000
     - 6b4bbf4d4c91dca4a85dcfd1ff77a3d5: 21300000
     - 98bee05d5a24f5c4a8164542e732b8cf: 21300000
     - 12adc47da4193cc479e203a80854adb6: 21300000
@@ -307,6 +308,7 @@ SpriteAtlas:
     - 90cd945e65a4caf44bda4a48698eeab5: 21300000
     - f117a47e60914d144a99bcce406a2de4: 21300000
     - 4d39d67e2484da2489d73ffd5ab71c06: 21300000
+    - 7f154e7ef5894ce4e94912bcec004d24: 21300000
     - fbe0688ea28b3c349b054c6bf2bc903c: 21300000
     - 0281a99e835bcc64999cd5f2b7303f9e: 21300000
     - 68f55dbea4b1809409edfe72104f5a1f: 21300000
@@ -570,6 +572,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 4a65652d1e0abd74fbad99feed075fc5, type: 3}
   - {fileID: 21300000, guid: 972ea23dc29f7324197dfad60d3268de, type: 3}
   - {fileID: 21300000, guid: dbb58b3d8be8c5a48888bc74d6b552fb, type: 3}
+  - {fileID: 21300000, guid: 9863e04da5aa75f4399f79abd58bfbcf, type: 3}
   - {fileID: 21300000, guid: 6b4bbf4d4c91dca4a85dcfd1ff77a3d5, type: 3}
   - {fileID: 21300000, guid: 98bee05d5a24f5c4a8164542e732b8cf, type: 3}
   - {fileID: 21300000, guid: 12adc47da4193cc479e203a80854adb6, type: 3}
@@ -594,6 +597,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 90cd945e65a4caf44bda4a48698eeab5, type: 3}
   - {fileID: 21300000, guid: f117a47e60914d144a99bcce406a2de4, type: 3}
   - {fileID: 21300000, guid: 4d39d67e2484da2489d73ffd5ab71c06, type: 3}
+  - {fileID: 21300000, guid: 7f154e7ef5894ce4e94912bcec004d24, type: 3}
   - {fileID: 21300000, guid: fbe0688ea28b3c349b054c6bf2bc903c, type: 3}
   - {fileID: 21300000, guid: 0281a99e835bcc64999cd5f2b7303f9e, type: 3}
   - {fileID: 21300000, guid: 68f55dbea4b1809409edfe72104f5a1f, type: 3}
@@ -856,6 +860,7 @@ SpriteAtlas:
   - icon_item_991003
   - icon_item_990112
   - icon_item_300007
+  - icon_item_106164
   - icon_item_105801
   - icon_item_108151
   - icon_item_910104
@@ -880,6 +885,7 @@ SpriteAtlas:
   - icon_item_990104
   - icon_item_309101
   - icon_item_990008
+  - icon_item_106165
   - icon_item_100906
   - icon_item_108101
   - icon_item_10000011

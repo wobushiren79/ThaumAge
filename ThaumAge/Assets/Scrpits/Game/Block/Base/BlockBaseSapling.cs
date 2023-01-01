@@ -8,7 +8,8 @@ public class BlockBaseSapling : Block
     public override void InitBlock(Chunk chunk, Vector3Int localPosition, int state)
     {
         base.InitBlock(chunk, localPosition, state);
-        chunk.RegisterEventUpdate(localPosition, TimeUpdateEventTypeEnum.Min);
+        if (state == 0 || state == 1)
+            chunk.RegisterEventUpdate(localPosition, TimeUpdateEventTypeEnum.Min);
     }
 
     public override void EventBlockUpdateForMin(Chunk chunk, Vector3Int localPosition)

@@ -108,7 +108,7 @@ public partial class UIGameMagicInstrumentAssembly : UIGameCommonNormal
         MagicInstrumentInfoBean rodInfo = MagicInstrumentInfoCfg.GetItemDataByItemId(itemMetaWand.rodId);
         //设置魔力
         itemMetaWand.mana = capInfo.mana_add + rodInfo.mana_add;
-        itemMetaWand.curMana = itemMetaWand.mana;
+        itemMetaWand.curMana = 0;
 
         itemsWand.SetMetaData(itemMetaWand);
 

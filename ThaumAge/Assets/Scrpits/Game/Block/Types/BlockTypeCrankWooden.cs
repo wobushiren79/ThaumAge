@@ -4,16 +4,16 @@ using DG.Tweening;
 
 public class BlockTypeCrankWooden : Block
 {
-    public override void TargetUseBlock(GameObject user, ItemsBean itemData, Chunk targetChunk, Vector3Int targetWorldPosition)
+    public override bool TargetUseBlock(GameObject user, ItemsBean itemData, Chunk targetChunk, Vector3Int targetWorldPosition)
     {
         Vector3Int blockLocalPosition = targetWorldPosition - targetChunk.chunkData.positionForWorld;
         GameObject objTarget = targetChunk.GetBlockObjForLocal(blockLocalPosition);
         if (objTarget == null)
-            return;
+            return true;
 
         GetCloseBlockByDirection(targetChunk, blockLocalPosition, DirectionEnum.Down, out Block downBlock, out Chunk downChunk, out Vector3Int downLocalPosition);
         if (downChunk == null || downBlock == null)
-            return;
+            return true;
         BlockTypeEnum downBlockType = downBlock.blockType;
         switch (downBlockType)
         {
@@ -21,6 +21,7 @@ public class BlockTypeCrankWooden : Block
                 HandleForGrinderSimple(objTarget, downBlock, downChunk, downLocalPosition);
                 break;
         }
+        return true;
     }
 
     /// <summary>

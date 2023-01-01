@@ -14,11 +14,15 @@ public class BlockInfoBean : BaseBean
 {
     public int link_id;
 
+    public string mesh_name;//模型mesh数据
+
     public string model_name;
 
     public string color;//颜色
 
     public int shape;//形状
+
+    public string link_class;//注册的类
 
     public string uv_position;//uv位置
 
@@ -145,11 +149,20 @@ public class BlockInfoBean : BaseBean
     /// </summary>
     public MeshDataCustom GetBlockMeshData()
     {
-        BlockTypeEnum blockType = GetBlockType();
         TextAsset textAsset;
+        string blockAssetName;
+        if (!mesh_name.IsNull())
+        {
+            blockAssetName = mesh_name;
+        }
+        else
+        {
+            BlockTypeEnum blockType = GetBlockType();
+            blockAssetName = $"Block{blockType.GetEnumName()}";
+        }
         try
         {
-             textAsset = LoadAddressablesUtil.LoadAssetSync<TextAsset>($"Assets/Prefabs/BlockMeshData/Block{blockType.GetEnumName()}.txt");
+            textAsset = LoadAddressablesUtil.LoadAssetSync<TextAsset>($"Assets/Prefabs/BlockMeshData/{blockAssetName}.txt");
         }
         catch (Exception e)
         {

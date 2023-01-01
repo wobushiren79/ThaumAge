@@ -35,7 +35,7 @@ public class ItemTypeCreature : Item
                     UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();
                     userData.AddItems(itemData, -1);
                     //刷新UI
-                    UIHandler.Instance.RefreshUI();
+                    EventHandler.Instance.TriggerEvent(EventsInfo.ItemsBean_MetaChange, itemData);
                 }
             }
             else

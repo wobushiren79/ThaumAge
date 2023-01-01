@@ -28,7 +28,7 @@ public class BlockTypeFrameItem : Block
                 chunk.isSaveData = true;
                 //减去身上的道具
                 userData.AddItems(itemsData, -1);
-                UIHandler.Instance.RefreshUI();
+                EventHandler.Instance.TriggerEvent(EventsInfo.ItemsBean_MetaChange, itemsData);
             }
         }
         //如果有物品 则掉落

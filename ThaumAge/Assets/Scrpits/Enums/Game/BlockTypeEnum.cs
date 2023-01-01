@@ -151,6 +151,9 @@ public enum BlockTypeEnum
     Crucible = 6161,//坩埚
     ResearchTable = 6162,//研究台
     FocalManipulator = 6163,//核心镶饰台
+    RechargePedestal = 6164,//奥术充能基座
+    WorkbenchCharger = 6165,//奥术充能器
+
     Box = 6201,//箱子
     SwitchesWooden = 6301,//木制开关
     TorchWooden = 6311, //木制火把

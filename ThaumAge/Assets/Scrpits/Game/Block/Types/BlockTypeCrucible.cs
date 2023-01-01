@@ -11,7 +11,7 @@ public class BlockTypeCrucible : Block
     /// </summary>
     /// <param name="targetChunk"></param>
     /// <param name="targetWorldPosition"></param>
-    public override void TargetUseBlock(GameObject user, ItemsBean itemData, Chunk targetChunk, Vector3Int targetWorldPosition)
+    public override bool TargetUseBlock(GameObject user, ItemsBean itemData, Chunk targetChunk, Vector3Int targetWorldPosition)
     {
         base.TargetUseBlock(user, itemData, targetChunk, targetWorldPosition);
 
@@ -23,6 +23,8 @@ public class BlockTypeCrucible : Block
         SaveCrucibleData(targetChunk,  targetWorldPosition, blockData, blockMetaData, 0);
 
         EventHandler.Instance.TriggerEvent(EventsInfo.BlockTypeCrucible_UpdateElemental, targetWorldPosition);
+
+        return false;
     }
 
     /// <summary>

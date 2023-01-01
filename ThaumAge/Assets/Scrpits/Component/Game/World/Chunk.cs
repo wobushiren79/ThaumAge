@@ -15,11 +15,11 @@ public class Chunk
     public ChunkComponent chunkComponent;
 
     //需要更新事件的方块（频率每0.2秒一次）
-    public List<Vector3Int> listEventUpdateForSecTiny = new List<Vector3Int>();
+    public HashSet<Vector3Int> listEventUpdateForSecTiny = new HashSet<Vector3Int>();
     //需要更新事件的方块（频率每秒一次）
-    public List<Vector3Int> listEventUpdateForSec = new List<Vector3Int>();
+    public HashSet<Vector3Int> listEventUpdateForSec = new HashSet<Vector3Int>();
     //需要更新事件的方块（频率每秒一次）
-    public List<Vector3Int> listEventUpdateForMin = new List<Vector3Int>();
+    public HashSet<Vector3Int> listEventUpdateForMin = new HashSet<Vector3Int>();
 
     //需要创建方块实力的列表
     public ConcurrentQueue<Vector3Int> listBlockModelUpdate = new ConcurrentQueue<Vector3Int>();
@@ -32,8 +32,11 @@ public class Chunk
     public bool isActive = false;
     //是否初始化数据
     public bool isInit = false;
-    //时候构建
+    //是否正在构建
     public bool isBuildChunk = false;
+    //是否第一次构建方块
+    public bool isInitBuildChunk = false;
+
     //是否绘制
     public bool isDrawMesh = false;
 
@@ -305,6 +308,7 @@ public class Chunk
 #if UNITY_EDITOR
         Stopwatch stopwatch = TimeUtil.GetMethodTimeStart();
 #endif
+        int initBlockType = isInitBuildChunk ? 2 : 0;
         chunkMeshData = new ChunkMeshData();
         //遍历每一个子区块
         for (int i = 0; i < chunkData.chunkSectionDatas.Length; i++)
@@ -324,11 +328,12 @@ public class Chunk
                             continue;
                         Vector3Int localPosition = new Vector3Int(x, y + chunkSection.yBase, z);
                         block.BuildBlock(this, localPosition);
-                        block.InitBlock(this, localPosition, 0);
+                        block.InitBlock(this, localPosition, initBlockType);
                     }
                 }
             }
         }
+        isInitBuildChunk = true;
 #if UNITY_EDITOR
         TimeUtil.GetMethodTimeEnd("Time_BuildChunkForAsync:", stopwatch);
 #endif
@@ -428,7 +433,6 @@ public class Chunk
         }
     }
 
-
     /// <summary>
     /// 处理-基础地形方块
     /// </summary>
@@ -500,33 +504,50 @@ public class Chunk
     /// </summary>
     public void HandleForEventUpdateForSecTiny()
     {
-        for (int i = 0; i < listEventUpdateForSecTiny.Count; i++)
+        try
         {
-            Vector3Int localPosition = listEventUpdateForSecTiny[i];
-            Block block = chunkData.GetBlockForLocal(localPosition);
-            block.EventBlockUpdateForSecTiny(this, localPosition);
+            foreach (var localPosition in listEventUpdateForSecTiny)
+            {
+                Block block = chunkData.GetBlockForLocal(localPosition);
+                block.EventBlockUpdateForSecTiny(this, localPosition);
+            }
+        }
+        catch
+        {
+
         }
     }
 
     public void HandleForEventUpdateForSec()
     {
-        for (int i = 0; i < listEventUpdateForSec.Count; i++)
+        try
         {
-            Vector3Int localPosition = listEventUpdateForSec[i];
-            Block block = chunkData.GetBlockForLocal(localPosition);
-            block.EventBlockUpdateForSec(this, localPosition);
+            foreach (var localPosition in listEventUpdateForSec)
+            {
+                Block block = chunkData.GetBlockForLocal(localPosition);
+                block.EventBlockUpdateForSec(this, localPosition);
+            }
+        }
+        catch
+        {
+
         }
     }
     public void HandleForEventUpdateForMin()
     {
-        for (int i = 0; i < listEventUpdateForMin.Count; i++)
+        try
         {
-            Vector3Int localPosition = listEventUpdateForMin[i];
-            Block block = chunkData.GetBlockForLocal(localPosition);
-            block.EventBlockUpdateForMin(this, localPosition);
+            foreach (var localPosition in listEventUpdateForMin)
+            {
+                Block block = chunkData.GetBlockForLocal(localPosition);
+                block.EventBlockUpdateForMin(this, localPosition);
+            }
+        }
+        catch
+        {
+
         }
     }
-
 
     /// <summary>
     /// 处理实例化模型的方块

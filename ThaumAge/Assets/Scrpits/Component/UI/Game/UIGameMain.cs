@@ -27,7 +27,7 @@ public partial class UIGameMain : BaseUIComponent
         base.RefreshUI(isOpenInit);
 
         //展示一些解锁UI
-        ShowUnlockUI();
+        StartCoroutine(ShowUnlockUI());
         if (isOpenInit)
             return;
         //道具刷新
@@ -44,24 +44,35 @@ public partial class UIGameMain : BaseUIComponent
     }
 
 
+    protected bool isShowUnlockUIing = false;
     /// <summary>
     /// 展示解锁UI
     /// </summary>
-    public void ShowUnlockUI()
+    public IEnumerator ShowUnlockUI()
     {
-        ui_MagicCore.gameObject.ShowObj(false);
-        ui_ViewShortcutsMagic.CloseUI();
-        //法杖的UI
-        UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();
-        ItemsBean holdItemsData = userData.GetItemsFromShortcut();
-        if (holdItemsData.itemId != 0)
+        if (isShowUnlockUIing)
         {
-            ItemsInfoBean holdItemInfo = ItemsHandler.Instance.manager.GetItemsInfoById(holdItemsData.itemId);
-            if (holdItemInfo.GetItemsType() == ItemsTypeEnum.Wand)
+
+        }
+        else
+        {
+            isShowUnlockUIing = true;
+            ui_MagicCore.gameObject.ShowObj(false);
+            ui_ViewShortcutsMagic.CloseUI();
+            //法杖的UI
+            UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();
+            ItemsBean holdItemsData = userData.GetItemsFromShortcut();
+            if (holdItemsData.itemId != 0)
             {
-                ui_MagicCore.gameObject.ShowObj(true);
-                ui_ViewShortcutsMagic.OpenUI();
+                ItemsInfoBean holdItemInfo = ItemsHandler.Instance.manager.GetItemsInfoById(holdItemsData.itemId);
+                if (holdItemInfo.GetItemsType() == ItemsTypeEnum.Wand)
+                {
+                    ui_MagicCore.gameObject.ShowObj(true);
+                    ui_ViewShortcutsMagic.OpenUI();
+                }
             }
+            yield return new WaitForEndOfFrame();
+            isShowUnlockUIing = false;
         }
     }
 
@@ -204,7 +215,9 @@ public partial class UIGameMain : BaseUIComponent
     /// </summary>
     public void CallBackForShortcutsItemExchange(UIViewItemContainer uIViewItem, long itemId)
     {
-        ShowUnlockUI();
+        if (!gameObject.activeSelf)
+            return;
+        StartCoroutine(ShowUnlockUI());
     }
 
     /// <summary>
@@ -212,6 +225,8 @@ public partial class UIGameMain : BaseUIComponent
     /// </summary>
     public void CallBackForShortcutsChangeSelect(int selectIndex)
     {
-        ShowUnlockUI();
+        if (!gameObject.activeSelf)
+            return;
+        StartCoroutine(ShowUnlockUI());
     }
 }

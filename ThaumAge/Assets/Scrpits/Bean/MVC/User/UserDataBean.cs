@@ -57,9 +57,7 @@ public class UserDataBean
         ItemsInfoBean itemsInfo = ItemsHandler.Instance.manager.GetItemsInfoById(itemData.itemId);
         if (itemData.number <= 0)
         {
-            itemData.itemId = 0;
-            itemData.number = 0;
-            itemData.meta = null;
+            itemData.ClearData();
         }
         else if (itemData.number > itemsInfo.max_number)
         {
@@ -72,7 +70,7 @@ public class UserDataBean
 
     /// <summary>
     /// 增加道具
-    /// </summary>
+    /// </summary>p
     public int AddItems(long itemId, int itemNumber, string meta)
     {
         //记录成就
@@ -107,7 +105,6 @@ public class UserDataBean
             ItemsBean itemData = arrayContainer[i];
             if (itemData != null && itemData.itemId == itemId)
             {
-                itemData.meta = meta;
                 if (itemData.number < itemsInfo.max_number)
                 {
                     int subNumber = itemsInfo.max_number - itemData.number;
@@ -116,12 +113,14 @@ public class UserDataBean
                     {
                         itemData.number += itemNumber;
                         itemNumber = 0;
+                        itemData.meta = meta;
                         return itemNumber;
                     }
                     //如果增加的数量在该道具的上限之外
                     else
                     {
                         itemData.number = itemsInfo.max_number;
+                        itemData.meta = meta;
                         itemNumber -= subNumber;
                     }
                 }

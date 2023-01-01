@@ -7,9 +7,9 @@ public class BlockBaseLiquid : Block
     public override void InitBlock(Chunk chunk, Vector3Int localPosition, int state)
     {
         base.InitBlock(chunk, localPosition, state);
-        if (state == 1)
+        if (state == 0)
         {
-            RegisterEventUpdate(chunk, localPosition);
+            chunk.RegisterEventUpdate(localPosition, TimeUpdateEventTypeEnum.Sec);
         }
     }
 
@@ -23,20 +23,7 @@ public class BlockBaseLiquid : Block
     {
         base.RefreshBlock(chunk, localPosition, direction, updateChunkType);
         //刷新的时候注册事件 
-        RegisterEventUpdate(chunk, localPosition);
-    }
-
-    /// <summary>
-    /// 注册事件
-    /// </summary>
-    /// <param name="chunk"></param>
-    /// <param name="localPosition"></param>
-    public void RegisterEventUpdate(Chunk chunk, Vector3Int localPosition)
-    {
-        chunk.chunkComponent.WaitExecuteEndOfFrame(1, () =>
-        {
-            chunk.RegisterEventUpdate(localPosition, TimeUpdateEventTypeEnum.Sec);
-        });
+        chunk.RegisterEventUpdate(localPosition, TimeUpdateEventTypeEnum.Sec);
     }
 
     /// <summary>

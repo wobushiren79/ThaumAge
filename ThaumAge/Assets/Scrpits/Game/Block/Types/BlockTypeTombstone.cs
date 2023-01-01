@@ -8,7 +8,8 @@ public class BlockTypeTombstone : BlockTypeBox
     public override void InitBlock(Chunk chunk, Vector3Int localPosition, int state)
     {
         base.InitBlock(chunk, localPosition, state);
-        boxSize = 2 * 7;
+        if (state == 0)
+            boxSize = 2 * 7;
     }
 
     public override void OpenBox(Vector3Int worldPosition)

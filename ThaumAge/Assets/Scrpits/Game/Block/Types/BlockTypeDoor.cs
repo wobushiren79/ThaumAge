@@ -8,7 +8,8 @@ public class BlockTypeDoor : BlockBaseLink
     public override void InitBlock(Chunk chunk, Vector3Int localPosition, int state)
     {
         base.InitBlock(chunk, localPosition, state);
-        listLinkPosition = new List<Vector3Int>() { Vector3Int.up };
+        if (state == 0)
+            listLinkPosition = new List<Vector3Int>() { Vector3Int.up };
     }
 
     public override void CreateBlockModel(Chunk chunk, Vector3Int localPosition)

@@ -5,7 +5,7 @@ using UnityEngine;
 public class BlockBaseBerryBush : Block
 {
 
-    public override void TargetUseBlock(GameObject user, ItemsBean itemData, Chunk targetChunk, Vector3Int targetWorldPosition)
+    public override bool TargetUseBlock(GameObject user, ItemsBean itemData, Chunk targetChunk, Vector3Int targetWorldPosition)
     {
         List<ItemsBean> listDropItems = GetDropItems();
 
@@ -14,6 +14,8 @@ public class BlockBaseBerryBush : Block
 
         //设置被采集
         targetChunk.SetBlockForWorld(targetWorldPosition,(BlockTypeEnum) blockInfo.remark_int);
+
+        return false;
     }
 
 }

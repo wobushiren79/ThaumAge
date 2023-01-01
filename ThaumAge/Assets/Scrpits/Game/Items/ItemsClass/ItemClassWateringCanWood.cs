@@ -3,13 +3,17 @@ using UnityEngine;
 
 public class ItemClassWateringCanWood : ItemBaseTool
 {
-    public override void TargetUseR(GameObject user, ItemsBean itemData, Vector3Int targetPosition, Vector3Int closePosition, BlockDirectionEnum direction)
+    public override bool TargetUseR(GameObject user, ItemsBean itemData, Vector3Int targetPosition, Vector3Int closePosition, BlockDirectionEnum direction)
     {
+        bool isBlockUseStop = base.TargetUseR(user, itemData, targetPosition, closePosition, direction);
+        if (isBlockUseStop)
+            return true;
+
         //获取目标方块
         WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(targetPosition, out Block targetBlock, out BlockDirectionEnum targetBlockDirection, out Chunk targetChunk);
 
         if (targetBlock == null)
-            return;
+            return false;
         if (targetBlock.blockInfo.GetBlockShape() == BlockShapeEnum.Plough
             || targetBlock is BlockBaseCrop)
         {
@@ -17,13 +21,13 @@ public class ItemClassWateringCanWood : ItemBaseTool
         }
         else
         {
-            return;
+            return false;
         }
         ItemMetaTool itemsDetailsTool = itemData.GetMetaData<ItemMetaTool>();
         //如果没有耐久了 则不执行
         if (itemsDetailsTool.curDurability <= 0)
         {
-            return;
+            return false;
         }
         //扣除耐久
         itemsDetailsTool.AddLife(-1);
@@ -64,5 +68,6 @@ public class ItemClassWateringCanWood : ItemBaseTool
         effectData.timeForShow = 2;
 
         EffectHandler.Instance.ShowEffect(effectData);
+        return false;
     }
 }

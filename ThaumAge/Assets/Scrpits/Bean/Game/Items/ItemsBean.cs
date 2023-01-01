@@ -33,6 +33,20 @@ public class ItemsBean
         this.meta = meta;
     }
 
+    public ItemsBean(ItemsBean otherItem)
+    {
+        this.itemId = otherItem.itemId;
+        this.number = otherItem.number;
+        this.meta = otherItem.meta;
+    }
+
+    public void ClearData()
+    {
+        this.itemId = 0;
+        this.number = 0;
+        this.meta = null;
+    }
+
     public T GetMetaData<T>() where T : ItemBaseMeta
     {        
         //如果meta数据是null的 则按items的类型赋予不同的数据

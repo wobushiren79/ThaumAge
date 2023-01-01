@@ -73,9 +73,7 @@ public partial class UIViewItemContainer : BaseUIView
     {
         if (itemsData != this.itemsData)
             return;
-        if (currentViewItem == null)
-            return;
-        currentViewItem.SetData(itemsData.itemId, itemsData.number, itemsData.meta);
+        SetViewItemByData(itemsData, true);
     }
 
     /// <summary>
@@ -129,7 +127,7 @@ public partial class UIViewItemContainer : BaseUIView
     /// <summary>
     /// 清空容器
     /// </summary>
-    public void ClearViewItem(bool isDestroyViewItem = false,bool isCallBack = true)
+    public void ClearViewItem(bool isDestroyViewItem = false, bool isCallBack = true)
     {
         //删除原来存在的
         if (isDestroyViewItem && currentViewItem != null && currentViewItem.gameObject != null)
@@ -138,10 +136,7 @@ public partial class UIViewItemContainer : BaseUIView
             DestroyImmediate(currentViewItem.gameObject);
         }
         this.currentViewItem = null;
-
-        itemsData.itemId = 0;
-        itemsData.number = 0;
-        itemsData.meta = null;
+        itemsData.ClearData();
 
         //设置展示信息
         ui_ViewItemContainer.SetItemData(itemsData);
@@ -218,20 +213,22 @@ public partial class UIViewItemContainer : BaseUIView
                 DestroyImmediate(currentViewItem.gameObject);
             }
             currentViewItem = null;
-            return;
         }
-        //如果有东西，则先实例化再设置数据
-        if (currentViewItem == null)
+        else
         {
-            GameObject obj = Instantiate(gameObject, ui_ViewItemModel.gameObject);
-            obj.name = "ViewItem";
-            currentViewItem = obj.GetComponent<UIViewItem>();
-            currentViewItem.originalParent = this;
-            currentViewItem.transform.position = ui_ViewItemModel.transform.position;
-            currentViewItem.transform.localScale = ui_ViewItemModel.transform.localScale;
-            currentViewItem.transform.rotation = ui_ViewItemModel.transform.rotation;
+            //如果有东西，则先实例化再设置数据
+            if (currentViewItem == null)
+            {
+                GameObject obj = Instantiate(gameObject, ui_ViewItemModel.gameObject);
+                obj.name = "ViewItem";
+                currentViewItem = obj.GetComponent<UIViewItem>();
+                currentViewItem.originalParent = this;
+                currentViewItem.transform.position = ui_ViewItemModel.transform.position;
+                currentViewItem.transform.localScale = ui_ViewItemModel.transform.localScale;
+                currentViewItem.transform.rotation = ui_ViewItemModel.transform.rotation;
+            }
+            currentViewItem.SetData(itemsData.itemId, itemsData.number, itemsData.meta);
         }
-        currentViewItem.SetData(itemsData.itemId, itemsData.number, itemsData.meta);
 
         if (isCallBack)
         {

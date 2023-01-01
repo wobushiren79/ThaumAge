@@ -50,7 +50,20 @@ public partial class UIViewItem : BaseUIView,
     /// 设置数据
     /// </summary>
     public void SetData(long itemId, int itemNumber, string meta)
-    {
+    {        
+        //如果数据一样 就没必要刷新了
+        if (this.itemId == itemId && this.itemNumber == itemNumber)
+        {
+            if (this.meta.IsNull() && meta.IsNull())
+            {
+                return;
+            }
+            if (!this.meta.IsNull() && !meta.IsNull() && this.meta.Equals(meta))
+            {
+                return;
+            }
+        }
+
         this.itemId = itemId;
         this.itemNumber = itemNumber;
         this.meta = meta;

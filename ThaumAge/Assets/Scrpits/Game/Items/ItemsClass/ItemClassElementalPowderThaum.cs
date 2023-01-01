@@ -6,8 +6,11 @@ public class ItemClassElementalPowderThaum : Item
     /// <summary>
     /// 右键使用
     /// </summary>
-    public override void TargetUseR(GameObject user, ItemsBean itemData, Vector3Int targetPosition, Vector3Int closePosition, BlockDirectionEnum direction)
+    public override bool TargetUseR(GameObject user, ItemsBean itemData, Vector3Int targetPosition, Vector3Int closePosition, BlockDirectionEnum direction)
     {
+        bool isBlockUseStop = base.TargetUseR(user, itemData, targetPosition, closePosition, direction);
+        if (isBlockUseStop)
+            return true;
         //获取目标方块
         WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(targetPosition, out Block targetBlock, out BlockDirectionEnum targetBlockDirection, out Chunk taragetChunk);
         //如果靠近得方块有区块
@@ -15,7 +18,7 @@ public class ItemClassElementalPowderThaum : Item
         {
             //如果不是空方块 则不放置(液体则覆盖放置)
             if (targetBlock == null)
-                return;
+                return false;
             //将建议制造台变成奥术制造台
 
             switch (targetBlock.blockType)
@@ -24,16 +27,17 @@ public class ItemClassElementalPowderThaum : Item
                     HandleForCraftingTableArcane(targetPosition, targetBlock, targetBlockDirection, taragetChunk);
                     break;
                 default:
-                    return;
+                    return false;
             }
             //扣除道具
             UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();
             userData.AddItems(itemData, -1);
             //刷新UI
-            UIHandler.Instance.RefreshUI();
+            EventHandler.Instance.TriggerEvent(EventsInfo.ItemsBean_MetaChange, itemData);
             //播放音效
             AudioHandler.Instance.PlaySound(1101, targetPosition);
         }
+        return false;
     }
 
     /// <summary>

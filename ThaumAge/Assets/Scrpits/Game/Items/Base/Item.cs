@@ -220,35 +220,19 @@ public class Item
     /// <summary>
     /// 使用道具（鼠标右键）
     /// </summary>
-    public virtual void TargetUseR(GameObject user, ItemsBean itemData, Vector3Int targetPosition, Vector3Int closePosition, BlockDirectionEnum direction)
+    public virtual bool TargetUseR(GameObject user, ItemsBean itemData, Vector3Int targetPosition, Vector3Int closePosition, BlockDirectionEnum direction)
     {
         //获取目标方块
         WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(targetPosition, out Block targetBlock, out BlockDirectionEnum targetBlockDirection, out Chunk targetChunk);
-        ////首先获取靠近方块
-        //WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(closePosition, out Block closeBlock, out BlockDirectionEnum closeBlockDirection, out Chunk closeChunk);
-        //if (targetChunk == null)
-        //    return;
-        ////如果原位置是空则不做处理
-        //if (targetBlock == null || targetBlock.blockType == BlockTypeEnum.None)
-        //    return;
-
-        ////获取物品信息
-        //ItemsInfoBean itemsInfo = ItemsHandler.Instance.manager.GetItemsInfoById(itemData.itemId);
-        ////获取方块信息
-        //Block useBlock = BlockHandler.Instance.manager.GetRegisterBlock(itemsInfo.type_id);
-        //BlockInfoBean blockInfo = useBlock.blockInfo;
-
-        //BlockTypeEnum changeBlockType = blockInfo.GetBlockType();
-
-        ////获取meta数据
-        //string metaData = useBlock.ItemUseMetaData(closePosition, changeBlockType, closeBlockDirection, itemData.meta);
-        ////使用方块
-        //useBlock.ItemUse(this, itemData,
-        //    targetPosition, targetBlockDirection, targetBlock, targetChunk,
-        //    closePosition, closeBlockDirection, closeBlock, closeChunk,
-        //    direction, metaData);
-        targetBlock.TargetUseBlock(user, itemData, targetChunk, targetPosition);
+        //触发被使用方块的事件调用
+        bool blockUseStop = false;
+        if (targetChunk != null && targetBlock != null)
+        {
+            blockUseStop = targetBlock.TargetUseBlock(user, itemData, targetChunk, targetPosition);
+        }
         PlayItemSoundUseR(itemData);
+        //返回是否被方块的右键点击事件阻挡
+        return blockUseStop;
     }
 
 

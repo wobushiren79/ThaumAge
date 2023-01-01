@@ -7,7 +7,8 @@ public class BlockBaseFurnaces : Block
     {
         base.InitBlock(chunk, localPosition, state);
         //刷新的时候注册事件 
-        StartWork(chunk, localPosition);
+        if (state == 0 || state == 1)
+            StartWork(chunk, localPosition);
     }
 
     /// <summary>

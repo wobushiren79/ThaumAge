@@ -3,8 +3,12 @@ using UnityEngine;
 
 public class ItemTypeHoe : ItemBaseTool
 {
-    public override void TargetUseR(GameObject user, ItemsBean itemData, Vector3Int targetPosition, Vector3Int closePosition, BlockDirectionEnum direction)
+    public override bool TargetUseR(GameObject user, ItemsBean itemData, Vector3Int targetPosition, Vector3Int closePosition, BlockDirectionEnum direction)
     {
+        bool isBlockUseStop = base.TargetUseR(user, itemData, targetPosition, closePosition, direction);
+        if (isBlockUseStop)
+            return true;
+
         Chunk targetChunk = WorldCreateHandler.Instance.manager.GetChunkForWorldPosition(targetPosition);
         Vector3Int localPosition = targetPosition - targetChunk.chunkData.positionForWorld;
         //获取原位置方块
@@ -12,14 +16,14 @@ public class ItemTypeHoe : ItemBaseTool
 
         //如果不能锄地
         if (tagetBlock.blockInfo.plough_state == 0)
-            return;
+            return false;
 
         //获取上方方块
         Block upBlock = targetChunk.chunkData.GetBlockForLocal(localPosition + Vector3Int.up);
 
         //如果上方有方块 则无法使用锄头
         if (upBlock != null && upBlock.blockType != BlockTypeEnum.None)
-            return;
+            return false;
         //扣除道具耐久
         if (this is ItemBaseTool itemTool)
         {
@@ -27,7 +31,7 @@ public class ItemTypeHoe : ItemBaseTool
             //如果没有耐久 不能锄地
             if (itemsDetailsTool.curDurability <= 0)
             {
-                return;
+                return false;
             }
             itemsDetailsTool.AddLife(-1);
             //保存数据
@@ -45,5 +49,6 @@ public class ItemTypeHoe : ItemBaseTool
 
         //播放音效
         PlayItemSoundUseR(itemData);
+        return false;
     }
 }

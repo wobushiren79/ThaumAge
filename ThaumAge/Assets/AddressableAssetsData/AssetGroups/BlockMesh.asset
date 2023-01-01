@@ -149,54 +149,6 @@ MonoBehaviour:
     - BlockMeshData
     - BlockMesh
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 390ad57cbb843e74d852981ae0d11ac5
-    m_Address: Assets/Prefabs/BlockMeshData/BlockElementalCrystalDark.txt
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - BlockMesh
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 79183d9c80a967941a6bd76e93d3c743
-    m_Address: Assets/Prefabs/BlockMeshData/BlockElementalCrystalFire.txt
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - BlockMesh
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 7c404ec829fa7f34b9e52020449b2c9b
-    m_Address: Assets/Prefabs/BlockMeshData/BlockElementalCrystalThaum.txt
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - BlockMesh
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 1aa33d878a504ea4d859169524cc8481
-    m_Address: Assets/Prefabs/BlockMeshData/BlockElementalCrystalMetal.txt
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - BlockMesh
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: d799d336935c6cd4886ed733f4f078b5
-    m_Address: Assets/Prefabs/BlockMeshData/BlockElementalCrystalLight.txt
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - BlockMesh
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 50191b658406f754baf495161db6d6f6
-    m_Address: Assets/Prefabs/BlockMeshData/BlockElementalCrystalWater.txt
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - BlockMesh
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 7cd2123d2443d3048b4721e9a4f25b73
-    m_Address: Assets/Prefabs/BlockMeshData/BlockElementalCrystalEarth.txt
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - BlockMesh
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: ae319ebfd7a4d864e931b69cfb284bd8
-    m_Address: Assets/Prefabs/BlockMeshData/BlockElementalCrystalWood.txt
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - BlockMesh
-    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: fdd8a9b77a81d424ebbeee4e1a29889f
     m_Address: Assets/Prefabs/BlockMeshData/BlockCrucible.txt
     m_ReadOnly: 0
@@ -248,6 +200,30 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 289008f4ee566b3459849d960772f421
     m_Address: Assets/Prefabs/BlockMeshData/BlockFocalManipulator.txt
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - BlockMesh
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 7230cf6593bf1494ab2b1b34427854f9
+    m_Address: Assets/Prefabs/BlockMeshData/BlockRechargePedestal.txt
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - BlockMesh
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: fa4f0d64c739e7744bf2d1f5f12e61b1
+    m_Address: Assets/Prefabs/BlockMeshData/BlockWorkbenchCharger.txt
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - BlockMesh
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 2e985ef14399b654c94d32a140c22139
+    m_Address: Assets/Prefabs/BlockMeshData/BlockElementalCrystal_1.txt
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - BlockMesh
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: eee6edf24f429da43af28483902dd897
+    m_Address: Assets/Prefabs/BlockMeshData/BlockElementalCrystal_2.txt
     m_ReadOnly: 0
     m_SerializedLabels:
     - BlockMesh

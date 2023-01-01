@@ -154,7 +154,17 @@ public class BlockManager : BaseManager, IBlockInfoView
         for (int i = 0; i < listBlockType.Count; i++)
         {
             BlockTypeEnum blockType = listBlockType[i];
-            string blockTypeName = EnumExtension.GetEnumName(blockType);
+            BlockInfoBean blockInfo = GetBlockInfo(blockType);
+            string blockTypeName;
+            if (!blockInfo.link_class.IsNull())
+            {
+                blockTypeName = blockInfo.link_class;
+            }
+            else
+            {
+                blockTypeName = EnumExtension.GetEnumName(blockType);
+            }
+
             //通过反射获取类
             Block block = ReflexUtil.CreateInstance<Block>($"BlockType{blockTypeName}");
             if (block == null) block = new Block();
