@@ -1,6 +1,9 @@
 ﻿using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using DG.Tweening;
+using Newtonsoft.Json.Linq;
+using System;
 
 public class BlockTypeRechargePedestal : Block
 {
@@ -26,15 +29,16 @@ public class BlockTypeRechargePedestal : Block
             return;
         }
 
-        itemMetaMagicInstrument.ManaChange(1);
+        int curMana = itemMetaMagicInstrument.ManaChange(1);
         //刷新魔力进度
         GameObject objBlock = chunk.GetBlockObjForLocal(localPosition);
         if (objBlock == null)
             return;
         float manaPro = itemMetaMagicInstrument.GetManaPro();
 
-        //保存数据
-        blockMetaRecharge.itemsRecharge.SetMetaData(itemMetaMagicInstrument);
+        //保存数据 (只修改魔力属性)
+        blockMetaRecharge.itemsRecharge.meta = JsonUtil.ChangeJson(blockMetaRecharge.itemsRecharge.meta, "curMana", curMana);
+        //blockMetaRecharge.itemsRecharge.SetMetaData(itemMetaMagicInstrument);
         blockData.SetBlockMeta(blockMetaRecharge);
         chunk.SetBlockData(blockData);
 
@@ -196,11 +200,16 @@ public class BlockTypeRechargePedestal : Block
     /// <param name="pro"></param>
     public void SetRechargePro(GameObject objBlock, float pro)
     {
+        if (objBlock == null)
+            return;
         Transform tfShield = objBlock.transform.Find("Shield");
         MeshRenderer mrShield = tfShield.GetComponent<MeshRenderer>();
         Material shieldMat = mrShield.material;
 
-        shieldMat.SetColor("_EdgeColor", Color.Lerp(colorRechargeStart, colorRechargeEnd, pro));
+        Color colorShield = Color.Lerp(colorRechargeStart, colorRechargeEnd, pro);
+        shieldMat.SetColor("_EdgeColor", colorShield);
+        //shieldMat.DOKill();
+        //shieldMat.DOColor(colorShield, "_EdgeColor", 0.5f);
     }
 
     /// <summary>
