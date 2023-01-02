@@ -21,7 +21,7 @@ public class BlockEditorWindow : EditorWindow
     public static readonly string Path_FBX_BlockModelCommon = "Assets/Art/FBX/BlockModelCommon";
     public static readonly string Path_FBX_BlockModelCustom = "Assets/Art/FBX/BlockModelCustom";
 
-    public static readonly string Path_BlockMatCommon = "Assets/Mats/BlockCommon.mat";
+    public static readonly string Path_BlockMatCommon = "Assets/Mats/Block/BlockCommon.mat";
     public static readonly string Path_BlockMatCustom = "Assets/Prefabs/Mats/BlockCustom_0.mat";
     public static readonly string Path_BlockMatCustomTransparent = "Assets/Prefabs/Mats/BlockCustomTransparent_10.mat";
 
@@ -428,7 +428,7 @@ public class BlockEditorWindow : EditorWindow
                 continue;
             LogUtil.Log($"CreateBlockMeshData:{itemFile.Name}");
             GameObject obj = EditorUtil.GetAssetByPath<GameObject>($"{Path_Block_MeshModel}/{itemFile.Name}");
-            Collider colliderModel = obj.GetComponentInChildren<Collider>();
+
             //首先获取主体
             Transform tfModel = obj.transform.Find("Model");
             MeshFilter meshFilterModel = null;
@@ -436,6 +436,9 @@ public class BlockEditorWindow : EditorWindow
             {
                 meshFilterModel = tfModel.GetComponentInChildren<MeshFilter>();
             }
+            //获取碰撞
+            Collider[] colliderModelList = obj.GetComponentsInChildren<Collider>();
+
             MeshDataCustom meshData = null;
             float modelSize = 0.03125f;
             if (meshFilterModel != null)
@@ -449,7 +452,7 @@ public class BlockEditorWindow : EditorWindow
                 }
                 if (meshFilterModel.sharedMesh != null)
                 {
-                    meshData = new MeshDataCustom(colliderModel, meshFilterModel.sharedMesh, modelSize, offsetPosition, meshFilterModel.transform.localEulerAngles);
+                    meshData = new MeshDataCustom(colliderModelList, meshFilterModel.sharedMesh, modelSize, offsetPosition, meshFilterModel.transform.localEulerAngles);
                 }
                 else
                 {
@@ -458,7 +461,7 @@ public class BlockEditorWindow : EditorWindow
             }
             else
             {
-                meshData = new MeshDataCustom(colliderModel, modelSize, new Vector3(0.5f, 0f, 0.5f), Vector3.zero);
+                meshData = new MeshDataCustom(colliderModelList, modelSize, new Vector3(0.5f, 0f, 0.5f), Vector3.zero);
             }
             //获取Other
             List<Mesh> listMesh0ther = new List<Mesh>(); ;
@@ -504,7 +507,7 @@ public class BlockEditorWindow : EditorWindow
     /// <summary>
     /// 创建方块模型
     /// </summary>
-    public static void CreateBlockModel(int blockTextureSize, string pathRes, string pathSaveTexure, string saveName, string pathMatBlock, int textureArrayNumber = 1,bool isCreateTransparent = false, string pathMatBlockTransparent = null)
+    public static void CreateBlockModel(int blockTextureSize, string pathRes, string pathSaveTexure, string saveName, string pathMatBlock, int textureArrayNumber = 1, bool isCreateTransparent = false, string pathMatBlockTransparent = null)
     {
         try
         {
@@ -586,9 +589,9 @@ public class BlockEditorWindow : EditorWindow
             }
 
             //是否需要创建TextureArray
-            Material matUse = EditorUtil.GetAssetByPath<Material>(pathMatBlock); ;
+            Material matUse = EditorUtil.GetAssetByPath<Material>(pathMatBlock);
+            LogUtil.Log($"matUse pathMatBlock:{pathMatBlock}");
             //创建方块贴图
-
             if (textureArrayNumber > 1)
             {
                 CreateBlockAnimTexture(blockTextureSize, textureArrayNumber, pathSaveTexure, saveName, listCreateData);
@@ -636,7 +639,7 @@ public class BlockEditorWindow : EditorWindow
                     newUVList[f] += itemCreateData.GetStartUV(blockTextureSize);
                 }
                 //创建新的mesh
-                string newMeshName= $"{itemCreateData.nameBlock}_Mesh";
+                string newMeshName = $"{itemCreateData.nameBlock}_Mesh";
                 string pathMesh = $"{Path_Block_Model_Save}/{newMeshName}.asset";
 
                 Mesh newMesh = EditorUtil.GetAssetByPath<Mesh>(pathMesh);

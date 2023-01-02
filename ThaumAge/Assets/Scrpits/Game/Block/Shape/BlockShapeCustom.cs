@@ -58,7 +58,7 @@ public class BlockShapeCustom : BlockShape
     #region 增加顶点UV颜色
     public override void BaseAddVertsUVsColors(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction, Vector3[] vertsAdd, Vector2[] uvsAdd, Color[] colorsAdd)
     {
-        BaseAddVertsUVsColorsForCustom(chunk, localPosition, direction, vertsAdd, uvsAdd, colorsAdd, vertsColliderAdd);
+        BaseAddVertsUVsColorsForCustom(chunk, localPosition, direction, vertsAdd, uvsAdd, colorsAdd, vertsColliderAddCustom);
     }
 
     public virtual void BaseAddVertsUVsColorsForCustom(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction, Vector3[] vertsAdd, Vector2[] uvsAdd, Color[] colorsAdd, Vector3[] vertsColliderAdd)
