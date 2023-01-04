@@ -394,8 +394,19 @@ public class Item
     {
         ItemsHandler.Instance.manager.GetItemsIconById(itemsInfo.id, (data) =>
         {
-            Texture2D itemTex = TextureUtil.SpriteToTexture2D(data);
-            callBack?.Invoke(itemTex);
+            if (data == null)
+            {
+                IconHandler.Instance.GetUnKnowSprite((unknowSprite)=>
+                {
+                    Texture2D itemTex = TextureUtil.SpriteToTexture2D(unknowSprite);
+                    callBack?.Invoke(itemTex);
+                });
+            }
+            else
+            {
+                Texture2D itemTex = TextureUtil.SpriteToTexture2D(data);
+                callBack?.Invoke(itemTex);
+            }
         });
     }
 

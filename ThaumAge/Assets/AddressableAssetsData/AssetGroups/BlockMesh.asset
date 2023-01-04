@@ -228,6 +228,42 @@ MonoBehaviour:
     m_SerializedLabels:
     - BlockMesh
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 65ddb999c5022894fa6381ddad34cd52
+    m_Address: Assets/Prefabs/BlockMeshData/BlockArcaneAlembic.txt
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - BlockMesh
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 3485ff58b2d9d184abba31481251e4de
+    m_Address: Assets/Prefabs/BlockMeshData/BlockArcanePedestal.txt
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - BlockMesh
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 9cc25a921de379f439e0b16e1b534b1c
+    m_Address: Assets/Prefabs/BlockMeshData/BlockElementSmeltery.txt
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - BlockMesh
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 7d30a38a909a6cf44994b2ba44103dda
+    m_Address: Assets/Prefabs/BlockMeshData/BlockEverfullUrn.txt
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - BlockMesh
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 1e869d31d6716b8408b1f3f363e70ba3
+    m_Address: Assets/Prefabs/BlockMeshData/BlockRunicMatrix.txt
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - BlockMesh
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 3c58d788ac9dfbb4cad952e203c32feb
+    m_Address: Assets/Prefabs/BlockMeshData/BlockWardedJar.txt
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - BlockMesh
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: fd6114d87f1af534fbf270c47c0f10bf, type: 2}
   m_SchemaSet:

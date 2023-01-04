@@ -154,6 +154,11 @@ public enum BlockTypeEnum
     RechargePedestal = 6164,//奥术充能基座
     WorkbenchCharger = 6165,//奥术充能器
 
+    EverfullUrn = 6166,//无尽之瓮
+    WardedJar = 6167,//源质罐子
+    ElementSmeltery = 6168,//源质冶炼厂
+    ArcaneAlembic = 6169,//奥术蒸馏器
+
     Box = 6201,//箱子
     SwitchesWooden = 6301,//木制开关
     TorchWooden = 6311, //木制火把
@@ -217,6 +222,12 @@ public enum BlockTypeEnum
 
     ArcaneStone = 8301,//奥术石材
     ArcaneStoneBricks = 8302,//奥术石砖
+    RunicMatrix = 8303,//符文矩阵
+    ArcanePedestal = 8304,//奥术基座
+
+    PavingStoneOfTravel = 8311,//奥术旅行石
+    PavingStoneOfWarding = 8312,//奥术屏障石
+    PavingStoneOfHealth = 8313,//奥术恢复石
 
     ShineLightWhite = 8401, //闪耀之光
     ShineLightRed = 8402,

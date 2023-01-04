@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?><COLLADA xmlns="http://www.collada.org/2005/11/COLLADASchema" version="1.4.1">
+    <asset>
+        <contributor>
+            <author>VoxelShop User</author>
+            <authoring_tool>VoxelShop V1.8.22
+</authoring_tool>
+        </contributor>
+        <created>2023-01-04T16:35:41</created>
+        <modified>2023-01-04T16:35:41</modified>
+        <unit meter="1" name="meter"/>
+        <up_axis>Y_UP</up_axis>
+    </asset>
+    <library_images>
+        <image id="BlockArcanePedestal_texture0-image" name="BlockArcanePedestal_texture0-image">
+            <init_from>file://BlockArcanePedestal_texture0.png</init_from>
+        </image>
+    </library_images>
+    <library_effects>
+        <effect id="lambert0-fx">
+            <profile_COMMON>
+                <newparam sid="BlockArcanePedestal_texture0-surface">
+                    <surface type="2D">
+                        <init_from>BlockArcanePedestal_texture0-image</init_from>
+                    </surface>
+                </newparam>
+                <newparam sid="BlockArcanePedestal_texture0-sampler">
+                    <sampler2D>
+                        <source>BlockArcanePedestal_texture0-surface</source>
+                        <wrap_s>WRAP</wrap_s>
+                        <wrap_t>WRAP</wrap_t>
+                        <minfilter>NEAREST</minfilter>
+                        <magfilter>NEAREST</magfilter>
+                    </sampler2D>
+                </newparam>
+                <technique sid="common">
+                    <lambert>
+                        <emission>
+                            <color>0 0 0 1</color>
+                        </emission>
+                        <ambient>
+                            <color>0 0 0 1</color>
+                        </ambient>
+                        <diffuse>
+                            <texture texcoord="TEX0" texture="BlockArcanePedestal_texture0-sampler"/>
+                        </diffuse>
+                    </lambert>
+                </technique>
+            </profile_COMMON>
+        </effect>
+    </library_effects>
+    <library_materials>
+        <material id="lambert0-material" name="lambert0">
+            <instance_effect url="#lambert0-fx"/>
+        </material>
+    </library_materials>
+    <library_geometries>
+        <geometry id="Plane-tex-mesh-0" name="Plane-tex">
+            <mesh>
+                <source id="Plane-tex-mesh-0-positions">
+                    <float_array count="72" id="Plane-tex-mesh-0-positions-array">-8 22 8 -8 10 -8 -8 10 8 -8 22 -8 -12 32 12 -12 22 -12 -12 22 12 -12 32 -12 -16 10 16 -16 0 -16 -16 0 16 -16 10 -16 8 22 8 8 10 -8 8 10 8 8 22 -8 12 32 12 12 22 -12 12 22 12 12 32 -12 16 10 16 16 0 -16 16 0 16 16 10 -16</float_array>
+                    <technique_common>
+                        <accessor count="24" source="#Plane-tex-mesh-0-positions-array" stride="3">
+                            <param name="X" type="float"/>
+                            <param name="Y" type="float"/>
+                            <param name="Z" type="float"/>
+                        </accessor>
+                    </technique_common>
+                </source>
+                <source id="Plane-tex-mesh-0-uvs">
+                    <float_array count="96" id="Plane-tex-mesh-0-uvs-array">0.2969655 0.86611456 0.39057973 0.9374138 0.39057973 0.86611456 0.29176342 0.86935776 0.39578497 0.93742085 0.39578497 0.86935776 0.2917643 0.8708724 0.39578453 0.9374219 0.39578453 0.8708724 0.1250884 0.8708775 0.19162247 0.9374116 0.19162247 0.8708775 0.06253837 0.81254935 0.07293859 0.93740135 0.1249397 0.81254935 0.06256963 0.93744195 0.11247679 0.93744195 0.124953575 0.81261605 0.12496163 0.81254935 0.0625603 0.81254935 0.11456141 0.93740135 0.062546425 0.81261605 0.07502321 0.93744195 0.12493037 0.93744195 0.0625488 0.8542057 0.07814452 0.9374219 0.12493167 0.8542057 0.062598825 0.9374407 0.104146905 0.9374407 0.12492094 0.85428524 0.1249512 0.8542057 0.06256833 0.8542057 0.10935548 0.9374219 0.06257906 0.85428524 0.083353095 0.9374407 0.124901175 0.9374407 0.1250884 0.86936235 0.19313763 0.9374116 0.19313763 0.86936235 0.3905345 0.86611456 0.29692027 0.86611456 0.29692027 0.9374138 0.39573658 0.86935776 0.29171503 0.86935776 0.29171503 0.93742085 0.3957357 0.8708724 0.29171547 0.8708724 0.29171547 0.9374219</float_array>
+                    <technique_common>
+                        <accessor count="48" source="#Plane-tex-mesh-0-uvs-array" stride="2">
+                            <param name="S" type="float"/>
+                            <param name="T" type="float"/>
+                        </accessor>
+                    </technique_common>
+                </source>
+                <vertices id="Plane-tex-mesh-0-vertices">
+                    <input semantic="POSITION" source="#Plane-tex-mesh-0-positions"/>
+                </vertices>
+                <triangles count="44" material="Plane-tex-mesh-0-lambert0-material">
+                    <input offset="0" semantic="VERTEX" source="#Plane-tex-mesh-0-vertices"/>
+                    <input offset="1" semantic="TEXCOORD" set="0" source="#Plane-tex-mesh-0-uvs"/>
+                    <p>0 0 1 1 2 2 0 1 3 2 1 0 4 3 5 4 6 5 4 4 7 5 5 3 8 6 9 7 10 8 8 7 11 8 9 6 13 1 12 0 14 2 15 2 12 1 13 0 17 4 16 3 18 5 19 5 16 4 17 3 21 7 20 6 22 8 23 8 20 7 21 6 9 10 22 9 10 11 21 11 22 10 9 9 12 13 18 12 6 14 0 16 12 15 6 17 17 19 18 18 12 20 5 19 0 20 6 18 15 22 17 21 12 23 3 22 0 23 5 21 17 18 15 20 5 19 15 23 3 22 5 21 20 24 14 25 8 26 14 27 2 28 8 29 20 30 23 31 14 32 2 32 11 31 8 30 23 33 13 34 14 35 2 35 1 34 11 33 13 32 23 30 11 31 1 34 13 35 11 33 16 36 7 37 4 38 16 37 19 38 7 36 14 1 0 0 2 2 14 39 12 40 0 41 18 4 4 3 6 5 18 42 16 43 4 44 22 7 8 6 10 8 22 45 20 46 8 47 3 0 13 1 1 2 15 40 13 39 3 41 7 3 17 4 5 5 19 43 17 42 7 44 11 6 21 7 9 8 23 46 21 45 11 47</p>
+                </triangles>
+            </mesh>
+        </geometry>
+    </library_geometries>
+    <library_visual_scenes>
+        <visual_scene id="Scene" name="Scene">
+            <node id="blockarcanepedestal.merged" name="BlockArcanePedestal.Merged" type="NODE">
+                <translate sid="location">-0.0 -0.0 0.0</translate>
+                <rotate sid="rotationZ">0 0 1 0</rotate>
+                <rotate sid="rotationY">0 1 0 0</rotate>
+                <rotate sid="rotationX">1 0 0 0</rotate>
+                <scale sid="scale">1.0 1.0 1.0</scale>
+                <instance_geometry name="Merged" sid="blockarcanepedestal.merged" url="#Plane-tex-mesh-0">
+                    <bind_material>
+                        <technique_common>
+                            <instance_material symbol="lambert0-material" target="#lambert0-material">
+                                <bind_vertex_input input_semantic="TEXCOORD" input_set="0" semantic="TEX0"/>
+                            </instance_material>
+                        </technique_common>
+                    </bind_material>
+                </instance_geometry>
+            </node>
+        </visual_scene>
+    </library_visual_scenes>
+    <scene>
+        <instance_visual_scene url="#Scene"/>
+    </scene>
+</COLLADA>
