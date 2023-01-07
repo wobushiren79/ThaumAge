@@ -22,8 +22,6 @@ public class BlockShapeCustom : BlockShape
 
         if (!blockMeshData.trianglesCollider.IsNull())
             trisColliderAddCustom = blockMeshData.trianglesCollider;
-
-        InitBlockColor(colorsAdd);
     }
 
     #region 增加三角

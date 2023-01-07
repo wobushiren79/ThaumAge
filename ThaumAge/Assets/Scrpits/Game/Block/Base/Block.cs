@@ -15,6 +15,25 @@ public class Block
 
     }
 
+    public virtual void InitBlockColor(Color[] colorArray)
+    {
+        if (blockInfo.color.IsNull())
+        {
+            for (int i = 0; i < colorArray.Length; i++)
+            {
+                colorArray[i] = Color.white;
+            }
+        }
+        else
+        {
+            Color blockColor = blockInfo.GetBlockColor();
+            for (int i = 0; i < colorArray.Length; i++)
+            {
+                colorArray[i] = blockColor;
+            }
+        }
+    }
+
     /// <summary>
     /// 设置数据
     /// </summary>
@@ -28,6 +47,8 @@ public class Block
         BlockShapeEnum blockShapeType = blockInfo.GetBlockShape();
         //获取形状数据
         blockShape = BlockHandler.Instance.manager.GetRegisterBlockShape(this, blockShapeType);
+        //初始化数据
+        blockShape.InitData();
     }
 
     /// <summary>

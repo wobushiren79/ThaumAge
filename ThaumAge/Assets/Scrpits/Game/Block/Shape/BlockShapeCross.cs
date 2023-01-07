@@ -26,7 +26,12 @@ public class BlockShapeCross : BlockShape
         vertsAdd = VertsAddCross;
         trisAdd = TrisAddCross;
         colorsAdd = new Color[8];
-        InitBlockColor(colorsAdd);
+
+    }
+
+    public override void InitData()
+    {
+        base.InitData();
 
         Vector2 uvStartPosition = GetUVStartPosition(block);
         uvsAdd = new Vector2[]

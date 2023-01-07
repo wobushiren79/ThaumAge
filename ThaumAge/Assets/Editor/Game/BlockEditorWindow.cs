@@ -432,9 +432,11 @@ public class BlockEditorWindow : EditorWindow
             //首先获取主体
             Transform tfModel = obj.transform.Find("Model");
             MeshFilter meshFilterModel = null;
+            MeshRenderer meshRenderer = null;
             if (tfModel != null)
             {
                 meshFilterModel = tfModel.GetComponentInChildren<MeshFilter>();
+                meshRenderer = tfModel.GetComponentInChildren<MeshRenderer>();
             }
             //获取碰撞
             Collider[] colliderModelList = obj.GetComponentsInChildren<Collider>();
@@ -452,7 +454,7 @@ public class BlockEditorWindow : EditorWindow
                 }
                 if (meshFilterModel.sharedMesh != null)
                 {
-                    meshData = new MeshDataCustom(colliderModelList, meshFilterModel.sharedMesh, modelSize, offsetPosition, meshFilterModel.transform.localEulerAngles);
+                    meshData = new MeshDataCustom(colliderModelList, meshFilterModel.sharedMesh, modelSize, offsetPosition, meshFilterModel.transform.localEulerAngles, (Texture2D)meshRenderer.sharedMaterial.mainTexture);
                 }
                 else
                 {
