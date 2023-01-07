@@ -190,7 +190,10 @@ public class ControlForPlayer : ControlForBase
         //旋转角色
         RotateCharacter(moveData, speedCharacterRotate);
         //移动角色
-        MoveCharacterCalculate(moveData, speedMove);
+        CharacterBean characterData = character.GetCharacterData();
+        CreatureStatusBean creatureStatus = characterData.GetCreatureStatus();
+        float totalSpeedMove = speedMove + characterData.GetAttributeValue(AttributeTypeEnum.MoveSpeed) + creatureStatus.moveSpeedAdd;
+        MoveCharacterCalculate(moveData, totalSpeedMove);
         //攀爬处理
         if (timeClimbEnd > 0)
         {

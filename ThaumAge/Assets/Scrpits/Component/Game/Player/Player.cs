@@ -121,6 +121,9 @@ public class Player : BaseMonoBehaviour
             int maxHealth = characterData.GetAttributeValue(AttributeTypeEnum.Health);
             creatureStatus.HealthChange(Mathf.RoundToInt(-maxHealth * 0.1f));
         }
+        //处理一些debuff 和 buff
+        creatureStatus.HanleForStatusChange(timeUpdateMaxForPlayerData);
+
         //刷新研究进度
         bool hasResearchProgressChange = userData.userAchievement.ResearchProgressChange(1);
         if (hasResearchProgressChange)

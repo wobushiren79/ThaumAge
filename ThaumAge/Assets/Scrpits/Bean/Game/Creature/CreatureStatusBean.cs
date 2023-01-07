@@ -1,6 +1,7 @@
 ﻿using UnityEditor;
 using UnityEngine;
 using System;
+using System.Collections.Generic;
 
 [Serializable]
 public class CreatureStatusBean
@@ -39,6 +40,79 @@ public class CreatureStatusBean
     //攻击
     public int damage;
     public int damageMagic;
+
+    //移动速度添加
+    public float moveSpeedAdd;
+
+    public List<CreatureStatusChangeBean> listStatusChange = new List<CreatureStatusChangeBean>();
+
+    /// <summary>
+    /// 处理状态改变
+    /// </summary>
+    public void HanleForStatusChange(float intervalTime)
+    {
+        if (listStatusChange.IsNull())
+            return;
+        moveSpeedAdd = 0;
+
+        for (int i = 0; i < listStatusChange.Count; i++)
+        {
+            CreatureStatusChangeBean itemStatusChange = listStatusChange[i];
+            CreatureStatusChangeTypeEnum creatureStatusChangeType = itemStatusChange.GetChangeType();
+            switch (creatureStatusChangeType)
+            {
+                case CreatureStatusChangeTypeEnum.HealthAdd:
+                    HealthChange((int)itemStatusChange.changeValue);
+                    break;
+                case CreatureStatusChangeTypeEnum.MoveSpeedAdd:
+                    moveSpeedAdd = itemStatusChange.changeValue;
+                    break;
+            }
+            itemStatusChange.time -= intervalTime;
+            if (itemStatusChange.time <= 0)
+            {
+                RemoveStatusChange(itemStatusChange);
+                i--;
+            }
+        }
+    }
+
+    /// <summary>
+    /// 移除状态改变
+    /// </summary>
+    public void RemoveStatusChange(CreatureStatusChangeBean creatureStatusChange)
+    {
+        //CreatureStatusChangeTypeEnum creatureStatusChangeType = creatureStatusChange.GetChangeType();
+        //switch (creatureStatusChangeType)
+        //{
+        //    case CreatureStatusChangeTypeEnum.HealthAdd:
+        //        break;
+        //    case CreatureStatusChangeTypeEnum.MoveSpeedAdd:
+        //        moveSpeedAdd = 0;
+        //        break;
+        //}
+        listStatusChange.Remove(creatureStatusChange);
+    }
+
+    /// <summary>
+    /// 添加状态改变
+    /// </summary>
+    public void AddStatusChange(CreatureStatusChangeBean creatureStatusChange)
+    {
+        for (int i = 0; i < listStatusChange.Count; i++)
+        {
+            CreatureStatusChangeBean itemStatusChange = listStatusChange[i];
+            if (itemStatusChange.changType == creatureStatusChange.changType)
+            {
+                if(creatureStatusChange.time > itemStatusChange.time)
+                {
+                    itemStatusChange.time = creatureStatusChange.time;
+                }
+                return;
+            }
+        }
+        listStatusChange.Add(creatureStatusChange);
+    }
 
     /// <summary>
     /// 是否有足够的魔法

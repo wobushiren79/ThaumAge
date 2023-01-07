@@ -17,18 +17,24 @@ public class CreatureCollisionAndTrigger : CreatureBase
         Vector3 creaturePoint = creature.transform.position;
         Vector3Int targetBlockPosition = new Vector3Int
             (
-            Mathf.FloorToInt(creaturePoint.x), 
-            Mathf.FloorToInt(creaturePoint.y + 0.5f), 
+            Mathf.FloorToInt(creaturePoint.x),
+            Mathf.FloorToInt(creaturePoint.y + 0.5f),
             Mathf.FloorToInt(creaturePoint.z)
             );
         if (targetBlockPosition.y < 0 || targetBlockPosition.y >= WorldCreateHandler.Instance.manager.heightChunk)
             return;
         WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(targetBlockPosition, out Block targetBlock, out Chunk targetChunk);
-
+        if (targetChunk == null)
+            return;
+        targetBlock.GetCloseBlockByDirection(targetChunk, targetBlockPosition - targetChunk.chunkData.positionForWorld, DirectionEnum.Down, out Block downBlock, out Chunk downChunk, out Vector3Int downLocalPosition);
         CreatureTypeEnum creatureType = creature.creatureData.GetCreatureType();
-        if (targetBlock != null)
+        if (targetChunk != null && targetBlock != null)
         {
-            targetBlock.OnCollision(creatureType,creature.gameObject, targetBlockPosition, DirectionEnum.None);
+            targetBlock.OnCollision(creatureType, creature.gameObject, targetBlockPosition, DirectionEnum.None);
+        }
+        if (downChunk != null && downBlock != null)
+        {
+            downBlock.OnCollision(creatureType, creature.gameObject, targetBlockPosition, DirectionEnum.Down);
         }
         if (creatureType == CreatureTypeEnum.Player)
         {

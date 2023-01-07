@@ -9,6 +9,8 @@ public enum AttributeTypeEnum
     Saturation = 4,//饱食
     Air = 5,//空气
 
+    MoveSpeed = 11,//移动速度
+
     Def = 101,//物理防御
     DefMagic = 102,//魔法防御
     DefMetal = 111,//元素金防御

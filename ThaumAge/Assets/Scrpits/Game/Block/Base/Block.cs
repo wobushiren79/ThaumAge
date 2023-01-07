@@ -153,8 +153,10 @@ public class Block
     /// <param name="user"></param>
     public virtual void OnCollision(CreatureTypeEnum creatureType, GameObject targetObj, Vector3Int worldPosition, DirectionEnum direction)
     {
-        if (creatureType == CreatureTypeEnum.Player)
+        if (creatureType == CreatureTypeEnum.Player && direction == DirectionEnum.None)
+        {
             GameControlHandler.Instance.manager.controlForPlayer.ChangeGroundType(0);
+        }
     }
 
     /// <summary>
@@ -523,6 +525,11 @@ public class Block
             return;
         }
         else if (localPosition.y > maxHeight)
+        {
+            blockChunk = chunk;
+            return;
+        }
+        else if (localPosition.y < 0)
         {
             blockChunk = chunk;
             return;

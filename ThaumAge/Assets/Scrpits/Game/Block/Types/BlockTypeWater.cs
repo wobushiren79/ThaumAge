@@ -32,7 +32,7 @@ public class BlockTypeWater : BlockBaseLiquid
 
     public override void OnCollision(CreatureTypeEnum creatureType, GameObject targetObj, Vector3Int worldPosition, DirectionEnum direction)
     {
-        if(creatureType == CreatureTypeEnum.Player)
+        if (creatureType == CreatureTypeEnum.Player && direction == DirectionEnum.None)
         {
             GameControlHandler.Instance.manager.controlForPlayer.ChangeGroundType(1);
         }
