@@ -19,9 +19,9 @@ public class BlockBean
 
     }
 
-    public BlockBean(Vector3Int localposition, BlockTypeEnum blockType = BlockTypeEnum.None, BlockDirectionEnum direction = BlockDirectionEnum.UpForward, string meta = null)
+    public BlockBean(Vector3Int localPosition, BlockTypeEnum blockType = BlockTypeEnum.None, BlockDirectionEnum direction = BlockDirectionEnum.UpForward, string meta = null)
     {
-        SetData(localposition, blockType, direction, meta);
+        SetData(localPosition, blockType, direction, meta);
     }
 
     /// <summary>

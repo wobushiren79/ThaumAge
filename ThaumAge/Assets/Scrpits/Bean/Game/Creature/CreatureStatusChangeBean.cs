@@ -3,7 +3,7 @@ using UnityEngine;
 using System;
 
 [Serializable]
-public class CreatureStatusChangeBean
+public struct CreatureStatusChangeBean
 {
     public int changType;//类型
     public float time;//持续时间

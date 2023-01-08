@@ -5,6 +5,14 @@ using System.Collections.Generic;
 
 public class BlockTypeCrucible : Block
 {
+    public static int WaterLevelMax = 5;
+
+    public override void CreateBlockModelSuccess(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum blockDirection, GameObject obj)
+    {
+        base.CreateBlockModelSuccess(chunk, localPosition, blockDirection, obj);
+        var blockData = chunk.GetBlockData(localPosition);
+        SaveCrucibleData(chunk, localPosition + chunk.chunkData.positionForWorld, blockData, blockData?.GetBlockMeta<BlockMetaCrucible>(), isWaterChangeAnim: false, isSave: false);
+    }
 
     /// <summary>
     /// 对着空手使用
@@ -20,7 +28,7 @@ public class BlockTypeCrucible : Block
         BlockDirectionEnum blockDirection = targetChunk.chunkData.GetBlockDirection(blockLocalPosition.x, blockLocalPosition.y, blockLocalPosition.z);
 
         GeteCrucibleData(targetChunk, blockDirection, targetWorldPosition, out BlockBean blockData, out BlockMetaCrucible blockMetaData);
-        SaveCrucibleData(targetChunk,  targetWorldPosition, blockData, blockMetaData, 0);
+        SaveCrucibleData(targetChunk, targetWorldPosition, blockData, blockMetaData, 0);
 
         EventHandler.Instance.TriggerEvent(EventsInfo.BlockTypeCrucible_UpdateElemental, targetWorldPosition);
 
@@ -46,7 +54,7 @@ public class BlockTypeCrucible : Block
                 itemData.SetMetaData(itemMetaBuckets);
                 //保存坩埚数据
                 GeteCrucibleData(targetChunk, targetBlockDirection, blockWorldPosition, out BlockBean blockData, out BlockMetaCrucible blockMetaData);
-                SaveCrucibleData(targetChunk, blockWorldPosition, blockData, blockMetaData, 5);
+                SaveCrucibleData(targetChunk, blockWorldPosition, blockData, blockMetaData, WaterLevelMax);
                 return true;
             }
         }
@@ -57,7 +65,7 @@ public class BlockTypeCrucible : Block
     /// 开始合成
     /// </summary>
     /// <returns></returns>
-    public void StartSynthesis(Vector3Int blockWorldPosition, ItemsBean itemData,out int numberSynthesis)
+    public void StartSynthesis(Vector3Int blockWorldPosition, ItemsBean itemData, out int numberSynthesis)
     {
         numberSynthesis = 0;
         GeteCrucibleData(blockWorldPosition, out BlockBean blockData, out BlockMetaCrucible blockMetaData);
@@ -65,13 +73,11 @@ public class BlockTypeCrucible : Block
         for (int i = 0; i < listSynthesis.Count; i++)
         {
             ItemsSynthesisBean itemSynthesisData = listSynthesis[i];
-            itemSynthesisData.CheckSynthesisForCrucible(blockMetaData.listElemental, itemData,out numberSynthesis);
+            itemSynthesisData.CheckSynthesisForCrucible(blockMetaData.listElemental, itemData, out numberSynthesis);
             if (numberSynthesis > 0)
             {
                 //减少水
-                blockMetaData.waterLevel--;
-                if (blockMetaData.waterLevel < 0)
-                    blockMetaData.waterLevel = 0;
+                blockMetaData.AddWater(-1);
 
                 //减少元素 * numberSynthesis
                 Dictionary<ElementalTypeEnum, int> dicElemental = itemSynthesisData.GetElemental();
@@ -83,10 +89,10 @@ public class BlockTypeCrucible : Block
                 ItemsBean itemSynthesisResult = new ItemsBean(itemIdSynthesisResult, itemNumberSynthesisResult * numberSynthesis);
 
                 ItemDropBean itemDropData = new ItemDropBean(itemSynthesisResult, ItemDropStateEnum.DropPick, blockWorldPosition + new Vector3(0.5f, 1.1f, 0.5f), Vector3.up * 1.5f);
-                ItemsHandler.Instance.CreateItemCptDrop(itemDropData,(drop)=> 
-                {
-                    drop.canInteractiveBlock = false;
-                });
+                ItemsHandler.Instance.CreateItemCptDrop(itemDropData, (drop) =>
+                 {
+                     drop.canInteractiveBlock = false;
+                 });
 
                 blockData.SetBlockMeta(blockMetaData);
 
@@ -139,32 +145,40 @@ public class BlockTypeCrucible : Block
     /// <summary>
     /// 设置坩埚数据
     /// </summary>
-    public void SaveCrucibleData(Chunk targetChunk, Vector3Int blockWorldPosition,  BlockBean blockData,  BlockMetaCrucible blockMetaData,
-        int waterLevel = -1, bool isCleanElemental = false, List<NumberBean> addListElemental = null)
+    public void SaveCrucibleData(Chunk targetChunk, Vector3Int blockWorldPosition, BlockBean blockData, BlockMetaCrucible blockMetaData,
+        int waterLevel = -1, bool isCleanElemental = false, List<NumberBean> addListElemental = null, bool isWaterChangeAnim = true, bool isSave = true)
     {
-        //是否设置水量
-        if (waterLevel != -1)
-            blockMetaData.waterLevel = waterLevel;
-        //是否清除元素
-        if (isCleanElemental && !blockMetaData.listElemental.IsNull())
+        int currentWaterLevel = 0;
+        if (blockData != null && blockMetaData != null)
         {
-            blockMetaData.listElemental.Clear();
+            //是否设置水量
+            if (waterLevel != -1)
+                blockMetaData.waterLevel = waterLevel;
+            //是否清除元素
+            if (isCleanElemental && !blockMetaData.listElemental.IsNull())
+            {
+                blockMetaData.listElemental.Clear();
+            }
+            if (!addListElemental.IsNull())
+            {
+                blockMetaData.AddElemental(addListElemental);
+            }
+            //如果没有水了。也要清除元素
+            if (blockMetaData.waterLevel == 0 && !blockMetaData.listElemental.IsNull())
+            {
+                blockMetaData.listElemental.Clear();
+            }
+
+            if (isSave)
+            {
+                blockData.SetBlockMeta(blockMetaData);
+                targetChunk.SetBlockData(blockData);
+            }
+            currentWaterLevel = blockMetaData.waterLevel;
         }
-        if (!addListElemental.IsNull())
-        {
-            blockMetaData.AddElemental(addListElemental);
-        }
-        //如果没有水了。也要清除元素
-        if (blockMetaData.waterLevel == 0 && !blockMetaData.listElemental.IsNull())
-        {
-            blockMetaData.listElemental.Clear();
-        }
-        blockData.SetBlockMeta(blockMetaData);
-        targetChunk.isSaveData = true;
 
         bool isBoiling = CheckIsBoiling(targetChunk, blockWorldPosition);
-        SetWaterShow(blockWorldPosition, blockMetaData.waterLevel, isBoiling);
-
+        SetWaterShow(blockWorldPosition, currentWaterLevel, isBoiling, isWaterChangeAnim);
     }
 
     /// <summary>
@@ -220,7 +234,7 @@ public class BlockTypeCrucible : Block
         if (downChunk != null && downBlock != null)
         {
             ItemsInfoBean itemInfoBlock = ItemsHandler.Instance.manager.GetItemsInfoByBlockId(downBlock.blockInfo.id);
-            if (itemInfoBlock.GetElemental(ElementalTypeEnum.Fire) >= 5)
+            if (itemInfoBlock.GetElemental(ElementalTypeEnum.Fire) >= WaterLevelMax)
             {
                 return true;
             }
@@ -250,7 +264,7 @@ public class BlockTypeCrucible : Block
     /// </summary>
     /// <param name="level">0没有水 5满水</param>
     /// <param name="isBoiling">是否沸腾</param>
-    public void SetWaterShow(Vector3Int blockWorldPosition, int level, bool isBoiling)
+    public void SetWaterShow(Vector3Int blockWorldPosition, int level, bool isBoiling, bool isWaterChangeAnim = true)
     {
         GameObject objBlock = GetBlockObj(blockWorldPosition);
         if (objBlock == null)
@@ -267,7 +281,11 @@ public class BlockTypeCrucible : Block
             tfWaterPlane.DOKill();
             return;
         }
-        tfWaterPlane.DOLocalMoveY(waterPlaneY, 1);
+        if (isWaterChangeAnim)
+            tfWaterPlane.DOLocalMoveY(waterPlaneY, 1);
+        else
+            tfWaterPlane.localPosition = new Vector3(0, waterPlaneY, 0);
+
         tfWaterPlane.ShowObj(true);
         if (isBoiling)
         {
@@ -286,7 +304,7 @@ public class BlockTypeCrucible : Block
         switch (level)
         {
             case 0:
-                return 0 ;
+                return 0;
             case 1:
                 return 0.05f;
             case 2:
@@ -308,10 +326,10 @@ public class BlockTypeCrucible : Block
         effectData.effectName = EffectInfo.Effect_WaterBoiling_2;
         effectData.effectPosition = position;
         effectData.timeForShow = 3;
-        EffectHandler.Instance.ShowEffect(effectData, (effect)=> 
-        { 
-        
-        
+        EffectHandler.Instance.ShowEffect(effectData, (effect) =>
+        {
+
+
         });
     }
 

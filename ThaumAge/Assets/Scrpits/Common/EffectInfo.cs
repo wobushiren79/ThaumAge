@@ -22,5 +22,8 @@ public class EffectInfo
     public readonly static string Effect_WaterBoiling_2 = "Effect_WaterBoiling_2";
     //烟雾特效
     public readonly static string Effect_Smoke_3 = "Effect_Smoke_3";
-    
+
+    //连线粒子
+    public readonly static string Effect_Line_1 = "Effect_Line_1";
+    public readonly static string Effect_Line_2 = "Effect_Line_2";
 }

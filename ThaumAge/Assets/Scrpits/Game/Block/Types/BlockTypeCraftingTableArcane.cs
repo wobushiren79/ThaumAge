@@ -24,11 +24,11 @@ public class BlockTypeCraftingTableArcane : Block
     public int GetAroundMagicTotal(Vector3Int worldPosition)
     {
         int magicTotal = 100;
-        List<Block> listBlock = GetRoundBlock(worldPosition);
-        for (int i = 0; i < listBlock.Count; i++)
-        {
-            magicTotal += GetSingleBlockMagic(listBlock[i]);
-        }
+        GetRoundBlock(worldPosition,
+            callBackItem: (targetChunk, targetBlock, targetWorldPosition) =>
+         {
+             magicTotal += GetSingleBlockMagic(targetBlock);
+         });
         return magicTotal;
     }
 

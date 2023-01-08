@@ -464,7 +464,7 @@ public class BlockEditorWindow : EditorWindow
             else
             {
                 meshData = new MeshDataCustom(colliderModelList, modelSize, new Vector3(0.5f, 0f, 0.5f), Vector3.zero);
-            }
+            } 
             //获取Other
             List<Mesh> listMesh0ther = new List<Mesh>(); ;
             List<float> listSizeOther = new List<float>();

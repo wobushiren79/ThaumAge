@@ -8,6 +8,19 @@ public class BlockMetaCrucible : BlockMetaBase
     public List<NumberBean> listElemental;
 
     /// <summary>
+    /// 增加水
+    /// </summary>
+    /// <param name="addLevel"></param>
+    public void AddWater(int addLevel)
+    {
+        waterLevel+= addLevel;
+        if (waterLevel < 0)
+            waterLevel = 0;
+        if (waterLevel > 5)
+            waterLevel = 5;
+    }
+
+    /// <summary>
     /// 减少元素
     /// </summary>
     /// <param name="dicSubElemental"></param>

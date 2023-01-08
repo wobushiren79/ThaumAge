@@ -100,7 +100,7 @@ public class Block
     /// <summary>
     /// 获取周围的方块
     /// </summary>
-    public void GetRoundBlock(Vector3Int worldPosition,
+    public virtual void GetRoundBlock(Vector3Int worldPosition,
         out Block upBlock, out Block downBlock, out Block leftBlock, out Block rightBlock, out Block forwardBlock, out Block backBlock)
     {
         //获取周围的方块 并触发互动
@@ -118,9 +118,8 @@ public class Block
         WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(backPosition, out backBlock, out Chunk backChunk);
     }
 
-    public List<Block> GetRoundBlock(Vector3Int worldPosition, int range = 1)
+    public virtual void GetRoundBlock(Vector3Int worldPosition, int range = 1, Action<Chunk, Block, Vector3Int> callBackItem = null)
     {
-        List<Block> listBlock = new List<Block>();
         for (int x = -range; x <= range; x++)
         {
             for (int y = -range; y <= range; y++)
@@ -132,11 +131,12 @@ public class Block
                     Vector3Int targetPosition = worldPosition + new Vector3Int(x, y, z);
                     WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(targetPosition, out Block targetBlock, out Chunk targetChunk);
                     if (targetChunk != null && targetBlock != null)
-                        listBlock.Add(targetBlock);
+                    {
+                        callBackItem?.Invoke(targetChunk, targetBlock, targetPosition);
+                    }
                 }
             }
         }
-        return listBlock;
     }
 
     /// <summary>
@@ -284,7 +284,7 @@ public class Block
     /// <summary>
     /// 刷新方块
     /// </summary>
-    public virtual void RefreshBlock(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction,int updateChunkType = 1)
+    public virtual void RefreshBlock(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction, int updateChunkType = 1)
     {
         //更新方块
         WorldCreateHandler.Instance.manager.AddUpdateChunk(chunk, updateChunkType);
