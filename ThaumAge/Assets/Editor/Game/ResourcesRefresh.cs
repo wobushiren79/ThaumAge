@@ -114,6 +114,12 @@ public class ResourcesRefresh : Editor
         EditorUtil.RefreshAsset();
     }
 
+    [MenuItem("工具/资源/刷新自定义方块模型（不需要合并贴图 使用单独材质）")]
+    public static void RefreshBlockModelRes()
+    {
+        BlockEditorWindow.CreateBlockModel(0, BlockEditorWindow.Path_FBX_BlockModel, "", "", BlockEditorWindow.Path_BlockMat, 0);
+    }
+
     [MenuItem("工具/资源/刷新自定义方块模型（合并的模型）")]
     public static void RefreshBlockModelCustomRes()
     {

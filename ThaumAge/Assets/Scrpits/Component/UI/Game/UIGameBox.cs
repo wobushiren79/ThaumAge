@@ -11,6 +11,7 @@ public partial class UIGameBox : UIGameCommonNormal
         base.OpenUI();
         ui_Shortcuts.OpenUI();
         ui_ViewBackPack.OpenUI();
+        ui_ViewBoxList.OpenUI();
     }
 
     public override void CloseUI()
@@ -18,6 +19,7 @@ public partial class UIGameBox : UIGameCommonNormal
         base.CloseUI();
         ui_Shortcuts.CloseUI();
         ui_ViewBackPack.CloseUI();
+        ui_ViewBoxList.CloseUI();
     }
 
     public override void RefreshUI(bool isOpenInit)
@@ -27,6 +29,7 @@ public partial class UIGameBox : UIGameCommonNormal
             return;
         ui_Shortcuts.RefreshUI();
         ui_ViewBackPack.RefreshUI();
+        ui_ViewBoxList.RefreshUI();
     }
 
     /// <summary>

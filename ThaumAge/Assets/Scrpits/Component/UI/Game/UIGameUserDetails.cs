@@ -10,6 +10,7 @@ public partial class UIGameUserDetails : UIGameCommonNormal, IRadioGroupCallBack
     {
         base.Awake();
         ui_Labels.SetCallBack(this);
+        ui_ViewBackPack.isCloseClearAllCell = false;
     }
 
     protected void Start()

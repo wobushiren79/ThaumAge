@@ -14,6 +14,12 @@ public partial class UIViewBoxList : BaseUIView
         this.RegisterEvent<UIViewItemContainer, long>(EventsInfo.UIViewItemContainer_ItemChange, CallBackForItemChange);
     }
 
+    public override void CloseUI()
+    {
+        ui_ItemList.ClearAllCell();
+        base.CloseUI();
+    }
+
     /// <summary>
     /// 增加道具
     /// </summary>

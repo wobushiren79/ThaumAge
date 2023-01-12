@@ -6,6 +6,11 @@ public partial class UIViewBackpackList : BaseUIView
 {
     protected ItemsBean[] listBackpack;
 
+    //是否退出时删除所有元素
+    [HideInInspector]
+    public bool isCloseClearAllCell = true;
+
+    
     public override void OpenUI()
     {
         base.OpenUI();
@@ -14,7 +19,10 @@ public partial class UIViewBackpackList : BaseUIView
 
     public override void CloseUI()
     {
-        ui_ItemList.SetCellCount(0);
+        if (isCloseClearAllCell)
+        {
+            ui_ItemList.ClearAllCell();
+        }
         base.CloseUI();
     }
 

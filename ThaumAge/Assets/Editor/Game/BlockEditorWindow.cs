@@ -18,9 +18,11 @@ public class BlockEditorWindow : EditorWindow
     public static readonly string Path_Block_MeshModel = "Assets/Prefabs/BlockMeshModel";
     public static readonly string Path_Prefabs_BlockMat = "Assets/Prefabs/Mats";
 
+    public static readonly string Path_FBX_BlockModel = "Assets/Art/FBX/BlockModel";
     public static readonly string Path_FBX_BlockModelCommon = "Assets/Art/FBX/BlockModelCommon";
     public static readonly string Path_FBX_BlockModelCustom = "Assets/Art/FBX/BlockModelCustom";
 
+    public static readonly string Path_BlockMat = "Assets/Mats/Block";
     public static readonly string Path_BlockMatCommon = "Assets/Mats/Block/BlockCommon.mat";
     public static readonly string Path_BlockMatCustom = "Assets/Prefabs/Mats/BlockCustom_0.mat";
     public static readonly string Path_BlockMatCustomTransparent = "Assets/Prefabs/Mats/BlockCustomTransparent_10.mat";
@@ -509,7 +511,8 @@ public class BlockEditorWindow : EditorWindow
     /// <summary>
     /// 创建方块模型
     /// </summary>
-    public static void CreateBlockModel(int blockTextureSize, string pathRes, string pathSaveTexure, string saveName, string pathMatBlock, int textureArrayNumber = 1, bool isCreateTransparent = false, string pathMatBlockTransparent = null)
+    public static void CreateBlockModel(int blockTextureSize, string pathRes, string pathSaveTexure, string saveName, string pathMatBlock,
+        int textureArrayNumber = 1, bool isCreateTransparent = false, string pathMatBlockTransparent = null)
     {
         try
         {
@@ -539,12 +542,23 @@ public class BlockEditorWindow : EditorWindow
                     //获取对应的材质贴图
                     string texPath = $"{pathRes}/{nameNew}_texture";
                     List<Texture2D> listTexItem = new List<Texture2D>();
-                    for (int t = 0; t < textureArrayNumber; t++)
+
+                    if (textureArrayNumber > 0)
                     {
-                        Texture2D texItem = EditorUtil.GetAssetByPath<Texture2D>($"{texPath}{t}.png");
+                        for (int t = 0; t < textureArrayNumber; t++)
+                        {
+                            Texture2D texItem = EditorUtil.GetAssetByPath<Texture2D>($"{texPath}{t}.png");
+                            if (texItem != null)
+                                listTexItem.Add(texItem);
+                        }
+                    }
+                    else
+                    {
+                        Texture2D texItem = EditorUtil.GetAssetByPath<Texture2D>($"{texPath}0.png");
                         if (texItem != null)
                             listTexItem.Add(texItem);
                     }
+
 
                     //如果有贴图 则开始生成数据
                     if (!listTexItem.IsNull())
@@ -600,7 +614,7 @@ public class BlockEditorWindow : EditorWindow
                 CreateBlockTextureArray(blockTextureSize, textureArrayNumber, new List<string>() { saveName });
                 EditorUtil.RefreshAsset(matUse);
             }
-            else
+            else if(textureArrayNumber == 1)
             {
                 CreateBlockTexture(blockTextureSize, pathSaveTexure, saveName, 0, listCreateData);
                 Texture2D createTex = EditorUtil.GetAssetByPath<Texture2D>($"{pathSaveTexure}/{saveName}_0.png");
@@ -617,11 +631,21 @@ public class BlockEditorWindow : EditorWindow
                     matUseTransparent.mainTexture = createTexTransparent;
                 }
             }
+            else
+            {
+                //如果不需要合成贴图
+            }
 
             //生成相关模型
             for (int i = 0; i < listCreateData.Count; i++)
             {
                 BlockModelCreateBean itemCreateData = listCreateData[i];
+                if (textureArrayNumber == 0)
+                {
+                    //使用名字和方块一样的材质
+                    matUse = EditorUtil.GetAssetByPath<Material>($"{pathMatBlock}/{itemCreateData.nameBlock}.mat");
+                    itemCreateData.uvScaleSize = 1;
+                }
                 //获取老方块
                 GameObject obj = EditorUtil.GetAssetByPath<GameObject>($"{pathRes}/{itemCreateData.nameBlock}.dae");
                 MeshFilter objOldMeshFilter = obj.GetComponentInChildren<MeshFilter>();
@@ -635,10 +659,17 @@ public class BlockEditorWindow : EditorWindow
                 //设置UV
                 Vector2[] oldUVList = objOldMeshFilter.sharedMesh.uv;
                 Vector2[] newUVList = new Vector2[oldUVList.Length];
-                for (int f = 0; f < oldUVList.Length; f++)
+                if (textureArrayNumber == 0)
                 {
-                    newUVList[f] = oldUVList[f] * (1f / itemCreateData.uvScaleSize);
-                    newUVList[f] += itemCreateData.GetStartUV(blockTextureSize);
+                    newUVList = oldUVList;
+                }
+                else
+                {
+                    for (int f = 0; f < oldUVList.Length; f++)
+                    {
+                        newUVList[f] = oldUVList[f] * (1f / itemCreateData.uvScaleSize);
+                        newUVList[f] += itemCreateData.GetStartUV(blockTextureSize);
+                    }
                 }
                 //创建新的mesh
                 string newMeshName = $"{itemCreateData.nameBlock}_Mesh";
