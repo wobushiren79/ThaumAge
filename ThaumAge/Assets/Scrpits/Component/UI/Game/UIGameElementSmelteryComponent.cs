@@ -8,5 +8,7 @@ public partial class UIGameElementSmeltery
 
     public UIViewShortcuts ui_Shortcuts;
 
+    public UIViewElementSmeltery ui_ViewElementSmeltery;
+
 
 }

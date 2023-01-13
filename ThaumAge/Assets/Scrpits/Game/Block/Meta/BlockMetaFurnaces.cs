@@ -16,4 +16,21 @@ public class BlockMetaFurnaces : BlockMetaItemsTransition
     {
         fireTimeMax = 200;
     }
+
+    /// <summary>
+    /// 增加剩余制烧事件
+    /// </summary>
+    public int AddFireTimeRemain(int addFireTimeRemain)
+    {
+        fireTimeRemain += addFireTimeRemain;
+        if (fireTimeRemain > fireTimeMax)
+        {
+            fireTimeRemain = fireTimeMax;
+        }
+        if (fireTimeRemain < 0)
+        {
+            fireTimeRemain = 0;
+        }
+        return fireTimeRemain;
+    }
 }

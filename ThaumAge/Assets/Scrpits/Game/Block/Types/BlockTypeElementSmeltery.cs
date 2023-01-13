@@ -11,10 +11,180 @@ public class BlockTypeElementSmeltery : Block
         base.Interactive(user, worldPosition, direction);
 
         //打开箱子UI
-        UIGameFurnaces uiGameFurnacesSimple = UIHandler.Instance.OpenUIAndCloseOther<UIGameFurnaces>();
+        UIGameElementSmeltery uiGameElementSmeltery = UIHandler.Instance.OpenUIAndCloseOther<UIGameElementSmeltery>();
         //设置数据
-        uiGameFurnacesSimple.SetData(worldPosition);
+        uiGameElementSmeltery.SetData(worldPosition);
 
         AudioHandler.Instance.PlaySound(1);
+    }
+
+
+    public override void InitBlock(Chunk chunk, Vector3Int localPosition, int state)
+    {
+        base.InitBlock(chunk, localPosition, state);
+        if(state == 0 || state == 1)
+        {
+            StartWork(chunk, localPosition);
+        }
+    }
+
+    /// <summary>
+    /// 开始工作
+    /// </summary>
+    /// <param name="chunk"></param>
+    /// <param name="localPosition"></param>
+    public void StartWork(Chunk chunk, Vector3Int localPosition)
+    {
+        chunk.RegisterEventUpdate(localPosition, TimeUpdateEventTypeEnum.Sec);
+    }
+
+    /// <summary>
+    /// 刷新方块模型
+    /// </summary>
+    /// <param name="chunk"></param>
+    /// <param name="localPosition"></param>
+    public override void RefreshObjModel(Chunk chunk, Vector3Int localPosition)
+    {
+        BlockBean blockData = chunk.GetBlockData(localPosition);
+        BlockMetaElementSmeltery blockMetaData = FromMetaData<BlockMetaElementSmeltery>(blockData.meta);
+        if (blockMetaData == null)
+            blockMetaData = new BlockMetaElementSmeltery();
+
+        //GameObject objFurnaces = chunk.GetBlockObjForLocal(localPosition);
+        ////设置烧纸之前的物品
+        //Transform tfItemFire = objFurnaces.transform.Find("Fire");
+
+        ////设置火焰
+        //if (blockMetaData.transitionPro <= 0)
+        //{
+        //    tfItemFire.ShowObj(false);
+        //}
+        //else
+        //{
+        //    tfItemFire.ShowObj(true);
+        //}
+    }
+
+    /// <summary>
+    /// 每秒刷新
+    /// </summary>
+    /// <param name="chunk"></param>
+    /// <param name="localPosition"></param>
+    public override void EventBlockUpdateForSec(Chunk chunk, Vector3Int localPosition)
+    {
+        base.EventBlockUpdateForSec(chunk, localPosition);
+        //获取数据
+        BlockBean blockData = chunk.GetBlockData(localPosition);
+        BlockMetaElementSmeltery blockMetaData = FromMetaData<BlockMetaElementSmeltery>(blockData.meta);
+        //如果没有数据
+        if (blockMetaData == null)
+        {
+            chunk.UnRegisterEventUpdate(localPosition, TimeUpdateEventTypeEnum.Sec);
+            return;
+        }
+        //首先添加烧制能量材料
+        if (blockMetaData.itemFireSourceId != 0)
+        {
+            ItemsInfoBean itemsInfoFire = ItemsHandler.Instance.manager.GetItemsInfoById(blockMetaData.itemFireSourceId);
+            //拥有相应元素 能够烧制 一个元素能烧制10秒
+            int elementalWood = itemsInfoFire.GetElemental(ElementalTypeEnum.Wood);
+            int elementalFire = itemsInfoFire.GetElemental(ElementalTypeEnum.Fire);
+            if (elementalWood != 0 || elementalFire != 0)
+            {
+                int addFireAddRemain = elementalWood * 10 + elementalFire * 10;
+
+                if (blockMetaData.fireTimeRemain < blockMetaData.fireTimeMax)
+                {
+                    blockMetaData.AddFireTimeRemain(addFireAddRemain);
+                    blockMetaData.itemFireSourceNum--;
+                }
+            }
+        }
+
+        //如果没有烧制的物品 或者剩下的烧制时间为0 则结束
+        if (blockMetaData.itemBeforeId == 0 || blockMetaData.fireTimeRemain == 0)
+        {
+            blockMetaData.transitionPro = 0;
+            chunk.UnRegisterEventUpdate(localPosition, TimeUpdateEventTypeEnum.Sec);
+            //保存数据
+            SaveData(chunk, localPosition, blockData, blockMetaData);
+            return;
+        }
+        //查询烧制之前的物品能否烧制物品
+        ItemsInfoBean itemsInfoBefore = ItemsHandler.Instance.manager.GetItemsInfoById(blockMetaData.itemBeforeId);
+        if (itemsInfoBefore.fire_items.IsNull())
+        {
+            blockMetaData.transitionPro = 0;
+            //如果是不能烧制的物品 则结束刷新
+            chunk.UnRegisterEventUpdate(localPosition, TimeUpdateEventTypeEnum.Sec);
+            //保存数据
+            SaveData(chunk, localPosition, blockData, blockMetaData);
+            return;
+        }
+
+        //获取烧制的结果
+        itemsInfoBefore.GetFireItems(out int[] fireItemsId, out int[] fireItemsNum, out int[] fireTime);
+        int itemFireTime = fireTime[0];
+        //检测是否正在烧制物品
+        if (blockMetaData.transitionPro < 1)
+        {
+            blockMetaData.transitionPro += 1f / itemFireTime;
+        }
+        else if (blockMetaData.transitionPro >= 1)
+        {
+            //烧制完成
+            blockMetaData.transitionPro = 0;
+            blockMetaData.itemAfterId = fireItemsId[0];
+            blockMetaData.itemAfterNum++;
+            blockMetaData.itemBeforeNum--;
+            chunk.isSaveData = true;
+        }
+        else
+        {
+            ItemsInfoBean itemsInfoAfter = ItemsHandler.Instance.manager.GetItemsInfoById(blockMetaData.itemAfterId);
+            //如果已经有烧制的物品 并且该物品不等于当前物品烧制后的物品 则也不进行烧制     //如果已经达到物品上限 也不烧制了
+            if (blockMetaData.itemAfterId != 0
+                && (blockMetaData.itemAfterId != fireItemsId[0] || itemsInfoAfter.max_number <= blockMetaData.itemAfterNum))
+            {
+                blockMetaData.transitionPro = 0;
+                chunk.UnRegisterEventUpdate(localPosition, TimeUpdateEventTypeEnum.Sec);
+                //保存数据
+                SaveData(chunk, localPosition, blockData, blockMetaData);
+                return;
+            }
+            blockMetaData.transitionPro = 1f / itemFireTime;
+        }
+        blockMetaData.AddFireTimeRemain(-1);
+        //保存数据
+        SaveData(chunk, localPosition, blockData, blockMetaData);
+    }
+
+    /// <summary>
+    /// 保存数据
+    /// </summary>
+    protected void SaveData(Chunk chunk, Vector3Int localPosition, BlockBean blockData, BlockMetaElementSmeltery blockMetaData)
+    {
+        //数据检测
+        if (blockMetaData.itemFireSourceNum <= 0)
+        {
+            blockMetaData.itemFireSourceNum = 0;
+            blockMetaData.itemFireSourceId = 0;
+        }
+        if (blockMetaData.itemAfterNum <= 0)
+        {
+            blockMetaData.itemAfterNum = 0;
+            blockMetaData.itemAfterId = 0;
+        }
+        if (blockMetaData.itemBeforeNum <= 0)
+        {
+            blockMetaData.itemBeforeNum = 0;
+            blockMetaData.itemBeforeId = 0;
+        }
+        RefreshObjModel(chunk, localPosition);
+        blockData.SetBlockMeta(blockMetaData);
+        chunk.SetBlockData(blockData);
+
+        //暂时不通知 如果有很多熔炉 每个都更新很耗资源 直接在UI里去检测比较好
+        //EventHandler.Instance.TriggerEvent(EventsInfo.BlockTypeElementSmeltery_Update, localPosition + chunk.chunkData.positionForWorld);
     }
 }

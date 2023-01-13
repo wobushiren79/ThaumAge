@@ -20,7 +20,7 @@ public class BlockTypeArcanePedestal : Block
         {
             blockMetaArcanePedestal = new BlockMetaArcanePedestal();
         }
-        SetShowItem(chunk, localPosition, blockMetaArcanePedestal.itemsShow);
+        RefreshObjModel(chunk, localPosition, blockMetaArcanePedestal.itemsShow);
     }
 
     public override bool TargetUseBlock(GameObject user, ItemsBean itemData, Chunk targetChunk, Vector3Int targetWorldPosition)
@@ -73,14 +73,14 @@ public class BlockTypeArcanePedestal : Block
         blockData.SetBlockMeta(blockMetaArcanePedestal);
         targetChunk.SetBlockData(blockData);
 
-        SetShowItem(targetChunk, blockLocalPosition, blockMetaArcanePedestal.itemsShow);
+        RefreshObjModel(targetChunk, blockLocalPosition, blockMetaArcanePedestal.itemsShow);
         return true;
     }
 
     /// <summary>
     /// 设置展示的物品
     /// </summary>
-    public void SetShowItem(Chunk chunk, Vector3Int localPosition, ItemsBean itemsData)
+    public virtual void RefreshObjModel(Chunk chunk, Vector3Int localPosition, ItemsBean itemsData)
     {
         GameObject objBlock = chunk.GetBlockObjForLocal(localPosition);
         if (objBlock == null)

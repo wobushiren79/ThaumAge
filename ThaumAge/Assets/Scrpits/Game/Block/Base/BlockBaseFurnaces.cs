@@ -111,11 +111,11 @@ public class BlockBaseFurnaces : Block
             int elementalFire = itemsInfoFire.GetElemental(ElementalTypeEnum.Fire);
             if (elementalWood != 0 || elementalFire != 0)
             {
-                int fireAddRemain = blockMetaData.fireTimeRemain + elementalWood * 10 + elementalFire * 10;
-                //限制最大100能量
-                if (fireAddRemain < blockMetaData.fireTimeMax)
+                int addFireAddRemain = elementalWood * 10 + elementalFire * 10;
+  
+                if (blockMetaData.fireTimeRemain < blockMetaData.fireTimeMax)
                 {
-                    blockMetaData.fireTimeRemain = fireAddRemain;
+                    blockMetaData.AddFireTimeRemain(addFireAddRemain);
                     blockMetaData.itemFireSourceNum--;
                 }
             }
@@ -174,7 +174,7 @@ public class BlockBaseFurnaces : Block
             }
             blockMetaData.transitionPro = 1f / itemFireTime;
         }
-        blockMetaData.fireTimeRemain--;
+        blockMetaData.AddFireTimeRemain(-1);
         //保存数据
         SaveFurnacesData(chunk, localPosition, blockData, blockMetaData);
     }
@@ -200,9 +200,12 @@ public class BlockBaseFurnaces : Block
             blockMetaData.itemBeforeNum = 0;
             blockMetaData.itemBeforeId = 0;
         }
-        blockData.meta = ToMetaData(blockMetaData);
         RefreshObjModel(chunk, localPosition);
-        chunk.isSaveData = true;
+        blockData.SetBlockMeta(blockMetaData);
+        chunk.SetBlockData(blockData);
+
+        //暂时不通知 如果有很多熔炉 每个都更新很耗资源 直接在UI里去检测比较好
+        //EventHandler.Instance.TriggerEvent(EventsInfo.BlockTypeFurnaces_Update, localPosition + chunk.chunkData.positionForWorld);
     }
 
 }

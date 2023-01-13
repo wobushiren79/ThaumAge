@@ -20,21 +20,21 @@ public class BlockTypeWardedJar : Block
         {
             blockMetaWardedJar = new BlockMetaWardedJar();
         }
-        SetLiquidPro(chunk, localPosition, blockMetaWardedJar);
+        RefreshObjModel(chunk, localPosition, blockMetaWardedJar);
     }
 
     /// <summary>
     /// 设置液体进度
     /// </summary>
-    public void SetLiquidPro(Chunk chunk, Vector3Int localPosition, BlockMetaWardedJar blockMetaWardedJar) 
+    public virtual void RefreshObjModel(Chunk chunk, Vector3Int localPosition, BlockMetaWardedJar blockMetaWardedJar)
     {
-        SetLiquidPro(chunk, localPosition, blockMetaWardedJar.GetElementalType(), blockMetaWardedJar.GetElementalPro());
+        RefreshObjModel(chunk, localPosition, blockMetaWardedJar.GetElementalType(), blockMetaWardedJar.GetElementalPro());
     }
 
     /// <summary>
     /// 设置液体进度
     /// </summary>
-    public void SetLiquidPro(Chunk chunk, Vector3Int localPosition,ElementalTypeEnum elementalType, float liquidPro)
+    public virtual void RefreshObjModel(Chunk chunk, Vector3Int localPosition, ElementalTypeEnum elementalType, float liquidPro)
     {
         GameObject objBlock = chunk.GetBlockObjForLocal(localPosition);
         if (objBlock == null)
@@ -47,7 +47,7 @@ public class BlockTypeWardedJar : Block
         else
         {
             tfLiquid.ShowObj(true);
-            var elementalInfo =  ElementalInfoCfg.GetItemData(elementalType);
+            var elementalInfo = ElementalInfoCfg.GetItemData(elementalType);
             ColorUtility.TryParseHtmlString($"{elementalInfo.color}", out Color elementalColor);
 
             MeshRenderer meshRenderer = tfLiquid.GetComponent<MeshRenderer>();
@@ -56,7 +56,7 @@ public class BlockTypeWardedJar : Block
             meshRenderer.material.SetFloat("_WobbleZ", 0);
             meshRenderer.material.SetFloat("_Emission", 0f);
             meshRenderer.material.SetFloat("_FresnelPower", 0);
-            meshRenderer.material.SetColor("_LiquidColor",elementalColor);
+            meshRenderer.material.SetColor("_LiquidColor", elementalColor);
             meshRenderer.material.SetColor("_TopColor", elementalColor * 0.9f);
         }
     }

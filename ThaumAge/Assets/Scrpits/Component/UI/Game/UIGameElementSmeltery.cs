@@ -31,6 +31,6 @@ public partial class UIGameElementSmeltery : UIGameCommonNormal
     /// <param name="blockData"></param>
     public void SetData(Vector3Int worldPosition)
     {
-        //ui_ViewFurnaces.SetData(worldPosition);
+        ui_ViewElementSmeltery.SetData(worldPosition);
     }
 }

@@ -8,6 +8,7 @@ public partial class UIGameFurnaces : UIGameCommonNormal
         base.OpenUI();
         ui_Shortcuts.OpenUI();
         ui_ViewBackPack.OpenUI();
+        ui_ViewFurnaces.OpenUI();
     }
 
     public override void CloseUI()
@@ -15,6 +16,7 @@ public partial class UIGameFurnaces : UIGameCommonNormal
         base.CloseUI();
         ui_Shortcuts.CloseUI();
         ui_ViewBackPack.CloseUI();
+        ui_ViewFurnaces.CloseUI();
     }
 
     public override void RefreshUI(bool isOpenInit = false)
@@ -22,8 +24,9 @@ public partial class UIGameFurnaces : UIGameCommonNormal
         base.RefreshUI(isOpenInit);
         if (isOpenInit)
             return;
-        ui_Shortcuts.RefreshUI();
-        ui_ViewBackPack.RefreshUI();
+        ui_Shortcuts.RefreshUI(isOpenInit);
+        ui_ViewBackPack.RefreshUI(isOpenInit);
+        ui_ViewFurnaces.RefreshUI(isOpenInit);
     }
 
     /// <summary>

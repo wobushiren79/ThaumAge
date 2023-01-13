@@ -16,6 +16,9 @@ public partial class UIViewFurnaces : BaseUIView
     //线性数据
     protected float lerpFirePowerPro = 0;
     protected float lerpFirePro = 0;
+
+    protected float timeForUpdate = 0;
+    protected float timeForUpdateMax = 0.5f;
     public override void Awake()
     {
         base.Awake();
@@ -24,24 +27,31 @@ public partial class UIViewFurnaces : BaseUIView
         ui_AfterItems.SetCallBackForSetViewItem(CallBackForItemsChange);
     }
 
-    public float timeUpdate = 0;
-
     public void Update()
     {
-        timeUpdate += Time.deltaTime;
-        if (timeUpdate >= 0.1f)
+        timeForUpdate += Time.deltaTime;
+        if (timeForUpdate > timeForUpdateMax)
         {
-            timeUpdate = 0;
+            timeForUpdate = 0;
             RefreshUI();
         }
-        SetFirePower(lerpFirePowerPro);
-        SetFirePro(lerpFirePro);
+        SetFirePower(lerpFirePowerPro, true);
+        SetFirePro(lerpFirePro, true);
+    }
+
+    public override void OpenUI()
+    {
+        base.OpenUI();
+        //暂时取消这个事件，如果场景中熔炉过多 会消耗过多的资源 改用在update中更新
+        //this.RegisterEvent<Vector3Int>(EventsInfo.BlockTypeFurnaces_Update, EventForUpdate);
     }
 
     public override void RefreshUI(bool isOpenInit = false)
     {
         base.RefreshUI(isOpenInit);
 
+        if (blockData == null)
+            return;
         blockMetaFurnaces = Block.FromMetaData<BlockMetaFurnaces>(blockData.meta);
 
         if (blockMetaFurnaces == null)
@@ -83,27 +93,46 @@ public partial class UIViewFurnaces : BaseUIView
         itemsAfter = new ItemsBean();
 
         RefreshUI();
+
+        //初始化的时候设置一次进度
+        SetFirePower(lerpFirePowerPro, false);
+        SetFirePro(lerpFirePro, false);
     }
 
 
     /// <summary>
     /// 设置烧制能量值
     /// </summary>
-    public void SetFirePower(float firePowerPro)
+    public void SetFirePower(float firePowerPro, bool isLerp)
     {
-        ui_FirePower.value = Mathf.Lerp(ui_FirePower.value, firePowerPro, Time.deltaTime);
+        if (isLerp)
+        {
+            ui_FirePower.value = Mathf.Lerp(ui_FirePower.value, firePowerPro, Time.deltaTime);
+        }
+        else
+        {
+            ui_FirePower.value = firePowerPro;
+        }
     }
 
     /// <summary>
     /// 设置烧制进度
     /// </summary>
-    public void SetFirePro(float firePro)
+    public void SetFirePro(float firePro, bool isLerp)
     {
         if (ui_FirePro.value > firePro)
         {
             ui_FirePro.value = 0;
         }
-        ui_FirePro.value = Mathf.Lerp(ui_FirePro.value, firePro, Time.deltaTime);
+
+        if (isLerp)
+        {
+            ui_FirePro.value = Mathf.Lerp(ui_FirePro.value, firePro, Time.deltaTime);
+        }
+        else
+        {
+            ui_FirePro.value = firePro;
+        }
     }
 
     /// <summary>
@@ -130,6 +159,16 @@ public partial class UIViewFurnaces : BaseUIView
         ui_AfterItems.SetViewItemByData(UIViewItemContainer.ContainerType.Furnaces, itemsData);
     }
 
+    /// <summary>
+    /// 事件更新
+    /// </summary>
+    /// <param name="blockWorldPosition"></param>
+    public void EventForUpdate(Vector3Int blockWorldPosition)
+    {
+        if (this.blockWorldPosition != blockWorldPosition)
+            return;
+        RefreshUI();
+    }
 
     /// <summary>
     /// 道具修改回调
