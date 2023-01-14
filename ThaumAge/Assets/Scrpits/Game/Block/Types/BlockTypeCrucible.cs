@@ -25,9 +25,8 @@ public class BlockTypeCrucible : Block
 
         //保存坩埚数据
         Vector3Int blockLocalPosition = targetWorldPosition - targetChunk.chunkData.positionForWorld;
-        BlockDirectionEnum blockDirection = targetChunk.chunkData.GetBlockDirection(blockLocalPosition.x, blockLocalPosition.y, blockLocalPosition.z);
 
-        GeteCrucibleData(targetChunk, blockDirection, targetWorldPosition, out BlockBean blockData, out BlockMetaCrucible blockMetaData);
+        GetBlockMetaData(targetChunk, blockLocalPosition, out BlockBean blockData, out BlockMetaCrucible blockMetaData);
         SaveCrucibleData(targetChunk, targetWorldPosition, blockData, blockMetaData, 0);
 
         EventHandler.Instance.TriggerEvent(EventsInfo.BlockTypeCrucible_UpdateElemental, targetWorldPosition);
@@ -53,7 +52,7 @@ public class BlockTypeCrucible : Block
                 itemMetaBuckets.itemIdForSomething = 0;
                 itemData.SetMetaData(itemMetaBuckets);
                 //保存坩埚数据
-                GeteCrucibleData(targetChunk, targetBlockDirection, blockWorldPosition, out BlockBean blockData, out BlockMetaCrucible blockMetaData);
+                GetBlockMetaData(targetChunk, blockWorldPosition - targetChunk.chunkData.positionForWorld, out BlockBean blockData, out BlockMetaCrucible blockMetaData);
                 SaveCrucibleData(targetChunk, blockWorldPosition, blockData, blockMetaData, WaterLevelMax);
                 return true;
             }
@@ -68,7 +67,7 @@ public class BlockTypeCrucible : Block
     public void StartSynthesis(Vector3Int blockWorldPosition, ItemsBean itemData, out int numberSynthesis)
     {
         numberSynthesis = 0;
-        GeteCrucibleData(blockWorldPosition, out BlockBean blockData, out BlockMetaCrucible blockMetaData);
+        GetBlockMetaData(blockWorldPosition, out BlockBean blockData, out BlockMetaCrucible blockMetaData);
         List<ItemsSynthesisBean> listSynthesis = ItemsSynthesisCfg.GetItemsSynthesisForCrucible();
         for (int i = 0; i < listSynthesis.Count; i++)
         {
@@ -117,7 +116,7 @@ public class BlockTypeCrucible : Block
     public bool AddElemental(Vector3Int blockWorldPosition, List<NumberBean> listElemental)
     {
         WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(blockWorldPosition, out Block targetBlock, out BlockDirectionEnum targetBlockDirection, out Chunk targetChunk);
-        GeteCrucibleData(targetChunk, targetBlockDirection, blockWorldPosition, out BlockBean blockData, out BlockMetaCrucible blockMetaData);
+        GetBlockMetaData(targetChunk, blockWorldPosition - targetChunk.chunkData.positionForWorld, out BlockBean blockData, out BlockMetaCrucible blockMetaData);
         //如果没有水 则不添加
         if (blockMetaData.waterLevel == 0)
         {
@@ -181,26 +180,10 @@ public class BlockTypeCrucible : Block
         SetWaterShow(blockWorldPosition, currentWaterLevel, isBoiling, isWaterChangeAnim);
     }
 
-    /// <summary>
-    /// 获取坩埚数据
-    /// </summary>
-    public void GeteCrucibleData(Chunk targetChunk, BlockDirectionEnum targetBlockDirection, Vector3Int blockWorldPosition,
-        out BlockBean blockData, out BlockMetaCrucible blockMetaData)
+    public void GetBlockMetaData(Vector3Int blockWorldPosition, out BlockBean blockData, out BlockMetaCrucible blockMetaData)
     {
-        Vector3Int blockLocalPosition = blockWorldPosition - targetChunk.chunkData.positionForWorld;
-        blockData = targetChunk.GetBlockData(blockLocalPosition);
-        if (blockData == null)
-        {
-            blockData = new BlockBean(blockLocalPosition, blockType, targetBlockDirection);
-        }
-        blockMetaData = blockData.GetBlockMeta<BlockMetaCrucible>();
-        if (blockMetaData == null)
-            blockMetaData = new BlockMetaCrucible();
-    }
-    public void GeteCrucibleData(Vector3Int blockWorldPosition, out BlockBean blockData, out BlockMetaCrucible blockMetaData)
-    {
-        WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(blockWorldPosition, out Block targetBlock, out BlockDirectionEnum blockDirection, out Chunk targetChunk);
-        GeteCrucibleData(targetChunk, blockDirection, blockWorldPosition, out blockData, out blockMetaData);
+        Chunk targetChunk =  WorldCreateHandler.Instance.manager.GetChunkForWorldPosition(blockWorldPosition);
+        GetBlockMetaData(targetChunk, blockWorldPosition, out blockData, out blockMetaData);
     }
 
 
@@ -250,9 +233,8 @@ public class BlockTypeCrucible : Block
     public void InitWater(Chunk chunk, Vector3Int localPosition)
     {
         Vector3Int targetWorldPosition = localPosition + chunk.chunkData.positionForWorld;
-        BlockDirectionEnum targetBlockDirection = chunk.chunkData.GetBlockDirection(localPosition);
         //获取坩埚数据
-        GeteCrucibleData(chunk, targetBlockDirection, localPosition + chunk.chunkData.positionForWorld, out BlockBean blockData, out BlockMetaCrucible blockMetaData);
+        GetBlockMetaData(chunk, localPosition, out BlockBean blockData, out BlockMetaCrucible blockMetaData);
         //获取是否烧开
         bool isBoiling = CheckIsBoiling(chunk, targetWorldPosition);
         //设置水位

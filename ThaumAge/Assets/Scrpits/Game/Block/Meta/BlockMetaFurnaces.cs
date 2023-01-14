@@ -1,6 +1,8 @@
 ﻿using UnityEditor;
 using UnityEngine;
+using System;
 
+[Serializable]
 public class BlockMetaFurnaces : BlockMetaItemsTransition
 {
     //当前剩余烧制时间

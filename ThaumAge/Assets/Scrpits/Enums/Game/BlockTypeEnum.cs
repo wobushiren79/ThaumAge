@@ -155,11 +155,13 @@ public enum BlockTypeEnum
     WorkbenchCharger = 6165,//奥术充能器
 
     EverfullUrn = 6166,//无尽之瓮
-    WardedJar = 6167,//源质罐子
     ElementSmeltery = 6168,//源质冶炼厂
     ArcaneAlembic = 6169,//奥术蒸馏器
 
     Box = 6201,//箱子
+
+    WardedJar = 6211,//源质罐子
+
     SwitchesWooden = 6301,//木制开关
     TorchWooden = 6311, //木制火把
     LanternStone = 6322,//石制灯笼

@@ -8,10 +8,7 @@ public class BlockTypeFocalManipulator : Block
         base.CreateBlockModelSuccess(chunk, localPosition, blockDirection, obj);
 
         //获取方块数据
-        BlockBean blockData = chunk.GetBlockData(localPosition);
-        BlockMetaFocalManipulator blockMetaData = blockData.GetBlockMeta<BlockMetaFocalManipulator>();
-        if (blockMetaData == null)
-            blockMetaData = new BlockMetaFocalManipulator();
+        GetBlockMetaData(chunk, localPosition, out BlockBean blockData, out BlockMetaFocalManipulator blockMetaData);
         if (blockMetaData.itemMagicCore != null && blockMetaData.itemMagicCore.itemId != 0)
         {
             SetMagicCore(localPosition + chunk.chunkData.positionForWorld, blockMetaData.itemMagicCore);
@@ -50,7 +47,7 @@ public class BlockTypeFocalManipulator : Block
             blockMetaData.itemMagicCore = blockMetaData.itemMagicCoreWorkTemp;
             blockMetaData.workPro = 0;
             chunk.UnRegisterEventUpdate(localPosition, TimeUpdateEventTypeEnum.Sec);
-            AudioHandler.Instance.PlaySound(1101, localPosition+chunk.chunkData.positionForWorld);
+            AudioHandler.Instance.PlaySound(1101, localPosition + chunk.chunkData.positionForWorld);
 
             //展示粒子效果
             GameObject objEffect = SetWorkEffect(localPosition + chunk.chunkData.positionForWorld, false);

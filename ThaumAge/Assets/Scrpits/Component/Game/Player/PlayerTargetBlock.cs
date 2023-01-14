@@ -21,9 +21,11 @@ public class PlayerTargetBlock : BaseMonoBehaviour
     protected bool isShow = true;
     protected bool isShowElemental = false;
 
+    protected float timeUpdateShowElemental = 0;
+    protected float timeUpdateShowElementalMax = 1;
     public void Awake()
     {
-        EventHandler.Instance.RegisterEvent<Vector3Int>(EventsInfo.BlockTypeCrucible_UpdateElemental, EventForUpdateElemental);
+        //EventHandler.Instance.RegisterEvent<Vector3Int>(EventsInfo.BlockTypeCrucible_UpdateElemental, EventForUpdateElemental);
         objElementalItemModel.ShowObj(false);
         meshFilter = objTargetBlock.GetComponent<MeshFilter>();
         meshRenderer = objTargetBlock.GetComponent<MeshRenderer>();
@@ -33,6 +35,13 @@ public class PlayerTargetBlock : BaseMonoBehaviour
     {
         if (isShowElemental)
         {
+            timeUpdateShowElemental += Time.deltaTime;
+            if (timeUpdateShowElemental > timeUpdateShowElementalMax)
+            {
+                timeUpdateShowElemental = 0;
+                ShowElemental(lastWorldPosition);
+            }
+
             Player player = GameHandler.Instance.manager.player;
             objElementalContainer.transform.LookAt(player.transform);
         }
@@ -45,7 +54,7 @@ public class PlayerTargetBlock : BaseMonoBehaviour
             Destroy(listElementalItemObj[i]);
         }
         listElementalItemObj.Clear();
-        EventHandler.Instance.UnRegisterEvent<Vector3Int>(EventsInfo.BlockTypeCrucible_UpdateElemental, EventForUpdateElemental);
+        //EventHandler.Instance.UnRegisterEvent<Vector3Int>(EventsInfo.BlockTypeCrucible_UpdateElemental, EventForUpdateElemental);
     }
 
     public void Show(Vector3Int worldPosition, Block block, bool isInteractive)
@@ -101,7 +110,7 @@ public class PlayerTargetBlock : BaseMonoBehaviour
             BlockMetaBaseLink oldeBlockMetaLinkData = Block.FromMetaData<BlockMetaBaseLink>(oldBlockData.meta);
             objTargetCenterBlock.transform.position = oldeBlockMetaLinkData.GetBasePosition() + new Vector3(0.5f, 0.5f, 0.5f);
         }
-        else if (block.blockType == BlockTypeEnum.Crucible)
+        else if (block.blockType == BlockTypeEnum.Crucible || block.blockType == BlockTypeEnum.ArcaneAlembic)
         {
             ShowElemental(worldPosition);
             objTargetCenterBlock.transform.localPosition = new Vector3(0.5f, 0.5f, 0.5f);
@@ -114,23 +123,42 @@ public class PlayerTargetBlock : BaseMonoBehaviour
 
     public void ShowElemental(Vector3Int worldPosition)
     {
+        isShowElemental = true;
+
         WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(worldPosition, out Block targetBlock, out BlockDirectionEnum targetDirection, out Chunk targetChunk);
-        //如果是坩埚 则需要展示所拥有的元素
-        BlockTypeCrucible blockTypeCrucible = targetBlock as BlockTypeCrucible;
-        blockTypeCrucible.GeteCrucibleData(targetChunk, targetDirection, worldPosition, out BlockBean blockData, out BlockMetaCrucible blockMetaData);
 
         //获取这个方块的元素信息 
-        List<NumberBean> listElemental = blockMetaData.listElemental;
+        List<NumberBean> listElemental = new List<NumberBean>();
+        Vector3Int targetLocalPosition = worldPosition - targetChunk.chunkData.positionForWorld;
+        if (targetBlock.blockType == BlockTypeEnum.Crucible)
+        {
+            //如果是坩埚 则需要展示所拥有的元素
+            BlockTypeCrucible blockTypeCrucible = targetBlock as BlockTypeCrucible;
+            blockTypeCrucible.GetBlockMetaData(targetChunk, targetLocalPosition, out BlockBean blockData, out BlockMetaCrucible blockMetaData);
+            listElemental = blockMetaData.listElemental;
+        }
+        else if (targetBlock.blockType == BlockTypeEnum.ArcaneAlembic)
+        {
+            //如果是奥术蒸馏器
+            BlockTypeArcaneAlembic blockTypeArcaneAlembic = targetBlock as BlockTypeArcaneAlembic;
+            blockTypeArcaneAlembic.GetBlockMetaData(targetChunk, targetLocalPosition, out BlockBean blockData, out BlockMetaArcaneAlembic blockMetaData);
+            listElemental = blockMetaData.listElemental;
+        }
+        else if (targetBlock.blockType == BlockTypeEnum.WardedJar)
+        {
+            //如果是奥术蒸馏器
+            BlockTypeWardedJar blockTypeWardedJar = targetBlock as BlockTypeWardedJar;
+            blockTypeWardedJar.GetBlockMetaData(targetChunk, targetLocalPosition, out BlockBean blockData, out BlockMetaWardedJar blockMetaData);
+            listElemental.Add(new NumberBean(blockMetaData.elementalType, blockMetaData.curElemental));
+        }
         if (listElemental.IsNull())
         {
             foreach (var itemElementalObj in listElementalItemObj)
             {
                 itemElementalObj.ShowObj(false);
             }
-            isShowElemental = false;
             return;
         }
-        isShowElemental = true;
 
         int index = 0;
         float startX = 0;
@@ -144,6 +172,7 @@ public class PlayerTargetBlock : BaseMonoBehaviour
         {
             startX = (listElemental.Count / 2f) - 0.5f;
         }
+
         foreach (var itemElemental in listElemental)
         {
             if (itemElemental.number == 0)
@@ -178,6 +207,15 @@ public class PlayerTargetBlock : BaseMonoBehaviour
              });
             index++;
         }
+        //如果没有元素了
+        if (index == 0)
+        {
+            foreach (var itemElementalObj in listElementalItemObj)
+            {
+                itemElementalObj.ShowObj(false);
+            }
+            return;
+        }
     }
 
     public void Hide()
@@ -200,20 +238,5 @@ public class PlayerTargetBlock : BaseMonoBehaviour
         {
             gameObject.SetActive(false);
         }
-    }
-
-    /// <summary>
-    /// 事件-元素更新
-    /// </summary>
-    /// <param name="worldPosition"></param>
-    public void EventForUpdateElemental(Vector3Int worldPosition)
-    {
-        this.WaitExecuteSeconds(0.1f,()=> 
-        {
-            if (worldPosition == lastWorldPosition)
-            {
-                ShowElemental(worldPosition);
-            }
-        });
     }
 }

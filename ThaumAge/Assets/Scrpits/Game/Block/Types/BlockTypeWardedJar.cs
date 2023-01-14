@@ -6,22 +6,10 @@ public class BlockTypeWardedJar : Block
     public override void CreateBlockModelSuccess(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum blockDirection, GameObject obj)
     {
         base.CreateBlockModelSuccess(chunk, localPosition, blockDirection, obj);
-        BlockBean blockData = chunk.GetBlockData(localPosition);
-        BlockMetaWardedJar blockMetaWardedJar = null;
-        if (blockData == null)
-        {
-
-        }
-        else
-        {
-            blockMetaWardedJar = blockData.GetBlockMeta<BlockMetaWardedJar>();
-        }
-        if (blockMetaWardedJar == null)
-        {
-            blockMetaWardedJar = new BlockMetaWardedJar();
-        }
-        RefreshObjModel(chunk, localPosition, blockMetaWardedJar);
+        GetBlockMetaData(chunk, localPosition, out BlockBean blockData, out BlockMetaWardedJar blockMetaData);
+        RefreshObjModel(chunk, localPosition, blockMetaData);
     }
+
 
     /// <summary>
     /// 设置液体进度

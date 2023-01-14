@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using System;
 
+[Serializable]
 public class BlockMetaCrucible : BlockMetaBase
 {
     public int waterLevel;

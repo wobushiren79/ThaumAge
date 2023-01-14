@@ -1,6 +1,8 @@
 ﻿using UnityEditor;
 using UnityEngine;
+using System;
 
+[Serializable]
 public class BlockMetaItemsTransition : BlockMetaBase
 {
     //转换之前的物品

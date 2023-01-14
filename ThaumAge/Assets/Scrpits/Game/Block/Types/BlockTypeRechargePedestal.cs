@@ -75,41 +75,16 @@ public class BlockTypeRechargePedestal : Block
     public override void CreateBlockModelSuccess(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum blockDirection, GameObject obj)
     {
         base.CreateBlockModelSuccess(chunk, localPosition, blockDirection, obj);
-        BlockBean blockData = chunk.GetBlockData(localPosition);
-        BlockMetaRechargePedestal blockMetaRecharge = null;
-        if (blockData == null)
-        {
 
-        }
-        else
-        {
-            blockMetaRecharge = blockData.GetBlockMeta<BlockMetaRechargePedestal>();
-        }
-        if (blockMetaRecharge == null)
-        {
-            blockMetaRecharge = new BlockMetaRechargePedestal();
-        }
+        GetBlockMetaData(chunk, localPosition, out BlockBean blockData, out BlockMetaRechargePedestal blockMetaRecharge);
         SetRechargeItem(chunk, localPosition, blockMetaRecharge.itemsRecharge);
     }
 
     public override bool TargetUseBlock(GameObject user, ItemsBean itemData, Chunk targetChunk, Vector3Int targetWorldPosition)
     {
         Vector3Int blockLocalPosition = targetWorldPosition - targetChunk.chunkData.positionForWorld;
-        BlockBean blockData = targetChunk.GetBlockData(blockLocalPosition);
-        targetChunk.GetBlockForLocal(blockLocalPosition, out Block targetBlock, out BlockDirectionEnum targetBlockDirection, out targetChunk);
-        BlockMetaRechargePedestal blockMetaRecharge = null;
-        if (blockData == null)
-        {
-            blockData = new BlockBean(blockLocalPosition, blockType, targetBlockDirection);
-        }
-        else
-        {
-            blockMetaRecharge = blockData.GetBlockMeta<BlockMetaRechargePedestal>();
-        }
-        if (blockMetaRecharge == null)
-        {
-            blockMetaRecharge = new BlockMetaRechargePedestal();
-        }
+        GetBlockMetaData(targetChunk, blockLocalPosition, out BlockBean blockData, out BlockMetaRechargePedestal blockMetaRecharge);
+
         //如果基座上没有物品
         if (blockMetaRecharge.itemsRecharge == null || blockMetaRecharge.itemsRecharge.itemId == 0)
         {

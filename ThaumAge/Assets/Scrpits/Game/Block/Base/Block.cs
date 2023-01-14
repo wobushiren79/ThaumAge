@@ -51,6 +51,27 @@ public class Block
         blockShape.InitData();
     }
 
+    public virtual void GetBlockMetaData<T>(Chunk targetChunk, Vector3Int blockLocalPosition,
+        out BlockBean blockData, out T blockMetaData) where T: BlockMetaBase, new()
+    {
+        blockMetaData = null;
+        blockData = targetChunk.GetBlockData(blockLocalPosition);
+        if (blockData == null)
+        {
+            BlockDirectionEnum targetBlockDirection = targetChunk.chunkData.GetBlockDirection(blockLocalPosition);
+            blockData = new BlockBean(blockLocalPosition, blockType, targetBlockDirection);
+        }
+        else
+        {
+            blockMetaData = blockData.GetBlockMeta<T>();
+        }
+        if (blockMetaData == null)
+        {
+            blockMetaData = new T();
+        }
+    }
+
+
     /// <summary>
     /// »ñÈ¡Çø¿é
     /// </summary>

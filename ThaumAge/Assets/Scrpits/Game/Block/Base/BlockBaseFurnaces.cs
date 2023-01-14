@@ -94,8 +94,7 @@ public class BlockBaseFurnaces : Block
     {
         base.EventBlockUpdateForSec(chunk, localPosition);
         //获取数据
-        BlockBean blockData = chunk.GetBlockData(localPosition);
-        BlockMetaFurnaces blockMetaData = FromMetaData<BlockMetaFurnaces>(blockData.meta);
+        GetBlockMetaData(chunk, localPosition, out BlockBean blockData, out BlockMetaFurnaces blockMetaData);
         //如果没有数据
         if (blockMetaData == null)
         {
@@ -113,7 +112,7 @@ public class BlockBaseFurnaces : Block
             {
                 int addFireAddRemain = elementalWood * 10 + elementalFire * 10;
   
-                if (blockMetaData.fireTimeRemain < blockMetaData.fireTimeMax)
+                if (blockMetaData.fireTimeRemain + addFireAddRemain <=  blockMetaData.fireTimeMax)
                 {
                     blockMetaData.AddFireTimeRemain(addFireAddRemain);
                     blockMetaData.itemFireSourceNum--;

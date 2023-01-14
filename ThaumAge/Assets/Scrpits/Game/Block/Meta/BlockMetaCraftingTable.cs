@@ -1,6 +1,8 @@
 ﻿using UnityEditor;
 using UnityEngine;
+using System;
 
+[Serializable]
 public class BlockMetaCraftingTable : BlockMetaBase
 {
     public int magic;

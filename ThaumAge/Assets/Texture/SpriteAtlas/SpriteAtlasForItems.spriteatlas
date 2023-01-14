@@ -939,7 +939,7 @@ SpriteAtlas:
   - icon_item_105803
   - icon_item_310011
   - icon_item_200002
-  - icon_item_106167
+  - icon_item_106211
   m_RenderDataMap: {}
   m_Tag: SpriteAtlasForItems
   m_IsVariant: 0

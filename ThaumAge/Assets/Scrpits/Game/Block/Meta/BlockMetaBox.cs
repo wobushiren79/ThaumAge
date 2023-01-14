@@ -1,6 +1,8 @@
 ﻿using UnityEditor;
 using UnityEngine;
+using System;
 
+[Serializable]
 public class BlockMetaBox : BlockMetaBase
 {
     public ItemsBean[] items;

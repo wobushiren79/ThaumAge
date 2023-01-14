@@ -14,6 +14,7 @@ public partial class UIViewElementSmeltery : BaseUIView
     //线性数据
     protected float lerpFirePowerPro = 0;
     protected float lerpFirePro = 0;
+    protected float elementalPro = 0;
 
     protected float timeForUpdate = 0;
     protected float timeForUpdateMax = 0.5f;
@@ -34,6 +35,7 @@ public partial class UIViewElementSmeltery : BaseUIView
         }
         SetFirePower(lerpFirePowerPro, true);
         SetFirePro(lerpFirePro, true);
+        SetElementalPro(elementalPro, true);
     }
 
 
@@ -59,6 +61,7 @@ public partial class UIViewElementSmeltery : BaseUIView
         //初始化的时候设置一次进度
         SetFirePower(lerpFirePowerPro, false);
         SetFirePro(lerpFirePro, false);
+        SetElementalPro(elementalPro, false);
     }
 
     public override void RefreshUI(bool isOpenInit = false)
@@ -78,6 +81,7 @@ public partial class UIViewElementSmeltery : BaseUIView
 
         lerpFirePowerPro = blockMetaElementSmeltery.fireTimeRemain / (float)blockMetaElementSmeltery.fireTimeMax;
         lerpFirePro = blockMetaElementSmeltery.transitionPro;
+        elementalPro = blockMetaElementSmeltery.GetElementalPro();
 
         SetFireItems(itemsFire);
         SetBeforeItems(itemsBefore);
@@ -132,6 +136,24 @@ public partial class UIViewElementSmeltery : BaseUIView
         else
         {
             ui_FirePro.value = firePro;
+        }
+    }
+
+    /// <summary>
+    /// 设置元素进度
+    /// </summary>
+    /// <param name="elementalPro"></param>
+    /// <param name="isLerp"></param>
+    public void SetElementalPro(float elementalPro, bool isLerp)
+    {
+        elementalPro = MathUtil.Remap(elementalPro, 0f, 1f, 0.09f, 0.91f);
+        if (isLerp)
+        {
+            ui_ElementPro.value = Mathf.Lerp(ui_ElementPro.value, elementalPro, Time.deltaTime);
+        }
+        else
+        {
+            ui_ElementPro.value = elementalPro;
         }
     }
 
