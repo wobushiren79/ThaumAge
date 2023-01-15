@@ -17,7 +17,7 @@ public class BlockMetaElementSmeltery : BlockMetaItemsTransition
     public int elementalMax;
     public BlockMetaElementSmeltery()
     {
-        fireTimeMax = 200;
+        fireTimeMax = 100;
         elementalMax = 10;
         listElemental = new List<int>();
     }
@@ -55,16 +55,27 @@ public class BlockMetaElementSmeltery : BlockMetaItemsTransition
     /// <summary>
     /// 减去元素
     /// </summary>
-    public bool SubElemental(out ElementalTypeEnum subElemental)
+    public bool SubElemental()
     {
-        subElemental = ElementalTypeEnum.None;
         if (listElemental.IsNull())
         {
             return false;
         }
-        subElemental = (ElementalTypeEnum)listElemental[0];
         listElemental.RemoveAt(0);
         return true;
+    }
+
+    /// <summary>
+    /// 获取第一个元素
+    /// </summary>
+    /// <returns></returns>
+    public ElementalTypeEnum GetFirstElemental()
+    {
+        if (listElemental.IsNull())
+        {
+            return ElementalTypeEnum.None;
+        }
+        return (ElementalTypeEnum)listElemental[0];
     }
 
     /// <summary>

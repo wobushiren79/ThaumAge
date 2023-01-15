@@ -75,7 +75,7 @@ public class BlockBaseFurnaces : Block
         }
 
         //设置火焰
-        if (blockMetaData.transitionPro <= 0)
+        if (blockMetaData.transitionPro <= 0 || blockMetaData.fireTimeRemain == 0)
         {
             tfItemFire.ShowObj(false);
         }
@@ -95,12 +95,6 @@ public class BlockBaseFurnaces : Block
         base.EventBlockUpdateForSec(chunk, localPosition);
         //获取数据
         GetBlockMetaData(chunk, localPosition, out BlockBean blockData, out BlockMetaFurnaces blockMetaData);
-        //如果没有数据
-        if (blockMetaData == null)
-        {
-            chunk.UnRegisterEventUpdate(localPosition, TimeUpdateEventTypeEnum.Sec);
-            return;
-        }
         //首先添加烧制能量材料
         if (blockMetaData.itemFireSourceId != 0)
         {
@@ -119,61 +113,69 @@ public class BlockBaseFurnaces : Block
                 }
             }
         }
-
-        //如果没有烧制的物品 或者剩下的烧制时间为0 则结束
-        if (blockMetaData.itemBeforeId == 0 || blockMetaData.fireTimeRemain == 0)
-        {
-            blockMetaData.transitionPro = 0;
-            chunk.UnRegisterEventUpdate(localPosition, TimeUpdateEventTypeEnum.Sec);
-            //保存数据
-            SaveFurnacesData(chunk, localPosition, blockData, blockMetaData);
-            return;
-        }
-        //查询烧制之前的物品能否烧制物品
-        ItemsInfoBean itemsInfoBefore = ItemsHandler.Instance.manager.GetItemsInfoById(blockMetaData.itemBeforeId);
-        if (itemsInfoBefore.fire_items.IsNull())
-        {
-            blockMetaData.transitionPro = 0;
-            //如果是不能烧制的物品 则结束刷新
-            chunk.UnRegisterEventUpdate(localPosition, TimeUpdateEventTypeEnum.Sec);
-            //保存数据
-            SaveFurnacesData(chunk, localPosition, blockData, blockMetaData);
-            return;
-        }
-
-        //获取烧制的结果
-        itemsInfoBefore.GetFireItems(out int[] fireItemsId, out int[] fireItemsNum, out int[] fireTime);
-        int itemFireTime = fireTime[0];
-        //检测是否正在烧制物品
-        if (blockMetaData.transitionPro < 1)
-        {
-            blockMetaData.transitionPro += 1f / itemFireTime;
-        }
-        else if (blockMetaData.transitionPro >= 1)
-        {            
-            //烧制完成
-            blockMetaData.transitionPro = 0;
-            blockMetaData.itemAfterId = fireItemsId[0];
-            blockMetaData.itemAfterNum++;
-            blockMetaData.itemBeforeNum--;
-            chunk.isSaveData = true;
-        }
-        else
-        {
-            ItemsInfoBean itemsInfoAfter = ItemsHandler.Instance.manager.GetItemsInfoById(blockMetaData.itemAfterId);
-            //如果已经有烧制的物品 并且该物品不等于当前物品烧制后的物品 则也不进行烧制     //如果已经达到物品上限 也不烧制了
-            if (blockMetaData.itemAfterId != 0 
-                && (blockMetaData.itemAfterId != fireItemsId[0] || itemsInfoAfter.max_number <= blockMetaData.itemAfterNum))
+        //首先判断是否还有烧能量
+        if(blockMetaData.fireTimeRemain != 0)
+        {       
+            //如果没有烧制的物品 则结束
+            if (blockMetaData.itemBeforeId == 0)
             {
                 blockMetaData.transitionPro = 0;
                 chunk.UnRegisterEventUpdate(localPosition, TimeUpdateEventTypeEnum.Sec);
-                //保存数据
-                SaveFurnacesData(chunk, localPosition, blockData, blockMetaData);
-                return;
             }
-            blockMetaData.transitionPro = 1f / itemFireTime;
+            else
+            {
+                //查询烧制之前的物品能否烧制物品
+                ItemsInfoBean itemsInfoBefore = ItemsHandler.Instance.manager.GetItemsInfoById(blockMetaData.itemBeforeId);
+                if (itemsInfoBefore.fire_items.IsNull())
+                {
+                    blockMetaData.transitionPro = 0;
+                    //如果是不能烧制的物品 则结束刷新
+                    chunk.UnRegisterEventUpdate(localPosition, TimeUpdateEventTypeEnum.Sec);
+                }
+                else
+                {
+                    //获取烧制的结果
+                    itemsInfoBefore.GetFireItems(out int[] fireItemsId, out int[] fireItemsNum, out int[] fireTime);
+                    int itemFireTime = fireTime[0];
+                    //检测是否正在烧制物品
+                    if (blockMetaData.transitionPro < 1)
+                    {
+                        blockMetaData.transitionPro += 1f / itemFireTime;
+                        blockMetaData.AddFireTimeRemain(-1);
+                    }
+                    else if (blockMetaData.transitionPro >= 1)
+                    {
+                        //烧制完成
+                        blockMetaData.transitionPro = 0;
+                        blockMetaData.itemAfterId = fireItemsId[0];
+                        blockMetaData.itemAfterNum++;
+                        blockMetaData.itemBeforeNum--;
+                        chunk.isSaveData = true;
+                        blockMetaData.AddFireTimeRemain(-1);
+                    }
+                    else
+                    {
+                        ItemsInfoBean itemsInfoAfter = ItemsHandler.Instance.manager.GetItemsInfoById(blockMetaData.itemAfterId);
+                        //如果已经有烧制的物品 并且该物品不等于当前物品烧制后的物品 则也不进行烧制     //如果已经达到物品上限 也不烧制了
+                        if (blockMetaData.itemAfterId != 0
+                            && (blockMetaData.itemAfterId != fireItemsId[0] || itemsInfoAfter.max_number <= blockMetaData.itemAfterNum))
+                        {
+                            blockMetaData.transitionPro = 0;
+                            chunk.UnRegisterEventUpdate(localPosition, TimeUpdateEventTypeEnum.Sec);
+                        }
+                        else
+                        {
+                            blockMetaData.transitionPro = 1f / itemFireTime;
+                            blockMetaData.AddFireTimeRemain(-1);
+                        }
+                    }
+                }
+            }
         }
-        blockMetaData.AddFireTimeRemain(-1);
+        else
+        {
+            chunk.UnRegisterEventUpdate(localPosition, TimeUpdateEventTypeEnum.Sec);
+        }
         //保存数据
         SaveFurnacesData(chunk, localPosition, blockData, blockMetaData);
     }

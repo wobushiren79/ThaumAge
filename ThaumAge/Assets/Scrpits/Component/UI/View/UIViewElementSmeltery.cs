@@ -161,17 +161,22 @@ public partial class UIViewElementSmeltery : BaseUIView
     /// <summary>
     /// 道具修改回调
     /// </summary>
-    public void CallBackForItemsChange(UIViewItemContainer changeView, ItemsBean chagneData)
+    public void CallBackForItemsChange(UIViewItemContainer changeView, ItemsBean changeData)
     {
         if (changeView == ui_FireItems)
         {
-            blockMetaElementSmeltery.itemFireSourceId = (int)chagneData.itemId;
-            blockMetaElementSmeltery.itemFireSourceNum = chagneData.number;
+            blockMetaElementSmeltery.itemFireSourceId = (int)changeData.itemId;
+            blockMetaElementSmeltery.itemFireSourceNum = changeData.number;
         }
         else if (changeView == ui_BeforeItems)
         {
-            blockMetaElementSmeltery.itemBeforeId = (int)chagneData.itemId;
-            blockMetaElementSmeltery.itemBeforeNum = chagneData.number;
+            if (blockMetaElementSmeltery.itemBeforeId != (int)changeData.itemId
+                && blockMetaElementSmeltery.itemBeforeNum != changeData.number)
+            {
+                blockMetaElementSmeltery.transitionPro = 0;
+            }
+            blockMetaElementSmeltery.itemBeforeId = (int)changeData.itemId;
+            blockMetaElementSmeltery.itemBeforeNum = changeData.number;
         }
 
         string metaStr = Block.ToMetaData(blockMetaElementSmeltery);

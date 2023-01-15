@@ -16,7 +16,7 @@ public class BlockMetaFurnaces : BlockMetaItemsTransition
 
     public BlockMetaFurnaces()
     {
-        fireTimeMax = 200;
+        fireTimeMax = 100;
     }
 
     /// <summary>

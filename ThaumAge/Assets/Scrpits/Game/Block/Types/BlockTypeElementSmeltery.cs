@@ -45,24 +45,20 @@ public class BlockTypeElementSmeltery : Block
     /// <param name="localPosition"></param>
     public override void RefreshObjModel(Chunk chunk, Vector3Int localPosition)
     {
-        BlockBean blockData = chunk.GetBlockData(localPosition);
-        BlockMetaElementSmeltery blockMetaData = FromMetaData<BlockMetaElementSmeltery>(blockData.meta);
-        if (blockMetaData == null)
-            blockMetaData = new BlockMetaElementSmeltery();
+        GetBlockMetaData(chunk, localPosition,out BlockBean blockData,out BlockMetaElementSmeltery blockMetaData);
+        GameObject objFurnaces = chunk.GetBlockObjForLocal(localPosition);
+        //设置烧纸之前的物品
+        Transform tfItemFire = objFurnaces.transform.Find("Fire");
 
-        //GameObject objFurnaces = chunk.GetBlockObjForLocal(localPosition);
-        ////设置烧纸之前的物品
-        //Transform tfItemFire = objFurnaces.transform.Find("Fire");
-
-        ////设置火焰
-        //if (blockMetaData.transitionPro <= 0)
-        //{
-        //    tfItemFire.ShowObj(false);
-        //}
-        //else
-        //{
-        //    tfItemFire.ShowObj(true);
-        //}
+        //设置火焰
+        if (blockMetaData.transitionPro <= 0)
+        {
+            tfItemFire.ShowObj(false);
+        }
+        else
+        {
+            tfItemFire.ShowObj(true);
+        }
     }
 
     /// <summary>
@@ -72,8 +68,7 @@ public class BlockTypeElementSmeltery : Block
     {
         base.EventBlockUpdateForSec(chunk, localPosition);
         //获取数据
-        BlockBean blockData = chunk.GetBlockData(localPosition);
-        BlockMetaElementSmeltery blockMetaData = FromMetaData<BlockMetaElementSmeltery>(blockData.meta);
+        GetBlockMetaData(chunk, localPosition, out BlockBean blockData, out BlockMetaElementSmeltery blockMetaData);
 
         bool isDataChange = false;
         //如果没有数据
@@ -101,45 +96,49 @@ public class BlockTypeElementSmeltery : Block
                 }
             }
         }
-        //如果有烧纸的物品则开始烧纸
-        float elementalPro = blockMetaData.GetElementalPro();
-        //如果容器没满 并且还有可炼制的物品
-        if (elementalPro != 1 && blockMetaData.itemBeforeId != 0 && blockMetaData.itemBeforeNum != 0)
+        //首先判断有没有烧纸能量
+        if (blockMetaData.fireTimeRemain != 0)
         {
-            //获取烧制的时间
-            int itemFireTime = 5;
-            //检测是否正在烧制物品
-            if (blockMetaData.transitionPro < 1)
+            //如果有烧纸的物品则开始烧纸
+            float elementalPro = blockMetaData.GetElementalPro();
+            //如果容器没满 并且还有可炼制的物品
+            if (elementalPro != 1 && blockMetaData.itemBeforeId != 0 && blockMetaData.itemBeforeNum != 0)
             {
-                blockMetaData.transitionPro += 1f / itemFireTime;
-            }
-            else if (blockMetaData.transitionPro >= 1)
-            {
-                ItemsInfoBean itemsInfoBefore = ItemsHandler.Instance.manager.GetItemsInfoById(blockMetaData.itemBeforeId);
-                itemsInfoBefore.GetAllElemental();
-                //烧制完成
-                blockMetaData.transitionPro = 0;
-                blockMetaData.itemBeforeNum--;
-                //增加元素
-                var allElemental = itemsInfoBefore.GetAllElemental();
-                foreach (var itemElemental in allElemental)
+                //获取烧制的时间
+                int itemFireTime = 5;
+                //检测是否正在烧制物品
+                if (blockMetaData.transitionPro < 1)
                 {
-                    ElementalTypeEnum elementalType = itemElemental.Key;
-                    int count = itemElemental.Value;
-                    for (int i = 0; i < count; i++)
+                    blockMetaData.transitionPro += 1f / itemFireTime;
+                }
+                else if (blockMetaData.transitionPro >= 1)
+                {
+                    ItemsInfoBean itemsInfoBefore = ItemsHandler.Instance.manager.GetItemsInfoById(blockMetaData.itemBeforeId);
+                    itemsInfoBefore.GetAllElemental();
+                    //烧制完成
+                    blockMetaData.transitionPro = 0;
+                    blockMetaData.itemBeforeNum--;
+                    //增加元素
+                    var allElemental = itemsInfoBefore.GetAllElemental();
+                    foreach (var itemElemental in allElemental)
                     {
-                        bool isAdd = blockMetaData.AddElemental(elementalType);
-                        if (!isAdd)
-                            break;
+                        ElementalTypeEnum elementalType = itemElemental.Key;
+                        int count = itemElemental.Value;
+                        for (int i = 0; i < count; i++)
+                        {
+                            bool isAdd = blockMetaData.AddElemental(elementalType);
+                            if (!isAdd)
+                                break;
+                        }
                     }
                 }
+                else
+                {
+                    blockMetaData.transitionPro = 1f / itemFireTime;
+                }
+                blockMetaData.AddFireTimeRemain(-1);
+                isDataChange = true;
             }
-            else
-            {
-                blockMetaData.transitionPro = 1f / itemFireTime;
-            }
-            blockMetaData.AddFireTimeRemain(-1);
-            isDataChange = true;
         }
 
         //检测上方3个位置是否有ArcaneAlembic 奥术蒸馏器
@@ -185,16 +184,21 @@ public class BlockTypeElementSmeltery : Block
             blockTypeArcane.GetBlockMetaData(targetChunk, targetLocalPosition,
                 out BlockBean blockData, out BlockMetaArcaneAlembic blockMetaArcaneAlembic);
 
-            bool isSubElemental = blockMetaData.SubElemental(out ElementalTypeEnum subElemental);
-            if (isSubElemental)
+            //获取工厂内的第一个元素
+            ElementalTypeEnum subElemental =  blockMetaData.GetFirstElemental();
+            if(subElemental != ElementalTypeEnum.None)
             {
+                //检测是否能加上 
                 bool isAddElemental = blockMetaArcaneAlembic.AddElemental(subElemental, 1);
-                if(isAddElemental)
+                if (isAddElemental)
                 {
                     blockData.SetBlockMeta(blockMetaArcaneAlembic);
                     targetChunk.SetBlockData(blockData);
+
+                    //扣除工厂内的元素
+                    blockMetaData.SubElemental();
                     return true;
-                }  
+                }
             }
         }
         return false;

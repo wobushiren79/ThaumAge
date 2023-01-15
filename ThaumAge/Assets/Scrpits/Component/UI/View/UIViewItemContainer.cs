@@ -199,7 +199,6 @@ public partial class UIViewItemContainer : BaseUIView
     {
         if (itemsData == null)
             itemsData = new ItemsBean();
-
         this.itemsData = itemsData;
         //设置展示信息
         ui_ViewItemContainer.SetItemData(itemsData);
