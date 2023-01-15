@@ -51,9 +51,9 @@ public class CreatureStatusBean
     /// </summary>
     public void HanleForStatusChange(float intervalTime)
     {
+        moveSpeedAdd = 0;
         if (listStatusChange.IsNull())
             return;
-        moveSpeedAdd = 0;
 
         for (int i = 0; i < listStatusChange.Count; i++)
         {
@@ -68,11 +68,15 @@ public class CreatureStatusBean
                     moveSpeedAdd = itemStatusChange.changeValue;
                     break;
             }
-            itemStatusChange.time -= intervalTime;
-            if (itemStatusChange.time <= 0)
+            if (itemStatusChange.time - intervalTime <= 0)
             {
                 RemoveStatusChange(itemStatusChange);
                 i--;
+            }
+            else
+            {
+                itemStatusChange.time -= intervalTime;
+                listStatusChange[i] = itemStatusChange;
             }
         }
     }

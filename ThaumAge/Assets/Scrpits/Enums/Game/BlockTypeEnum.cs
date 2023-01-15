@@ -242,4 +242,6 @@ public enum BlockTypeEnum
 
     TestBlockAnim = 9998,//测试动画方块
     TestBlockDirection = 9999,//测试方向方块
+
+    InfusionAltar = 10001,//注魔祭坛
 }

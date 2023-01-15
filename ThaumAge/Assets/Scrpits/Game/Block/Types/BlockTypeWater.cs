@@ -35,6 +35,13 @@ public class BlockTypeWater : BlockBaseLiquid
         if (creatureType == CreatureTypeEnum.Player && direction == DirectionEnum.None)
         {
             GameControlHandler.Instance.manager.controlForPlayer.ChangeGroundType(1);
+
+            UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();
+            CharacterBean characterData = userData.characterData;
+            CreatureStatusBean creatureStatus = characterData.GetCreatureStatus();
+
+            CreatureStatusChangeBean creatureStatusChange = new CreatureStatusChangeBean(CreatureStatusChangeTypeEnum.MoveSpeedAdd, 1.01f, -0.3f);
+            creatureStatus.AddStatusChange(creatureStatusChange);
         }
     }
 }

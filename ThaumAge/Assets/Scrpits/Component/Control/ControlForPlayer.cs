@@ -40,13 +40,20 @@ public class ControlForPlayer : ControlForBase
     private InputAction inputActionUseR;
     private InputAction inputActionUseFace;
 
-    private InputAction inputActionJump;
-    private InputAction inputActionMove;
-    private InputAction inputActionUserDetailsData;
-    private InputAction inputActionUseDrop;
-    private InputAction inputActionShift;
-    private InputAction inputActionCtrl;
-    private InputAction inputActionShortcutsSelect;
+    [HideInInspector]
+    public InputAction inputActionJump;
+    [HideInInspector]
+    public InputAction inputActionMove;
+    [HideInInspector]
+    public InputAction inputActionUserDetailsData;
+    [HideInInspector]
+    public InputAction inputActionUseDrop;
+    [HideInInspector]
+    public InputAction inputActionShift;
+    [HideInInspector]
+    public InputAction inputActionCtrl;
+    [HideInInspector]
+    public InputAction inputActionShortcutsSelect;
 
     //是否正在使用道具
     private bool isUseItem = false;

@@ -110,7 +110,9 @@ public class PlayerTargetBlock : BaseMonoBehaviour
             BlockMetaBaseLink oldeBlockMetaLinkData = Block.FromMetaData<BlockMetaBaseLink>(oldBlockData.meta);
             objTargetCenterBlock.transform.position = oldeBlockMetaLinkData.GetBasePosition() + new Vector3(0.5f, 0.5f, 0.5f);
         }
-        else if (block.blockType == BlockTypeEnum.Crucible || block.blockType == BlockTypeEnum.ArcaneAlembic)
+        else if (block.blockType == BlockTypeEnum.Crucible 
+            || block.blockType == BlockTypeEnum.ArcaneAlembic
+            || block.blockType == BlockTypeEnum.WardedJar)
         {
             ShowElemental(worldPosition);
             objTargetCenterBlock.transform.localPosition = new Vector3(0.5f, 0.5f, 0.5f);

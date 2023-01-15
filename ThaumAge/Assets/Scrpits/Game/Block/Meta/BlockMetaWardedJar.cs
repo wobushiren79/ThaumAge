@@ -3,7 +3,9 @@ using UnityEngine;
 
 public class BlockMetaWardedJar : BlockMetaBase
 {
-    public int elementalType = 1;
+    public int elementalType = 0;//瓶内元素类型
+    public int elementalTypeForLabel = 0;//标签类型
+
     public int curElemental = 0;
     public int maxElemental = 100;
     
@@ -20,6 +22,11 @@ public class BlockMetaWardedJar : BlockMetaBase
     public bool AddElemental(ElementalTypeEnum elementalType,int elementalNum, out int leftElementalNum)
     {
         leftElementalNum = elementalNum;
+        //如果有标签 首先判断标签 如果不是同一种元素 不能添加
+        if (this.elementalTypeForLabel != 0 && this.elementalTypeForLabel!= (int)elementalType)
+        {
+            return false;
+        }
         //种类不同不能添加
         if (curElemental != 0 && this.elementalType != (int)elementalType)
         {
