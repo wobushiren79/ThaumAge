@@ -13,7 +13,7 @@ public class BuildingEditorHandler : BaseHandler<BuildingEditorHandler, Building
     {
         if (manager.curCreateType == 0)
         {
-            //建造
+            //放置方块
             //先删除有的
             if (manager.dicBlockBuild.TryGetValue(blockPosition, out BuildingEditorModel blockEditor))
             {
@@ -30,7 +30,7 @@ public class BuildingEditorHandler : BaseHandler<BuildingEditorHandler, Building
         }
         else if (manager.curCreateType == 1)
         {
-            //删除
+            //移除方块
             if (manager.dicBlockBuild.TryGetValue(blockPosition, out BuildingEditorModel blockEditor))
             {
                 Destroy(blockEditor.gameObject);
@@ -64,13 +64,14 @@ public class BuildingEditorHandler : BaseHandler<BuildingEditorHandler, Building
     public void ClearAllBlock()
     {
         manager.objBlockContainer.transform.DestroyAllChild();
+        manager.dicBlockBuild.Clear();
     }
 
     /// <summary>
     /// 保存建筑数据
     /// </summary>
     /// <param name="buildingInfo"></param>
-    public void SaveBuildingData()
+    public void SaveBuildingData(int buildId,string buildName)
     {
         //获取场中的方块数据 设置
         List<BuildingBean> listBlockData = new List<BuildingBean>();
@@ -82,20 +83,26 @@ public class BuildingEditorHandler : BaseHandler<BuildingEditorHandler, Building
             itemBlockData.direction = (int)blockEditor.blockDirection;
             itemBlockData.position = itemData.Key;
             itemBlockData.randomRate = blockEditor.randomRate;
+            listBlockData.Add(itemBlockData);
         }
         manager.curBuildingInfo.SetListBuildingData(listBlockData);
+        manager.curBuildingInfo.id = buildId;
+        manager.curBuildingInfo.name_cn = buildName;
+        manager.curBuildingInfo.name_en = buildName;
+        manager.curBuildingInfo.valid = 1;
         manager.controllerForBuildingInfo.SetBuildingInfoData(manager.curBuildingInfo);
     }
 
     /// <summary>
     /// 加载建筑
     /// </summary>
-    public void LoadBuilding(long buildingId)
+    public void LoadBuilding(long buildingId,Action<BuildingInfoBean> callBack)
     {
         manager.controllerForBuildingInfo.GetBuildingInfoDataById(buildingId, (data) =>
         {
             manager.curBuildingInfo = data;
             BuildBuilding(data);
+            callBack?.Invoke(data);
         });
     }
 }

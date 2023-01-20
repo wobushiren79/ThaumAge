@@ -4,6 +4,43 @@ using UnityEngine.UI;
 
 public class ItemClassWardedJar : ItemTypeBlock
 {
+
+    /// <summary>
+    /// 设置名字
+    /// </summary>
+    public override void SetItemName(Text tvTarget, ItemsBean itemData, ItemsInfoBean itemsInfo)
+    {
+        if (itemData != null && !itemData.meta.IsNull())
+        {
+            BlockMetaWardedJar blockMetaWarded = JsonUtil.FromJson<BlockMetaWardedJar>(itemData.meta);
+            if (blockMetaWarded != null && blockMetaWarded.curElemental != 0 && blockMetaWarded.elementalType != 0)
+            {
+                string name;
+                if (blockMetaWarded.elementalTypeForLabel != 0)
+                {
+                    ElementalInfoBean elementalInfo = ElementalInfoCfg.GetItemData((ElementalTypeEnum)blockMetaWarded.elementalTypeForLabel);
+                    //有标签
+                    name = $"{itemsInfo.GetName()} {elementalInfo.GetName()}";
+                    tvTarget.text = name;
+                    return;
+                }
+                else
+                {
+                    //无标签
+                    if (blockMetaWarded.curElemental != 0 && blockMetaWarded.elementalType != 0)
+                    {
+                        ElementalInfoBean elementalInfo = ElementalInfoCfg.GetItemData((ElementalTypeEnum)blockMetaWarded.elementalType);
+                        name = $"{itemsInfo.GetName()} {elementalInfo.GetName()}";
+                        tvTarget.text = name;
+                        return;
+                    }
+                }
+
+            }
+        }
+        base.SetItemName(tvTarget, itemData, itemsInfo);
+    }
+
     /// <summary>
     /// 设置道具图标
     /// </summary>
@@ -14,7 +51,7 @@ public class ItemClassWardedJar : ItemTypeBlock
         base.SetItemIcon(itemData, itemsInfo, ivTarget, srTarget);
 
         //如果没有东西 则不设置
-        if (itemData.meta.IsNull())
+        if (itemData == null || itemData.meta.IsNull())
         {
             return;
         }

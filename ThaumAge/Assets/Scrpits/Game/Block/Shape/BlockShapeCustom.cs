@@ -77,6 +77,7 @@ public class BlockShapeCustom : BlockShape
     /// <returns></returns>
     public override Mesh GetCompleteMeshData(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction)
     {
-        return blockMeshData.GetMainMesh();
+        Mesh meshMain = blockMeshData.GetMainMesh();
+        return meshMain;
     }
 }

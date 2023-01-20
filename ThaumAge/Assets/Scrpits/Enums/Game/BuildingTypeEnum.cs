@@ -8,4 +8,6 @@ public enum BuildingTypeEnum
     MushrooBig = 3,//大蘑菇
 
     StoneMoss = 11, //苔藓石
+
+    InfusionAltar = 10001,//注魔祭坛
 }

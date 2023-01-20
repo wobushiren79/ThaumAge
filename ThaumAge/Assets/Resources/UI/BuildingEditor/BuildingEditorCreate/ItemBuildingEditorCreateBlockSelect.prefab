@@ -66,8 +66,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
-  m_Type: 0
+  m_Sprite: {fileID: 21300000, guid: 6cb6186927ac68641ae947a51bf7c4eb, type: 3}
+  m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -184,6 +184,7 @@ MonoBehaviour:
   rectTransform: {fileID: 0}
   ui_Select: {fileID: 5163187189212964457}
   ui_Icon: {fileID: 8402113944006390404}
+  ui_ItemBuildingEditorCreateBlockSelect: {fileID: 0}
 --- !u!1 &8594403372413792239
 GameObject:
   m_ObjectHideFlags: 0

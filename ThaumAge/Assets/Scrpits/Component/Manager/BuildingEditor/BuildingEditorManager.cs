@@ -27,6 +27,7 @@ public class BuildingEditorManager : BaseManager,IBuildingInfoView
     public bool isStartBuild = false;
     public void Awake()
     {
+        curBuildingInfo = new BuildingInfoBean();
         objBlockContainer = GameObject.Find("BlockContainer");
         objPlane = GameObject.Find("Plane");
         objBlockModel = GameObject.Find("BlockModel");

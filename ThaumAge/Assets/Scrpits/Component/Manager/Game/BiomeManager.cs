@@ -11,7 +11,7 @@ public class BiomeManager : BaseManager
     protected BuildingInfoController controllerForBuilding;
 
     protected BiomeInfoBean[] arrayBiomeInfo = new BiomeInfoBean[EnumExtension.GetEnumMaxIndex<BiomeTypeEnum>() + 1];
-    protected BuildingInfoBean[] arrayBuildingInfo = new BuildingInfoBean[EnumExtension.GetEnumMaxIndex<BuildingTypeEnum>() + 1];
+    protected Dictionary<int, BuildingInfoBean> dicBuildingInfo = new Dictionary<int, BuildingInfoBean>();
 
     //地形数据
     public Dictionary<BiomeTypeEnum, Biome> dicBiome = new Dictionary<BiomeTypeEnum, Biome>();
@@ -71,23 +71,25 @@ public class BiomeManager : BaseManager
     /// <param name="listData"></param>
     public void InitBuildingInfo(List<BuildingInfoBean> listData)
     {
+        dicBuildingInfo.Clear();
         for (int i = 0; i < listData.Count; i++)
         {
             BuildingInfoBean itemInfo = listData[i];
-            arrayBuildingInfo[itemInfo.id] = itemInfo;
+            dicBuildingInfo.Add(itemInfo.id, itemInfo);
         }
     }
 
     /// <summary>
     /// 获取生态信息
     /// </summary>
-    /// <param name="biomeType"></param>
-    /// <returns></returns>
     public BiomeInfoBean GetBiomeInfo(BiomeTypeEnum biomeType)
     {
         return GetBiomeInfo((int)biomeType);
     }
 
+    /// <summary>
+    /// 获取生态信息
+    /// </summary>
     public BiomeInfoBean GetBiomeInfo(int biomeId)
     {
         return arrayBiomeInfo[biomeId];
@@ -96,22 +98,22 @@ public class BiomeManager : BaseManager
     /// <summary>
     /// 获取建筑信息
     /// </summary>
-    /// <param name="biomeType"></param>
-    /// <returns></returns>
     public BuildingInfoBean GetBuildingInfo(BuildingTypeEnum buildingType)
     {
         return GetBuildingInfo((int)buildingType);
     }
 
+    /// <summary>
+    /// 获取建筑信息
+    /// </summary>
     public BuildingInfoBean GetBuildingInfo(int buildingId)
     {
-        return arrayBuildingInfo[buildingId];
+        return base.GetDataById(buildingId, dicBuildingInfo);
     }
 
     /// <summary>
     /// 获取生态数据
     /// </summary>
-    /// <returns></returns>
     public virtual Biome GetBiome(BiomeTypeEnum biomeType)
     {
         //如果已经有了

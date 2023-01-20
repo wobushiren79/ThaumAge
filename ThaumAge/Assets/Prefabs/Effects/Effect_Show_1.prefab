@@ -11,9 +11,9 @@ GameObject:
   - component: {fileID: 7610797672387502941}
   - component: {fileID: 2846747087689624992}
   - component: {fileID: 988087270272497429}
-  - component: {fileID: -5031873135760880994}
+  - component: {fileID: 851186673632597723}
   m_Layer: 0
-  m_Name: Effect_Change_1
+  m_Name: Effect_Show_1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -42,7 +42,7 @@ VisualEffect:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2939940622265413595}
   m_Enabled: 1
-  m_Asset: {fileID: 8926484042661614526, guid: 3b863813f89802f428ce6c387a4e2235, type: 3}
+  m_Asset: {fileID: 8926484042661614526, guid: bba7204ac312eb5408e6271d461488c8, type: 3}
   m_InitialEventName: OnPlay
   m_InitialEventNameOverriden: 0
   m_StartSeed: 0
@@ -55,10 +55,7 @@ VisualEffect:
     m_Vector2f:
       m_Array: []
     m_Vector3f:
-      m_Array:
-      - m_Value: {x: 1, y: 1, z: 1}
-        m_Name: Size
-        m_Overridden: 1
+      m_Array: []
     m_Vector4f:
       m_Array: []
     m_Uint:
@@ -115,7 +112,7 @@ VFXRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!114 &-5031873135760880994
+--- !u!114 &851186673632597723
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

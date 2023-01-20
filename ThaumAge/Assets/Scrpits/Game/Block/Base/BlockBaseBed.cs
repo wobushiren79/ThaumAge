@@ -5,11 +5,10 @@ using UnityEngine;
 
 public class BlockBaseBed : BlockBaseLink
 {
-    public override void InitBlock(Chunk chunk, Vector3Int localPosition, int state)
+    public override void SetData(BlockTypeEnum blockType)
     {
-        base.InitBlock(chunk, localPosition, state);
-        if(state == 0)
-            listLinkPosition = new List<Vector3Int>() { Vector3Int.forward };
+        base.SetData(blockType);
+        listLinkPosition = new List<Vector3Int>() { Vector3Int.forward };
     }
 
     /// <summary>

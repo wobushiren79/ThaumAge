@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 public partial class UIBuildingEditorCreate : BaseUIComponent
@@ -31,12 +32,13 @@ public partial class UIBuildingEditorCreate : BaseUIComponent
         base.OpenUI();
         InitData();
         RegisterEvent<int>(EventsInfo.UIBuildingEditorCreate_SelectChange, CallBackForSelectChange);
+        RegisterEvent<Vector3Int>(EventsInfo.UIBuildingEditorCreate_PositionChange, CallBackForPositionChange);
         BuildingEditorHandler.Instance.manager.isStartBuild = true;
     }
 
     public override void CloseUI()
     {
-        base.CloseUI(); 
+        base.CloseUI();
         BuildingEditorHandler.Instance.manager.isStartBuild = false;
     }
 
@@ -51,9 +53,22 @@ public partial class UIBuildingEditorCreate : BaseUIComponent
         {
             OnClickForCreateBuilding();
         }
-        else if (viewButton== ui_LoadBuilding)
+        else if (viewButton == ui_LoadBuilding)
         {
             OnClickForLoadBuilding();
+        }
+    }
+
+    public override void OnInputActionForStarted(InputActionUIEnum inputType, InputAction.CallbackContext callback)
+    {
+        base.OnInputActionForStarted(inputType, callback);
+        if(inputType == InputActionUIEnum.N1)
+        {
+            ui_CreateSelect.isOn = true;
+        }
+        else if (inputType == InputActionUIEnum.N2)
+        {
+            ui_DestorySelect.isOn = true;
         }
     }
 
@@ -64,10 +79,14 @@ public partial class UIBuildingEditorCreate : BaseUIComponent
         //添加不为NULL的数据
         for (int i = 0; i < arrayBlockInfo.Length; i++)
         {
-            var itemInfo = arrayBlockInfo[i];
-            if (itemInfo != null)
+            var blockInfo = arrayBlockInfo[i];
+            if (blockInfo != null)
             {
-                listBlockInfo.Add(itemInfo);
+                ItemsInfoBean itemsInfo = ItemsHandler.Instance.manager.GetItemsInfoByBlockId(blockInfo.id);
+                if (itemsInfo != null)
+                {
+                    listBlockInfo.Add(blockInfo);
+                }
             }
         }
         ui_BlockList.SetCellCount(listBlockInfo.Count);
@@ -109,6 +128,16 @@ public partial class UIBuildingEditorCreate : BaseUIComponent
         ui_BlockDirection.value = 0;
     }
 
+    public void SetUIBuildingId(int buildingId)
+    {
+        ui_BuildingIdEdit.text = $"{buildingId}";
+    }
+
+    public void SetUIBuildingName(string buildingName)
+    {
+        ui_BuildingNameEdit.text = $"{buildingName}";
+    }
+
     /// <summary>
     /// 选择方块列表设置
     /// </summary>
@@ -130,6 +159,11 @@ public partial class UIBuildingEditorCreate : BaseUIComponent
         ui_BlockDirection.value = 3;
         //刷新所有
         ui_BlockList.RefreshAllCells();
+    }
+
+    public void CallBackForPositionChange(Vector3Int position)
+    {
+        ui_BlockPosition.text = $"{position.x},{position.y},{position.z}";
     }
 
     /// <summary>
@@ -175,11 +209,25 @@ public partial class UIBuildingEditorCreate : BaseUIComponent
     /// </summary>
     public void OnClickForCreateBuilding()
     {
-        DialogBean dialogData = new DialogBean();
+        BuildingEditorHandler.Instance.manager.isStartBuild = false;
+           DialogBean dialogData = new DialogBean();
         dialogData.content = $"是否要创建ID为 {ui_BuildingIdEdit.text} 的建筑";
         dialogData.actionSubmit = (view, data) =>
         {
-            BuildingEditorHandler.Instance.SaveBuildingData();
+            int buildId = int.Parse(ui_BuildingIdEdit.text);
+            string buildName = ui_BuildingNameEdit.text;
+            BuildingEditorHandler.Instance.SaveBuildingData(buildId, buildName);
+            this.WaitExecuteSeconds(0.1f,()=> 
+            {
+                BuildingEditorHandler.Instance.manager.isStartBuild = true;
+            });
+        };
+        dialogData.actionCancel= (view, data) =>
+        {
+            this.WaitExecuteSeconds(0.1f, () =>
+            {
+                BuildingEditorHandler.Instance.manager.isStartBuild = true;
+            });
         };
         UIDialogNormal uiDialog = UIHandler.Instance.ShowDialog<UIDialogNormal>(dialogData);
     }
@@ -189,10 +237,32 @@ public partial class UIBuildingEditorCreate : BaseUIComponent
     /// </summary>
     public void OnClickForLoadBuilding()
     {
-        //清空所有方块
-        BuildingEditorHandler.Instance.ClearAllBlock();
-        //加载建筑
-        BuildingEditorHandler.Instance.LoadBuilding(long.Parse(ui_BuildingIdEdit.text));
-
+        BuildingEditorHandler.Instance.manager.isStartBuild = false;
+        DialogBean dialogData = new DialogBean();
+        dialogData.content = $"是否要加载ID为 {ui_BuildingIdEdit.text} 的建筑";
+        dialogData.actionSubmit = (view, data) =>
+        {
+            //清空所有方块
+            BuildingEditorHandler.Instance.ClearAllBlock();
+            //加载建筑
+            BuildingEditorHandler.Instance.LoadBuilding(long.Parse(ui_BuildingIdEdit.text), (data) =>
+            {
+                SetUIBuildingId(data.id);
+                SetUIBuildingName(data.name_cn);
+                this.WaitExecuteSeconds(0.1f, () =>
+                {
+                    BuildingEditorHandler.Instance.manager.isStartBuild = true;
+                });
+            });
+        }; 
+        dialogData.actionCancel = (view, data) =>
+        {
+            this.WaitExecuteSeconds(0.1f, () =>
+            {
+                BuildingEditorHandler.Instance.manager.isStartBuild = true;
+            });
+        };
+        UIDialogNormal uiDialog = UIHandler.Instance.ShowDialog<UIDialogNormal>(dialogData);
     }
+
 }

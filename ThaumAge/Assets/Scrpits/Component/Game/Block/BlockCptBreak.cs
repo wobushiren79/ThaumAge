@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
-
+using DG.Tweening;
 public class BlockCptBreak : BaseMonoBehaviour
 {
     public MeshRenderer mrBlockBreak;
@@ -24,6 +24,8 @@ public class BlockCptBreak : BaseMonoBehaviour
     protected float timeForUpdate;
     //闲置删除时间
     protected float timeForIdleDestory = 2;
+
+    private Tween animForBreakShake;
 
     protected Vector2[] uvList = new Vector2[]
     {
@@ -65,6 +67,7 @@ public class BlockCptBreak : BaseMonoBehaviour
         transform.position = worldPosition;
     }
 
+
     /// <summary>
     /// 破碎方块
     /// </summary>
@@ -100,6 +103,25 @@ public class BlockCptBreak : BaseMonoBehaviour
         Vector3Int localPosition = worldPosition - targetChunk.chunkData.positionForWorld;
         //设置破坏的形状
         Mesh newMeshData = block.blockShape.GetCompleteMeshData(targetChunk, localPosition, targetDirection);
+
+        //设置方向
+        tfCenter.eulerAngles = targetBlock.GetRotateAngles(targetDirection);
+        tfCenter.localScale = new Vector3(1.001f, 1.001f, 1.001f);
+        tfCenter.localPosition = new Vector3(0.5f, 0.5f, 0.5f);
+        //如果没有顶点 则直接取实例模型 并且让他抖动一下
+        if (newMeshData.vertices.Length == 0)
+        {
+            if (!block.blockInfo.model_name.IsNull() && damage > 0)
+            {
+                GameObject objTarget = block.GetBlockObj(worldPosition);
+                if(animForBreakShake != null && !animForBreakShake.IsComplete())
+                {
+                    animForBreakShake.Complete();
+                }
+                animForBreakShake = objTarget.transform.DOShakePosition(0.2f,0.02f,20,180);
+            }
+        }
+
         Vector2[] newUVS = new Vector2[newMeshData.vertices.Length];
         for (int i = 0; i < newMeshData.vertices.Length; i++)
         {
@@ -108,10 +130,6 @@ public class BlockCptBreak : BaseMonoBehaviour
         }
         newMeshData.SetUVs(0, newUVS);
         mfBlockBreak.mesh = newMeshData;
-
-        //设置方向
-        tfCenter.eulerAngles = targetBlock.GetRotateAngles(targetDirection);
-        tfCenter.localScale = new Vector3(1.001f, 1.001f, 1.001f);
 
         //如果是link类型，
         if (targetBlock.blockInfo.GetBlockShape() == BlockShapeEnum.LinkChild)

@@ -82,11 +82,6 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 23a07a5a27eeafd43a4eb3abd58e9a0a
-    m_Address: Assets/Prefabs/Block/BlockBedWooden.prefab
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: b8e8098b097d2c84d850c3f9386871f5
     m_Address: Assets/Prefabs/Block/BlockFurnacesSimple.prefab
     m_ReadOnly: 0

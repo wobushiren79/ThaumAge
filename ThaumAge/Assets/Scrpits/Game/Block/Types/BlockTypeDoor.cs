@@ -5,11 +5,10 @@ using DG.Tweening;
 
 public class BlockTypeDoor : BlockBaseLink
 {
-    public override void InitBlock(Chunk chunk, Vector3Int localPosition, int state)
+    public override void SetData(BlockTypeEnum blockType)
     {
-        base.InitBlock(chunk, localPosition, state);
-        if (state == 0)
-            listLinkPosition = new List<Vector3Int>() { Vector3Int.up };
+        base.SetData(blockType);
+        listLinkPosition = new List<Vector3Int>() { Vector3Int.up };
     }
 
     public override void CreateBlockModel(Chunk chunk, Vector3Int localPosition)

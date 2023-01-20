@@ -58,7 +58,9 @@ public class ControlForBuildingEditor : ControlForBase
         {
             objSelect.ShowObj(true);
 
-            objSelect.transform.position = Vector3Int.RoundToInt(hit.point);
+            Vector3Int hitPosition = Vector3Int.RoundToInt(hit.point);
+            objSelect.transform.position = hitPosition;
+            EventHandler.Instance.TriggerEvent(EventsInfo.UIBuildingEditorCreate_PositionChange, hitPosition);
         }
         else
         {
@@ -71,8 +73,11 @@ public class ControlForBuildingEditor : ControlForBase
     /// </summary>
     public void OnClickForBuild()
     {
-        BuildingEditorHandler.Instance.BuildBlock
-            (Vector3Int.RoundToInt(objSelect.transform.position),BuildingEditorHandler.Instance.manager.curSelectBlockInfo.id, BuildingEditorHandler.Instance.manager.curBlockDirection);
+        BlockInfoBean curSelectBlockInfo = BuildingEditorHandler.Instance.manager.curSelectBlockInfo;
+        if (curSelectBlockInfo != null)
+        {
+            BuildingEditorHandler.Instance.BuildBlock(Vector3Int.RoundToInt(objSelect.transform.position), curSelectBlockInfo.id, BuildingEditorHandler.Instance.manager.curBlockDirection);
+        }
     }
 
     /// <summary>

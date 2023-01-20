@@ -24,11 +24,9 @@ public partial class UIItemBuildingEditorCreateBlockSelect : BaseUIView
     {
         this.index = index;
         this.blockInfo = blockInfo;
-        ItemsInfoBean itemsInfo = ItemsHandler.Instance.manager.GetItemsInfoByBlockId(blockInfo.id);
-        if (itemsInfo != null)
-        {
-            SetBlockIcon(itemsInfo.icon_key);
-        }
+
+        //设置图标
+        SetBlockIcon(blockInfo);
         //展示选中状态
         ShowSelect(indexSelect == index);
     }
@@ -37,12 +35,11 @@ public partial class UIItemBuildingEditorCreateBlockSelect : BaseUIView
     /// 设置图标
     /// </summary>
     /// <param name="iconKey"></param>
-    public void SetBlockIcon(string iconKey)
+    public void SetBlockIcon(BlockInfoBean blockInfo)
     {
-        IconHandler.Instance.manager.GetItemsSpriteByName(iconKey, (spIcon) =>
-        {
-            ui_Icon.sprite = spIcon;
-        });
+        ItemsInfoBean itemsInfo = ItemsHandler.Instance.manager.GetItemsInfoByBlockId(blockInfo.id);
+        Item item = ItemsHandler.Instance.manager.GetRegisterItem(itemsInfo.id, (ItemsTypeEnum)itemsInfo.items_type);
+        item.SetItemIcon(null, itemsInfo, ui_Icon);
     }
 
     /// <summary>

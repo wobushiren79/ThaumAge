@@ -22,5 +22,9 @@ public partial class UIBuildingEditorCreate
 
     public Button ui_LoadBuilding;
 
+    public Text ui_BlockPosition;
+
+    public InputField ui_BuildingNameEdit;
+
 
 }

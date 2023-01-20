@@ -26,6 +26,9 @@ public class ItemClassElementalPowderThaum : Item
                 case BlockTypeEnum.CraftingTableSimple:
                     HandleForCraftingTableArcane(targetPosition, targetBlock, targetBlockDirection, taragetChunk);
                     break;
+                case BlockTypeEnum.RunicMatrix:
+                    HandleForRunicMatrix(targetPosition, targetBlock, targetBlockDirection, taragetChunk);
+                    break;
                 default:
                     return false;
             }
@@ -43,10 +46,6 @@ public class ItemClassElementalPowderThaum : Item
     /// <summary>
     /// 处理-奥术制造台
     /// </summary>
-    /// <param name="targetPosition"></param>
-    /// <param name="targetBlock"></param>
-    /// <param name="targetBlockDirection"></param>
-    /// <param name="taragetChunk"></param>
     protected void HandleForCraftingTableArcane(Vector3Int targetPosition, Block targetBlock, BlockDirectionEnum targetBlockDirection, Chunk taragetChunk)
     {
         EffectHandler.Instance.WaitExecuteSeconds(2, () =>
@@ -66,6 +65,50 @@ public class ItemClassElementalPowderThaum : Item
         effectSmoke.effectName = EffectInfo.Effect_Change_1;
         effectSmoke.effectPosition = new Vector3(0.5f + targetPosition.x, 0.5f + targetPosition.y, 0.5f + targetPosition.z);
         effectSmoke.timeForShow = 5;
-        EffectHandler.Instance.ShowEffect(effectSmoke);
+        EffectHandler.Instance.ShowEffect(effectSmoke, (effect) =>
+        {
+            effect.listVE[0].SetVector3("Size", new Vector3(1, 1, 1));
+        });
+    }
+
+    /// <summary>
+    /// 处理 奥术矩阵
+    /// </summary>
+    protected void HandleForRunicMatrix(Vector3Int targetPosition, Block targetBlock, BlockDirectionEnum targetBlockDirection, Chunk taragetChunk)
+    {
+        //检测是否能放下这个多方块结构
+        BuildingInfoBean buildingInfo = BiomeHandler.Instance.manager.GetBuildingInfo(BuildingTypeEnum.InfusionAltar);
+        Vector3Int basePosition = targetPosition - Vector3Int.up * 2;
+        if (!buildingInfo.CheckCanSetLinkLargeBuilding(basePosition))
+        {
+            return;
+        }
+        EffectHandler.Instance.WaitExecuteSeconds(2, () =>
+        {
+            //获取目标方块
+            WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(targetPosition, out targetBlock, out targetBlockDirection, out taragetChunk);
+            if (taragetChunk != null && targetBlock.blockType == BlockTypeEnum.RunicMatrix)
+            {       
+                //检测是否能放下这个多方块结构
+                BuildingInfoBean buildingInfo = BiomeHandler.Instance.manager.GetBuildingInfo(BuildingTypeEnum.InfusionAltar);
+                if (!buildingInfo.CheckCanSetLinkLargeBuilding(basePosition))
+                {
+                    return;
+                }
+                taragetChunk.SetBlockForLocal(basePosition, BlockTypeEnum.InfusionAltar, targetBlockDirection);
+                //播放音效
+                AudioHandler.Instance.PlaySound(3, targetPosition);
+            }
+        });
+        //播放粒子特效
+        EffectBean effectSmoke = new EffectBean();
+        effectSmoke.effectType = EffectTypeEnum.Visual;
+        effectSmoke.effectName = EffectInfo.Effect_Change_1;
+        effectSmoke.effectPosition = new Vector3(0.5f + targetPosition.x, 0.5f + targetPosition.y - 1.5f, 0.5f + targetPosition.z);
+        effectSmoke.timeForShow = 5;
+        EffectHandler.Instance.ShowEffect(effectSmoke,(effect)=> 
+        {
+            effect.listVE[0].SetVector3("Size",new Vector3(3,3,3));
+        });
     }
 }
