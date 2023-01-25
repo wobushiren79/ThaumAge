@@ -30,7 +30,7 @@
       "url": "https://packages.unity.cn"
     },
     "com.unity.burst": {
-      "version": "1.7.4",
+      "version": "1.8.2",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -39,7 +39,7 @@
       "url": "https://packages.unity.cn"
     },
     "com.unity.cinemachine": {
-      "version": "2.9.2",
+      "version": "2.9.4",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -65,7 +65,7 @@
       "url": "https://packages.unity.cn"
     },
     "com.unity.ide.rider": {
-      "version": "3.0.16",
+      "version": "3.0.17",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -74,7 +74,7 @@
       "url": "https://packages.unity.cn"
     },
     "com.unity.ide.visualstudio": {
-      "version": "2.0.16",
+      "version": "2.0.17",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -132,7 +132,7 @@
       "source": "builtin",
       "dependencies": {
         "com.unity.mathematics": "1.2.4",
-        "com.unity.burst": "1.6.4",
+        "com.unity.burst": "1.8.2",
         "com.unity.modules.video": "1.0.0",
         "com.unity.modules.animation": "1.0.0",
         "com.unity.modules.imageconversion": "1.0.0",

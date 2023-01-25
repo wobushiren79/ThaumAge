@@ -71,7 +71,6 @@ public class Block
         }
     }
 
-
     /// <summary>
     /// 获取区块
     /// </summary>
@@ -158,6 +157,15 @@ public class Block
                 }
             }
         }
+    }
+
+    /// <summary>
+    /// 获取方块的生命值
+    /// </summary>
+    /// <returns></returns>
+    public virtual int GetBlockLife(Chunk chunk, Vector3Int localPosition)
+    {
+        return blockInfo.life;
     }
 
     /// <summary>
@@ -569,17 +577,10 @@ public class Block
     public virtual void CreateLinkBlock(Chunk chunk, Vector3Int localPosition, List<Vector3Int> listLink)
     {
         //获取数据
-        BlockBean blockData = chunk.GetBlockData(localPosition);
-        if (blockData != null)
-        {
-            BlockMetaBaseLink blockMetaLinkData = FromMetaData<BlockMetaBaseLink>(blockData.meta);
-            if (blockMetaLinkData != null)
-            {
-                //如果是子级 则不生成
-                if (blockMetaLinkData.level > 0)
-                    return;
-            }
-        }
+        GetBlockMetaData(chunk, localPosition, out BlockBean blockData, out BlockMetaBaseLink blockMetaLinkData);
+        //如果是子级 则不生成
+        if (blockMetaLinkData.level > 0)
+            return;
         //判断是否在指定的link坐标上有其他方块，如果有则生成道具
         bool hasBlock = false;
         BlockDirectionEnum blockDirection = chunk.chunkData.GetBlockDirection(localPosition.x, localPosition.y, localPosition.z);
@@ -611,10 +612,11 @@ public class Block
                 Vector3Int linkPosition = listLink[i];
                 Vector3 linkPositionRotate = VectorUtil.GetRotatedPosition(Vector3.zero, linkPosition, blockAngleRotate);
                 Vector3Int closeWorldPosition = localPosition + chunk.chunkData.positionForWorld + Vector3Int.RoundToInt(linkPositionRotate);
-                BlockMetaBaseLink blockMetaLinkData = new BlockMetaBaseLink();
-                blockMetaLinkData.level = 1;
-                blockMetaLinkData.linkBasePosition = new Vector3IntBean(localPosition + chunk.chunkData.positionForWorld);
-                chunk.SetBlockForWorld(closeWorldPosition, BlockTypeEnum.LinkChild, blockDirection, ToMetaData(blockMetaLinkData));
+                BlockMetaBaseLink itemBlockMetaLinkData = new BlockMetaBaseLink();
+                itemBlockMetaLinkData.level = 1;
+                itemBlockMetaLinkData.linkBasePosition = new Vector3IntBean(localPosition + chunk.chunkData.positionForWorld);
+                itemBlockMetaLinkData.baseBlockType = blockInfo.id;
+                chunk.SetBlockForWorld(closeWorldPosition, BlockTypeEnum.LinkChild, blockDirection, ToMetaData(itemBlockMetaLinkData));
             }
         }
     }

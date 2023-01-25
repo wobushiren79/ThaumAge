@@ -88,6 +88,9 @@ public class ItemsHandler : BaseHandler<ItemsHandler, ItemsManager>
     {
         for (int i = 0; i < itemDatas.Count; i++)
         {
+            ItemsBean itemData = itemDatas[i];
+            if (itemData.itemId == 0)
+                continue;
             ItemDropBean itemDropData = new ItemDropBean(itemDatas[i], itemCptDropState, dropPosition, dropDirection);
             CreateItemCptDrop(itemDropData);
             yield return new WaitForSeconds(0.1f);

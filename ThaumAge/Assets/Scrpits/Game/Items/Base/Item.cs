@@ -171,8 +171,7 @@ public class Item
         //如果是链接方块 则用链接方块的基础方块代替
         if (targetBlock.blockType == BlockTypeEnum.LinkChild)
         {
-            BlockBean oldBlockData = targetChunk.GetBlockData(targetPosition - targetChunk.chunkData.positionForWorld);
-            BlockMetaBaseLink oldeBlockMetaLinkData = Block.FromMetaData<BlockMetaBaseLink>(oldBlockData.meta);
+            targetBlock.GetBlockMetaData(targetChunk, targetPosition - targetChunk.chunkData.positionForWorld, out BlockBean oldBlockData, out BlockMetaBaseLink oldeBlockMetaLinkData);
             WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(oldeBlockMetaLinkData.GetBasePosition(), out targetBlock, out targetChunk);
             targetPosition = oldeBlockMetaLinkData.GetBasePosition();
         }

@@ -1,5 +1,6 @@
 ﻿using UnityEditor;
 using UnityEngine;
+using UnityEngine.VFX;
 
 public class ItemClassElementalPowderThaum : Item
 {
@@ -48,6 +49,7 @@ public class ItemClassElementalPowderThaum : Item
     /// </summary>
     protected void HandleForCraftingTableArcane(Vector3Int targetPosition, Block targetBlock, BlockDirectionEnum targetBlockDirection, Chunk taragetChunk)
     {
+        PlayThrowEffect();
         EffectHandler.Instance.WaitExecuteSeconds(2, () =>
         {
             //获取目标方块
@@ -67,7 +69,10 @@ public class ItemClassElementalPowderThaum : Item
         effectSmoke.timeForShow = 5;
         EffectHandler.Instance.ShowEffect(effectSmoke, (effect) =>
         {
-            effect.listVE[0].SetVector3("Size", new Vector3(1, 1, 1));
+            VisualEffect itemEffect = effect.listVE[0];
+            itemEffect.SetVector3("Size", new Vector3(1, 1, 1));
+            itemEffect.SetFloat("EffectSmokeNum", 250);
+            itemEffect.SetFloat("EffectStarNum", 100);
         });
     }
 
@@ -83,6 +88,7 @@ public class ItemClassElementalPowderThaum : Item
         {
             return;
         }
+        PlayThrowEffect();
         EffectHandler.Instance.WaitExecuteSeconds(2, () =>
         {
             //获取目标方块
@@ -95,7 +101,14 @@ public class ItemClassElementalPowderThaum : Item
                 {
                     return;
                 }
-                taragetChunk.SetBlockForLocal(basePosition, BlockTypeEnum.InfusionAltar, targetBlockDirection);
+                BlockMetaBaseLink blockMetaLinkData = new BlockMetaBaseLink();
+                blockMetaLinkData.level = 0;
+                blockMetaLinkData.linkBasePosition = new Vector3IntBean(basePosition);
+                blockMetaLinkData.isBreakAll = false;
+                blockMetaLinkData.isBreakMesh = false;
+                blockMetaLinkData.baseBlockType = targetBlock.blockInfo.id;
+
+                taragetChunk.SetBlockForLocal(basePosition, BlockTypeEnum.InfusionAltar, targetBlockDirection, blockMetaLinkData.ToJson());
                 //播放音效
                 AudioHandler.Instance.PlaySound(3, targetPosition);
             }
@@ -104,11 +117,36 @@ public class ItemClassElementalPowderThaum : Item
         EffectBean effectSmoke = new EffectBean();
         effectSmoke.effectType = EffectTypeEnum.Visual;
         effectSmoke.effectName = EffectInfo.Effect_Change_1;
-        effectSmoke.effectPosition = new Vector3(0.5f + targetPosition.x, 0.5f + targetPosition.y - 1.5f, 0.5f + targetPosition.z);
+        effectSmoke.effectPosition = new Vector3(0.5f + targetPosition.x, 0.5f + targetPosition.y - 1f, 0.5f + targetPosition.z);
         effectSmoke.timeForShow = 5;
         EffectHandler.Instance.ShowEffect(effectSmoke,(effect)=> 
         {
-            effect.listVE[0].SetVector3("Size",new Vector3(3,3,3));
+            VisualEffect itemEffect = effect.listVE[0];
+            itemEffect.SetVector3("Size",new Vector3(3,3,3));
+            itemEffect.SetFloat("EffectSmokeNum", 250 * 5);
+            itemEffect.SetFloat("EffectStarNum", 100 * 5);
         });
+    }
+
+    /// <summary>
+    /// 播放抛粉特效
+    /// </summary>
+    protected void PlayThrowEffect()
+    {
+        Player player = GameHandler.Instance.manager.player;
+        Camera mainCamera = CameraHandler.Instance.manager.mainCamera;
+        Vector3 playerPosition = player.transform.position;
+        //播放粒子特效
+        EffectBean effectSmoke = new EffectBean();
+        effectSmoke.effectType = EffectTypeEnum.Visual;
+        effectSmoke.effectName = EffectInfo.Effect_Throw_1;
+        effectSmoke.effectPosition = playerPosition + new Vector3(0,1.5f,0);
+        effectSmoke.timeForShow = 3;
+        EffectHandler.Instance.ShowEffect(effectSmoke, (effect) =>
+        {
+            VisualEffect itemEffect = effect.listVE[0];
+            itemEffect.transform.eulerAngles = mainCamera.transform.eulerAngles;
+        });
+        
     }
 }

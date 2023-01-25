@@ -41,9 +41,11 @@ public class BlockShapeLinkChild : BlockShapeCube
 
     public override Mesh GetCompleteMeshData(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction)
     {
-        BlockBean blockData = chunk.GetBlockData(localPosition);
-        BlockMetaBaseLink blockMetaLinkData = Block.FromMetaData<BlockMetaBaseLink>(blockData.meta);
-        Vector3Int baseBlockWorldPosition = blockMetaLinkData.GetBasePosition();
+        block.GetBlockMetaData(chunk, localPosition, out BlockBean blockData, out BlockMetaBaseLink blockMetaLinkData);
+        if (!blockMetaLinkData.isBreakMesh)
+        {
+            return new Mesh();
+        }
         if (blockMetaLinkData.level == 0)
         {
             //如果自己是基础方块
@@ -51,6 +53,7 @@ public class BlockShapeLinkChild : BlockShapeCube
         }
         else
         {
+            Vector3Int baseBlockWorldPosition = blockMetaLinkData.GetBasePosition();
             //获取基础方块
             WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(baseBlockWorldPosition, out Block baseBlock, out BlockDirectionEnum baseBlockDirection, out Chunk baseChunk);
             return baseBlock.blockShape.GetCompleteMeshData(baseChunk, baseBlockWorldPosition - baseChunk.chunkData.positionForWorld, baseBlockDirection);

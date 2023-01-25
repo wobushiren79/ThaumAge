@@ -69,19 +69,57 @@ public class BuildingInfoBean : BaseBean
     /// </summary>
     public void SetLinkLargeBuilding(Vector3Int basePosition)
     {
+        WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(basePosition, out Block baseBlock, out Chunk baseChunk);
         for (int i = 0; i < listBuildingData.Count; i++)
         {    
             var itemBuildingData = listBuildingData[i];
-            //如果是0,0,0处 再放置的时候已经设置过了 这里就不处理了
+            //如果是0,0,0处 再放置的时候已经设置过了 这里就不处理了 只设置基础数据
             if (itemBuildingData.position == Vector3Int.zero)
+            {
                 continue;
+            }      
             Vector3Int itemWorldPosition = itemBuildingData.position + basePosition;
             WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(itemWorldPosition, out Block itemBlock, out Chunk itemChunk);
             if (itemChunk == null || itemBlock == null)
             {
                 return;
             }
-            itemChunk.SetBlockForLocal(itemWorldPosition - itemChunk.chunkData.positionForWorld, BlockTypeEnum.None);
+            BlockMetaBaseLink blockMetaLinkData = new BlockMetaBaseLink();
+            blockMetaLinkData.level = 1;
+            blockMetaLinkData.linkBasePosition = new Vector3IntBean(basePosition);
+            blockMetaLinkData.isBreakAll = false;
+            blockMetaLinkData.isBreakMesh = false;
+            blockMetaLinkData.baseBlockType = baseBlock.blockInfo.id;
+            itemChunk.SetBlockForLocal(itemWorldPosition - itemChunk.chunkData.positionForWorld, BlockTypeEnum.LinkLargeChild, BlockDirectionEnum.UpForward, blockMetaLinkData.ToJson());
+        }
+    }
+
+    /// <summary>
+    /// 还原多方快结构的原型
+    /// </summary>
+    public void ResetLinkLargeBuilding(Vector3Int basePosition,List<Vector3Int> nullPosition = null)
+    {
+        WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(basePosition, out Block baseBlock, out Chunk baseChunk);
+        for (int i = 0; i < listBuildingData.Count; i++)
+        {
+            var itemBuildingData = listBuildingData[i];
+            Vector3Int itemWorldPosition = itemBuildingData.position + basePosition;
+            WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(itemWorldPosition, out Block itemBlock, out Chunk itemChunk);
+            if (nullPosition.Contains(itemWorldPosition))
+            {
+                continue;
+            }
+            //如果是主节点 要删除模型
+            if (itemBuildingData.position == Vector3Int.zero)
+            {
+                itemChunk.SetBlockForLocal(itemWorldPosition - itemChunk.chunkData.positionForWorld, (BlockTypeEnum)itemBuildingData.blockId, isDestoryOld: true);
+                continue;
+            }
+            if (itemChunk == null || itemBlock == null)
+            {
+                continue;
+            }
+            itemChunk.SetBlockForLocal(itemWorldPosition - itemChunk.chunkData.positionForWorld, (BlockTypeEnum)itemBuildingData.blockId, isDestoryOld : false);
         }
     }
 }

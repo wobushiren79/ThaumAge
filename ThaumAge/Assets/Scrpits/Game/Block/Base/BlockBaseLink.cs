@@ -14,6 +14,7 @@ public class BlockBaseLink : Block
         BlockMetaBaseLink blockMetaBaseLink = new BlockMetaBaseLink();
         blockMetaBaseLink.level = 0;
         blockMetaBaseLink.linkBasePosition = new Vector3IntBean(worldPosition);
+        blockMetaBaseLink.baseBlockType = blockInfo.id;
         return ToMetaData(blockMetaBaseLink);
     }
 

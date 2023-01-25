@@ -395,20 +395,25 @@ public class Chunk
         Vector3Int blockLocalPosition = worldPosition - chunkData.positionForWorld;
         SetBlockForLocal(blockLocalPosition, blockType, direction, meta, isRefreshMesh, isSaveData, isRefreshBlockRange, updateChunkType);
     }
-    public void SetBlockForLocal(Vector3Int localPosition, BlockTypeEnum blockType, 
-        BlockDirectionEnum direction = BlockDirectionEnum.UpForward, string meta = null, bool isRefreshMesh = true, bool isSaveData = true, bool isRefreshBlockRange = true,int updateChunkType = 1)
+    public void SetBlockForLocal(Vector3Int localPosition, BlockTypeEnum blockType,
+        BlockDirectionEnum direction = BlockDirectionEnum.UpForward, string meta = null, bool isRefreshMesh = true, bool isSaveData = true, bool isRefreshBlockRange = true, int updateChunkType = 1, bool isDestoryOld = true)
     {
         if (localPosition.y > chunkData.chunkHeight)
             return;
+
         //首先移除方块
-        Block oldBlock = chunkData.GetBlockForLocal(localPosition);
-        if (oldBlock != null && oldBlock.blockType != BlockTypeEnum.None)
+        if (isDestoryOld)
         {
-            //先删除方块 再删除老数据 因为再删除方块时会用到老数据
-            oldBlock.DestoryBlock(this, localPosition, direction);
-            //删除老数据
-            ClearBlockData(localPosition);
+            Block oldBlock = chunkData.GetBlockForLocal(localPosition);
+            if (oldBlock != null && oldBlock.blockType != BlockTypeEnum.None)
+            {
+                //先删除方块 再删除老数据 因为再删除方块时会用到老数据
+                oldBlock.DestoryBlock(this, localPosition, direction);
+                //删除老数据
+                ClearBlockData(localPosition);
+            }
         }
+
         //设置新方块
         Block newBlock = BlockHandler.Instance.manager.GetRegisterBlock(blockType);
         chunkData.SetBlockForLocal(localPosition, newBlock, direction);

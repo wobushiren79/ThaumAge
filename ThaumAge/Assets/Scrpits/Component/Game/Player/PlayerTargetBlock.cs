@@ -104,10 +104,9 @@ public class PlayerTargetBlock : BaseMonoBehaviour
         transform.position = worldPosition;
 
         //如果是linkchild 则outline位置位base位置
-        if (block.blockShape is BlockShapeLinkChild blockShapeLinkChild)
+        if (block.blockType == BlockTypeEnum.LinkChild)
         {
-            BlockBean oldBlockData = targetChunk.GetBlockData(localPosition);
-            BlockMetaBaseLink oldeBlockMetaLinkData = Block.FromMetaData<BlockMetaBaseLink>(oldBlockData.meta);
+            block.GetBlockMetaData(targetChunk, localPosition, out BlockBean oldBlockData, out BlockMetaBaseLink oldeBlockMetaLinkData);
             objTargetCenterBlock.transform.position = oldeBlockMetaLinkData.GetBasePosition() + new Vector3(0.5f, 0.5f, 0.5f);
         }
         else if (block.blockType == BlockTypeEnum.Crucible 

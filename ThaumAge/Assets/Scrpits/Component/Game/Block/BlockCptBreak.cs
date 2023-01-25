@@ -12,6 +12,7 @@ public class BlockCptBreak : BaseMonoBehaviour
     public Vector3Int worldPosition;
 
     public int blockLife = 0;
+    public int blockLifeMax = 0;
     //是否需要删除
     public bool isNeedDestory = false;
 
@@ -61,9 +62,12 @@ public class BlockCptBreak : BaseMonoBehaviour
     {
         if (block == null)
             return;
+        WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(worldPosition, out Block targetBlock, out Chunk targetChunk);
         this.worldPosition = worldPosition;
         this.block = block;
-        blockLife = block.blockInfo.life;
+        blockLifeMax = block.GetBlockLife(targetChunk, worldPosition - targetChunk.chunkData.positionForWorld);
+        blockLife = blockLifeMax;
+
         transform.position = worldPosition;
     }
 
@@ -83,15 +87,15 @@ public class BlockCptBreak : BaseMonoBehaviour
         {
             blockLife = 0;
         }
-        else if (blockLife > block.blockInfo.life) 
+        else if (blockLife > blockLifeMax)
         {
-            blockLife = block.blockInfo.life;
+            blockLife = blockLifeMax;
         }
 
         float breakPro;
-        if (block.blockInfo.life != 0)
+        if (blockLifeMax != 0)
         {
-            breakPro = 1 - ((float)blockLife / block.blockInfo.life);
+            breakPro = 1 - ((float)blockLife / blockLifeMax);
         }
         else
         {
@@ -114,11 +118,11 @@ public class BlockCptBreak : BaseMonoBehaviour
             if (!block.blockInfo.model_name.IsNull() && damage > 0)
             {
                 GameObject objTarget = block.GetBlockObj(worldPosition);
-                if(animForBreakShake != null && !animForBreakShake.IsComplete())
+                if (animForBreakShake != null && !animForBreakShake.IsComplete())
                 {
                     animForBreakShake.Complete();
                 }
-                animForBreakShake = objTarget.transform.DOShakePosition(0.2f,0.02f,20,180);
+                animForBreakShake = objTarget.transform.DOShakePosition(0.2f, 0.02f, 20, 180);
             }
         }
 
@@ -132,10 +136,9 @@ public class BlockCptBreak : BaseMonoBehaviour
         mfBlockBreak.mesh = newMeshData;
 
         //如果是link类型，
-        if (targetBlock.blockInfo.GetBlockShape() == BlockShapeEnum.LinkChild)
+        if (targetBlock.blockType == BlockTypeEnum.LinkChild)
         {
-            BlockBean blockData = targetChunk.GetBlockData(localPosition.x, localPosition.y, localPosition.z);
-            BlockMetaBaseLink blockMetaBaseLink = Block.FromMetaData<BlockMetaBaseLink>(blockData.meta);
+            block.GetBlockMetaData(targetChunk, localPosition,out BlockBean blockData, out BlockMetaBaseLink blockMetaBaseLink);
             transform.position = blockMetaBaseLink.GetBasePosition();
         }
     }
@@ -146,10 +149,10 @@ public class BlockCptBreak : BaseMonoBehaviour
     /// <param name="pro"></param>
     public void Reply(float pro)
     {
-        int life = Mathf.CeilToInt(block.blockInfo.life * pro);
+        int life = Mathf.CeilToInt(blockLifeMax * pro);
         Break(-life);
         //如果生命值回满了
-        if (blockLife >= block.blockInfo.life)
+        if (blockLife >= blockLifeMax)
         {
             BlockHandler.Instance.DestroyBreakBlock(worldPosition);
         }

@@ -2,7 +2,6 @@ public enum BlockTypeEnum
 {
     None = 0,    //空气
     Foundation = 1,    //地基
-    LinkChild = 2,//链接子方块
 
     Sand = 3,    //沙子
     Dirt = 4,    //泥土
@@ -240,6 +239,8 @@ public enum BlockTypeEnum
     Water = 9001,//水
     Magma = 9002,//岩浆
 
+    LinkChild = 9981,//链接子方块
+    LinkLargeChild = 9982,//链接子方块(多方块结构)
     TestBlockAnim = 9998,//测试动画方块
     TestBlockDirection = 9999,//测试方向方块
 
