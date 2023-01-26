@@ -1,1 +1,1 @@
-[{"item_before":"1","item_after":"3","materials":"111","elements":"11","remark":"测试","id":1,"valid":0,"name_cn":null,"name_en":null}]
+[{"item_before":"100001","item_after":"100003","materials":"100004&100005&100005","elements":"2:15&4:10","remark":"测试","id":1,"valid":0,"name_cn":null,"name_en":null}]

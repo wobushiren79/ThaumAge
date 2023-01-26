@@ -20,18 +20,7 @@ public class BlockTypeEverfullUrn : Block
 
     public override void EventBlockUpdateForSec(Chunk chunk, Vector3Int localPosition)
     {
-        BlockBean blockData = chunk.GetBlockData(localPosition);
-
-        if (blockData == null)
-        {
-            chunk.GetBlockForLocal(localPosition, out Block targetBlock, out BlockDirectionEnum targetDirection, out Chunk targetChunk);
-            blockData = new BlockBean(localPosition, blockInfo.GetBlockType(), targetDirection);
-        }
-        BlockMetaEverfullUrn blockMetaEverfull = blockData.GetBlockMeta<BlockMetaEverfullUrn>();
-        if (blockMetaEverfull == null)
-        {
-            blockMetaEverfull = new BlockMetaEverfullUrn();
-        }
+        GetBlockMetaData(chunk, localPosition, out BlockBean blockData, out BlockMetaEverfullUrn blockMetaEverfull);
         //是否要保存数据（如果没有设置水的情况下可以不保存 节省一点保存资源）
         bool isSaveData = false;
         //获取周围方块 每次获取一层
@@ -42,21 +31,14 @@ public class BlockTypeEverfullUrn : Block
                 //如果是坩埚 则加水
                 if (itemBlock.blockType == BlockTypeEnum.Crucible)
                 {
-                    var itemBlockData = itemChunk.GetBlockData(itemWorldPosition - itemChunk.chunkData.positionForWorld);
-                    if (itemBlockData != null)
+                    Vector3Int itemLocalPosition = itemWorldPosition - itemChunk.chunkData.positionForWorld;
+                    GetBlockMetaData(itemChunk, itemLocalPosition, out BlockBean itemBlockData,out BlockMetaCrucible blockMetaCrucible);
+                    if (blockMetaCrucible.waterLevel < BlockTypeCrucible.WaterLevelMax)
                     {
-                        BlockMetaCrucible blockMetaCrucible = itemBlockData.GetBlockMeta<BlockMetaCrucible>();
-                        if (blockMetaCrucible == null)
-                        {
-                            blockMetaCrucible = new BlockMetaCrucible();
-                        }
-                        if (blockMetaCrucible.waterLevel < BlockTypeCrucible.WaterLevelMax)
-                        {
-                            BlockTypeCrucible blockTypeCrucible = itemBlock as BlockTypeCrucible;
-                            blockTypeCrucible.SaveCrucibleData(itemChunk, itemWorldPosition, itemBlockData, blockMetaCrucible, BlockTypeCrucible.WaterLevelMax);
-                            PlayAddWaterEffect(targetWorldPosition + new Vector3(0.5f, 0.9f, 0.5f), itemWorldPosition + new Vector3(0.5f, 0.6f, 0.5f));
-                            isSaveData = true;
-                        }
+                        BlockTypeCrucible blockTypeCrucible = itemBlock as BlockTypeCrucible;
+                        blockTypeCrucible.SaveCrucibleData(itemChunk, itemLocalPosition, itemBlockData, blockMetaCrucible, BlockTypeCrucible.WaterLevelMax);
+                        PlayAddWaterEffect(targetWorldPosition + new Vector3(0.5f, 0.9f, 0.5f), itemWorldPosition + new Vector3(0.5f, 0.6f, 0.5f));
+                        isSaveData = true;
                     }
                 }
 

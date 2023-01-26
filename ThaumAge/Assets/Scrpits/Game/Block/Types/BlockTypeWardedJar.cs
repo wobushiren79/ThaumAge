@@ -69,7 +69,7 @@ public class BlockTypeWardedJar : Block
         }
     }
 
-    public override bool TargetUseBlock(GameObject user, ItemsBean itemData, Chunk targetChunk, Vector3Int targetWorldPosition)
+    public override bool TargetUseBlock(GameObject user, ItemsBean itemData, Chunk targetChunk, Vector3Int targetLocalPosition)
     {
         //如果空手
         if (itemData.itemId == 0)
@@ -80,7 +80,6 @@ public class BlockTypeWardedJar : Block
             if (shiftInput != 0)
             {
                 //清空元素
-                Vector3Int targetLocalPosition = targetWorldPosition - targetChunk.chunkData.positionForWorld;
                 GetBlockMetaData(targetChunk, targetLocalPosition, out BlockBean blockData, out BlockMetaWardedJar blockMetaData);
                 blockMetaData.curElemental = 0;
                 blockData.SetBlockMeta(blockMetaData);
@@ -96,7 +95,6 @@ public class BlockTypeWardedJar : Block
             var controlPlayer = GameControlHandler.Instance.manager.controlForPlayer;
             float shiftInput = controlPlayer.inputActionShift.ReadValue<float>();
 
-            Vector3Int targetLocalPosition = targetWorldPosition - targetChunk.chunkData.positionForWorld;
             GetBlockMetaData(targetChunk, targetLocalPosition, out BlockBean blockData, out BlockMetaWardedJar blockMetaData);
             //如果同时按住了shift 则去掉标签
             if (shiftInput != 0)
@@ -121,7 +119,7 @@ public class BlockTypeWardedJar : Block
             RefreshObjModel(targetChunk, targetLocalPosition, blockMetaData);
             return true;
         }
-        return base.TargetUseBlock(user, itemData, targetChunk, targetWorldPosition);
+        return base.TargetUseBlock(user, itemData, targetChunk, targetLocalPosition);
     }
 
 }

@@ -30,6 +30,7 @@ public partial class ItemsSynthesisBean
                     dicElemental.Add(EnumExtension.GetEnum<ElementalTypeEnum>(elementalData[0]), int.Parse(elementalData[1]));
                 }
             }
+            
         }
         return dicElemental;
     }

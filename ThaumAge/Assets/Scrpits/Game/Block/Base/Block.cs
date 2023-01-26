@@ -52,7 +52,7 @@ public class Block
     }
 
     public virtual void GetBlockMetaData<T>(Chunk targetChunk, Vector3Int blockLocalPosition,
-        out BlockBean blockData, out T blockMetaData) where T: BlockMetaBase, new()
+        out BlockBean blockData, out T blockMetaData) where T : BlockMetaBase, new()
     {
         blockMetaData = null;
         blockData = targetChunk.GetBlockData(blockLocalPosition);
@@ -88,7 +88,7 @@ public class Block
     /// <returns></returns>
     public GameObject GetBlockObj(Vector3Int worldPosition)
     {
-        return BlockHandler.Instance.GetBlockObj(worldPosition); ;
+        return BlockHandler.Instance.GetBlockObj(worldPosition);
     }
 
     /// <summary>
@@ -152,7 +152,7 @@ public class Block
                     WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(targetPosition, out Block targetBlock, out Chunk targetChunk);
                     if (targetChunk != null && targetBlock != null)
                     {
-                        callBackItem?.Invoke(targetChunk, targetBlock, targetPosition);
+                        callBackItem?.Invoke(targetChunk, targetBlock, targetPosition - targetChunk.chunkData.positionForWorld);
                     }
                 }
             }
@@ -389,7 +389,7 @@ public class Block
     /// <summary>
     /// 被使用
     /// </summary>
-    public virtual bool TargetUseBlock(GameObject user, ItemsBean itemData, Chunk targetChunk, Vector3Int targetWorldPosition)
+    public virtual bool TargetUseBlock(GameObject user, ItemsBean itemData, Chunk targetChunk, Vector3Int localPosition)
     {
         return false;
     }
@@ -397,7 +397,7 @@ public class Block
     /// <summary>
     /// 被破坏
     /// </summary>
-    public virtual void TargetBreakBlock(GameObject user, ItemsBean itemData, Chunk targetChunk, Vector3Int worldPosition)
+    public virtual void TargetBreakBlock(GameObject user, ItemsBean itemData, Chunk targetChunk, Vector3Int localPosition)
     {
 
     }

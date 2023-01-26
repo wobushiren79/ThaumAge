@@ -11,7 +11,7 @@ public class BlockTypeCrucible : Block
     {
         base.CreateBlockModelSuccess(chunk, localPosition, blockDirection, obj);
         var blockData = chunk.GetBlockData(localPosition);
-        SaveCrucibleData(chunk, localPosition + chunk.chunkData.positionForWorld, blockData, blockData?.GetBlockMeta<BlockMetaCrucible>(), isWaterChangeAnim: false, isSave: false);
+        SaveCrucibleData(chunk, localPosition, blockData, blockData?.GetBlockMeta<BlockMetaCrucible>(), isWaterChangeAnim: false, isSave: false);
     }
 
     /// <summary>
@@ -19,17 +19,15 @@ public class BlockTypeCrucible : Block
     /// </summary>
     /// <param name="targetChunk"></param>
     /// <param name="targetWorldPosition"></param>
-    public override bool TargetUseBlock(GameObject user, ItemsBean itemData, Chunk targetChunk, Vector3Int targetWorldPosition)
+    public override bool TargetUseBlock(GameObject user, ItemsBean itemData, Chunk targetChunk, Vector3Int blockLocalPosition)
     {
-        base.TargetUseBlock(user, itemData, targetChunk, targetWorldPosition);
+        base.TargetUseBlock(user, itemData, targetChunk, blockLocalPosition);
 
         //保存坩埚数据
-        Vector3Int blockLocalPosition = targetWorldPosition - targetChunk.chunkData.positionForWorld;
-
         GetBlockMetaData(targetChunk, blockLocalPosition, out BlockBean blockData, out BlockMetaCrucible blockMetaData);
-        SaveCrucibleData(targetChunk, targetWorldPosition, blockData, blockMetaData, 0);
+        SaveCrucibleData(targetChunk, blockLocalPosition, blockData, blockMetaData, 0);
 
-        EventHandler.Instance.TriggerEvent(EventsInfo.BlockTypeCrucible_UpdateElemental, targetWorldPosition);
+        EventHandler.Instance.TriggerEvent(EventsInfo.BlockTypeCrucible_UpdateElemental, blockLocalPosition + targetChunk.chunkData.positionForWorld);
 
         return false;
     }
@@ -97,7 +95,7 @@ public class BlockTypeCrucible : Block
 
                 Chunk targetChunk = WorldCreateHandler.Instance.manager.GetChunkForWorldPosition(blockWorldPosition);
 
-                SaveCrucibleData(targetChunk, blockWorldPosition, blockData, blockMetaData);
+                SaveCrucibleData(targetChunk, blockWorldPosition - targetChunk.chunkData.positionForWorld, blockData, blockMetaData);
                 //播放特效
                 PlaySynthesisEffect(blockWorldPosition + new Vector3(0.5f, 1f, 0.5f));
 
@@ -116,7 +114,8 @@ public class BlockTypeCrucible : Block
     public bool AddElemental(Vector3Int blockWorldPosition, List<NumberBean> listElemental)
     {
         WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(blockWorldPosition, out Block targetBlock, out BlockDirectionEnum targetBlockDirection, out Chunk targetChunk);
-        GetBlockMetaData(targetChunk, blockWorldPosition - targetChunk.chunkData.positionForWorld, out BlockBean blockData, out BlockMetaCrucible blockMetaData);
+        Vector3Int targetLocalPosition = blockWorldPosition - targetChunk.chunkData.positionForWorld;
+        GetBlockMetaData(targetChunk, targetLocalPosition, out BlockBean blockData, out BlockMetaCrucible blockMetaData);
         //如果没有水 则不添加
         if (blockMetaData.waterLevel == 0)
         {
@@ -130,7 +129,7 @@ public class BlockTypeCrucible : Block
         }
         if (targetChunk != null && targetBlock != null)
         {
-            SaveCrucibleData(targetChunk, blockWorldPosition, blockData, blockMetaData, addListElemental: listElemental);
+            SaveCrucibleData(targetChunk, targetLocalPosition, blockData, blockMetaData, addListElemental: listElemental);
             EventHandler.Instance.TriggerEvent(EventsInfo.BlockTypeCrucible_UpdateElemental, blockWorldPosition);
 
             float waterPlaneY = GetWaterLevelY(blockMetaData.waterLevel);
@@ -144,7 +143,7 @@ public class BlockTypeCrucible : Block
     /// <summary>
     /// 设置坩埚数据
     /// </summary>
-    public void SaveCrucibleData(Chunk targetChunk, Vector3Int blockWorldPosition, BlockBean blockData, BlockMetaCrucible blockMetaData,
+    public void SaveCrucibleData(Chunk targetChunk, Vector3Int blockLocalPosition, BlockBean blockData, BlockMetaCrucible blockMetaData,
         int waterLevel = -1, bool isCleanElemental = false, List<NumberBean> addListElemental = null, bool isWaterChangeAnim = true, bool isSave = true)
     {
         int currentWaterLevel = 0;
@@ -176,13 +175,13 @@ public class BlockTypeCrucible : Block
             currentWaterLevel = blockMetaData.waterLevel;
         }
 
-        bool isBoiling = CheckIsBoiling(targetChunk, blockWorldPosition);
-        SetWaterShow(blockWorldPosition, currentWaterLevel, isBoiling, isWaterChangeAnim);
+        bool isBoiling = CheckIsBoiling(targetChunk, blockLocalPosition);
+        SetWaterShow(targetChunk, blockLocalPosition, currentWaterLevel, isBoiling, isWaterChangeAnim);
     }
 
     public void GetBlockMetaData(Vector3Int blockWorldPosition, out BlockBean blockData, out BlockMetaCrucible blockMetaData)
     {
-        Chunk targetChunk =  WorldCreateHandler.Instance.manager.GetChunkForWorldPosition(blockWorldPosition);
+        Chunk targetChunk = WorldCreateHandler.Instance.manager.GetChunkForWorldPosition(blockWorldPosition);
         GetBlockMetaData(targetChunk, blockWorldPosition, out blockData, out blockMetaData);
     }
 
@@ -210,9 +209,8 @@ public class BlockTypeCrucible : Block
     /// 检测是否煮沸
     /// </summary>
     /// <returns></returns>
-    public bool CheckIsBoiling(Chunk targetChunk, Vector3Int blockWorldPosition)
+    public bool CheckIsBoiling(Chunk targetChunk, Vector3Int blockLocalPosition)
     {
-        Vector3Int blockLocalPosition = blockWorldPosition - targetChunk.chunkData.positionForWorld;
         GetCloseBlockByDirection(targetChunk, blockLocalPosition, DirectionEnum.Down, out Block downBlock, out Chunk downChunk, out Vector3Int downLocalPosition);
         if (downChunk != null && downBlock != null)
         {
@@ -232,13 +230,12 @@ public class BlockTypeCrucible : Block
     /// <param name="localPosition"></param>
     public void InitWater(Chunk chunk, Vector3Int localPosition)
     {
-        Vector3Int targetWorldPosition = localPosition + chunk.chunkData.positionForWorld;
         //获取坩埚数据
         GetBlockMetaData(chunk, localPosition, out BlockBean blockData, out BlockMetaCrucible blockMetaData);
         //获取是否烧开
-        bool isBoiling = CheckIsBoiling(chunk, targetWorldPosition);
+        bool isBoiling = CheckIsBoiling(chunk, localPosition);
         //设置水位
-        SetWaterShow(targetWorldPosition, blockMetaData.waterLevel, isBoiling);
+        SetWaterShow(chunk, localPosition, blockMetaData.waterLevel, isBoiling);
     }
 
     /// <summary>
@@ -246,9 +243,9 @@ public class BlockTypeCrucible : Block
     /// </summary>
     /// <param name="level">0没有水 5满水</param>
     /// <param name="isBoiling">是否沸腾</param>
-    public void SetWaterShow(Vector3Int blockWorldPosition, int level, bool isBoiling, bool isWaterChangeAnim = true)
+    public void SetWaterShow(Chunk chunk, Vector3Int localPosition, int level, bool isBoiling, bool isWaterChangeAnim = true)
     {
-        GameObject objBlock = GetBlockObj(blockWorldPosition);
+        GameObject objBlock = chunk.GetBlockObjForLocal(localPosition);
         if (objBlock == null)
         {
             return;

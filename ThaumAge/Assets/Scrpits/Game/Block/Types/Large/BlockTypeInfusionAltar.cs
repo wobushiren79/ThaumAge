@@ -13,21 +13,21 @@ public class BlockTypeInfusionAltar : BlockBaseLinkLarge
         RefreshObjModel(chunk, localPosition, blockMetaData.itemsShow);
     }
 
-    public override bool TargetUseBlock(GameObject user, ItemsBean itemData, Chunk targetChunk, Vector3Int targetWorldPosition)
+    public override bool TargetUseBlock(GameObject user, ItemsBean itemData, Chunk targetChunk, Vector3Int targetLocalPosition)
     {
         //首先获取该方块的位置（有可能是子方块）
-        Vector3Int blockLocalPosition = targetWorldPosition - targetChunk.chunkData.positionForWorld;
-        GetBlockMetaData(targetChunk, blockLocalPosition, out BlockBean blockData, out BlockMetaBaseLink blockMetaData);
+        Vector3Int targetWorldPosition = targetLocalPosition + targetChunk.chunkData.positionForWorld;
+        GetBlockMetaData(targetChunk, targetLocalPosition, out BlockBean blockData, out BlockMetaBaseLink blockMetaData);
         Vector3Int basePosition = blockMetaData.GetBasePosition();
         //如果是基础点（基座的位置 则执行基座逻辑）
         if (basePosition == targetWorldPosition)
         {
-            return TargetUseBlockForBase(user, itemData, targetChunk, targetWorldPosition);
+            return TargetUseBlockForBase(user, itemData, targetChunk, targetLocalPosition);
         }
         //如果是矩阵
         else if ((basePosition + Vector3Int.up * 2) == targetWorldPosition)
         {
-            return TargetUseBlockForStarWork(user, itemData, targetChunk, targetWorldPosition);
+            return TargetUseBlockForStarWork(user, itemData, targetChunk, targetLocalPosition);
         }
         return false;
     }
@@ -36,10 +36,9 @@ public class BlockTypeInfusionAltar : BlockBaseLinkLarge
     /// 对着基座使用 放置道具
     /// </summary>
     /// <returns></returns>
-    public virtual bool TargetUseBlockForBase(GameObject user, ItemsBean itemData, Chunk targetChunk, Vector3Int targetWorldPosition)
+    public virtual bool TargetUseBlockForBase(GameObject user, ItemsBean itemData, Chunk targetChunk, Vector3Int targetLocalPosition)
     {
-        Vector3Int blockLocalPosition = targetWorldPosition - targetChunk.chunkData.positionForWorld;
-        GetBlockMetaData(targetChunk, blockLocalPosition, out BlockBean blockData, out BlockMetaInfusionAltar blockMetaData);
+        GetBlockMetaData(targetChunk, targetLocalPosition, out BlockBean blockData, out BlockMetaInfusionAltar blockMetaData);
         //如果基座上没有物品
         if (blockMetaData.itemsShow == null || blockMetaData.itemsShow.itemId == 0)
         {
@@ -62,6 +61,7 @@ public class BlockTypeInfusionAltar : BlockBaseLinkLarge
         //如果基座上有物品
         else
         {
+            Vector3Int targetWorldPosition = targetLocalPosition + targetChunk.chunkData.positionForWorld;
             //先让基座上的物品掉落
             ItemDropBean itemDropData = new ItemDropBean(blockMetaData.itemsShow, ItemDropStateEnum.DropPick, targetWorldPosition + new Vector3(0.5f, 1.5f, 0.5f), Vector3.up * 1.5f);
             ItemsHandler.Instance.CreateItemCptDrop(itemDropData);
@@ -72,7 +72,7 @@ public class BlockTypeInfusionAltar : BlockBaseLinkLarge
         blockData.SetBlockMeta(blockMetaData);
         targetChunk.SetBlockData(blockData);
 
-        RefreshObjModel(targetChunk, blockLocalPosition, blockMetaData.itemsShow);
+        RefreshObjModel(targetChunk, targetLocalPosition, blockMetaData.itemsShow);
         return true;
     }
 
@@ -80,25 +80,36 @@ public class BlockTypeInfusionAltar : BlockBaseLinkLarge
     /// 对着矩阵使用 放置道具
     /// </summary>
     /// <returns></returns>
-    public virtual bool TargetUseBlockForStarWork(GameObject user, ItemsBean itemData, Chunk targetChunk, Vector3Int targetWorldPosition)
+    public virtual bool TargetUseBlockForStarWork(GameObject user, ItemsBean itemData, Chunk targetChunk, Vector3Int targetLocalPosition)
     {
         ItemsInfoBean itemsInfo = ItemsHandler.Instance.manager.GetItemsInfoById(itemData.itemId);
         //如果是法杖
         if (itemsInfo.GetItemsType() == ItemsTypeEnum.Wand)
         {
-            Vector3Int basePosition = targetWorldPosition - Vector3Int.up * 2;
+            Vector3Int baseLocalPosition = targetLocalPosition - Vector3Int.up * 2;
             //首先检测基座上是否有物品
-            GetBlockMetaData(targetChunk, basePosition, out BlockBean blockData, out BlockMetaInfusionAltar blockMetaData);
+            GetBlockMetaData(targetChunk, baseLocalPosition, out BlockBean blockData, out BlockMetaInfusionAltar blockMetaData);
             //没有道具
             if (blockMetaData.itemsShow == null || blockMetaData.itemsShow.itemId == 0)
             {
                 return true;
             }
-            //播放注魔开始特效
-            SetInfusionAltarState(targetChunk, basePosition, 1);
             //判断该道具是否可以注魔
+            bool canInfusion = InfusionAltarInfoCfg.CheckCanInfusion(blockMetaData.itemsShow.itemId);
+            if (!canInfusion)
+            {
+                return true;
+            }
+            //播放注魔开始特效
+            SetInfusionAltarState(targetChunk, baseLocalPosition, 1);
+
+            //重置并保存数据
+            InfusionAltarInfoBean infusionAltarInfo = InfusionAltarInfoCfg.GetInfusionTargetData(blockMetaData.itemsShow.itemId, targetChunk, baseLocalPosition);
+            blockMetaData.InitData(infusionAltarInfo);
+            blockData.SetBlockMeta(blockMetaData);
+            targetChunk.SetBlockData(blockData, false);
             //开始注魔
-            targetChunk.RegisterEventUpdate(basePosition, TimeUpdateEventTypeEnum.Sec);
+            targetChunk.RegisterEventUpdate(baseLocalPosition, TimeUpdateEventTypeEnum.Sec);
         }
         return true;
     }
@@ -118,6 +129,8 @@ public class BlockTypeInfusionAltar : BlockBaseLinkLarge
             SetInfusionAltarState(chunk, localPosition, 0);
             return;
         }
+
+        blockMetaData.infusionTime++;
     }
 
     /// <summary>
@@ -178,6 +191,6 @@ public class BlockTypeInfusionAltar : BlockBaseLinkLarge
         mrMatrix.material.DOFloat(matrixEmissionText, "_EmissionText1", 1f);
 
         tfMatrix.DOKill();
-        tfMatrix.DOShakePosition(0.2f,0.1f,50);
+        tfMatrix.DOShakePosition(0.2f, 0.1f, 50);
     }
 }

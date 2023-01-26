@@ -169,6 +169,7 @@ public class Item
         if (targetBlock == null || targetBlock.blockType == BlockTypeEnum.None)
             return;
         //如果是链接方块 则用链接方块的基础方块代替
+
         if (targetBlock.blockType == BlockTypeEnum.LinkChild)
         {
             targetBlock.GetBlockMetaData(targetChunk, targetPosition - targetChunk.chunkData.positionForWorld, out BlockBean oldBlockData, out BlockMetaBaseLink oldeBlockMetaLinkData);
@@ -194,7 +195,7 @@ public class Item
             EventHandler.Instance.TriggerEvent(EventsInfo.ItemsBean_MetaChange, itemsData);
         }
         //通知
-        targetBlock.TargetBreakBlock(user, itemsData, targetChunk, targetPosition);
+        targetBlock.TargetBreakBlock(user, itemsData, targetChunk, targetPosition - targetChunk.chunkData.positionForWorld);
 
         BlockCptBreak BlockCptBreak = BlockHandler.Instance.BreakBlock(targetPosition, targetBlock, breakDamage);
         if (BlockCptBreak.blockLife <= 0)
@@ -227,7 +228,7 @@ public class Item
         bool blockUseStop = false;
         if (targetChunk != null && targetBlock != null)
         {
-            blockUseStop = targetBlock.TargetUseBlock(user, itemData, targetChunk, targetPosition);
+            blockUseStop = targetBlock.TargetUseBlock(user, itemData, targetChunk, targetPosition - targetChunk.chunkData.positionForWorld);
         }
         PlayItemSoundUseR(itemData);
         //返回是否被方块的右键点击事件阻挡
