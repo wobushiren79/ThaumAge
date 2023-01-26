@@ -6,43 +6,17 @@ public class BlockTypeArcanePedestal : Block
     public override void CreateBlockModelSuccess(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum blockDirection, GameObject obj)
     {
         base.CreateBlockModelSuccess(chunk, localPosition, blockDirection, obj);
-        BlockBean blockData = chunk.GetBlockData(localPosition);
-        BlockMetaArcanePedestal blockMetaArcanePedestal = null;
-        if (blockData == null)
-        {
 
-        }
-        else
-        {
-            blockMetaArcanePedestal = blockData.GetBlockMeta<BlockMetaArcanePedestal>();
-        }
-        if (blockMetaArcanePedestal == null)
-        {
-            blockMetaArcanePedestal = new BlockMetaArcanePedestal();
-        }
-        RefreshObjModel(chunk, localPosition, blockMetaArcanePedestal.itemsShow);
+        GetBlockMetaData(chunk, localPosition, out BlockBean blockData, out BlockMetaArcanePedestal blockMetaData);
+        RefreshObjModel(chunk, localPosition, blockMetaData.itemsShow);
     }
 
     public override bool TargetUseBlock(GameObject user, ItemsBean itemData, Chunk targetChunk, Vector3Int targetWorldPosition)
     {
         Vector3Int blockLocalPosition = targetWorldPosition - targetChunk.chunkData.positionForWorld;
-        BlockBean blockData = targetChunk.GetBlockData(blockLocalPosition);
-        targetChunk.GetBlockForLocal(blockLocalPosition, out Block targetBlock, out BlockDirectionEnum targetBlockDirection, out targetChunk);
-        BlockMetaArcanePedestal blockMetaArcanePedestal = null;
-        if (blockData == null)
-        {
-            blockData = new BlockBean(blockLocalPosition, blockType, targetBlockDirection);
-        }
-        else
-        {
-            blockMetaArcanePedestal = blockData.GetBlockMeta<BlockMetaArcanePedestal>();
-        }
-        if (blockMetaArcanePedestal == null)
-        {
-            blockMetaArcanePedestal = new BlockMetaArcanePedestal();
-        }
+        GetBlockMetaData(targetChunk, blockLocalPosition, out BlockBean blockData, out BlockMetaArcanePedestal blockMetaData);
         //如果基座上没有物品
-        if (blockMetaArcanePedestal.itemsShow == null || blockMetaArcanePedestal.itemsShow.itemId == 0)
+        if (blockMetaData.itemsShow == null || blockMetaData.itemsShow.itemId == 0)
         {
             //如果是空手
             if (itemData == null || itemData.itemId == 0)
@@ -53,7 +27,7 @@ public class BlockTypeArcanePedestal : Block
             else
             {
                 //如果能放置
-                blockMetaArcanePedestal.itemsShow = new ItemsBean(itemData);
+                blockMetaData.itemsShow = new ItemsBean(itemData.itemId, 1, itemData.meta);
                 //扣除道具
                 UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();
                 userData.AddItems(itemData, -1);
@@ -64,16 +38,16 @@ public class BlockTypeArcanePedestal : Block
         else
         {
             //先让基座上的物品掉落
-            ItemDropBean itemDropData = new ItemDropBean(blockMetaArcanePedestal.itemsShow, ItemDropStateEnum.DropPick, targetWorldPosition + new Vector3(0.5f, 1.5f, 0.5f), Vector3.up * 1.5f);
+            ItemDropBean itemDropData = new ItemDropBean(blockMetaData.itemsShow, ItemDropStateEnum.DropPick, targetWorldPosition + new Vector3(0.5f, 1.5f, 0.5f), Vector3.up * 1.5f);
             ItemsHandler.Instance.CreateItemCptDrop(itemDropData);
-            blockMetaArcanePedestal.itemsShow = null;
+            blockMetaData.itemsShow = null;
         }
 
         //保存数据
-        blockData.SetBlockMeta(blockMetaArcanePedestal);
+        blockData.SetBlockMeta(blockMetaData);
         targetChunk.SetBlockData(blockData);
 
-        RefreshObjModel(targetChunk, blockLocalPosition, blockMetaArcanePedestal.itemsShow);
+        RefreshObjModel(targetChunk, blockLocalPosition, blockMetaData.itemsShow);
         return true;
     }
 

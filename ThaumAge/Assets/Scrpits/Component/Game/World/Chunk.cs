@@ -78,10 +78,8 @@ public class Chunk
             eventUpdateTimeForMin = 0;
             HandleForEventUpdateForMin();
         }
-        HandleForBlockModelUpdate(out bool hasUpdate);
-        //先更新完全部需要更新的东西 在进行删除
-        if (!hasUpdate)
-            HandleForBlockModelDestory();
+        HandleForBlockModelDestory();
+        HandleForBlockModelUpdate();
         //数据保存
         if (isSaveData)
         {
@@ -557,20 +555,18 @@ public class Chunk
     /// <summary>
     /// 处理实例化模型的方块
     /// </summary>
-    public void HandleForBlockModelUpdate(out bool hasUpdate)
+    public void HandleForBlockModelUpdate()
     {
-        hasUpdate = false;
         if (listBlockModelUpdate.Count <= 0)
             return;
-        hasUpdate = true;
+
         if (!listBlockModelUpdate.TryDequeue(out Vector3Int localPosition))
             return;
-        //首先删除原有的模型
+
+        //如果已经有一样的模型
         int blockIndex = Block.GetIndex(localPosition, chunkData.chunkWidth, chunkData.chunkHeight);
         if (dicBlockModel.TryGetValue(blockIndex, out GameObject dataObj))
         {
-            //dicBlockModel.Remove(localPosition);
-            //Destroy(dataObj);
             return;
         }
 

@@ -16,16 +16,12 @@ public class BlockTypeDoor : BlockBaseLink
         //如果有模型。则创建模型
         if (!blockInfo.model_name.IsNull())
         {
+            GetBlockMetaData(chunk, localPosition, out BlockBean blockData, out BlockMetaDoor blockDoorData);
             //获取数据
-            BlockBean blockData = chunk.GetBlockData(localPosition);
-            if (blockData != null)
+            if (blockDoorData != null)
             {
-                BlockMetaDoor blockDoorData = FromMetaData<BlockMetaDoor>(blockData.meta);
-                if (blockDoorData != null)
-                {
-                    if (blockDoorData.level == 1)
-                        return;
-                }
+                if (blockDoorData.level == 1)
+                    return;
             }
             chunk.listBlockModelUpdate.Enqueue(localPosition);
         }
@@ -40,10 +36,8 @@ public class BlockTypeDoor : BlockBaseLink
         base.Interactive(user, worldPosition, blockDirection);
         WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(worldPosition, out Block block, out BlockDirectionEnum direction, out Chunk chunk);
         //获取数据
-        BlockBean blockData = chunk.GetBlockData(worldPosition - chunk.chunkData.positionForWorld);
-
-        BlockMetaDoor blockDoorData = FromMetaData<BlockMetaDoor>(blockData.meta);
-        if (blockDoorData == null)
+        GetBlockMetaData(chunk, worldPosition - chunk.chunkData.positionForWorld, out BlockBean blockData, out BlockMetaDoor blockDoorData);
+        if (blockData == null || blockDoorData == null)
         {
             blockDoorData = new BlockMetaDoor();
             blockDoorData.state = 0;

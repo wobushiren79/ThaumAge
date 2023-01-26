@@ -229,7 +229,10 @@ public class Block
     /// <param name="state">0:第一次创建地形 1：手动设置方块 2：刷新地形</param>
     public virtual void InitBlock(Chunk chunk, Vector3Int localPosition, int state)
     {
-        CreateBlockModel(chunk, localPosition);
+        if (state == 0 || state == 1)
+        {
+            CreateBlockModel(chunk, localPosition);
+        }
     }
 
     /// <summary>
