@@ -183,6 +183,26 @@ PrefabInstance:
       propertyPath: m_InitialEventNameOverriden
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 2846747087689624992, guid: 8f365258bba92104d8d43f858e8f0b62, type: 3}
+      propertyPath: m_PropertySheet.m_Vector4f.m_Array.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2846747087689624992, guid: 8f365258bba92104d8d43f858e8f0b62, type: 3}
+      propertyPath: m_PropertySheet.m_Vector4f.m_Array.Array.data[0].m_Name
+      value: Color
+      objectReference: {fileID: 0}
+    - target: {fileID: 2846747087689624992, guid: 8f365258bba92104d8d43f858e8f0b62, type: 3}
+      propertyPath: m_PropertySheet.m_Vector4f.m_Array.Array.data[0].m_Value.x
+      value: 0.06597481
+      objectReference: {fileID: 0}
+    - target: {fileID: 2846747087689624992, guid: 8f365258bba92104d8d43f858e8f0b62, type: 3}
+      propertyPath: m_PropertySheet.m_Vector4f.m_Array.Array.data[0].m_Value.z
+      value: 0.33962262
+      objectReference: {fileID: 0}
+    - target: {fileID: 2846747087689624992, guid: 8f365258bba92104d8d43f858e8f0b62, type: 3}
+      propertyPath: m_PropertySheet.m_Vector4f.m_Array.Array.data[0].m_Overridden
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2939940622265413595, guid: 8f365258bba92104d8d43f858e8f0b62, type: 3}
       propertyPath: m_Name
       value: Effect_Show_1

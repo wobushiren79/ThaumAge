@@ -50,4 +50,28 @@ public class EffectBase : BaseMonoBehaviour
             }
         }
     }
+
+    /// <summary>
+    /// 停止粒子
+    /// </summary>
+    public virtual void StopEffect()
+    {
+        if (!listPS.IsNull())
+        {
+            for (int i = 0; i < listPS.Count; i++)
+            {
+                ParticleSystem itemPS = listPS[i];
+                itemPS.Stop();
+            }
+        }
+        if (!listVE.IsNull())
+        {
+            for (int i = 0; i < listVE.Count; i++)
+            {
+                VisualEffect itemVE = listVE[i];
+                itemVE.SendEvent("OnStop");
+            }
+        }
+
+    }
 }

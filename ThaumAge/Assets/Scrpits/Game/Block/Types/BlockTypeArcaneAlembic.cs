@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class BlockTypeArcaneAlembic : Block
 {
-    public override bool TargetUseBlock(GameObject user, ItemsBean itemData, Chunk targetChunk, Vector3Int targetWorldPosition)
+    public override bool TargetUseBlock(GameObject user, ItemsBean itemData, Chunk targetChunk, Vector3Int targetLocalPosition)
     {
         if (itemData.itemId == 0)
             return true;
@@ -24,11 +24,11 @@ public class BlockTypeArcaneAlembic : Block
                 if (blockMetaWardedJar == null)
                     blockMetaWardedJar = new BlockMetaWardedJar();
             }
-            GetBlockMetaData(targetChunk, targetWorldPosition - targetChunk.chunkData.positionForWorld, out BlockBean blockData, out BlockMetaArcaneAlembic blockMetaData);
+            GetBlockMetaData(targetChunk, targetLocalPosition, out BlockBean blockData, out BlockMetaArcaneAlembic blockMetaData);
 
-            if (blockMetaData.listElemental.IsNull())
+            if (blockMetaData.elementalData == null || blockMetaData.elementalData.id == 0 || blockMetaData.elementalData.number > 0)
                 return true;
-            NumberBean numberData = blockMetaData.listElemental[0];
+            NumberBean numberData = blockMetaData.elementalData;
             bool checkCanAdd = blockMetaWardedJar.CheckCanAdd((ElementalTypeEnum)numberData.id);
             if (checkCanAdd)
             {

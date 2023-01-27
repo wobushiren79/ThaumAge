@@ -80,9 +80,8 @@ public class BlockTypeRechargePedestal : Block
         SetRechargeItem(chunk, localPosition, blockMetaRecharge.itemsRecharge);
     }
 
-    public override bool TargetUseBlock(GameObject user, ItemsBean itemData, Chunk targetChunk, Vector3Int targetWorldPosition)
+    public override bool TargetUseBlock(GameObject user, ItemsBean itemData, Chunk targetChunk, Vector3Int blockLocalPosition)
     {
-        Vector3Int blockLocalPosition = targetWorldPosition - targetChunk.chunkData.positionForWorld;
         GetBlockMetaData(targetChunk, blockLocalPosition, out BlockBean blockData, out BlockMetaRechargePedestal blockMetaRecharge);
 
         //如果基座上没有物品
@@ -115,6 +114,7 @@ public class BlockTypeRechargePedestal : Block
         //如果基座上有物品
         else
         {
+            Vector3Int targetWorldPosition = blockLocalPosition + targetChunk.chunkData.positionForWorld;
             //先让基座上的物品掉落
             ItemDropBean itemDropData = new ItemDropBean(blockMetaRecharge.itemsRecharge, ItemDropStateEnum.DropPick, targetWorldPosition + new Vector3(0.5f, 1.5f, 0.5f), Vector3.up * 1.5f);
             ItemsHandler.Instance.CreateItemCptDrop(itemDropData);

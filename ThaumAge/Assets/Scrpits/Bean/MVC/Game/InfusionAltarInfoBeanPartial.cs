@@ -95,7 +95,8 @@ public partial class InfusionAltarInfoCfg
         targetChunk.GetBlockForLocal(basePosition, out Block targetBlock, out BlockDirectionEnum targetDirection, out targetChunk);
 
         InfusionAltarInfoBean targetData = null;
-        targetBlock.GetRoundBlock(basePosition + targetChunk.chunkData.positionForWorld, 5, (itemChunk, itemBlock, itemLocalPosition) =>
+
+        targetBlock.GetRoundBlock(basePosition + targetChunk.chunkData.positionForWorld, BlockTypeInfusionAltar.RangeMaterial, BlockTypeInfusionAltar.RangeMaterial, BlockTypeInfusionAltar.RangeMaterial, (itemChunk, itemBlock, itemLocalPosition) =>
         {
             //获取基座上的物品
             if (itemBlock.blockType == BlockTypeEnum.ArcanePedestal)

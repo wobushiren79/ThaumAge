@@ -162,7 +162,8 @@ public class Chunk
         chunkSaveData.dicBlockData[index] = blockData;
 
         //异步保存数据
-        this.isSaveData = isSaveData;
+        if(isSaveData)
+            this.isSaveData = isSaveData;
     }
 
     /// <summary>

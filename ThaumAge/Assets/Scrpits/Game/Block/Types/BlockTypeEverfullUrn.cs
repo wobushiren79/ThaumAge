@@ -105,6 +105,7 @@ public class BlockTypeEverfullUrn : Block
              visualEffect.SetFloat("EffectStartWaitMax", 0.05f);
              visualEffect.SetFloat("EffectLifetimeMin", 1);
              visualEffect.SetFloat("EffectLifetimeMax", 3);
+             visualEffect.SetFloat("EffectNum", 80);
              visualEffect.SetVector4("ColorRandom1", new Vector4(0.3f, 0.65f, 1, 1));
              visualEffect.SetVector4("ColorRandom2", new Vector4(0.3f, 0.65f, 1, 1));
              visualEffect.SendEvent("OnPlay");

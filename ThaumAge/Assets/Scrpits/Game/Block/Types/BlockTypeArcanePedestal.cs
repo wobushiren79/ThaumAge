@@ -11,9 +11,8 @@ public class BlockTypeArcanePedestal : Block
         RefreshObjModel(chunk, localPosition, blockMetaData.itemsShow);
     }
 
-    public override bool TargetUseBlock(GameObject user, ItemsBean itemData, Chunk targetChunk, Vector3Int targetWorldPosition)
+    public override bool TargetUseBlock(GameObject user, ItemsBean itemData, Chunk targetChunk, Vector3Int blockLocalPosition)
     {
-        Vector3Int blockLocalPosition = targetWorldPosition - targetChunk.chunkData.positionForWorld;
         GetBlockMetaData(targetChunk, blockLocalPosition, out BlockBean blockData, out BlockMetaArcanePedestal blockMetaData);
         //如果基座上没有物品
         if (blockMetaData.itemsShow == null || blockMetaData.itemsShow.itemId == 0)
@@ -37,8 +36,9 @@ public class BlockTypeArcanePedestal : Block
         //如果基座上有物品
         else
         {
+            Vector3Int blockWorldPosition = blockLocalPosition + targetChunk.chunkData.positionForWorld;
             //先让基座上的物品掉落
-            ItemDropBean itemDropData = new ItemDropBean(blockMetaData.itemsShow, ItemDropStateEnum.DropPick, targetWorldPosition + new Vector3(0.5f, 1.5f, 0.5f), Vector3.up * 1.5f);
+            ItemDropBean itemDropData = new ItemDropBean(blockMetaData.itemsShow, ItemDropStateEnum.DropPick, blockWorldPosition + new Vector3(0.5f, 1.5f, 0.5f), Vector3.up * 1.5f);
             ItemsHandler.Instance.CreateItemCptDrop(itemDropData);
             blockMetaData.itemsShow = null;
         }
@@ -56,20 +56,32 @@ public class BlockTypeArcanePedestal : Block
     /// </summary>
     public virtual void RefreshObjModel(Chunk chunk, Vector3Int localPosition, ItemsBean itemsData)
     {
-        GameObject objBlock = chunk.GetBlockObjForLocal(localPosition);
-        if (objBlock == null)
-            return;
-        Transform tfItemShow = objBlock.transform.Find("ItemShow");
+        GameObject objItemShow = GetItemShowObj(chunk, localPosition);
         if (itemsData == null || itemsData.itemId == 0)
         {
-            tfItemShow.ShowObj(false);
+            objItemShow.ShowObj(false);
         }
         else
         {
-            tfItemShow.ShowObj(true);
+            objItemShow.ShowObj(true);
             ItemsInfoBean itemsInfo = ItemsHandler.Instance.manager.GetItemsInfoById(itemsData.itemId);
-            ItemCptShow itemCpt = tfItemShow.GetComponent<ItemCptShow>();
+            ItemCptShow itemCpt = objItemShow.GetComponent<ItemCptShow>();
             itemCpt.SetItem(itemsData, itemsInfo, 1);
         }
+    }
+
+    /// <summary>
+    /// 获取展示的物品
+    /// </summary>
+    /// <returns></returns>
+    public virtual GameObject GetItemShowObj(Chunk chunk, Vector3Int localPosition)
+    {
+        GameObject objBlock = chunk.GetBlockObjForLocal(localPosition);
+        if (objBlock == null)
+            return null;
+        Transform tfItemShow = objBlock.transform.Find("ItemShow");
+        if (tfItemShow == null)
+            return null;
+        return tfItemShow.gameObject;
     }
 }

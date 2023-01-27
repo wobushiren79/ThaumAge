@@ -67,6 +67,9 @@ VisualEffect:
       - m_Value: 0
         m_Name: EffectLifetimeMax
         m_Overridden: 1
+      - m_Value: 160
+        m_Name: EffectNum
+        m_Overridden: 1
     m_Vector2f:
       m_Array: []
     m_Vector3f:

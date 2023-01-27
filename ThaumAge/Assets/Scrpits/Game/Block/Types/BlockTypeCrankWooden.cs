@@ -4,9 +4,8 @@ using DG.Tweening;
 
 public class BlockTypeCrankWooden : Block
 {
-    public override bool TargetUseBlock(GameObject user, ItemsBean itemData, Chunk targetChunk, Vector3Int targetWorldPosition)
+    public override bool TargetUseBlock(GameObject user, ItemsBean itemData, Chunk targetChunk, Vector3Int blockLocalPosition)
     {
-        Vector3Int blockLocalPosition = targetWorldPosition - targetChunk.chunkData.positionForWorld;
         GameObject objTarget = targetChunk.GetBlockObjForLocal(blockLocalPosition);
         if (objTarget == null)
             return true;

@@ -143,7 +143,8 @@ public class PlayerTargetBlock : BaseMonoBehaviour
             //如果是奥术蒸馏器
             BlockTypeArcaneAlembic blockTypeArcaneAlembic = targetBlock as BlockTypeArcaneAlembic;
             blockTypeArcaneAlembic.GetBlockMetaData(targetChunk, targetLocalPosition, out BlockBean blockData, out BlockMetaArcaneAlembic blockMetaData);
-            listElemental = blockMetaData.listElemental;
+            if(blockMetaData.elementalData != null)
+                listElemental.Add(blockMetaData.elementalData);
         }
         else if (targetBlock.blockType == BlockTypeEnum.WardedJar)
         {

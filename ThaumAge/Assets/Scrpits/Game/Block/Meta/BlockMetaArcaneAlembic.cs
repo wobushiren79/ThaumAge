@@ -6,7 +6,7 @@ using System.Collections.Generic;
 [Serializable]
 public class BlockMetaArcaneAlembic : BlockMetaBase
 {
-    public List<NumberBean> listElemental;
+    public NumberBean elementalData;
     public int maxElemental;
 
     public BlockMetaArcaneAlembic()
@@ -16,22 +16,26 @@ public class BlockMetaArcaneAlembic : BlockMetaBase
 
     public bool AddElemental(ElementalTypeEnum elementalType, int elementalNum)
     {
-        if (listElemental.IsNull())
+        if (elementalData == null)
+            elementalData = new NumberBean((int)elementalType, 0);
+        if (elementalData.number == 0)
         {
-            if (listElemental == null)
-                listElemental = new List<NumberBean>();
-            NumberBean numberData = new NumberBean((int)elementalType, elementalNum);
-            listElemental.Add(numberData);
+            elementalData.id = (int)elementalType;
+            elementalData.number = elementalNum;
             return true;
         }
-        else
+        if (elementalData.id == (int)elementalType && (elementalData.number + elementalNum) <= maxElemental)
         {
-            NumberBean numberData = listElemental[0];
-            if(numberData.id == (int)elementalType && (numberData.number + elementalNum) <= maxElemental)
-            {
-                numberData.number += elementalNum;
-                return true;
-            }
+            elementalData.number += elementalNum;
+            return true;
+        }
+        if(elementalData.number > maxElemental)
+        {
+            elementalData.number = maxElemental;
+        }
+        else if (elementalData.number < 0)
+        {
+            elementalData.number = 0;
         }
         return false;
     }

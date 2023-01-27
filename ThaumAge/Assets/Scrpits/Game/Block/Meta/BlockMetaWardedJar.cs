@@ -8,8 +8,8 @@ public class BlockMetaWardedJar : BlockMetaBase
 
     public int curElemental = 0;
     public int maxElemental = 100;
-    
-    public bool  CheckCanAdd(ElementalTypeEnum elementalType)
+
+    public bool CheckCanAdd(ElementalTypeEnum elementalType)
     {
         //种类不同不能添加
         if (curElemental != 0 && this.elementalType != (int)elementalType)
@@ -19,11 +19,11 @@ public class BlockMetaWardedJar : BlockMetaBase
         return true;
     }
 
-    public bool AddElemental(ElementalTypeEnum elementalType,int elementalNum, out int leftElementalNum)
+    public bool AddElemental(ElementalTypeEnum elementalType, int elementalNum, out int leftElementalNum)
     {
         leftElementalNum = elementalNum;
         //如果有标签 首先判断标签 如果不是同一种元素 不能添加
-        if (this.elementalTypeForLabel != 0 && this.elementalTypeForLabel!= (int)elementalType)
+        if (this.elementalTypeForLabel != 0 && this.elementalTypeForLabel != (int)elementalType)
         {
             return false;
         }
@@ -39,7 +39,12 @@ public class BlockMetaWardedJar : BlockMetaBase
             leftElementalNum = curElemental - maxElemental;
             curElemental = maxElemental;
         }
-        else 
+        else if (curElemental < 0)
+        {
+            leftElementalNum = Mathf.Abs(curElemental);
+            curElemental = 0;
+        }
+        else
         {
             leftElementalNum = 0;
         }

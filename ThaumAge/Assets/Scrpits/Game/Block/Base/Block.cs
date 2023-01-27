@@ -138,13 +138,13 @@ public class Block
         WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(backPosition, out backBlock, out Chunk backChunk);
     }
 
-    public virtual void GetRoundBlock(Vector3Int worldPosition, int range = 1, Action<Chunk, Block, Vector3Int> callBackItem = null)
+    public virtual void GetRoundBlock(Vector3Int worldPosition, int rangeX = 1, int rangY = 1, int rangZ = 1, Action<Chunk, Block, Vector3Int> callBackItem = null)
     {
-        for (int x = -range; x <= range; x++)
+        for (int x = -rangeX; x <= rangeX; x++)
         {
-            for (int y = -range; y <= range; y++)
+            for (int y = -rangY; y <= rangY; y++)
             {
-                for (int z = -range; z <= range; z++)
+                for (int z = -rangZ; z <= rangZ; z++)
                 {
                     if (x == 0 && y == 0 && z == 0)
                         continue;
