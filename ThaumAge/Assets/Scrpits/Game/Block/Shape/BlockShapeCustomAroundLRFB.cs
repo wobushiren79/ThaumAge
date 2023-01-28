@@ -1,4 +1,5 @@
-﻿using UnityEditor;
+﻿using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 public class BlockShapeCustomAroundLRFB : BlockShapeCustom
@@ -52,9 +53,16 @@ public class BlockShapeCustomAroundLRFB : BlockShapeCustom
     protected void AddOtherMeshData(Chunk chunk, Vector3Int localPosition,float angle)
     {
         Vector3[] rotatePositionArray = VectorUtil.GetRotatedPosition(new Vector3(0.5f,0.5f,0.5f), vertsAddLink, new Vector3(0, angle, 0));
-        BaseAddTrisForCustom(chunk, localPosition, BlockDirectionEnum.UpForward, trisAddLink);
+        BaseAddTrisForCustomOther(chunk, localPosition, BlockDirectionEnum.UpForward, trisAddLink);
         BaseAddVertsUVsColorsForCustom(chunk, localPosition, BlockDirectionEnum.UpForward,
             rotatePositionArray, uvsAddLink, colorAddLink, new Vector3[0]);
+    }
+
+    protected virtual void BaseAddTrisForCustomOther(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum blockDirection, int[] trisAdd)
+    {
+        int index = chunk.chunkMeshData.verts.Count;
+        List<int> trisData = chunk.chunkMeshData.dicTris[block.blockInfo.material_type];
+        AddTris(index, trisData, trisAdd);
     }
 
     /// <summary>
@@ -71,6 +79,11 @@ public class BlockShapeCustomAroundLRFB : BlockShapeCustom
             out Block blockClose, out Chunk blockChunkClose, out Vector3Int localPositionClose);
         //如果是方块
         if (blockClose.blockInfo.GetBlockShape() == BlockShapeEnum.Cube)
+        {
+            return true;
+        }
+        //如果是都这种形状（目前只用于栅栏）
+        if (blockClose.blockInfo.GetBlockShape() == block.blockInfo.GetBlockShape())
         {
             return true;
         }

@@ -11,6 +11,12 @@ public class BlockTypeInfusionAltar : BlockBaseLinkLarge
     public static int RangeElemental = 7;
     //基座材料检测范围
     public static int RangeMaterial = 5;
+
+    public override BuildingTypeEnum GetBuildingType()
+    {
+        return BuildingTypeEnum.InfusionAltar;
+    }
+
     public override void CreateBlockModelSuccess(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum blockDirection, GameObject obj)
     {
         base.CreateBlockModelSuccess(chunk, localPosition, blockDirection, obj);

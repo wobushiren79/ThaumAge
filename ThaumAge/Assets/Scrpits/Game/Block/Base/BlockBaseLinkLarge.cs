@@ -10,7 +10,8 @@ public class BlockBaseLinkLarge : Block
         if (state == 1)
         {
             //检测是否能放下这个多方块结构
-            BuildingInfoBean buildingInfo = BiomeHandler.Instance.manager.GetBuildingInfo(BuildingTypeEnum.InfusionAltar);
+            BuildingTypeEnum buildingType = GetBuildingType();
+            BuildingInfoBean buildingInfo = BiomeHandler.Instance.manager.GetBuildingInfo(buildingType);
             Vector3Int buildingWorldPosition = localPosition + chunk.chunkData.positionForWorld;
             if (!buildingInfo.CheckCanSetLinkLargeBuilding(buildingWorldPosition))
             {
@@ -18,6 +19,15 @@ public class BlockBaseLinkLarge : Block
                 return;
             }
         }
+    }
+
+    /// <summary>
+    /// 获取对应的建筑类型
+    /// </summary>
+    /// <returns></returns>
+    public virtual BuildingTypeEnum GetBuildingType()
+    {
+        return BuildingTypeEnum.None;
     }
 
     public override void DestoryBlock(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction)

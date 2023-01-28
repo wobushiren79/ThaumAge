@@ -264,6 +264,18 @@ MonoBehaviour:
     m_SerializedLabels:
     - BlockMesh
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 30bdecedd1ebb12419d088d09d2c7d2b
+    m_Address: Assets/Prefabs/BlockMeshData/BlockFenceIron.txt
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - BlockMesh
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 48e784736a6976844b8fb7f38eeb59f5
+    m_Address: Assets/Prefabs/BlockMeshData/BlockInfernalFurnace.txt
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - BlockMesh
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: fd6114d87f1af534fbf270c47c0f10bf, type: 2}
   m_SchemaSet:

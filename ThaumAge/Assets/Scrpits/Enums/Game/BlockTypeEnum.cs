@@ -167,7 +167,10 @@ public enum BlockTypeEnum
     FrameItem = 6331,//物品展示框
 
     SignWooden = 6341,//木制牌子
+
     FenceWooden = 6351,//木制栅栏
+    FenceIron = 6352,//铁制栅栏
+
     FenceDoorWooden = 6361,//木制栅栏门
     Bonfire = 6371,//篝火
     TableWooden = 6381,//木桌
@@ -245,4 +248,5 @@ public enum BlockTypeEnum
     TestBlockDirection = 9999,//测试方向方块
 
     InfusionAltar = 10001,//注魔祭坛
+    InfernalFurnace = 10002,//炼狱熔炉
 }

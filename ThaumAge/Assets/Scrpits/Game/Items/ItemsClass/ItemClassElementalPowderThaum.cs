@@ -30,6 +30,9 @@ public class ItemClassElementalPowderThaum : Item
                 case BlockTypeEnum.RunicMatrix:
                     HandleForRunicMatrix(targetPosition, targetBlock, targetBlockDirection, taragetChunk);
                     break;
+                case BlockTypeEnum.FenceIron:
+                    HandleForFenceIron(targetPosition, targetBlock, targetBlockDirection, taragetChunk);
+                    break;
                 default:
                     return false;
             }
@@ -94,14 +97,14 @@ public class ItemClassElementalPowderThaum : Item
             //获取目标方块
             WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(targetPosition, out targetBlock, out targetBlockDirection, out taragetChunk);
             if (taragetChunk != null && targetBlock.blockType == BlockTypeEnum.RunicMatrix)
-            {       
+            {
                 //检测是否能放下这个多方块结构
                 BuildingInfoBean buildingInfo = BiomeHandler.Instance.manager.GetBuildingInfo(BuildingTypeEnum.InfusionAltar);
                 if (!buildingInfo.CheckCanSetLinkLargeBuilding(basePosition))
                 {
                     return;
                 }
-                BlockMetaBaseLink blockMetaLinkData = new BlockMetaBaseLink();
+                BlockMetaInfusionAltar blockMetaLinkData = new BlockMetaInfusionAltar();
                 blockMetaLinkData.level = 0;
                 blockMetaLinkData.linkBasePosition = new Vector3IntBean(basePosition);
                 blockMetaLinkData.isBreakAll = false;
@@ -119,10 +122,80 @@ public class ItemClassElementalPowderThaum : Item
         effectSmoke.effectName = EffectInfo.Effect_Change_1;
         effectSmoke.effectPosition = new Vector3(0.5f + targetPosition.x, 0.5f + targetPosition.y - 1f, 0.5f + targetPosition.z);
         effectSmoke.timeForShow = 5;
-        EffectHandler.Instance.ShowEffect(effectSmoke,(effect)=> 
+        EffectHandler.Instance.ShowEffect(effectSmoke, (effect) =>
+         {
+             VisualEffect itemEffect = effect.listVE[0];
+             itemEffect.SetVector3("Size", new Vector3(3, 3, 3));
+             itemEffect.SetFloat("EffectSmokeNum", 250 * 5);
+             itemEffect.SetFloat("EffectStarNum", 100 * 5);
+         });
+    }
+
+    /// <summary>
+    /// 处理地狱熔炉
+    /// </summary>
+    protected void HandleForFenceIron(Vector3Int targetPosition, Block targetBlock, BlockDirectionEnum targetBlockDirection, Chunk taragetChunk)
+    {        
+        //检测是否能放下这个多方块结构
+        BuildingInfoBean buildingInfo = BiomeHandler.Instance.manager.GetBuildingInfo(BuildingTypeEnum.InfernalFurnace);
+        Vector3Int basePosition = targetPosition - Vector3Int.up;
+        //判断一下选择
+        if (!buildingInfo.CheckCanSetLinkLargeBuilding(basePosition + Vector3Int.forward))
+        {
+            if (!buildingInfo.CheckCanSetLinkLargeBuilding(basePosition + Vector3Int.back))
+            {
+                if (!buildingInfo.CheckCanSetLinkLargeBuilding(basePosition + Vector3Int.left))
+                {
+                    if (!buildingInfo.CheckCanSetLinkLargeBuilding(basePosition + Vector3Int.right))
+                    {
+                        return;
+                    }
+                    else
+                        basePosition += Vector3Int.right;
+                }
+                else
+                    basePosition += Vector3Int.left;
+            }
+            else
+                basePosition += Vector3Int.back;
+        }
+        else
+            basePosition += Vector3Int.forward;
+        PlayThrowEffect();
+        EffectHandler.Instance.WaitExecuteSeconds(2, () =>
+        {
+            //获取目标方块
+            WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(targetPosition, out targetBlock, out targetBlockDirection, out taragetChunk);
+            if (taragetChunk != null && targetBlock.blockType == BlockTypeEnum.FenceIron)
+            {
+                //检测是否能放下这个多方块结构
+                BuildingInfoBean buildingInfo = BiomeHandler.Instance.manager.GetBuildingInfo(BuildingTypeEnum.InfernalFurnace);
+                if (!buildingInfo.CheckCanSetLinkLargeBuilding(basePosition))
+                {
+                    return;
+                }
+                BlockMetaInfernalFurnace blockMetaLinkData = new BlockMetaInfernalFurnace();
+                blockMetaLinkData.level = 0;
+                blockMetaLinkData.linkBasePosition = new Vector3IntBean(basePosition);
+                blockMetaLinkData.isBreakAll = false;
+                blockMetaLinkData.isBreakMesh = false;
+                blockMetaLinkData.baseBlockType = targetBlock.blockInfo.id;
+
+                taragetChunk.SetBlockForLocal(basePosition, BlockTypeEnum.InfernalFurnace, targetBlockDirection, blockMetaLinkData.ToJson());
+                //播放音效
+                AudioHandler.Instance.PlaySound(3, targetPosition);
+            }
+        });
+        //播放粒子特效
+        EffectBean effectSmoke = new EffectBean();
+        effectSmoke.effectType = EffectTypeEnum.Visual;
+        effectSmoke.effectName = EffectInfo.Effect_Change_1;
+        effectSmoke.effectPosition = new Vector3(0.5f + basePosition.x, 1.5f + basePosition.y, 0.5f + basePosition.z);
+        effectSmoke.timeForShow = 5;
+        EffectHandler.Instance.ShowEffect(effectSmoke, (effect) =>
         {
             VisualEffect itemEffect = effect.listVE[0];
-            itemEffect.SetVector3("Size",new Vector3(3,3,3));
+            itemEffect.SetVector3("Size", new Vector3(3, 3, 3));
             itemEffect.SetFloat("EffectSmokeNum", 250 * 5);
             itemEffect.SetFloat("EffectStarNum", 100 * 5);
         });
@@ -140,13 +213,13 @@ public class ItemClassElementalPowderThaum : Item
         EffectBean effectSmoke = new EffectBean();
         effectSmoke.effectType = EffectTypeEnum.Visual;
         effectSmoke.effectName = EffectInfo.Effect_Throw_1;
-        effectSmoke.effectPosition = playerPosition + new Vector3(0,1.5f,0);
+        effectSmoke.effectPosition = playerPosition + new Vector3(0, 1.5f, 0);
         effectSmoke.timeForShow = 3;
         EffectHandler.Instance.ShowEffect(effectSmoke, (effect) =>
         {
             VisualEffect itemEffect = effect.listVE[0];
             itemEffect.transform.eulerAngles = mainCamera.transform.eulerAngles;
         });
-        
+
     }
 }

@@ -62,11 +62,11 @@ public partial class UIBuildingEditorCreate : BaseUIComponent
     public override void OnInputActionForStarted(InputActionUIEnum inputType, InputAction.CallbackContext callback)
     {
         base.OnInputActionForStarted(inputType, callback);
-        if(inputType == InputActionUIEnum.N1)
+        if(inputType == InputActionUIEnum.F1)
         {
             ui_CreateSelect.isOn = true;
         }
-        else if (inputType == InputActionUIEnum.N2)
+        else if (inputType == InputActionUIEnum.F2)
         {
             ui_DestorySelect.isOn = true;
         }
