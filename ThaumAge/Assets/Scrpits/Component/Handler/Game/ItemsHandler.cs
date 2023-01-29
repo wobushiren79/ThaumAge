@@ -104,9 +104,8 @@ public class ItemsHandler : BaseHandler<ItemsHandler, ItemsManager>
     {
         if (itemDropData.itemData == null || itemDropData.itemData.itemId == 0)
             return;
-        manager.GetItemsDropObj((objModel) =>
+        manager.GetItemsDropObj((objCommon) =>
         {
-            GameObject objCommon = Instantiate(gameObject, objModel);
             ItemCptDrop ItemCptDrop = objCommon.GetComponent<ItemCptDrop>();
             ItemCptDrop.SetData(itemDropData);
             callBackForComplete?.Invoke(ItemCptDrop);

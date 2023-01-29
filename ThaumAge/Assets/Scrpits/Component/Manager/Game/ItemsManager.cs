@@ -26,6 +26,9 @@ public class ItemsManager : BaseManager,IItemsInfoView
     //道具模型贴图
     protected Dictionary<long, Texture> dicItemsTex = new();
 
+    //道具池
+    public Queue<ItemCptDrop> poolItemDrop = new Queue<ItemCptDrop>();
+
     //路径-道具丢弃模型
     public static string PathForItemDrop = "Assets/Prefabs/Game/Item/ItemDrop.prefab";
     //路径-道具发射模型
@@ -135,14 +138,28 @@ public class ItemsManager : BaseManager,IItemsInfoView
         IconHandler.Instance.manager.GetItemsSpriteByName(itemsInfo.icon_key, callBack);
     }
 
+
     /// <summary>
     /// 获取道具掉落的模型
     /// </summary>
     /// <param name="callBack"></param>
     public void GetItemsDropObj(Action<GameObject> callBack)
     {
-        //添加道具掉落模型
-        GetModelForAddressables(dicItemsObj, -1, PathForItemDrop, callBack);
+        //优先取闲置列表里的
+        if (poolItemDrop.Count > 0)
+        {
+            GameObject objCommon = poolItemDrop.Dequeue().gameObject;
+            callBack?.Invoke(objCommon);
+        }
+        else
+        {
+            //添加道具掉落模型
+            GetModelForAddressables(dicItemsObj, -1, PathForItemDrop, (GameObject objModel) =>
+            {
+                GameObject objCommon = Instantiate(gameObject, objModel);
+                callBack?.Invoke(objCommon);
+            });
+        }
     }
 
     /// <summary>

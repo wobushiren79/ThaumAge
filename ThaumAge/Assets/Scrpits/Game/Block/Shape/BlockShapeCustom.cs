@@ -5,9 +5,10 @@ using UnityEngine;
 public class BlockShapeCustom : BlockShape
 {
     //自定义形状方块所有的数据
-    public MeshDataCustom blockMeshData;
-    public Vector3[] vertsColliderAddCustom;
-    public int[] trisColliderAddCustom;
+    protected MeshDataCustom blockMeshData;
+    protected Vector3[] vertsColliderAddCustom;
+    protected int[] trisColliderAddCustom;
+   
 
     public BlockShapeCustom(Block block) : base(block)
     {
@@ -72,6 +73,15 @@ public class BlockShapeCustom : BlockShape
     #endregion
 
     /// <summary>
+    /// 获取meshdata
+    /// </summary>
+    /// <returns></returns>
+    public virtual MeshDataCustom GetBlockMeshData()
+    {
+        return blockMeshData;
+    }
+
+    /// <summary>
     /// 获取完整mesh数据
     /// </summary>
     /// <returns></returns>
@@ -79,5 +89,17 @@ public class BlockShapeCustom : BlockShape
     {
         Mesh meshMain = blockMeshData.GetMainMesh();
         return meshMain;
+    }
+
+    /// <summary>
+    /// 设置颜色的亮度
+    /// </summary>
+    /// <param name="emission"></param>
+    public virtual void SetColorsEmission(float emission)
+    {
+        for (int i = 0; i < colorsAdd.Length; i++)
+        {
+            colorsAdd[i].a = emission;
+        }
     }
 }

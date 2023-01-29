@@ -43,42 +43,90 @@ public class BuildingInfoBean : BaseBean
     /// <summary>
     /// 检测是否能放置下这个建筑
     /// </summary>
-    public bool CheckCanSetLinkLargeBuilding(Vector3Int basePosition)
+    public bool CheckCanSetLinkLargeBuilding(Vector3Int basePosition, out BlockDirectionEnum baseBlockDirection)
     {
+        baseBlockDirection = BlockDirectionEnum.UpForward;
         if (basePosition.y < 0)
             return false;
-        for (int i = 0; i < listBuildingData.Count; i++)
+        int rotateAngle = 0;
+        bool canSet = false;
+        while (rotateAngle < 360 && canSet == false)
         {
-            var itemBuildingData = listBuildingData[i];
-            Vector3Int itemWorldPosition = itemBuildingData.position + basePosition;
-            WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(itemWorldPosition, out Block itemBlock, out Chunk itemChunk);
-            if (itemChunk == null || itemBlock == null)
+            canSet = true;
+            for (int i = 0; i < listBuildingData.Count; i++)
             {
-                return false;
+                var itemBuildingData = listBuildingData[i];
+                Vector3 rotatePosition = VectorUtil.GetRotatedPosition(basePosition, itemBuildingData.position + basePosition, new Vector3(0, rotateAngle, 0));
+                Vector3Int itemWorldPosition = Vector3Int.RoundToInt(rotatePosition);
+                WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(itemWorldPosition, out Block itemBlock, out Chunk itemChunk);
+                if (itemChunk == null || itemBlock == null)
+                {
+                    canSet = false;
+                    break;
+                }
+                if (itemBuildingData.blockId != itemBlock.blockInfo.id)
+                {
+                    canSet = false;
+                    break;
+                }
             }
-            if (itemBuildingData.blockId != itemBlock.blockInfo.id)
+            if (!canSet)
             {
-                return false;
+                rotateAngle += 90;
             }
         }
-        return true;
+        switch (rotateAngle)
+        {
+            case 0:
+                baseBlockDirection = BlockDirectionEnum.UpForward;
+                break;
+            case 90:
+                baseBlockDirection = BlockDirectionEnum.UpLeft;
+                break;
+            case 180:
+                baseBlockDirection = BlockDirectionEnum.UpBack;
+                break;
+            case 270:
+                baseBlockDirection = BlockDirectionEnum.UpRight;
+                break;
+        }
+
+        return canSet;
     }
 
     /// <summary>
     /// 放置这个大型方块
     /// </summary>
-    public void SetLinkLargeBuilding(Vector3Int basePosition)
+    public void SetLinkLargeBuilding(Vector3Int basePosition, BlockDirectionEnum baseBlockDirection)
     {
+        int rotateAngle = 0;
+        switch (baseBlockDirection)
+        {
+            case BlockDirectionEnum.UpForward:
+                rotateAngle = 0;
+                break;
+            case BlockDirectionEnum.UpLeft:
+                rotateAngle = 90;
+                break;
+            case BlockDirectionEnum.UpBack:
+                rotateAngle = 180;
+                break;
+            case BlockDirectionEnum.UpRight:
+                rotateAngle = 270;
+                break;
+        }
+
         WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(basePosition, out Block baseBlock, out Chunk baseChunk);
         for (int i = 0; i < listBuildingData.Count; i++)
-        {    
+        {
             var itemBuildingData = listBuildingData[i];
             //如果是0,0,0处 再放置的时候已经设置过了 这里就不处理了 只设置基础数据
             if (itemBuildingData.position == Vector3Int.zero)
             {
                 continue;
-            }      
-            Vector3Int itemWorldPosition = itemBuildingData.position + basePosition;
+            }
+            Vector3 rotatePosition = VectorUtil.GetRotatedPosition(basePosition, itemBuildingData.position + basePosition, new Vector3(0, rotateAngle, 0));
+            Vector3Int itemWorldPosition = Vector3Int.RoundToInt(rotatePosition);
             WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(itemWorldPosition, out Block itemBlock, out Chunk itemChunk);
             if (itemChunk == null || itemBlock == null)
             {
@@ -97,7 +145,7 @@ public class BuildingInfoBean : BaseBean
     /// <summary>
     /// 还原多方快结构的原型
     /// </summary>
-    public void ResetLinkLargeBuilding(Vector3Int basePosition,List<Vector3Int> nullPosition = null)
+    public void ResetLinkLargeBuilding(Vector3Int basePosition, List<Vector3Int> nullPosition = null)
     {
         WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(basePosition, out Block baseBlock, out Chunk baseChunk);
         for (int i = 0; i < listBuildingData.Count; i++)
@@ -119,7 +167,7 @@ public class BuildingInfoBean : BaseBean
             {
                 continue;
             }
-            itemChunk.SetBlockForLocal(itemWorldPosition - itemChunk.chunkData.positionForWorld, (BlockTypeEnum)itemBuildingData.blockId, isDestoryOld : false);
+            itemChunk.SetBlockForLocal(itemWorldPosition - itemChunk.chunkData.positionForWorld, (BlockTypeEnum)itemBuildingData.blockId, isDestoryOld: false);
         }
     }
 }

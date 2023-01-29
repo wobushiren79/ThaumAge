@@ -8,14 +8,7 @@ public class BlockBaseTorch : Block
     {
         base.SetData(blockType);
         BlockShapeCustomDirection blockShapeCustomDirection = blockShape as BlockShapeCustomDirection;
-        for (int i = 0; i < blockShapeCustomDirection.colorsAddDirection.Length; i++)
-        {
-            blockShapeCustomDirection.colorsAddDirection[i].a = 2;
-        }
-        for (int i = 0; i < blockShapeCustomDirection.colorsAdd.Length; i++)
-        {
-            blockShapeCustomDirection.colorsAdd[i].a = 2;
-        }
+        blockShapeCustomDirection.SetColorsEmission(2);
     }
 
     /// <summary>

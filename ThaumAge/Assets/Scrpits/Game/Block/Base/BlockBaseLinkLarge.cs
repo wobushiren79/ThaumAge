@@ -13,9 +13,9 @@ public class BlockBaseLinkLarge : Block
             BuildingTypeEnum buildingType = GetBuildingType();
             BuildingInfoBean buildingInfo = BiomeHandler.Instance.manager.GetBuildingInfo(buildingType);
             Vector3Int buildingWorldPosition = localPosition + chunk.chunkData.positionForWorld;
-            if (!buildingInfo.CheckCanSetLinkLargeBuilding(buildingWorldPosition))
+            if (buildingInfo.CheckCanSetLinkLargeBuilding(buildingWorldPosition, out BlockDirectionEnum baseBlockDirection))
             {
-                buildingInfo.SetLinkLargeBuilding(buildingWorldPosition);
+                buildingInfo.SetLinkLargeBuilding(buildingWorldPosition, baseBlockDirection);
                 return;
             }
         }
@@ -38,10 +38,20 @@ public class BlockBaseLinkLarge : Block
 
     public static void DestoryBlockForLinkLarge(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction)
     {
-        BuildingInfoBean buildingInfo = BiomeHandler.Instance.manager.GetBuildingInfo(BuildingTypeEnum.InfusionAltar);
         chunk.GetBlockForLocal(localPosition, out Block block, out direction, out chunk);
         block.GetBlockMetaData(chunk, localPosition, out BlockBean blockData, out BlockMetaBaseLink blockMetaData);
         Vector3Int basePosition = blockMetaData.GetBasePosition();
-        buildingInfo.ResetLinkLargeBuilding(basePosition, new List<Vector3Int> { localPosition + chunk.chunkData.positionForWorld });
+
+        //获取主方块数据
+        WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(basePosition,out Block baseBlock,out Chunk baseChunk);
+        if (baseChunk != null)
+        {     
+            //获取建筑类型
+            BlockBaseLinkLarge blockBaseLinkLarge = baseBlock as BlockBaseLinkLarge;
+            BuildingTypeEnum buildingType = blockBaseLinkLarge.GetBuildingType();
+
+            BuildingInfoBean buildingInfo = BiomeHandler.Instance.manager.GetBuildingInfo(buildingType);
+            buildingInfo.ResetLinkLargeBuilding(basePosition, new List<Vector3Int> { localPosition + chunk.chunkData.positionForWorld });
+        }
     }
 }

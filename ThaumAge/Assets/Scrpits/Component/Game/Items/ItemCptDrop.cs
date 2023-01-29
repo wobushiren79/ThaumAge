@@ -29,9 +29,11 @@ public class ItemCptDrop : BaseMonoBehaviour
         InvokeRepeating("UpdateItemData", 1, 1);
     }
 
-    public void OnDestroy()
+    public virtual void DestroyCpt()
     {
         CancelInvoke();
+        gameObject.SetActive(false);
+        ItemsHandler.Instance.manager.poolItemDrop.Enqueue(this);
     }
 
     /// <summary>
@@ -56,7 +58,7 @@ public class ItemCptDrop : BaseMonoBehaviour
         //如果玩家距离物体过远，或者超过存在时间，则删除物体
         if (dis > disForItemsDestory || timeForCreate > timeForItemsDestory)
         {
-            Destroy(gameObject);
+            DestroyCpt();
         }
     }
 
@@ -77,7 +79,7 @@ public class ItemCptDrop : BaseMonoBehaviour
         this.itemDropData = itemDropData;
         itemsInfo = ItemsHandler.Instance.manager.GetItemsInfoById(itemDropData.itemData.itemId);
         transform.position = itemDropData.dropPosition;
-
+        gameObject.SetActive(true);
         Item item = ItemsHandler.Instance.manager.GetRegisterItem(itemsInfo.id);
 
         //设置头像
@@ -148,7 +150,7 @@ public class ItemCptDrop : BaseMonoBehaviour
                 if (number == 0)
                 {
                     //如果都加完了 则删除
-                    Destroy(gameObject);
+                    DestroyCpt();
                 }
                 else
                 {

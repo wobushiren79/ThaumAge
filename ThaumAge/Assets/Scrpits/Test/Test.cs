@@ -10,6 +10,12 @@ public class Test : BaseMonoBehaviour
     protected List<Vector3Int> listData1 = new List<Vector3Int>();
     protected HashSet<Vector3Int> listData2 = new HashSet<Vector3Int>();
     protected Dictionary<Vector3Int, string> listData3 = new Dictionary<Vector3Int, string>();
+
+    public void Start()
+    {
+        //Cursor.lockState = CursorLockMode.Confined;
+    }
+
     public void Update()
     {
         if (Input.GetKeyUp(KeyCode.F))

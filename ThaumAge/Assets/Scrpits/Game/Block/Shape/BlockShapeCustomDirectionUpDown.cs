@@ -3,10 +3,10 @@ using UnityEngine;
 
 public class BlockShapeCustomDirectionUpDown : BlockShapeCustom
 {
-    public Vector3[] vertsAddDirection;
-    public int[] trisAddDirection;
-    public Vector2[] uvsAddDirection;
-    public Color[] colorsAddDirection;
+    protected Vector3[] vertsAddDirection;
+    protected int[] trisAddDirection;
+    protected Vector2[] uvsAddDirection;
+    protected Color[] colorsAddDirection;
 
     public BlockShapeCustomDirectionUpDown(Block block) :base(block)
     {
@@ -59,5 +59,18 @@ public class BlockShapeCustomDirectionUpDown : BlockShapeCustom
                 return mesh;
         }
         return null;
+    }
+
+    /// <summary>
+    /// 设置颜色的亮度
+    /// </summary>
+    /// <param name="emission"></param>
+    public override void SetColorsEmission(float emission)
+    {
+        base.SetColorsEmission(emission);
+        for (int i = 0; i < colorsAddDirection.Length; i++)
+        {
+            colorsAddDirection[i].a = emission;
+        }
     }
 }

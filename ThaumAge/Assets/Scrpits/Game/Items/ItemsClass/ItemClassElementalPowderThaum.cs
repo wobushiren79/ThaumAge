@@ -87,7 +87,7 @@ public class ItemClassElementalPowderThaum : Item
         //检测是否能放下这个多方块结构
         BuildingInfoBean buildingInfo = BiomeHandler.Instance.manager.GetBuildingInfo(BuildingTypeEnum.InfusionAltar);
         Vector3Int basePosition = targetPosition - Vector3Int.up * 2;
-        if (!buildingInfo.CheckCanSetLinkLargeBuilding(basePosition))
+        if (!buildingInfo.CheckCanSetLinkLargeBuilding(basePosition, out BlockDirectionEnum baseBlockDirection))
         {
             return;
         }
@@ -100,7 +100,7 @@ public class ItemClassElementalPowderThaum : Item
             {
                 //检测是否能放下这个多方块结构
                 BuildingInfoBean buildingInfo = BiomeHandler.Instance.manager.GetBuildingInfo(BuildingTypeEnum.InfusionAltar);
-                if (!buildingInfo.CheckCanSetLinkLargeBuilding(basePosition))
+                if (!buildingInfo.CheckCanSetLinkLargeBuilding(basePosition,out BlockDirectionEnum baseBlockDirection))
                 {
                     return;
                 }
@@ -111,7 +111,8 @@ public class ItemClassElementalPowderThaum : Item
                 blockMetaLinkData.isBreakMesh = false;
                 blockMetaLinkData.baseBlockType = targetBlock.blockInfo.id;
 
-                taragetChunk.SetBlockForLocal(basePosition, BlockTypeEnum.InfusionAltar, targetBlockDirection, blockMetaLinkData.ToJson());
+                //这里直接使用taragetChunk 因为再同一个区块
+                taragetChunk.SetBlockForLocal(basePosition, BlockTypeEnum.InfusionAltar, baseBlockDirection, blockMetaLinkData.ToJson());
                 //播放音效
                 AudioHandler.Instance.PlaySound(3, targetPosition);
             }
@@ -139,14 +140,15 @@ public class ItemClassElementalPowderThaum : Item
         //检测是否能放下这个多方块结构
         BuildingInfoBean buildingInfo = BiomeHandler.Instance.manager.GetBuildingInfo(BuildingTypeEnum.InfernalFurnace);
         Vector3Int basePosition = targetPosition - Vector3Int.up;
+        BlockDirectionEnum baseBlockDirection;
         //判断一下选择
-        if (!buildingInfo.CheckCanSetLinkLargeBuilding(basePosition + Vector3Int.forward))
+        if (!buildingInfo.CheckCanSetLinkLargeBuilding(basePosition + Vector3Int.forward, out  baseBlockDirection))
         {
-            if (!buildingInfo.CheckCanSetLinkLargeBuilding(basePosition + Vector3Int.back))
+            if (!buildingInfo.CheckCanSetLinkLargeBuilding(basePosition + Vector3Int.back, out  baseBlockDirection))
             {
-                if (!buildingInfo.CheckCanSetLinkLargeBuilding(basePosition + Vector3Int.left))
+                if (!buildingInfo.CheckCanSetLinkLargeBuilding(basePosition + Vector3Int.left, out  baseBlockDirection))
                 {
-                    if (!buildingInfo.CheckCanSetLinkLargeBuilding(basePosition + Vector3Int.right))
+                    if (!buildingInfo.CheckCanSetLinkLargeBuilding(basePosition + Vector3Int.right, out  baseBlockDirection))
                     {
                         return;
                     }
@@ -164,13 +166,14 @@ public class ItemClassElementalPowderThaum : Item
         PlayThrowEffect();
         EffectHandler.Instance.WaitExecuteSeconds(2, () =>
         {
-            //获取目标方块
-            WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(targetPosition, out targetBlock, out targetBlockDirection, out taragetChunk);
+            //获取目标方块 (再判断一次 防止2秒之后方块改变)
+            WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(targetPosition, out Block targetBlock, out BlockDirectionEnum targetBlockDirection, out Chunk taragetChunk);
             if (taragetChunk != null && targetBlock.blockType == BlockTypeEnum.FenceIron)
             {
+                WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(basePosition, out Block baseBlock, out BlockDirectionEnum baseBlockDirection, out Chunk baseChunk);
                 //检测是否能放下这个多方块结构
                 BuildingInfoBean buildingInfo = BiomeHandler.Instance.manager.GetBuildingInfo(BuildingTypeEnum.InfernalFurnace);
-                if (!buildingInfo.CheckCanSetLinkLargeBuilding(basePosition))
+                if (!buildingInfo.CheckCanSetLinkLargeBuilding(basePosition,out baseBlockDirection))
                 {
                     return;
                 }
@@ -178,10 +181,9 @@ public class ItemClassElementalPowderThaum : Item
                 blockMetaLinkData.level = 0;
                 blockMetaLinkData.linkBasePosition = new Vector3IntBean(basePosition);
                 blockMetaLinkData.isBreakAll = false;
-                blockMetaLinkData.isBreakMesh = false;
+                blockMetaLinkData.isBreakMesh = true;
                 blockMetaLinkData.baseBlockType = targetBlock.blockInfo.id;
-
-                taragetChunk.SetBlockForLocal(basePosition, BlockTypeEnum.InfernalFurnace, targetBlockDirection, blockMetaLinkData.ToJson());
+                baseChunk.SetBlockForLocal(basePosition, BlockTypeEnum.InfernalFurnace, baseBlockDirection, blockMetaLinkData.ToJson());
                 //播放音效
                 AudioHandler.Instance.PlaySound(3, targetPosition);
             }

@@ -3,10 +3,10 @@ using UnityEngine;
 
 public class BlockShapeCustomDirection : BlockShapeCustom
 {
-    public Vector3[] vertsAddDirection;
-    public int[] trisAddDirection;
-    public Vector2[] uvsAddDirection;
-    public Color[] colorsAddDirection;
+    protected Vector3[] vertsAddDirection;
+    protected int[] trisAddDirection;
+    protected Vector2[] uvsAddDirection;
+    protected Color[] colorsAddDirection;
 
     public BlockShapeCustomDirection(Block block) : base(block)
     {

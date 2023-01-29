@@ -6,14 +6,7 @@ public class BlockBaseLantern : Block
     {
         base.SetData(blockType);
         BlockShapeCustomDirectionUpDown blockShapeCustomDirectionUpDown = blockShape as BlockShapeCustomDirectionUpDown;
-        for (int i = 0; i < blockShapeCustomDirectionUpDown.colorsAddDirection.Length; i++)
-        {
-            blockShapeCustomDirectionUpDown.colorsAddDirection[i].a = 2;
-        }
-        for (int i = 0; i < blockShapeCustomDirectionUpDown.colorsAdd.Length; i++)
-        {
-            blockShapeCustomDirectionUpDown.colorsAdd[i].a = 2;
-        }
+        blockShapeCustomDirectionUpDown.SetColorsEmission(2);
     }
 
     public override Vector3 GetRotateAngles(BlockDirectionEnum direction)

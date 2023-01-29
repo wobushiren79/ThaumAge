@@ -9,7 +9,8 @@ public class BlockTypeWorkbenchCharger : Block
         BlockShapeCustom blockShapeCustom = blockShape as BlockShapeCustom;
         for (int i = 0; i < colorArray.Length; i++)
         {
-            Color texColor = blockShapeCustom.blockMeshData.mainMeshData.texColor[i];
+            MeshDataCustom meshDataCustom = blockShapeCustom.GetBlockMeshData();
+            Color texColor = meshDataCustom.mainMeshData.texColor[i];
             if (texColor.r > 0.5f)
             {
                 colorArray[i] = lightColor;
