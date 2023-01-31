@@ -183,7 +183,7 @@ public class ControlForPlayer : ControlForBase
         if (!isActiveAndEnabled)
             return;
         UIGameUserDetails uiGameUserDetails = UIHandler.Instance.OpenUIAndCloseOther<UIGameUserDetails>();
-        uiGameUserDetails.ui_ViewSynthesis.SetData(ItemsSynthesisTypeEnum.Self,Vector3Int.zero);
+        uiGameUserDetails.ui_ViewSynthesis.SetData(ItemsSynthesisTypeEnum.Self, Vector3Int.zero);
     }
 
     /// <summary>
@@ -386,7 +386,7 @@ public class ControlForPlayer : ControlForBase
             timeUpdateForUseItem += Time.deltaTime;
             if (timeUpdateForUseItem > timeUpdateMaxForUseItem)
             {
-                if(inputActionUseL.ReadValue<float>() == 1)
+                if (inputActionUseL.ReadValue<float>() == 1)
                 {
                     HandleForUseL(new CallbackContext());
                 }
@@ -449,7 +449,15 @@ public class ControlForPlayer : ControlForBase
         //丢出道具
         Player player = GameHandler.Instance.manager.player;
         Vector3 randomFroce = new Vector3(UnityEngine.Random.Range(-0.1f, 0.1f), UnityEngine.Random.Range(0.4f, 0.5f), UnityEngine.Random.Range(-0.1f, 0.1f));
-        ItemDropBean itemDropData = new ItemDropBean(itemData.itemId, player.transform.position + Vector3.up * 1.25f, player.transform.forward + randomFroce, 1, itemData.meta, ItemDropStateEnum.DropNoPick);
+        ItemDropBean itemDropData = new ItemDropBean
+            (
+            itemData.itemId,
+            player.transform.position + Vector3.up * 1.25f,
+            player.transform.forward + randomFroce,
+            1,
+            itemData.meta,
+            ItemDropStateEnum.DropNoPick
+            );
         ItemsHandler.Instance.CreateItemCptDrop(itemDropData);
 
         //扣除道具

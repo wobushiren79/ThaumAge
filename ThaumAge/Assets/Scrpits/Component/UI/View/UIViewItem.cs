@@ -214,10 +214,10 @@ public partial class UIViewItem : BaseUIView,
     {
         BaseUIComponent currentUI = UIHandler.Instance.GetOpenUI();
         //首先检测是否有箱子 优先放进箱子
-        UIViewBoxList boxList = currentUI.GetComponentInChildren<UIViewBoxList>();
-        if (boxList != null)
+        UIViewChestList chestList = currentUI.GetComponentInChildren<UIViewChestList>();
+        if (chestList != null)
         {
-            if (boxList.AddItems(this)) return true;
+            if (chestList.AddItems(this)) return true;
         }
         UIViewBackpackList backpackUI = currentUI.GetComponentInChildren<UIViewBackpackList>();
         if (backpackUI != null)
@@ -235,10 +235,10 @@ public partial class UIViewItem : BaseUIView,
     {
         BaseUIComponent currentUI = UIHandler.Instance.GetOpenUI();
         //首先检测是否有箱子 优先放进箱子
-        UIViewBoxList boxList = currentUI.GetComponentInChildren<UIViewBoxList>();
-        if (boxList != null)
+        UIViewChestList chestList = currentUI.GetComponentInChildren<UIViewChestList>();
+        if (chestList != null)
         {
-            if (boxList.AddItems(this)) return true;
+            if (chestList.AddItems(this)) return true;
         }
         //获取快捷栏
         UIViewShortcuts shortcutsUI = currentUI.GetComponentInChildren<UIViewShortcuts>();
@@ -432,7 +432,7 @@ public partial class UIViewItem : BaseUIView,
     {
         //如果什么都没有检测到，说明是把物体丢到场景中
         Player player = GameHandler.Instance.manager.player;
-        Vector3 randomFroce = new Vector3(UnityEngine.Random.Range(-0.5f, 0.5f), UnityEngine.Random.Range(0f, 0.5f), UnityEngine.Random.Range(-0.5f, 0.5f));
+        Vector3 randomFroce = new Vector3(UnityEngine.Random.Range(-0.1f, 0.1f), UnityEngine.Random.Range(0.4f, 0.5f), UnityEngine.Random.Range(-0.1f, 0.1f));
         ItemDropBean itemDropData = new ItemDropBean
             (
             itemId,

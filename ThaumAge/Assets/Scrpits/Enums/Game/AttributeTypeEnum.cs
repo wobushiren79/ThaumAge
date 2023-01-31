@@ -29,5 +29,10 @@ public enum AttributeTypeEnum
     BreakSpeed = 401,//挖掘速度
     BreakLevel = 402,//挖掘等级
 
-    ShowElemental = 1001,//元素展示
+    ShowElemental = 1000,//元素展示
+
+
+    HealthAdd = 1001,   //生命值修改
+
+    MoveSpeedAdd = 1011,//移动速度添加
 }

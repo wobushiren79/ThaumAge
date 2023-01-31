@@ -26,7 +26,7 @@ public class BlockTypeArcaneAlembic : Block
             }
             GetBlockMetaData(targetChunk, targetLocalPosition, out BlockBean blockData, out BlockMetaArcaneAlembic blockMetaData);
 
-            if (blockMetaData.elementalData == null || blockMetaData.elementalData.id == 0 || blockMetaData.elementalData.number > 0)
+            if (blockMetaData.elementalData == null || blockMetaData.elementalData.id == 0 || blockMetaData.elementalData.number <= 0)
                 return true;
             NumberBean numberData = blockMetaData.elementalData;
             bool checkCanAdd = blockMetaWardedJar.CheckCanAdd((ElementalTypeEnum)numberData.id);

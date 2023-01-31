@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3640963682115063865}
   - component: {fileID: 5760897105182530083}
-  - component: {fileID: 8565811530245355325}
+  - component: {fileID: 5687947034017650294}
   m_Layer: 13
   m_Name: BlockInfernalFurnace
   m_TagString: Untagged
@@ -55,7 +55,7 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 0.5, z: 1}
   m_Center: {x: 0, y: 1.75, z: 0}
---- !u!114 &8565811530245355325
+--- !u!114 &5687947034017650294
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -64,7 +64,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 3640963682115063866}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b9d7e7892f2173947ad7b5b31a54109d, type: 3}
+  m_Script: {fileID: 11500000, guid: 2a7696f8f20c1a34d998c0fea92048cd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   blockWorldPosition: {x: 0, y: 0, z: 0}

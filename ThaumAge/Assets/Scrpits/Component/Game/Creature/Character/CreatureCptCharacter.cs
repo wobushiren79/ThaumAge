@@ -107,7 +107,7 @@ public class CreatureCptCharacter : CreatureCptBase
                 //随机墓碑的方向
                 int direction = Random.Range(11, 15);
                 ItemsBean[] allShortcutItems = userData.GetAllItemsFromShortcut();
-                BlockMetaBox blockMetaData = new BlockMetaBox(2 * 7, allShortcutItems);
+                BlockMetaChest blockMetaData = new BlockMetaChest(2 * 7, allShortcutItems);
                 chunk.SetBlockForLocal(worldPos - chunk.chunkData.positionForWorld, tombType, (BlockDirectionEnum)direction, blockMetaData.ToJson());
                 //清除所有的道具
                 userData.ClearAllItemsFromShortcut();

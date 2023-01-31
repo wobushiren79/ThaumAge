@@ -40,7 +40,7 @@ public class BlockTypeWater : BlockBaseLiquid
             CharacterBean characterData = userData.characterData;
             CreatureStatusBean creatureStatus = characterData.GetCreatureStatus();
 
-            CreatureStatusChangeBean creatureStatusChange = new CreatureStatusChangeBean(CreatureStatusChangeTypeEnum.MoveSpeedAdd, 1.01f, -0.3f);
+            CreatureStatusChangeBean creatureStatusChange = new CreatureStatusChangeBean(AttributeTypeEnum.MoveSpeedAdd, 1.01f, -0.3f);
             creatureStatus.AddStatusChange(creatureStatusChange);
         }
     }

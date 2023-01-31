@@ -12,7 +12,7 @@ public class BlockTypePavingStoneOfHealth : Block
             CharacterBean characterData = userData.characterData;
             CreatureStatusBean creatureStatus = characterData.GetCreatureStatus();
 
-            CreatureStatusChangeBean creatureStatusChange = new CreatureStatusChangeBean(CreatureStatusChangeTypeEnum.HealthAdd, 1, 1);
+            CreatureStatusChangeBean creatureStatusChange = new CreatureStatusChangeBean(AttributeTypeEnum.HealthAdd, 1, 1);
             creatureStatus.AddStatusChange(creatureStatusChange);
         }
     }

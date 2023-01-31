@@ -76,13 +76,6 @@ public class BlockTypeFrameItem : Block
     }
 
 
-    public override void ItemUseForSightTarget(Vector3Int targetWorldPosition)
-    {
-        //展示目标位置
-        GameHandler.Instance.manager.playerTargetBlock.Show(targetWorldPosition, this, blockInfo.interactive_state == 1);
-    }
-
-
     /// <summary>
     /// 获取相框物品ID
     /// </summary>

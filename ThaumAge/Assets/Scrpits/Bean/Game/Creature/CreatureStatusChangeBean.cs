@@ -9,15 +9,15 @@ public struct CreatureStatusChangeBean
     public float time;//持续时间
     public float changeValue;//修改的值
 
-    public CreatureStatusChangeBean(CreatureStatusChangeTypeEnum creatureStatusChangeType, float time, float changValue)
+    public CreatureStatusChangeBean(AttributeTypeEnum attributeType, float time, float changValue)
     {
-        this.changType = (int)creatureStatusChangeType;
+        this.changType = (int)attributeType;
         this.time = time;
         this.changeValue = changValue;
     }
 
-    public CreatureStatusChangeTypeEnum GetChangeType()
+    public AttributeTypeEnum GetChangeType()
     {
-        return (CreatureStatusChangeTypeEnum)changType;
+        return (AttributeTypeEnum)changType;
     }
 }

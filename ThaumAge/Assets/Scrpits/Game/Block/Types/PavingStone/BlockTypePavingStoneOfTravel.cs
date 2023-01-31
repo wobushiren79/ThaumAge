@@ -12,7 +12,7 @@ public class BlockTypePavingStoneOfTravel : Block
             CharacterBean characterData = userData.characterData;
             CreatureStatusBean creatureStatus = characterData.GetCreatureStatus();
 
-            CreatureStatusChangeBean creatureStatusChange = new CreatureStatusChangeBean(CreatureStatusChangeTypeEnum.MoveSpeedAdd, 1.01f, 0.6f);
+            CreatureStatusChangeBean creatureStatusChange = new CreatureStatusChangeBean(AttributeTypeEnum.MoveSpeedAdd, 1.01f, 0.6f);
             creatureStatus.AddStatusChange(creatureStatusChange);
         }
     }

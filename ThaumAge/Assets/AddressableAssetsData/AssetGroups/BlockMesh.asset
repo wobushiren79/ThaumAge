@@ -17,12 +17,6 @@ MonoBehaviour:
     m_SerializedData: []
   m_GUID: 4402f9f4a00ec714db35e5caa08d74f6
   m_SerializeEntries:
-  - m_GUID: aae6ef907660cbd4b9233ad6bb51b51f
-    m_Address: Assets/Prefabs/BlockMeshData/BlockBox.txt
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - BlockMeshData
-    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: bb703c0f11c556c478e98177d63b4d40
     m_Address: Assets/Prefabs/BlockMeshData/BlockBedWooden.txt
     m_ReadOnly: 0

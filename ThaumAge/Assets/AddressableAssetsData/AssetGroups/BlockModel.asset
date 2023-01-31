@@ -33,7 +33,7 @@ MonoBehaviour:
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: ae576cb42165b1d419296421e30798fa
-    m_Address: Assets/Prefabs/Block/BlockBox.prefab
+    m_Address: Assets/Prefabs/Block/BlockChest.prefab
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
@@ -174,6 +174,11 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: bb92d93544a36b848bac542dd0faa349
     m_Address: Assets/Prefabs/Block/BlockInfernalFurnace.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 907dac44193ea6c4db157d9956f6eeeb
+    m_Address: Assets/Prefabs/Block/BlockChestHungry.prefab
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0

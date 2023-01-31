@@ -58,13 +58,13 @@ public class CreatureStatusBean
         for (int i = 0; i < listStatusChange.Count; i++)
         {
             CreatureStatusChangeBean itemStatusChange = listStatusChange[i];
-            CreatureStatusChangeTypeEnum creatureStatusChangeType = itemStatusChange.GetChangeType();
-            switch (creatureStatusChangeType)
+            AttributeTypeEnum attributeType = itemStatusChange.GetChangeType();
+            switch (attributeType)
             {
-                case CreatureStatusChangeTypeEnum.HealthAdd:
+                case AttributeTypeEnum.HealthAdd:
                     HealthChange((int)itemStatusChange.changeValue);
                     break;
-                case CreatureStatusChangeTypeEnum.MoveSpeedAdd:
+                case AttributeTypeEnum.MoveSpeedAdd:
                     moveSpeedAdd = itemStatusChange.changeValue;
                     break;
             }

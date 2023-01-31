@@ -124,6 +124,12 @@ public class PlayerTargetBlock : BaseMonoBehaviour
 
     public void ShowElemental(Vector3Int worldPosition)
     {
+        UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();
+        if (userData.characterData.GetAttributeValue(AttributeTypeEnum.ShowElemental) == 0)
+        {
+            return;
+        }
+
         isShowElemental = true;
 
         WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(worldPosition, out Block targetBlock, out BlockDirectionEnum targetDirection, out Chunk targetChunk);

@@ -87,7 +87,8 @@ public class ItemCptDrop : BaseMonoBehaviour
 
         Color itemColor = item.GetItemIconColor(itemDropData.itemData, itemsInfo);
         SetIconColor(itemColor);
-
+        //开启物理
+        EnablePhysic(true);
         //增加一个跳动的力
         //随机方向
         if (itemDropData.dropDirection == Vector3.zero)
