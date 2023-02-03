@@ -156,6 +156,7 @@ public enum BlockTypeEnum
     EverfullUrn = 6166,//无尽之瓮
     ElementSmeltery = 6168,//源质冶炼厂
     ArcaneAlembic = 6169,//奥术蒸馏器
+    ArcaneBellows = 6170,//奥术风箱
 
     Chest = 6201,//箱子
     ChestHungry = 6210,//饕餮箱子

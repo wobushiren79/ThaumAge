@@ -162,11 +162,11 @@ public class BlockManager : BaseManager, IBlockInfoView
             }
             else
             {
-                blockTypeName = EnumExtension.GetEnumName(blockType);
+                blockTypeName = $"BlockType{EnumExtension.GetEnumName(blockType)}";
             }
 
             //通过反射获取类
-            Block block = ReflexUtil.CreateInstance<Block>($"BlockType{blockTypeName}");
+            Block block = ReflexUtil.CreateInstance<Block>(blockTypeName);
             if (block == null) block = new Block();
             block.SetData(blockType);
             arrayBlockRegister[(int)blockType] = block;

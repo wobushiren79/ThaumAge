@@ -117,7 +117,7 @@ public class BlockCptBreak : BaseMonoBehaviour
         {
             if (!block.blockInfo.model_name.IsNull() && damage > 0)
             {
-                GameObject objTarget = block.GetBlockObj(worldPosition);
+                GameObject objTarget = block.GetBlockObj(targetChunk, localPosition);
                 if (animForBreakShake != null && !animForBreakShake.IsComplete())
                 {
                     animForBreakShake.Complete();

@@ -90,6 +90,11 @@ public class Block
     {
         return BlockHandler.Instance.GetBlockObj(worldPosition);
     }
+    public GameObject GetBlockObj(Chunk chunk, Vector3Int localPosition)
+    {
+        return chunk.GetBlockObjForLocal(localPosition);
+    }
+
 
     /// <summary>
     /// 获取方块的方位
@@ -452,22 +457,22 @@ public class Block
     /// <summary>
     /// 获取靠近坐标
     /// </summary>
-    public Vector3Int GetClosePositionByDirection(DirectionEnum getDirection, Vector3Int position)
+    public Vector3Int GetClosePositionByDirection(DirectionEnum getDirection, Vector3Int position,int directionOffset = 1)
     {
         switch (getDirection)
         {
             case DirectionEnum.UP:
-                return position.AddY(1);
+                return position.AddY(directionOffset);
             case DirectionEnum.Down:
-                return position.AddY(-1);
+                return position.AddY(-directionOffset);
             case DirectionEnum.Left:
-                return position.AddX(-1);
+                return position.AddX(-directionOffset);
             case DirectionEnum.Right:
-                return position.AddX(1);
+                return position.AddX(directionOffset);
             case DirectionEnum.Forward:
-                return position.AddZ(-1);
+                return position.AddZ(- directionOffset);
             case DirectionEnum.Back:
-                return position.AddZ(1);
+                return position.AddZ(directionOffset);
             default:
                 return position;
         }
@@ -501,12 +506,12 @@ public class Block
     /// <param name="closeBlock"></param>
     /// <param name="hasChunk"></param>
     public virtual void GetCloseBlockByDirection(Chunk chunk, Vector3Int localPosition, DirectionEnum getDirection,
-        out Block block, out Chunk blockChunk, out Vector3Int closeLocalPosition)
+        out Block block, out Chunk blockChunk, out Vector3Int closeLocalPosition, int directionOffset = 1)
     {
         //获取目标的本地坐标
         block = null;
 
-        localPosition = GetClosePositionByDirection(getDirection, localPosition);
+        localPosition = GetClosePositionByDirection(getDirection, localPosition, directionOffset);
         closeLocalPosition = localPosition;
 
         int maxWidth = chunk.chunkData.chunkWidth - 1;

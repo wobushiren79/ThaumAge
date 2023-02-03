@@ -50,9 +50,9 @@ public class BlockShapeCustomAroundLRFB : BlockShapeCustom
     /// <param name="chunk"></param>
     /// <param name="localPosition"></param>
     /// <param name="angle"></param>
-    protected void AddOtherMeshData(Chunk chunk, Vector3Int localPosition,float angle)
+    protected void AddOtherMeshData(Chunk chunk, Vector3Int localPosition, float angle)
     {
-        Vector3[] rotatePositionArray = VectorUtil.GetRotatedPosition(new Vector3(0.5f,0.5f,0.5f), vertsAddLink, new Vector3(0, angle, 0));
+        Vector3[] rotatePositionArray = VectorUtil.GetRotatedPosition(new Vector3(0.5f, 0.5f, 0.5f), vertsAddLink, new Vector3(0, angle, 0));
         BaseAddTrisForCustomOther(chunk, localPosition, BlockDirectionEnum.UpForward, trisAddLink);
         BaseAddVertsUVsColorsForCustom(chunk, localPosition, BlockDirectionEnum.UpForward,
             rotatePositionArray, uvsAddLink, colorAddLink, new Vector3[0]);
@@ -74,28 +74,9 @@ public class BlockShapeCustomAroundLRFB : BlockShapeCustom
     /// <returns></returns>
     protected virtual bool CheckCanLink(Chunk chunk, Vector3Int localPosition, DirectionEnum faceDiection)
     {
-        //获取四周的方块 判断是否需要添加
-        block.GetCloseBlockByDirection(chunk, localPosition, faceDiection,
-            out Block blockClose, out Chunk blockChunkClose, out Vector3Int localPositionClose);
-        //如果是方块
-        if (blockClose.blockInfo.GetBlockShape() == BlockShapeEnum.Cube)
+        if (block is BlockBaseAroundLRFB blockAroundLRFB)
         {
-            return true;
-        }
-        //如果是都这种形状（目前只用于栅栏）
-        if (blockClose.blockInfo.GetBlockShape() == block.blockInfo.GetBlockShape())
-        {
-            return true;
-        }
-        //如果是同一种类型
-        if (blockClose.blockType == block.blockType)
-        {
-            return true;
-        }
-        //如果是栅栏门
-        if (blockClose is BlockBaseFenceDoor)
-        {
-            return true;
+            return blockAroundLRFB.CheckCanLink(chunk, localPosition, faceDiection);
         }
         return false;
     }
