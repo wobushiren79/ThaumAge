@@ -157,6 +157,7 @@ public enum BlockTypeEnum
     ElementSmeltery = 6168,//源质冶炼厂
     ArcaneAlembic = 6169,//奥术蒸馏器
     ArcaneBellows = 6170,//奥术风箱
+    ArcaneLevitator = 6171,//奥术悬浮台
 
     Chest = 6201,//箱子
     ChestHungry = 6210,//饕餮箱子
