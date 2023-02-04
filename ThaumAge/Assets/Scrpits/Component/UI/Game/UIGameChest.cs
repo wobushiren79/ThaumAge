@@ -39,13 +39,10 @@ public partial class UIGameChest : UIGameCommonNormal
     public void SetData(Vector3Int worldPosition,int boxSize)
     {
         this.blockWorldPosition = worldPosition;
-        //获取对应方块
         WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(worldPosition, out Block block, out Chunk chunk);
         blockChest = block as BlockBaseChest;
-        //获取方块数据
-        blockData = chunk.GetBlockData(worldPosition - chunk.chunkData.positionForWorld);
         //设置数据
-        ui_ViewBoxList.SetData(worldPosition, blockData, boxSize);
+        ui_ViewBoxList.SetData(worldPosition, boxSize);
     }
 
     /// <summary>

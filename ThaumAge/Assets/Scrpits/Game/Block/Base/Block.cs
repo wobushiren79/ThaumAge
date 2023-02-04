@@ -457,7 +457,7 @@ public class Block
     /// <summary>
     /// 获取靠近坐标
     /// </summary>
-    public Vector3Int GetClosePositionByDirection(DirectionEnum getDirection, Vector3Int position,int directionOffset = 1)
+    public Vector3Int GetClosePositionByDirection(DirectionEnum getDirection, Vector3Int position, int directionOffset = 1)
     {
         switch (getDirection)
         {
@@ -470,7 +470,7 @@ public class Block
             case DirectionEnum.Right:
                 return position.AddX(directionOffset);
             case DirectionEnum.Forward:
-                return position.AddZ(- directionOffset);
+                return position.AddZ(-directionOffset);
             case DirectionEnum.Back:
                 return position.AddZ(directionOffset);
             default:
@@ -578,6 +578,7 @@ public class Block
             blockChunk = chunk;
         }
     }
+
 
     /// <summary>
     /// 创建链接的方块

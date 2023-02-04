@@ -21,19 +21,30 @@ public class ItemCptDrop : BaseMonoBehaviour
 
     //是否能和方块交互（用于和一些特殊方块 比如坩埚交互）
     public bool canInteractiveBlock = true;
+
+    protected float timeUpdate = 0;
+    protected float timeUpdateMax = 1;
     public void Awake()
     {
         srIcon = GetComponentInChildren<SpriteRenderer>();
         rbItem = GetComponent<Rigidbody>();
         colliderItem = GetComponent<Collider>();
-        InvokeRepeating("UpdateItemData", 1, 1);
     }
 
     public virtual void DestroyCpt()
     {
-        CancelInvoke();
         gameObject.SetActive(false);
         ItemsHandler.Instance.manager.poolItemDrop.Enqueue(this);
+    }
+
+    public void Update()
+    {
+        timeUpdate += Time.deltaTime;
+        if (timeUpdate > timeUpdateMax)
+        {
+            UpdateItemData();
+            timeUpdate = 0;
+        }
     }
 
     /// <summary>

@@ -87,7 +87,7 @@ public class ItemClassElementalPowderThaum : Item
         //检测是否能放下这个多方块结构
         BuildingInfoBean buildingInfo = BiomeHandler.Instance.manager.GetBuildingInfo(BuildingTypeEnum.InfusionAltar);
         Vector3Int basePosition = targetPosition - Vector3Int.up * 2;
-        if (!buildingInfo.CheckCanSetLinkLargeBuilding(basePosition, out BlockDirectionEnum baseBlockDirection))
+        if (!buildingInfo.CheckCanSetLinkLargeBuilding(basePosition, true, out BlockDirectionEnum baseBlockDirection))
         {
             return;
         }
@@ -100,7 +100,7 @@ public class ItemClassElementalPowderThaum : Item
             {
                 //检测是否能放下这个多方块结构
                 BuildingInfoBean buildingInfo = BiomeHandler.Instance.manager.GetBuildingInfo(BuildingTypeEnum.InfusionAltar);
-                if (!buildingInfo.CheckCanSetLinkLargeBuilding(basePosition,out BlockDirectionEnum baseBlockDirection))
+                if (!buildingInfo.CheckCanSetLinkLargeBuilding(basePosition, true, out BlockDirectionEnum baseBlockDirection))
                 {
                     return;
                 }
@@ -136,19 +136,19 @@ public class ItemClassElementalPowderThaum : Item
     /// 处理地狱熔炉
     /// </summary>
     protected void HandleForFenceIron(Vector3Int targetPosition, Block targetBlock, BlockDirectionEnum targetBlockDirection, Chunk taragetChunk)
-    {        
+    {
         //检测是否能放下这个多方块结构
         BuildingInfoBean buildingInfo = BiomeHandler.Instance.manager.GetBuildingInfo(BuildingTypeEnum.InfernalFurnace);
         Vector3Int basePosition = targetPosition - Vector3Int.up;
         BlockDirectionEnum baseBlockDirection;
         //判断一下选择
-        if (!buildingInfo.CheckCanSetLinkLargeBuilding(basePosition + Vector3Int.forward, out  baseBlockDirection))
+        if (!buildingInfo.CheckCanSetLinkLargeBuilding(basePosition + Vector3Int.forward, true, out baseBlockDirection))
         {
-            if (!buildingInfo.CheckCanSetLinkLargeBuilding(basePosition + Vector3Int.back, out  baseBlockDirection))
+            if (!buildingInfo.CheckCanSetLinkLargeBuilding(basePosition + Vector3Int.back, true, out baseBlockDirection))
             {
-                if (!buildingInfo.CheckCanSetLinkLargeBuilding(basePosition + Vector3Int.left, out  baseBlockDirection))
+                if (!buildingInfo.CheckCanSetLinkLargeBuilding(basePosition + Vector3Int.left, true, out baseBlockDirection))
                 {
-                    if (!buildingInfo.CheckCanSetLinkLargeBuilding(basePosition + Vector3Int.right, out  baseBlockDirection))
+                    if (!buildingInfo.CheckCanSetLinkLargeBuilding(basePosition + Vector3Int.right, true, out baseBlockDirection))
                     {
                         return;
                     }
@@ -173,7 +173,7 @@ public class ItemClassElementalPowderThaum : Item
                 WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(basePosition, out Block baseBlock, out BlockDirectionEnum baseBlockDirection, out Chunk baseChunk);
                 //检测是否能放下这个多方块结构
                 BuildingInfoBean buildingInfo = BiomeHandler.Instance.manager.GetBuildingInfo(BuildingTypeEnum.InfernalFurnace);
-                if (!buildingInfo.CheckCanSetLinkLargeBuilding(basePosition,out baseBlockDirection))
+                if (!buildingInfo.CheckCanSetLinkLargeBuilding(basePosition, true, out baseBlockDirection))
                 {
                     return;
                 }
@@ -183,7 +183,7 @@ public class ItemClassElementalPowderThaum : Item
                 blockMetaLinkData.isBreakAll = false;
                 blockMetaLinkData.isBreakMesh = true;
                 blockMetaLinkData.baseBlockType = targetBlock.blockInfo.id;
-                baseChunk.SetBlockForLocal(basePosition, BlockTypeEnum.InfernalFurnace, baseBlockDirection, blockMetaLinkData.ToJson());
+                baseChunk.SetBlockForLocal(basePosition - baseChunk.chunkData.positionForWorld, BlockTypeEnum.InfernalFurnace, baseBlockDirection, blockMetaLinkData.ToJson());
                 //播放音效
                 AudioHandler.Instance.PlaySound(3, targetPosition);
             }

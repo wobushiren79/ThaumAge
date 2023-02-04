@@ -282,18 +282,18 @@ public class BlockShape
     /// <param name="closeBlock"></param>
     /// <param name="blockChunk"></param>
     public virtual void GetCloseRotateBlockByDirection(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction, DirectionEnum getDirection,
-        out Block closeBlock, out Chunk closeBlockChunk, out Vector3Int closeLocalPosition)
+        out Block closeBlock, out Chunk closeBlockChunk, out Vector3Int closeLocalPosition, int directionOffset = 1)
     {
         switch (block.blockInfo.rotate_state)
         {
             case 0:
                 //不旋转
-                block.GetCloseBlockByDirection(chunk, localPosition, getDirection, out closeBlock, out closeBlockChunk, out closeLocalPosition);
+                block.GetCloseBlockByDirection(chunk, localPosition, getDirection, out closeBlock, out closeBlockChunk, out closeLocalPosition, directionOffset);
                 break;
             default:
                 //旋转
                 DirectionEnum rotateDirection = GetRotateDirection(direction, getDirection);
-                block.GetCloseBlockByDirection(chunk, localPosition, rotateDirection, out closeBlock, out closeBlockChunk, out closeLocalPosition);
+                block.GetCloseBlockByDirection(chunk, localPosition, rotateDirection, out closeBlock, out closeBlockChunk, out closeLocalPosition, directionOffset);
                 break;
         }
     }

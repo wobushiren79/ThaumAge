@@ -45,7 +45,7 @@ public class BlockTypeElementSmeltery : Block
     /// <param name="localPosition"></param>
     public override void RefreshObjModel(Chunk chunk, Vector3Int localPosition)
     {
-        GetBlockMetaData(chunk, localPosition,out BlockBean blockData,out BlockMetaElementSmeltery blockMetaData);
+        GetBlockMetaData(chunk, localPosition, out BlockBean blockData, out BlockMetaElementSmeltery blockMetaData);
         GameObject objFurnaces = chunk.GetBlockObjForLocal(localPosition);
         //设置烧纸之前的物品
         Transform tfItemFire = objFurnaces.transform.Find("Fire");
@@ -59,6 +59,32 @@ public class BlockTypeElementSmeltery : Block
         {
             tfItemFire.ShowObj(true);
         }
+    }
+
+    /// <summary>
+    /// 获取火焰加成
+    /// </summary>
+    public virtual int GetTransitionSpeed(Chunk chunk, Vector3Int localPosition)
+    {
+        BlockDirectionEnum blockDirection = chunk.chunkData.GetBlockDirection(localPosition);
+        blockShape.GetCloseRotateBlockByDirection(chunk, localPosition, blockDirection, DirectionEnum.Left, out Block leftBlock, out Chunk leftChunk, out Vector3Int leftLocalPosition);
+        blockShape.GetCloseRotateBlockByDirection(chunk, localPosition, blockDirection, DirectionEnum.Right, out Block rightBlock, out Chunk rightChunk, out Vector3Int rightLocalPosition);
+        blockShape.GetCloseRotateBlockByDirection(chunk, localPosition, blockDirection, DirectionEnum.Back, out Block backBlock, out Chunk backChunk, out Vector3Int backLocalPosition);
+
+        int addData = 1;
+        if (leftChunk != null && leftBlock != null && leftBlock.blockType == BlockTypeEnum.ArcaneBellows)
+        {
+            addData++;
+        }
+        if (rightChunk != null && rightBlock != null && rightBlock.blockType == BlockTypeEnum.ArcaneBellows)
+        {
+            addData++;
+        }
+        if (backChunk != null && backBlock != null && backBlock.blockType == BlockTypeEnum.ArcaneBellows)
+        {
+            addData++;
+        }
+        return addData;
     }
 
     /// <summary>
@@ -105,11 +131,13 @@ public class BlockTypeElementSmeltery : Block
             if (elementalPro != 1 && blockMetaData.itemBeforeId != 0 && blockMetaData.itemBeforeNum != 0)
             {
                 //获取烧制的时间
-                int itemFireTime = 5;
+                int itemFireTime = 10;
+                //监测四周的是否有奥术风箱
+                float transitionSpeed = GetTransitionSpeed(chunk, localPosition);
                 //检测是否正在烧制物品
                 if (blockMetaData.transitionPro < 1)
                 {
-                    blockMetaData.transitionPro += 1f / itemFireTime;
+                    blockMetaData.transitionPro += transitionSpeed / itemFireTime;
                 }
                 else if (blockMetaData.transitionPro >= 1)
                 {
@@ -134,7 +162,7 @@ public class BlockTypeElementSmeltery : Block
                 }
                 else
                 {
-                    blockMetaData.transitionPro = 1f / itemFireTime;
+                    blockMetaData.transitionPro = transitionSpeed / itemFireTime;
                 }
                 blockMetaData.AddFireTimeRemain(-1);
                 isDataChange = true;
@@ -185,8 +213,8 @@ public class BlockTypeElementSmeltery : Block
                 out BlockBean blockData, out BlockMetaArcaneAlembic blockMetaArcaneAlembic);
 
             //获取工厂内的第一个元素
-            ElementalTypeEnum subElemental =  blockMetaData.GetFirstElemental();
-            if(subElemental != ElementalTypeEnum.None)
+            ElementalTypeEnum subElemental = blockMetaData.GetFirstElemental();
+            if (subElemental != ElementalTypeEnum.None)
             {
                 //检测是否能加上 
                 bool isAddElemental = blockMetaArcaneAlembic.AddElemental(subElemental, 1);

@@ -13,7 +13,7 @@ public class BlockBaseLinkLarge : Block
             BuildingTypeEnum buildingType = GetBuildingType();
             BuildingInfoBean buildingInfo = BiomeHandler.Instance.manager.GetBuildingInfo(buildingType);
             Vector3Int buildingWorldPosition = localPosition + chunk.chunkData.positionForWorld;
-            if (buildingInfo.CheckCanSetLinkLargeBuilding(buildingWorldPosition, out BlockDirectionEnum baseBlockDirection))
+            if (buildingInfo.CheckCanSetLinkLargeBuilding(buildingWorldPosition, false, out BlockDirectionEnum baseBlockDirection))
             {
                 buildingInfo.SetLinkLargeBuilding(buildingWorldPosition, baseBlockDirection);
                 return;
@@ -43,9 +43,9 @@ public class BlockBaseLinkLarge : Block
         Vector3Int basePosition = blockMetaData.GetBasePosition();
 
         //获取主方块数据
-        WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(basePosition,out Block baseBlock,out Chunk baseChunk);
+        WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(basePosition, out Block baseBlock, out Chunk baseChunk);
         if (baseChunk != null)
-        {     
+        {
             //获取建筑类型
             BlockBaseLinkLarge blockBaseLinkLarge = baseBlock as BlockBaseLinkLarge;
             BuildingTypeEnum buildingType = blockBaseLinkLarge.GetBuildingType();

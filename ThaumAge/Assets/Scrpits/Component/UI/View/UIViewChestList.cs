@@ -59,14 +59,17 @@ public partial class UIViewChestList : BaseUIView
     /// <summary>
     /// 初始化数据
     /// </summary>
-    public void SetData(Vector3Int worldPosition, BlockBean blockData,int boxSize)
+    public void SetData(Vector3Int worldPosition, int boxSize)
     {
-        if (blockData == null)
-            return;
         this.blockWorldPosition = worldPosition;
-        this.blockData = blockData;
-        this.blockChestData = Block.FromMetaData<BlockMetaChest>(blockData.meta);
+        //获取对应方块
+        WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(worldPosition, out Block block, out Chunk chunk);
+        BlockBaseChest blockChest = block as BlockBaseChest;
+        //获取方块数据
+        blockChest.GetBlockMetaData(chunk, worldPosition - chunk.chunkData.positionForWorld,out blockData,out  blockChestData);
+
         if (blockChestData == null) blockChestData = new BlockMetaChest(boxSize);
+
         ui_ItemList.SetCellCount(blockChestData.items.Length);
         ui_ItemList.RefreshAllCells();
     }

@@ -39,6 +39,18 @@ public class BlockBaseChest : Block, IBlockForItemsPutOut
         return listData;
     }
 
+    public override void GetBlockMetaData<T>(Chunk targetChunk, Vector3Int blockLocalPosition, out BlockBean blockData, out T blockMetaData)
+    {
+        base.GetBlockMetaData(targetChunk, blockLocalPosition, out blockData, out blockMetaData);
+        if(blockMetaData is BlockMetaChest blockMetaChest)
+        {
+            if (blockMetaChest.items.Length == 0)
+            {
+                blockMetaChest.InitItems(chestSize);
+            }
+        }
+    }
+
     /// <summary>
     /// 打开箱子
     /// </summary>
@@ -61,7 +73,7 @@ public class BlockBaseChest : Block, IBlockForItemsPutOut
     /// 触发箱子
     /// </summary>
     /// <param name="worldPosition"></param>
-    public virtual void TriggerChest(Vector3Int worldPosition) 
+    public virtual void TriggerChest(Vector3Int worldPosition)
     {
         AnimForChest(worldPosition, 3);
     }
@@ -82,7 +94,7 @@ public class BlockBaseChest : Block, IBlockForItemsPutOut
         {
             blockAnim.Play("BlockChestOpen");
         }
-        else if(state == 2)
+        else if (state == 2)
         {
             blockAnim.Play("BlockChestClose");
         }
@@ -117,11 +129,12 @@ public class BlockBaseChest : Block, IBlockForItemsPutOut
             }
             else
             {
+                //TODO 考虑从什么方向吐出
                 //设置新的数量
-                putItem.number = itemNumber;
+                //putItem.number = itemNumber;
                 //如果还有 则吐出
-                ItemDropBean itemDrop = new ItemDropBean(putItem, ItemDropStateEnum.DropPick, localPosition + new Vector3(0.5f, 1f, 0.5f), Vector3Int.up);
-                ItemsHandler.Instance.CreateItemCptDrop(itemDrop);
+                //ItemDropBean itemDrop = new ItemDropBean(putItem, ItemDropStateEnum.DropPick, chunk.chunkData.positionForWorld + localPosition + new Vector3(0.5f, 1.5f, 0.5f), Vector3Int.forward * 3);
+                //ItemsHandler.Instance.CreateItemCptDrop(itemDrop);
             }
         }
 

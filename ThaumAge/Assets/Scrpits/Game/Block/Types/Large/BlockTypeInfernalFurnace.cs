@@ -48,6 +48,33 @@ public class BlockTypeInfernalFurnace : BlockBaseLinkLarge, IBlockForItemsPutOut
     }
 
     /// <summary>
+    /// 获取火焰加成
+    /// </summary>
+    public virtual int GetTransitionSpeed(Chunk chunk, Vector3Int localPosition)
+    {
+        Vector3Int upPosition = localPosition + Vector3Int.up;
+        BlockDirectionEnum blockDirection = chunk.chunkData.GetBlockDirection(localPosition);
+        blockShape.GetCloseRotateBlockByDirection(chunk, upPosition, blockDirection, DirectionEnum.Left, out Block leftBlock, out Chunk leftChunk, out Vector3Int leftLocalPosition, 2);
+        blockShape.GetCloseRotateBlockByDirection(chunk, upPosition, blockDirection, DirectionEnum.Right, out Block rightBlock, out Chunk rightChunk, out Vector3Int rightLocalPosition, 2);
+        blockShape.GetCloseRotateBlockByDirection(chunk, upPosition, blockDirection, DirectionEnum.Back, out Block backBlock, out Chunk backChunk, out Vector3Int backLocalPosition, 2);
+
+        int addData = 1;
+        if (leftChunk != null && leftBlock != null && leftBlock.blockType == BlockTypeEnum.ArcaneBellows)
+        {
+            addData++;
+        }
+        if (rightChunk != null && rightBlock != null && rightBlock.blockType == BlockTypeEnum.ArcaneBellows)
+        {
+            addData++;
+        }
+        if (backChunk != null && backBlock != null && backBlock.blockType == BlockTypeEnum.ArcaneBellows)
+        {
+            addData++;
+        }
+        return addData;
+    }
+
+    /// <summary>
     /// 每秒刷新
     /// </summary>
     /// <param name="chunk"></param>
@@ -79,10 +106,11 @@ public class BlockTypeInfernalFurnace : BlockBaseLinkLarge, IBlockForItemsPutOut
                 //获取烧制的结果
                 itemsInfoBefore.GetFireItems(out int[] fireItemsId, out int[] fireItemsNum, out int[] fireTime);
                 int itemFireTime = fireTime[0];
+                float transitionSpeed = GetTransitionSpeed(chunk, localPosition);
                 //检测是否正在烧制物品
                 if (blockMetaData.transitionPro < 1)
                 {
-                    blockMetaData.transitionPro += 1f / itemFireTime;
+                    blockMetaData.transitionPro += transitionSpeed / itemFireTime;
                 }
                 else if (blockMetaData.transitionPro >= 1)
                 {

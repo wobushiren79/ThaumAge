@@ -6,7 +6,7 @@ public class BlockTypeArcaneAlembic : Block
     public override bool TargetUseBlock(GameObject user, ItemsBean itemData, Chunk targetChunk, Vector3Int targetLocalPosition)
     {
         if (itemData.itemId == 0)
-            return true;
+            return false;
         ItemsInfoBean itemInfo = ItemsHandler.Instance.manager.GetItemsInfoById(itemData.itemId);
         //如果时源质罐子
         if (itemInfo.id == 106211)
@@ -27,7 +27,7 @@ public class BlockTypeArcaneAlembic : Block
             GetBlockMetaData(targetChunk, targetLocalPosition, out BlockBean blockData, out BlockMetaArcaneAlembic blockMetaData);
 
             if (blockMetaData.elementalData == null || blockMetaData.elementalData.id == 0 || blockMetaData.elementalData.number <= 0)
-                return true;
+                return false;
             NumberBean numberData = blockMetaData.elementalData;
             bool checkCanAdd = blockMetaWardedJar.CheckCanAdd((ElementalTypeEnum)numberData.id);
             if (checkCanAdd)
@@ -38,8 +38,12 @@ public class BlockTypeArcaneAlembic : Block
             itemData.meta = JsonUtil.ToJson(blockMetaWardedJar);
             blockData.SetBlockMeta(blockMetaData);
             targetChunk.SetBlockData(blockData);
+            return true;
         }
-        return true;
+        else
+        {
+            return false;
+        }
     }
 
 }

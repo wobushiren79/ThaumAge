@@ -25,13 +25,17 @@ public class BlockTypeArcaneBellows : BlockBaseAroundLRFB
         //如果是多方块结构
         else if (blockClose.blockType == BlockTypeEnum.LinkLargeChild)
         {
-            GetCloseBlockByDirection(chunk, localPosition, faceDiection,
+            GetCloseBlockByDirection(chunk, localPosition - Vector3Int.up, faceDiection,
                 out Block blockClose2, out Chunk blockChunkClose2, out Vector3Int localPositionClose2, 2);
+            if(blockChunkClose2 == null || blockClose2 == null)
+            {
+                return isCanLink;
+            }
             //如果是炼狱熔炉
             if (blockClose2.blockType == BlockTypeEnum.InfernalFurnace)
             {
                 //炼狱熔炉检测和旁边·2格
-                bool isClose = CheckCloseBlockForLRB(blockChunkClose2, localPositionClose2, chunk, localPosition, 2);
+                bool isClose = CheckCloseBlockForLRB(blockChunkClose2, localPositionClose2, chunk, localPosition - Vector3Int.up, 2);
                 if (isClose)
                     isCanLink = true;
             }

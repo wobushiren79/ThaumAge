@@ -43,7 +43,7 @@ public class BuildingInfoBean : BaseBean
     /// <summary>
     /// 检测是否能放置下这个建筑
     /// </summary>
-    public bool CheckCanSetLinkLargeBuilding(Vector3Int basePosition, out BlockDirectionEnum baseBlockDirection)
+    public bool CheckCanSetLinkLargeBuilding(Vector3Int basePosition, bool isCheckBase, out BlockDirectionEnum baseBlockDirection)
     {
         baseBlockDirection = BlockDirectionEnum.UpForward;
         if (basePosition.y < 0)
@@ -56,9 +56,13 @@ public class BuildingInfoBean : BaseBean
             for (int i = 0; i < listBuildingData.Count; i++)
             {
                 var itemBuildingData = listBuildingData[i];
-                Vector3 rotatePosition = VectorUtil.GetRotatedPosition(basePosition, itemBuildingData.position + basePosition, new Vector3(0, rotateAngle, 0));
+                Vector3 rotatePosition = VectorUtil.GetRotatedPosition(Vector3.zero, itemBuildingData.position, new Vector3(0, rotateAngle, 0)) + basePosition;
                 Vector3Int itemWorldPosition = Vector3Int.RoundToInt(rotatePosition);
                 WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(itemWorldPosition, out Block itemBlock, out Chunk itemChunk);
+                if (!isCheckBase && itemBuildingData.position == Vector3Int.zero)
+                {
+                    continue;
+                }
                 if (itemChunk == null || itemBlock == null)
                 {
                     canSet = false;
@@ -125,7 +129,7 @@ public class BuildingInfoBean : BaseBean
             {
                 continue;
             }
-            Vector3 rotatePosition = VectorUtil.GetRotatedPosition(basePosition, itemBuildingData.position + basePosition, new Vector3(0, rotateAngle, 0));
+            Vector3 rotatePosition = VectorUtil.GetRotatedPosition(Vector3.zero, itemBuildingData.position, new Vector3(0, rotateAngle, 0)) + basePosition;
             Vector3Int itemWorldPosition = Vector3Int.RoundToInt(rotatePosition);
             WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(itemWorldPosition, out Block itemBlock, out Chunk itemChunk);
             if (itemChunk == null || itemBlock == null)
@@ -138,7 +142,7 @@ public class BuildingInfoBean : BaseBean
             blockMetaLinkData.isBreakAll = false;
             blockMetaLinkData.isBreakMesh = false;
             blockMetaLinkData.baseBlockType = baseBlock.blockInfo.id;
-            itemChunk.SetBlockForLocal(itemWorldPosition - itemChunk.chunkData.positionForWorld, BlockTypeEnum.LinkLargeChild, BlockDirectionEnum.UpForward, blockMetaLinkData.ToJson());
+            itemChunk.SetBlockForLocal(itemWorldPosition - itemChunk.chunkData.positionForWorld, BlockTypeEnum.LinkLargeChild, baseBlockDirection, blockMetaLinkData.ToJson());
         }
     }
 
