@@ -19,9 +19,9 @@ public class BlockBaseLiquid : Block
     /// <param name="chunk"></param>
     /// <param name="localPosition"></param>
     /// <param name="direction"></param>
-    public override void RefreshBlock(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction, int updateChunkType = 1)
+    public override void RefreshBlock(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction, int refreshType, int updateChunkType)
     {
-        base.RefreshBlock(chunk, localPosition, direction, updateChunkType);
+        base.RefreshBlock(chunk, localPosition, direction, refreshType, updateChunkType);
         //刷新的时候注册事件 
         chunk.RegisterEventUpdate(localPosition, TimeUpdateEventTypeEnum.Sec);
     }
@@ -104,7 +104,7 @@ public class BlockBaseLiquid : Block
                     downBlockData.meta = ToMetaData(downBlockMetaLiquid);
                     downChunk.SetBlockData(downBlockData);
                     //刷新
-                    RefreshBlock(downChunk, downWorldPosition - downChunk.chunkData.positionForWorld, downBlockDirection);
+                    RefreshBlock(downChunk, downWorldPosition - downChunk.chunkData.positionForWorld, downBlockDirection,7,1);
                     RefreshBlockRange(downChunk, downWorldPosition - downChunk.chunkData.positionForWorld, downBlockDirection);
                     WorldCreateHandler.Instance.manager.AddUpdateChunk(downChunk, 1);
                     return;
@@ -198,7 +198,7 @@ public class BlockBaseLiquid : Block
                     closeBlockData.meta = ToMetaData(closeBlockMetaLiquid);
                     closeChunk.SetBlockData(closeBlockData);
                     //刷新
-                    RefreshBlock(closeChunk, wPos - closeChunk.chunkData.positionForWorld, closeDirection);
+                    RefreshBlock(closeChunk, wPos - closeChunk.chunkData.positionForWorld, closeDirection,7,1);
                     RefreshBlockRange(closeChunk, wPos - closeChunk.chunkData.positionForWorld, closeDirection);
                     WorldCreateHandler.Instance.manager.AddUpdateChunk(closeChunk, 1);
                     return true;

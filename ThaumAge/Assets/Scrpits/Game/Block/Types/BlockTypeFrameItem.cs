@@ -48,7 +48,7 @@ public class BlockTypeFrameItem : Block
     /// <summary>
     /// 刷新预制
     /// </summary>
-    public override void RefreshObjModel(Chunk chunk, Vector3Int localPosition)
+    public override void RefreshObjModel(Chunk chunk, Vector3Int localPosition, int refreshType)
     {
         BlockBean blockData = chunk.GetBlockData(localPosition);
         BlockMetaFrameItem frameItemData = GetFrameItemMetaData(blockData);

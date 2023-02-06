@@ -26,7 +26,7 @@ public class BlockBaseFurnaces : Block
     /// </summary>
     /// <param name="chunk"></param>
     /// <param name="localPosition"></param>
-    public override void RefreshObjModel(Chunk chunk, Vector3Int localPosition)
+    public override void RefreshObjModel(Chunk chunk, Vector3Int localPosition,int refreshType)
     {
         BlockBean blockData = chunk.GetBlockData(localPosition);
         BlockMetaFurnaces blockMetaData = FromMetaData<BlockMetaFurnaces>(blockData.meta);
@@ -201,7 +201,7 @@ public class BlockBaseFurnaces : Block
             blockMetaData.itemBeforeNum = 0;
             blockMetaData.itemBeforeId = 0;
         }
-        RefreshObjModel(chunk, localPosition);
+        RefreshObjModel(chunk, localPosition,7);
         blockData.SetBlockMeta(blockMetaData);
         chunk.SetBlockData(blockData);
 

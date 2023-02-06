@@ -296,7 +296,7 @@ public class Block
         {
             blockTypeComponent.SetBlockWorldPosition(chunk.chunkData.positionForWorld + localPosition);
         }
-        RefreshObjModel(chunk, localPosition);
+        RefreshObjModel(chunk, localPosition, 0);
     }
 
     /// <summary>
@@ -311,9 +311,8 @@ public class Block
     /// <summary>
     /// 刷新方块模型
     /// </summary>
-    /// <param name="chunk"></param>
-    /// <param name="localPosition"></param>
-    public virtual void RefreshObjModel(Chunk chunk, Vector3Int localPosition)
+    /// <param name="refreshType">0 创建时刷新   来自不同方向影响刷新 UP = 1, Down = 2, Left = 3,Right = 4,Forward = 5,Back = 6   7调用刷新</param>
+    public virtual void RefreshObjModel(Chunk chunk, Vector3Int localPosition, int refreshType)
     {
 
     }
@@ -321,7 +320,9 @@ public class Block
     /// <summary>
     /// 刷新方块
     /// </summary>
-    public virtual void RefreshBlock(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction, int updateChunkType = 1)
+    /// updateChunkType 0场景创建 1场景编辑异步 2场景编辑同步
+    /// <param name="refreshType">0 创建时刷新   来自不同方向影响刷新 UP = 1, Down = 2, Left = 3,Right = 4,Forward = 5,Back = 6   7调用刷新</param>
+    public virtual void RefreshBlock(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction, int refreshType = 7, int updateChunkType = 1)
     {
         //更新方块
         WorldCreateHandler.Instance.manager.AddUpdateChunk(chunk, updateChunkType);
@@ -334,24 +335,23 @@ public class Block
     {
         Vector3Int worldPosition = localPosition + chunk.chunkData.positionForWorld;
 
-        RefreshBlockClose(worldPosition + Vector3Int.up, updateChunkType);
-        RefreshBlockClose(worldPosition + Vector3Int.down, updateChunkType);
-        RefreshBlockClose(worldPosition + Vector3Int.left, updateChunkType);
-        RefreshBlockClose(worldPosition + Vector3Int.right, updateChunkType);
-        RefreshBlockClose(worldPosition + Vector3Int.forward, updateChunkType);
-        RefreshBlockClose(worldPosition + Vector3Int.back, updateChunkType);
+        RefreshBlockClose(worldPosition + Vector3Int.up, 2, updateChunkType);
+        RefreshBlockClose(worldPosition + Vector3Int.down, 1, updateChunkType);
+        RefreshBlockClose(worldPosition + Vector3Int.left, 4, updateChunkType);
+        RefreshBlockClose(worldPosition + Vector3Int.right, 3, updateChunkType);
+        RefreshBlockClose(worldPosition + Vector3Int.forward, 6, updateChunkType);
+        RefreshBlockClose(worldPosition + Vector3Int.back, 5, updateChunkType);
     }
 
     /// <summary>
     /// 刷新靠近的方块
     /// </summary>
-    /// <param name="closeWorldPosition"></param>
-    public virtual void RefreshBlockClose(Vector3Int closeWorldPosition, int updateChunkType = 1)
+    public virtual void RefreshBlockClose(Vector3Int closeWorldPosition, int refreshType, int updateChunkType)
     {
         WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(closeWorldPosition, out Block closeBlock, out BlockDirectionEnum direction, out Chunk closeChunk);
         if (closeChunk != null && closeBlock != null && closeBlock.blockType != BlockTypeEnum.None)
         {
-            closeBlock?.RefreshBlock(closeChunk, closeWorldPosition - closeChunk.chunkData.positionForWorld, direction, updateChunkType);
+            closeBlock?.RefreshBlock(closeChunk, closeWorldPosition - closeChunk.chunkData.positionForWorld, direction, refreshType, updateChunkType);
         }
     }
 

@@ -145,7 +145,7 @@ public class ControlForPlayer : ControlForBase
     /// <summary>
     /// 改变地面类型 
     /// </summary>
-    /// <param name="groundType">0地面 1水里</param>
+    /// <param name="groundType">0地面 1水里 2悬浮</param>
     public void ChangeGroundType(int groundType)
     {
         this.groundType = groundType;
@@ -156,6 +156,10 @@ public class ControlForPlayer : ControlForBase
         else if (groundType == 1)
         {
             gravityValue = new Vector3(0, -2f, 0);
+        }
+        else if (groundType == 2)
+        {
+            gravityValue = new Vector3(0, 2f, 0);
         }
     }
 
@@ -334,8 +338,8 @@ public class ControlForPlayer : ControlForBase
     {
         if (!enabledControl)
             return;
-        //如果是在水里
-        if (groundType == 1)
+        //如果是在水里 或者是悬浮状态
+        if (groundType == 1 || groundType == 2)
         {
             rbPlayer.AddForce(new Vector3(0, 2f * speedJump, 0), ForceMode.Impulse);
             return;

@@ -15,7 +15,7 @@ public class BlockBaseSign : Block
     /// <summary>
     /// 刷新方块
     /// </summary>
-    public override void RefreshObjModel(Chunk chunk, Vector3Int localPosition)
+    public override void RefreshObjModel(Chunk chunk, Vector3Int localPosition, int refreshType)
     {
         BlockBean blockData = chunk.GetBlockData(localPosition);
         if (blockData == null)
@@ -55,6 +55,6 @@ public class BlockBaseSign : Block
         blockData.meta = ToMetaData(blockMetaSignData);
         chunk.isSaveData = true;
         //刷新牌子
-        RefreshObjModel(chunk, localPosition);
+        RefreshObjModel(chunk, localPosition,7);
     }
 }

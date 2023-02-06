@@ -195,6 +195,6 @@ public partial class UIViewFurnaces : BaseUIView
         blockData.meta = metaStr;
         Vector3Int localPosition = blockWorldPosition - targetBlockChunk.chunkData.positionForWorld;
         targetBlockFurnaces.StartWork(targetBlockChunk, localPosition);
-        targetBlockFurnaces.RefreshObjModel(targetBlockChunk, localPosition);
+        targetBlockFurnaces.RefreshObjModel(targetBlockChunk, localPosition,7);
     }
 }

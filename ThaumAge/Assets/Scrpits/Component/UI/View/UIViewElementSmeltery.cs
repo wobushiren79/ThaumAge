@@ -183,6 +183,6 @@ public partial class UIViewElementSmeltery : BaseUIView
         blockData.meta = metaStr;
         Vector3Int localPosition = blockWorldPosition - targetBlockChunk.chunkData.positionForWorld;
         targetBlockElementSmeltery.StartWork(targetBlockChunk, localPosition);
-        targetBlockElementSmeltery.RefreshObjModel(targetBlockChunk, localPosition);
+        targetBlockElementSmeltery.RefreshObjModel(targetBlockChunk, localPosition,7);
     }
 }

@@ -3,11 +3,6 @@ using UnityEngine;
 
 public class BlockTypeArcaneBellows : BlockBaseAroundLRFB
 {
-    public override void RefreshBlock(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction, int updateChunkType = 1)
-    {
-        base.RefreshBlock(chunk, localPosition, direction, updateChunkType);
-        RefreshObjModel(chunk, localPosition);
-    }
 
     public override bool CheckCanLink(Chunk chunk, Vector3Int localPosition, DirectionEnum faceDiection)
     {
@@ -94,7 +89,7 @@ public class BlockTypeArcaneBellows : BlockBaseAroundLRFB
         return false;
     }
 
-    public override void RefreshObjModel(Chunk chunk, Vector3Int localPosition)
+    public override void RefreshObjModel(Chunk chunk, Vector3Int localPosition, int refreshType)
     {
         bool isWork = true;
         bool leftCheck = CheckCanLink(chunk, localPosition, DirectionEnum.Left);

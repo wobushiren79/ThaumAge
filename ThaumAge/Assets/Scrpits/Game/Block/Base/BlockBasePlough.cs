@@ -4,10 +4,10 @@ using UnityEngine;
 public class BlockBasePlough : Block
 {
 
-    public override void RefreshBlock(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction, int updateChunkType = 1)
+    public override void RefreshBlock(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction, int refreshType, int updateChunkType)
     {
-        base.RefreshBlock(chunk, localPosition, direction, updateChunkType);
-        GetCloseBlockByDirection(chunk, localPosition, DirectionEnum.UP, 
+        base.RefreshBlock(chunk, localPosition, direction, refreshType, updateChunkType);
+        GetCloseBlockByDirection(chunk, localPosition, DirectionEnum.UP,
             out Block blockClose, out Chunk blockChunkClose, out Vector3Int closeLocalPositionClose);
         if (blockClose != null && blockClose.blockType != BlockTypeEnum.None)
         {
@@ -16,7 +16,7 @@ public class BlockBasePlough : Block
                 && blockClose.blockInfo.GetBlockShape() != BlockShapeEnum.CropWell)
             {
                 //还原成普通的地面
-                chunk.SetBlockForLocal(localPosition,(BlockTypeEnum)blockInfo.remark_int,BlockDirectionEnum.UpForward);
+                chunk.SetBlockForLocal(localPosition, (BlockTypeEnum)blockInfo.remark_int, BlockDirectionEnum.UpForward);
             }
         }
     }

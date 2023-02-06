@@ -76,7 +76,7 @@ public class BlockTypeElementalCrystalSeed : Block
         }
     }
 
-    public override void RefreshBlock(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction, int updateChunkType = 1)
+    public override void RefreshBlock(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction, int refreshType, int updateChunkType)
     {
         //获取下方方块
         Vector3Int downLocalPosition = localPosition + Vector3Int.down;

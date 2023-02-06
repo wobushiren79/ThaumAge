@@ -41,9 +41,7 @@ public class BlockTypeElementSmeltery : Block
     /// <summary>
     /// 刷新方块模型
     /// </summary>
-    /// <param name="chunk"></param>
-    /// <param name="localPosition"></param>
-    public override void RefreshObjModel(Chunk chunk, Vector3Int localPosition)
+    public override void RefreshObjModel(Chunk chunk, Vector3Int localPosition,int refreshType)
     {
         GetBlockMetaData(chunk, localPosition, out BlockBean blockData, out BlockMetaElementSmeltery blockMetaData);
         GameObject objFurnaces = chunk.GetBlockObjForLocal(localPosition);
@@ -248,7 +246,7 @@ public class BlockTypeElementSmeltery : Block
             blockMetaData.itemBeforeNum = 0;
             blockMetaData.itemBeforeId = 0;
         }
-        RefreshObjModel(chunk, localPosition);
+        RefreshObjModel(chunk, localPosition,7);
         blockData.SetBlockMeta(blockMetaData);
         chunk.SetBlockData(blockData);
 
