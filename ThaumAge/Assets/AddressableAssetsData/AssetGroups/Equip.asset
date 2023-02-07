@@ -161,6 +161,12 @@ MonoBehaviour:
     m_SerializedLabels:
     - Equip
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 209d14cd1a189654888ff8a1b40f63a4
+    m_Address: Assets/Prefabs/Model/Character/Equip/BootsOfTraveler.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Equip
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: fd6114d87f1af534fbf270c47c0f10bf, type: 2}
   m_SchemaSet:
