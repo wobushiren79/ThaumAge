@@ -203,7 +203,7 @@ public class ControlForPlayer : ControlForBase
         //移动角色
         CharacterBean characterData = character.GetCharacterData();
         CreatureStatusBean creatureStatus = characterData.GetCreatureStatus();
-        float totalSpeedMove = speedMove + characterData.GetAttributeValue(AttributeTypeEnum.MoveSpeed) + creatureStatus.moveSpeedAdd;
+        float totalSpeedMove = speedMove + characterData.GetAttributeValue(AttributeTypeEnum.MoveSpeed) + characterData.GetAttributeValue(AttributeTypeEnum.MoveSpeedAdd) * 0.1f + creatureStatus.moveSpeedAdd;
         MoveCharacterCalculate(moveData, totalSpeedMove);
         //攀爬处理
         if (timeClimbEnd > 0)
@@ -268,8 +268,11 @@ public class ControlForPlayer : ControlForBase
     /// </summary>
     public void HandleForStepClimb()
     {
+        CharacterBean characterData = character.GetCharacterData();
+        float totalStepHeigh = stepHeigh  + characterData.GetAttributeValue(AttributeTypeEnum.ClimbHighAdd);
+
         Vector3 stepLowerPosition = transform.position.AddY(0.05f);
-        Vector3 stepUpperPosition = stepLowerPosition.AddY(stepHeigh);
+        Vector3 stepUpperPosition = stepLowerPosition.AddY(totalStepHeigh);
 
         //Debug.DrawRay(stepLowerPosition, playerVelocity.normalized * 0.5f, Color.red);
         //Debug.DrawRay(stepUpperPosition, playerVelocity.normalized * 0.6f, Color.red);

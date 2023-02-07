@@ -25,14 +25,12 @@ public enum AttributeTypeEnum
     KnockbackTime = 212,//击退时间
 
     Durability = 301,//装备耐久
-    
+
     BreakSpeed = 401,//挖掘速度
     BreakLevel = 402,//挖掘等级
 
     ShowElemental = 1000,//元素展示
-
-
     HealthAdd = 1001,   //生命值修改
-
-    MoveSpeedAdd = 1011,//移动速度添加
+    MoveSpeedAdd = 1011,//移动速度添加 倍率为0.1
+    ClimbHighAdd = 1021,//攀爬高度
 }
