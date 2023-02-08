@@ -5,8 +5,8 @@
 <authoring_tool>VoxelShop V1.8.22
 </authoring_tool>
 </contributor>
-<created>2023-02-07T18:25:41</created>
-<modified>2023-02-07T18:25:41</modified>
+<created>2023-02-07T22:34:45</created>
+<modified>2023-02-07T22:34:45</modified>
 <unit meter="1" name="meter"/>
 <up_axis>Y_UP</up_axis>
 </asset>
@@ -57,7 +57,7 @@
 <geometry id="Plane-tex-mesh-0" name="Plane-tex">
 <mesh>
 <source id="Plane-tex-mesh-0-positions">
-<float_array count="24" id="Plane-tex-mesh-0-positions-array">-16 16 8 -16 0 -4 -16 0 8 -16 16 -4 -4 16 8 -4 0 -4 -4 0 8 -4 16 -4</float_array>
+<float_array count="24" id="Plane-tex-mesh-0-positions-array">-16 16 6 -16 0 -6 -16 0 6 -16 16 -6 -4 16 6 -4 0 -6 -4 0 6 -4 16 -6</float_array>
 <technique_common>
 <accessor count="8" source="#Plane-tex-mesh-0-positions-array" stride="3">
 <param name="X" type="float"/>
@@ -89,7 +89,7 @@
 <library_visual_scenes>
 <visual_scene id="Scene" name="Scene">
 <node id="bootsoftraveler.merged" name="BootsOfTraveler.Merged" type="NODE">
-<translate sid="location">10.0 -0.0 -2.0</translate>
+<translate sid="location">10.0 -0.0 0.0</translate>
 <rotate sid="rotationZ">0 0 1 0</rotate>
 <rotate sid="rotationY">0 1 0 0</rotate>
 <rotate sid="rotationX">1 0 0 0</rotate>

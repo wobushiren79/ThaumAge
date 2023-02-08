@@ -705,7 +705,8 @@ public class BlockEditorWindow : EditorWindow
                 objNewMeshFilter.sharedMesh = newMesh;
                 objNewMeshFilter.mesh = newMesh;
                 //设置材质
-                objNewMeshRenderer.material = matUse;
+                if(matUse != null)
+                    objNewMeshRenderer.material = matUse;
 
                 EditorUtil.CreatePrefab(objNew, $"{Path_Block_Model_Save}/{itemCreateData.nameBlock}");
                 //EditorUtil.RefreshAsset(objNew);
