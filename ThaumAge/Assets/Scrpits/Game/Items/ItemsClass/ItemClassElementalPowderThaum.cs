@@ -33,6 +33,9 @@ public class ItemClassElementalPowderThaum : Item
                 case BlockTypeEnum.FenceIron:
                     HandleForFenceIron(targetPosition, targetBlock, targetBlockDirection, taragetChunk);
                     break;
+                case BlockTypeEnum.TableStone:
+                    HandleForGolemPress(targetPosition, targetBlock, targetBlockDirection, taragetChunk);
+                    break;
                 default:
                     return false;
             }
@@ -198,6 +201,59 @@ public class ItemClassElementalPowderThaum : Item
         {
             VisualEffect itemEffect = effect.listVE[0];
             itemEffect.SetVector3("Size", new Vector3(3, 3, 3));
+            itemEffect.SetFloat("EffectSmokeNum", 250 * 5);
+            itemEffect.SetFloat("EffectStarNum", 100 * 5);
+        });
+    }
+
+    /// <summary>
+    /// 处理傀儡工坊
+    /// </summary>
+    protected  void HandleForGolemPress(Vector3Int targetPosition, Block targetBlock, BlockDirectionEnum targetBlockDirection, Chunk taragetChunk)
+    {
+        //检测是否能放下这个多方块结构
+        BuildingInfoBean buildingInfo = BiomeHandler.Instance.manager.GetBuildingInfo(BuildingTypeEnum.GolemPress);
+        Vector3Int basePosition = targetPosition;
+        if (!buildingInfo.CheckCanSetLinkLargeBuilding(basePosition, true, out BlockDirectionEnum baseBlockDirection))
+        {
+            return;
+        }
+        PlayThrowEffect();
+        EffectHandler.Instance.WaitExecuteSeconds(2, () =>
+        {
+            //获取目标方块
+            WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(targetPosition, out targetBlock, out targetBlockDirection, out taragetChunk);
+            if (taragetChunk != null && targetBlock.blockType == BlockTypeEnum.TableStone)
+            {
+                //检测是否能放下这个多方块结构
+                BuildingInfoBean buildingInfo = BiomeHandler.Instance.manager.GetBuildingInfo(BuildingTypeEnum.GolemPress);
+                if (!buildingInfo.CheckCanSetLinkLargeBuilding(basePosition, true, out BlockDirectionEnum baseBlockDirection))
+                {
+                    return;
+                }
+                BlockMetaInfusionAltar blockMetaLinkData = new BlockMetaInfusionAltar();
+                blockMetaLinkData.level = 0;
+                blockMetaLinkData.linkBasePosition = new Vector3IntBean(basePosition);
+                blockMetaLinkData.isBreakAll = false;
+                blockMetaLinkData.isBreakMesh = false;
+                blockMetaLinkData.baseBlockType = targetBlock.blockInfo.id;
+
+                //这里直接使用taragetChunk 因为再同一个区块
+                taragetChunk.SetBlockForLocal(basePosition, BlockTypeEnum.GolemPress, baseBlockDirection, blockMetaLinkData.ToJson());
+                //播放音效
+                AudioHandler.Instance.PlaySound(3, targetPosition);
+            }
+        });
+        //播放粒子特效
+        EffectBean effectSmoke = new EffectBean();
+        effectSmoke.effectType = EffectTypeEnum.Visual;
+        effectSmoke.effectName = EffectInfo.Effect_Change_1;
+        effectSmoke.effectPosition = new Vector3(1f + targetPosition.x, 0.5f + targetPosition.y, 1f + targetPosition.z);
+        effectSmoke.timeForShow = 5;
+        EffectHandler.Instance.ShowEffect(effectSmoke, (effect) =>
+        {
+            VisualEffect itemEffect = effect.listVE[0];
+            itemEffect.SetVector3("Size", new Vector3(2, 1, 2));
             itemEffect.SetFloat("EffectSmokeNum", 250 * 5);
             itemEffect.SetFloat("EffectStarNum", 100 * 5);
         });

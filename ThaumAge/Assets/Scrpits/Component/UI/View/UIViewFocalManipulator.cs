@@ -115,6 +115,15 @@ public partial class UIViewFocalManipulator : BaseUIView, SelectView.ICallBack
         ui_Option_Power.SetPosition(0);
     }
 
+    public override void OnClickForButton(Button viewButton)
+    {
+        base.OnClickForButton(viewButton);
+        if (viewButton == ui_SubmitBtn)
+        {
+            HandleForSubmit();
+        }
+    }
+
     protected void GetOptionsData(int researchDetailsType, List<ResearchInfoBean> listTargetData, List<string> listTargetDataName)
     {
         List<ResearchInfoBean> listData = ResearchInfoCfg.GetResearchInfoByType(1, researchDetailsType);
@@ -211,19 +220,19 @@ public partial class UIViewFocalManipulator : BaseUIView, SelectView.ICallBack
 
         listSelectMaterialsData.Clear();
         var itemElements = listElementsOptionsInfo[indexSelectElements];
-        HandleMaterialsList(listSelectMaterialsData, ItemsBean.GetListItemsArrayBean(itemElements.materials));
+        ItemsBean.CombineItems(listSelectMaterialsData, ItemsBean.GetListItemsBean(itemElements.materials));
 
         var itemCreate = listCreateOptionsInfo[indexSelectCreate];
-        HandleMaterialsList(listSelectMaterialsData, ItemsBean.GetListItemsArrayBean(itemCreate.materials));
+        ItemsBean.CombineItems(listSelectMaterialsData, ItemsBean.GetListItemsBean(itemCreate.materials));
 
         var itemRange = listRangeOptionsInfo[indexSelectRange];
-        HandleMaterialsList(listSelectMaterialsData, ItemsBean.GetListItemsArrayBean(itemRange.materials));
+        ItemsBean.CombineItems(listSelectMaterialsData, ItemsBean.GetListItemsBean(itemRange.materials));
 
         var itemScope = listScopeOptionsInfo[indexSelectScope];
-        HandleMaterialsList(listSelectMaterialsData, ItemsBean.GetListItemsArrayBean(itemScope.materials));
+        ItemsBean.CombineItems(listSelectMaterialsData, ItemsBean.GetListItemsBean(itemScope.materials));
 
         var itemPower = listPowerOptionsInfo[indexSelectPower];
-        HandleMaterialsList(listSelectMaterialsData, ItemsBean.GetListItemsArrayBean(itemPower.materials));
+        ItemsBean.CombineItems(listSelectMaterialsData, ItemsBean.GetListItemsBean(itemPower.materials));
 
         //var itemMagicPay = listMagicPayOptionsInfo[indexSelectMagicPay];
         //HandleMaterialsList(listSelectMaterialsData, ItemsBean.GetListItemsArrayBean(itemMagicPay.materials));
@@ -235,37 +244,6 @@ public partial class UIViewFocalManipulator : BaseUIView, SelectView.ICallBack
             isSetMaterials = false;
         });
     }
-
-    protected void HandleMaterialsList(List<ItemsBean> listMaterialsData, List<ItemsBean> listTargetData)
-    {
-        for (int i = 0; i < listTargetData.Count; i++)
-        {
-            ItemsBean itemTarget = listTargetData[i];
-            bool hasData = false;
-            for (int f = 0; f < listMaterialsData.Count; f++)
-            {
-                ItemsBean itemMaterials = listMaterialsData[f];
-                if (itemTarget.itemId == itemMaterials.itemId)
-                {
-                    hasData = true;
-                    itemMaterials.number += itemTarget.number;
-                    break;
-                }
-            }
-            if (!hasData)
-                listMaterialsData.Add(itemTarget);
-        }
-    }
-
-    public override void OnClickForButton(Button viewButton)
-    {
-        base.OnClickForButton(viewButton);
-        if (viewButton == ui_SubmitBtn)
-        {
-            HandleForSubmit();
-        }
-    }
-
     /// <summary>
     /// 处理-点击
     /// </summary>

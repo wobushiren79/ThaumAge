@@ -35,9 +35,9 @@ public enum ItemsTypeEnum
     Wand = 41, // 法杖
     Cap = 42,//法杖杖端
     Rod = 43,//法杖杖柄
-    
-    Creature = 101,//生物
 
+    Gloem = 99,//傀儡
+    Creature = 101,//生物
     Empty = 999,//空手
 }
 

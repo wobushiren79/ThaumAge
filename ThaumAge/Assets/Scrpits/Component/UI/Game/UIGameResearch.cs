@@ -184,7 +184,7 @@ public partial class UIGameResearch : UIGameCommonNormal, IRadioGroupCallBack
         var researchView = listViewResearch[currentSelectIndex];
         var researchData = researchView.researchInfo;
         //设置选中的材料
-        listSelectMaterialsData = ItemsBean.GetListItemsArrayBean(researchData.unlock_materials);
+        listSelectMaterialsData = ItemsBean.GetListItemsBean(researchData.unlock_materials);
         ui_ViewMaterialsShow.SetData(listSelectMaterialsData);
     }
 

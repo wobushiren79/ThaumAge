@@ -251,4 +251,5 @@ public enum BlockTypeEnum
 
     InfusionAltar = 10001,//×¢Ä§¼ÀÌ³
     InfernalFurnace = 10002,//Á¶ÓüÈÛÂ¯
+    GolemPress = 10003,//¿şÀÜ¹¤·»
 }

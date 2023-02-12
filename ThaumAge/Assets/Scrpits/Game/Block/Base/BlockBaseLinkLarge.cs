@@ -2,7 +2,7 @@
 using UnityEditor;
 using UnityEngine;
 
-public class BlockBaseLinkLarge : Block
+public abstract class BlockBaseLinkLarge : Block
 {
     public override void InitBlock(Chunk chunk, Vector3Int localPosition, int state)
     {
@@ -25,10 +25,7 @@ public class BlockBaseLinkLarge : Block
     /// 获取对应的建筑类型
     /// </summary>
     /// <returns></returns>
-    public virtual BuildingTypeEnum GetBuildingType()
-    {
-        return BuildingTypeEnum.None;
-    }
+    public abstract BuildingTypeEnum GetBuildingType();
 
     public override void DestoryBlock(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction)
     {

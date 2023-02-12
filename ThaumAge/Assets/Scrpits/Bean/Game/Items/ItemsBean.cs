@@ -69,9 +69,11 @@ public class ItemsBean
     /// </summary>
     /// <param name="listDataStr"></param>
     /// <returns></returns>
-    public static List<ItemsBean> GetListItemsArrayBean(string listDataStr)
+    public static List<ItemsBean> GetListItemsBean(string listDataStr)
     {
         List<ItemsBean> listData = new List<ItemsBean>();
+        if (listDataStr.IsNull())
+            return listData;
         string[] listItemsData = listDataStr.SplitForArrayStr('&');
         for (int i = 0; i < listItemsData.Length; i++)
         {
@@ -159,6 +161,32 @@ public class ItemsBean
             }
         }
         return itemNumber;
+    }
+
+    /// <summary>
+    /// 合并两个道具列表 不考虑数量上限
+    /// </summary>
+    /// <param name="listMaterialsData"></param>
+    /// <param name="listTargetData"></param>
+    public static void CombineItems(List<ItemsBean> listOldData, List<ItemsBean> listNewData)
+    {
+        for (int i = 0; i < listNewData.Count; i++)
+        {
+            ItemsBean itemTarget = listNewData[i];
+            bool hasData = false;
+            for (int f = 0; f < listOldData.Count; f++)
+            {
+                ItemsBean itemMaterials = listOldData[f];
+                if (itemTarget.itemId == itemMaterials.itemId)
+                {
+                    hasData = true;
+                    itemMaterials.number += itemTarget.number;
+                    break;
+                }
+            }
+            if (!hasData)
+                listOldData.Add(itemTarget);
+        }
     }
 
 
