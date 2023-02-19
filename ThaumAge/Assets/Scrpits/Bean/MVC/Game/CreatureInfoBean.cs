@@ -12,7 +12,7 @@ public partial class CreatureInfoBean : BaseBean
 	/// </summary>
 	public string remark;
 	/// <summary>
-	///生物类型
+	///生物类型(1玩家 2动物 3怪物 4傀儡)
 	/// </summary>
 	public int creature_type;
 	/// <summary>

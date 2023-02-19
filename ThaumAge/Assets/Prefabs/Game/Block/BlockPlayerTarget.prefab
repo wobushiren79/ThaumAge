@@ -671,7 +671,7 @@ GameObject:
   - component: {fileID: 7546255859441469461}
   - component: {fileID: 2692833385650956161}
   m_Layer: 0
-  m_Name: PlayerTargetBlock
+  m_Name: BlockPlayerTarget
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -715,7 +715,7 @@ MonoBehaviour:
   objElementalItemModel: {fileID: 4223033701761035993}
 --- !u!95 &2692833385650956161
 Animator:
-  serializedVersion: 4
+  serializedVersion: 5
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -732,4 +732,4 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
+  m_KeepAnimatorStateOnDisable: 0

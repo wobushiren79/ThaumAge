@@ -17,13 +17,45 @@ public class BlockManager : BaseManager, IBlockInfoView
     //存储着所有的材质
     public Material[] arrayBlockMat;
 
+
+    //路径-破碎方块
+    public static string pathForBlockCptBreak = "Assets/Prefabs/Game/BlockBreak.prefab";
     //方块破碎模型
-    public GameObject blockBreakModel;
+    private GameObject _blockBreakModel;
+    public GameObject blockBreakModel
+    {
+        get
+        {
+            if (_blockBreakModel == null)
+            {
+                _blockBreakModel = LoadAddressablesUtil.LoadAssetSync<GameObject>(pathForBlockCptBreak);
+            }
+            return _blockBreakModel;
+        }
+    }
+
+
+    //路径-傀儡核心选择方块
+    public static string pathForBlockCptGolemCore = "Assets/Prefabs/Game/Block/BlockSelectGolemCore.prefab";
+    //傀儡核心选择方块
+    private GameObject _blockGolemCoreSelectModel;
+    public GameObject blockGolemCoreSelectModel 
+    {
+        get
+        {
+            if (_blockGolemCoreSelectModel == null)
+            {
+                _blockGolemCoreSelectModel = LoadAddressablesUtil.LoadAssetSync<GameObject>(pathForBlockCptGolemCore);
+            }
+            return _blockGolemCoreSelectModel;
+        }
+    }
 
     //路径-方块模型
     public static string pathForBlockModel = "Assets/Prefabs/Block";
-    //路径-破碎方块
-    public static string pathForBlockCptBreak = "Assets/Prefabs/Game/BlockBreak.prefab";
+
+
+
     //路径-方块材质 （使用标签）
     public static string pathForBlockMats = "BlockMats";
 
@@ -73,13 +105,7 @@ public class BlockManager : BaseManager, IBlockInfoView
                 int indexMat = int.Parse(nameList[1]);
                 arrayBlockMat[indexMat] = itemMat;
             }
-
-            //加载方块破碎模型
-            LoadAddressablesUtil.LoadAssetAsync<GameObject>(pathForBlockCptBreak, (obj) =>
-            {
-                blockBreakModel = obj.Result;
-                callBack?.Invoke();
-            });
+            callBack?.Invoke();
         });
     }
 

@@ -188,10 +188,14 @@ public partial class UIViewGolemPress : BaseUIView, SelectView.ICallBack
 
         ItemMetaGolem itemMetaGolem = new ItemMetaGolem();
         itemMetaGolem.material = listGolemPressMaterial[indexSelectMaterial].id;
-        itemMetaGolem.head = listGolemPressHead[indexSelectHead].id;
-        itemMetaGolem.hand = listGolemPressHand[indexSelectHand].id;
-        itemMetaGolem.foot = listGolemPressFoot[indexSelectFoot].id;
-        itemMetaGolem.accessory = listGolemPressAccessory[indexSelectAccessory].id;
+        if (indexSelectHead !=0)
+            itemMetaGolem.head = listGolemPressHead[indexSelectHead].id;
+        if (indexSelectHand != 0)
+            itemMetaGolem.hand = listGolemPressHand[indexSelectHand].id;
+        if (indexSelectFoot != 0)
+            itemMetaGolem.foot = listGolemPressFoot[indexSelectFoot].id;
+        if (indexSelectAccessory != 0)
+            itemMetaGolem.accessory = listGolemPressAccessory[indexSelectAccessory].id;
 
         var blockTypeGolemPress = block as BlockTypeGolemPress;
         blockMetaGolemPress.itemsGolem.itemId = 9900001;

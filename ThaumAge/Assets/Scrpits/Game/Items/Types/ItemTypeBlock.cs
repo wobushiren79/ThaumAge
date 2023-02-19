@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class ItemTypeBlock : Item
 {
-    protected override void UseForPlayer(Player player, ItemsBean itemData, ItemUseTypeEnum useType)
+    public override void UseForPlayer(Player player, ItemsBean itemData, ItemUseTypeEnum useType)
     {
         //检测玩家前方是否有方块
         if (player.playerRay.RayToChunkBlock(out RaycastHit hit, out Vector3Int targetBlockPosition))

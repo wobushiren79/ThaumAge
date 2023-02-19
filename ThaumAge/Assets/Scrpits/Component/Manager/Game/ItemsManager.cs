@@ -255,10 +255,13 @@ public class ItemsManager : BaseManager,IItemsInfoView
         {
             var itemInfo = listItemsInfo[i];
             //通过反射获取类
-            Item item = ReflexUtil.CreateInstance<Item>($"ItemClass{itemInfo.link_class}");
-            if (item != null)
+            if (!itemInfo.link_class.IsNull())
             {
-                RegisterItem(itemInfo.id, item);
+                Item item = ReflexUtil.CreateInstance<Item>($"{itemInfo.link_class}");
+                if (item != null)
+                {
+                    RegisterItem(itemInfo.id, item);
+                }
             }
         }
         //注册所有类型道具

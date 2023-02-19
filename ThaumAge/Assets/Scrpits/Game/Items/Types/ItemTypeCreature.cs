@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class ItemTypeCreature : Item
 {
-    protected override void UseForPlayer(Player player, ItemsBean itemData, ItemUseTypeEnum useType)
+    public override void UseForPlayer(Player player, ItemsBean itemData, ItemUseTypeEnum useType)
     {
         //检测玩家前方是否有方块
         if (player.playerRay.RayToChunkBlock(out RaycastHit hit, out Vector3Int targetBlockPosition))
@@ -28,8 +28,8 @@ public class ItemTypeCreature : Item
                     if (upBlock != null && upBlock.blockType != BlockTypeEnum.None)
                         return;
 
-                    ItemsInfoBean itemsInfo = GetItemsInfo(itemData.itemId);
-                    CreatureHandler.Instance.CreateCreature(itemsInfo.type_id, targetPosition + Vector3Int.up);
+                    //创建生物
+                    CreateCreature(itemData, targetPosition);
 
                     //扣除道具
                     UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();
@@ -45,4 +45,12 @@ public class ItemTypeCreature : Item
         }
     }
 
+    /// <summary>
+    /// 创建生物
+    /// </summary>
+    public virtual void CreateCreature(ItemsBean itemData,Vector3Int targetPosition)
+    {
+        ItemsInfoBean itemsInfo = GetItemsInfo(itemData.itemId);
+        CreatureHandler.Instance.CreateCreature(itemsInfo.type_id, targetPosition + Vector3Int.up);
+    }
 }

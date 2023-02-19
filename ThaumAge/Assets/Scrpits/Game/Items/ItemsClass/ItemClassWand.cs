@@ -107,7 +107,7 @@ public class ItemClassWand : Item
             });
         });
     }
-    protected override void UseForPlayer(Player player, ItemsBean itemsData, ItemUseTypeEnum itemUseType)
+    public override void UseForPlayer(Player player, ItemsBean itemsData, ItemUseTypeEnum itemUseType)
     {
         if (itemUseType == ItemUseTypeEnum.Right)
         {

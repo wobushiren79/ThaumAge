@@ -35,6 +35,7 @@ public enum ItemsTypeEnum
     Wand = 41, // 法杖
     Cap = 42,//法杖杖端
     Rod = 43,//法杖杖柄
+    GolemCore = 44,//傀儡核心
 
     Gloem = 99,//傀儡
     Creature = 101,//生物

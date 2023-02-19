@@ -71,7 +71,7 @@ public class Item
     /// <summary>
     /// 使用 交互
     /// </summary>
-    protected virtual void UseForInteractive(Player player)
+    public virtual void UseForInteractive(Player player)
     {
         //检测玩家前方是否有方块
         if (player.playerRay.RayToChunkBlock(out RaycastHit hit, out Vector3Int targetBlockPosition))
@@ -94,7 +94,7 @@ public class Item
     }
 
 
-    protected virtual void UseForPlayer(Player player, ItemsBean itemsData, ItemUseTypeEnum itemUseType)
+    public virtual void UseForPlayer(Player player, ItemsBean itemsData, ItemUseTypeEnum itemUseType)
     {
         //检测玩家前方是否有方块
         if (player.playerRay.RayToChunkBlock(out RaycastHit hit, out Vector3Int targetBlockPosition))
@@ -117,7 +117,7 @@ public class Item
         }
     }
 
-    protected virtual void UseForOther(GameObject user, ItemsBean itemsData, ItemUseTypeEnum itemUseType)
+    public virtual void UseForOther(GameObject user, ItemsBean itemsData, ItemUseTypeEnum itemUseType)
     {
 
     }
