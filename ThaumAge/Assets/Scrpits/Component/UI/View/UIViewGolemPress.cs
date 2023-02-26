@@ -188,7 +188,7 @@ public partial class UIViewGolemPress : BaseUIView, SelectView.ICallBack
 
         ItemMetaGolem itemMetaGolem = new ItemMetaGolem();
         itemMetaGolem.material = listGolemPressMaterial[indexSelectMaterial].id;
-        if (indexSelectHead !=0)
+        if (indexSelectHead != 0)
             itemMetaGolem.head = listGolemPressHead[indexSelectHead].id;
         if (indexSelectHand != 0)
             itemMetaGolem.hand = listGolemPressHand[indexSelectHand].id;
@@ -196,6 +196,15 @@ public partial class UIViewGolemPress : BaseUIView, SelectView.ICallBack
             itemMetaGolem.foot = listGolemPressFoot[indexSelectFoot].id;
         if (indexSelectAccessory != 0)
             itemMetaGolem.accessory = listGolemPressAccessory[indexSelectAccessory].id;
+
+        //设置核心数量
+        int golemCoreNum = 1;
+        itemMetaGolem.listGolemCore.Clear();
+        for (int i = 0; i < golemCoreNum; i++)
+        {
+            ItemsBean itemsGolemCore = new ItemsBean(0, 1);
+            itemMetaGolem.listGolemCore.Add(itemsGolemCore);
+        }
 
         var blockTypeGolemPress = block as BlockTypeGolemPress;
         blockMetaGolemPress.itemsGolem.itemId = 9900001;
@@ -207,7 +216,7 @@ public partial class UIViewGolemPress : BaseUIView, SelectView.ICallBack
 
         blockData.SetBlockMeta(blockMetaGolemPress);
         chunk.SetBlockData(blockData);
-       //设置选项
+        //设置选项
         ui_ItemGolem.SetViewItemByData(blockMetaGolemPress.itemsGolem);
         //刷新UI
         UIHandler.Instance.RefreshUI();

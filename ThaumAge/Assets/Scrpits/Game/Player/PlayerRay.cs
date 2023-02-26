@@ -8,17 +8,22 @@ public class PlayerRay : PlayerBase
     {
     }
 
+    /// <summary>
+    /// 检测以摄像头为起点的角色前方的方块
+    /// </summary>
+    public bool RayToChunkBlock(out RaycastHit hit, out Vector3Int targetPosition)
+    {
+        bool hasHitData = RayToBase(out hit, 1 << LayerInfo.ChunkTrigger | 1 << LayerInfo.ChunkCollider);
+        GetHitPositionAndDirection(hit,  out targetPosition, out Vector3Int closePosition, out BlockDirectionEnum direction);
+        return hasHitData;
+    }
 
     /// <summary>
     /// 检测以摄像头为起点的角色前方的方块
     /// </summary>
-    /// <param name="hit"></param>
-    /// <param name="targetBlockPosition"></param>
-    /// <returns></returns>
-    public bool RayToChunkBlock(out RaycastHit hit, out Vector3Int targetPosition)
+    public bool RayToBase(out RaycastHit hit,int layer)
     {
         hit = new RaycastHit();
-        targetPosition = Vector3Int.zero;
 
         //获取摄像头到角色的距离
         Vector3 cameraPosition = CameraHandler.Instance.manager.mainCamera.transform.position;
@@ -27,15 +32,15 @@ public class PlayerRay : PlayerBase
         float disRayBlock = 4;
         if (controlForCamera.cameraDistance <= 0)
         {
-             disMax = Vector3.Distance(cameraPosition, player.objFirstLook.transform.position);
+            disMax = Vector3.Distance(cameraPosition, player.objFirstLook.transform.position);
         }
         else
         {
-             disMax = Vector3.Distance(cameraPosition, player.objThirdLook.transform.position);
+            disMax = Vector3.Distance(cameraPosition, player.objThirdLook.transform.position);
         }
-  
+
         //发射射线检测
-        RayUtil.RayAllToScreenPointForScreenCenter(disMax + disRayBlock, 1 << LayerInfo.ChunkTrigger | 1 << LayerInfo.ChunkCollider, out RaycastHit[] arrayHit);
+        RayUtil.RayAllToScreenPointForScreenCenter(disMax + disRayBlock, layer, out RaycastHit[] arrayHit);
         //如果没有发生碰撞
         if (arrayHit == null || arrayHit.Length == 0)
         {
@@ -63,9 +68,9 @@ public class PlayerRay : PlayerBase
                 }
             }
         }
-        GetHitPositionAndDirection(hit,  out targetPosition, out Vector3Int closePosition, out BlockDirectionEnum direction);
         return hasHitData;
     }
+
 
 
     /// <summary>

@@ -15,7 +15,8 @@ public partial class UIViewItemContainer : BaseUIView
         Shortcuts,//快捷栏
         Equip,//装备
         Backpack,//背包
-        Box,//箱子
+        Chest,//箱子
+        Bag,//包（用于NPC的包 或者傀儡的包）
         God,//列表 GOD模式
         Furnaces,//熔炉
         ItemsTransition,//转换

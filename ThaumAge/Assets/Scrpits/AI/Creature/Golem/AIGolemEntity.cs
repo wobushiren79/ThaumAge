@@ -8,6 +8,7 @@ public class AIGolemEntity : AICreateEntity
     {
         //根据不同的核心 添加不同的意图
         listIntentEnum.Add(AIIntentEnum.GolemIdle);
+        listIntentEnum.Add(AIIntentEnum.GolemStandby);
     }
 
     public override void SetData(CreatureCptBase creatureCpt)

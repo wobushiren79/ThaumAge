@@ -115,8 +115,7 @@ public class CreatureCptBase : BaseMonoBehaviour
             EffectDeadBody deadBody = effect as EffectDeadBody;
             deadBody.SetData(skinnedMeshRenderer.sharedMesh, bodyTex);
 
-            //删除此物体
-            Destroy(gameObject);
+            DestoryCreature();
         });
 
         //查询身体位置
@@ -180,7 +179,7 @@ public class CreatureCptBase : BaseMonoBehaviour
     /// <summary>
     /// 创建掉落物
     /// </summary>
-    public void CreateDropItems()
+    public virtual void CreateDropItems()
     {
         //创建道具
         List<ItemsBean> listDropItems = ItemsHandler.Instance.GetItemsDrop(creatureInfo.drop);
@@ -190,9 +189,18 @@ public class CreatureCptBase : BaseMonoBehaviour
     /// <summary>
     /// 创建产出
     /// </summary>
-    public void CreateOutputItems()
+    public virtual void CreateOutputItems()
     {
         List<ItemsBean> listDropItems = ItemsHandler.Instance.GetItemsDrop(creatureInfo.output_res);
         ItemsHandler.Instance.CreateItemCptDropList(listDropItems, ItemDropStateEnum.DropPick, transform.position + Vector3.up * 0.75f);
+    }
+
+    /// <summary>
+    /// 删除生物
+    /// </summary>
+    public virtual void DestoryCreature()
+    {
+        //删除此物体
+        CreatureHandler.Instance.DestoryCreature(this);
     }
 }

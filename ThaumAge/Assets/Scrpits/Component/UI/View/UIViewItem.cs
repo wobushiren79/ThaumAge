@@ -287,11 +287,14 @@ public partial class UIViewItem : BaseUIView,
                     break;
                 //如果是箱子里的东西
                 case UIViewItemContainer.ContainerType.None:
-                case UIViewItemContainer.ContainerType.Box:
+                case UIViewItemContainer.ContainerType.Chest:
                 case UIViewItemContainer.ContainerType.Furnaces:
                 case UIViewItemContainer.ContainerType.ItemsTransition:
+                case UIViewItemContainer.ContainerType.Bag:
                 case UIViewItemContainer.ContainerType.Other:
                     HandleForShiftClickForBackpackAndShortcuts();
+                    break;
+                default:
                     break;
             }
         }

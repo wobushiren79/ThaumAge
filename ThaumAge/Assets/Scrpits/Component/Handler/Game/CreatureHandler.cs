@@ -1,12 +1,16 @@
-﻿using UnityEditor;
+﻿using System;
+using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 public class CreatureHandler : BaseHandler<CreatureHandler, CreatureManager>
 {
+    public List<CreatureCptBase> listCreature = new List<CreatureCptBase>();
+
     /// <summary>
     /// 创建生物
     /// </summary>
-    public void CreateCreature(long creatureId, Vector3 position)
+    public void CreateCreature(long creatureId, Vector3 position, Action<CreatureCptBase> callBackForComplete = null)
     {
         CreatureInfoBean creatureInfo = CreatureInfoCfg.GetItemData(creatureId);
         if (creatureInfo == null)
@@ -21,6 +25,10 @@ public class CreatureHandler : BaseHandler<CreatureHandler, CreatureManager>
             CreatureCptBase creatureCpt = objCreature.GetComponent<CreatureCptBase>();
             //设置生物信息
             creatureCpt.SetData(creatureInfo);
+            //回调
+            callBackForComplete?.Invoke(creatureCpt);
+            //添加到列表里
+            listCreature.Add(creatureCpt);
         });
     }
 
@@ -37,7 +45,17 @@ public class CreatureHandler : BaseHandler<CreatureHandler, CreatureManager>
         //获取控件
         CreatureCptLifeProgress creatureCptLife = objLifeProgress.GetComponent<CreatureCptLifeProgress>();
         //设置位置
-        objLifeProgress.transform.localPosition = new Vector3(0,1.5f,0);
+        objLifeProgress.transform.localPosition = new Vector3(0, 1.5f, 0);
         return creatureCptLife;
+    }
+
+    /// <summary>
+    /// 删除生物
+    /// </summary>
+    /// <param name="creatureCpt"></param>
+    public void DestoryCreature(CreatureCptBase creatureCpt)
+    {
+        listCreature.Remove(creatureCpt);
+        Destroy(creatureCpt.gameObject);
     }
 }

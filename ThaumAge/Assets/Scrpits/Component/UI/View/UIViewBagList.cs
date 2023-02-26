@@ -2,11 +2,9 @@
 using UnityEditor;
 using UnityEngine;
 
-public partial class UIViewChestList : BaseUIView
+public partial class UIViewBagList : BaseUIView
 {
-    protected BlockBean blockData;
-    protected BlockMetaChest blockChestData;
-    protected Vector3Int blockWorldPosition;
+    protected ItemMetaBag itemMetaBag;
     public override void Awake()
     {
         base.Awake();
@@ -40,9 +38,9 @@ public partial class UIViewChestList : BaseUIView
             }
         }
         //如果不成功则直接查询整个箱子
-        for (int i = 0; i < blockChestData.items.Length; i++)
+        for (int i = 0; i < itemMetaBag.items.Length; i++)
         {
-            ItemsBean itemData = blockChestData.items[i];
+            ItemsBean itemData = itemMetaBag.items[i];
             if (itemData == null || itemData.itemId == 0)
             {
                 itemData.itemId = uiViewItem.itemId;
@@ -55,32 +53,14 @@ public partial class UIViewChestList : BaseUIView
         return false;
     }
 
-
     /// <summary>
     /// 初始化数据
     /// </summary>
-    public void SetData(Vector3Int worldPosition, int boxSize)
+    public void SetData(ItemMetaBag itemMetaBag)
     {
-        this.blockWorldPosition = worldPosition;
-        //获取对应方块
-        WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(worldPosition, out Block block, out Chunk chunk);
-        BlockBaseChest blockChest = block as BlockBaseChest;
-        //获取方块数据
-        blockChest.GetBlockMetaData(chunk, worldPosition - chunk.chunkData.positionForWorld,out blockData,out  blockChestData);
-
-        if (blockChestData == null) blockChestData = new BlockMetaChest(boxSize);
-
-        ui_ItemList.SetCellCount(blockChestData.items.Length);
+        this.itemMetaBag = itemMetaBag;
+        ui_ItemList.SetCellCount(itemMetaBag.items.Length);
         ui_ItemList.RefreshAllCells();
-    }
-
-    /// <summary>
-    /// 获取数据
-    /// </summary>
-    /// <returns></returns>
-    public string GetDataJson()
-    {
-        return Block.ToMetaData(blockChestData);
     }
 
     /// <summary>
@@ -90,8 +70,8 @@ public partial class UIViewChestList : BaseUIView
     public void OnCellForItem(ScrollGridCell itemCell)
     {
         UIViewItemContainer viewItemContainer = itemCell.GetComponent<UIViewItemContainer>();
-        ItemsBean itemsData = blockChestData.items[itemCell.index];
-        viewItemContainer.SetViewItemByData(UIViewItemContainer.ContainerType.Chest, itemsData, itemCell.index);
+        ItemsBean itemsData = itemMetaBag.items[itemCell.index];
+        viewItemContainer.SetViewItemByData(UIViewItemContainer.ContainerType.Bag, itemsData, itemCell.index);
     }
 
     /// <summary>
@@ -101,21 +81,7 @@ public partial class UIViewChestList : BaseUIView
     /// <param name="itemId"></param>
     public void CallBackForItemChange(UIViewItemContainer itemContainer, long itemId)
     {
-        if (itemContainer.containerType != UIViewItemContainer.ContainerType.Chest)
+        if (itemContainer.containerType != UIViewItemContainer.ContainerType.Bag)
             return;
-        //保存数据
-        SaveChestBlockData();
-    }
-
-    /// <summary>
-    /// 保存数据
-    /// </summary>
-    public void SaveChestBlockData()
-    {
-        //获取对应方块
-        WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(blockWorldPosition, out Block block, out Chunk chunk);
-        string dataJson = Block.ToMetaData(blockChestData);
-        blockData.meta = dataJson;
-        chunk.SetBlockData(blockData);
     }
 }

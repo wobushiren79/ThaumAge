@@ -8,7 +8,12 @@ public class ItemClassGolem : ItemTypeCreature
     public override void CreateCreature(ItemsBean itemData, Vector3Int targetPosition)
     {
         ItemsInfoBean itemsInfo = GetItemsInfo(itemData.itemId);
-        CreatureHandler.Instance.CreateCreature(itemsInfo.type_id, targetPosition + Vector3Int.up);
+        CreatureHandler.Instance.CreateCreature(itemsInfo.type_id, targetPosition + Vector3Int.up, (creature) =>
+        {
+            CreatureCptBaseGolem  golemCreature = creature as CreatureCptBaseGolem;
+            ItemMetaGolem itemMetaGolem = itemData.GetMetaData<ItemMetaGolem>();
+            golemCreature.golemMetaData = itemMetaGolem;
+        });
     }
 
     /// <summary>

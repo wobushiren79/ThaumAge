@@ -1,4 +1,5 @@
-﻿using UnityEditor;
+﻿using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 public class ItemMetaGolem : ItemBaseMeta
@@ -13,4 +14,9 @@ public class ItemMetaGolem : ItemBaseMeta
     public int foot;
     //附件
     public int accessory;
+    //傀儡核心
+    public List<ItemsBean> listGolemCore = new List<ItemsBean>() { new ItemsBean(0,1) };
+
+    //背包数据
+    public ItemMetaBag bagData = new ItemMetaBag(3);
 }

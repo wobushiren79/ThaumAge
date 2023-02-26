@@ -12,15 +12,6 @@ public class BlockMetaChest : BlockMetaBase
         items = new ItemsBean[0];
     }
 
-    public void InitItems(int number)
-    {
-        items = new ItemsBean[number];
-        for (int i = 0; i < items.Length; i++)
-        {
-            items[i] = new ItemsBean();
-        }
-    }
-
     public BlockMetaChest(int number)
     {
         InitItems(number);
@@ -39,6 +30,14 @@ public class BlockMetaChest : BlockMetaBase
             {
                 items[i] = new ItemsBean();
             }
+        }
+    }
+    public void InitItems(int number)
+    {
+        items = new ItemsBean[number];
+        for (int i = 0; i < items.Length; i++)
+        {
+            items[i] = new ItemsBean();
         }
     }
 }
