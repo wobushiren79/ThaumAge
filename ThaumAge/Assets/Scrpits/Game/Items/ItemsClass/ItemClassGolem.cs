@@ -12,7 +12,7 @@ public class ItemClassGolem : ItemTypeCreature
         {
             CreatureCptBaseGolem  golemCreature = creature as CreatureCptBaseGolem;
             ItemMetaGolem itemMetaGolem = itemData.GetMetaData<ItemMetaGolem>();
-            golemCreature.golemMetaData = itemMetaGolem;
+            golemCreature.SetData(itemMetaGolem);
         });
     }
 

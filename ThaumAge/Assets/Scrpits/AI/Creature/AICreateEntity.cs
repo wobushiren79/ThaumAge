@@ -19,6 +19,9 @@ public class AICreateEntity : AIBaseEntity
     public virtual void SetData(CreatureCptBase creatureCpt)
     {
         this.creatureCpt = creatureCpt;
+        //初始化意图
+        InitIntentEntity();
+
         //初始化寻路
         aiNavigation = new AINavigation(this);
         //下一帧 初始化寻一次路，到当前点，防止模型下陷

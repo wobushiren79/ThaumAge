@@ -313,6 +313,7 @@ SpriteAtlas:
     - 276cf8ed8ecc1f342b12a3a2f90b55c0: 21300000
     - 7b7645fdcbc17134287f522c0540587a: 21300000
     - 5466a31ec854ee3429fe6949bc4c4737: 21300000
+    - 4dc6c71eb7bae7c4f8e43c956c0a178e: 21300000
     - 41f8291e30fb1cc4c9da9b2bc7cc3f34: 21300000
     - d0c1a91ed33b55a4292833e482611494: 21300000
     - 16d4bd1e6c6d5344ab09325e246c4d9b: 21300000
@@ -624,6 +625,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 276cf8ed8ecc1f342b12a3a2f90b55c0, type: 3}
   - {fileID: 21300000, guid: 7b7645fdcbc17134287f522c0540587a, type: 3}
   - {fileID: 21300000, guid: 5466a31ec854ee3429fe6949bc4c4737, type: 3}
+  - {fileID: 21300000, guid: 4dc6c71eb7bae7c4f8e43c956c0a178e, type: 3}
   - {fileID: 21300000, guid: 41f8291e30fb1cc4c9da9b2bc7cc3f34, type: 3}
   - {fileID: 21300000, guid: d0c1a91ed33b55a4292833e482611494, type: 3}
   - {fileID: 21300000, guid: 16d4bd1e6c6d5344ab09325e246c4d9b, type: 3}
@@ -934,6 +936,7 @@ SpriteAtlas:
   - icon_item_105901
   - icon_item_102221
   - icon_item_101101
+  - icon_item_4400004
   - icon_item_108206
   - icon_item_103002
   - icon_item_200001

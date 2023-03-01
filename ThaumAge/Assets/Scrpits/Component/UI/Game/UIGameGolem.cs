@@ -25,6 +25,7 @@ public partial class UIGameGolem : UIGameCommonNormal
         {
             //初始化这个傀儡的AI意图
             golem.aiEntity.InitIntentEntity();
+            golem.aiEntity.ChangeIntent(AIIntentEnum.GolemIdle);
         }
     }
 
