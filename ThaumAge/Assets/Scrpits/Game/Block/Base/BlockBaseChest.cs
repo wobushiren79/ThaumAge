@@ -42,7 +42,7 @@ public class BlockBaseChest : Block, IBlockForItemsPutOut
     public override void GetBlockMetaData<T>(Chunk targetChunk, Vector3Int blockLocalPosition, out BlockBean blockData, out T blockMetaData)
     {
         base.GetBlockMetaData(targetChunk, blockLocalPosition, out blockData, out blockMetaData);
-        if(blockMetaData is BlockMetaChest blockMetaChest)
+        if (blockMetaData is BlockMetaChest blockMetaChest)
         {
             if (blockMetaChest.items.Length == 0)
             {
@@ -142,8 +142,31 @@ public class BlockBaseChest : Block, IBlockForItemsPutOut
         chunk.SetBlockData(blockData);
     }
 
+    public bool ItemsPutCheck(Chunk chunk, Vector3Int localPosition, ItemsBean putItem)
+    {
+        GetBlockMetaData(chunk, localPosition, out BlockBean blockData, out BlockMetaChest blockMetaData);
+        return ItemsBean.CheckAddItems(blockMetaData.items, putItem.itemId, putItem.number, putItem.meta);
+    }
+
     public ItemsBean ItemsOut(Chunk chunk, Vector3Int localPosition)
     {
+        GetBlockMetaData(chunk, localPosition, out BlockBean blockData, out BlockMetaChest blockMetaData);
+        if (blockData == null || blockMetaData == null)
+            return null;
+        for (int i = 0; i < blockMetaData.items.Length; i++)
+        {
+            var itemData = blockMetaData.items[i];
+            if (itemData.itemId != 0)
+            {
+                ItemsBean newData = new ItemsBean(itemData);
+                //清空这个道具
+                itemData.ClearData();
+                //保存数据
+                blockData.SetBlockMeta(blockMetaData);
+                chunk.SetBlockData(blockData);
+                return newData;
+            }
+        }
         return null;
     }
     #endregion

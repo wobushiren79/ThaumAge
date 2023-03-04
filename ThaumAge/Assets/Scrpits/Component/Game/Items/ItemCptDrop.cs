@@ -31,7 +31,7 @@ public class ItemCptDrop : BaseMonoBehaviour
         colliderItem = GetComponent<Collider>();
     }
 
-    public virtual void DestroyCpt()
+    public virtual void DestroySelf()
     {
         gameObject.SetActive(false);
         ItemsHandler.Instance.manager.poolItemDrop.Enqueue(this);
@@ -69,7 +69,7 @@ public class ItemCptDrop : BaseMonoBehaviour
         //如果玩家距离物体过远，或者超过存在时间，则删除物体
         if (dis > disForItemsDestory || timeForCreate > timeForItemsDestory)
         {
-            DestroyCpt();
+            DestroySelf();
         }
     }
 
@@ -162,7 +162,7 @@ public class ItemCptDrop : BaseMonoBehaviour
                 if (number == 0)
                 {
                     //如果都加完了 则删除
-                    DestroyCpt();
+                    DestroySelf();
                 }
                 else
                 {
@@ -190,4 +190,5 @@ public class ItemCptDrop : BaseMonoBehaviour
         colliderItem.isTrigger = !isEnable;
         colliderItem.enabled = isEnable;
     }
+
 }

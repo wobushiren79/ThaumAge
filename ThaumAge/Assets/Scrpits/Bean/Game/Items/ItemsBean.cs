@@ -94,6 +94,62 @@ public class ItemsBean
     }
 
     /// <summary>
+    /// 检测是否能把道具完全放入
+    /// </summary>
+    public static bool CheckAddItems(ItemsBean[] arrayContainer, long itemId, int itemNumber, string meta = null)
+    {
+        ItemsInfoBean itemsInfo = ItemsHandler.Instance.manager.GetItemsInfoById(itemId);
+        //首先检测老道具是否能容纳下
+        for (int i = 0; i < arrayContainer.Length; i++)
+        {
+            ItemsBean itemData = arrayContainer[i];
+            if (itemData != null && itemData.itemId == itemId)
+            {
+                if (itemData.number < itemsInfo.max_number)
+                {
+                    int subNumber = itemsInfo.max_number - itemData.number;
+                    //如果增加的数量在该道具的上限之内
+                    if (subNumber >= itemNumber)
+                    {
+                        itemNumber = 0;
+                        break;
+                    }
+                    //如果增加的数量在该道具的上限之外
+                    else
+                    {
+                        itemNumber -= subNumber;
+                    }
+                }
+            }
+        }
+        if (itemNumber <= 0)
+            return true;
+        //再检测新道具是否能容纳下
+        for (int i = 0; i < arrayContainer.Length; i++)
+        {
+            ItemsBean itemData = arrayContainer[i];
+            if (itemData.itemId == 0)
+            {
+                int subNumber = itemsInfo.max_number;
+                //如果增加的数量在该道具的上限之内
+                if (subNumber >= itemNumber)
+                {
+                    itemNumber = 0;
+                    break;
+                }
+                //如果增加的数量在该道具的上限之外
+                else
+                {
+                    itemNumber -= subNumber;
+                }
+            }
+        }
+        if (itemNumber <= 0)
+            return true;
+        return false;
+    }
+
+    /// <summary>
     /// 在容器里有的itemdata中增加数据
     /// </summary>
     /// <returns></returns>

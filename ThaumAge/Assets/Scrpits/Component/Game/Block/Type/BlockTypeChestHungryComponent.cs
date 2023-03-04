@@ -22,7 +22,7 @@ public class BlockTypeChestHungryComponent : BlockTypeComponent
                     //将道具放入方块
                     blockTypeChest.ItemsPut(targetChunk, blockWorldPosition - targetChunk.chunkData.positionForWorld, itemCptDrop.itemDropData.itemData);
                     //删除当前的丢弃
-                    itemCptDrop.DestroyCpt();
+                    itemCptDrop.DestroySelf();
                     //播放箱子动画
                     blockTypeChest.TriggerChest(blockWorldPosition);
                 }

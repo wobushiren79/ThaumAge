@@ -534,11 +534,13 @@ public class ControlForPlayer : ControlForBase
             changIndex = 1;
         }
         UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();
-        userData.SetShortcuts(userData.indexForShortcuts + changIndex);
+        int selectIndex = userData.SetShortcuts(userData.indexForShortcuts + changIndex);
         //刷新手上物品
         GameHandler.Instance.manager.player.RefreshHandItem();
         //刷新UI
         UIHandler.Instance.GetOpenUI().RefreshUI();
+        //事件通知
+        EventHandler.Instance.TriggerEvent(EventsInfo.UIViewShortcuts_ChangeSelect, selectIndex);
     }
 
     /// <summary>

@@ -184,6 +184,15 @@ public class BlockTypeInfernalFurnace : BlockBaseLinkLarge, IBlockForItemsPutOut
     }
 
     /// <summary>
+    /// 检测是否能放下
+    /// </summary>
+    /// <returns></returns>
+    public bool ItemsPutCheck(Chunk chunk, Vector3Int localPosition, ItemsBean putItem)
+    {
+        return true;
+    }
+
+    /// <summary>
     /// 道具取出
     /// </summary>
     public virtual ItemsBean ItemsOut(Chunk chunk, Vector3Int localPosition)

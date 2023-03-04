@@ -21,7 +21,7 @@ public class BlockTypeInfernalFurnaceComponent : BlockTypeComponent
                     //将道具放入方块
                     blockTypeInfernalFurnace.ItemsPut(targetChunk,blockWorldPosition - targetChunk.chunkData.positionForWorld, itemCptDrop.itemDropData.itemData);
                     //删除当前的丢弃主题
-                    itemCptDrop.DestroyCpt();
+                    itemCptDrop.DestroySelf();
                 }
             }
         }
