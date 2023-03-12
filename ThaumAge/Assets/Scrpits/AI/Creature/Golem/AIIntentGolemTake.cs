@@ -14,6 +14,10 @@ public class AIIntentGolemTake : AIBaseIntent
 
     public override void IntentEntering(AIBaseEntity aiEntity)
     {
+        AIGolemEntity aiGolemEntity = aiEntity as AIGolemEntity;
+        //播放闲置动画
+        aiGolemEntity.creatureCpt.creatureAnim.PlayBaseAnim(CreatureAnimBaseState.Idle);
+
         takeStatus = 0;
         timeUpdateForTakeItems = 0;
     }
@@ -65,6 +69,9 @@ public class AIIntentGolemTake : AIBaseIntent
         }
         //向绑定的位置移动
         aiGolemEntity.aiNavigation.SetMovePosition(itemMetaGolemCore.bindBlockWorldPosition + new Vector3(0.5f, 0.5f, 0.5f));
+        //播放动画
+        aiGolemEntity.creatureCpt.creatureAnim.PlayBaseAnim(CreatureAnimBaseState.Walk);
+
         takeStatus = 1;
     }
 
@@ -101,6 +108,8 @@ public class AIIntentGolemTake : AIBaseIntent
                 return;
             }
             takeStatus = 2;
+            //播放闲置动画
+            aiGolemEntity.creatureCpt.creatureAnim.PlayBaseAnim(CreatureAnimBaseState.Idle);
         }
     }
 
@@ -145,6 +154,8 @@ public class AIIntentGolemTake : AIBaseIntent
                 if (outItem != null && outItem.itemId != 0)
                 {
                     itemMetaGolem.bagData.AddItemForBag(outItem);
+                    //播放动画
+                    aiGolemEntity.creatureCpt.creatureAnim.PlayBaseAnim(CreatureAnimBaseState.Take);
                 }
                 //如果箱子空了
                 else

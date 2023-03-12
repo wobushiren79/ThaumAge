@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class CreatureCptBaseGolem : CreatureCptBase
 {
+    [HideInInspector]
     public AIGolemEntity aiEntity;
 
     //傀儡的meta数据

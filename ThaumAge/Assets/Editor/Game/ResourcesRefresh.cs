@@ -192,6 +192,13 @@ public class ResourcesRefresh : Editor
         EditorUtil.RefreshAsset();
     }
 
+    [MenuItem("工具/资源/刷新傀儡资源")]
+    public static void RefreshFBXForGloem()
+    {
+        string pathFBX = "Assets/Art/FBX/Gloems";
+        SkinMeshEditor.CreateCopyMesh(pathFBX, pathFBX);
+    }
+
 
 
     protected static void CreateFBXMatAndSet(string fbxFilesPath)
@@ -286,5 +293,7 @@ public class ResourcesRefresh : Editor
 
             DestroyImmediate(objCreate);
         }
+
+        
     }
 }

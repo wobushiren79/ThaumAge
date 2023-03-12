@@ -67,7 +67,7 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 646ab34d7ac61e344b6f92e7d0f31fc8
+  - m_GUID: b9548898d33a2ac4babb63f4c8522922
     m_Address: Assets/Prefabs/Model/Creature/Golem.prefab
     m_ReadOnly: 0
     m_SerializedLabels: []

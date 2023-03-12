@@ -12,10 +12,15 @@ public class AIIntentGolemIdle : AIBaseIntent
     public override void IntentEntering(AIBaseEntity aiEntity)
     {
         var aiGolemEntity = aiEntity as AIGolemEntity;
+        //播放闲置动画
+        aiGolemEntity.creatureCpt.creatureAnim.PlayBaseAnim(CreatureAnimBaseState.Idle);
+
         if (aiGolemEntity.queueWorkIntent.Count == 0)
             return;
         aiIntentWork = aiGolemEntity.queueWorkIntent.Dequeue();
         aiGolemEntity.queueWorkIntent.Enqueue(aiIntentWork);
+
+
     }
 
     public override void IntentUpdate(AIBaseEntity aiEntity)

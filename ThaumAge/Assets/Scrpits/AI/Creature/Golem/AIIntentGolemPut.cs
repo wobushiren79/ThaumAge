@@ -14,6 +14,10 @@ public class AIIntentGolemPut : AIBaseIntent
 
     public override void IntentEntering(AIBaseEntity aiEntity)
     {
+        AIGolemEntity aiGolemEntity = aiEntity as AIGolemEntity;
+        //播放闲置动画
+        aiGolemEntity.creatureCpt.creatureAnim.PlayBaseAnim(CreatureAnimBaseState.Idle);
+
         putStatus = 0;
         timeUpdateForPutItems = 0;
     }
@@ -65,6 +69,9 @@ public class AIIntentGolemPut : AIBaseIntent
         }
         //向绑定的位置移动
         aiGolemEntity.aiNavigation.SetMovePosition(itemMetaGolemCore.bindBlockWorldPosition+new Vector3(0.5f,0.5f,0.5f));
+
+        //播放闲置动画
+        aiGolemEntity.creatureCpt.creatureAnim.PlayBaseAnim(CreatureAnimBaseState.Walk);
         putStatus = 1;
     }
 
@@ -99,7 +106,9 @@ public class AIIntentGolemPut : AIBaseIntent
             {
                 aiGolemEntity.ChangeIntent(AIIntentEnum.GolemIdle);
                 return;
-            }
+            }            
+            //播放闲置动画
+            aiGolemEntity.creatureCpt.creatureAnim.PlayBaseAnim(CreatureAnimBaseState.Idle);
             putStatus = 2;
         }
     }
@@ -139,6 +148,7 @@ public class AIIntentGolemPut : AIBaseIntent
             //是否有放入接口
             if (targetBlock is IBlockForItemsPutOut blockPutOut)
             {
+
                 Vector3Int localBlockPosition = itemMetaGolemCore.bindBlockWorldPosition - targetChunk.chunkData.positionForWorld;
                 ItemsBean itemPut = itemMetaGolem.bagData.GetItem();
                 //检测是否能放下
@@ -147,6 +157,9 @@ public class AIIntentGolemPut : AIBaseIntent
                 {
                     blockPutOut.ItemsPut(targetChunk, localBlockPosition, itemPut);
                     itemMetaGolem.bagData.RemoveItem(itemPut);
+
+                    //播放动画
+                    aiGolemEntity.creatureCpt.creatureAnim.PlayBaseAnim(CreatureAnimBaseState.Take);
                 }
                 //如果箱子满了 不能放下
                 else

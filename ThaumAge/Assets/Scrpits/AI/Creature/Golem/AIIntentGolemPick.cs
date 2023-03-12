@@ -13,7 +13,11 @@ public class AIIntentGolemPick : AIBaseIntent
     protected ItemCptDrop targetItemDrop;
 
     public override void IntentEntering(AIBaseEntity aiEntity)
-    {
+    {          
+        AIGolemEntity aiGolemEntity = aiEntity as AIGolemEntity;
+        //播放闲置动画
+        aiGolemEntity.creatureCpt.creatureAnim.PlayBaseAnim(CreatureAnimBaseState.Idle);
+
         pickStatus = 0;
     }
 
@@ -83,6 +87,9 @@ public class AIIntentGolemPick : AIBaseIntent
                     targetItemDrop = itemDrop;
                     aiGolemEntity.aiNavigation.SetMovePosition(targetCollider.gameObject.transform.position);
                     pickStatus = 1;
+
+                    //播放移动动画
+                    aiGolemEntity.creatureCpt.creatureAnim.PlayBaseAnim(CreatureAnimBaseState.Walk);
                     return;
                 }
             }
@@ -121,6 +128,13 @@ public class AIIntentGolemPick : AIBaseIntent
                     //删除物体
                     targetItemDrop.DestroySelf();
                 }
+                //播放拿取动画
+                aiGolemEntity.creatureCpt.creatureAnim.PlayBaseAnim(CreatureAnimBaseState.Take);
+            }
+            else
+            {
+                //播放闲置动画
+                aiGolemEntity.creatureCpt.creatureAnim.PlayBaseAnim(CreatureAnimBaseState.Idle);
             }
             pickStatus = 0;
         }

@@ -27,7 +27,10 @@ public class CreatureAnim : CreatureBase
     public void PlayBaseAnim(CreatureAnimBaseState animType)
     {
         animator.SetInteger("state", (int)animType);
-
+        if(animType== CreatureAnimBaseState.Take)
+        {
+            PlayAnim("take");
+        }
     }
 
     /// <summary>
