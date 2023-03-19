@@ -29,23 +29,35 @@ public class SceneMainHandler : SceneBaseHandler<SceneMainHandler, SceneMainMana
     /// <summary>
     /// 改变摄像头
     /// </summary>
-    /// <param name="index"></param>
     public void ChangeCameraByIndex(int index)
     {
         CameraHandler.Instance.ChangeCameraPriority(manager.cameraPositionStart, 0);
         CameraHandler.Instance.ChangeCameraPriority(manager.cameraPosition_1, 0);
         CameraHandler.Instance.ChangeCameraPriority(manager.cameraPosition_2, 0);
         CameraHandler.Instance.ChangeCameraPriority(manager.cameraPosition_3, 0);
+
+        CameraHandler.Instance.ChangeCameraPriority(manager.cameraPosition_1_Start, 0);
+        CameraHandler.Instance.ChangeCameraPriority(manager.cameraPosition_2_Start, 0);
+        CameraHandler.Instance.ChangeCameraPriority(manager.cameraPosition_3_Start, 0);
         switch (index)
         {
             case 1:
                 CameraHandler.Instance.ChangeCameraPriority(manager.cameraPosition_1, 200);
                 break;
+            case 11:
+                CameraHandler.Instance.ChangeCameraPriority(manager.cameraPosition_1_Start, 200);
+                break;
             case 2:
                 CameraHandler.Instance.ChangeCameraPriority(manager.cameraPosition_2, 200);
                 break;
+            case 21:
+                CameraHandler.Instance.ChangeCameraPriority(manager.cameraPosition_2_Start, 200);
+                break;
             case 3:
                 CameraHandler.Instance.ChangeCameraPriority(manager.cameraPosition_3, 200);
+                break;
+            case 31:
+                CameraHandler.Instance.ChangeCameraPriority(manager.cameraPosition_3_Start, 200);
                 break;
             default:
                 CameraHandler.Instance.ChangeCameraPriority(manager.cameraPositionStart, 200);

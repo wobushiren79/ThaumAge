@@ -56,7 +56,7 @@ public class CreatureCptBaseGolem : CreatureCptBase
     public void SetGolemMaterial(int material)
     {
         if (material == 0)
-            material = 10002;
+            material = 10001;
         var materialData = GolemPressInfoCfg.GetItemData(material);
         Texture2D matTex = LoadAddressablesUtil.LoadAssetSync<Texture2D>(materialData.tex);
         if (matTex != null)

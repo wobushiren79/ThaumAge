@@ -210,7 +210,8 @@ public partial class UIBuildingEditorCreate : BaseUIComponent
     public void OnClickForCreateBuilding()
     {
         BuildingEditorHandler.Instance.manager.isStartBuild = false;
-           DialogBean dialogData = new DialogBean();
+        
+        DialogBean dialogData = new DialogBean();
         dialogData.content = $"是否要创建ID为 {ui_BuildingIdEdit.text} 的建筑";
         dialogData.actionSubmit = (view, data) =>
         {

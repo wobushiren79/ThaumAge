@@ -136,10 +136,25 @@ public partial class UIListItemMainUserData : BaseUIView
     /// </summary>
     public void HandleForContinue()
     {
-        //使用数据
-        GameDataHandler.Instance.manager.UseUserData(userData);
-        //改变场景
-        SceneMainHandler.Instance.ChangeScene(ScenesEnum.GameScene);
+        //弹出确认框
+        DialogBean dialogData = new DialogBean();
+        dialogData.content = TextHandler.Instance.GetTextById(20002);
+        dialogData.actionSubmit = (view, data) =>
+        {
+            //使用数据
+            GameDataHandler.Instance.manager.UseUserData(userData);
+            //改变场景
+            SceneMainHandler.Instance.ChangeScene(ScenesEnum.GameScene);
+        };
+        dialogData.actionCancel = (view, data) =>
+        {
+            //还原摄像头
+            SceneMainHandler.Instance.ChangeCameraByIndex(0);
+        };
+        UIHandler.Instance.ShowDialog<UIDialogNormal>(dialogData);
+
+        //设置摄像头
+        SceneMainHandler.Instance.ChangeCameraByIndex(userDataIndex * 10 + 1);
     }
 
     /// <summary>
@@ -168,7 +183,7 @@ public partial class UIListItemMainUserData : BaseUIView
         UIMainCreate uiCreate = UIHandler.Instance.OpenUIAndCloseOther<UIMainCreate>();
         uiCreate.SetUserDataIndex(userDataIndex);
 
-        //设施摄像头
+        //设置摄像头
         SceneMainHandler.Instance.ChangeCameraByIndex(userDataIndex);
         //显示角色
         SceneMainHandler.Instance.manager.ShowCharacterObjByIndex(userDataIndex, true);

@@ -30,7 +30,22 @@ public class SceneMainManager : SceneBaseManager
         }
     }
 
+
+    protected CinemachineVirtualCamera _cameraPosition_1_Start;
+    public CinemachineVirtualCamera cameraPosition_1_Start
+    {
+        get
+        {
+            if (_cameraPosition_1_Start == null)
+            {
+                _cameraPosition_1_Start = GameObject.Find("CameraPosition_1_Start")?.GetComponent<CinemachineVirtualCamera>();
+            }
+            return _cameraPosition_1_Start;
+        }
+    }
+
     protected CinemachineVirtualCamera _cameraPosition_2;
+
     public CinemachineVirtualCamera cameraPosition_2
     {
         get
@@ -40,6 +55,19 @@ public class SceneMainManager : SceneBaseManager
                 _cameraPosition_2 = GameObject.Find("CameraPosition_2")?.GetComponent<CinemachineVirtualCamera>();
             }
             return _cameraPosition_2;
+        }
+    }
+
+    protected CinemachineVirtualCamera _cameraPosition_2_Start;
+    public CinemachineVirtualCamera cameraPosition_2_Start
+    {
+        get
+        {
+            if (_cameraPosition_2_Start == null)
+            {
+                _cameraPosition_2_Start = GameObject.Find("CameraPosition_2_Start")?.GetComponent<CinemachineVirtualCamera>();
+            }
+            return _cameraPosition_2_Start;
         }
     }
 
@@ -56,6 +84,18 @@ public class SceneMainManager : SceneBaseManager
         }
     }
 
+    protected CinemachineVirtualCamera _cameraPosition_3_Start;
+    public CinemachineVirtualCamera cameraPosition_3_Start
+    {
+        get
+        {
+            if (_cameraPosition_3_Start == null)
+            {
+                _cameraPosition_3_Start = GameObject.Find("CameraPosition_3_Start")?.GetComponent<CinemachineVirtualCamera>();
+            }
+            return _cameraPosition_3_Start;
+        }
+    }
 
     protected GameObject _characterObj_1;
     public GameObject characterObj_1

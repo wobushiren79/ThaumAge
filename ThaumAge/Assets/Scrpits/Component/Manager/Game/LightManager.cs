@@ -6,7 +6,9 @@ using UnityEngine.Rendering.HighDefinition;
 public class LightManager : BaseManager
 {
     protected Light _sunLight;
+    protected HDAdditionalLightData _sunLightHD;
     protected Light _moonLight;
+    protected HDAdditionalLightData _moonLightHD;
 
     protected List<HDAdditionalLightData> listHDLightData = new List<HDAdditionalLightData>();
 
@@ -26,6 +28,17 @@ public class LightManager : BaseManager
             return _sunLight;
         }
     }
+    public HDAdditionalLightData sunLightHD
+    {
+        get
+        {
+            if (_sunLightHD == null)
+            {
+                _sunLightHD = sunLight.GetComponent<HDAdditionalLightData>();
+            }
+            return _sunLightHD;
+        }
+    }
 
     public Light moonLight
     {
@@ -37,6 +50,18 @@ public class LightManager : BaseManager
 
             }
             return _moonLight;
+        }
+    }
+
+    public HDAdditionalLightData moonLightHD
+    {
+        get
+        {
+            if (_moonLightHD == null)
+            {
+                _moonLightHD = moonLight.GetComponent<HDAdditionalLightData>();
+            }
+            return _moonLightHD;
         }
     }
 
