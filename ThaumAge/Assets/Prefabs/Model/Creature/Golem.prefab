@@ -204,7 +204,7 @@ GameObject:
   - component: {fileID: 4636966780464941553}
   - component: {fileID: 3614081337802849443}
   m_Layer: 0
-  m_Name: Gloem_Body
+  m_Name: Golem_Body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

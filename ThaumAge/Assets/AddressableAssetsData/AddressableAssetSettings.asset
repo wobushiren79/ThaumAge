@@ -15,7 +15,7 @@ MonoBehaviour:
   m_DefaultGroup: 1261beb35e7b46c4fbf9458f1cd39db6
   m_CachedHash:
     serializedVersion: 2
-    Hash: ce969dd99320711655045241de4665fd
+    Hash: 00000000000000000000000000000000
   m_OptimizeCatalogSize: 0
   m_BuildRemoteCatalog: 0
   m_BundleLocalCatalog: 0
@@ -122,3 +122,4 @@ MonoBehaviour:
     m_Settings: {fileID: 11400000}
     m_NextInstanceId: 0
     m_RegisteredServiceTypeRefs: []
+    m_PingTimeoutInMilliseconds: 5000

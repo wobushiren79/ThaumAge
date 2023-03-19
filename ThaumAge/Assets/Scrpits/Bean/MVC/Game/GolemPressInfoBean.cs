@@ -8,6 +8,10 @@ public partial class GolemPressInfoBean : BaseBean
 	/// </summary>
 	public int golem_part_type;
 	/// <summary>
+	///贴图资源
+	/// </summary>
+	public string tex;
+	/// <summary>
 	///材料（&分隔不同材料） （:分隔道具数量） （|分隔可替换的材料）
 	/// </summary>
 	public string materials;

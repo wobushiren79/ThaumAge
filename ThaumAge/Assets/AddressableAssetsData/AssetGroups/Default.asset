@@ -17,11 +17,6 @@ MonoBehaviour:
     m_SerializedData: []
   m_GUID: 1261beb35e7b46c4fbf9458f1cd39db6
   m_SerializeEntries:
-  - m_GUID: 76273f7083df46a4fb8c1f3a6cd83f50
-    m_Address: Assets/Audio/Sound/audio_sound_eat_1.wav
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 8e0044834839b6841a0d389f4f8a9462
     m_Address: Assets/Prefabs/Game/Block/BlockSelectGolemCore.prefab
     m_ReadOnly: 0
