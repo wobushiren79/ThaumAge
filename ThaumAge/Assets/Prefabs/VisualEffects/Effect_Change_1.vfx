@@ -222,7 +222,7 @@ MonoBehaviour:
   capacity: 1000
   stripCapacity: 16
   particlePerStripCount: 16
-  needsComputeBounds: 1
+  needsComputeBounds: 0
   boundsMode: 1
   m_Space: 0
 --- !u!114 &8926484042661614583
@@ -3777,7 +3777,7 @@ MonoBehaviour:
   capacity: 2500
   stripCapacity: 16
   particlePerStripCount: 16
-  needsComputeBounds: 1
+  needsComputeBounds: 0
   boundsMode: 1
   m_Space: 0
 --- !u!114 &8926484042661615115
