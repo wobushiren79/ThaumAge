@@ -141,7 +141,7 @@ public class BuildingInfoBean : BaseBean
             blockMetaLinkData.linkBasePosition = new Vector3IntBean(basePosition);
             blockMetaLinkData.isBreakAll = false;
             blockMetaLinkData.isBreakMesh = false;
-            blockMetaLinkData.baseBlockType = baseBlock.blockInfo.id;
+            blockMetaLinkData.baseBlockType = (int)baseBlock.blockInfo.id;
             itemChunk.SetBlockForLocal(itemWorldPosition - itemChunk.chunkData.positionForWorld, BlockTypeEnum.LinkLargeChild, baseBlockDirection, blockMetaLinkData.ToJson());
         }
     }

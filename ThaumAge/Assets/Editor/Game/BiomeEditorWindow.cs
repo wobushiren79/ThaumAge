@@ -120,7 +120,7 @@ public class BiomeEditorWindow : EditorWindow
         {
             if (EditorUI.GUIButton("创建生态", 150))
             {
-                biomeInfo.link_id = biomeInfo.id;
+                biomeInfo.link_id = (int)biomeInfo.id;
                 biomeInfo.valid = 1;
                 bool isSuccess = serviceForBiomeInfo.UpdateData(biomeInfo);
                 if (!isSuccess)
@@ -133,7 +133,7 @@ public class BiomeEditorWindow : EditorWindow
         {
             if (EditorUI.GUIButton("更新生态", 150))
             {
-                biomeInfo.link_id = biomeInfo.id;
+                biomeInfo.link_id = (int)biomeInfo.id;
                 bool isSuccess = serviceForBiomeInfo.UpdateData(biomeInfo);
                 if (!isSuccess)
                 {

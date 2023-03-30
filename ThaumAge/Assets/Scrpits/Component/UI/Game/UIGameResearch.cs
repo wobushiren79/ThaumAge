@@ -130,9 +130,9 @@ public partial class UIGameResearch : UIGameCommonNormal, IRadioGroupCallBack
         var researchData = researchView.researchInfo;
 
         UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();
-        var progressData = userData.userAchievement.GetResearchProgressData(researchData.id);
+        var progressData = userData.userAchievement.GetResearchProgressData((int)researchData.id);
         //判断是否已经解锁
-        bool isUnlock = userData.userAchievement.CheckUnlockResearch(researchData.id);
+        bool isUnlock = userData.userAchievement.CheckUnlockResearch((int)researchData.id);
         if (isUnlock)
         {
             //如果已经有数据
@@ -152,7 +152,7 @@ public partial class UIGameResearch : UIGameCommonNormal, IRadioGroupCallBack
                     UIHandler.Instance.ToastHint<ToastView>(TextHandler.Instance.GetTextById(30002));
                     return;
                 }
-                userData.userAchievement.AddResearchProgressData(researchData.id, researchData.time);
+                userData.userAchievement.AddResearchProgressData((int)researchData.id, researchData.time);
                 //扣除材料
                 userData.RemoveItem(listSelectMaterialsData);
                 //刷新UI

@@ -154,9 +154,9 @@ public class ItemBaseBuckets : Item
             }
 
             ItemMetaBuckets itemMetaBuckets = itemData.GetMetaData<ItemMetaBuckets>();
-            ItemsInfoBean itemsInfo = ItemsHandler.Instance.manager.GetItemsInfoByBlockId(closeBlock.blockInfo.id);
+            ItemsInfoBean itemsInfo = ItemsHandler.Instance.manager.GetItemsInfoByBlockId((int)closeBlock.blockInfo.id);
             //扣除道具
-            itemMetaBuckets.itemIdForSomething = itemsInfo.id;
+            itemMetaBuckets.itemIdForSomething = (int)itemsInfo.id;
             itemData.SetMetaData(itemMetaBuckets);
 
             ///播放音效

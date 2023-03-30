@@ -82,7 +82,7 @@ public partial class UIBuildingEditorCreate : BaseUIComponent
             var blockInfo = arrayBlockInfo[i];
             if (blockInfo != null)
             {
-                ItemsInfoBean itemsInfo = ItemsHandler.Instance.manager.GetItemsInfoByBlockId(blockInfo.id);
+                ItemsInfoBean itemsInfo = ItemsHandler.Instance.manager.GetItemsInfoByBlockId((int)blockInfo.id);
                 if (itemsInfo != null)
                 {
                     listBlockInfo.Add(blockInfo);
@@ -248,7 +248,7 @@ public partial class UIBuildingEditorCreate : BaseUIComponent
             //加载建筑
             BuildingEditorHandler.Instance.LoadBuilding(long.Parse(ui_BuildingIdEdit.text), (data) =>
             {
-                SetUIBuildingId(data.id);
+                SetUIBuildingId((int)data.id);
                 SetUIBuildingName(data.name_cn);
                 this.WaitExecuteSeconds(0.1f, () =>
                 {

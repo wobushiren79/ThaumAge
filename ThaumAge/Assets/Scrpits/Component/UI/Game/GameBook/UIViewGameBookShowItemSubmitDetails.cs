@@ -117,7 +117,7 @@ public partial class UIViewGameBookShowItemSubmitDetails : BaseUIView
         SetNumber(curItemNumber, itemData.itemNumber);
 
         //添加点位颜色
-        bool isUnlockSelf = userData.userAchievement.CheckUnlockBookModelDetails(bookModelDetailsInfo.id);
+        bool isUnlockSelf = userData.userAchievement.CheckUnlockBookModelDetails((int)bookModelDetailsInfo.id);
         if (isUnlockSelf)
         {
             SetStatus(2);

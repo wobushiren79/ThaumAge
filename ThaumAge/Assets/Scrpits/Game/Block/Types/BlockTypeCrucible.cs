@@ -214,7 +214,7 @@ public class BlockTypeCrucible : Block
         GetCloseBlockByDirection(targetChunk, blockLocalPosition, DirectionEnum.Down, out Block downBlock, out Chunk downChunk, out Vector3Int downLocalPosition);
         if (downChunk != null && downBlock != null)
         {
-            ItemsInfoBean itemInfoBlock = ItemsHandler.Instance.manager.GetItemsInfoByBlockId(downBlock.blockInfo.id);
+            ItemsInfoBean itemInfoBlock = ItemsHandler.Instance.manager.GetItemsInfoByBlockId((int)downBlock.blockInfo.id);
             if (itemInfoBlock.GetElemental(ElementalTypeEnum.Fire) >= WaterLevelMax)
             {
                 return true;

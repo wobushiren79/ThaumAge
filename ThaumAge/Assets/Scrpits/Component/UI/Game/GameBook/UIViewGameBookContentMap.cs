@@ -75,11 +75,11 @@ public partial class UIViewGameBookContentMap : BaseUIView
         }
         listMapItem.Clear();
         //获取数据
-        var listBookModelInfoDetails = BookModelDetailsInfoCfg.GetItemDataByModel(bookModelInfo.id);
+        var listBookModelInfoDetails = BookModelDetailsInfoCfg.GetItemDataByModel((int)bookModelInfo.id);
         for (int i = 0; i < listBookModelInfoDetails.Count; i++)
         {
             var itemData = listBookModelInfoDetails[i];
-            dicBookModelInfoDetails.Add(itemData.id, itemData);
+            dicBookModelInfoDetails.Add((int)itemData.id, itemData);
         }
 
         if (listBookModelInfoDetails == null || listBookModelInfoDetails.Count == 0)

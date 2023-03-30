@@ -79,7 +79,7 @@ public class BuildingEditorHandler : BaseHandler<BuildingEditorHandler, Building
         {
             BuildingEditorModel blockEditor = itemData.Value;
             BuildingBean itemBlockData = new BuildingBean();
-            itemBlockData.blockId = blockEditor.blockInfo.id;
+            itemBlockData.blockId = (int)blockEditor.blockInfo.id;
             itemBlockData.direction = (int)blockEditor.blockDirection;
             itemBlockData.position = itemData.Key;
             itemBlockData.randomRate = blockEditor.randomRate;

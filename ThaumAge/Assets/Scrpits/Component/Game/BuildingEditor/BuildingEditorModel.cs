@@ -25,7 +25,7 @@ public class BuildingEditorModel : BaseMonoBehaviour
         this.blockDirection = blockDirection;
         this.blockInfo = blockInfo;
 
-        Block targetBlock = BlockHandler.Instance.manager.GetRegisterBlock(blockInfo.id);
+        Block targetBlock = BlockHandler.Instance.manager.GetRegisterBlock((int)blockInfo.id);
         Mesh targetMesh = targetBlock.blockShape.GetCompleteMeshData(null, Vector3Int.zero, BuildingEditorHandler.Instance.manager.curBlockDirection);
 
         //显示问题    //向下移动0.5个单位

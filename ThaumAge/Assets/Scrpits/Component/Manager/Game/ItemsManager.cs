@@ -260,7 +260,7 @@ public class ItemsManager : BaseManager,IItemsInfoView
                 Item item = ReflexUtil.CreateInstance<Item>($"{itemInfo.link_class}");
                 if (item != null)
                 {
-                    RegisterItem(itemInfo.id, item);
+                    RegisterItem((int)itemInfo.id, item);
                 }
             }
         }

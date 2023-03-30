@@ -624,7 +624,7 @@ public class Block
                 BlockMetaBaseLink itemBlockMetaLinkData = new BlockMetaBaseLink();
                 itemBlockMetaLinkData.level = 1;
                 itemBlockMetaLinkData.linkBasePosition = new Vector3IntBean(localPosition + chunk.chunkData.positionForWorld);
-                itemBlockMetaLinkData.baseBlockType = blockInfo.id;
+                itemBlockMetaLinkData.baseBlockType = (int)blockInfo.id;
                 chunk.SetBlockForWorld(closeWorldPosition, BlockTypeEnum.LinkChild, blockDirection, ToMetaData(itemBlockMetaLinkData));
             }
         }

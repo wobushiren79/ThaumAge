@@ -24,7 +24,7 @@ public partial class UIViewGameBookShowItemSubmit : BaseUIView
     public void SetData(BookModelDetailsInfoBean bookModelDetailsInfo)
     {
         this.bookModelDetailsInfo = bookModelDetailsInfo;
-        SetSubmitState(bookModelDetailsInfo.id);
+        SetSubmitState((int)bookModelDetailsInfo.id);
         SetUnlockItems(bookModelDetailsInfo.GetUnlockItems());
     }
 
@@ -100,7 +100,7 @@ public partial class UIViewGameBookShowItemSubmit : BaseUIView
         //    userData.RemoveItem(itemUnlock.itemId, itemUnlock.number);
         //}
         //保存数据
-        userData.userAchievement.UnlockBookModelDetails(bookModelDetailsInfo.id);
+        userData.userAchievement.UnlockBookModelDetails((int)bookModelDetailsInfo.id);
         //通知UI更新
         TriggerEvent(EventsInfo.UIGameBook_MapItemRefresh, bookModelDetailsInfo);
         TriggerEvent(EventsInfo.UIGameBook_RefreshLabels);

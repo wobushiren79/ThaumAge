@@ -37,7 +37,7 @@ public partial class UIItemBuildingEditorCreateBlockSelect : BaseUIView
     /// <param name="iconKey"></param>
     public void SetBlockIcon(BlockInfoBean blockInfo)
     {
-        ItemsInfoBean itemsInfo = ItemsHandler.Instance.manager.GetItemsInfoByBlockId(blockInfo.id);
+        ItemsInfoBean itemsInfo = ItemsHandler.Instance.manager.GetItemsInfoByBlockId((int)blockInfo.id);
         Item item = ItemsHandler.Instance.manager.GetRegisterItem(itemsInfo.id, (ItemsTypeEnum)itemsInfo.items_type);
         item.SetItemIcon(null, itemsInfo, ui_Icon);
     }

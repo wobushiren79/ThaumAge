@@ -99,7 +99,7 @@ public partial class UIViewItemResearch : BaseUIView
     public void SetUnlockPro()
     {
         UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();
-        bool isUnlock = userData.userAchievement.CheckUnlockResearch(researchInfo.id);
+        bool isUnlock = userData.userAchievement.CheckUnlockResearch((int)researchInfo.id);
         if (isUnlock)
         {
             ui_Icon.materialForRendering.SetFloat("_EffectAmount", 0);
@@ -107,7 +107,7 @@ public partial class UIViewItemResearch : BaseUIView
             ui_ResearchPro.ShowObj(false);
             return;
         }
-        ProgressBean progressData = userData.userAchievement.GetResearchProgressData(researchInfo.id);
+        ProgressBean progressData = userData.userAchievement.GetResearchProgressData((int)researchInfo.id);
         if (progressData == null || progressData.progress == 0)
         {
             ui_Icon.materialForRendering.SetFloat("_EffectAmount", 1);

@@ -112,7 +112,7 @@ public class ItemClassElementalPowderThaum : Item
                 blockMetaLinkData.linkBasePosition = new Vector3IntBean(basePosition);
                 blockMetaLinkData.isBreakAll = false;
                 blockMetaLinkData.isBreakMesh = false;
-                blockMetaLinkData.baseBlockType = targetBlock.blockInfo.id;
+                blockMetaLinkData.baseBlockType = (int)targetBlock.blockInfo.id;
 
                 //这里直接使用taragetChunk 因为再同一个区块
                 taragetChunk.SetBlockForLocal(basePosition, BlockTypeEnum.InfusionAltar, baseBlockDirection, blockMetaLinkData.ToJson());
@@ -185,7 +185,7 @@ public class ItemClassElementalPowderThaum : Item
                 blockMetaLinkData.linkBasePosition = new Vector3IntBean(basePosition);
                 blockMetaLinkData.isBreakAll = false;
                 blockMetaLinkData.isBreakMesh = true;
-                blockMetaLinkData.baseBlockType = targetBlock.blockInfo.id;
+                blockMetaLinkData.baseBlockType = (int)targetBlock.blockInfo.id;
                 baseChunk.SetBlockForLocal(basePosition - baseChunk.chunkData.positionForWorld, BlockTypeEnum.InfernalFurnace, baseBlockDirection, blockMetaLinkData.ToJson());
                 //播放音效
                 AudioHandler.Instance.PlaySound(3, targetPosition);
@@ -236,7 +236,7 @@ public class ItemClassElementalPowderThaum : Item
                 blockMetaLinkData.linkBasePosition = new Vector3IntBean(basePosition);
                 blockMetaLinkData.isBreakAll = false;
                 blockMetaLinkData.isBreakMesh = false;
-                blockMetaLinkData.baseBlockType = targetBlock.blockInfo.id;
+                blockMetaLinkData.baseBlockType = (int)targetBlock.blockInfo.id;
 
                 //这里直接使用taragetChunk 因为再同一个区块
                 taragetChunk.SetBlockForLocal(basePosition, BlockTypeEnum.GolemPress, baseBlockDirection, blockMetaLinkData.ToJson());

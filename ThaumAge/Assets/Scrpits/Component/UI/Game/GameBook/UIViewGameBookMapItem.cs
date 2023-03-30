@@ -54,7 +54,7 @@ public partial class UIViewGameBookMapItem : BaseUIView
     public void SetItemState()
     {
         UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();
-        bool isUnlock = userData.userAchievement.CheckUnlockBookModelDetails(bookModelDetailsInfo.id);
+        bool isUnlock = userData.userAchievement.CheckUnlockBookModelDetails((int)bookModelDetailsInfo.id);
         //判断是否解锁
         if (isUnlock)
         {
@@ -132,8 +132,8 @@ public partial class UIViewGameBookMapItem : BaseUIView
                 lineViewItem.listPosition.Add(endPosition);
 
                 //添加点位颜色
-                bool isUnlockSelf = userData.userAchievement.CheckUnlockBookModelDetails(bookModelDetailsInfo.id);
-                bool isUnlockPreShow = userData.userAchievement.CheckUnlockBookModelDetails(itemPreShowData.id);
+                bool isUnlockSelf = userData.userAchievement.CheckUnlockBookModelDetails((int)bookModelDetailsInfo.id);
+                bool isUnlockPreShow = userData.userAchievement.CheckUnlockBookModelDetails((int)itemPreShowData.id);
                 //如果前置已经解锁
                 if (isUnlockPreShow)
                 {

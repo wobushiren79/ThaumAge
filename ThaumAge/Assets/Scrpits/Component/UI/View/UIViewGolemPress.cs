@@ -187,15 +187,15 @@ public partial class UIViewGolemPress : BaseUIView, SelectView.ICallBack
         userData.RemoveItem(listSelectMaterialsData);
 
         ItemMetaGolem itemMetaGolem = new ItemMetaGolem();
-        itemMetaGolem.material = listGolemPressMaterial[indexSelectMaterial].id;
+        itemMetaGolem.material = (int)listGolemPressMaterial[indexSelectMaterial].id;
         if (indexSelectHead != 0)
-            itemMetaGolem.head = listGolemPressHead[indexSelectHead].id;
+            itemMetaGolem.head = (int)listGolemPressHead[indexSelectHead].id;
         if (indexSelectHand != 0)
-            itemMetaGolem.hand = listGolemPressHand[indexSelectHand].id;
+            itemMetaGolem.hand = (int)listGolemPressHand[indexSelectHand].id;
         if (indexSelectFoot != 0)
-            itemMetaGolem.foot = listGolemPressFoot[indexSelectFoot].id;
+            itemMetaGolem.foot = (int)listGolemPressFoot[indexSelectFoot].id;
         if (indexSelectAccessory != 0)
-            itemMetaGolem.accessory = listGolemPressAccessory[indexSelectAccessory].id;
+            itemMetaGolem.accessory = (int)listGolemPressAccessory[indexSelectAccessory].id;
 
         //设置核心数量
         int golemCoreNum = 1;

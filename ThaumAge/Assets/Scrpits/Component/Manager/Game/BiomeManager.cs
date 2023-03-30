@@ -75,7 +75,7 @@ public class BiomeManager : BaseManager
         for (int i = 0; i < listData.Count; i++)
         {
             BuildingInfoBean itemInfo = listData[i];
-            dicBuildingInfo.Add(itemInfo.id, itemInfo);
+            dicBuildingInfo.Add((int)itemInfo.id, itemInfo);
         }
     }
 

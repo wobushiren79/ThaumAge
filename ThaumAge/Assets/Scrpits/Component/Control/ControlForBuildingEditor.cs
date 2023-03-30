@@ -76,7 +76,7 @@ public class ControlForBuildingEditor : ControlForBase
         BlockInfoBean curSelectBlockInfo = BuildingEditorHandler.Instance.manager.curSelectBlockInfo;
         if (curSelectBlockInfo != null)
         {
-            BuildingEditorHandler.Instance.BuildBlock(Vector3Int.RoundToInt(objSelect.transform.position), curSelectBlockInfo.id, BuildingEditorHandler.Instance.manager.curBlockDirection);
+            BuildingEditorHandler.Instance.BuildBlock(Vector3Int.RoundToInt(objSelect.transform.position), (int)curSelectBlockInfo.id, BuildingEditorHandler.Instance.manager.curBlockDirection);
         }
     }
 

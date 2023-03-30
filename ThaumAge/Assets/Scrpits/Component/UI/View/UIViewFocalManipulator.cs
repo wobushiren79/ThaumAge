@@ -142,7 +142,7 @@ public partial class UIViewFocalManipulator : BaseUIView, SelectView.ICallBack
             {
                 //判断是否解锁
                 UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();
-                bool isUnlock = userData.userAchievement.CheckUnlockResearch(itemData.id);
+                bool isUnlock = userData.userAchievement.CheckUnlockResearch((int)itemData.id);
                 if (isUnlock)
                 {
                     listTargetDataName.Add(itemData.GetName());
