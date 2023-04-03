@@ -254,7 +254,7 @@ public class Item
         //播放破坏音效
         if (itemsData == null)
         {
-            AudioHandler.Instance.PlaySound(351);
+            AudioHandler.Instance.PlayNormalDigSound();
             return;
         }
         ItemsInfoBean itemsInfo = GetItemsInfo(itemsData.itemId);
@@ -265,7 +265,7 @@ public class Item
         }
         else
         {
-            AudioHandler.Instance.PlaySound(351);
+            AudioHandler.Instance.PlayNormalDigSound();
         }
     }
 
@@ -277,7 +277,7 @@ public class Item
         //播放破坏音效
         if (itemsData == null)
         {
-            AudioHandler.Instance.PlaySound(351);
+            AudioHandler.Instance.PlayNormalDigSound();
             return;
         }
         ItemsInfoBean itemsInfo = GetItemsInfo(itemsData.itemId);
@@ -288,7 +288,7 @@ public class Item
         }
         else
         {
-            AudioHandler.Instance.PlaySound(351);
+            AudioHandler.Instance.PlayNormalDigSound();
         }
     }
 

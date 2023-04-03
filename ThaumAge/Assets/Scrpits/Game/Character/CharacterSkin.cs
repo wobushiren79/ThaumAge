@@ -40,7 +40,6 @@ public class CharacterSkin : CharacterBase
         headRenderer = character.characterHead.GetComponent<MeshRenderer>();
         bodyRenderer = character.characterBody.GetComponentInChildren<SkinnedMeshRenderer>();
         objHairContainer = character.characterHair;
-
         if (this.headRenderer != null)
         {
             headMat = headRenderer.material;
@@ -114,7 +113,7 @@ public class CharacterSkin : CharacterBase
                         objHair.transform.localPosition = Vector3.zero;
                         //objHair.transform.localEulerAngles = Vector3.zero;
                         MeshRenderer hairMeshRebderer = objHair.GetComponentInChildren<MeshRenderer>();
-                        hairMat = hairMeshRebderer.sharedMaterial;
+                        hairMat = hairMeshRebderer.material;
 
                         //如果是玩家 再刷新一次头部显示
                         if (character.creatureData.GetCreatureType() == CreatureTypeEnum.Player)
