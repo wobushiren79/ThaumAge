@@ -199,7 +199,7 @@ public partial class ItemsSynthesisCfg
                 foreach (var itemDataType in itemSynthesisTypes)
                 {
                     //如果是默认的 那不用判断是否解锁 默认解锁
-                    if (itemDataType == (int)ItemsSynthesisTypeEnum.Self)
+                    if (itemDataType == (int)ItemsSynthesisTypeEnum.Basics)
                     {
                         hasSelf = true;
                         break;
@@ -222,6 +222,10 @@ public partial class ItemsSynthesisCfg
         return listData;
     }
 
+    /// <summary>
+    /// 获取坩埚的合成类型
+    /// </summary>
+    /// <returns></returns>
     public static List<ItemsSynthesisBean> GetItemsSynthesisForCrucible()
     {
         if (listItemsSynthesisForCrucible.IsNull())

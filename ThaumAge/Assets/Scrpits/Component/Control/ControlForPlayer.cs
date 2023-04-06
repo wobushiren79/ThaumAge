@@ -36,6 +36,9 @@ public class ControlForPlayer : ControlForBase
     //是否在地面
     private bool isGround = true;
 
+    private float timeWalkUpdate = 0;
+    private float timeWalkUpdateMax = 0.5f;
+
     private InputAction inputActionUseL;
     private InputAction inputActionUseR;
     private InputAction inputActionUseFace;
@@ -249,6 +252,14 @@ public class ControlForPlayer : ControlForBase
             rbPlayer.MovePosition(rbPlayer.transform.position + playerVelocity);
             //高度翻越处理
             HandleForStepClimb();
+
+            timeWalkUpdate += Time.deltaTime;
+            float tempTimeWalkUpdateMax = timeWalkUpdateMax / (totalSpeedMove / speedMove);
+            if (timeWalkUpdate > tempTimeWalkUpdateMax)
+            {
+                AudioHandler.Instance.PlayWalkSound();
+                timeWalkUpdate = 0;
+            }
         }
     }
 
@@ -300,6 +311,7 @@ public class ControlForPlayer : ControlForBase
                 isJumpCheck = false;
                 isJump = false;
                 character.characterAnim.creatureAnim.PlayJump(isJump);
+                AudioHandler.Instance.PlayWalkSound();
             }
         }
     }

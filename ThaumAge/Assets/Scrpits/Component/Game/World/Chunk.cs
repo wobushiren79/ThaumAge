@@ -15,11 +15,11 @@ public class Chunk
     public ChunkComponent chunkComponent;
 
     //需要更新事件的方块（频率每0.2秒一次）
-    public HashSet<Vector3Int> listEventUpdateForSecTiny = new HashSet<Vector3Int>();
+    public List<Vector3Int> listEventUpdateForSecTiny = new List<Vector3Int>();
     //需要更新事件的方块（频率每秒一次）
-    public HashSet<Vector3Int> listEventUpdateForSec = new HashSet<Vector3Int>();
+    public List<Vector3Int> listEventUpdateForSec = new List<Vector3Int>();
     //需要更新事件的方块（频率每秒一次）
-    public HashSet<Vector3Int> listEventUpdateForMin = new HashSet<Vector3Int>();
+    public List<Vector3Int> listEventUpdateForMin = new List<Vector3Int>();
 
     //需要创建方块实力的列表
     public ConcurrentQueue<Vector3Int> listBlockModelUpdate = new ConcurrentQueue<Vector3Int>();
@@ -93,7 +93,7 @@ public class Chunk
     /// </summary>
     public void SetData(Vector3Int worldPosition, int width, int height)
     {
-        chunkData = new ChunkData(this,worldPosition, width, height);
+        chunkData = new ChunkData(this, worldPosition, width, height);
         chunkMeshData = new ChunkMeshData();
     }
 
@@ -158,11 +158,13 @@ public class Chunk
     /// <param name="blockData"></param>
     public void SetBlockData(BlockBean blockData, bool isSaveData = true)
     {
+        if (chunkSaveData == null)
+            return;
         int index = chunkData.GetIndexByPosition(blockData.localPosition);
         chunkSaveData.dicBlockData[index] = blockData;
 
         //异步保存数据
-        if(isSaveData)
+        if (isSaveData)
             this.isSaveData = isSaveData;
     }
 
@@ -378,17 +380,17 @@ public class Chunk
     /// <param name="position"></param>
     public void RemoveBlockForWorld(Vector3Int worldPosition, bool isSaveData = true)
     {
-        SetBlockForWorld(worldPosition, BlockTypeEnum.None, isSaveData: isSaveData, updateChunkType : 2);
+        SetBlockForWorld(worldPosition, BlockTypeEnum.None, isSaveData: isSaveData, updateChunkType: 2);
     }
     public void RemoveBlockForLocal(Vector3Int localPosition, bool isSaveData = true)
     {
-        SetBlockForLocal(localPosition, BlockTypeEnum.None, isSaveData: isSaveData, updateChunkType : 2);
+        SetBlockForLocal(localPosition, BlockTypeEnum.None, isSaveData: isSaveData, updateChunkType: 2);
     }
 
     /// <summary>
     /// 设置方块
     /// </summary>
-    public void SetBlockForWorld(Vector3Int worldPosition, BlockTypeEnum blockType, 
+    public void SetBlockForWorld(Vector3Int worldPosition, BlockTypeEnum blockType,
         BlockDirectionEnum direction = BlockDirectionEnum.UpForward, string meta = null, bool isRefreshMesh = true, bool isSaveData = true, bool isRefreshBlockRange = true, int updateChunkType = 1)
     {
         Vector3Int blockLocalPosition = worldPosition - chunkData.positionForWorld;
@@ -510,15 +512,16 @@ public class Chunk
     {
         try
         {
-            foreach (var localPosition in listEventUpdateForSecTiny)
+            for (int i = 0; i < listEventUpdateForSecTiny.Count; i++)
             {
+                var localPosition = listEventUpdateForSecTiny[i];
                 Block block = chunkData.GetBlockForLocal(localPosition);
                 block.EventBlockUpdateForSecTiny(this, localPosition);
             }
         }
-        catch
+        catch (Exception e)
         {
-
+            LogUtil.LogError($"listEventUpdateForSecTiny 循环出错{e.ToString()}");
         }
     }
 
@@ -526,30 +529,32 @@ public class Chunk
     {
         try
         {
-            foreach (var localPosition in listEventUpdateForSec)
+            for (int i = 0; i < listEventUpdateForSec.Count; i++)
             {
+                var localPosition = listEventUpdateForSec[i];
                 Block block = chunkData.GetBlockForLocal(localPosition);
                 block.EventBlockUpdateForSec(this, localPosition);
             }
         }
-        catch
+        catch (Exception e)
         {
-
+            LogUtil.LogError($"listEventUpdateForSec 循环出错{e.ToString()}");
         }
     }
     public void HandleForEventUpdateForMin()
     {
         try
         {
-            foreach (var localPosition in listEventUpdateForMin)
+            for (int i = 0; i < listEventUpdateForMin.Count; i++)
             {
+                var localPosition = listEventUpdateForMin[i];
                 Block block = chunkData.GetBlockForLocal(localPosition);
                 block.EventBlockUpdateForMin(this, localPosition);
             }
         }
-        catch
+        catch (Exception e)
         {
-
+            LogUtil.LogError($"listEventUpdateForMin 循环出错{e.ToString()}");
         }
     }
 

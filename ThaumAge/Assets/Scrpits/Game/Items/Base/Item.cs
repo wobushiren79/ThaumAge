@@ -213,7 +213,15 @@ public class Item
         }
         else
         {
-            PlayItemSoundUseL(itemsData);
+            if (targetBlock.blockInfo.sound_break.IsNull())
+            {
+                PlayItemSoundUseL(itemsData);
+            }
+            else
+            {
+                int soundId = int.Parse(targetBlock.blockInfo.sound_break);
+                AudioHandler.Instance.PlaySound(soundId);
+            }
         }
     }
 
@@ -230,7 +238,16 @@ public class Item
         {
             blockUseStop = targetBlock.TargetUseBlock(user, itemData, targetChunk, targetPosition - targetChunk.chunkData.positionForWorld);
         }
-        PlayItemSoundUseR(itemData);
+        if (targetBlock.blockInfo.sound_break.IsNull())
+        {
+            PlayItemSoundUseR(itemData);
+        }
+        else
+        {
+            int soundId = int.Parse(targetBlock.blockInfo.sound_break);
+            AudioHandler.Instance.PlaySound(soundId);
+        }
+
         //返回是否被方块的右键点击事件阻挡
         return blockUseStop;
     }

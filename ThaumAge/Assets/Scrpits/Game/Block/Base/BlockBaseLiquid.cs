@@ -165,7 +165,7 @@ public class BlockBaseLiquid : Block
     {
         WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(wPos, out Block closeBlock, out BlockDirectionEnum closeDirection, out Chunk closeChunk);
         //如果没有区块 则不能流动
-        if (closeChunk == null)
+        if (closeChunk == null || !closeChunk.isInit)
             return false;
         //如果方块是空气 则可以流动
         if (closeBlock == null || closeBlock.blockType == BlockTypeEnum.None)

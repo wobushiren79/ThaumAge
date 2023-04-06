@@ -20,7 +20,7 @@ public partial class ItemsSynthesisBean : BaseBean
 	/// </summary>
 	public string elemental;
 	/// <summary>
-	///合成类型(用|分割) 0自身  1基础制造台 11神秘制造台 21坩埚
+	///合成类型(用|分割) 0自带 1自身 2基础制造台 11神秘制造台 21坩埚
 	/// </summary>
 	public string type_synthesis;
 	/// <summary>

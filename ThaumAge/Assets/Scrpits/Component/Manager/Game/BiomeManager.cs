@@ -167,17 +167,17 @@ public class BiomeManager : BaseManager
                     arrayBiome[0] = BiomeTypeEnum.Test;
                     break;
                 case WorldTypeEnum.Main:
-                    arrayBiome = new BiomeTypeEnum[10];
-                    arrayBiome[0] = BiomeTypeEnum.Prairie;
-                    arrayBiome[1] = BiomeTypeEnum.Forest;
-                    arrayBiome[2] = BiomeTypeEnum.Desert;
-                    arrayBiome[3] = BiomeTypeEnum.Mountain;
-                    arrayBiome[4] = BiomeTypeEnum.PrairieLava;
-                    arrayBiome[5] = BiomeTypeEnum.Ocean;
-                    arrayBiome[6] = BiomeTypeEnum.Swamp;
-                    arrayBiome[7] = BiomeTypeEnum.Snowland;
-                    arrayBiome[8] = BiomeTypeEnum.ForestMagic;
-                    arrayBiome[9] = BiomeTypeEnum.ForestBirch;
+                    arrayBiome = new BiomeTypeEnum[1];
+                    //arrayBiome[0] = BiomeTypeEnum.Prairie;
+                    arrayBiome[0] = BiomeTypeEnum.Forest;
+                    //arrayBiome[2] = BiomeTypeEnum.Desert;
+                    //arrayBiome[3] = BiomeTypeEnum.Mountain;
+                    //arrayBiome[4] = BiomeTypeEnum.PrairieLava;
+                    //arrayBiome[5] = BiomeTypeEnum.Ocean;
+                    //arrayBiome[6] = BiomeTypeEnum.Swamp;
+                    //arrayBiome[7] = BiomeTypeEnum.Snowland;
+                    //arrayBiome[8] = BiomeTypeEnum.ForestMagic;
+                    //arrayBiome[9] = BiomeTypeEnum.ForestBirch;
                     break;
                 case WorldTypeEnum.Launch:
                     arrayBiome = new BiomeTypeEnum[1];

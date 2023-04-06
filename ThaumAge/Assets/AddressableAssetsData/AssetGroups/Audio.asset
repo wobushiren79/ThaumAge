@@ -227,6 +227,66 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 7cbb423818e9b1a408b598bde87b85ce
+    m_Address: Assets/Audio/Sound/audio_sound_dig_10.wav
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 3609b328088da5447987f1965c67fb47
+    m_Address: Assets/Audio/Sound/audio_sound_walk_5.wav
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: d83a73c17a49ea84cb34e524ba54962c
+    m_Address: Assets/Audio/Sound/audio_sound_walk_7.wav
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 130c24f3e31991d41917e1253ba841b1
+    m_Address: Assets/Audio/Sound/audio_sound_walk_3.wav
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: d89c4de53d0939640b66aa97559eb81a
+    m_Address: Assets/Audio/Sound/audio_sound_walk_10.wav
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a5759031818751e43ab31f4db4dc2cd1
+    m_Address: Assets/Audio/Sound/audio_sound_walk_9.wav
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: defb509efb6b8a1419012ee9821ca080
+    m_Address: Assets/Audio/Sound/audio_sound_walk_1.wav
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a9782559199bc134d92960ece48e62e5
+    m_Address: Assets/Audio/Sound/audio_sound_walk_2.wav
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 6a7701f598af8cf4f9533952475467ca
+    m_Address: Assets/Audio/Sound/audio_sound_walk_11.wav
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: c2f0e5fc43da95142992584454b09d22
+    m_Address: Assets/Audio/Sound/audio_sound_walk_8.wav
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a7abe986e9117d84ebbef635d2780c37
+    m_Address: Assets/Audio/Sound/audio_sound_walk_6.wav
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 41846773ccefae34ab7cf1d2bc70526f
+    m_Address: Assets/Audio/Sound/audio_sound_walk_4.wav
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: fd6114d87f1af534fbf270c47c0f10bf, type: 2}
   m_SchemaSet:

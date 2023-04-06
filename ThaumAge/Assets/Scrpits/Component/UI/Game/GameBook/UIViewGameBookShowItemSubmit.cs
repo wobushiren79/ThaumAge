@@ -7,6 +7,12 @@ public partial class UIViewGameBookShowItemSubmit : BaseUIView
 {
     protected BookModelDetailsInfoBean bookModelDetailsInfo;
 
+    public override void Awake()
+    {
+        base.Awake();
+        ui_ViewGameBookShowItemSubmitDetails.ShowObj(false);
+    }
+
     public override void OnClickForButton(Button viewButton)
     {
         base.OnClickForButton(viewButton);
@@ -14,7 +20,6 @@ public partial class UIViewGameBookShowItemSubmit : BaseUIView
         {
             OnClickForSubmit();
         }
-        ui_ViewGameBookShowItemSubmitDetails.ShowObj(false);
     }
 
     /// <summary>

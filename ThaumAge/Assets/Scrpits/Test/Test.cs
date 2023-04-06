@@ -30,7 +30,25 @@ public class Test : BaseMonoBehaviour
             listData1.Clear();
             listData2.Clear();
             listData3.Clear();
-            Vector3Int itemTest = new Vector3Int(123,167,12361);
+            Stopwatch stopwatch = TimeUtil.GetMethodTimeStart();
+            stopwatch.Start();
+            Vector3Int itemTest = new Vector3Int(123, 167, 12361);
+            for (int x = 0; x < 16; x++)
+            {
+                for (int z = 0; z < 16; z++)
+                {
+                    for (int y = 0; y < 256; y++)
+                    {
+                        listData2.Add(new Vector3Int(x, y, z));
+                    }
+                }
+            }
+            stopwatch.Stop();
+            UnityEngine.Debug.Log("HashSetAdd " + stopwatch.ElapsedTicks);
+            stopwatch.Reset();
+            stopwatch.Restart();
+
+
             for (int x = 0; x < 16; x++)
             {
                 for (int z = 0; z < 16; z++)
@@ -38,76 +56,47 @@ public class Test : BaseMonoBehaviour
                     for (int y = 0; y < 256; y++)
                     {
                         listData1.Add(new Vector3Int(x, y, z));
-                        listData2.Add(new Vector3Int(x, y, z));
-                        listData3.Add(new Vector3Int(x, y, z), "Test");
                     }
                 }
             }
 
-            Stopwatch stopwatch = TimeUtil.GetMethodTimeStart();
-
-            foreach (var itemData in listData3)
-            {
-                var item = itemData.Key;
-  
-            }
             stopwatch.Stop();
-            UnityEngine.Debug.Log("3 "+ stopwatch.ElapsedTicks);
-            stopwatch.Reset();
-            stopwatch.Restart();
-            foreach (var itemData in listData2)
-            {
-           
-            }
-            stopwatch.Stop();
-            UnityEngine.Debug.Log("2 " + stopwatch.ElapsedTicks);
-            stopwatch.Reset();
-            stopwatch.Restart();
-            var demoEnum = listData2.GetEnumerator();
-            while (demoEnum.MoveNext())
-            {
-                Vector3Int res = demoEnum.Current;
-                if(res.x==1&&res.y==1&&res.z==1)
-                    listData2.Add(new Vector3Int(1111,1111,1111));
-            }
-            stopwatch.Stop();
-            UnityEngine.Debug.Log("1 " + stopwatch.ElapsedTicks);
-           // stopwatch.Reset();
-            //stopwatch.Restart();
-
-            //for (int i = 0; i < 16 * 16 * 256; i++)
-            //{
-            //    if (listData3.ContainsKey(itemTest))
-            //    {
-
-            //    }
-            //}
-
-            //stopwatch.Stop();
-            //UnityEngine.Debug.Log("33 " + stopwatch.ElapsedTicks);
+            UnityEngine.Debug.Log("ListAdd " + stopwatch.ElapsedTicks);
             //stopwatch.Reset();
             //stopwatch.Restart();
-            //for (int i = 0; i < 16 * 16 * 256; i++)
+            //for (int i = 0; i < listData2.Count; i++)
             //{
-            //    if (listData2.Contains(itemTest))
-            //    {
-
-            //    }
+            //    var item = listData2.ElementAt(i);
             //}
-
             //stopwatch.Stop();
-            //UnityEngine.Debug.Log("22 " + stopwatch.ElapsedTicks);
+            //UnityEngine.Debug.Log("HashSet " + stopwatch.ElapsedTicks);
+
             //stopwatch.Reset();
             //stopwatch.Restart();
-            ////for (int i = 0; i < 16 * 16 * 256; i++)
-            ////{
-            ////    if (listData1.Contains(itemTest))
-            ////    {
-
-            ////    }
-            ////}
+            //for (int i = 0; i < listData1.Count; i++)
+            //{
+            //    var item = listData1[i];
+            //}
             //stopwatch.Stop();
-            //UnityEngine.Debug.Log("11 " + stopwatch.ElapsedTicks);
+            //UnityEngine.Debug.Log("List " + stopwatch.ElapsedTicks);
+
+            stopwatch.Reset();
+            stopwatch.Restart();
+            for (int i = 0; i < listData2.Count; i++)
+            {
+                bool isA = listData2.Contains(Vector3Int.zero);
+            }
+            stopwatch.Stop();
+            UnityEngine.Debug.Log("HashSet " + stopwatch.ElapsedTicks);
+
+            stopwatch.Reset();
+            stopwatch.Restart();
+            for (int i = 0; i < listData1.Count; i++)
+            {
+                bool isA = listData1.Contains(Vector3Int.zero);
+            }
+            stopwatch.Stop();
+            UnityEngine.Debug.Log("List " + stopwatch.ElapsedTicks);
         }
     }
 

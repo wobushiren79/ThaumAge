@@ -61,6 +61,8 @@ public class BlockInfoBean : BaseBean
 
     public int remark_int;//备注int
 
+    public string sound_break;//方块被破坏的音效
+
     /// <summary>
     /// 获取方块类型
     /// </summary>
