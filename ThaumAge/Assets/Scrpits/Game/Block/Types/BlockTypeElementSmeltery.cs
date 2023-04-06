@@ -14,8 +14,6 @@ public class BlockTypeElementSmeltery : Block
         UIGameElementSmeltery uiGameElementSmeltery = UIHandler.Instance.OpenUIAndCloseOther<UIGameElementSmeltery>();
         //设置数据
         uiGameElementSmeltery.SetData(worldPosition);
-
-        AudioHandler.Instance.PlaySound(1);
     }
 
 

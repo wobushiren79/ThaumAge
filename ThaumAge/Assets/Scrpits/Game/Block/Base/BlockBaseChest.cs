@@ -16,7 +16,6 @@ public class BlockBaseChest : Block, IBlockForItemsPutOut
         uiGameChest.SetData(worldPosition, chestSize);
         //打开盒子
         OpenChest(worldPosition);
-        AudioHandler.Instance.PlaySound(1);
     }
 
     public override List<ItemsBean> GetDropItems(BlockBean blockData)
@@ -58,6 +57,7 @@ public class BlockBaseChest : Block, IBlockForItemsPutOut
     public virtual void OpenChest(Vector3Int worldPosition)
     {
         AnimForChest(worldPosition, 1);
+        AudioHandler.Instance.PlaySound(1301);
     }
 
     /// <summary>
@@ -67,6 +67,7 @@ public class BlockBaseChest : Block, IBlockForItemsPutOut
     public virtual void CloseChest(Vector3Int worldPosition)
     {
         AnimForChest(worldPosition, 2);
+        AudioHandler.Instance.PlaySound(1302);
     }
 
     /// <summary>

@@ -21,8 +21,6 @@ public class BlockTypeFocalManipulator : Block
         //打开UI
         UIGameFocalManipulator uiGameFocalManipulator = UIHandler.Instance.OpenUIAndCloseOther<UIGameFocalManipulator>();
         uiGameFocalManipulator.SetData(worldPosition);
-
-        AudioHandler.Instance.PlaySound(1);
     }
 
 

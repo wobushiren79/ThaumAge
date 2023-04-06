@@ -14,7 +14,5 @@ public class BlockTypeFurnacesSimple : BlockBaseFurnaces
         UIGameFurnaces uiGameFurnacesSimple = UIHandler.Instance.OpenUIAndCloseOther<UIGameFurnaces>();
         //设置数据
         uiGameFurnacesSimple.SetData(worldPosition);
-
-        AudioHandler.Instance.PlaySound(1);
     }
 }
