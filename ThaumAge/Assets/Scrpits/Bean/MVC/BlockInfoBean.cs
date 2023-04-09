@@ -164,7 +164,6 @@ public class BlockInfoBean : BaseBean
         }
         try
         {
-
             textAsset = LoadAddressablesUtil.LoadAssetSync<TextAsset>($"Assets/Prefabs/BlockMeshData/{blockAssetName}.txt");
         }
         catch (Exception e)

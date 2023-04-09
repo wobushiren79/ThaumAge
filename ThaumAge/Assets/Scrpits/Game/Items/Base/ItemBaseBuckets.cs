@@ -30,6 +30,11 @@ public class ItemBaseBuckets : Item
     public override void SetItemIcon(ItemsBean itemData, ItemsInfoBean itemsInfo, Image ivTarget = null, SpriteRenderer srTarget = null)
     {
         base.SetItemIcon(itemData, itemsInfo, ivTarget, srTarget);
+        //没有物品数据 比如合成的时候
+        if (itemData == null)
+        {
+            return;
+        }
         ItemMetaBuckets itemMetaBuckets = itemData.GetMetaData<ItemMetaBuckets>();
         //如果没有东西 则不设置
         if (itemMetaBuckets.itemIdForSomething == 0)

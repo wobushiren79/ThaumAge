@@ -59,7 +59,7 @@ public class ItemClassWateringCanWood : ItemBaseTool
         //更新区块
         WorldCreateHandler.Instance.manager.AddUpdateChunk(targetChunk, 1);
         //播放音效
-        PlayItemSoundUseR(itemData);
+        PlayItemSoundUse(itemData, ItemUseTypeEnum.Right);
         //播放浇水粒子特效
         EffectBean effectData = new EffectBean();
         effectData.effectName = EffectInfo.Effect_Water_1;

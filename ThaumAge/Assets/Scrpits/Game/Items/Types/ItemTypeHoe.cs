@@ -48,7 +48,7 @@ public class ItemTypeHoe : ItemBaseTool
         BlockCptBreak.PlayBlockCptBreakEffect(ploughBlockType, targetPosition + new Vector3(0.5f, 0.5f, 0.5f));
 
         //播放音效
-        PlayItemSoundUseR(itemData);
+        PlayItemSoundUse(itemData, ItemUseTypeEnum.Right);
         return false;
     }
 }

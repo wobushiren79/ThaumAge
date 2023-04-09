@@ -457,7 +457,6 @@ public partial class UIViewSynthesis : BaseUIView
         Vector2[] listCirclePosition = VectorUtil.GetListCirclePosition(listMaterials.Count, 0, Vector2.zero, 120);
         //创建所有素材
         int itemAngle = 360 / listMaterials.Count;
-
         for (int i = 0; i < listMaterials.Count; i++)
         {
             GameObject objMaterial = Instantiate(ui_SynthesisMaterials.gameObject, ui_ModelViewSynthesisMaterial.gameObject);

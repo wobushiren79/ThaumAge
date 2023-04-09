@@ -44,17 +44,8 @@ public class ItemTypeSeed : Item
         //刷新UI
         EventHandler.Instance.TriggerEvent(EventsInfo.ItemsBean_MetaChange, itemData);
         //播放音效
-        PlayItemSoundUseR(itemData);
+        PlayItemSoundUse(itemData, ItemUseTypeEnum.Right);
 
         return false;
-    }
-
-    /// <summary>
-    /// 播放播种的声音
-    /// </summary>
-    /// <param name="itemsData"></param>
-    public override void PlayItemSoundUseR(ItemsBean itemsData)
-    {
-        AudioHandler.Instance.PlaySound(602);
     }
 }

@@ -106,6 +106,7 @@ public partial class UIViewGameBookShowItemSubmit : BaseUIView
         //}
         //保存数据
         userData.userAchievement.UnlockBookModelDetails((int)bookModelDetailsInfo.id);
+        GameDataHandler.Instance.manager.SaveUserData();
         //通知UI更新
         TriggerEvent(EventsInfo.UIGameBook_MapItemRefresh, bookModelDetailsInfo);
         TriggerEvent(EventsInfo.UIGameBook_RefreshLabels);

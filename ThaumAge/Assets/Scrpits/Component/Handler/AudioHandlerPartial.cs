@@ -11,7 +11,7 @@ public partial class AudioHandler
 
     protected int[] walkSound = new int[]
     {
-        1201,1202,1203,1204,1205,1206,1207,1208,1209,1210,1211
+        1201,1202,1203,1204,1205,1206,1207,1208,1209,1210
     };
 
 

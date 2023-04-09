@@ -199,7 +199,7 @@ public class ItemClassWand : Item
         MagicHandler.Instance.CreateMagic(magicData);
 
         //播放法杖使用音效
-        PlayItemSoundUseR(itemData);
+        PlayItemSoundUse(itemData, ItemUseTypeEnum.Right);
 
         return false;
     }

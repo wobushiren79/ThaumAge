@@ -215,7 +215,7 @@ public class Item
         {
             if (targetBlock.blockInfo.sound_break.IsNull())
             {
-                PlayItemSoundUseL(itemsData);
+                PlayItemSoundUse(itemsData, ItemUseTypeEnum.Left);
             }
             else
             {
@@ -240,7 +240,7 @@ public class Item
         }
         if (targetBlock.blockInfo.sound_break.IsNull())
         {
-            PlayItemSoundUseR(itemData);
+            PlayItemSoundUse(itemData, ItemUseTypeEnum.Right);
         }
         else
         {
@@ -266,7 +266,7 @@ public class Item
     /// <summary>
     /// 播放道具破坏音效（鼠标左键） 
     /// </summary>
-    public virtual void PlayItemSoundUseL(ItemsBean itemsData)
+    public virtual void PlayItemSoundUse(ItemsBean itemsData, ItemUseTypeEnum itemUseType)
     {
         //播放破坏音效
         if (itemsData == null)
@@ -277,31 +277,36 @@ public class Item
         ItemsInfoBean itemsInfo = GetItemsInfo(itemsData.itemId);
         if (itemsInfo != null && !itemsInfo.sound_use.IsNull())
         {
-            int soundId = int.Parse(itemsInfo.sound_use);
-            AudioHandler.Instance.PlaySound(soundId);
-        }
-        else
-        {
-            AudioHandler.Instance.PlayNormalDigSound();
-        }
-    }
-
-    /// <summary>
-    /// 播放道具使用声音（鼠标右键）
-    /// </summary>
-    public virtual void PlayItemSoundUseR(ItemsBean itemsData)
-    {
-        //播放破坏音效
-        if (itemsData == null)
-        {
-            AudioHandler.Instance.PlayNormalDigSound();
-            return;
-        }
-        ItemsInfoBean itemsInfo = GetItemsInfo(itemsData.itemId);
-        if (itemsInfo != null && !itemsInfo.sound_use.IsNull())
-        {
-            int soundId = int.Parse(itemsInfo.sound_use);
-            AudioHandler.Instance.PlaySound(soundId);
+            int[] soundIds = itemsInfo.sound_use.SplitForArrayInt(',');
+            if (soundIds.Length == 1)
+            {
+                AudioHandler.Instance.PlaySound(soundIds[0]);
+            }
+            else if (soundIds.Length == 2)
+            {
+                if (itemUseType == ItemUseTypeEnum.Left)
+                {
+                    if (soundIds[0] == 0)
+                    {
+                        AudioHandler.Instance.PlayNormalDigSound();
+                    }
+                    else
+                    {
+                        AudioHandler.Instance.PlaySound(soundIds[0]);
+                    }
+                }
+                else if (itemUseType == ItemUseTypeEnum.Right)
+                {
+                    if (soundIds[1] == 0)
+                    {
+                        AudioHandler.Instance.PlayNormalDigSound();
+                    }
+                    else
+                    {
+                        AudioHandler.Instance.PlaySound(soundIds[1]);
+                    }
+                }
+            }
         }
         else
         {
@@ -413,7 +418,7 @@ public class Item
         {
             if (data == null)
             {
-                IconHandler.Instance.GetUnKnowSprite((unknowSprite)=>
+                IconHandler.Instance.GetUnKnowSprite((unknowSprite) =>
                 {
                     Texture2D itemTex = TextureUtil.SpriteToTexture2D(unknowSprite);
                     callBack?.Invoke(itemTex);
