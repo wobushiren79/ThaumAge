@@ -7,7 +7,7 @@
       "dependencies": {}
     },
     "com.unity.addressables": {
-      "version": "1.21.8",
+      "version": "1.21.9",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -195,7 +195,7 @@
       "url": "https://packages.unity.cn"
     },
     "com.unity.timeline": {
-      "version": "1.7.3",
+      "version": "1.7.4",
       "depth": 0,
       "source": "registry",
       "dependencies": {

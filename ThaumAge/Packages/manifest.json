@@ -1,7 +1,7 @@
 {
   "dependencies": {
     "com.unity.2d.sprite": "1.0.0",
-    "com.unity.addressables": "1.21.8",
+    "com.unity.addressables": "1.21.9",
     "com.unity.ai.navigation": "1.1.1",
     "com.unity.burst": "1.8.3",
     "com.unity.cinemachine": "2.9.5",
@@ -13,7 +13,7 @@
     "com.unity.render-pipelines.high-definition": "14.0.6",
     "com.unity.test-framework": "2.0.1-pre.18",
     "com.unity.textmeshpro": "3.2.0-pre.2",
-    "com.unity.timeline": "1.7.3",
+    "com.unity.timeline": "1.7.4",
     "com.unity.ugui": "1.0.0",
     "jillejr.newtonsoft.json-for-unity": "13.0.102",
     "com.unity.modules.ai": "1.0.0",
