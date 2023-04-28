@@ -172,23 +172,6 @@ public class BlockBaseCrop : BlockBasePlant
     }
 
     /// <summary>
-    /// 初始化植物定点
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    public static Vector3[] InitCropVert(Vector3[] vertsAdd)
-    {
-        //往下偏移的位置
-        Vector3[] newVertsAdd = new Vector3[vertsAdd.Length];
-        float offsetY = -(1f / 16f);
-        for (int i = 0; i < vertsAdd.Length; i++)
-        {
-            newVertsAdd[i] = vertsAdd[i].AddY(offsetY);
-        }
-        return newVertsAdd;
-    }
-
-
-    /// <summary>
     /// 获取生长UV
     /// </summary>
     public static Vector2 GetUVStartPosition(Block block, BlockInfoBean blockInfo, BlockMetaCrop blockCropData)

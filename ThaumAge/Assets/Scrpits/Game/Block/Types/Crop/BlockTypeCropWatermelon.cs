@@ -8,7 +8,7 @@ public class BlockTypeCropWatermelon : Block
     {
         base.SetData(blockType);
         BlockShapeCustom blockShapeCustom = blockShape as BlockShapeCustom;
-        blockShapeCustom.vertsAdd = BlockBaseCrop.InitCropVert(blockShapeCustom.vertsAdd);
+        blockShapeCustom.vertsAdd = blockShapeCustom.vertsAdd.AddY(-(1f / 16f));
     }
 
 }

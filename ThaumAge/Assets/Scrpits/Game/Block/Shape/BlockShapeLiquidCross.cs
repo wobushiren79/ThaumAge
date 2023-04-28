@@ -29,7 +29,7 @@ public class BlockShapeLiquidCross : BlockShapeLiquid
     public override void BuildBlock(Chunk chunk, Vector3Int localPosition)
     {
         base.BuildBlock(chunk, localPosition);
-        BuildFace(chunk, localPosition, vertsAdd, uvsAdd, colorsAdd, trisAdd);
+        BuildFace(chunk, localPosition, vertsAdd, uvsAdd, colorsAdd, VertsColliderAddCube, VertsColliderAddCube, trisAdd, TrisColliderAddCube, TrisColliderAddCube);
     }
 
 
@@ -44,8 +44,8 @@ public class BlockShapeLiquidCross : BlockShapeLiquid
     public override Mesh GetSelectMeshData(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction)
     {
         Mesh mesh = new Mesh();
-        mesh.vertices = vertsColliderAdd;
-        mesh.triangles = trisColliderAdd;
+        mesh.vertices = VertsColliderAddCube;
+        mesh.triangles = TrisColliderAddCube;
         mesh.RecalculateBounds();
         mesh.RecalculateNormals();
         return mesh;

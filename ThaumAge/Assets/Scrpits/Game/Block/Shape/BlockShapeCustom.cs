@@ -26,7 +26,9 @@ public class BlockShapeCustom : BlockShape
     }
 
     #region 增加三角
-    public override void BaseAddTris(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum blockDirection, int[] trisAdd)
+    public override void BaseAddTris(
+        Chunk chunk, Vector3Int localPosition, BlockDirectionEnum blockDirection, 
+        int[] trisAdd, int[] trisColliderAdd, int[] trisTriggerAdd)
     {
         BaseAddTrisForCustom(chunk, localPosition, blockDirection, trisAdd);
     }
@@ -55,12 +57,16 @@ public class BlockShapeCustom : BlockShape
 
 
     #region 增加顶点UV颜色
-    public override void BaseAddVertsUVsColors(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction, Vector3[] vertsAdd, Vector2[] uvsAdd, Color[] colorsAdd)
+    public override void BaseAddVertsUVsColors(
+        Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction,
+        Vector3[] vertsAdd, Vector2[] uvsAdd, Color[] colorsAdd, Vector3[] vertsColliderAdd, Vector3[] vertsTriggerAdd)
     {
         BaseAddVertsUVsColorsForCustom(chunk, localPosition, direction, vertsAdd, uvsAdd, colorsAdd, vertsColliderAddCustom);
     }
 
-    public virtual void BaseAddVertsUVsColorsForCustom(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction, Vector3[] vertsAdd, Vector2[] uvsAdd, Color[] colorsAdd, Vector3[] vertsColliderAdd)
+    public virtual void BaseAddVertsUVsColorsForCustom
+        (Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction,
+        Vector3[] vertsAdd, Vector2[] uvsAdd, Color[] colorsAdd, Vector3[] vertsColliderAdd)
     {
         AddVertsUVsColors(localPosition, direction,
             chunk.chunkMeshData.verts, chunk.chunkMeshData.uvs, chunk.chunkMeshData.colors,

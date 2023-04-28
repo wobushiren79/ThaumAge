@@ -6,7 +6,7 @@ public class BlockShapeCropWell : BlockShapeWell
 {
     public BlockShapeCropWell(Block block) : base(block)
     {
-        vertsAdd = BlockBaseCrop.InitCropVert(vertsAdd);
+        vertsAdd = vertsAdd.AddY(-(1f / 16f));
     }
     /// <summary>
     /// 获取UVAdd
@@ -42,10 +42,12 @@ public class BlockShapeCropWell : BlockShapeWell
         return uvsAdd;
     }
 
-    public override void BaseAddVertsUVsColors(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum blockDirection,
-        Vector3[] vertsAdd, Vector2[] uvsAdd, Color[] colorsAdd)
+    public override void BaseAddVertsUVsColors(
+        Chunk chunk, Vector3Int localPosition, BlockDirectionEnum blockDirection,
+        Vector3[] vertsAdd, Vector2[] uvsAdd, Color[] colorsAdd,
+        Vector3[] vertsColliderAdd, Vector3[] vertsTriggerAdd)
     {
         Vector2[] uvsAddNew = GetUVsAddForCrop(chunk, block, localPosition, block.blockInfo);
-        base.BaseAddVertsUVsColors(chunk, localPosition, blockDirection, vertsAdd, uvsAddNew, colorsAdd);
+        base.BaseAddVertsUVsColors(chunk, localPosition, blockDirection, vertsAdd, uvsAddNew, colorsAdd, vertsColliderAdd, vertsTriggerAdd);
     }
 }

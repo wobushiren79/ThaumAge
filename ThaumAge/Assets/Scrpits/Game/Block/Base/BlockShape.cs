@@ -11,7 +11,7 @@ public class BlockShape
     public Color[] colorsAdd = new Color[0];
     public int[] trisAdd = new int[0];
 
-    public static Vector3[] vertsColliderAdd = new Vector3[]
+    public static Vector3[] VertsColliderAddCube = new Vector3[]
     {
             new Vector3(0,0,0),
             new Vector3(0,1,0),
@@ -44,7 +44,7 @@ public class BlockShape
             new Vector3(1,0,1)
     };
 
-    public static int[] trisColliderAdd = new int[]
+    public static int[] TrisColliderAddCube = new int[]
     {
             0,2,1, 0,3,2,
 
@@ -59,7 +59,7 @@ public class BlockShape
             20,22,21, 20,23,22
     };
 
-    public static Vector2[] uvColliderAdd = new Vector2[]
+    public static Vector2[] UVColliderAddCube = new Vector2[]
 {
             new Vector2(0,0),
             new Vector2(0,0),
@@ -128,7 +128,7 @@ public class BlockShape
     {
         if (block.blockType != BlockTypeEnum.None)
         {
-            BuildFace(chunk, localPosition, vertsAdd, uvsAdd, colorsAdd, trisAdd);
+            BuildFace(chunk, localPosition, vertsAdd, uvsAdd, colorsAdd, VertsColliderAddCube, VertsColliderAddCube, trisAdd, TrisColliderAddCube, TrisColliderAddCube);
         }
     }
 
@@ -143,15 +143,17 @@ public class BlockShape
     /// <param name="verts"></param>
     /// <param name="uvs"></param>
     /// <param name="tris"></param>
-    public virtual void BuildFace(Chunk chunk, Vector3Int localPosition, Vector3[] vertsAdd, Vector2[] uvsAdd, Color[] colorsAdd, int[] trisAdd)
+    public virtual void BuildFace(Chunk chunk, Vector3Int localPosition,
+        Vector3[] vertsAdd, Vector2[] uvsAdd, Color[] colorsAdd, Vector3[] vertsColliderAdd, Vector3[] vertsTriggerAdd,
+        int[] trisAdd, int[] trisColliderAdd, int[] trisTriggerAdd)
     {
         BlockDirectionEnum direction = BlockDirectionEnum.UpForward;
         if (block.blockInfo.rotate_state != 0)
         {
             direction = chunk.chunkData.GetBlockDirection(localPosition.x, localPosition.y, localPosition.z);
         }
-        BaseAddTris(chunk, localPosition, direction, trisAdd);
-        BaseAddVertsUVsColors(chunk, localPosition, direction, vertsAdd, uvsAdd, colorsAdd);
+        BaseAddTris(chunk, localPosition, direction, trisAdd, trisColliderAdd, trisTriggerAdd);
+        BaseAddVertsUVsColors(chunk, localPosition, direction, vertsAdd, uvsAdd, colorsAdd, vertsColliderAdd, vertsTriggerAdd);
     }
 
     /// <summary>
@@ -163,7 +165,8 @@ public class BlockShape
     /// <param name="verts"></param>
     public virtual void BaseAddVertsUVsColors(
         Chunk chunk, Vector3Int localPosition, BlockDirectionEnum blockDirection,
-        Vector3[] vertsAdd, Vector2[] uvsAdd, Color[] colorsAdd)
+        Vector3[] vertsAdd, Vector2[] uvsAdd, Color[] colorsAdd,
+        Vector3[] vertsColliderAdd, Vector3[] vertsTriggerAdd)
     {
         AddVertsUVsColors(localPosition,
             blockDirection, chunk.chunkMeshData.verts, chunk.chunkMeshData.uvs, chunk.chunkMeshData.colors,
@@ -173,7 +176,7 @@ public class BlockShape
             AddVerts(localPosition, blockDirection, chunk.chunkMeshData.vertsCollider, vertsColliderAdd);
 
         if (block.blockInfo.trigger_state == 1)
-            AddVerts(localPosition, blockDirection, chunk.chunkMeshData.vertsTrigger, vertsColliderAdd);
+            AddVerts(localPosition, blockDirection, chunk.chunkMeshData.vertsTrigger, vertsTriggerAdd);
     }
 
     /// <summary>
@@ -183,7 +186,10 @@ public class BlockShape
     /// <param name="tris"></param>
     /// <param name="indexCollider"></param>
     /// <param name="trisCollider"></param>
-    public virtual void BaseAddTris(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction, int[] trisAdd)
+    public virtual void BaseAddTris(
+        Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction,
+        int[] trisAdd,
+        int[] trisColliderAdd, int[] trisTriggerAdd)
     {
         int index = chunk.chunkMeshData.verts.Count;
 
@@ -200,7 +206,7 @@ public class BlockShape
         if (block.blockInfo.trigger_state == 1)
         {
             int triggerIndex = chunk.chunkMeshData.vertsTrigger.Count;
-            AddTris(triggerIndex, trisTrigger, trisColliderAdd);
+            AddTris(triggerIndex, trisTrigger, trisTriggerAdd);
         }
     }
 

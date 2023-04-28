@@ -60,6 +60,7 @@ public class BlockInfoBean : BaseBean
     public int interactive_state;//互动状态 0不可互动 1可互动(F键)
 
     public int remark_int;//备注int
+    public string remark_string;//备注string
 
     public string sound_break;//方块被破坏的音效
 

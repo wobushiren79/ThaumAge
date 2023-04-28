@@ -58,54 +58,14 @@ public class BlockShapeFace : BlockShape
     }
 
     /// <summary>
-    /// 添加坐标点
+    /// 构建面
     /// </summary>
-    /// <param name="corner"></param>
-    /// <param name="up"></param>
-    /// <param name="right"></param>
-    /// <param name="verts"></param>
-    public override void BaseAddVertsUVsColors(
-        Chunk chunk, Vector3Int localPosition, BlockDirectionEnum blockDirection,
-        Vector3[] vertsAdd, Vector2[] uvsAdd, Color[] colorsAdd)
+    public override void BuildFace(
+        Chunk chunk, Vector3Int localPosition, 
+        Vector3[] vertsAdd, Vector2[] uvsAdd, Color[] colorsAdd, Vector3[] vertsColliderAdd, Vector3[] vertsTriggerAdd, 
+        int[] trisAdd, int[] trisColliderAdd, int[] trisTriggerAdd)
     {
-
-        AddVertsUVsColors(localPosition,
-            blockDirection, chunk.chunkMeshData.verts, chunk.chunkMeshData.uvs, chunk.chunkMeshData.colors,
-            vertsAdd, uvsAdd, colorsAdd);
-
-        if (block.blockInfo.collider_state == 1)
-            AddVerts(localPosition, blockDirection, chunk.chunkMeshData.vertsCollider, VertsColliderAddFace);
-
-        if (block.blockInfo.trigger_state == 1)
-            AddVerts(localPosition, blockDirection, chunk.chunkMeshData.vertsTrigger, vertsColliderAdd);
-    }
-
-    /// <summary>
-    /// 添加索引
-    /// </summary>
-    /// <param name="index"></param>
-    /// <param name="tris"></param>
-    /// <param name="indexCollider"></param>
-    /// <param name="trisCollider"></param>
-    public override void BaseAddTris(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction, int[] trisAdd)
-    {
-        int index = chunk.chunkMeshData.verts.Count;
-
-        List<int> trisData = chunk.chunkMeshData.dicTris[block.blockInfo.material_type];
-        List<int> trisCollider = chunk.chunkMeshData.trisCollider;
-        List<int> trisTrigger = chunk.chunkMeshData.trisTrigger;
-
-        AddTris(index, trisData, trisAdd);
-        if (block.blockInfo.collider_state == 1)
-        {
-            int colliderIndex = chunk.chunkMeshData.vertsCollider.Count;
-            AddTris(colliderIndex, trisCollider, TrisColliderAddFace);
-        }
-        if (block.blockInfo.trigger_state == 1)
-        {
-            int triggerIndex = chunk.chunkMeshData.vertsTrigger.Count;
-            AddTris(triggerIndex, trisTrigger, trisColliderAdd);
-        }
+        base.BuildFace(chunk, localPosition, vertsAdd, uvsAdd, colorsAdd, VertsColliderAddFace, vertsTriggerAdd, trisAdd, TrisColliderAddFace, trisTriggerAdd);
     }
 
     public virtual Vector2 GetUVStartPosition(Block block)
