@@ -10,12 +10,12 @@ public class BlockShapeLiquid : BlockShapeCube
     public BlockShapeLiquid(Block block) : base(block)
     {
         uvsAddLeft = new Vector2[]
-       {
+        {
             new Vector2(0 ,1),
             new Vector2(1,1),
             new Vector2(1 ,0),
             new Vector2(0 ,0)
-       };
+        };
 
         uvsAddRight = new Vector2[]
         {
@@ -84,16 +84,19 @@ public class BlockShapeLiquid : BlockShapeCube
             CheckNeedBuildFaceAndBuild(chunk, localPosition, direction, DirectionEnum.Back, vertsAddBack, uvsAddBack, colorsAddCube, trisAddCube, blockMetaLiquid);
         }
     }
-
-    public virtual void BuildFace(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction, DirectionEnum face,
+    /// <summary>
+    /// 构建面
+    /// </summary>
+    public virtual void BuildFaceNoCloseLiquid(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction, DirectionEnum face,
         Vector3[] vertsAdd, Vector2[] uvsAdd, Color[] colorsAdd, int[] trisAdd,
         BlockMetaLiquid blockMetaLiquid)
     {
         //如果是自己满水
         if (blockMetaLiquid == null || blockMetaLiquid.volume == BlockBaseLiquid.maxLiquidVolume)
         {
+            Vector3[] vertsAddNew = GetVertsForYMove(vertsAdd, 0, 1 / 16f);
             BaseAddTrisForLiquid(chunk, localPosition, direction, face, trisAdd);
-            BaseAddVertsUVsColorsForLiquid(chunk, localPosition, direction, face, vertsAdd, uvsAdd, colorsAdd);
+            BaseAddVertsUVsColorsForLiquid(chunk, localPosition, direction, face, vertsAddNew, uvsAdd, colorsAdd);
         }
         else
         {
@@ -103,9 +106,12 @@ public class BlockShapeLiquid : BlockShapeCube
         }
     }
 
-    public virtual void BuildFace(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction, DirectionEnum face,
+    /// <summary>
+    /// 构建面
+    /// </summary>
+    public virtual void BuildFaceHasCloseLiquid(Chunk chunk, Vector3Int localPosition, BlockDirectionEnum direction, DirectionEnum face,
         Vector3[] vertsAdd, Vector2[] uvsAdd, Color[] colorsAdd, int[] trisAdd,
-        BlockMetaLiquid blockMetaLiquid, BlockMetaLiquid closeBlockMetaLiquid)
+        BlockMetaLiquid blockMetaLiquid , BlockMetaLiquid closeBlockMetaLiquid)
     {
         //如果是自己满水
         if (blockMetaLiquid == null || blockMetaLiquid.volume == BlockBaseLiquid.maxLiquidVolume)
@@ -144,26 +150,29 @@ public class BlockShapeLiquid : BlockShapeCube
         BlockMetaLiquid blockMetaLiquid)
     {
         if (localPosition.y == 0) return false;
-        GetCloseRotateBlockByDirection(chunk, localPosition, direction, closeDirection,
-            out Block closeBlock, out Chunk closeBlockChunk, out Vector3Int closeLocalPosition);
+        //获取旁边方块的数据
+        GetCloseRotateBlockByDirection(chunk, localPosition, direction, closeDirection, out Block closeBlock, out Chunk closeBlockChunk, out Vector3Int closeLocalPosition);
         if (closeBlockChunk != null && closeBlockChunk.isInit)
         {
+            //如果旁边是空气方块
             if (closeBlock == null || closeBlock.blockType == BlockTypeEnum.None)
             {
-                //只是空气方块
-                BuildFace(chunk, localPosition, direction, closeDirection, vertsAdd, uvsAdd, colorsAdd, trisAdd, blockMetaLiquid);
+                BuildFaceNoCloseLiquid(chunk, localPosition, direction, closeDirection, vertsAdd, uvsAdd, colorsAdd, trisAdd, blockMetaLiquid);
                 return true;
             }
         }
         else
         {
-            //还没有生成chunk
+            //还没有生成chunk 则不生成面
             return false;
         }
         BlockShapeEnum closeBlockShape = closeBlock.blockInfo.GetBlockShape();
         switch (closeBlockShape)
         {
+            //如果旁边的方块或者是耕地或者正方形方块
             case BlockShapeEnum.Cube:
+            case BlockShapeEnum.Plough:
+                //如果是上面的面
                 if (closeDirection == DirectionEnum.UP)
                 {
                     //水是满的
@@ -171,13 +180,23 @@ public class BlockShapeLiquid : BlockShapeCube
                     {
                         return false;
                     }
-                    BuildFace(chunk, localPosition, direction, closeDirection, vertsAdd, uvsAdd, colorsAdd, trisAdd, blockMetaLiquid);
-                    return true;
+                    //如果水没满 则需要构建上方的水面
+                    else
+                    {
+                        BuildFaceNoCloseLiquid(chunk, localPosition, direction, closeDirection, vertsAdd, uvsAdd, colorsAdd, trisAdd, blockMetaLiquid);
+                        return true;
+                    }
                 }
-                return false;
+                //其他面
+                else
+                {
+                    return false;
+                }
+            //如果旁边的方块是与水相关的方块
             case BlockShapeEnum.Liquid:
             case BlockShapeEnum.LiquidCross:
             case BlockShapeEnum.LiquidCrossOblique:
+                //检测是否是同种类型的液体方块
                 if (block.blockType == closeBlock.blockType
                     || (block is BlockBaseLiquid blockLiquid && blockLiquid.CheckIsSameType(closeBlockChunk, closeBlock))
                     || (block is BlockBaseLiquidSame blockLiquidSame && blockLiquidSame.CheckIsSameType(closeBlockChunk, closeBlock))
@@ -199,7 +218,7 @@ public class BlockShapeLiquid : BlockShapeCube
                         }
                         else
                         {
-                            BuildFace(chunk, localPosition, direction, closeDirection, vertsAdd, uvsAdd, colorsAdd, trisAdd, blockMetaLiquid);
+                            BuildFaceNoCloseLiquid(chunk, localPosition, direction, closeDirection, vertsAdd, uvsAdd, colorsAdd, trisAdd, blockMetaLiquid);
                             return true;
                         }
                     }
@@ -212,7 +231,7 @@ public class BlockShapeLiquid : BlockShapeCube
                         }
                         else
                         {
-                            BuildFace(chunk, localPosition, direction, closeDirection, vertsAdd, uvsAdd, colorsAdd, trisAdd, blockMetaLiquid);
+                            BuildFaceNoCloseLiquid(chunk, localPosition, direction, closeDirection, vertsAdd, uvsAdd, colorsAdd, trisAdd, blockMetaLiquid);
                             return true;
                         }
                     }
@@ -221,8 +240,19 @@ public class BlockShapeLiquid : BlockShapeCube
                         //如果旁边的水满了 则不渲染面
                         if (closeBlockMetaLiquid == null || closeBlockMetaLiquid.volume == BlockBaseLiquid.maxLiquidVolume)
                         {
+                            //如果旁边的上方是空的
+                            closeBlock.GetCloseBlockByDirection(closeBlockChunk, closeLocalPosition, DirectionEnum.UP, out Block closeUpBlock, out Chunk closeUpChunk, out Vector3Int closeUpLocalPosition);
+                            if (closeUpChunk != null)
+                            {
+                                if (closeUpBlock == null || closeUpBlock.blockType == BlockTypeEnum.None)
+                                {
+                                    BuildFaceHasCloseLiquid(chunk, localPosition, direction, closeDirection, vertsAdd, uvsAdd, colorsAdd, trisAdd, blockMetaLiquid, closeBlockMetaLiquid);
+                                    return true;
+                                }
+                            }
                             return false;
                         }
+                        //如果旁边的水没满
                         else
                         {
                             if (blockMetaLiquid == null)
@@ -241,23 +271,25 @@ public class BlockShapeLiquid : BlockShapeCube
                                     return false;
                                 }
                             }
-                            BuildFace(chunk, localPosition, direction, closeDirection, vertsAdd, uvsAdd, colorsAdd, trisAdd, blockMetaLiquid, closeBlockMetaLiquid);
+                            BuildFaceHasCloseLiquid(chunk, localPosition, direction, closeDirection, vertsAdd, uvsAdd, colorsAdd, trisAdd, blockMetaLiquid, closeBlockMetaLiquid);
                             return true;
                         }
                     }
                 }
                 else
                 {
-                    BuildFace(chunk, localPosition, direction, closeDirection, vertsAdd, uvsAdd, colorsAdd, trisAdd, blockMetaLiquid);
+                    BuildFaceNoCloseLiquid(chunk, localPosition, direction, closeDirection, vertsAdd, uvsAdd, colorsAdd, trisAdd, blockMetaLiquid);
                     return true;
                 }
             default:
-                BuildFace(chunk, localPosition, direction, closeDirection, vertsAdd, uvsAdd, colorsAdd, trisAdd, blockMetaLiquid);
+                BuildFaceNoCloseLiquid(chunk, localPosition, direction, closeDirection, vertsAdd, uvsAdd, colorsAdd, trisAdd, blockMetaLiquid);
                 return true;
         }
     }
 
-
+    /// <summary>
+    /// 获取水面Y轴位移
+    /// </summary>
     public Vector3[] GetVertsForYMove(Vector3[] oldData, float moveOffsetAdd, float moveOffsetSub)
     {
         Vector3[] newData = new Vector3[oldData.Length];

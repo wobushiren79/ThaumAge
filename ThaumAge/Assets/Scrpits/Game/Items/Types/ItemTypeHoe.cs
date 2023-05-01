@@ -24,6 +24,11 @@ public class ItemTypeHoe : ItemBaseTool
         //如果上方有方块 则无法使用锄头
         if (upBlock != null && upBlock.blockType != BlockTypeEnum.None)
             return false;
+        //如果不是锄的正上方 也无法使用
+
+        if (direction != BlockDirectionEnum.UpBack && direction != BlockDirectionEnum.UpForward && direction != BlockDirectionEnum.UpLeft && direction != BlockDirectionEnum.UpRight)
+            return false;
+
         //扣除道具耐久
         if (this is ItemBaseTool itemTool)
         {
