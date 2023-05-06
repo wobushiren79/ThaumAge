@@ -112,8 +112,8 @@ public partial class InfusionAltarInfoCfg
                         if (checkMat)
                         {
                             targetData = itemInfusionAltarInfoData;
+                            break;
                         }
-                        break;
                     }
                 }
             }
