@@ -118,45 +118,48 @@ public class BlockBaseCrop : BlockBasePlant
 
         //获取下方方块，如果下方方块时耕地
         GetCloseBlockByDirection(chunk, localPosition, DirectionEnum.Down, out Block blockDown, out Chunk blockChunkDown, out Vector3Int blockDownLocalPosition);
-        if (blockDown is BlockBasePlough)
+        if (blockDown != null && blockDown is BlockBasePlough blockPlough)
         {
-            BlockBean blockDownData = blockChunkDown.GetBlockData(blockDownLocalPosition.x, blockDownLocalPosition.y, blockDownLocalPosition.z);
-            if (blockDownData != null)
-            {
-                BlockMetaPlough blockMetaPlough = FromMetaData<BlockMetaPlough>(blockDownData.meta);
-                //并且已经浇水 才能生长
-                if (blockMetaPlough != null && blockMetaPlough.waterState == 1)
+            blockPlough.GetBlockMetaData(blockChunkDown, blockDownLocalPosition, out BlockBean blockDownData, out BlockMetaPlough blockMetaPlough);
+            //并且已经浇水 才能生长
+            if (blockMetaPlough.waterState == 1)
+            {                   
+                //成长周期+1
+                if (blockMetaCrop.isStartGrow)
                 {
-                    //成长周期+1
-                    if (blockMetaCrop.isStartGrow)
-                    {
-                        //是否开始生长
-                        blockMetaCrop.growPro++;
-                        isGrowAdd = true;
+                    //是否开始生长
+                    blockMetaCrop.growPro++;
+                    isGrowAdd = true;
 
-                        //浇水的土地干了
-                        blockMetaPlough.waterState = 0;
-                        blockDownData.meta = ToMetaData(blockMetaPlough);
+                    //浇水的土地干了
+                    if (blockPlough.CheckRoundWater(blockChunkDown, blockDownLocalPosition))
+                    {
+                        blockMetaPlough.waterState = 1;
                     }
                     else
                     {
-                        blockMetaCrop.isStartGrow = true;
+                        blockMetaPlough.waterState = 0;
                     }
-
-                    //判断是否已经是最大生长周期
-                    int lifeCycle = GetCropLifeCycle(blockInfo);
-                    if (blockMetaCrop.growPro >= lifeCycle)
-                    {
-                        chunk.UnRegisterEventUpdate(localPosition, TimeUpdateEventTypeEnum.Min);
-                    }
-
-                    //设置新数据
-                    string newMeta = ToMetaData(blockMetaCrop);
-                    blockData.meta = newMeta;
-                    chunk.SetBlockData(blockData);
-                    //刷新
-                    WorldCreateHandler.Instance.manager.AddUpdateChunk(chunk, 1);
+                    blockDownData.meta = ToMetaData(blockMetaPlough);
                 }
+                else
+                {
+                    blockMetaCrop.isStartGrow = true;
+                }
+
+                //判断是否已经是最大生长周期
+                int lifeCycle = GetCropLifeCycle(blockInfo);
+                if (blockMetaCrop.growPro >= lifeCycle)
+                {
+                    chunk.UnRegisterEventUpdate(localPosition, TimeUpdateEventTypeEnum.Min);
+                }
+
+                //设置新数据
+                string newMeta = ToMetaData(blockMetaCrop);
+                blockData.meta = newMeta;
+                chunk.SetBlockData(blockData);
+                //刷新
+                WorldCreateHandler.Instance.manager.AddUpdateChunk(chunk, 1);
             }
         }
     }

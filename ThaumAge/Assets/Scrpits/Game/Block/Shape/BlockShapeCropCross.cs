@@ -60,7 +60,15 @@ public class BlockShapeCropCross : BlockShapeCross
         {
             //用备注信息来设置高
             float[] arrayHeightRate = block.blockInfo.remark_string.SplitForArrayFloat('|');
-            float heightRate = arrayHeightRate[blockCropData.growPro];
+            float heightRate;
+            if (blockCropData.growPro >= arrayHeightRate.Length)
+            {
+                heightRate = arrayHeightRate[arrayHeightRate.Length - 1];
+            }
+            else
+            {
+                heightRate = arrayHeightRate[blockCropData.growPro];
+            }
             vertsColliderAdd = VertsColliderAddCube.MultiplyY(heightRate);
         }
         return vertsColliderAdd;

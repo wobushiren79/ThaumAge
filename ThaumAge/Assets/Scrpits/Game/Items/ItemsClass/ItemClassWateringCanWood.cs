@@ -37,27 +37,33 @@ public class ItemClassWateringCanWood : ItemBaseTool
         EventHandler.Instance.TriggerEvent(EventsInfo.ItemsBean_MetaChange, itemData);
 
         Vector3Int ploughLocalPosition = targetPosition - targetChunk.chunkData.positionForWorld;
+        BlockBasePlough blockPlough = null;
         //修改耕地的状态
         if (targetBlock.blockInfo.GetBlockShape() == BlockShapeEnum.Plough)
         {
-
+            blockPlough = targetBlock as BlockBasePlough;
         }
         else if (targetBlock is BlockBaseCrop)
         {
             //如果是植物 则获取他下方的一个方块 
             targetBlock.GetCloseBlockByDirection(targetChunk, ploughLocalPosition, DirectionEnum.Down, out Block blockDown, out Chunk blockChunkDown, out Vector3Int localPositionDown);
             ploughLocalPosition = localPositionDown;
+            if (blockDown != null && blockDown is BlockBasePlough)
+            {
+                blockPlough = blockDown as BlockBasePlough;
+            }
+            else
+            {
+                return false;
+            }
         }
+        else
+        {
+            return false;
+        }
+        //改变耕地状态
+        blockPlough.ChangeWaterState(targetChunk, ploughLocalPosition,1);
 
-        BlockBean blockData = targetChunk.GetBlockData(ploughLocalPosition);
-        BlockMetaPlough blockMetaPlough = Block.FromMetaData<BlockMetaPlough>(blockData.meta);
-        if (blockMetaPlough == null)
-            blockMetaPlough = new BlockMetaPlough();
-        blockMetaPlough.waterState = 1;
-        blockData.meta = Block.ToMetaData(blockMetaPlough);
-        targetChunk.SetBlockData(blockData);
-        //更新区块
-        WorldCreateHandler.Instance.manager.AddUpdateChunk(targetChunk, 1);
         //播放音效
         PlayItemSoundUse(itemData, ItemUseTypeEnum.Right);
         //播放浇水粒子特效

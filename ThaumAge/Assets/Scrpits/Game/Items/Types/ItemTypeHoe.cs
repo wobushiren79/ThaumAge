@@ -47,8 +47,18 @@ public class ItemTypeHoe : ItemBaseTool
 
         BlockTypeEnum ploughBlockType = (BlockTypeEnum)tagetBlock.blockInfo.remark_int;
         //替换为耕地方块
-        targetChunk.SetBlockForLocal(localPosition, ploughBlockType, direction);
-
+        BlockBasePlough blockBasePlough = BlockHandler.Instance.manager.GetRegisterBlock(BlockTypeEnum.PloughGrass) as BlockBasePlough;
+        BlockMetaPlough blockMetaPlough = new BlockMetaPlough();
+        //检测四周是否有水
+        if (blockBasePlough.CheckRoundWater(targetChunk, localPosition))
+        {
+            blockMetaPlough.waterState = 1;
+        }
+        else
+        {
+            blockMetaPlough.waterState = 0;
+        }
+        targetChunk.SetBlockForLocal(localPosition, ploughBlockType, direction, blockMetaPlough.ToJson());
         //播放粒子特效
         BlockCptBreak.PlayBlockCptBreakEffect(ploughBlockType, targetPosition + new Vector3(0.5f, 0.5f, 0.5f));
 

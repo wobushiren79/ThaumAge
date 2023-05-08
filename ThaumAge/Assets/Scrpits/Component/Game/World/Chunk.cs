@@ -397,7 +397,7 @@ public class Chunk
         SetBlockForLocal(blockLocalPosition, blockType, direction, meta, isRefreshMesh, isSaveData, isRefreshBlockRange, updateChunkType);
     }
     public void SetBlockForLocal(Vector3Int localPosition, BlockTypeEnum blockType,
-        BlockDirectionEnum direction = BlockDirectionEnum.UpForward, string meta = null, bool isRefreshMesh = true, bool isSaveData = true, bool isRefreshBlockRange = true, int updateChunkType = 1, bool isDestoryOld = true)
+        BlockDirectionEnum direction = BlockDirectionEnum.UpForward, string blockMetaData = null, bool isRefreshMesh = true, bool isSaveData = true, bool isRefreshBlockRange = true, int updateChunkType = 1, bool isDestoryOld = true)
     {
         if (localPosition.y > chunkData.chunkHeight)
             return;
@@ -422,7 +422,7 @@ public class Chunk
         //保存数据
         if (isSaveData)
         {
-            BlockBean blockData = new BlockBean(localPosition, blockType, direction, meta);
+            BlockBean blockData = new BlockBean(localPosition, blockType, direction, blockMetaData);
             SetBlockData(blockData);
         }
         //刷新blockMesh

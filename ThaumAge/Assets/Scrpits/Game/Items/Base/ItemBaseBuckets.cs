@@ -138,15 +138,16 @@ public class ItemBaseBuckets : Item
         WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(closePosition, out Block closeBlock, out BlockDirectionEnum closeBlockDirection, out Chunk closeChunk);
         if (closeChunk == null)
             return;
-        if (closeBlock != null)
+        if (closeBlock != null && closeBlock.blockType == BlockTypeEnum.Water || closeBlock.blockType == BlockTypeEnum.Magma)
         {
             //检测是否能装
             if (!CheckCanGet(itemData, closeBlock))
                 return;
 
             Vector3Int closePositionLocal = closePosition - closeChunk.chunkData.positionForWorld;
-            BlockBean blockCloseData = closeChunk.GetBlockData(closePositionLocal);
-            BlockMetaLiquid blockMetaLiquid = blockCloseData.GetBlockMeta<BlockMetaLiquid>();
+
+            BlockBaseLiquid closeLiquidBlock = closeBlock as BlockBaseLiquid;
+            closeLiquidBlock.GetBlockMetaData(closeChunk, closePositionLocal, out BlockBean blockCloseData, out BlockMetaLiquid blockMetaLiquid);
             int liquidVolume = blockMetaLiquid.AddVolume(-1);
             blockCloseData.SetBlockMeta(blockMetaLiquid);
             if (liquidVolume == 0)

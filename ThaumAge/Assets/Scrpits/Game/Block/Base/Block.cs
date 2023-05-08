@@ -579,7 +579,6 @@ public class Block
         }
     }
 
-
     /// <summary>
     /// 创建链接的方块
     /// </summary>
