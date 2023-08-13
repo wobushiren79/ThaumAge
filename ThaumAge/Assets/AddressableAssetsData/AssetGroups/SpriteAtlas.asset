@@ -18,17 +18,17 @@ MonoBehaviour:
   m_GUID: f1d0fa8d78da86c48a6a85c002e480fc
   m_SerializeEntries:
   - m_GUID: 8f9bd3aae34e2d145b112b70f60dc0bb
-    m_Address: Assets/Texture/SpriteAtlas/SpriteAtlasForItems.spriteatlas
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 76a5d38a8f30c0540ab9d2354a2634ca
-    m_Address: Assets/Texture/SpriteAtlas/SpriteAtlasForUI.spriteatlas
+    m_Address: Assets/Texture/SpriteAtlas/AtlasForItems.spriteatlas
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: a98a36a8ebb52444c9627d909cc19d8b
-    m_Address: Assets/Texture/SpriteAtlas/SpriteAtlasForSky.spriteatlas
+    m_Address: Assets/Texture/SpriteAtlas/AtlasForSky.spriteatlas
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 76a5d38a8f30c0540ab9d2354a2634ca
+    m_Address: Assets/Texture/SpriteAtlas/AtlasForUI.spriteatlas
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
