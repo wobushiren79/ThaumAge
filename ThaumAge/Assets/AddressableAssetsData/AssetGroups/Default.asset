@@ -22,6 +22,111 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 31da8239694567e4091a43c11942e6d2
+    m_Address: Assets/Prefabs/Effects/Common/Effect_WaterBoiling_2.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 1bd4762c424b23d47a86483e2e3ef0f1
+    m_Address: Assets/Prefabs/Effects/Common/Effect_WaterBoiling_1.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a2be820f4df531748801da3ade8798e6
+    m_Address: Assets/Prefabs/Effects/Common/Effect_Water_1.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 5f0b08fbdd10f164eab18c4e3cc86ab3
+    m_Address: Assets/Prefabs/Effects/Common/Effect_Throw_1.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 15c8f4a4bd39ffd4a96c7398785ad9e3
+    m_Address: Assets/Prefabs/Effects/Common/Effect_Test_2.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a0a87f27c6ba9e94e8052f278d1e337c
+    m_Address: Assets/Prefabs/Effects/Common/Effect_Test_1.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a4543187981813a49b611a7cfaceff62
+    m_Address: Assets/Prefabs/Effects/Common/Effect_Smoke_3.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 571146a4934adf646bbdafe4eee4228e
+    m_Address: Assets/Prefabs/Effects/Common/Effect_Smoke_2.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 8f365258bba92104d8d43f858e8f0b62
+    m_Address: Assets/Prefabs/Effects/Common/Effect_Show_1.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 16bf85d295127fb42845e6eb46e93cad
+    m_Address: Assets/Prefabs/Effects/Common/Effect_Shine_Light_1.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 1d32bad59198b9042aa758a6442a7463
+    m_Address: Assets/Prefabs/Effects/Common/Effect_Line_2.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 7da006c72aa3471438e44e229b5246d4
+    m_Address: Assets/Prefabs/Effects/Common/Effect_DeadBody_1.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ff51808b2ae46154098e2f50dfcb04b8
+    m_Address: Assets/Prefabs/Effects/Common/Effect_Dead_1.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 05a18a082666182449abedb0981807c0
+    m_Address: Assets/Prefabs/Effects/Common/Effect_DamageText_1.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: fe0e1e54d31275c409af8d6f0b6dca81
+    m_Address: Assets/Prefabs/Effects/Common/Effect_Collect_1.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 09c1a0f78ebe62544b476cbf95eb70f9
+    m_Address: Assets/Prefabs/Effects/Common/Effect_Change_1.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 8e8eb9336dfa74f4d8f666a3d7c67a2b
+    m_Address: Assets/Prefabs/Effects/Common/Effect_Boom_1.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 4b50516df71f8b84bb93b9a0f04af532
+    m_Address: Assets/Prefabs/Effects/Common/Effect_Blood_1.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f0687f50f0032834fa76401d7a908d91
+    m_Address: Assets/Prefabs/Effects/Common/Effect_BlockFire_1.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a95198ba0e9651d4ea1ac5f051dcbb7e
+    m_Address: Assets/Prefabs/Effects/Common/Effect_BlockBreak_1.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 47c0804817fbe8043ae12a9a4a7d80b0
+    m_Address: Assets/Prefabs/Effects/Common/EffectUI_Liquid.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: fd6114d87f1af534fbf270c47c0f10bf, type: 2}
   m_SchemaSet:
