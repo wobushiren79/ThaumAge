@@ -77,6 +77,30 @@ public class ChunkComponent : BaseMonoBehaviour
     }
 
     /// <summary>
+    /// 是否显示实例放方块
+    /// </summary>
+    /// <param name="isOptimizeShow"></param>
+    public void IsShowEntityBlock(bool isShow)
+    {
+        objBlockContainer.SetActive(isShow);
+    }
+
+    /// <summary>
+    /// 是否接受阴影
+    /// </summary>
+    public void IsCastShadow(bool isShow)
+    {
+        if (isShow)
+        {
+            meshRenderer.shadowCastingMode = ShadowCastingMode.On;
+        }
+        else
+        {
+            meshRenderer.shadowCastingMode = ShadowCastingMode.Off;
+        }
+    }
+
+    /// <summary>
     /// 初始化mats
     /// </summary>
     protected void InitBlockMats()

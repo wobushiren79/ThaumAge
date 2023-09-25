@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,6 +11,8 @@ public class UIChildGameSettingGameContent : UIChildGameSettingBaseContent
     protected UIListItemGameSettingRange worldRefreshRange;
     //卸载范围
     protected UIListItemGameSettingRange worldDestoryRange;
+    //实体方块范围
+    protected UIListItemGameSettingRange entityShowDis;
 
     public List<string> listLanguageData;
 
@@ -44,6 +47,9 @@ public class UIChildGameSettingGameContent : UIChildGameSettingBaseContent
         isInitWorldDestoryRange = true;
         worldDestoryRange.SetPro(gameConfig.worldDestoryRange);
 
+        //实体方块范围
+        entityShowDis = CreateItemForRange(TextHandler.Instance.GetTextById(120), HandleForEntityShowDis);
+        entityShowDis.SetPro(gameConfig.entityShowDis / 200);
     }
 
     public override void RefreshUI()
@@ -79,6 +85,15 @@ public class UIChildGameSettingGameContent : UIChildGameSettingBaseContent
         gameConfig.worldDestoryRange = (int)value;
         worldDestoryRange.SetContent($"{gameConfig.worldDestoryRange}");
         WorldCreateHandler.Instance.HandleForWorldUpdate(false);
+    }
+
+    /// <summary>
+    /// 实体显示距离
+    /// </summary>
+    public void HandleForEntityShowDis(float value)
+    {
+        gameConfig.entityShowDis = value * 200;
+        entityShowDis.SetContent($"{Math.Round(gameConfig.entityShowDis, 0)}m");
     }
 
     /// <summary>

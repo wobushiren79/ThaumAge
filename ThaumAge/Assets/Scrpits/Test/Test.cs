@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.VFX;
+
 public class Test : BaseMonoBehaviour
 {
     public MagicBean magicData;
@@ -13,7 +15,22 @@ public class Test : BaseMonoBehaviour
 
     public void Start()
     {
-        //Cursor.lockState = CursorLockMode.Confined;
+        // Assuming you have a reference to the MeshRenderer component
+        MeshRenderer meshRenderer = GetComponent<MeshRenderer>();
+
+        // Set the culling mode to Front
+        //meshRenderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.On;
+        //meshRenderer.receiveShadows = true;
+        //meshRenderer.reflectionProbeUsage = UnityEngine.Rendering.ReflectionProbeUsage.BlendProbes;
+        //meshRenderer.lightProbeUsage = UnityEngine.Rendering.LightProbeUsage.BlendProbes;
+        //meshRenderer.motionVectorGenerationMode = MotionVectorGenerationMode.Object;
+        //meshRenderer.allowOcclusionWhenDynamic = true;
+        //meshRenderer.sortingLayerName = "Default";
+        //meshRenderer.sortingOrder = 0;
+        //meshRenderer.renderingLayerMask = 1;
+
+        // Set the culling mode to Front or Off
+        meshRenderer.material.SetInteger("_Cull", (int)UnityEngine.Rendering.CullMode.Off);
     }
 
     public void Update()

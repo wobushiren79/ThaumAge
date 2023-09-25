@@ -31,6 +31,7 @@ SpriteAtlas:
       m_CrunchedCompression: 0
       m_AllowsAlphaSplitting: 0
       m_Overridden: 0
+      m_IgnorePlatformSupport: 0
       m_AndroidETC2FallbackOverride: 0
       m_ForceMaximumCompressionQuality_BC6H_BC7: 0
     packingSettings:
@@ -983,5 +984,5 @@ SpriteAtlas:
   - icon_item_200002
   - icon_item_106211
   m_RenderDataMap: {}
-  m_Tag: SpriteAtlasForItems
+  m_Tag: AtlasForItems
   m_IsVariant: 0

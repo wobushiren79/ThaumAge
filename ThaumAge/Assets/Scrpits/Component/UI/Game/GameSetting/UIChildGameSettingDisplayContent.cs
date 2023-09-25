@@ -23,6 +23,9 @@ public class UIChildGameSettingDisplayContent : UIChildGameSettingBaseContent
     protected UIListItemGameSettingSelect settingShadowResolutionLevelData;
     //阴影距离
     protected UIListItemGameSettingRange settingShadowDis;
+    //投射阴影距离
+    protected UIListItemGameSettingRange settingCastShadowDis;
+
     //抗锯齿
     protected UIListItemGameSettingSelect settingAntiAliasingSelect;
     //抗锯齿质量
@@ -150,6 +153,10 @@ public class UIChildGameSettingDisplayContent : UIChildGameSettingBaseContent
         settingShadowDis = CreateItemForRange(TextHandler.Instance.GetTextById(105), HandleForShadowDis);
         settingShadowDis.SetPro(gameConfig.shadowDis / 200);
 
+        //投射阴影距离
+        settingCastShadowDis = CreateItemForRange(TextHandler.Instance.GetTextById(119), HandleForCastShadowDis);
+        settingCastShadowDis.SetPro(gameConfig.shadowCastDis / 200);
+        
         //抗锯齿
         settingAntiAliasingSelect = CreateItemForSelect(TextHandler.Instance.GetTextById(108), listAntiAliasingData, HandleForAntiAliasing);
         settingAntiAliasingSelect.SetIndex((int)gameConfig.GetAntialiasingMode());
@@ -210,6 +217,16 @@ public class UIChildGameSettingDisplayContent : UIChildGameSettingBaseContent
         gameConfig.shadowDis = value * 200;
         VolumeHandler.Instance.manager.SetShadowsDistance(gameConfig.shadowDis);
         settingShadowDis.SetContent($"{Math.Round(gameConfig.shadowDis, 0)}m");
+    }
+
+    /// <summary>
+    /// 处理-投射阴影距离
+    /// </summary>
+    /// <param name="value"></param>
+    public void HandleForCastShadowDis(float value)
+    {
+        gameConfig.shadowCastDis = value * 200;
+        settingCastShadowDis.SetContent($"{Math.Round(gameConfig.shadowCastDis, 0)}m");
     }
 
     /// <summary>

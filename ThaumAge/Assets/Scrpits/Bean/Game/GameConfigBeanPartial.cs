@@ -14,4 +14,9 @@ public partial class GameConfigBean
     public int worldRefreshRange = 5;
     //世界删除范围
     public int worldDestoryRange = 5;
+
+    //实体显示具体
+    public float entityShowDis = 20;
+    //投射阴影范围
+    public float shadowCastDis = 20;
 }

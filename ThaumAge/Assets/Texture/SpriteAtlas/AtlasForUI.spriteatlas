@@ -31,6 +31,7 @@ SpriteAtlas:
       m_CrunchedCompression: 0
       m_AllowsAlphaSplitting: 0
       m_Overridden: 0
+      m_IgnorePlatformSupport: 0
       m_AndroidETC2FallbackOverride: 0
       m_ForceMaximumCompressionQuality_BC6H_BC7: 0
     packingSettings:
@@ -323,5 +324,5 @@ SpriteAtlas:
   - ui_cancel_1
   - ui_anvil_1
   m_RenderDataMap: {}
-  m_Tag: SpriteAtlasForUI
+  m_Tag: AtlasForUI
   m_IsVariant: 0

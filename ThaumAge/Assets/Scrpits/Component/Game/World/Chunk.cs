@@ -40,6 +40,10 @@ public class Chunk
     //是否绘制
     public bool isDrawMesh = false;
 
+    //是否已经优化显示
+    protected bool isShowEntityBlock = true;
+    protected bool isCastShadow = true;
+
     //包含Chunk内的所有信息
     public ChunkData chunkData;
     //渲染数据
@@ -60,6 +64,8 @@ public class Chunk
     {
         if (!isInit)
             return;
+        if (!chunkComponent.gameObject.activeSelf)
+            return;
         //eventUpdateTimeForSecTiny += Time.deltaTime;
         eventUpdateTimeForSec += Time.deltaTime;
         eventUpdateTimeForMin += Time.deltaTime;
@@ -72,6 +78,7 @@ public class Chunk
         {
             eventUpdateTimeForSec = 0;
             HandleForEventUpdateForSec();
+            HandleForOptimizeShow();
         }
         if (eventUpdateTimeForMin > 60)
         {
@@ -501,6 +508,51 @@ public class Chunk
 
                 Block block = BlockHandler.Instance.manager.GetRegisterBlock(blockData.blockId);
                 chunkData.SetBlockForLocal(positionBlock, block, blockData.direction);
+            }
+        }
+    }
+
+    /// <summary>
+    /// 优化显示处理
+    /// </summary>
+    public void HandleForOptimizeShow()
+    {
+        if (chunkComponent == null)
+            return;
+        Vector3 cameraPos = CameraHandler.Instance.manager.mainCamera.transform.position;
+        float disOptimzie = Vector3.Distance(new Vector3(cameraPos.x,0, cameraPos.z) , chunkData.positionForWorld);
+        GameConfigBean gameConfig = GameDataHandler.Instance.manager.GetGameConfig();
+        if (disOptimzie >= gameConfig.entityShowDis)
+        {
+            if (isShowEntityBlock)
+            {
+                isShowEntityBlock = false;
+                chunkComponent.IsShowEntityBlock(isShowEntityBlock);
+            }
+        }
+        else
+        {
+            if (!isShowEntityBlock)
+            {
+                isShowEntityBlock = true;
+                chunkComponent.IsShowEntityBlock(isShowEntityBlock);
+            }
+        }
+
+        if (disOptimzie >= gameConfig.shadowCastDis)
+        {
+            if (isCastShadow)
+            {
+                isCastShadow = false;
+                chunkComponent.IsCastShadow(isCastShadow);
+            }
+        }
+        else
+        {
+            if (!isCastShadow)
+            {
+                isCastShadow = true;
+                chunkComponent.IsCastShadow(isCastShadow);
             }
         }
     }
