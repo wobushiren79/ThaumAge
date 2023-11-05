@@ -5,6 +5,7 @@ using Unity.Mathematics;
 using UnityEngine;
 using Unity.Burst;
 using System.Collections.Generic;
+using UnityEngine.Rendering;
 
 public class TestCShader : BaseMonoBehaviour
 {
@@ -40,8 +41,92 @@ public class TestCShader : BaseMonoBehaviour
     {
         if (GUILayout.Button("Test"))
         {
-            HandleForTest();
+            HandleForTest2();
         }
+    }
+
+    [System.Serializable]
+    public struct VoxelDetails
+    {
+        public float color;
+        public float metallic;
+        public float smoothness;
+    }
+    public struct BlockData
+    {
+        public int blockId;
+    }
+
+    public ComputeShader noiseShader;
+    public ComputeBuffer noiseLayersArray;
+    //public ComputeShader voxelShader;
+
+    public Terrain3DCShaderNoiseLayers[] noiseLayers;
+
+    public int chunkSize = 16;
+    public int maxHeight = 256;
+    public bool isUseTextures = false;
+    public bool isSharedVertices = false;
+    public Vector3 chunkPosition = Vector3.zero;
+
+
+    public void HandleForTest2()
+    {
+        Stopwatch stopwatch = new Stopwatch();
+        stopwatch.Start();
+        Terrain3DCShaderBean terrain3DCShaderBean = new Terrain3DCShaderBean();
+        terrain3DCShaderBean.chunkPosition = chunkPosition;
+        terrain3DCShaderBean.chunkSizeW = chunkSize;
+        terrain3DCShaderBean.chunkSizeH = maxHeight;
+        terrain3DCShaderBean.stateCaves = 1;
+        terrain3DCShaderBean.stateBedrock = 1;
+        terrain3DCShaderBean.oceanHeight = 42;
+        terrain3DCShaderBean.seed = seed;
+        terrain3DCShaderBean.seedOffset = Vector3.zero;
+        terrain3DCShaderBean.noiseLayers = noiseLayers;
+        CShaderHandler.Instance.HandleTerrain3DCShader(terrain3DCShaderBean, (shaderData)=> {
+
+            stopwatch.Stop();
+            LogUtil.Log($"stopwatch1 {stopwatch.ElapsedTicks}");
+            stopwatch.Restart();
+
+            BlockData[] blockArray = new BlockData[terrain3DCShaderBean.GetBlockTotalNum()];
+            shaderData.blockArrayBuffer.GetData(blockArray);
+
+            uint[] count = new uint[1];
+            shaderData.blockCountBuffer.GetData(count);
+            stopwatch.Stop();
+            LogUtil.Log($"stopwatch2 {stopwatch.ElapsedTicks}");
+
+            LogUtil.Log($"Length {blockArray.Length}");
+            LogUtil.Log($"count {count[0]}");
+
+            for (int x = 0; x < chunkSize; x++)
+            {
+                for (int y = 0; y < maxHeight; y++)
+                {
+                    bool isCreate = false;
+                    for (int z = 0; z < chunkSize; z++)
+                    {
+                        var itemData = blockArray[x + (y * chunkSize) + (z * chunkSize * maxHeight)];
+                        if (itemData.blockId == 0)
+                        {
+                            continue;
+                        }
+                        isCreate = true;
+                        GameObject obj = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                        obj.transform.position = new Vector3(x, y, z) + chunkPosition;
+
+                    }
+                }
+            }
+        });
+    }
+
+    VoxelDetails[] getVoxelDetails()
+    {
+        VoxelDetails[] voxelDetails = new VoxelDetails[16];
+        return voxelDetails;
     }
 
     public void HandleForTest()

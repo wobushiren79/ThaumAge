@@ -1,13 +1,16 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 public class BiomeMapData
 {
     public ChunkTerrainData[] arrayChunkTerrainData;
     //最近的3个生态点（用于数据保存）
     public Vector3Int[] arrayCloseBiome;
-    public BiomeMapData(Chunk chunk)
+
+    public void InitData(Chunk chunk,Action<BiomeMapData> callBackForComplete)
     {
         BiomeHandler biomeHandler = BiomeHandler.Instance;
         BiomeManager biomeManager = biomeHandler.manager;
@@ -47,16 +50,22 @@ public class BiomeMapData
         biomeManager.terrainCShader.SetBuffer(kernelId, "BufferTerraninData", bufferTerrain);
         biomeManager.terrainCShader.SetBuffer(kernelId, "BufferBiomeData", bufferBiome);
         biomeManager.terrainCShader.Dispatch(kernelId, arrayChunkTerrainData.Length, 1, 1);
-        bufferTerrain.GetData(arrayChunkTerrainData);
-        bufferTerrain.Dispose();
 
-        //保存数据
-        ChunkTerrainData tempTerrainData = arrayChunkTerrainData[0];
-        bool isSetSuccess = biomeSaveData.SetData((int)tempTerrainData.biomePosition.x, (int)tempTerrainData.biomePosition.y, tempTerrainData.biomeIndex);
-        if (isSetSuccess)
+        AsyncGPUReadback.Request(bufferTerrain, (callbackGPU) =>
         {
-            GameDataHandler.Instance.manager.SaveBiomeData();
-        }
+            bufferTerrain.GetData(arrayChunkTerrainData);
+            bufferTerrain.Dispose();
+
+            //保存数据
+            ChunkTerrainData tempTerrainData = arrayChunkTerrainData[0];
+            bool isSetSuccess = biomeSaveData.SetData((int)tempTerrainData.biomePosition.x, (int)tempTerrainData.biomePosition.y, tempTerrainData.biomeIndex);
+            if (isSetSuccess)
+            {
+                GameDataHandler.Instance.manager.SaveBiomeData();
+            }
+
+            callBackForComplete?.Invoke(this);
+        });
     }
 
 }

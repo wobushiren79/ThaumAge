@@ -96,7 +96,7 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
                 chunk.chunkComponent = chunkComponent;
             }
             //开始异步创建方块数据
-            chunk.BuildChunkBlockDataForAsync(callBackForCreateData);
+            chunk.BuildChunkBlockDataForGPUAsync(callBackForCreateData);
             //开始异步创建方块数据
             chunk.isActive = true;
         }

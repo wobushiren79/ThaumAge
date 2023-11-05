@@ -1,0 +1,226 @@
+// Each #kernel tells which function to compile; you can have many kernels
+#pragma kernel StartCreate
+
+#include "Noise/SimplexNoiseCShader.compute"
+
+//方块数据
+struct BlockData 
+{
+    //方块ID
+    int blockId;
+};
+
+//noise数据
+struct NoiseLayer 
+{    
+    //出现频率 数值越大 波峰越多
+    float frequency;
+    //振幅 数值越大 越宽
+    float amplitude;
+    //间隙性
+    float lacunarity;
+    //噪音循环迭代次数 复杂度
+    int octaves;
+
+    //洞穴大小
+    float caveScale;
+    //洞穴的阈值
+    float caveThreshold;
+
+    //洞穴出现频率 数值越大 波峰越多
+    float caveFrequency;
+    //洞穴振幅 数值越大 越宽
+    float caveAmplitude;
+    //洞穴循环迭代次数 复杂度
+    int caveOctaves;
+
+    //地面的最低高度
+    int groundMinHeigh;
+};
+
+//2D地形数据
+struct Terrain2DData 
+{
+    //高度
+    uint height;
+    //使用的noiseIndex
+    uint noiseIndex;
+};
+
+//区块宽
+uint chunkSizeW;
+//区块高
+uint chunkSizeH;
+/*
+洞穴状态 
+0 不创建洞穴  
+1 创建普通洞穴
+*/
+uint stateCaves;
+/*
+基岩状态
+0 不创建基岩
+1 创建普通基岩 y=0
+*/
+uint stateBedrock;
+//海洋的高度
+uint oceanHeight;
+//区块位置
+float3 chunkPosition;
+//种子
+int seed;
+//种子偏移
+float3 seedOffset;
+
+//所有noise数据
+StructuredBuffer<NoiseLayer> noiseLayersArrayBuffer;
+int noiseLayersCount;
+
+//所有的方块列表数据
+RWStructuredBuffer<BlockData> blockArrayBuffer;
+//不是空气方块的数量
+RWStructuredBuffer<uint> blockCountBuffer;
+
+//获取方块的序号
+int GetBlockIndex(uint3 idx)
+{
+    return idx.x + (idx.y * chunkSizeW) + (idx.z * chunkSizeW * chunkSizeH);
+}
+
+//创建3D地形数据 暂时用于洞穴
+float CreateTerrainCaveData(float3 blockPos, float terrainHeight, uint noiseIndex)
+{
+    //获取当前noise数据
+    NoiseLayer selectedNoise = noiseLayersArrayBuffer[noiseIndex];
+
+    float amplitude = 1;
+    float frequency = 1;
+
+    //3D地形的权重
+    float weightCave = 0;
+
+    //迭代次数
+    for (int i = 0; i < selectedNoise.caveOctaves; i++)
+    {
+        weightCave += snoise(frequency * (blockPos / (selectedNoise.caveScale / ((uint) terrainHeight > oceanHeight ? 1 : 6)))) * amplitude;
+        frequency *= selectedNoise.caveFrequency;
+        amplitude *= selectedNoise.caveAmplitude;
+    }
+    return weightCave;
+}
+
+//获取指定位置 2D地形的高度权重
+float CreateTerrain2DWeightH(float2 blockPosXZ, uint noiseIndex)
+{
+    float weightH = 0;
+    float amplitude = 1;
+    //获取当前noise数据
+    NoiseLayer selectedNoise = noiseLayersArrayBuffer[noiseIndex];
+    float3 posTempData = float3(blockPosXZ.xy, seed);
+    //容错处理 0，0位置的高度有问题 使用1，1的高度
+    if (posTempData.x == 0 && posTempData.y == 0)
+    {
+        posTempData.x = 1;
+        posTempData.y = 0;
+    }
+    //迭代次数
+    for (int i = 0; i < selectedNoise.octaves; i++)
+    {     
+        //调取噪音计算 获取2D的权重高度 这里加上振幅和频率
+        weightH += snoise(float3(posTempData.xy / selectedNoise.frequency, posTempData.z)) * amplitude;
+        //每次迭代改变间隙性
+        posTempData.xy *= selectedNoise.lacunarity;
+        //每次迭代改变振幅
+        amplitude *= selectedNoise.amplitude;
+    }
+    weightH = weightH * weightH;
+    return clamp(weightH, 0, 1);
+}
+
+
+//创建2D的地形数据
+Terrain2DData CreateTerrain2DData(float2 blockPosXZ)
+{
+    //噪音数据的序号  TODO 暂时只处理第一个
+    uint noiseIndex = 0;
+    //获取2D地形的权重高
+    float weightH = CreateTerrain2DWeightH(blockPosXZ, noiseIndex);
+    //获取当前的noise参数
+    NoiseLayer selectedNoise = noiseLayersArrayBuffer[noiseIndex];
+    //做一个容错。最高不超过区块的高-16
+    float height = clamp((weightH * (chunkSizeH - 32)) + selectedNoise.groundMinHeigh, 0, chunkSizeH - 16);
+
+    Terrain2DData terrain2DData;
+    terrain2DData.height = round(height);
+    terrain2DData.noiseIndex = noiseIndex;
+    return terrain2DData;
+}
+
+
+//开始生成数据
+[numthreads(8, 8, 8)]
+void StartCreate(uint3 id : SV_DispatchThreadID)
+{
+    //如果XZ大于W 则不处理
+    if (any(id.xz > chunkSizeW))
+        return;
+    //获取方块的世界坐标
+    float3 blockPos = id + chunkPosition + seedOffset;
+    //获取方块的XZ世界坐标
+    float2 blockPosXZ = blockPos.xz;
+    //获取2D地形数据
+    Terrain2DData terrain2DData = CreateTerrain2DData(blockPosXZ);
+    //获取2D地形的高
+    uint terrainHeight = terrain2DData.height;
+    //获取噪音数据
+    NoiseLayer selectedNoise = noiseLayersArrayBuffer[terrain2DData.noiseIndex];
+
+    BlockData itemBlock;
+    itemBlock.blockId = 0;
+
+    //如果大于地面高度
+    if (id.y > terrainHeight)
+    {
+        //则设置空方块
+        itemBlock.blockId = 0;
+        blockArrayBuffer[GetBlockIndex(id)] = itemBlock;
+        return;
+    }
+
+    //bool isSurfaceBlock = id.y >= terrainHeight - 3;
+    //TODO 设置方块的类型
+    itemBlock.blockId = 1;
+
+    //如果是需要创建普通洞穴
+    switch (stateCaves)
+    {
+        case 1:
+            //如果大于阈值则是空气
+            float weightCave = CreateTerrainCaveData(blockPos, terrainHeight, terrain2DData.noiseIndex);
+            if (weightCave > selectedNoise.caveThreshold)
+            {
+                itemBlock.blockId = 0;
+            }
+        break;
+    }
+
+    //设置基岩
+    switch (stateBedrock)
+    {
+        case 1:
+            if (id.y <= 1)
+            {
+                itemBlock.blockId = 2;
+            }
+        break;
+    }
+
+    if (itemBlock.blockId != 0) 
+    {
+        //blockCountBuffer.IncrementCounter();
+        //也可以使用这种方式增加计数
+        InterlockedAdd(blockCountBuffer[0], 1);
+    }
+
+    blockArrayBuffer[GetBlockIndex(id)] = itemBlock;
+}

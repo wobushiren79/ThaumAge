@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using UnityEditor;
 using UnityEngine;
@@ -16,7 +17,7 @@ public class BiomeHandler : BaseHandler<BiomeHandler, BiomeManager>
     public void InitWorldBiomeSeed()
     {
         int seed = WorldCreateHandler.Instance.manager.GetWorldSeed();
-        offsetBiome = Random.value * 1000;
+        offsetBiome = UnityEngine.Random.value * 1000;
         fastNoise = new FastNoise(seed);
         SimplexNoiseUtil.Seed = seed;
     }
@@ -29,20 +30,24 @@ public class BiomeHandler : BaseHandler<BiomeHandler, BiomeManager>
         manager.dicWorldChunkTerrainDataPool.Clear();
     }
 
-    public BiomeMapData GetBiomeMapData(Chunk chunk)
+    public void GetBiomeMapData(Chunk chunk, Action<BiomeMapData> callBackForComplete)
     {
         if (manager.dicWorldChunkTerrainDataPool.TryGetValue($"{chunk.chunkData.positionForWorld.x}|{chunk.chunkData.positionForWorld.z}", out BiomeMapData biomeMapData))
         {
-            return biomeMapData;
+            callBackForComplete?.Invoke(biomeMapData);
         }
         else
         {
-            biomeMapData = new BiomeMapData(chunk);
-            //添加到缓存中
-            if (manager.dicWorldChunkTerrainDataPool.Count > 2047)
-                ClearBiomeMapData();
-            manager.dicWorldChunkTerrainDataPool.Add($"{chunk.chunkData.positionForWorld.x}|{chunk.chunkData.positionForWorld.z}", biomeMapData);
-            return biomeMapData;
+            biomeMapData = new BiomeMapData();
+            biomeMapData.InitData(chunk, (data) =>
+             {
+                //添加到缓存中
+                if (manager.dicWorldChunkTerrainDataPool.Count > 2047)
+                     ClearBiomeMapData();
+                 manager.dicWorldChunkTerrainDataPool.Add($"{chunk.chunkData.positionForWorld.x}|{chunk.chunkData.positionForWorld.z}", data);
+
+                 callBackForComplete?.Invoke(data);
+             });
         }
     }
 
@@ -66,7 +71,7 @@ public class BiomeHandler : BaseHandler<BiomeHandler, BiomeManager>
     /// <param name="biome"></param>
     public void CreateBiomeBlockTypeForChunk(Chunk chunk, BiomeMapData biomeMapData, Biome biome)
     {
-        biome.InitBiomeBlockForChunk(chunk, biomeMapData);
+
     }
 
     /// <summary>

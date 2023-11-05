@@ -49,7 +49,7 @@ public class Chunk
     //渲染数据
     public ChunkMeshData chunkMeshData;
     //存储数据
-    protected ChunkSaveBean chunkSaveData;
+    public ChunkSaveBean chunkSaveData;
 
     protected object lockForBlcok = new object();
 
@@ -210,7 +210,7 @@ public class Chunk
     /// </summary>
     /// <param name="chunk"></param>
     /// <param name="callBack"></param>
-    public async void BuildChunkBlockDataForAsync(Action<Chunk> callBackForComplete)
+    public void BuildChunkBlockDataForCPUAsync(Action<Chunk> callBackForComplete)
     {
         //初始化Map
         BiomeManager biomeManager = BiomeHandler.Instance.manager;
@@ -218,39 +218,91 @@ public class Chunk
         GameDataManager gameDataManager = GameDataHandler.Instance.manager;
 
         //获取地图数据
-        BiomeMapData biomeMapData = BiomeHandler.Instance.GetBiomeMapData(this);
+        Action<BiomeMapData> callBackForGetBiomeData = async (biomeMapData) =>
+        {
+            await Task.Run(() =>
+            {
+                try
+                {
+                    lock (lockForBlcok)
+                    {
+#if UNITY_EDITOR
+                        Stopwatch stopwatch = TimeUtil.GetMethodTimeStart();
+#endif
+                        //生成基础地形数据 
+                        BlockHandler.Instance.CreateBaseBlockData(this, biomeMapData, () =>
+                        {
+                            //处理存档方块 优先使用存档方块
+                            BlockHandler.Instance.LoadSaveBlockData(this);
+                            //初始化完成
+                            isInit = true;
+                        });
+#if UNITY_EDITOR
+                        TimeUtil.GetMethodTimeEnd("Time_BuildChunkBlockDataForAsync:", stopwatch);
+#endif
+                    }
+                }
+                catch (Exception e)
+                {
+                    LogUtil.Log("CreateChunkBlockDataForAsync:" + e.ToString());
+                }
+            });
+            //初始化周围方块
+            chunkData.InitRoundChunk();
+            //刷新周围方块
+            AddUpdateChunkForRange(0);
 
-        await Task.Run(() =>
+            callBackForComplete?.Invoke(this);
+
+        };
+
+        BiomeHandler.Instance.GetBiomeMapData(this, callBackForGetBiomeData);
+    }
+
+    public void BuildChunkBlockDataForGPUAsync(Action<Chunk> callBackForComplete)
+    {
+        //初始化Map
+        BiomeManager biomeManager = BiomeHandler.Instance.manager;
+        BlockManager blockManager = BlockHandler.Instance.manager;
+        GameDataManager gameDataManager = GameDataHandler.Instance.manager;
+
+        //获取地图数据
+        Action<BiomeMapData> callBackForGetBiomeData = (biomeMapData) =>
         {
             try
             {
                 lock (lockForBlcok)
                 {
-#if UNITY_EDITOR          
+#if UNITY_EDITOR
                     Stopwatch stopwatch = TimeUtil.GetMethodTimeStart();
 #endif
-                    //生成基础地形数据      
-                    HandleForBaseBlock(biomeMapData);
-                    //处理存档方块 优先使用存档方块
-                    HandleForLoadBlock();
-                    //初始化完成
-                    isInit = true;
+                    //生成基础地形数据 
+                    BlockHandler.Instance.CreateBaseBlockDataForGPU(this, biomeMapData, () =>
+                    {
+                        //处理存档方块 优先使用存档方块
+                        BlockHandler.Instance.LoadSaveBlockData(this);
+                        //初始化完成
+                        isInit = true;
+
+                        //初始化周围方块
+                        chunkData.InitRoundChunk();
+                        //刷新周围方块
+                        AddUpdateChunkForRange(0);
+
+                        callBackForComplete?.Invoke(this);
 #if UNITY_EDITOR
-                    TimeUtil.GetMethodTimeEnd("Time_BuildChunkBlockDataForAsync:", stopwatch);
+                        TimeUtil.GetMethodTimeEnd("Time_BuildChunkBlockDataForAsync:", stopwatch);
 #endif
+                    });
                 }
             }
             catch (Exception e)
             {
                 LogUtil.Log("CreateChunkBlockDataForAsync:" + e.ToString());
             }
-        });
-        //初始化周围方块
-        chunkData.InitRoundChunk();
-        //刷新周围方块
-        AddUpdateChunkForRange(0);
+        };
 
-        callBackForComplete?.Invoke(this);
+        BiomeHandler.Instance.GetBiomeMapData(this, callBackForGetBiomeData);
     }
 
     /// <summary>
@@ -443,72 +495,6 @@ public class Chunk
         if (isRefreshBlockRange)
         {
             newBlock.RefreshBlockRange(this, localPosition, direction, updateChunkType);
-        }
-    }
-
-    /// <summary>
-    /// 处理-基础地形方块
-    /// </summary>
-    /// <param name="chunk"></param>
-    public void HandleForBaseBlock(BiomeMapData biomeMapData)
-    {
-        WorldTypeEnum worldType = WorldCreateHandler.Instance.manager.worldType;
-        Biome biome = null;
-        for (int x = 0; x < chunkData.chunkWidth; x++)
-        {
-            for (int z = 0; z < chunkData.chunkWidth; z++)
-            {
-                ChunkTerrainData itemTerrainData = biomeMapData.arrayChunkTerrainData[x * chunkData.chunkWidth + z];
-                biome = BiomeHandler.Instance.manager.GetBiome(worldType, itemTerrainData.biomeIndex);
-                for (int y = 0; y < chunkData.chunkHeight; y++)
-                {
-                    Vector3Int position = new Vector3Int(x, y, z);
-                    //获取方块类型
-                    BlockTypeEnum blockType = BiomeHandler.Instance.CreateBiomeBlockType(this, position, biome, itemTerrainData);
-                    //如果是空 则跳过
-                    if (blockType == BlockTypeEnum.None)
-                        continue;
-
-                    Block block = BlockHandler.Instance.manager.GetRegisterBlock(blockType);
-                    //添加方块
-                    chunkData.SetBlockForLocal(x, y, z, block, BlockDirectionEnum.UpForward);
-                }
-            }
-        }
-        //生成区块的对应方块（洞穴 大物体之类）
-        BiomeHandler.Instance.CreateBiomeBlockTypeForChunk(this, biomeMapData, biome);
-    }
-
-    /// <summary>
-    /// 处理 读取的方块
-    /// </summary>
-    public void HandleForLoadBlock()
-    {
-        GameDataManager gameDataManager = GameDataHandler.Instance.manager;
-        //获取数据中的chunk
-        UserDataBean userData = gameDataManager.GetUserData();
-
-        chunkSaveData = gameDataManager.GetChunkSaveData(userData.userId, WorldCreateHandler.Instance.manager.worldType, chunkData.positionForWorld);
-        //如果没有世界数据 则创建一个
-        if (chunkSaveData == null)
-        {
-            chunkSaveData = new ChunkSaveBean();
-            chunkSaveData.worldType = (int)WorldCreateHandler.Instance.manager.worldType;
-            chunkSaveData.userId = userData.userId;
-            chunkSaveData.position = chunkData.positionForWorld;
-        }
-        else
-        {
-            chunkSaveData.InitData();
-            Dictionary<int, BlockBean> dicBlockData = chunkSaveData.dicBlockData;
-            foreach (var itemData in dicBlockData)
-            {
-                BlockBean blockData = itemData.Value;
-                Vector3Int positionBlock = blockData.localPosition;
-
-                Block block = BlockHandler.Instance.manager.GetRegisterBlock(blockData.blockId);
-                chunkData.SetBlockForLocal(positionBlock, block, blockData.direction);
-            }
         }
     }
 

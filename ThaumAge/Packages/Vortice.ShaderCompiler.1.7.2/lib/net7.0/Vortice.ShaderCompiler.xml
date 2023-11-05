@@ -1,0 +1,136 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Vortice.ShaderCompiler</name>
+    </assembly>
+    <members>
+        <member name="M:Vortice.ShaderCompiler.Compiler.Finalize">
+            <summary>
+            Finalizes an instance of the <see cref="T:Vortice.ShaderCompiler.Compiler" /> class.
+            </summary>
+        </member>
+        <member name="T:Vortice.ShaderCompiler.Native.shaderc_include_result">
+            <summary>An include result. https://github.com/google/shaderc/blob/c42db5815fad0424f0f1311de1eec92cdd77203d/libshaderc/include/shaderc/shaderc.h#L325</summary>
+        </member>
+        <member name="F:Vortice.ShaderCompiler.Native.shaderc_include_result.source_name">
+            <summary>
+            The name of the source file.  The name should be fully resolved
+            in the sense that it should be a unique name in the context of the
+            includer.  For example, if the includer maps source names to files in
+            a filesystem, then this name should be the absolute path of the file.
+            For a failed inclusion, this string is empty.
+            </summary>
+        </member>
+        <member name="F:Vortice.ShaderCompiler.Native.shaderc_include_result.content">
+            <summary>
+            The text contents of the source file in the normal case.
+            For a failed inclusion, this contains the error message.
+            </summary>
+        </member>
+        <member name="F:Vortice.ShaderCompiler.Native.shaderc_include_result.user_data">
+            <summary>
+            User data to be passed along with this request.
+            </summary>
+        </member>
+        <member name="T:Vortice.ShaderCompiler.Native.PFN_shaderc_include_resolve_fn">
+            <returns>shaderc_include_result</returns>
+        </member>
+        <member name="T:Vortice.ShaderCompiler.Native.PFN_shaderc_include_result_release_fn">
+            <param name="user_data">User data</param>
+            <param name="include_result">shaderc_include_result</param>
+        </member>
+        <member name="F:Vortice.ShaderCompiler.OptimizationLevel.Zero">
+            <summary>
+            No optimization
+            </summary>
+        </member>
+        <member name="F:Vortice.ShaderCompiler.OptimizationLevel.Size">
+            <summary>
+            Optimize towards reducing code size
+            </summary>
+        </member>
+        <member name="F:Vortice.ShaderCompiler.OptimizationLevel.Performance">
+            <summary>
+            Optimize towards performance.
+            </summary>
+        </member>
+        <member name="M:Vortice.ShaderCompiler.Options.Finalize">
+            <summary>
+            Finalizes an instance of the <see cref="T:Vortice.ShaderCompiler.Options" /> class.
+            </summary>
+        </member>
+        <member name="M:Vortice.ShaderCompiler.Options.SetInvertY(System.Boolean)">
+            <summary>
+            Sets whether the compiler should invert position.Y output in vertex shader.
+            </summary>
+            <param name="enable"></param>
+        </member>
+        <member name="P:Vortice.ShaderCompiler.Result.ErrorMessage">
+            <summary>
+            Returns a null-terminated string that contains any error messages generated
+            during the compilation.
+            </summary>
+        </member>
+        <member name="M:Vortice.ShaderCompiler.Result.Finalize">
+            <summary>
+            Finalizes an instance of the <see cref="T:Vortice.ShaderCompiler.Result" /> class.
+            </summary>
+        </member>
+        <member name="F:Vortice.ShaderCompiler.ShaderKind.GLSLInferFromSource">
+            <summary>
+            Deduce the shader kind from #pragma annotation in the source code. Compiler will emit error if #pragma annotation is not found.
+            </summary>
+        </member>
+        <member name="F:Vortice.ShaderCompiler.TargetEnvironment.Vulkan">
+            <summary>
+            SPIR-V under Vulkan semantics.
+            </summary>
+        </member>
+        <member name="F:Vortice.ShaderCompiler.TargetEnvironment.OpenGL">
+            <summary>
+            SPIR-V under OpenGL semantics.
+            NOTE: SPIR-V code generation is not supported for shaders under OpenGL compatibility profile.
+            </summary>
+        </member>
+        <member name="F:Vortice.ShaderCompiler.TargetEnvironment.OpenGLCompate">
+            <summary>
+            SPIR-V under OpenGL semantics, including compatibility profile functions
+            </summary>
+        </member>
+        <member name="F:Vortice.ShaderCompiler.TargetEnvironment.WebGPU">
+            <summary>
+            Deprecated, SPIR-V under WebGPU semantics.
+            </summary>
+        </member>
+        <member name="F:Vortice.ShaderCompiler.UniformKind.Image">
+            <summary>
+            Image and image buffer.
+            </summary>
+        </member>
+        <member name="F:Vortice.ShaderCompiler.UniformKind.Sampler">
+            <summary>
+            Pure sampler.
+            </summary>
+        </member>
+        <member name="F:Vortice.ShaderCompiler.UniformKind.Texture">
+            <summary>
+            Sampled texture in GLSL, and Shader Resource View in HLSL.
+            </summary>
+        </member>
+        <member name="F:Vortice.ShaderCompiler.UniformKind.Buffer">
+            <summary>
+            Uniform Buffer Object (UBO) in GLSL.  Cbuffer in HLSL.
+            </summary>
+        </member>
+        <member name="F:Vortice.ShaderCompiler.UniformKind.StorageBuffer">
+            <summary>
+            Shader Storage Buffer Object (SSBO) in GLSL.
+            </summary>
+        </member>
+        <member name="F:Vortice.ShaderCompiler.UniformKind.UnorderedAccessView">
+            <summary>
+            Unordered Access View, in HLSL.  (Writable storage image or storage buffer.)
+            </summary>
+        </member>
+    </members>
+</doc>
