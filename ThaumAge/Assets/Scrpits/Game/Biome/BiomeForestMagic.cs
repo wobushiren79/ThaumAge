@@ -14,64 +14,65 @@ public class BiomeForestMagic : Biome
     {
     }
 
-    public override BlockTypeEnum GetBlockForMaxHeightDown(Chunk chunk, Vector3Int localPos, ChunkTerrainData terrainData)
+    public override BlockTypeEnum GetBlockForMaxHeightDown(Chunk chunk, Vector3Int localPos)
     {
-        if (localPos.y == terrainData.maxHeight)
-        {
-            if (localPos.y >= biomeInfo.GetWaterPlaneHeight())
-            {
-                Vector3Int wPos = localPos + chunk.chunkData.positionForWorld;
-                AddWeed(wPos);
-                AddMushroomTree(wPos);
-                AddStoneMoss(wPos);
-                AddFlower(wPos);
-                AddDeadwood(wPos);
-            }
-            if (localPos.y == biomeInfo.GetWaterPlaneHeight() || localPos.y == biomeInfo.GetWaterPlaneHeight() + 1)
-            {
-                // 地表，使用草
-                return BlockTypeEnum.Sand;
-            }
-            else
-            {
-                // 地表，使用草
-                return BlockTypeEnum.GrassMagic;
-            }
-        }
-        if (localPos.y < terrainData.maxHeight && localPos.y > terrainData.maxHeight - 10)
-        {
-            //中使用泥土
-            return BlockTypeEnum.Dirt;
-        }
-        else if (localPos.y == 0)
-        {
-            //基础
-            return BlockTypeEnum.Foundation;
-        }
-        else
-        {
-            //其他石头
-            return BlockTypeEnum.Stone;
-        }
+        return BlockTypeEnum.None;
+        //if (localPos.y == terrainData.maxHeight)
+        //{
+        //    if (localPos.y >= biomeInfo.GetWaterPlaneHeight())
+        //    {
+        //        Vector3Int wPos = localPos + chunk.chunkData.positionForWorld;
+        //        AddWeed(wPos);
+        //        AddMushroomTree(wPos);
+        //        AddStoneMoss(wPos);
+        //        AddFlower(wPos);
+        //        AddDeadwood(wPos);
+        //    }
+        //    if (localPos.y == biomeInfo.GetWaterPlaneHeight() || localPos.y == biomeInfo.GetWaterPlaneHeight() + 1)
+        //    {
+        //        // 地表，使用草
+        //        return BlockTypeEnum.Sand;
+        //    }
+        //    else
+        //    {
+        //        // 地表，使用草
+        //        return BlockTypeEnum.GrassMagic;
+        //    }
+        //}
+        //if (localPos.y < terrainData.maxHeight && localPos.y > terrainData.maxHeight - 10)
+        //{
+        //    //中使用泥土
+        //    return BlockTypeEnum.Dirt;
+        //}
+        //else if (localPos.y == 0)
+        //{
+        //    //基础
+        //    return BlockTypeEnum.Foundation;
+        //}
+        //else
+        //{
+        //    //其他石头
+        //    return BlockTypeEnum.Stone;
+        //}
     }
 
-    public override void InitBiomeBlockForChunk(Chunk chunk, BiomeMapData biomeMapData)
+    public override void InitBiomeBlockForChunk(Chunk chunk)
     {
-        base.InitBiomeBlockForChunk(chunk, biomeMapData);
+        //base.InitBiomeBlockForChunk(chunk, biomeMapData);
 
-        //获取中心点的地形数据
-        Vector3Int centerPosition = new Vector3Int(8,0,8);
-        Vector3Int chunkPosition = chunk.chunkData.positionForWorld;
-        //获取地形数据
-        ChunkTerrainData centerPositionTerrainData = GetTerrainData(chunk, biomeMapData, centerPosition.x, centerPosition.z);
+        ////获取中心点的地形数据
+        //Vector3Int centerPosition = new Vector3Int(8,0,8);
+        //Vector3Int chunkPosition = chunk.chunkData.positionForWorld;
+        ////获取地形数据
+        //ChunkTerrainData centerPositionTerrainData = GetTerrainData(chunk, biomeMapData, centerPosition.x, centerPosition.z);
 
-        Vector3Int bigTreeWorldPosition = new Vector3Int
-            (chunkPosition.x + centerPosition.x, Mathf.RoundToInt(centerPositionTerrainData.maxHeight), chunkPosition.z + centerPosition.z);
-        bool isWorldTreeCreate = AddWorldTree(bigTreeWorldPosition);
-        if (!isWorldTreeCreate)
-        {
-            AddBigTree(bigTreeWorldPosition);
-        }
+        //Vector3Int bigTreeWorldPosition = new Vector3Int
+        //    (chunkPosition.x + centerPosition.x, Mathf.RoundToInt(centerPositionTerrainData.maxHeight), chunkPosition.z + centerPosition.z);
+        //bool isWorldTreeCreate = AddWorldTree(bigTreeWorldPosition);
+        //if (!isWorldTreeCreate)
+        //{
+        //    AddBigTree(bigTreeWorldPosition);
+        //}
     }
 
     protected void AddMushroomTree(Vector3Int wPos)

@@ -13,36 +13,37 @@ public class BiomeTest : Biome
 
     }
 
-    public override BlockTypeEnum GetBlockForMaxHeightDown(Chunk chunk, Vector3Int localPos, ChunkTerrainData terrainData)
+    public override BlockTypeEnum GetBlockForMaxHeightDown(Chunk chunk, Vector3Int localPos)
     {
-        if (localPos.y == terrainData.maxHeight)
-        {
-            //AddWeed(wPos);
-            //AddBigTree(wPos);
-            //AddWorldTree(wPos);
-            //AddMushroomTree(wPos);
-            //AddStoneMoss(wPos);
-            //AddFlower(wPos);
-            //AddDeadwood(wPos);
-            //草
-            return BlockTypeEnum.Grass;
-        }
-        else if (localPos.y == 0)
-        {
-            //基础
-            return BlockTypeEnum.Foundation;
-        }
-        else if (localPos.y < terrainData.maxHeight && localPos.y >= terrainData.maxHeight - 5)
-        {
-            //其他土
-            return BlockTypeEnum.Dirt;
-        }
-        else
-        {
-            //BiomeCreateTool.AddOre(900, 0.00001f, wPos);
-            //其他土
-            return BlockTypeEnum.Stone;
-        }
+        return BlockTypeEnum.None;
+        //if (localPos.y == terrainData.maxHeight)
+        //{
+        //    //AddWeed(wPos);
+        //    //AddBigTree(wPos);
+        //    //AddWorldTree(wPos);
+        //    //AddMushroomTree(wPos);
+        //    //AddStoneMoss(wPos);
+        //    //AddFlower(wPos);
+        //    //AddDeadwood(wPos);
+        //    //草
+        //    return BlockTypeEnum.Grass;
+        //}
+        //else if (localPos.y == 0)
+        //{
+        //    //基础
+        //    return BlockTypeEnum.Foundation;
+        //}
+        //else if (localPos.y < terrainData.maxHeight && localPos.y >= terrainData.maxHeight - 5)
+        //{
+        //    //其他土
+        //    return BlockTypeEnum.Dirt;
+        //}
+        //else
+        //{
+        //    //BiomeCreateTool.AddOre(900, 0.00001f, wPos);
+        //    //其他土
+        //    return BlockTypeEnum.Stone;
+        //}
     }
 
 

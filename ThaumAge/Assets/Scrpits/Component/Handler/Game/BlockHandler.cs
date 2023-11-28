@@ -1,4 +1,5 @@
-﻿using System;
+﻿using OfficeOpenXml.FormulaParsing.Excel.Functions.Math;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -133,45 +134,18 @@ public class BlockHandler : BaseHandler<BlockHandler, BlockManager>
     //}
     public struct BlockData
     {
+        //方块ID
         public int blockId;
+        //方块结构
+        public int blockStructure;
     }
 
     public Terrain3DCShaderNoiseLayers[] terrain3DCShaderNoises;
 
     /// <summary>
-    /// 生成基础地形数据 
+    /// 生成地形数据
     /// </summary>
-    public void CreateBaseBlockData(Chunk chunk, BiomeMapData biomeMapData,Action callBackForComplete)
-    {
-        WorldTypeEnum worldType = WorldCreateHandler.Instance.manager.worldType;
-        Biome biome = null;
-        for (int x = 0; x < chunk.chunkData.chunkWidth; x++)
-        {
-            for (int z = 0; z < chunk.chunkData.chunkWidth; z++)
-            {
-                ChunkTerrainData itemTerrainData = biomeMapData.arrayChunkTerrainData[x * chunk.chunkData.chunkWidth + z];
-                biome = BiomeHandler.Instance.manager.GetBiome(worldType, itemTerrainData.biomeIndex);
-                for (int y = 0; y < chunk.chunkData.chunkHeight; y++)
-                {
-                    Vector3Int position = new Vector3Int(x, y, z);
-                    //获取方块类型
-                    BlockTypeEnum blockType = BiomeHandler.Instance.CreateBiomeBlockType(chunk, position, biome, itemTerrainData);
-                    //如果是空 则跳过
-                    if (blockType == BlockTypeEnum.None)
-                        continue;
-
-                    Block block = BlockHandler.Instance.manager.GetRegisterBlock(blockType);
-                    //添加方块
-                    chunk.chunkData.SetBlockForLocal(x, y, z, block, BlockDirectionEnum.UpForward);
-                }
-            }
-        }
-        //生成区块的对应方块（洞穴 大物体之类）
-        BiomeHandler.Instance.CreateBiomeBlockTypeForChunk(chunk, biomeMapData, biome);
-        callBackForComplete?.Invoke();
-    }
-
-    public void CreateBaseBlockDataForGPU(Chunk chunk, BiomeMapData biomeMapData, Action callBackForComplete)
+    public void CreateBaseBlockDataForGPU(Chunk chunk, Action<BlockData[]> callBackForComplete)
     {
         if (terrain3DCShaderNoises == null)
         {
@@ -207,26 +181,64 @@ public class BlockHandler : BaseHandler<BlockHandler, BlockManager>
 
             uint[] count = new uint[1];
             terrainData.blockCountBuffer.GetData(count);
-            for (int x = 0; x < chunk.chunkData.chunkWidth; x++)
-            {
-                for (int z = 0; z < chunk.chunkData.chunkWidth; z++)
-                {
-                    for (int y = 0; y < chunk.chunkData.chunkHeight; y++)
-                    {
-                        var itemData = blockArray[x + (y * terrainData.chunkSizeW) + (z * terrainData.chunkSizeW * terrainData.chunkSizeH)];
-                        BlockTypeEnum blockType = (BlockTypeEnum)itemData.blockId;
-                        //如果是空 则跳过
-                        if (blockType == BlockTypeEnum.None)
-                            continue;
 
-                        Block block = manager.GetRegisterBlock(BlockTypeEnum.Dirt);
-                        //添加方块
-                        chunk.chunkData.SetBlockForLocal(x, y, z, block, BlockDirectionEnum.UpForward);
+            callBackForComplete?.Invoke(blockArray);
+        });
+    }
+
+    /// <summary>
+    /// 处理生成的地形数据
+    /// </summary>
+    /// <param name="chunk"></param>
+    /// <param name="blockArray"></param>
+    public void HandleBaseBlockData(Chunk chunk, BlockData[] blockArray)
+    {
+        int chunkWidth = chunk.chunkData.chunkWidth;
+        int chunkHeight = chunk.chunkData.chunkHeight;
+        for (int x = 0; x < chunk.chunkData.chunkWidth; x++)
+        {
+            for (int z = 0; z < chunk.chunkData.chunkWidth; z++)
+            {
+                for (int y = 0; y < chunk.chunkData.chunkHeight; y++)
+                {
+                    var itemData = blockArray[x + (y * chunkWidth) + (z * chunkWidth * chunkHeight)];
+                    //如果是空 则跳过
+                    if (itemData.blockId == 0)
+                        continue;
+                    BlockTypeEnum blockType = (BlockTypeEnum)itemData.blockId;
+                    Block block = manager.GetRegisterBlock(blockType);
+                    //添加方块
+                    chunk.chunkData.SetBlockForLocal(x, y, z, block, BlockDirectionEnum.UpForward);
+                    //创建特殊结构方框的数据
+                    if (itemData.blockStructure != 0)
+                    {
+                        CreateBaseBlockDataForStructure((BlockStructureEnum)itemData.blockStructure, chunk.chunkData.positionForWorld + new Vector3Int(x,y,z));
                     }
                 }
             }
-            callBackForComplete?.Invoke();
-        });
+        }
+    }
+
+    /// <summary>
+    /// 创建结构提方框的数据
+    /// </summary>
+    public void CreateBaseBlockDataForStructure(BlockStructureEnum blockStructure, Vector3Int baseWorldPosition)
+    {
+        switch (blockStructure) 
+        {
+            case BlockStructureEnum.NormalTree:
+                BiomeCreateTreeTool.BiomeForTreeData treeData = new BiomeCreateTreeTool.BiomeForTreeData
+                {
+                    addRate = 0.025f,
+                    minHeight = 5,
+                    maxHeight = 8,
+                    treeTrunk = BlockTypeEnum.TreeOak,
+                    treeLeaves = BlockTypeEnum.LeavesOak,
+                    leavesRange = 2,
+                };
+                BiomeCreateTreeTool.AddTree(201, baseWorldPosition, treeData);
+                break;
+        }
     }
 
 

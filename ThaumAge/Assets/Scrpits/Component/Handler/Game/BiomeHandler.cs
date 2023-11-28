@@ -23,35 +23,6 @@ public class BiomeHandler : BaseHandler<BiomeHandler, BiomeManager>
     }
 
     /// <summary>
-    /// 清理缓存数据
-    /// </summary>
-    public void ClearBiomeMapData()
-    {
-        manager.dicWorldChunkTerrainDataPool.Clear();
-    }
-
-    public void GetBiomeMapData(Chunk chunk, Action<BiomeMapData> callBackForComplete)
-    {
-        if (manager.dicWorldChunkTerrainDataPool.TryGetValue($"{chunk.chunkData.positionForWorld.x}|{chunk.chunkData.positionForWorld.z}", out BiomeMapData biomeMapData))
-        {
-            callBackForComplete?.Invoke(biomeMapData);
-        }
-        else
-        {
-            biomeMapData = new BiomeMapData();
-            biomeMapData.InitData(chunk, (data) =>
-             {
-                //添加到缓存中
-                if (manager.dicWorldChunkTerrainDataPool.Count > 2047)
-                     ClearBiomeMapData();
-                 manager.dicWorldChunkTerrainDataPool.Add($"{chunk.chunkData.positionForWorld.x}|{chunk.chunkData.positionForWorld.z}", data);
-
-                 callBackForComplete?.Invoke(data);
-             });
-        }
-    }
-
-    /// <summary>
     /// 根据生物生态 创造方块
     /// </summary>
     /// <param name="listBiome"></param>
@@ -59,9 +30,9 @@ public class BiomeHandler : BaseHandler<BiomeHandler, BiomeManager>
     /// <param name="width"></param>
     /// <param name="height"></param>
     /// <returns></returns>
-    public BlockTypeEnum CreateBiomeBlockType(Chunk chunk, Vector3Int blockLocalPosition, Biome biome, ChunkTerrainData chunkTerrainData)
+    public BlockTypeEnum CreateBiomeBlockType(Chunk chunk, Vector3Int blockLocalPosition, Biome biome)
     {
-        return biome.InitBiomeBlock(chunk, blockLocalPosition, chunkTerrainData);
+        return biome.InitBiomeBlock(chunk, blockLocalPosition);
     }
 
     /// <summary>
@@ -69,7 +40,7 @@ public class BiomeHandler : BaseHandler<BiomeHandler, BiomeManager>
     /// </summary>
     /// <param name="chunk"></param>
     /// <param name="biome"></param>
-    public void CreateBiomeBlockTypeForChunk(Chunk chunk, BiomeMapData biomeMapData, Biome biome)
+    public void CreateBiomeBlockTypeForChunk(Chunk chunk, Biome biome)
     {
 
     }

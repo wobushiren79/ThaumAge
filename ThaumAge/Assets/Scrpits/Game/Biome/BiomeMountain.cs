@@ -12,63 +12,64 @@ public class BiomeMountain : Biome
     //高山
     public BiomeMountain() : base(BiomeTypeEnum.Mountain)
     {
-        maxHight = biomeInfo.min_height + (int)biomeInfo.amplitude0 / 2;
-        lineSnow = maxHight - 30;
-        lineHalfSnow = maxHight - 24;
+        //maxHight = biomeInfo.min_height + (int)biomeInfo.amplitude0 / 2;
+        //lineSnow = maxHight - 30;
+        //lineHalfSnow = maxHight - 24;
     }
 
-    public override BlockTypeEnum GetBlockForMaxHeightUp(Chunk chunk, Vector3Int localPos, ChunkTerrainData terrainData)
+    public override BlockTypeEnum GetBlockForMaxHeightUp(Chunk chunk, Vector3Int localPos)
     {
-        if (localPos.y == terrainData.maxHeight + 1)
-        {
-            if (localPos.y >= lineSnow && localPos.y <= lineHalfSnow)
-            {
-                return BlockTypeEnum.HalfStoneSnow;
-            }
-        }
+        //if (localPos.y == terrainData.maxHeight + 1)
+        //{
+        //    if (localPos.y >= lineSnow && localPos.y <= lineHalfSnow)
+        //    {
+        //        return BlockTypeEnum.HalfStoneSnow;
+        //    }
+        //}
         return BlockTypeEnum.None;
     }
 
-    public override BlockTypeEnum GetBlockForMaxHeightDown(Chunk chunk, Vector3Int localPos, ChunkTerrainData terrainData)
+    public override BlockTypeEnum GetBlockForMaxHeightDown(Chunk chunk, Vector3Int localPos)
     {
-        if (localPos.y == terrainData.maxHeight)
-        {
-            Vector3Int wPos = localPos + chunk.chunkData.positionForWorld;
-            if (localPos.y > lineHalfSnow - 1)
-            {
-                // 地表，使用草
-                AddWeedSnow(wPos);
-                return BlockTypeEnum.StoneSnow;
-            }
-            AddWeed(wPos);
-            AddFlower(wPos);
-            AddTree1(wPos);
-            if (localPos.y < lineSnow)
-            {
-                AddTree2(wPos);
-            }
-            if (localPos.y >= lineSnow && localPos.y <= lineHalfSnow)
-            {
-                return BlockTypeEnum.GrassSnow;
-            }
-            // 地表，使用草
-            return BlockTypeEnum.Grass;
-        }
-        if (localPos.y < terrainData.maxHeight && localPos.y > terrainData.maxHeight - 5)
-        {
-            //中使用泥土
-            return BlockTypeEnum.Dirt;
-        }
-        else if (localPos.y == 0)
-        {
-            //基础
-            return BlockTypeEnum.Foundation;
-        }
-        else
-        {
-            //其他石头
-            return BlockTypeEnum.Stone;
-        }
+        return BlockTypeEnum.None;
+        //if (localPos.y == terrainData.maxHeight)
+        //{
+        //    Vector3Int wPos = localPos + chunk.chunkData.positionForWorld;
+        //    if (localPos.y > lineHalfSnow - 1)
+        //    {
+        //        // 地表，使用草
+        //        AddWeedSnow(wPos);
+        //        return BlockTypeEnum.StoneSnow;
+        //    }
+        //    AddWeed(wPos);
+        //    AddFlower(wPos);
+        //    AddTree1(wPos);
+        //    if (localPos.y < lineSnow)
+        //    {
+        //        AddTree2(wPos);
+        //    }
+        //    if (localPos.y >= lineSnow && localPos.y <= lineHalfSnow)
+        //    {
+        //        return BlockTypeEnum.GrassSnow;
+        //    }
+        //    // 地表，使用草
+        //    return BlockTypeEnum.Grass;
+        //}
+        //if (localPos.y < terrainData.maxHeight && localPos.y > terrainData.maxHeight - 5)
+        //{
+        //    //中使用泥土
+        //    return BlockTypeEnum.Dirt;
+        //}
+        //else if (localPos.y == 0)
+        //{
+        //    //基础
+        //    return BlockTypeEnum.Foundation;
+        //}
+        //else
+        //{
+        //    //其他石头
+        //    return BlockTypeEnum.Stone;
+        //}
     }
 
     protected void AddFlower(Vector3Int wPos)

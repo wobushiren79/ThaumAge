@@ -75,7 +75,7 @@ public class BiomeCreateTreeTool
     {
         //生成概率
         float addRate = WorldRandTools.GetValue(startPosition, randomData);
-
+        addRate = 0;
         if (addRate < treeData.addRate)
         {
             //高度

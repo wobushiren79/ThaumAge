@@ -9,90 +9,92 @@ public class BiomeSnowland : Biome
 
     }
 
-    public override BlockTypeEnum GetBlockForMaxHeightUp(Chunk chunk, Vector3Int localPos, ChunkTerrainData terrainData)
+    public override BlockTypeEnum GetBlockForMaxHeightUp(Chunk chunk, Vector3Int localPos)
     {
-        //当前方块位置高于随机生成的高度值时，当前方块类型为空
-        int waterPlaneHeight = biomeInfo.GetWaterPlaneHeight();
-        if (localPos.y == waterPlaneHeight)
-        {
-            if (terrainData.maxHeight > 60)
-            {
-                Vector3Int wPos = localPos + chunk.chunkData.positionForWorld;
-                //AddIceHalf(wPos);
-                //生成概率
-                float addRate = WorldRandTools.GetValue(wPos, 111);
-                if (addRate < 0.01f)
-                {
-                    return BlockTypeEnum.Water;
-                }
-                else
-                {
-                    return BlockTypeEnum.StoneIce;
-                }
-            }
-            return BlockTypeEnum.Water;
-        }
-        else if (localPos.y == waterPlaneHeight + 1)
-        {
-            if (localPos.y == terrainData.maxHeight + 1)
-            {
-                if (terrainData.maxHeight > 60)
-                {
-                    return BlockTypeEnum.HalfStoneSnow;
-                }
-                else
-                {
-                    return BlockTypeEnum.StoneSnow;
-                }
-            }
-        }
-        else if (localPos.y < waterPlaneHeight)
-        {
-            Block tagetBlock = chunk.chunkData.GetBlockForLocal(localPos);
-            if (tagetBlock == null || tagetBlock.blockType == BlockTypeEnum.None)
-            {
-                return BlockTypeEnum.Water;
-            }
-        }
         return BlockTypeEnum.None;
+        //当前方块位置高于随机生成的高度值时，当前方块类型为空
+        //int waterPlaneHeight = biomeInfo.GetWaterPlaneHeight();
+        //if (localPos.y == waterPlaneHeight)
+        //{
+        //    if (terrainData.maxHeight > 60)
+        //    {
+        //        Vector3Int wPos = localPos + chunk.chunkData.positionForWorld;
+        //        //AddIceHalf(wPos);
+        //        //生成概率
+        //        float addRate = WorldRandTools.GetValue(wPos, 111);
+        //        if (addRate < 0.01f)
+        //        {
+        //            return BlockTypeEnum.Water;
+        //        }
+        //        else
+        //        {
+        //            return BlockTypeEnum.StoneIce;
+        //        }
+        //    }
+        //    return BlockTypeEnum.Water;
+        //}
+        //else if (localPos.y == waterPlaneHeight + 1)
+        //{
+        //    if (localPos.y == terrainData.maxHeight + 1)
+        //    {
+        //        if (terrainData.maxHeight > 60)
+        //        {
+        //            return BlockTypeEnum.HalfStoneSnow;
+        //        }
+        //        else
+        //        {
+        //            return BlockTypeEnum.StoneSnow;
+        //        }
+        //    }
+        //}
+        //else if (localPos.y < waterPlaneHeight)
+        //{
+        //    Block tagetBlock = chunk.chunkData.GetBlockForLocal(localPos);
+        //    if (tagetBlock == null || tagetBlock.blockType == BlockTypeEnum.None)
+        //    {
+        //        return BlockTypeEnum.Water;
+        //    }
+        //}
+        //return BlockTypeEnum.None;
     }
 
-    public override BlockTypeEnum GetBlockForMaxHeightDown(Chunk chunk, Vector3Int localPos, ChunkTerrainData terrainData)
+    public override BlockTypeEnum GetBlockForMaxHeightDown(Chunk chunk, Vector3Int localPos)
     {
-        int waterPlaneHeight = biomeInfo.GetWaterPlaneHeight();
-        if (localPos.y == terrainData.maxHeight)
-        {
-            Vector3Int wPos = localPos + chunk.chunkData.positionForWorld;      
-            // 地表，使用草
-            if (localPos.y > waterPlaneHeight)
-            {
-                AddWeed(wPos);
-                if (localPos.y == waterPlaneHeight + 1)
-                {
-                    return BlockTypeEnum.StoneSnow;
-                }
-                return BlockTypeEnum.GrassSnow;
-            }
-            else
-            {
-                return BlockTypeEnum.Dirt;
-            }
-        }
-        else if (localPos.y < terrainData.maxHeight && localPos.y > terrainData.maxHeight - 5)
-        {
-            //中使用泥土
-            return BlockTypeEnum.Dirt;
-        }
-        else if (localPos.y == 0)
-        {
-            //基础
-            return BlockTypeEnum.Foundation;
-        }
-        else
-        {
-            //其他石头
-            return BlockTypeEnum.Stone;
-        }
+        return BlockTypeEnum.None;
+        //int waterPlaneHeight = biomeInfo.GetWaterPlaneHeight();
+        //if (localPos.y == terrainData.maxHeight)
+        //{
+        //    Vector3Int wPos = localPos + chunk.chunkData.positionForWorld;      
+        //    // 地表，使用草
+        //    if (localPos.y > waterPlaneHeight)
+        //    {
+        //        AddWeed(wPos);
+        //        if (localPos.y == waterPlaneHeight + 1)
+        //        {
+        //            return BlockTypeEnum.StoneSnow;
+        //        }
+        //        return BlockTypeEnum.GrassSnow;
+        //    }
+        //    else
+        //    {
+        //        return BlockTypeEnum.Dirt;
+        //    }
+        //}
+        //else if (localPos.y < terrainData.maxHeight && localPos.y > terrainData.maxHeight - 5)
+        //{
+        //    //中使用泥土
+        //    return BlockTypeEnum.Dirt;
+        //}
+        //else if (localPos.y == 0)
+        //{
+        //    //基础
+        //    return BlockTypeEnum.Foundation;
+        //}
+        //else
+        //{
+        //    //其他石头
+        //    return BlockTypeEnum.Stone;
+        //}
     }
 
     /// <summary>

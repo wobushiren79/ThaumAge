@@ -12,51 +12,52 @@ public class BiomeOcean : Biome
 
     }
 
-    public override BlockTypeEnum GetBlockForMaxHeightDown(Chunk chunk, Vector3Int localPos, ChunkTerrainData terrainData)
+    public override BlockTypeEnum GetBlockForMaxHeightDown(Chunk chunk, Vector3Int localPos)
     {
-        if (localPos.y == terrainData.maxHeight)
-        {
-            Vector3Int wPos = localPos + chunk.chunkData.positionForWorld;
-            int waterHight = biomeInfo.water_height;
-            if (localPos.y >= waterHight - 4 && localPos.y <= waterHight + 4)
-            {
-                if (localPos.y >= waterHight)
-                {
-                    AddTree(wPos);
-                }
-                return BlockTypeEnum.Sand;
-            }
-            else if (localPos.y > waterHight)
-            {
-                AddWeed(wPos);
-                return BlockTypeEnum.Grass;
-            }
-            else if (localPos.y < waterHight - 8)
-            {
-                AddWaterPlant(wPos);
-            }
-            return BlockTypeEnum.Dirt;
-        }
-        if (localPos.y < terrainData.maxHeight && localPos.y > terrainData.maxHeight - 5)
-        {
-            //中使用泥土
-            return BlockTypeEnum.Dirt;
-        }
-        else if (localPos.y == 0)
-        {
-            //基础
-            return BlockTypeEnum.Foundation;
-        }
-        else
-        {
-            //其他石头
-            return BlockTypeEnum.Stone;
-        }
+        return BlockTypeEnum.None;
+        //if (localPos.y == terrainData.maxHeight)
+        //{
+        //    Vector3Int wPos = localPos + chunk.chunkData.positionForWorld;
+        //    int waterHight = biomeInfo.water_height;
+        //    if (localPos.y >= waterHight - 4 && localPos.y <= waterHight + 4)
+        //    {
+        //        if (localPos.y >= waterHight)
+        //        {
+        //            AddTree(wPos);
+        //        }
+        //        return BlockTypeEnum.Sand;
+        //    }
+        //    else if (localPos.y > waterHight)
+        //    {
+        //        AddWeed(wPos);
+        //        return BlockTypeEnum.Grass;
+        //    }
+        //    else if (localPos.y < waterHight - 8)
+        //    {
+        //        AddWaterPlant(wPos);
+        //    }
+        //    return BlockTypeEnum.Dirt;
+        //}
+        //if (localPos.y < terrainData.maxHeight && localPos.y > terrainData.maxHeight - 5)
+        //{
+        //    //中使用泥土
+        //    return BlockTypeEnum.Dirt;
+        //}
+        //else if (localPos.y == 0)
+        //{
+        //    //基础
+        //    return BlockTypeEnum.Foundation;
+        //}
+        //else
+        //{
+        //    //其他石头
+        //    return BlockTypeEnum.Stone;
+        //}
     }
 
-    public override void InitBiomeBlockForChunk(Chunk chunk, BiomeMapData biomeMapData)
+    public override void InitBiomeBlockForChunk(Chunk chunk)
     {
-        base.InitBiomeBlockForChunk(chunk, biomeMapData);
+        base.InitBiomeBlockForChunk(chunk);
     }
 
     /// <summary>

@@ -10,65 +10,66 @@ public class BiomeForest : Biome
 
     }
 
-    public override BlockTypeEnum GetBlockForMaxHeightDown(Chunk chunk, Vector3Int localPos, ChunkTerrainData terrainData)
+    public override BlockTypeEnum GetBlockForMaxHeightDown(Chunk chunk, Vector3Int localPos)
     {
-        if (localPos.y == terrainData.maxHeight)
-        {
-            Vector3Int wPos = localPos + chunk.chunkData.positionForWorld;
-            int waterHeight = biomeInfo.GetWaterPlaneHeight();
-            if (localPos.y == waterHeight)
-            {
-                AddStoneMoss(wPos);
-                AddTreeForFallDown(wPos);
-                return BlockTypeEnum.Sand;
-            }
-            else if (localPos.y < waterHeight)
-            {
-                return BlockTypeEnum.Dirt;
-            }
-            AddTreeForFallDown(wPos);
-            AddWeed(wPos);
-            AddFlowerAndDeadWood(wPos);
-            AddTree(wPos);
-            return BlockTypeEnum.Grass;
-        }
-        if (localPos.y < terrainData.maxHeight && localPos.y > terrainData.maxHeight - 5)
-        {
-            //中使用泥土
-            return BlockTypeEnum.Dirt;
-        }
-        else if (localPos.y == 0)
-        {
-            //基础
-            return BlockTypeEnum.Foundation;
-        }
-        else
-        {
-            //其他石头
-            return BlockTypeEnum.Stone;
-        }
+        return BlockTypeEnum.None;
+        //if (localPos.y == terrainData.maxHeight)
+        //{
+        //    Vector3Int wPos = localPos + chunk.chunkData.positionForWorld;
+        //    int waterHeight = biomeInfo.GetWaterPlaneHeight();
+        //    if (localPos.y == waterHeight)
+        //    {
+        //        AddStoneMoss(wPos);
+        //        AddTreeForFallDown(wPos);
+        //        return BlockTypeEnum.Sand;
+        //    }
+        //    else if (localPos.y < waterHeight)
+        //    {
+        //        return BlockTypeEnum.Dirt;
+        //    }
+        //    AddTreeForFallDown(wPos);
+        //    AddWeed(wPos);
+        //    AddFlowerAndDeadWood(wPos);
+        //    AddTree(wPos);
+        //    return BlockTypeEnum.Grass;
+        //}
+        //if (localPos.y < terrainData.maxHeight && localPos.y > terrainData.maxHeight - 5)
+        //{
+        //    //中使用泥土
+        //    return BlockTypeEnum.Dirt;
+        //}
+        //else if (localPos.y == 0)
+        //{
+        //    //基础
+        //    return BlockTypeEnum.Foundation;
+        //}
+        //else
+        //{
+        //    //其他石头
+        //    return BlockTypeEnum.Stone;
+        //}
     }
 
-    public override void InitBiomeBlockForChunk(Chunk chunk, BiomeMapData biomeMapData)
+    public override void InitBiomeBlockForChunk(Chunk chunk)
     {
-        base.InitBiomeBlockForChunk(chunk, biomeMapData);
-        //获取地形数据
-        ChunkTerrainData startTerrainData = GetTerrainData(chunk, biomeMapData, 0, 0);
+        //base.InitBiomeBlockForChunk(chunk, biomeMapData);
+        ////获取地形数据
+        //ChunkTerrainData startTerrainData = GetTerrainData(chunk, biomeMapData, 0, 0);
 
-        int waterHeight = biomeInfo.GetWaterPlaneHeight();
-        Vector3Int flowerPosition = new Vector3Int(chunk.chunkData.positionForWorld.x, startTerrainData.maxHeight, chunk.chunkData.positionForWorld.z);
-        if (startTerrainData.maxHeight == waterHeight)
-        {
+        //int waterHeight = biomeInfo.GetWaterPlaneHeight();
+        //Vector3Int flowerPosition = new Vector3Int(chunk.chunkData.positionForWorld.x, startTerrainData.maxHeight, chunk.chunkData.positionForWorld.z);
+        //if (startTerrainData.maxHeight == waterHeight)
+        //{
 
-        }
-        else if (startTerrainData.maxHeight < waterHeight)
-        {
-            AddFlowerWater(flowerPosition);
-        }
-        else
-        {
-            AddFlowerWood(flowerPosition);
-        }
+        //}
+        //else if (startTerrainData.maxHeight < waterHeight)
+        //{
+        //    AddFlowerWater(flowerPosition);
+        //}
+        //else
+        //{
+        //    AddFlowerWood(flowerPosition);
+        //}
     }
 
     /// <summary>

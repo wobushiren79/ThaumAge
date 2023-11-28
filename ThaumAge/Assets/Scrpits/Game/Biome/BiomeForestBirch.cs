@@ -10,65 +10,66 @@ public class BiomeForestBirch : Biome
 
     }
 
-    public override BlockTypeEnum GetBlockForMaxHeightDown(Chunk chunk, Vector3Int localPos, ChunkTerrainData terrainData)
+    public override BlockTypeEnum GetBlockForMaxHeightDown(Chunk chunk, Vector3Int localPos)
     {
-        if (localPos.y == terrainData.maxHeight)
-        {
-            Vector3Int wPos = localPos + chunk.chunkData.positionForWorld;
-            int waterHeight = biomeInfo.GetWaterPlaneHeight();
+        return BlockTypeEnum.None;
+        //if (localPos.y == terrainData.maxHeight)
+        //{
+        //    Vector3Int wPos = localPos + chunk.chunkData.positionForWorld;
+        //    int waterHeight = biomeInfo.GetWaterPlaneHeight();
          
-            if (localPos.y < waterHeight)
-            {
-                return BlockTypeEnum.Dirt;
-            }
-            else if (localPos.y == waterHeight)
-            {
+        //    if (localPos.y < waterHeight)
+        //    {
+        //        return BlockTypeEnum.Dirt;
+        //    }
+        //    else if (localPos.y == waterHeight)
+        //    {
 
-            }
-            AddFlowerAndDeadWood(wPos);
-            AddTreeForFallDown(wPos);
-            AddTreeForTall(wPos);
-            AddWeed(wPos);
-            // 地表，使用草
-            return BlockTypeEnum.GrassWild;
-        }
-        if (localPos.y < terrainData.maxHeight && localPos.y > terrainData.maxHeight - 10)
-        {
-            //中使用泥土
-            return BlockTypeEnum.Dirt;
-        }
-        else if (localPos.y == 0)
-        {
-            //基础
-            return BlockTypeEnum.Foundation;
-        }
-        else
-        {
-            //其他石头
-            return BlockTypeEnum.Stone;
-        }
+        //    }
+        //    AddFlowerAndDeadWood(wPos);
+        //    AddTreeForFallDown(wPos);
+        //    AddTreeForTall(wPos);
+        //    AddWeed(wPos);
+        //    // 地表，使用草
+        //    return BlockTypeEnum.GrassWild;
+        //}
+        //if (localPos.y < terrainData.maxHeight && localPos.y > terrainData.maxHeight - 10)
+        //{
+        //    //中使用泥土
+        //    return BlockTypeEnum.Dirt;
+        //}
+        //else if (localPos.y == 0)
+        //{
+        //    //基础
+        //    return BlockTypeEnum.Foundation;
+        //}
+        //else
+        //{
+        //    //其他石头
+        //    return BlockTypeEnum.Stone;
+        //}
     }
 
-    public override void InitBiomeBlockForChunk(Chunk chunk, BiomeMapData biomeMapData)
+    public override void InitBiomeBlockForChunk(Chunk chunk)
     {
-        base.InitBiomeBlockForChunk(chunk, biomeMapData);
-        //获取地形数据
-        ChunkTerrainData startTerrainData = GetTerrainData(chunk, biomeMapData, 0, 0);
+        //base.InitBiomeBlockForChunk(chunk, biomeMapData);
+        ////获取地形数据
+        //ChunkTerrainData startTerrainData = GetTerrainData(chunk, biomeMapData, 0, 0);
 
-        int waterHeight = biomeInfo.GetWaterPlaneHeight();
-        Vector3Int flowerPosition = new Vector3Int(chunk.chunkData.positionForWorld.x, startTerrainData.maxHeight, chunk.chunkData.positionForWorld.z);
-        if (startTerrainData.maxHeight == waterHeight - 1)
-        {
+        //int waterHeight = biomeInfo.GetWaterPlaneHeight();
+        //Vector3Int flowerPosition = new Vector3Int(chunk.chunkData.positionForWorld.x, startTerrainData.maxHeight, chunk.chunkData.positionForWorld.z);
+        //if (startTerrainData.maxHeight == waterHeight - 1)
+        //{
 
-        }
-        else if (startTerrainData.maxHeight < waterHeight - 1)
-        {
-            AddFlowerWater(flowerPosition);
-        }
-        else
-        {
-            AddFlowerWood(flowerPosition);
-        }
+        //}
+        //else if (startTerrainData.maxHeight < waterHeight - 1)
+        //{
+        //    AddFlowerWater(flowerPosition);
+        //}
+        //else
+        //{
+        //    AddFlowerWood(flowerPosition);
+        //}
     }
 
     /// <summary>

@@ -43,7 +43,7 @@ public partial class CShaderHandler
         targetCShader.SetInt("noiseLayersCount", cshaderData.noiseLayers.Length);
 
         //设置方块buffer
-        cshaderData.blockArrayBuffer = new ComputeBuffer(cshaderData.GetBlockTotalNum(), 4);
+        cshaderData.blockArrayBuffer = new ComputeBuffer(cshaderData.GetBlockTotalNum(), 8);
         targetCShader.SetBuffer(0, "blockArrayBuffer", cshaderData.blockArrayBuffer);
 
         //设置不是空气方块的数量buffer

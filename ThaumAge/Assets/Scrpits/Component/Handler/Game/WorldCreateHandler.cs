@@ -43,8 +43,6 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
         manager.ClearAllChunk();
         //清除所有寻路
         PathFindingHandler.Instance.manager.InitPathFinding();
-        //清理所有生态缓存
-        BiomeHandler.Instance.ClearBiomeMapData();
     }
 
     /// <summary>

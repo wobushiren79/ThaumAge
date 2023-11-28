@@ -14,30 +14,31 @@ public class BiomeMain : Biome
     }
 
 
-    public override BlockTypeEnum GetBlockForMaxHeightDown(Chunk chunk, Vector3Int localPos, ChunkTerrainData terrainData)
+    public override BlockTypeEnum GetBlockForMaxHeightDown(Chunk chunk, Vector3Int localPos)
     {
-        if (localPos.y == terrainData.maxHeight)
-        {
-            Vector3Int wPos = localPos + chunk.chunkData.positionForWorld;
-            if (wPos.x <= 3 && wPos.x >= -3 && wPos.z <= 4 && wPos.z >= -10)
-            {
+        return BlockTypeEnum.None;
+        //if (localPos.y == terrainData.maxHeight)
+        //{
+        //    Vector3Int wPos = localPos + chunk.chunkData.positionForWorld;
+        //    if (wPos.x <= 3 && wPos.x >= -3 && wPos.z <= 4 && wPos.z >= -10)
+        //    {
 
-            }
-            else
-            {
-                AddWeed(wPos);
-                AddFlower(wPos);
-                AddTree(wPos);
-            }
+        //    }
+        //    else
+        //    {
+        //        AddWeed(wPos);
+        //        AddFlower(wPos);
+        //        AddTree(wPos);
+        //    }
 
-            // 地表，使用草
-            return BlockTypeEnum.Grass;
-        }
-        else
-        {
-            //其他石头
-            return BlockTypeEnum.Stone;
-        }
+        //    // 地表，使用草
+        //    return BlockTypeEnum.Grass;
+        //}
+        //else
+        //{
+        //    //其他石头
+        //    return BlockTypeEnum.Stone;
+        //}
     }
 
     protected void AddWeed(Vector3Int wPos)

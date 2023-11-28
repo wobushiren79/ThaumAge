@@ -10,51 +10,53 @@ public class BiomePrairieLava : Biome
     public BiomePrairieLava() : base(BiomeTypeEnum.PrairieLava)
     {
     }
-    public override BlockTypeEnum GetBlockForMaxHeightDown(Chunk chunk, Vector3Int localPos, ChunkTerrainData terrainData)
+    public override BlockTypeEnum GetBlockForMaxHeightDown(Chunk chunk, Vector3Int localPos)
     {
-        if (localPos.y == terrainData.maxHeight)
-        {
-            Vector3Int wPos = localPos + chunk.chunkData.positionForWorld;
-            // 地表，使用草
-            return BlockTypeEnum.StoneVolcanic;
-        }
-        if (localPos.y < terrainData.maxHeight && localPos.y > terrainData.maxHeight - 5)
-        {
-            //中使用泥土
-            return BlockTypeEnum.StoneVolcanic;
-        }
-        else if (localPos.y == 0)
-        {
-            //基础
-            return BlockTypeEnum.Foundation;
-        }
-        else
-        {
-            //其他石头
-            return BlockTypeEnum.Stone;
-        }
+        return BlockTypeEnum.None;
+        //if (localPos.y == terrainData.maxHeight)
+        //{
+        //    Vector3Int wPos = localPos + chunk.chunkData.positionForWorld;
+        //    // 地表，使用草
+        //    return BlockTypeEnum.StoneVolcanic;
+        //}
+        //if (localPos.y < terrainData.maxHeight && localPos.y > terrainData.maxHeight - 5)
+        //{
+        //    //中使用泥土
+        //    return BlockTypeEnum.StoneVolcanic;
+        //}
+        //else if (localPos.y == 0)
+        //{
+        //    //基础
+        //    return BlockTypeEnum.Foundation;
+        //}
+        //else
+        //{
+        //    //其他石头
+        //    return BlockTypeEnum.Stone;
+        //}
     }
 
-    public override BlockTypeEnum GetBlockForMaxHeightUp(Chunk chunk, Vector3Int localPos, ChunkTerrainData terrainData)
+    public override BlockTypeEnum GetBlockForMaxHeightUp(Chunk chunk, Vector3Int localPos)
     {
-        if (localPos.y <= biomeInfo.GetWaterPlaneHeight())
-        {
-            Block tagetBlock = chunk.chunkData.GetBlockForLocal(localPos);
-            if (tagetBlock == null || tagetBlock.blockType == BlockTypeEnum.None)
-            {
-                return BlockTypeEnum.Magma;
-            }
-            return BlockTypeEnum.None;
-        }
-        else
-        {
-            return BlockTypeEnum.None;
-        }
+        return BlockTypeEnum.None;
+        //if (localPos.y <= biomeInfo.GetWaterPlaneHeight())
+        //{
+        //    Block tagetBlock = chunk.chunkData.GetBlockForLocal(localPos);
+        //    if (tagetBlock == null || tagetBlock.blockType == BlockTypeEnum.None)
+        //    {
+        //        return BlockTypeEnum.Magma;
+        //    }
+        //    return BlockTypeEnum.None;
+        //}
+        //else
+        //{
+        //    return BlockTypeEnum.None;
+        //}
     }
 
-    public override void InitBiomeBlockForChunk(Chunk chunk, BiomeMapData biomeMapData)
+    public override void InitBiomeBlockForChunk(Chunk chunk)
     {
-        base.InitBiomeBlockForChunk(chunk, biomeMapData);
+        base.InitBiomeBlockForChunk(chunk);
 
     }
 

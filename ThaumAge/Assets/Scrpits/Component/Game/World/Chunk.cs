@@ -8,6 +8,7 @@ using UnityEditor;
 using UnityEngine;
 using DG.Tweening;
 using System.Collections.Concurrent;
+using OfficeOpenXml.FormulaParsing.Excel.Functions.Math;
 
 public class Chunk
 {
@@ -205,104 +206,49 @@ public class Chunk
         WorldCreateHandler.Instance.manager.AddUpdateChunk(this, type);
     }
 
-    /// <summary>
-    /// 异步创建区块方块数据
-    /// </summary>
-    /// <param name="chunk"></param>
-    /// <param name="callBack"></param>
-    public void BuildChunkBlockDataForCPUAsync(Action<Chunk> callBackForComplete)
-    {
-        //初始化Map
-        BiomeManager biomeManager = BiomeHandler.Instance.manager;
-        BlockManager blockManager = BlockHandler.Instance.manager;
-        GameDataManager gameDataManager = GameDataHandler.Instance.manager;
-
-        //获取地图数据
-        Action<BiomeMapData> callBackForGetBiomeData = async (biomeMapData) =>
-        {
-            await Task.Run(() =>
-            {
-                try
-                {
-                    lock (lockForBlcok)
-                    {
-#if UNITY_EDITOR
-                        Stopwatch stopwatch = TimeUtil.GetMethodTimeStart();
-#endif
-                        //生成基础地形数据 
-                        BlockHandler.Instance.CreateBaseBlockData(this, biomeMapData, () =>
-                        {
-                            //处理存档方块 优先使用存档方块
-                            BlockHandler.Instance.LoadSaveBlockData(this);
-                            //初始化完成
-                            isInit = true;
-                        });
-#if UNITY_EDITOR
-                        TimeUtil.GetMethodTimeEnd("Time_BuildChunkBlockDataForAsync:", stopwatch);
-#endif
-                    }
-                }
-                catch (Exception e)
-                {
-                    LogUtil.Log("CreateChunkBlockDataForAsync:" + e.ToString());
-                }
-            });
-            //初始化周围方块
-            chunkData.InitRoundChunk();
-            //刷新周围方块
-            AddUpdateChunkForRange(0);
-
-            callBackForComplete?.Invoke(this);
-
-        };
-
-        BiomeHandler.Instance.GetBiomeMapData(this, callBackForGetBiomeData);
-    }
-
     public void BuildChunkBlockDataForGPUAsync(Action<Chunk> callBackForComplete)
     {
         //初始化Map
         BiomeManager biomeManager = BiomeHandler.Instance.manager;
         BlockManager blockManager = BlockHandler.Instance.manager;
         GameDataManager gameDataManager = GameDataHandler.Instance.manager;
-
-        //获取地图数据
-        Action<BiomeMapData> callBackForGetBiomeData = (biomeMapData) =>
+        try
         {
-            try
+            lock (lockForBlcok)
             {
-                lock (lockForBlcok)
-                {
 #if UNITY_EDITOR
-                    Stopwatch stopwatch = TimeUtil.GetMethodTimeStart();
+                Stopwatch stopwatch = TimeUtil.GetMethodTimeStart();
 #endif
-                    //生成基础地形数据 
-                    BlockHandler.Instance.CreateBaseBlockDataForGPU(this, biomeMapData, () =>
+                //生成基础地形数据 
+                BlockHandler.Instance.CreateBaseBlockDataForGPU(this, async (blockArray) =>
+                {
+                    //异步加载保存数据
+                    await Task.Run(() =>
                     {
+                        //处理地形方块
+                        BlockHandler.Instance.HandleBaseBlockData(this, blockArray);
                         //处理存档方块 优先使用存档方块
                         BlockHandler.Instance.LoadSaveBlockData(this);
-                        //初始化完成
-                        isInit = true;
-
-                        //初始化周围方块
-                        chunkData.InitRoundChunk();
-                        //刷新周围方块
-                        AddUpdateChunkForRange(0);
-
-                        callBackForComplete?.Invoke(this);
-#if UNITY_EDITOR
-                        TimeUtil.GetMethodTimeEnd("Time_BuildChunkBlockDataForAsync:", stopwatch);
-#endif
                     });
-                }
-            }
-            catch (Exception e)
-            {
-                LogUtil.Log("CreateChunkBlockDataForAsync:" + e.ToString());
-            }
-        };
+                    //初始化完成
+                    isInit = true;
 
-        BiomeHandler.Instance.GetBiomeMapData(this, callBackForGetBiomeData);
+                    //初始化周围方块
+                    chunkData.InitRoundChunk();
+                    //刷新周围方块
+                    AddUpdateChunkForRange(0);
+
+                    callBackForComplete?.Invoke(this);
+#if UNITY_EDITOR
+                    TimeUtil.GetMethodTimeEnd("Time_BuildChunkBlockDataForAsync:", stopwatch);
+#endif
+                });
+            }
+        }
+        catch (Exception e)
+        {
+            LogUtil.Log("CreateChunkBlockDataForAsync:" + e.ToString());
+        }
     }
 
     /// <summary>

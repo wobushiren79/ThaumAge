@@ -31,6 +31,7 @@ public class Terrain3DCShaderBean
     public ComputeBuffer blockArrayBuffer;
     //不是空气方块的数量
     public ComputeBuffer blockCountBuffer;
+    
 
     /// <summary>
     /// 获取方块总数
