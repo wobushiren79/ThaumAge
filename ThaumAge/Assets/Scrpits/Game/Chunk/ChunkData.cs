@@ -1,5 +1,7 @@
-﻿using UnityEditor;
+﻿using OfficeOpenXml.FormulaParsing.Excel.Functions.Math;
+using UnityEditor;
 using UnityEngine;
+using static UnityEngine.Animations.AimConstraint;
 
 public class ChunkData
 {
@@ -17,6 +19,9 @@ public class ChunkData
     public int chunkWidth;
     public int chunkHeight;
 
+    //生态类型
+    public BiomeTypeEnum biomeType;
+
     public ChunkData(Chunk chunkSelf, Vector3Int wPosition, int chunkWidth, int chunkHeight)
     {
         this.chunkSelf = chunkSelf;
@@ -31,6 +36,10 @@ public class ChunkData
         {
             chunkSectionDatas[i] = new ChunkSectionData(sectionSize, sectionSize * i);
         }
+        //设置生态
+        WorldTypeEnum worldType = WorldCreateHandler.Instance.manager.worldType;
+        int seed = WorldCreateHandler.Instance.manager.GetWorldSeed();
+        biomeType = BiomeHandler.Instance.manager.GetBiomeType(wPosition, chunkWidth, worldType, seed);
     }
 
     /// <summary>

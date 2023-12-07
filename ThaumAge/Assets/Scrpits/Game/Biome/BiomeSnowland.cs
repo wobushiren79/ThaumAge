@@ -9,7 +9,7 @@ public class BiomeSnowland : Biome
 
     }
 
-    public override BlockTypeEnum GetBlockForMaxHeightUp(Chunk chunk, Vector3Int localPos)
+    public BlockTypeEnum GetBlockForMaxHeightUp(Chunk chunk, Vector3Int localPos)
     {
         return BlockTypeEnum.None;
         //当前方块位置高于随机生成的高度值时，当前方块类型为空
@@ -58,7 +58,7 @@ public class BiomeSnowland : Biome
         //return BlockTypeEnum.None;
     }
 
-    public override BlockTypeEnum GetBlockForMaxHeightDown(Chunk chunk, Vector3Int localPos)
+    public BlockTypeEnum GetBlockForMaxHeightDown(Chunk chunk, Vector3Int localPos)
     {
         return BlockTypeEnum.None;
         //int waterPlaneHeight = biomeInfo.GetWaterPlaneHeight();

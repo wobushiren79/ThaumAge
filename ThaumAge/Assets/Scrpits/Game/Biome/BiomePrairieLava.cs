@@ -10,7 +10,7 @@ public class BiomePrairieLava : Biome
     public BiomePrairieLava() : base(BiomeTypeEnum.PrairieLava)
     {
     }
-    public override BlockTypeEnum GetBlockForMaxHeightDown(Chunk chunk, Vector3Int localPos)
+    public BlockTypeEnum GetBlockForMaxHeightDown(Chunk chunk, Vector3Int localPos)
     {
         return BlockTypeEnum.None;
         //if (localPos.y == terrainData.maxHeight)
@@ -36,7 +36,7 @@ public class BiomePrairieLava : Biome
         //}
     }
 
-    public override BlockTypeEnum GetBlockForMaxHeightUp(Chunk chunk, Vector3Int localPos)
+    public BlockTypeEnum GetBlockForMaxHeightUp(Chunk chunk, Vector3Int localPos)
     {
         return BlockTypeEnum.None;
         //if (localPos.y <= biomeInfo.GetWaterPlaneHeight())
@@ -52,12 +52,6 @@ public class BiomePrairieLava : Biome
         //{
         //    return BlockTypeEnum.None;
         //}
-    }
-
-    public override void InitBiomeBlockForChunk(Chunk chunk)
-    {
-        base.InitBiomeBlockForChunk(chunk);
-
     }
 
     /// <summary>

@@ -8,7 +8,7 @@ public class BiomeSwamp : Biome
     public BiomeSwamp() : base(BiomeTypeEnum.Swamp)
     {
     }
-    public override BlockTypeEnum GetBlockForMaxHeightUp(Chunk chunk, Vector3Int localPos)
+    public BlockTypeEnum GetBlockForMaxHeightUp(Chunk chunk, Vector3Int localPos)
     {
         return BlockTypeEnum.None;
         //int waterHeight = biomeInfo.GetWaterPlaneHeight();
@@ -19,7 +19,7 @@ public class BiomeSwamp : Biome
         //return base.GetBlockForMaxHeightUp(chunk, localPos, terrainData);
     }
 
-    public override BlockTypeEnum GetBlockForMaxHeightDown(Chunk chunk, Vector3Int localPos)
+    public BlockTypeEnum GetBlockForMaxHeightDown(Chunk chunk, Vector3Int localPos)
     {
         return BlockTypeEnum.None;
         //if (localPos.y == terrainData.maxHeight)
@@ -58,7 +58,7 @@ public class BiomeSwamp : Biome
         //}
     }
 
-    public override void InitBiomeBlockForChunk(Chunk chunk)
+    public void InitBiomeBlockForChunk(Chunk chunk)
     {
         //base.InitBiomeBlockForChunk(chunk, biomeMapData);
         ////获取地形数据

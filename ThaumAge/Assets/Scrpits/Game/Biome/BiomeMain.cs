@@ -14,7 +14,7 @@ public class BiomeMain : Biome
     }
 
 
-    public override BlockTypeEnum GetBlockForMaxHeightDown(Chunk chunk, Vector3Int localPos)
+    public BlockTypeEnum GetBlockForMaxHeightDown(Chunk chunk, Vector3Int localPos)
     {
         return BlockTypeEnum.None;
         //if (localPos.y == terrainData.maxHeight)

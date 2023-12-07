@@ -17,7 +17,7 @@ public class BiomeMountain : Biome
         //lineHalfSnow = maxHight - 24;
     }
 
-    public override BlockTypeEnum GetBlockForMaxHeightUp(Chunk chunk, Vector3Int localPos)
+    public BlockTypeEnum GetBlockForMaxHeightUp(Chunk chunk, Vector3Int localPos)
     {
         //if (localPos.y == terrainData.maxHeight + 1)
         //{
@@ -29,7 +29,7 @@ public class BiomeMountain : Biome
         return BlockTypeEnum.None;
     }
 
-    public override BlockTypeEnum GetBlockForMaxHeightDown(Chunk chunk, Vector3Int localPos)
+    public BlockTypeEnum GetBlockForMaxHeightDown(Chunk chunk, Vector3Int localPos)
     {
         return BlockTypeEnum.None;
         //if (localPos.y == terrainData.maxHeight)

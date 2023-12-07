@@ -8,7 +8,6 @@ public class BiomeManager : BaseManager
 {
     protected BuildingInfoController controllerForBuilding;
 
-    protected BiomeInfoBean[] arrayBiomeInfo = new BiomeInfoBean[EnumExtension.GetEnumMaxIndex<BiomeTypeEnum>() + 1];
     protected Dictionary<int, BuildingInfoBean> dicBuildingInfo = new Dictionary<int, BuildingInfoBean>();
 
     //地形数据
@@ -17,13 +16,14 @@ public class BiomeManager : BaseManager
     public Dictionary<WorldTypeEnum, BiomeTypeEnum[]> dicWorldBiomeType = new Dictionary<WorldTypeEnum, BiomeTypeEnum[]>();
     //世界生态数据
     public static Dictionary<WorldTypeEnum, BiomeInfoBean[]> dicWorldBiomeData = new Dictionary<WorldTypeEnum, BiomeInfoBean[]>();
-    //世界生态buffer数据
-    public static Dictionary<WorldTypeEnum, ComputeBuffer> dicWorldBiomeBuffer = new Dictionary<WorldTypeEnum, ComputeBuffer>();
 
     //地形生成计算shader
     public ComputeShader terrainCShader;
     //路径-地形生成计算shader （使用标签）
     public static string pathForTerrainCShader = "Assets/ComputeShader/TerrainCShader.compute";
+
+    //生态区块大小
+    public int biomeChunkSize = 2;
 
     public virtual void Awake()
     {
@@ -44,19 +44,6 @@ public class BiomeManager : BaseManager
             terrainCShader = data.Result;
             loadComplete?.Invoke();
         });
-    }
-
-    /// <summary>
-    /// 初始化生态信息
-    /// </summary>
-    /// <param name="listData"></param>
-    public void InitBiomeInfo(List<BiomeInfoBean> listData)
-    {
-        for (int i = 0; i < listData.Count; i++)
-        {
-            BiomeInfoBean itemInfo = listData[i];
-            arrayBiomeInfo[itemInfo.id] = itemInfo;
-        }
     }
 
     /// <summary>
@@ -86,7 +73,7 @@ public class BiomeManager : BaseManager
     /// </summary>
     public BiomeInfoBean GetBiomeInfo(int biomeId)
     {
-        return arrayBiomeInfo[biomeId];
+        return  BiomeInfoCfg.GetItemData(biomeId);
     }
 
     /// <summary>
@@ -106,6 +93,20 @@ public class BiomeManager : BaseManager
     }
 
     /// <summary>
+    /// 获取指定区块的生态类型
+    /// </summary>
+    /// <returns></returns>
+    public virtual BiomeTypeEnum GetBiomeType(Vector3Int chunkWorldPosition, int chunkWidth, WorldTypeEnum worldType, int seed)
+    {
+        BiomeTypeEnum[] biomeTypes = GetBiomeTypeListByWorldType(worldType);
+        float posX = chunkWorldPosition.x - (chunkWorldPosition.x % (chunkWidth * biomeChunkSize));
+        float posZ = chunkWorldPosition.z - (chunkWorldPosition.z % (chunkWidth * biomeChunkSize));
+        Vector3 centerPos = new Vector3(posX, posZ);
+        int randomRate = WorldRandTools.Range(0, biomeTypes.Length, centerPos, (uint)seed);
+        return biomeTypes[randomRate];
+    }
+
+    /// <summary>
     /// 获取生态数据
     /// </summary>
     public virtual Biome GetBiome(BiomeTypeEnum biomeType)
@@ -118,26 +119,13 @@ public class BiomeManager : BaseManager
         else
         {
             //通过反射获取类
-            biome = ReflexUtil.CreateInstance<Biome>($"Biome{biomeType.GetEnumName()}");
-            if (biome != null)
+            Biome biomeTarget = ReflexUtil.CreateInstance<Biome>($"Biome{biomeType.GetEnumName()}");
+            if (biomeTarget != null)
             {
-                dicBiome.Add(biomeType, biome);
+                dicBiome.Add(biomeType, biomeTarget);
             }
-            return biome;
+            return biomeTarget;
         }
-    }
-
-    /// <summary>
-    /// 获取生态数据
-    /// </summary>
-    /// <param name="worldType"></param>
-    /// <param name="biomeIndex"></param>
-    /// <returns></returns>
-    public virtual Biome GetBiome(WorldTypeEnum worldType, int biomeIndex)
-    {
-        BiomeTypeEnum[] arrayBiomeType = GetBiomeTypeListByWorldType(worldType);
-        BiomeTypeEnum biomeType = arrayBiomeType[biomeIndex];
-        return GetBiome(biomeType);
     }
 
     /// <summary>
@@ -154,33 +142,14 @@ public class BiomeManager : BaseManager
         }
         else
         {
-            switch (worldType)
+            var targetWorldInfo = WorldInfoCfg.GetItemData((int)worldType);
+            string biomeContent = targetWorldInfo.biome_content;
+            int[] biomesData = biomeContent.SplitForArrayInt(',');
+            arrayBiome = new BiomeTypeEnum[biomesData.Length];
+            for (int i = 0; i < biomesData.Length; i++)
             {
-                case WorldTypeEnum.Test:
-                    arrayBiome = new BiomeTypeEnum[1];
-                    arrayBiome[0] = BiomeTypeEnum.Test;
-                    break;
-                case WorldTypeEnum.Main:
-                    arrayBiome = new BiomeTypeEnum[1];
-                    //arrayBiome[0] = BiomeTypeEnum.Prairie;
-                    arrayBiome[0] = BiomeTypeEnum.Forest;
-                    //arrayBiome[2] = BiomeTypeEnum.Desert;
-                    //arrayBiome[3] = BiomeTypeEnum.Mountain;
-                    //arrayBiome[4] = BiomeTypeEnum.PrairieLava;
-                    //arrayBiome[5] = BiomeTypeEnum.Ocean;
-                    //arrayBiome[6] = BiomeTypeEnum.Swamp;
-                    //arrayBiome[7] = BiomeTypeEnum.Snowland;
-                    //arrayBiome[8] = BiomeTypeEnum.ForestMagic;
-                    //arrayBiome[9] = BiomeTypeEnum.ForestBirch;
-                    break;
-                case WorldTypeEnum.Launch:
-                    arrayBiome = new BiomeTypeEnum[1];
-                    arrayBiome[0] = BiomeTypeEnum.Main;
-                    break;
-                default:
-                    arrayBiome = new BiomeTypeEnum[1];
-                    arrayBiome[0] = BiomeTypeEnum.Test;
-                    break;
+                int biomeId = biomesData[i];
+                arrayBiome[i] = (BiomeTypeEnum)biomeId;
             }
             dicWorldBiomeType.Add(worldType, arrayBiome);
             return arrayBiome;

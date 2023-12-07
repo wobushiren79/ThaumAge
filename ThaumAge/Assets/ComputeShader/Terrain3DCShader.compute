@@ -2,6 +2,9 @@
 #pragma kernel StartCreate
 
 #include "Noise/SimplexNoiseCShader.compute"
+#include "Biome/BiomeForestCShader.compute"
+#include "Biome/BiomePrairieCShader.compute"
+#include "Biome/BiomeTestCShader.compute"
 
 //方块数据
 struct BlockData
@@ -15,6 +18,8 @@ struct BlockData
 //noise数据
 struct NoiseLayer
 {
+	//生态ID
+	int biomeId;
 	//出现频率 数值越大 波峰越多
 	float frequency;
 	//振幅 数值越大 越宽
@@ -38,6 +43,8 @@ struct NoiseLayer
 
 	//地面的最低高度
 	int groundMinHeigh;
+	//海面高度
+	int oceanHeight;
 };
 
 //2D地形数据
@@ -65,8 +72,6 @@ uint stateCaves;
 1 创建普通基岩 y=0
 */
 uint stateBedrock;
-//海洋的高度
-uint oceanHeight;
 //区块位置
 float3 chunkPosition;
 //种子
@@ -104,7 +109,7 @@ float CreateTerrainCaveData(float3 blockPos, float terrainHeight, uint noiseInde
 	//迭代次数
 	for (int i = 0; i < selectedNoise.caveOctaves; i++)
 	{
-		weightCave += snoise(frequency * (blockPos / (selectedNoise.caveScale / ((uint) terrainHeight > oceanHeight ? 1 : 6)))) * amplitude;
+		weightCave += snoise(frequency * (blockPos / (selectedNoise.caveScale / ((uint) terrainHeight > selectedNoise.oceanHeight ? 1 : 6)))) * amplitude;
 		frequency *= selectedNoise.caveFrequency;
 		amplitude *= selectedNoise.caveAmplitude;
 	}
@@ -129,7 +134,15 @@ float CreateTerrain2DWeightH(float2 blockPosXZ, uint noiseIndex)
 	for (int i = 0; i < selectedNoise.octaves; i++)
 	{
 		//调取噪音计算 获取2D的权重高度 这里加上振幅和频率
-		weightH += snoise(float3(posTempData.xy / selectedNoise.frequency, posTempData.z)) * amplitude;
+		if (selectedNoise.frequency == 0) 
+		{
+			//如果频率为0 则为0高度
+			weightH += 0;
+		}
+		else 
+		{
+			weightH += snoise(float3(posTempData.xy / selectedNoise.frequency, posTempData.z)) * amplitude;
+		}
 		//每次迭代改变间隙性
 		posTempData.xy *= selectedNoise.lacunarity;
 		//每次迭代改变振幅
@@ -158,6 +171,35 @@ Terrain2DData CreateTerrain2DData(float2 blockPosXZ)
 	return terrain2DData;
 }
 
+//根据生态生成数据 测试用
+int4 HandleBiome(float3 blockPos, int blockIndex, uint terrainHeight)
+{
+	int4 targetBlockData = int4(0, 0, 0, 0);
+	//如果大于地面高度
+	if (blockPos.y > terrainHeight)
+	{
+		//如果是地面上一格
+		if (blockPos.y == terrainHeight + 1)
+		{
+
+		}
+		//其他设置空方块 
+		targetBlockData = int4(0, 0, 0, 0);
+	}
+	else if (blockPos.y == terrainHeight)
+	{
+		targetBlockData = int4(101, 0, 0, 0);
+	}
+	else if (blockPos.y == terrainHeight - 1)
+	{
+		targetBlockData = int4(4, 0, 0, 0);
+	}
+	else
+	{
+		targetBlockData = int4(5, 0, 0, 0);
+	}
+	return targetBlockData;
+}
 
 //开始生成数据
 [numthreads(8, 8, 8)]
@@ -166,6 +208,8 @@ void StartCreate(uint3 id : SV_DispatchThreadID)
 	//如果XZ大于W 则不处理
 	if (any(id.xz > chunkSizeW))
 		return;
+	//获取方块下标
+	int blockIndex = GetBlockIndex(id);
 	//获取方块的世界坐标
 	float3 blockPos = id + chunkPosition + seedOffset;
 	//获取方块的XZ世界坐标
@@ -177,40 +221,58 @@ void StartCreate(uint3 id : SV_DispatchThreadID)
 	//获取噪音数据
 	NoiseLayer selectedNoise = noiseLayersArrayBuffer[terrain2DData.noiseIndex];
 
-
 	BlockData itemBlock;
 	itemBlock.blockId = 0;
 	itemBlock.blockStructure = 0;
-	//如果大于地面高度
-	if (id.y > terrainHeight)
+
+	//获取生态方块数据
+	int4 biomeBlockData = int4(0, 0, 0, 0);
+	switch (selectedNoise.biomeId)
 	{
-		//如果是地面上一格 生成树木或者杂草
-		int blockIndex = GetBlockIndex(id);
-		if (id.y == terrainHeight + 1)
-		{
-			bool isCreateTree = snoise(float3(blockPosXZ, seed)) > 0.95f;
-			if (isCreateTree)
-			{
-				itemBlock.blockId = 5;
-				itemBlock.blockStructure = 1;
-				blockArrayBuffer[blockIndex] = itemBlock;
-				InterlockedAdd(blockCountBuffer[0], 1);
-				return;
-			}
-		}
-		//其他设置空方块
-		itemBlock.blockId = 0;
-		blockArrayBuffer[blockIndex] = itemBlock;
-		return;
+	case 1://平原
+		biomeBlockData = HandleBiome(blockPos, blockIndex, terrainHeight);
+		break;
+	case 2://森林
+		biomeBlockData = HandleBiome(blockPos, blockIndex, terrainHeight);
+		break;
+	case 998://测试生态
+		biomeBlockData = HandleBiomeTest(blockPos, blockIndex, terrainHeight);
+		break;
+	default:
+		biomeBlockData = HandleBiome(blockPos, blockIndex, terrainHeight);
+		break;
 	}
+	itemBlock.blockId = biomeBlockData.x;
+	itemBlock.blockStructure = biomeBlockData.y;
 
-	//bool isSurfaceBlock = id.y >= terrainHeight - 3;
-	//TODO 设置方块的类型
-	itemBlock.blockId = 4;
+	////如果大于地面高度
+	//if (id.y > terrainHeight)
+	//{
+	//	//如果是地面上一格 生成树木或者杂草
+	//	if (id.y == terrainHeight + 1)
+	//	{
+	//		bool isCreateTree = snoise(float3(blockPosXZ, seed)) > 0.95f;
+	//		if (isCreateTree)
+	//		{
+	//			itemBlock.blockId = 5;
+	//			itemBlock.blockStructure = 1;
+	//			blockArrayBuffer[blockIndex] = itemBlock;
+	//			InterlockedAdd(blockCountBuffer[0], 1);
+	//			return;
+	//		}
+	//	}
+	//	//其他设置空方块
+	//	itemBlock.blockId = 0;
+	//	blockArrayBuffer[blockIndex] = itemBlock;
+	//	return;
+	//}
 
-	//如果是需要创建普通洞穴
-	switch (stateCaves)
+	//如果不是空气方块 并且在地表以下 则创建普通洞穴
+	if (blockPos.y <= terrainHeight && itemBlock.blockId != 0)
 	{
+		//如果是需要创建普通洞穴
+		switch (stateCaves)
+		{
 		case 1:
 			//如果大于阈值则是空气
 			float weightCave = CreateTerrainCaveData(blockPos, terrainHeight, terrain2DData.noiseIndex);
@@ -218,17 +280,18 @@ void StartCreate(uint3 id : SV_DispatchThreadID)
 			{
 				itemBlock.blockId = 0;
 			}
-		break;
+			break;
+		}
 	}
 
 	//设置基岩
 	switch (stateBedrock)
 	{
-		case 1:
-			if (id.y <= 1)
-			{
-				itemBlock.blockId = 5;
-			}
+	case 1:
+		if (id.y <= 1)
+		{
+			itemBlock.blockId = 5;
+		}
 		break;
 	}
 
@@ -239,5 +302,5 @@ void StartCreate(uint3 id : SV_DispatchThreadID)
 		InterlockedAdd(blockCountBuffer[0], 1);
 	}
 
-	blockArrayBuffer[GetBlockIndex(id)] = itemBlock;
+	blockArrayBuffer[blockIndex] = itemBlock;
 }

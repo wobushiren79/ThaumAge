@@ -6,7 +6,47 @@ public partial class BiomeInfoBean : BaseBean
 	/// <summary>
 	///出现频率 数值越大 波峰越多
 	/// </summary>
-	public int frequency;
+	public float frequency;
+	/// <summary>
+	///振幅 数值越大 越宽 （0-1）
+	/// </summary>
+	public float amplitude;
+	/// <summary>
+	///间隙性
+	/// </summary>
+	public float lacunarity;
+	/// <summary>
+	///噪音循环迭代次数 复杂度
+	/// </summary>
+	public int octaves;
+	/// <summary>
+	///洞穴大小
+	/// </summary>
+	public float caveScale;
+	/// <summary>
+	///洞穴的阈值（0-1）
+	/// </summary>
+	public float caveThreshold;
+	/// <summary>
+	///洞穴出现频率 数值越大 波峰越多
+	/// </summary>
+	public float caveFrequency;
+	/// <summary>
+	///洞穴振幅 数值越大 越宽
+	/// </summary>
+	public float caveAmplitude;
+	/// <summary>
+	///洞穴循环迭代次数 复杂度
+	/// </summary>
+	public int caveOctaves;
+	/// <summary>
+	///地面的最低高度
+	/// </summary>
+	public int groundMinHeigh;
+	/// <summary>
+	///海面高度
+	/// </summary>
+	public int oceanHeight;
 }
 public partial class BiomeInfoCfg : BaseCfg<long, BiomeInfoBean>
 {

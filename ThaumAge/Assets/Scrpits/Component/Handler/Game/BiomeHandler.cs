@@ -23,29 +23,6 @@ public class BiomeHandler : BaseHandler<BiomeHandler, BiomeManager>
     }
 
     /// <summary>
-    /// 根据生物生态 创造方块
-    /// </summary>
-    /// <param name="listBiome"></param>
-    /// <param name="wPos"></param>
-    /// <param name="width"></param>
-    /// <param name="height"></param>
-    /// <returns></returns>
-    public BlockTypeEnum CreateBiomeBlockType(Chunk chunk, Vector3Int blockLocalPosition, Biome biome)
-    {
-        return biome.InitBiomeBlock(chunk, blockLocalPosition);
-    }
-
-    /// <summary>
-    /// 根据生物生态 创建区块方块
-    /// </summary>
-    /// <param name="chunk"></param>
-    /// <param name="biome"></param>
-    public void CreateBiomeBlockTypeForChunk(Chunk chunk, Biome biome)
-    {
-
-    }
-
-    /// <summary>
     /// 获取生态中心点 （无用）
     /// </summary>
     /// <param name="currentChunk"></param>

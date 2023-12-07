@@ -14,7 +14,7 @@ public class BiomeForestMagic : Biome
     {
     }
 
-    public override BlockTypeEnum GetBlockForMaxHeightDown(Chunk chunk, Vector3Int localPos)
+    public BlockTypeEnum GetBlockForMaxHeightDown(Chunk chunk, Vector3Int localPos)
     {
         return BlockTypeEnum.None;
         //if (localPos.y == terrainData.maxHeight)
@@ -56,7 +56,7 @@ public class BiomeForestMagic : Biome
         //}
     }
 
-    public override void InitBiomeBlockForChunk(Chunk chunk)
+    public void InitBiomeBlockForChunk(Chunk chunk)
     {
         //base.InitBiomeBlockForChunk(chunk, biomeMapData);
 

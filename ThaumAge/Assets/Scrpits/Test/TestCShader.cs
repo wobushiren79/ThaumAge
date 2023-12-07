@@ -80,7 +80,6 @@ public class TestCShader : BaseMonoBehaviour
         terrain3DCShaderBean.chunkSizeH = maxHeight;
         terrain3DCShaderBean.stateCaves = 1;
         terrain3DCShaderBean.stateBedrock = 1;
-        terrain3DCShaderBean.oceanHeight = 42;
         terrain3DCShaderBean.seed = seed;
         terrain3DCShaderBean.seedOffset = Vector3.zero;
         terrain3DCShaderBean.noiseLayers = noiseLayers;

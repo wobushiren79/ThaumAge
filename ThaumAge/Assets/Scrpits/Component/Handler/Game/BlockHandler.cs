@@ -147,33 +147,17 @@ public class BlockHandler : BaseHandler<BlockHandler, BlockManager>
     /// </summary>
     public void CreateBaseBlockDataForGPU(Chunk chunk, Action<BlockData[]> callBackForComplete)
     {
-        if (terrain3DCShaderNoises == null)
-        {
-            terrain3DCShaderNoises = new Terrain3DCShaderNoiseLayers[1];
-            Terrain3DCShaderNoiseLayers itemTemp = new Terrain3DCShaderNoiseLayers();
-            itemTemp.frequency = 700;
-            itemTemp.amplitude = 0.27f;
-            itemTemp.lacunarity = 3.3f;
-            itemTemp.octaves = 5;
-            itemTemp.caveScale = 550;
-            itemTemp.caveThreshold = 0.75f;
-            itemTemp.caveFrequency = 2;
-            itemTemp.caveAmplitude = 0.5f;
-            itemTemp.caveOctaves = 4;
-            itemTemp.groundMinHeigh = 40;
-            terrain3DCShaderNoises[0] = itemTemp;
-
-        }
+        BiomeManager biomeManager = BiomeHandler.Instance.manager;
+        Biome biome = biomeManager.GetBiome(chunk.chunkData.biomeType);
         Terrain3DCShaderBean terrain3DCShaderBean = new Terrain3DCShaderBean();
         terrain3DCShaderBean.chunkPosition = chunk.chunkData.positionForWorld;
         terrain3DCShaderBean.chunkSizeW = chunk.chunkData.chunkWidth;
         terrain3DCShaderBean.chunkSizeH = chunk.chunkData.chunkHeight;
         terrain3DCShaderBean.stateCaves = 1;
         terrain3DCShaderBean.stateBedrock = 1;
-        terrain3DCShaderBean.oceanHeight = 42;
         terrain3DCShaderBean.seed = 5;
         terrain3DCShaderBean.seedOffset = Vector3.zero;
-        terrain3DCShaderBean.noiseLayers = terrain3DCShaderNoises;
+        terrain3DCShaderBean.noiseLayers = biome.terrain3DCShaderNoises;
         CShaderHandler.Instance.HandleTerrain3DCShader(terrain3DCShaderBean, (terrainData) =>
         {
             BlockData[] blockArray = new BlockData[terrain3DCShaderBean.GetBlockTotalNum()];
@@ -205,42 +189,19 @@ public class BlockHandler : BaseHandler<BlockHandler, BlockManager>
                     //如果是空 则跳过
                     if (itemData.blockId == 0)
                         continue;
-                    BlockTypeEnum blockType = (BlockTypeEnum)itemData.blockId;
-                    Block block = manager.GetRegisterBlock(blockType);
+                    Block block = manager.GetRegisterBlock(itemData.blockId);
                     //添加方块
                     chunk.chunkData.SetBlockForLocal(x, y, z, block, BlockDirectionEnum.UpForward);
                     //创建特殊结构方框的数据
                     if (itemData.blockStructure != 0)
                     {
-                        CreateBaseBlockDataForStructure((BlockStructureEnum)itemData.blockStructure, chunk.chunkData.positionForWorld + new Vector3Int(x,y,z));
+                        Biome biome = BiomeHandler.Instance.manager.GetBiome(chunk.chunkData.biomeType);
+                        biome.CreateBlockStructure(chunk, itemData.blockId, (BlockStructureEnum)itemData.blockStructure, chunk.chunkData.positionForWorld + new Vector3Int(x, y, z));
                     }
                 }
             }
         }
     }
-
-    /// <summary>
-    /// 创建结构提方框的数据
-    /// </summary>
-    public void CreateBaseBlockDataForStructure(BlockStructureEnum blockStructure, Vector3Int baseWorldPosition)
-    {
-        switch (blockStructure) 
-        {
-            case BlockStructureEnum.NormalTree:
-                BiomeCreateTreeTool.BiomeForTreeData treeData = new BiomeCreateTreeTool.BiomeForTreeData
-                {
-                    addRate = 0.025f,
-                    minHeight = 5,
-                    maxHeight = 8,
-                    treeTrunk = BlockTypeEnum.TreeOak,
-                    treeLeaves = BlockTypeEnum.LeavesOak,
-                    leavesRange = 2,
-                };
-                BiomeCreateTreeTool.AddTree(201, baseWorldPosition, treeData);
-                break;
-        }
-    }
-
 
     /// <summary>
     /// 读取的方块

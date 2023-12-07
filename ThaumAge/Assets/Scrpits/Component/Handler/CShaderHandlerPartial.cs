@@ -28,15 +28,13 @@ public partial class CShaderHandler
         targetCShader.SetInt("stateCaves", cshaderData.stateCaves);
         //设置基岩状态
         targetCShader.SetInt("stateBedrock", cshaderData.stateBedrock);
-        //设置海洋高度
-        targetCShader.SetInt("oceanHeight", cshaderData.oceanHeight);
 
         //设置种子
         targetCShader.SetInt("seed", cshaderData.seed);
         targetCShader.SetVector("seedOffset", cshaderData.seedOffset);
 
         //设置noisebuffer
-        cshaderData.noiseLayersArrayBuffer = new ComputeBuffer(cshaderData.noiseLayers.Length, 40);
+        cshaderData.noiseLayersArrayBuffer = new ComputeBuffer(cshaderData.noiseLayers.Length, 48);
         cshaderData.noiseLayersArrayBuffer.SetData(cshaderData.noiseLayers);
 
         targetCShader.SetBuffer(0, "noiseLayersArrayBuffer", cshaderData.noiseLayersArrayBuffer);

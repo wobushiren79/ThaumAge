@@ -15,8 +15,6 @@ public class Terrain3DCShaderBean
     public int stateCaves; 
     //基岩状态 0不生成基岩 1生成基岩 Y=0时
     public int stateBedrock;
-    //海洋高度
-    public int oceanHeight;
     
     //种子
     public int seed;
@@ -51,6 +49,8 @@ public class Terrain3DCShaderBean
 [System.Serializable]
 public struct Terrain3DCShaderNoiseLayers
 {
+    //生态ID
+    public int biomeId;
     //出现频率 数值越大 波峰越多
     public float frequency;
     //振幅 数值越大 越宽 （0-1）
@@ -74,4 +74,6 @@ public struct Terrain3DCShaderNoiseLayers
 
     //地面的最低高度
     public int groundMinHeigh;
+    //海洋高度
+    public int oceanHeight;
 }

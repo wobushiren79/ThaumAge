@@ -12,7 +12,7 @@ public class BiomeOcean : Biome
 
     }
 
-    public override BlockTypeEnum GetBlockForMaxHeightDown(Chunk chunk, Vector3Int localPos)
+    public BlockTypeEnum GetBlockForMaxHeightDown(Chunk chunk, Vector3Int localPos)
     {
         return BlockTypeEnum.None;
         //if (localPos.y == terrainData.maxHeight)
@@ -53,11 +53,6 @@ public class BiomeOcean : Biome
         //    //其他石头
         //    return BlockTypeEnum.Stone;
         //}
-    }
-
-    public override void InitBiomeBlockForChunk(Chunk chunk)
-    {
-        base.InitBiomeBlockForChunk(chunk);
     }
 
     /// <summary>

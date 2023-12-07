@@ -10,10 +10,10 @@ public class BiomePrairie : Biome
     //草原
     public BiomePrairie() : base(BiomeTypeEnum.Prairie)
     {
-
+        
     }
 
-    public override BlockTypeEnum GetBlockForMaxHeightDown(Chunk chunk, Vector3Int localPos)
+    public BlockTypeEnum GetBlockForMaxHeightDown(Chunk chunk, Vector3Int localPos)
     {
         return BlockTypeEnum.None;
         //if (localPos.y == terrainData.maxHeight)
@@ -42,7 +42,7 @@ public class BiomePrairie : Biome
         //}
     }
 
-    public override void InitBiomeBlockForChunk(Chunk chunk)
+    public void InitBiomeBlockForChunk(Chunk chunk)
     {
         //base.InitBiomeBlockForChunk(chunk);
         ////获取地形数据

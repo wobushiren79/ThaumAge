@@ -1,0 +1,34 @@
+#include "../Noise/SimplexNoiseCShader.compute"
+
+//根据生态生成数据 测试用
+int4 HandleBiomePrairie(float3 blockPos, int blockIndex, uint terrainHeight)
+{
+	int4 targetBlockData = int4(0, 0, 0, 0);
+	//如果大于地面高度
+	if (blockPos.y > terrainHeight)
+	{
+		//如果是地面上一格
+		if (blockPos.y == terrainHeight + 1)
+		{
+
+		}
+		//其他设置空方块 
+		targetBlockData = int4(0, 0, 0, 0);
+	}
+	//地面用草坪
+	else if (blockPos.y == terrainHeight)
+	{
+		targetBlockData = int4(101, 0, 0, 0);
+	}
+	//地面下一格用泥土
+	else if (blockPos.y == terrainHeight - 1)
+	{
+		targetBlockData = int4(4, 0, 0, 0);
+	}
+	//其他用石头
+	else
+	{
+		targetBlockData = int4(5, 0, 0, 0);
+	}
+	return targetBlockData;
+}
