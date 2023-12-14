@@ -10,28 +10,34 @@ public class Biome
     //生态数据
     public BiomeInfoBean biomeInfo;
     //生态数据
-    public Terrain3DCShaderNoiseLayers[] terrain3DCShaderNoises;
+    public Terrain3DCShaderNoiseLayer terrain3DCShaderNoise;
 
     public Biome(BiomeTypeEnum biomeType)
     {
         this.biomeType = biomeType;
         biomeInfo = BiomeHandler.Instance.manager.GetBiomeInfo(this.biomeType);
-        if (terrain3DCShaderNoises == null)
+        terrain3DCShaderNoise = new Terrain3DCShaderNoiseLayer();
+        terrain3DCShaderNoise.biomeId = (int)biomeInfo.id;
+        terrain3DCShaderNoise.frequency = biomeInfo.frequency;
+        terrain3DCShaderNoise.amplitude = biomeInfo.amplitude;
+        terrain3DCShaderNoise.lacunarity = biomeInfo.lacunarity;
+        terrain3DCShaderNoise.octaves = biomeInfo.octaves;
+        terrain3DCShaderNoise.caveScale = biomeInfo.caveScale;
+        terrain3DCShaderNoise.caveThreshold = biomeInfo.caveThreshold;
+        terrain3DCShaderNoise.caveFrequency = biomeInfo.caveFrequency;
+        terrain3DCShaderNoise.caveAmplitude = biomeInfo.caveAmplitude;
+        terrain3DCShaderNoise.caveOctaves = biomeInfo.caveOctaves;
+        terrain3DCShaderNoise.groundMinHeigh = biomeInfo.groundMinHeigh;
+        terrain3DCShaderNoise.oceanHeight = biomeInfo.oceanHeight;
+
+        //如果是测试生态 直接获取GameLauncher里的数据
+        if (biomeType == BiomeTypeEnum.Test)
         {
-            terrain3DCShaderNoises = new Terrain3DCShaderNoiseLayers[1];
-            Terrain3DCShaderNoiseLayers itemTemp = new Terrain3DCShaderNoiseLayers();
-            itemTemp.biomeId = (int)biomeInfo.id;
-            itemTemp.frequency = biomeInfo.frequency;
-            itemTemp.amplitude = biomeInfo.amplitude;
-            itemTemp.lacunarity = biomeInfo.lacunarity;
-            itemTemp.octaves = biomeInfo.octaves;
-            itemTemp.caveScale = biomeInfo.caveScale;
-            itemTemp.caveThreshold = biomeInfo.caveThreshold;
-            itemTemp.caveFrequency = biomeInfo.caveFrequency;
-            itemTemp.caveAmplitude = biomeInfo.caveAmplitude;
-            itemTemp.caveOctaves = biomeInfo.caveOctaves;
-            itemTemp.groundMinHeigh = biomeInfo.groundMinHeigh;
-            terrain3DCShaderNoises[0] = itemTemp;
+            if (GameHandler.Instance.launcher is GameLauncher gameLauncher)
+            {
+                terrain3DCShaderNoise.biomeId = (int)biomeInfo.id;
+                terrain3DCShaderNoise = gameLauncher.testTerrain3DCShaderNoise;
+            }
         }
     }
 

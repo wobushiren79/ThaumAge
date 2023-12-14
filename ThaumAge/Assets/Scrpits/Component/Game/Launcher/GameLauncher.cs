@@ -6,9 +6,10 @@ using UnityEngine;
 
 public class GameLauncher : BaseLauncher
 {
+   
     public WorldTypeEnum testWorldType = WorldTypeEnum.Test;
     public int seed = 0;
-
+    public Terrain3DCShaderNoiseLayer testTerrain3DCShaderNoise;
     
     public override void Launch()
     {

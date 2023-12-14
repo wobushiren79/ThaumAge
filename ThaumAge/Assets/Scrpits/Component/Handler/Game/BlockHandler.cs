@@ -7,6 +7,8 @@ using System.Linq.Expressions;
 using System.Runtime.Serialization;
 using UnityEngine;
 using UnityEngine.Scripting;
+using static UnityEngine.Animations.AimConstraint;
+using UnityEngine.UIElements;
 
 [assembly: Preserve]
 
@@ -140,7 +142,7 @@ public class BlockHandler : BaseHandler<BlockHandler, BlockManager>
         public int blockStructure;
     }
 
-    public Terrain3DCShaderNoiseLayers[] terrain3DCShaderNoises;
+    public Terrain3DCShaderNoiseLayer[] terrain3DCShaderNoises;
 
     /// <summary>
     /// 生成地形数据
@@ -149,6 +151,12 @@ public class BlockHandler : BaseHandler<BlockHandler, BlockManager>
     {
         BiomeManager biomeManager = BiomeHandler.Instance.manager;
         Biome biome = biomeManager.GetBiome(chunk.chunkData.biomeType);
+
+        Biome biomeL = biomeManager.GetBiome(chunk.chunkData.biomeTypeL);
+        Biome biomeR = biomeManager.GetBiome(chunk.chunkData.biomeTypeR);
+        Biome biomeF = biomeManager.GetBiome(chunk.chunkData.biomeTypeF);
+        Biome biomeB = biomeManager.GetBiome(chunk.chunkData.biomeTypeB);
+
         Terrain3DCShaderBean terrain3DCShaderBean = new Terrain3DCShaderBean();
         terrain3DCShaderBean.chunkPosition = chunk.chunkData.positionForWorld;
         terrain3DCShaderBean.chunkSizeW = chunk.chunkData.chunkWidth;
@@ -157,7 +165,14 @@ public class BlockHandler : BaseHandler<BlockHandler, BlockManager>
         terrain3DCShaderBean.stateBedrock = 1;
         terrain3DCShaderBean.seed = 5;
         terrain3DCShaderBean.seedOffset = Vector3.zero;
-        terrain3DCShaderBean.noiseLayers = biome.terrain3DCShaderNoises;
+        terrain3DCShaderBean.noiseLayers = new Terrain3DCShaderNoiseLayer[] 
+        { 
+            biome.terrain3DCShaderNoise,
+            biomeL.terrain3DCShaderNoise,
+            biomeR.terrain3DCShaderNoise,
+            biomeF.terrain3DCShaderNoise,
+            biomeB.terrain3DCShaderNoise
+        };
         CShaderHandler.Instance.HandleTerrain3DCShader(terrain3DCShaderBean, (terrainData) =>
         {
             BlockData[] blockArray = new BlockData[terrain3DCShaderBean.GetBlockTotalNum()];

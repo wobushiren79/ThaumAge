@@ -61,7 +61,7 @@ public class TestCShader : BaseMonoBehaviour
     public ComputeBuffer noiseLayersArray;
     //public ComputeShader voxelShader;
 
-    public Terrain3DCShaderNoiseLayers[] noiseLayers;
+    public Terrain3DCShaderNoiseLayer[] noiseLayers;
 
     public int chunkSize = 16;
     public int maxHeight = 256;

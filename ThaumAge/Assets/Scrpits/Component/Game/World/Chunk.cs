@@ -224,7 +224,7 @@ public class Chunk
                 {
                     //异步加载保存数据
                     await Task.Run(() =>
-                    {
+                    {                  
                         //处理地形方块
                         BlockHandler.Instance.HandleBaseBlockData(this, blockArray);
                         //处理存档方块 优先使用存档方块
@@ -232,7 +232,6 @@ public class Chunk
                     });
                     //初始化完成
                     isInit = true;
-
                     //初始化周围方块
                     chunkData.InitRoundChunk();
                     //刷新周围方块

@@ -2,7 +2,6 @@
 using UnityEditor;
 using UnityEngine;
 using static BiomeCreatePlantTool;
-using static BiomeCreateTool;
 using static BiomeCreateTreeTool;
 
 public class BiomePrairie : Biome
@@ -10,49 +9,16 @@ public class BiomePrairie : Biome
     //草原
     public BiomePrairie() : base(BiomeTypeEnum.Prairie)
     {
-        
+
     }
 
-    public BlockTypeEnum GetBlockForMaxHeightDown(Chunk chunk, Vector3Int localPos)
+    public override void CreateBlockStructureForNormalTree(int blockId, Vector3Int baseWorldPosition)
     {
-        return BlockTypeEnum.None;
-        //if (localPos.y == terrainData.maxHeight)
-        //{
-        //    Vector3Int wPos = localPos + chunk.chunkData.positionForWorld;
-        //    AddWeed(wPos);
-        //    AddFlower(wPos);
-        //    AddTree(wPos);
-        //    // 地表，使用草
-        //    return BlockTypeEnum.GrassWild;
-        //}
-        //if (localPos.y < terrainData.maxHeight && localPos.y > terrainData.maxHeight - 5)
-        //{
-        //    //中使用泥土
-        //    return BlockTypeEnum.Dirt;
-        //}
-        //else if (localPos.y == 0)
-        //{
-        //    //基础
-        //    return BlockTypeEnum.Foundation;
-        //}
-        //else
-        //{
-        //    //其他石头
-        //    return BlockTypeEnum.Stone;
-        //}
-    }
-
-    public void InitBiomeBlockForChunk(Chunk chunk)
-    {
-        //base.InitBiomeBlockForChunk(chunk);
-        ////获取地形数据
-        //ChunkTerrainData startTerrainData1 = GetTerrainData(chunk, biomeMapData, 0, 0);
-        //Vector3Int flowerPosition = new Vector3Int(chunk.chunkData.positionForWorld.x, startTerrainData1.maxHeight, chunk.chunkData.positionForWorld.z);
-        //AddFlowerEarth(flowerPosition);
-
-        //ChunkTerrainData startTerrainData2 = GetTerrainData(chunk, biomeMapData, 4, 4);
-        //flowerPosition = new Vector3Int(chunk.chunkData.positionForWorld.x, startTerrainData2.maxHeight, chunk.chunkData.positionForWorld.z);
-        //AddFlowerWood(flowerPosition);
+        BlockTypeEnum blockType = (BlockTypeEnum)blockId;
+        if (blockType == BlockTypeEnum.TreeCherry)
+        {
+            BiomeCreateTreeTool.CreateNormalTree(baseWorldPosition, blockId, 6, 10, 2, (int)BlockTypeEnum.LeavesCherry);
+        }
     }
 
     /// <summary>
@@ -89,20 +55,6 @@ public class BiomePrairie : Biome
         BiomeCreatePlantTool.AddFlower(101, wPos, flowersData);
     }
 
-    protected void AddTree(Vector3Int wPos)
-    {
-        BiomeForTreeData treeData = new BiomeForTreeData
-        {
-            addRate = 0.0001f,
-            minHeight = 6,
-            maxHeight = 10,
-            treeTrunk = BlockTypeEnum.TreeCherry,
-            treeLeaves = BlockTypeEnum.LeavesCherry,
-            leavesRange = 2,
-        };
-        BiomeCreateTreeTool.AddTree(111, wPos, treeData);
-    }
-
     protected void AddWeed(Vector3Int wPos)
     {
         BiomeForPlantData weedData = new BiomeForPlantData
@@ -110,7 +62,7 @@ public class BiomePrairie : Biome
             addRate = 0.02f,
             listPlantType = new List<BlockTypeEnum> { BlockTypeEnum.WeedWildLong, BlockTypeEnum.WeedWildNormal, BlockTypeEnum.WeedWildShort, BlockTypeEnum.WeedWildStart }
         };
-        BiomeCreatePlantTool.AddPlant(222,wPos, weedData);
+        BiomeCreatePlantTool.AddPlant(222, wPos, weedData);
     }
 
 

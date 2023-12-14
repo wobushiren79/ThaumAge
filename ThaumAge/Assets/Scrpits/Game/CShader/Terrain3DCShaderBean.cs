@@ -23,7 +23,7 @@ public class Terrain3DCShaderBean
 
     //noise层级
     public ComputeBuffer noiseLayersArrayBuffer;
-    public Terrain3DCShaderNoiseLayers[] noiseLayers;
+    public Terrain3DCShaderNoiseLayer[] noiseLayers;
 
     //方块数据
     public ComputeBuffer blockArrayBuffer;
@@ -47,7 +47,7 @@ public class Terrain3DCShaderBean
 }
 
 [System.Serializable]
-public struct Terrain3DCShaderNoiseLayers
+public struct Terrain3DCShaderNoiseLayer
 {
     //生态ID
     public int biomeId;

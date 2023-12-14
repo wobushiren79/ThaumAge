@@ -1,1 +1,1 @@
-[{"biome_content":"1,2,998","remark":"测试世界","id":0,"valid":0,"name_cn":null,"name_en":null},{"biome_content":"1,2","remark":"主世界","id":1,"valid":0,"name_cn":null,"name_en":null},{"biome_content":"999","remark":"启动世界","id":99999,"valid":0,"name_cn":null,"name_en":null}]
+[{"biome_content":"998","remark":"测试世界","id":0,"valid":0,"name_cn":null,"name_en":null},{"biome_content":"1,2","remark":"主世界","id":1,"valid":0,"name_cn":null,"name_en":null},{"biome_content":"999","remark":"启动世界","id":99999,"valid":0,"name_cn":null,"name_en":null}]

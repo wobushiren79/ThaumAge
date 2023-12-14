@@ -1,8 +1,12 @@
 #include "../Noise/SimplexNoiseCShader.compute"
 
-//根据生态生成数据 测试用
-int4 HandleBiomePrairie(float3 blockPos, int blockIndex, uint terrainHeight)
+//根据生态生成数据
+int4 HandleBiomePrairie(int seed, float3 blockPos, int blockIndex, uint terrainHeight, bool isBlockCave, bool isBlockCaveDown)
 {
+	if (isBlockCave)
+	{
+		return int4(0, 0, 0, 1);
+	}
 	int4 targetBlockData = int4(0, 0, 0, 0);
 	//如果大于地面高度
 	if (blockPos.y > terrainHeight)
@@ -10,25 +14,51 @@ int4 HandleBiomePrairie(float3 blockPos, int blockIndex, uint terrainHeight)
 		//如果是地面上一格
 		if (blockPos.y == terrainHeight + 1)
 		{
+			//如果下方是洞穴
+			if (!isBlockCaveDown)
+			{
+				//是否生成荒野杂草
+				bool isCreateWeedWild = snoise(float3(blockPos.xz / 10, seed)) > 0.75;
+				bool isCreateFlower = snoise(float3(blockPos.xz / 9, seed)) > 0.95;
+				bool isCreateTree = snoise(float3(blockPos.xz / 8, seed)) > 0.98;
 
+				if (isCreateWeedWild)
+				{
+					targetBlockData = int4(3011, 0, 0, 1);
+				}
+				else if (isCreateFlower)
+				{
+					targetBlockData = int4(3111, 0, 0, 1);
+				}
+				else if (isCreateTree)
+				{
+					targetBlockData = int4(1004, 1, 0, 1);
+				}
+			}
+			else
+			{
+				targetBlockData = int4(0, 0, 0, 1);
+			}
 		}
-		//其他设置空方块 
-		targetBlockData = int4(0, 0, 0, 0);
+		else
+		{
+			targetBlockData = int4(0, 0, 0, 1);
+		}
 	}
-	//地面用草坪
 	else if (blockPos.y == terrainHeight)
 	{
-		targetBlockData = int4(101, 0, 0, 0);
+		//使用荒草泥土
+		targetBlockData = int4(103, 0, 0, 1);
 	}
-	//地面下一格用泥土
-	else if (blockPos.y == terrainHeight - 1)
+	else if (blockPos.y < terrainHeight && blockPos.y > terrainHeight - 6)
 	{
-		targetBlockData = int4(4, 0, 0, 0);
+		//使用泥土
+		targetBlockData = int4(4, 0, 0, 1);
 	}
-	//其他用石头
 	else
 	{
-		targetBlockData = int4(5, 0, 0, 0);
+		//使用石头
+		targetBlockData = int4(5, 0, 0, 1);
 	}
 	return targetBlockData;
 }
