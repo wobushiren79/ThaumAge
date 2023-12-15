@@ -47,6 +47,10 @@ public partial class BiomeInfoBean : BaseBean
 	///海面高度
 	/// </summary>
 	public int oceanHeight;
+	/// <summary>
+	///矿石数据(id_density&id_density)density在0-1 越接近1 矿石越稀少
+	/// </summary>
+	public string oreData;
 }
 public partial class BiomeInfoCfg : BaseCfg<long, BiomeInfoBean>
 {

@@ -40,6 +40,14 @@ public partial class CShaderHandler
         targetCShader.SetBuffer(0, "noiseLayersArrayBuffer", cshaderData.noiseLayersArrayBuffer);
         targetCShader.SetInt("noiseLayersCount", cshaderData.noiseLayers.Length);
 
+        //设置矿石buffer
+        cshaderData.oreDatasArrayBuffer = new ComputeBuffer(cshaderData.oreDatas.Length, 16);
+        cshaderData.oreDatasArrayBuffer.SetData(cshaderData.oreDatas);
+
+        targetCShader.SetBuffer(0, "oreDatasArrayBuffer", cshaderData.oreDatasArrayBuffer);
+        targetCShader.SetInt("oreDatasCount", cshaderData.oreDatas.Length);
+        
+
         //设置方块buffer
         cshaderData.blockArrayBuffer = new ComputeBuffer(cshaderData.GetBlockTotalNum(), 8);
         targetCShader.SetBuffer(0, "blockArrayBuffer", cshaderData.blockArrayBuffer);

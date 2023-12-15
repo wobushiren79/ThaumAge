@@ -11,7 +11,7 @@ public class Biome
     public BiomeInfoBean biomeInfo;
     //生态数据
     public Terrain3DCShaderNoiseLayer terrain3DCShaderNoise;
-
+    public Terrain3DShaderOreData[] terrain3DCShaderOre;
     public Biome(BiomeTypeEnum biomeType)
     {
         this.biomeType = biomeType;
@@ -29,6 +29,28 @@ public class Biome
         terrain3DCShaderNoise.caveOctaves = biomeInfo.caveOctaves;
         terrain3DCShaderNoise.groundMinHeigh = biomeInfo.groundMinHeigh;
         terrain3DCShaderNoise.oceanHeight = biomeInfo.oceanHeight;
+
+        //设置矿石数据
+        string oreDataStr = biomeInfo.oreData;
+        if (oreDataStr.IsNull())
+        {
+            terrain3DCShaderOre = new Terrain3DShaderOreData[0];
+        }
+        else
+        {
+            string[] oreDataStrArray = oreDataStr.Split('&');
+            terrain3DCShaderOre = new Terrain3DShaderOreData[oreDataStrArray.Length];
+            for (int i = 0; i < oreDataStrArray.Length; i++)
+            {
+                string[] itemOreDataStrArray = oreDataStrArray[i].Split('_');
+                Terrain3DShaderOreData terrain3DShaderOre = new Terrain3DShaderOreData();
+                terrain3DShaderOre.oreId = int.Parse(itemOreDataStrArray[0]);
+                terrain3DShaderOre.oreDensity = float.Parse(itemOreDataStrArray[1]);
+                terrain3DShaderOre.oreMinHeight = int.Parse(itemOreDataStrArray[2]);
+                terrain3DShaderOre.oreMaxHeight = int.Parse(itemOreDataStrArray[3]);
+                terrain3DCShaderOre[i] = terrain3DShaderOre;
+            }
+        }
 
         //如果是测试生态 直接获取GameLauncher里的数据
         if (biomeType == BiomeTypeEnum.Test)

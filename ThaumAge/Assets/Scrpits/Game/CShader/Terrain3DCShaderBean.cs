@@ -25,6 +25,10 @@ public class Terrain3DCShaderBean
     public ComputeBuffer noiseLayersArrayBuffer;
     public Terrain3DCShaderNoiseLayer[] noiseLayers;
 
+    //矿石数据
+    public ComputeBuffer oreDatasArrayBuffer;
+    public Terrain3DShaderOreData[] oreDatas;
+
     //方块数据
     public ComputeBuffer blockArrayBuffer;
     //不是空气方块的数量
@@ -77,3 +81,17 @@ public struct Terrain3DCShaderNoiseLayer
     //海洋高度
     public int oceanHeight;
 }
+
+[System.Serializable]
+public struct Terrain3DShaderOreData 
+{
+    //矿石ID
+    public int oreId;
+    //矿石密度
+    public float oreDensity;
+
+    //矿石的范围
+    public int oreMinHeight;
+    public int oreMaxHeight;
+}
+

@@ -47,6 +47,18 @@ struct NoiseLayer
 	int oceanHeight;
 };
 
+//矿石数据
+struct OreData
+{
+	//矿石ID
+	int oreId;
+	//矿石密度
+	float oreDensity;
+	//矿石的范围
+	int oreMinHeight;
+	int oreMaxHeight;
+};
+
 //2D地形数据
 struct Terrain2DData
 {
@@ -78,11 +90,12 @@ float3 chunkPosition;
 int seed;
 //种子偏移
 float3 seedOffset;
-
 //所有noise数据
 StructuredBuffer<NoiseLayer> noiseLayersArrayBuffer;
 int noiseLayersCount;
-
+//矿石数据
+StructuredBuffer<OreData> oreDatasArrayBuffer;
+int oreDatasCount;
 //所有的方块列表数据
 RWStructuredBuffer<BlockData> blockArrayBuffer;
 //不是空气方块的数量
@@ -219,9 +232,9 @@ Terrain2DData CreateTerrain2DData(float3 blockPos)
 }
 
 //根据生态生成数据 测试用
-int4 HandleBiomeForTest(int seed, float3 blockPos, int blockIndex, uint terrainHeight,bool isBlockCave,bool isBlockCaveDown)
+int4 HandleBiomeForTest(int seed, float3 blockPos, int blockIndex, uint terrainHeight, bool isBlockCave, bool isBlockCaveDown)
 {
-	if (isBlockCave) 
+	if (isBlockCave)
 	{
 		return int4(0, 0, 0, 1);
 	}
@@ -253,12 +266,12 @@ int4 HandleBiomeForTest(int seed, float3 blockPos, int blockIndex, uint terrainH
 					targetBlockData = int4(1004, 1, 0, 1);
 				}
 			}
-			else 
+			else
 			{
 				targetBlockData = int4(0, 0, 0, 1);
 			}
 		}
-		else 
+		else
 		{
 			targetBlockData = int4(0, 0, 0, 1);
 		}
@@ -322,7 +335,7 @@ void StartCreate(uint3 id : SV_DispatchThreadID)
 				isBlockCave = true;
 			}
 
-			if (blockPos.y == terrainHeight + 1) 
+			if (blockPos.y == terrainHeight + 1)
 			{
 				//如果大于阈值则是空气 下方方块
 				float weightCaveDown = CreateTerrainCaveData(float3(blockPos.x, blockPos.y - 1, blockPos.z), terrainHeight, terrain2DData.noiseIndex);
@@ -335,7 +348,7 @@ void StartCreate(uint3 id : SV_DispatchThreadID)
 		}
 	}
 
-	int4 biomeBlockData = int4(0,0,0,0);
+	int4 biomeBlockData = int4(0, 0, 0, 0);
 	//获取生态方块数据
 	switch (selectedNoise.biomeId)
 	{
@@ -359,10 +372,24 @@ void StartCreate(uint3 id : SV_DispatchThreadID)
 		itemBlock.blockStructure = biomeBlockData.y;
 	}
 
-
-	//矿物处理
-
-
+	//矿物处理 如果有矿物数据 并且当前不是洞穴 并且在地面以下
+	if (oreDatasCount > 0 && !isBlockCave && blockPos.y < terrainHeight - 5)
+	{
+		for (int i = 0; i < oreDatasCount; i++)
+		{
+			OreData itemOreData = oreDatasArrayBuffer[i];
+			//矿石在此高度内
+			if (blockPos.y >= itemOreData.oreMinHeight && blockPos.y <= itemOreData.oreMaxHeight)
+			{
+				float oreCreateRate = snoise(float4(blockPos / (i + 10), seed));
+				if (oreCreateRate > itemOreData.oreDensity)
+				{
+					itemBlock.blockId = itemOreData.oreId;
+					itemBlock.blockStructure = 0;
+				}
+			}
+		}
+	}
 
 	//设置基岩
 	switch (stateBedrock)
