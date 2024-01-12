@@ -20,6 +20,14 @@ public partial class BiomeInfoBean : BaseBean
 	/// </summary>
 	public int octaves;
 	/// <summary>
+	///洞穴最小高度
+	/// </summary>
+	public int caveMinHeight;
+	/// <summary>
+	///洞穴最大高度
+	/// </summary>
+	public int caveMaxHeight;
+	/// <summary>
 	///洞穴大小
 	/// </summary>
 	public float caveScale;
@@ -44,11 +52,31 @@ public partial class BiomeInfoBean : BaseBean
 	/// </summary>
 	public int groundMinHeigh;
 	/// <summary>
-	///海面高度
+	///海水最低高度
 	/// </summary>
-	public int oceanHeight;
+	public int oceanMinHeight;
 	/// <summary>
-	///矿石数据(id_density&id_density)density在0-1 越接近1 矿石越稀少
+	///海水最高高度
+	/// </summary>
+	public int oceanMaxHeight;
+	/// <summary>
+	///水的大小
+	/// </summary>
+	public float oceanScale;
+	/// <summary>
+	///水的阈值
+	/// </summary>
+	public float oceanThreshold;
+	/// <summary>
+	///水的振幅
+	/// </summary>
+	public float oceanAmplitude;
+	/// <summary>
+	///水的频率
+	/// </summary>
+	public float oceanFrequency;
+	/// <summary>
+	///矿石数据(id_density_minH_maxH&id_density_minH_max)density在0-1 越接近1 矿石越稀少
 	/// </summary>
 	public string oreData;
 }

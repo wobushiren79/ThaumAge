@@ -29,6 +29,9 @@ struct NoiseLayer
 	//噪音循环迭代次数 复杂度
 	int octaves;
 
+	//洞穴高度
+	int caveMinHeight;
+	int caveMaxHeight;
 	//洞穴大小
 	float caveScale;
 	//洞穴的阈值
@@ -44,7 +47,16 @@ struct NoiseLayer
 	//地面的最低高度
 	int groundMinHeigh;
 	//海面高度
-	int oceanHeight;
+	int oceanMinHeight;
+	int oceanMaxHeight;
+	//水的大小
+	float oceanScale;
+	//水的预制
+	float oceanThreshold;
+	//水的振幅 
+	float oceanAmplitude;
+	//水的频率 
+	float oceanFrequency;
 };
 
 //矿石数据
@@ -197,25 +209,25 @@ Terrain2DData CreateTerrain2DData(float3 blockPos)
 	int lerpBlockNum = 5;
 	if (selectedNoiseL.biomeId != selectedNoise.biomeId && posLocalX >= 0 && posLocalX < lerpBlockNum)
 	{
-		float baseHeight = (selectedNoise.oceanHeight + selectedNoiseL.oceanHeight) / 2;
+		float baseHeight = (selectedNoise.oceanMaxHeight + selectedNoiseL.oceanMaxHeight) / 2;
 		lerpHeightL = lerp(height, baseHeight, 1 - (posLocalX / (lerpBlockNum - 1)));
 		lerpHeightMin = lerpHeightL < lerpHeightMin ? lerpHeightL : lerpHeightMin;
 	}
 	if (selectedNoiseR.biomeId != selectedNoise.biomeId && posLocalX >= (chunkSizeW - lerpBlockNum) && posLocalX < chunkSizeW)
 	{
-		float baseHeight = (selectedNoise.oceanHeight + selectedNoiseR.oceanHeight) / 2;
+		float baseHeight = (selectedNoise.oceanMaxHeight + selectedNoiseR.oceanMaxHeight) / 2;
 		lerpHeightR = lerp(height, baseHeight, (posLocalX - (chunkSizeW - lerpBlockNum)) / (lerpBlockNum - 1));
 		lerpHeightMin = lerpHeightR < lerpHeightMin ? lerpHeightR : lerpHeightMin;
 	}
 	if (selectedNoiseF.biomeId != selectedNoise.biomeId && posLocalZ >= 0 && posLocalZ < lerpBlockNum)
 	{
-		float baseHeight = (selectedNoise.oceanHeight + selectedNoiseF.oceanHeight) / 2;
+		float baseHeight = (selectedNoise.oceanMaxHeight + selectedNoiseF.oceanMaxHeight) / 2;
 		lerpHeightF = lerp(height, baseHeight, 1 - (posLocalZ / (lerpBlockNum - 1)));
 		lerpHeightMin = lerpHeightF < lerpHeightMin ? lerpHeightF : lerpHeightMin;
 	}
 	if (selectedNoiseB.biomeId != selectedNoise.biomeId && posLocalZ >= (chunkSizeW - lerpBlockNum) && posLocalZ < chunkSizeW)
 	{
-		float baseHeight = (selectedNoise.oceanHeight + selectedNoiseB.oceanHeight) / 2;
+		float baseHeight = (selectedNoise.oceanMaxHeight + selectedNoiseB.oceanMaxHeight) / 2;
 		lerpHeightB = lerp(height, baseHeight, (posLocalZ - (chunkSizeW - lerpBlockNum)) / (lerpBlockNum - 1));
 		lerpHeightMin = lerpHeightB < lerpHeightMin ? lerpHeightB : lerpHeightMin;
 	}
@@ -232,8 +244,22 @@ Terrain2DData CreateTerrain2DData(float3 blockPos)
 }
 
 //根据生态生成数据 测试用
-int4 HandleBiomeForTest(int seed, float3 blockPos, int blockIndex, uint terrainHeight, bool isBlockCave, bool isBlockCaveDown)
+int4 HandleBiomeForTest(int seed, float3 blockPos, int blockIndex, uint terrainHeight, 
+	bool isBlockCave, bool isBlockCaveDown,bool isBlockWater, bool isBlockWaterDown)
 {
+	if (isBlockWater) 
+	{
+		//如果又是水 又是洞穴 并且下方也是
+		if (isBlockCave)
+		{
+			return int4(4, 0, 0, 1);
+		}
+		else if (isBlockCaveDown)
+		{
+			return int4(4, 0, 0, 1);
+		}
+		return int4(9001, 0, 0, 1);
+	}
 	if (isBlockCave)
 	{
 		return int4(0, 0, 0, 1);
@@ -243,23 +269,50 @@ int4 HandleBiomeForTest(int seed, float3 blockPos, int blockIndex, uint terrainH
 	if (blockPos.y > terrainHeight)
 	{
 		//如果是地面上一格
-		if (blockPos.y == terrainHeight + 1)
+	    if (blockPos.y == terrainHeight + 1)
 		{
-			//如果下方是洞穴
-			if (!isBlockCaveDown)
+			//如果下方不是洞穴 并且也不是水
+			if (!isBlockCaveDown && !isBlockWaterDown)
 			{
-				//是否生成荒野杂草
-				bool isCreateWeedWild = snoise(float3(blockPos.xz / 10, seed)) > 0.75;
+				//是否生成
+				bool isCreateWeedWild = snoise(float3(blockPos.xz / 10, seed)) > 0.3;
 				bool isCreateFlower = snoise(float3(blockPos.xz / 9, seed)) > 0.95;
-				bool isCreateTree = snoise(float3(blockPos.xz / 8, seed)) > 0.98;
-
+				bool isCreateTree = snoise(float3(blockPos.xz / 8, seed)) > 0.9;
 				if (isCreateWeedWild)
 				{
-					targetBlockData = int4(3011, 0, 0, 1);
+					float randomType = snoise(float4(blockPos, seed));
+					if (randomType > 0 && randomType <= 0.25)
+					{
+						targetBlockData = int4(3001, 0, 0, 1);
+					}
+					else if (randomType > 0.25 && randomType <= 0.5)
+					{
+						targetBlockData = int4(3002, 0, 0, 1);
+					}
+					else if (randomType > 0.5 && randomType <= 0.75)
+					{
+						targetBlockData = int4(3003, 0, 0, 1);
+					}
+					else 
+					{
+						targetBlockData = int4(3004, 0, 0, 1);
+					}
 				}
 				else if (isCreateFlower)
 				{
-					targetBlockData = int4(3111, 0, 0, 1);
+					float randomType = snoise(float4(blockPos, seed));
+					if (randomType > 0 && randomType <= 0.33)
+					{
+						targetBlockData = int4(3111, 0, 0, 1);
+					}
+					else if (randomType > 0.33 && randomType <= 0.66)
+					{
+						targetBlockData = int4(3112, 0, 0, 1);
+					}
+					else
+					{
+						targetBlockData = int4(3113, 0, 0, 1);
+					}
 				}
 				else if (isCreateTree)
 				{
@@ -279,7 +332,7 @@ int4 HandleBiomeForTest(int seed, float3 blockPos, int blockIndex, uint terrainH
 	else if (blockPos.y == terrainHeight)
 	{
 		//使用荒草泥土
-		targetBlockData = int4(103, 0, 0, 1);
+		targetBlockData = int4(101, 0, 0, 1);
 	}
 	else if (blockPos.y < terrainHeight && blockPos.y > terrainHeight - 6)
 	{
@@ -321,30 +374,70 @@ void StartCreate(uint3 id : SV_DispatchThreadID)
 	bool isBlockCave = false;
 	//下方方块是否是洞穴
 	bool isBlockCaveDown = false;
+	//当前方块是否是水
+	bool isBlockWater = false;
+	//当前下面的方块是否是水
+	bool isBlockWaterDown = false;
+
 	//如果不是空气方块 并且在地表以下 则创建普通洞穴
 	if (blockPos.y <= terrainHeight + 1)
 	{
-		//如果是需要创建普通洞穴
-		switch (stateCaves)
+		if (blockPos.y >= selectedNoise.caveMinHeight && blockPos.y <= selectedNoise.caveMaxHeight)
 		{
-		case 1:
-			//如果大于阈值则是空气
-			float weightCave = CreateTerrainCaveData(blockPos, terrainHeight, terrain2DData.noiseIndex);
-			if (weightCave > selectedNoise.caveThreshold)
+			//如果是需要创建普通洞穴
+			switch (stateCaves)
 			{
-				isBlockCave = true;
-			}
-
-			if (blockPos.y == terrainHeight + 1)
-			{
-				//如果大于阈值则是空气 下方方块
-				float weightCaveDown = CreateTerrainCaveData(float3(blockPos.x, blockPos.y - 1, blockPos.z), terrainHeight, terrain2DData.noiseIndex);
-				if (weightCaveDown > selectedNoise.caveThreshold)
+			case 1:
+				//如果大于阈值则是空气
+				float weightCave = CreateTerrainCaveData(blockPos, terrainHeight, terrain2DData.noiseIndex);
+				if (weightCave > selectedNoise.caveThreshold)
 				{
-					isBlockCaveDown = true;
+					isBlockCave = true;
+				}
+
+				if (blockPos.y == terrainHeight + 1)
+				{
+					//如果大于阈值则是空气 下方方块
+					float weightCaveDown = CreateTerrainCaveData(float3(blockPos.x, blockPos.y - 1, blockPos.z), terrainHeight, terrain2DData.noiseIndex);
+					if (weightCaveDown > selectedNoise.caveThreshold)
+					{
+						isBlockCaveDown = true;
+					}
+				}
+				break;
+			}
+		}
+		//创建水
+		if (selectedNoise.oceanScale > 0)
+		{
+			//如果在水的区域内 不生成洞穴
+			if (blockPos.y >= selectedNoise.oceanMinHeight && blockPos.y <= selectedNoise.oceanMaxHeight) 
+			{
+				isBlockCave = false;
+				isBlockCaveDown = false;
+			}
+			//是否生成水
+			if (blockPos.y > selectedNoise.oceanMinHeight && blockPos.y <= selectedNoise.oceanMaxHeight) 
+			{
+				float weighOcean = 0;
+				//迭代次数
+				weighOcean += snoise(selectedNoise.oceanFrequency * (blockPos / selectedNoise.oceanScale)) * selectedNoise.oceanAmplitude;
+				if (weighOcean > selectedNoise.oceanThreshold)
+				{
+					isBlockWater = true;
 				}
 			}
-			break;
+			//下方方块是否是水
+			if (blockPos.y - 1 > selectedNoise.oceanMinHeight && blockPos.y - 1 <= selectedNoise.oceanMaxHeight)
+			{
+				float weighOceanDown = 0;
+				//迭代次数
+				weighOceanDown += snoise(selectedNoise.oceanFrequency * (float3(blockPos.x, blockPos.y - 1, blockPos.z) / selectedNoise.oceanScale)) * selectedNoise.oceanAmplitude;
+				if (weighOceanDown > selectedNoise.oceanThreshold)
+				{
+					isBlockWaterDown = true;
+				}
+			}
 		}
 	}
 
@@ -352,9 +445,9 @@ void StartCreate(uint3 id : SV_DispatchThreadID)
 	//获取生态方块数据
 	switch (selectedNoise.biomeId)
 	{
-		//case 1://平原
-		//  biomeBlockData = HandleBiomePrairie(seed, blockPos, blockIndex, terrainHeight, isBlockCave, isBlockCaveDown);
-		//	break;
+	case 1://平原
+		biomeBlockData = HandleBiomePrairie(seed, blockPos, blockIndex, terrainHeight, isBlockCave, isBlockCaveDown);
+		break;
 		//case 2://森林
 		//	biomeBlockData = HandleBiome(blockPos, blockIndex, terrainHeight);
 		//	break;
@@ -362,7 +455,7 @@ void StartCreate(uint3 id : SV_DispatchThreadID)
 		//	biomeBlockData = HandleBiomeTest(blockPos, blockIndex, terrainHeight);
 		//	break;
 	default:
-		biomeBlockData = HandleBiomeForTest(seed, blockPos, blockIndex, terrainHeight, isBlockCave, isBlockCaveDown);
+		biomeBlockData = HandleBiomeForTest(seed, blockPos, blockIndex, terrainHeight, isBlockCave, isBlockCaveDown, isBlockWater, isBlockWaterDown);
 		break;
 	}
 
@@ -373,7 +466,7 @@ void StartCreate(uint3 id : SV_DispatchThreadID)
 	}
 
 	//矿物处理 如果有矿物数据 并且当前不是洞穴 并且在地面以下
-	if (oreDatasCount > 0 && !isBlockCave && blockPos.y < terrainHeight - 5)
+	if (oreDatasCount > 0 && !isBlockCave && !isBlockWater && blockPos.y < terrainHeight - 5)
 	{
 		for (int i = 0; i < oreDatasCount; i++)
 		{

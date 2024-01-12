@@ -22,14 +22,21 @@ public class Biome
         terrain3DCShaderNoise.amplitude = biomeInfo.amplitude;
         terrain3DCShaderNoise.lacunarity = biomeInfo.lacunarity;
         terrain3DCShaderNoise.octaves = biomeInfo.octaves;
+        terrain3DCShaderNoise.caveMinHeight = biomeInfo.caveMinHeight;
+        terrain3DCShaderNoise.caveMaxHeight = biomeInfo.caveMaxHeight;
         terrain3DCShaderNoise.caveScale = biomeInfo.caveScale;
         terrain3DCShaderNoise.caveThreshold = biomeInfo.caveThreshold;
         terrain3DCShaderNoise.caveFrequency = biomeInfo.caveFrequency;
         terrain3DCShaderNoise.caveAmplitude = biomeInfo.caveAmplitude;
         terrain3DCShaderNoise.caveOctaves = biomeInfo.caveOctaves;
         terrain3DCShaderNoise.groundMinHeigh = biomeInfo.groundMinHeigh;
-        terrain3DCShaderNoise.oceanHeight = biomeInfo.oceanHeight;
+        terrain3DCShaderNoise.oceanMinHeight = biomeInfo.oceanMinHeight;
+        terrain3DCShaderNoise.oceanMaxHeight = biomeInfo.oceanMaxHeight;
 
+        terrain3DCShaderNoise.oceanScale = biomeInfo.oceanScale;
+        terrain3DCShaderNoise.oceanThreshold = biomeInfo.oceanThreshold;
+        terrain3DCShaderNoise.oceanAmplitude = biomeInfo.oceanAmplitude;
+        terrain3DCShaderNoise.oceanFrequency = biomeInfo.oceanFrequency;
         //设置矿石数据
         string oreDataStr = biomeInfo.oreData;
         if (oreDataStr.IsNull())

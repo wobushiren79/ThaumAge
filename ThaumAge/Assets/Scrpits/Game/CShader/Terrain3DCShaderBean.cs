@@ -64,6 +64,9 @@ public struct Terrain3DCShaderNoiseLayer
     //噪音循环迭代次数 复杂度
     public int octaves;
 
+    //洞穴高度
+    public int caveMinHeight;
+    public int caveMaxHeight;
     //洞穴大小
     public float caveScale;
     //洞穴的阈值（0-1）
@@ -79,7 +82,16 @@ public struct Terrain3DCShaderNoiseLayer
     //地面的最低高度
     public int groundMinHeigh;
     //海洋高度
-    public int oceanHeight;
+    public int oceanMinHeight;
+    public int oceanMaxHeight;
+    //水的大小
+    public float oceanScale;
+    //水的预制
+    public float oceanThreshold;
+    //水的振幅 
+    public float oceanAmplitude;
+    //水的频率 
+    public float oceanFrequency;
 }
 
 [System.Serializable]

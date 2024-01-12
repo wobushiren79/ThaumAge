@@ -34,7 +34,7 @@ public partial class CShaderHandler
         targetCShader.SetVector("seedOffset", cshaderData.seedOffset);
 
         //…Ë÷√noisebuffer
-        cshaderData.noiseLayersArrayBuffer = new ComputeBuffer(cshaderData.noiseLayers.Length, 48);
+        cshaderData.noiseLayersArrayBuffer = new ComputeBuffer(cshaderData.noiseLayers.Length, 76);
         cshaderData.noiseLayersArrayBuffer.SetData(cshaderData.noiseLayers);
 
         targetCShader.SetBuffer(0, "noiseLayersArrayBuffer", cshaderData.noiseLayersArrayBuffer);

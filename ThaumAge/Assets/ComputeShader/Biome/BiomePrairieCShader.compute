@@ -17,18 +17,45 @@ int4 HandleBiomePrairie(int seed, float3 blockPos, int blockIndex, uint terrainH
 			//如果下方是洞穴
 			if (!isBlockCaveDown)
 			{
-				//是否生成荒野杂草
+				//是否生成
 				bool isCreateWeedWild = snoise(float3(blockPos.xz / 10, seed)) > 0.75;
 				bool isCreateFlower = snoise(float3(blockPos.xz / 9, seed)) > 0.95;
 				bool isCreateTree = snoise(float3(blockPos.xz / 8, seed)) > 0.98;
-
 				if (isCreateWeedWild)
 				{
-					targetBlockData = int4(3011, 0, 0, 1);
+					float randomType = snoise(float4(blockPos, seed));
+					if (randomType > 0 && randomType <= 0.25)
+					{
+						targetBlockData = int4(3011, 0, 0, 1);
+					}
+					else if (randomType > 0.25 && randomType <= 0.5)
+					{
+						targetBlockData = int4(3012, 0, 0, 1);
+					}
+					else if (randomType > 0.5 && randomType <= 0.75)
+					{
+						targetBlockData = int4(3013, 0, 0, 1);
+					}
+					else
+					{
+						targetBlockData = int4(3014, 0, 0, 1);
+					}
 				}
 				else if (isCreateFlower)
 				{
-					targetBlockData = int4(3111, 0, 0, 1);
+					float randomType = snoise(float4(blockPos, seed));
+					if (randomType > 0 && randomType <= 0.33)
+					{
+						targetBlockData = int4(3111, 0, 0, 1);
+					}
+					else if (randomType > 0.33 && randomType <= 0.66)
+					{
+						targetBlockData = int4(3112, 0, 0, 1);
+					}
+					else
+					{
+						targetBlockData = int4(3113, 0, 0, 1);
+					}
 				}
 				else if (isCreateTree)
 				{
