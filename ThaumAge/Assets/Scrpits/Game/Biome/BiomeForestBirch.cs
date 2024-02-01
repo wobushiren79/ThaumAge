@@ -112,7 +112,7 @@ public class BiomeForestBirch : Biome
         };
         BiomeCreatePlantTool.AddFlower(101, wPos, flowersData);
         //增加枯木
-        BiomeCreatePlantTool.AddDeadwood(102, 0.001f, wPos);
+        BiomeCreatePlantTool.AddDeadwood(wPos);
     }
 
     /// <summary>
@@ -146,7 +146,6 @@ public class BiomeForestBirch : Biome
             maxHeight = 6,
             treeTrunk = BlockTypeEnum.TreeBirch,
         };
-        BiomeCreateTreeTool.AddTreeForFallDown(211, wPos + new Vector3Int(0, 1, 0), treeData);
     }
 
     protected void AddWeed(Vector3Int wPos)

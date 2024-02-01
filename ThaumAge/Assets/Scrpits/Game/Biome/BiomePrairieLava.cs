@@ -60,7 +60,7 @@ public class BiomePrairieLava : Biome
     /// <param name="startPosition"></param>
     public void AddDeadwood(Vector3Int startPosition)
     {
-        BiomeCreatePlantTool.AddDeadwood(101, 0.005f, startPosition);
+        BiomeCreatePlantTool.AddDeadwood(startPosition);
     }
 
     /// <summary>

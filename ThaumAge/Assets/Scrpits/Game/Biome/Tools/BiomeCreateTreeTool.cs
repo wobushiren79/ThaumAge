@@ -31,19 +31,20 @@ public class BiomeCreateTreeTool
     public static void CreateNormalTree(
         Vector3Int startPosition,
         int treeTrunk, int treeLeaves,
-        int treeMinHeight = 5, int treeMaxHeight = 8, int leavesRange = 2
+        int treeMinHeight = 4, int treeMaxHeight = 7, int leavesHeight = 4, int leavesRange = 2
         )
     {
-        int treeHeight = WorldRandTools.Range(treeMinHeight, treeMaxHeight);
-        for (int i = 0; i < treeHeight + 2; i++)
+        int treeHeight = WorldRandTools.Range(treeMinHeight, treeMaxHeight, startPosition);
+        int leavesHeightHalf = (leavesHeight / 2);
+        for (int i = 1; i < treeHeight + leavesHeightHalf; i++)
         {
-            Vector3Int treeTrunkPosition = new Vector3Int(startPosition.x, startPosition.y + (i + 1), startPosition.z);
+            Vector3Int treeTrunkPosition = new Vector3Int(startPosition.x, startPosition.y + i, startPosition.z);
             //生成树干
             if (i < treeHeight)
             {
                 WorldCreateHandler.Instance.manager.AddUpdateBlock(treeTrunkPosition, treeTrunk);
             }
-            if (i > 2)
+            if (i >= treeHeight - leavesHeightHalf)
             {
                 //最大范围
                 if (i >= treeHeight)
@@ -59,7 +60,7 @@ public class BiomeCreateTreeTool
                 {
                     for (int z = -leavesRange; z <= leavesRange; z++)
                     {
-                        if (x == startPosition.x && z == startPosition.z)
+                        if (x == 0 && z == 0)
                             continue;
                         if (Math.Abs(x) == leavesRange || Math.Abs(z) == leavesRange)
                         {
@@ -105,21 +106,15 @@ public class BiomeCreateTreeTool
     /// <summary>
     /// 增加倒下的树干
     /// </summary>
-    public static void AddTreeForFallDown(uint randomData, Vector3Int startPosition, BiomeForTreeData treeData)
+    public static void AddTreeForFallDown(Vector3Int startPosition, int treeTrunk, int treeMinHeight = 1, int treeMaxHeight = 3)
     {
-        //生成概率
-        float addRate = WorldRandTools.GetValue(startPosition, randomData);
-
-        if (addRate < treeData.addRate)
+        GetRandomBlockDirection(out BlockDirectionEnum randomBlockDirection, out Vector3Int randomAddPosition);
+        //长度
+        int treeHeight = WorldRandTools.Range(treeMinHeight, treeMaxHeight);
+        for (int i = 0; i < treeHeight; i++)
         {
-            GetRandomBlockDirection(out BlockDirectionEnum randomBlockDirection, out Vector3Int randomAddPosition);
-            //长度
-            int treeHeight = WorldRandTools.Range(treeData.minHeight, treeData.maxHeight);
-            for (int i = 0; i < treeHeight; i++)
-            {
-                Vector3Int treeTrunkPosition = startPosition + i * randomAddPosition;
-                WorldCreateHandler.Instance.manager.AddUpdateBlock(treeTrunkPosition, treeData.treeTrunk, randomBlockDirection);
-            }
+            Vector3Int treeTrunkPosition = startPosition + i * randomAddPosition;
+            WorldCreateHandler.Instance.manager.AddUpdateBlock(treeTrunkPosition, treeTrunk, randomBlockDirection);
         }
     }
 

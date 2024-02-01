@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using TreeEditor;
 using UnityEditor;
 using UnityEngine;
 
@@ -80,6 +81,12 @@ public class Biome
             case BlockStructureEnum.NormalTree:
                 CreateBlockStructureForNormalTree(blockId, baseWorldPosition);
                 break;
+            case BlockStructureEnum.DeadWood:
+                CreateBlockStructureForDeadWood(blockId, baseWorldPosition);
+                break;
+            case BlockStructureEnum.FallDownTree:
+                CreateBlockStructureForFallDownTree(blockId, baseWorldPosition);
+                break;
         }
     }
 
@@ -91,6 +98,25 @@ public class Biome
     public virtual void CreateBlockStructureForNormalTree(int blockId, Vector3Int baseWorldPosition)
     {
         BiomeCreateTreeTool.CreateNormalTree(baseWorldPosition, blockId, (int)BlockTypeEnum.LeavesOak);
+    }
+
+    /// <summary>
+    /// 创建枯木
+    /// </summary>
+    /// <param name="blockId"></param>
+    /// <param name="baseWorldPosition"></param>
+    public virtual void CreateBlockStructureForDeadWood(int blockId, Vector3Int baseWorldPosition)
+    {
+        //增加枯木
+        BiomeCreatePlantTool.AddDeadwood(baseWorldPosition);
+    }
+
+    /// <summary>
+    /// 创建倒下的树
+    /// </summary>
+    public virtual void CreateBlockStructureForFallDownTree(int blockId, Vector3Int baseWorldPosition)
+    {
+        BiomeCreateTreeTool.AddTreeForFallDown(baseWorldPosition, blockId);
     }
 
     /// <summary>

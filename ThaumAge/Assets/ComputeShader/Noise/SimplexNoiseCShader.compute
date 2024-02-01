@@ -59,6 +59,13 @@ Remark about those offsets from the original author:
 // 1 / 289
 #define NOISE_SIMPLEX_1_DIV_289 0.00346020761245674740484429065744f
 
+//生成随机数0-1
+float GenerateRandom(uint seed, float x, float y)
+{
+	float2 pos = float2(x,y) * seed;
+    return frac(sin(dot(pos, float2(12.9898, 78.233))) * 43758.5453);
+}
+
 float mod289(float x) {
 	return x - floor(x * NOISE_SIMPLEX_1_DIV_289) * 289.0;
 }

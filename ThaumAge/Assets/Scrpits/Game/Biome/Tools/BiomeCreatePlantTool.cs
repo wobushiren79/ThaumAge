@@ -71,20 +71,14 @@ public class BiomeCreatePlantTool
     /// </summary>
     /// <param name="randomData"></param>
     /// <param name="startPosition"></param>
-    public static void AddDeadwood(uint randomData, float addRate, Vector3Int startPosition)
+    public static void AddDeadwood(Vector3Int startPosition)
     {
-        //生成概率
-        float addRateRandom = WorldRandTools.GetValue(startPosition, randomData);
-        if (addRateRandom < addRate)
+        //高度
+        int treeHeight = WorldRandTools.Range(1, 3, startPosition);
+        Vector3Int treeDataPosition = startPosition;
+        for (int i = 1; i < treeHeight; i++)
         {
-            //高度
-            int treeHeight = WorldRandTools.Range(1, 4);
-
-            Vector3Int treeDataPosition = startPosition;
-            for (int i = 0; i < treeHeight; i++)
-            {
-                WorldCreateHandler.Instance.manager.AddUpdateBlock(treeDataPosition.x, treeDataPosition.y + i + 1, treeDataPosition.z, BlockTypeEnum.WoodDead, BlockDirectionEnum.UpForward);
-            }
+            WorldCreateHandler.Instance.manager.AddUpdateBlock(treeDataPosition.x, treeDataPosition.y + i, treeDataPosition.z, BlockTypeEnum.WoodDead, BlockDirectionEnum.UpForward);
         }
     }
 }
