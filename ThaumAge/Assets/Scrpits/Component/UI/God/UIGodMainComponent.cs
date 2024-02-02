@@ -16,5 +16,7 @@ public partial class UIGodMain
 
     public Button ui_Time_4;
 
+    public Button ui_RefreshWorld;
+
 
 }

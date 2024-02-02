@@ -82,23 +82,17 @@ public class BiomeCreateTreeTool
     /// <param name="randomData"></param>
     /// <param name="startPosition"></param>
     /// <param name="cactusData"></param>
-    public static void AddCactus(uint randomData, Vector3Int startPosition, BiomeForTreeData cactusData)
+    public static void AddCactus(Vector3Int startPosition, int cactusID, int minHeight = 1, int maxHeight = 4)
     {
-        //生成概率
-        float addRate = WorldRandTools.GetValue(startPosition, randomData);
-
-        if (addRate < cactusData.addRate)
+        //高度
+        int treeHeight = WorldRandTools.Range(minHeight, maxHeight, startPosition);
+        for (int i = 1; i < treeHeight; i++)
         {
-            //高度
-            int treeHeight = WorldRandTools.Range(cactusData.minHeight, cactusData.maxHeight);
-            for (int i = 0; i < treeHeight; i++)
+            Vector3Int treeTrunkPosition = new Vector3Int(startPosition.x, startPosition.y + i, startPosition.z);
+            //生成树1干
+            if (i < treeHeight)
             {
-                Vector3Int treeTrunkPosition = startPosition + Vector3Int.up * (i + 1);
-                //生成树干
-                if (i < treeHeight)
-                {
-                    WorldCreateHandler.Instance.manager.AddUpdateBlock(treeTrunkPosition, cactusData.treeTrunk);
-                }
+                WorldCreateHandler.Instance.manager.AddUpdateBlock(treeTrunkPosition, cactusID);
             }
         }
     }

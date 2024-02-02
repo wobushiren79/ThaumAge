@@ -87,6 +87,9 @@ public class Biome
             case BlockStructureEnum.FallDownTree:
                 CreateBlockStructureForFallDownTree(blockId, baseWorldPosition);
                 break;
+            case BlockStructureEnum.Cactus:
+                CreateBlockStructureForCactus(blockId, baseWorldPosition);
+                break;
         }
     }
 
@@ -117,6 +120,16 @@ public class Biome
     public virtual void CreateBlockStructureForFallDownTree(int blockId, Vector3Int baseWorldPosition)
     {
         BiomeCreateTreeTool.AddTreeForFallDown(baseWorldPosition, blockId);
+    }
+
+    /// <summary>
+    /// 创建仙人掌
+    /// </summary>
+    /// <param name="blockId"></param>
+    /// <param name="baseWorldPosition"></param>
+    public virtual void CreateBlockStructureForCactus(int blockId, Vector3Int baseWorldPosition)
+    {
+        BiomeCreateTreeTool.AddCactus(baseWorldPosition, blockId);
     }
 
     /// <summary>

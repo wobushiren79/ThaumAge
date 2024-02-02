@@ -9,4 +9,5 @@ public enum BlockStructureEnum
 
     DeadWood = 1001,//枯木
     FallDownTree = 1002,//倒下的树
+    Cactus = 1003,//仙人掌
 }

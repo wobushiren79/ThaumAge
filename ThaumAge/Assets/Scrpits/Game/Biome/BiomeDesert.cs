@@ -52,48 +52,4 @@ public class BiomeDesert : Biome
         //AddFlowerFire(flowerPosition);
     }
 
-    /// <summary>
-    /// 增加元素花
-    /// </summary>
-    /// <param name="wPos"></param>
-    protected void AddFlowerFire(Vector3Int wPos)
-    {
-        //增加花
-        BiomeCreatePlantTool.BiomeForPlantData flowersData = new BiomeCreatePlantTool.BiomeForPlantData
-        {
-            addRate = 0.1f,
-            listPlantType = new List<BlockTypeEnum> { BlockTypeEnum.FlowerFire }
-        };
-        BiomeCreatePlantTool.AddFlower(110, wPos, flowersData);
-    }
-
-    /// <summary>
-    /// 增加杂草
-    /// </summary>
-    /// <param name="wPos"></param>
-    protected void AddWeed(Vector3Int wPos)
-    {
-        BiomeCreatePlantTool.BiomeForPlantData weedData = new BiomeCreatePlantTool.BiomeForPlantData
-        {
-            addRate = 0.005f,
-            listPlantType = new List<BlockTypeEnum> { BlockTypeEnum.WeedGrassLong, BlockTypeEnum.WeedGrassNormal, BlockTypeEnum.WeedGrassShort, BlockTypeEnum.WeedGrassStart }
-        };
-        BiomeCreatePlantTool.AddPlant(201, wPos, weedData);
-    }
-
-    /// <summary>
-    /// 增加仙人掌
-    /// </summary>
-    /// <param name="wPos"></param>
-    protected void AddCactus(Vector3Int wPos)
-    {
-        BiomeCreateTreeTool.BiomeForTreeData cactusData = new BiomeCreateTreeTool.BiomeForTreeData
-        {
-            addRate = 0.001f,
-            minHeight = 2,
-            maxHeight = 5,
-            treeTrunk = BlockTypeEnum.Cactus
-        };
-        BiomeCreateTreeTool.AddCactus(201, wPos, cactusData);
-    }
 }

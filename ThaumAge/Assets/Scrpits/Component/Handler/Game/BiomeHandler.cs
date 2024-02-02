@@ -50,4 +50,17 @@ public class BiomeHandler : BaseHandler<BiomeHandler, BiomeManager>
         }
         return listData.ToArray();
     }
+
+    /// <summary>
+    /// 刷新测试生态数据
+    /// </summary>
+    public void RefreshTestBiomeData()
+    {
+        var biomeTest = manager.GetBiome(BiomeTypeEnum.Test);
+        //如果是测试生态 直接获取GameLauncher里的数据
+        if (GameHandler.Instance.launcher is GameLauncher gameLauncher)
+        {
+            biomeTest.terrain3DCShaderNoise = gameLauncher.testTerrain3DCShaderNoise;
+        }
+    }
 }

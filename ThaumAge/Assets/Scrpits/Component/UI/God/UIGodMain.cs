@@ -72,6 +72,21 @@ public partial class UIGodMain : UIGameCommonNormal
             //播放音效
             AudioHandler.Instance.PlaySound(1);
         }
+        else if (viewButton == ui_RefreshWorld)
+        {
+            WorldCreateHandler.Instance.ClearWorld();
+
+            //刷新测试生态数据
+            BiomeHandler.Instance.RefreshTestBiomeData();
+
+            GameConfigBean gameConfig = GameDataHandler.Instance.manager.GetGameConfig();
+            //创建生态
+            WorldCreateHandler.Instance.CreateChunkRangeForCenterPosition(Vector3Int.zero, gameConfig.worldRefreshRange, true, () => 
+            {
+                //初始化游戏角色
+                GameHandler.Instance.InitCharacter();
+            });
+        }
     }
 
     /// <summary>
