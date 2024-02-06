@@ -5,6 +5,7 @@ public enum BlockStructureEnum
 {
     Null = 0,
     NormalTree = 1,//普通树木
+    NormalTreeSnow = 2,//普通树木 带雪
 
 
     DeadWood = 1001,//枯木

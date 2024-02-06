@@ -77,6 +77,68 @@ public class BiomeCreateTreeTool
     }
 
     /// <summary>
+    /// 增加普通的树
+    /// </summary>
+    /// <param name="startPosition">位置</param>
+    /// <param name="treeTrunk">躯干方块</param>
+    /// <param name="treeLeaves">树叶方块</param>
+    /// <param name="treeMinHeight">树的最低高度</param>
+    /// <param name="treeMaxHeight">树的最高高度</param>
+    /// <param name="leavesRange">树叶范围</param>
+    public static void CreateNormalTreeSnow(
+        Vector3Int startPosition,
+        int treeTrunk, int treeLeaves,
+        int treeMinHeight = 4, int treeMaxHeight = 7, int leavesHeight = 4, int leavesRange = 2
+        )
+    {
+        int treeHeight = WorldRandTools.Range(treeMinHeight, treeMaxHeight, startPosition);
+        int leavesHeightHalf = (leavesHeight / 2);
+        for (int i = 1; i < treeHeight + leavesHeightHalf; i++)
+        {
+            Vector3Int treeTrunkPosition = new Vector3Int(startPosition.x, startPosition.y + i, startPosition.z);
+            //生成树干
+            if (i < treeHeight)
+            {
+                WorldCreateHandler.Instance.manager.AddUpdateBlock(treeTrunkPosition, treeTrunk);
+            }
+            if (i >= treeHeight - leavesHeightHalf)
+            {
+                //最大范围
+                if (i >= treeHeight)
+                {
+                    //叶子在最顶层递减
+                    leavesRange -= (i - treeHeight);
+                    if (leavesRange < 0)
+                        leavesRange = 0;
+                }
+
+                //生成叶子
+                for (int x = -leavesRange; x <= leavesRange; x++)
+                {
+                    for (int z = -leavesRange; z <= leavesRange; z++)
+                    {
+                        if (x == 0 && z == 0)
+                            continue;
+                        if (Math.Abs(x) == leavesRange || Math.Abs(z) == leavesRange)
+                        {
+                            //如果是边界 则有几率不生成
+                            int randomLeaves = WorldRandTools.Range(0, 3);
+                            if (randomLeaves == 0)
+                                continue;
+                        }
+                        WorldCreateHandler.Instance.manager.AddUpdateBlock(treeTrunkPosition.x + x, treeTrunkPosition.y, treeTrunkPosition.z + z, treeLeaves);
+                        //如果是最上面 生成雪
+                        if (i + 1 == treeHeight + leavesHeightHalf)
+                        {
+                            WorldCreateHandler.Instance.manager.AddUpdateBlock(treeTrunkPosition.x + x, treeTrunkPosition.y + 1, treeTrunkPosition.z + z, BlockTypeEnum.HalfStoneSnow);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /// <summary>
     ///  增加仙人掌
     /// </summary>
     /// <param name="randomData"></param>

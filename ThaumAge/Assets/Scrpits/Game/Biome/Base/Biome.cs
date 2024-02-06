@@ -81,6 +81,9 @@ public class Biome
             case BlockStructureEnum.NormalTree:
                 CreateBlockStructureForNormalTree(blockId, baseWorldPosition);
                 break;
+            case BlockStructureEnum.NormalTreeSnow:
+                CreateBlockStructureForNormalTreeSnow(blockId, baseWorldPosition);
+                break;
             case BlockStructureEnum.DeadWood:
                 CreateBlockStructureForDeadWood(blockId, baseWorldPosition);
                 break;
@@ -101,6 +104,16 @@ public class Biome
     public virtual void CreateBlockStructureForNormalTree(int blockId, Vector3Int baseWorldPosition)
     {
         BiomeCreateTreeTool.CreateNormalTree(baseWorldPosition, blockId, (int)BlockTypeEnum.LeavesOak);
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="blockId"></param>
+    /// <param name="baseWorldPosition"></param>
+    public virtual void CreateBlockStructureForNormalTreeSnow(int blockId, Vector3Int baseWorldPosition)
+    {
+        BiomeCreateTreeTool.CreateNormalTreeSnow(baseWorldPosition, blockId, (int)BlockTypeEnum.LeavesOak);
     }
 
     /// <summary>
