@@ -75,7 +75,11 @@ public partial class UIGodMain : UIGameCommonNormal
         else if (viewButton == ui_RefreshWorld)
         {
             WorldCreateHandler.Instance.ClearWorld();
-
+            //如果是测试生态 刷新种子
+            if (GameHandler.Instance.launcher is GameLauncher gameLauncher)
+            {
+                WorldCreateHandler.Instance.manager.SetWorldSeed(gameLauncher.seed);
+            }
             //刷新测试生态数据
             BiomeHandler.Instance.RefreshTestBiomeData();
 

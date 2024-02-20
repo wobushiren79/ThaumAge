@@ -157,13 +157,14 @@ public class BlockHandler : BaseHandler<BlockHandler, BlockManager>
         Biome biomeF = biomeManager.GetBiome(chunk.chunkData.biomeTypeF);
         Biome biomeB = biomeManager.GetBiome(chunk.chunkData.biomeTypeB);
 
+        int worldSeed = WorldCreateHandler.Instance.manager.GetWorldSeed();
         Terrain3DCShaderBean terrain3DCShaderBean = new Terrain3DCShaderBean();
         terrain3DCShaderBean.chunkPosition = chunk.chunkData.positionForWorld;
         terrain3DCShaderBean.chunkSizeW = chunk.chunkData.chunkWidth;
         terrain3DCShaderBean.chunkSizeH = chunk.chunkData.chunkHeight;
         terrain3DCShaderBean.stateCaves = 1;
         terrain3DCShaderBean.stateBedrock = 1;
-        terrain3DCShaderBean.seed = 5;
+        terrain3DCShaderBean.seed = worldSeed;
         terrain3DCShaderBean.seedOffset = Vector3.zero;
         terrain3DCShaderBean.noiseLayers = new Terrain3DCShaderNoiseLayer[] 
         { 
@@ -196,11 +197,11 @@ public class BlockHandler : BaseHandler<BlockHandler, BlockManager>
     {
         int chunkWidth = chunk.chunkData.chunkWidth;
         int chunkHeight = chunk.chunkData.chunkHeight;
-        for (int x = 0; x < chunk.chunkData.chunkWidth; x++)
+        for (int x = chunk.chunkData.chunkWidth - 1; x >= 0; x--)
         {
-            for (int z = 0; z < chunk.chunkData.chunkWidth; z++)
+            for (int z = chunk.chunkData.chunkWidth - 1; z >= 0; z--)
             {
-                for (int y = 0; y < chunk.chunkData.chunkHeight; y++)
+                for (int y = chunk.chunkData.chunkHeight - 1; y >= 0; y--)
                 {
                     var itemData = blockArray[x + (y * chunkWidth) + (z * chunkWidth * chunkHeight)];
                     //如果是空 则跳过

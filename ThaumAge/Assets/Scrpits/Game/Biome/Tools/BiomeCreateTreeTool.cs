@@ -1,4 +1,5 @@
 ﻿using System;
+using TreeEditor;
 using UnityEditor;
 using UnityEngine;
 
@@ -134,6 +135,66 @@ public class BiomeCreateTreeTool
                         }
                     }
                 }
+            }
+        }
+    }
+
+    /// <summary>
+    /// 增加倾斜的树（例如椰子树）
+    /// </summary>
+    public static void CreateObliqueTree(Vector3Int startPosition,
+        int treeTrunk, int treeLeaves,
+        int treeMinHeight = 5, int treeMaxHeight = 8, int leavesRange = 2)
+    {
+        GetRandomBlockDirection(out BlockDirectionEnum randomBlockDirection, out Vector3Int randomAddPosition);
+        //高度
+        int treeHeight = WorldRandTools.Range(treeMinHeight, treeMaxHeight, startPosition);
+        //树偏移点（每次一半偏移）
+        int treeHalfHeight = Mathf.FloorToInt(treeHeight / 2f);
+        //偏移量
+        int offsetIndex = 0;
+        //最大范围
+        int range = leavesRange;
+        int leavesHeightOffset = 0;
+        Vector3Int startLeavesPos = Vector3Int.zero;
+        for (int i = 0; i < treeHeight + 1; i++)
+        {
+            if (i >= treeHalfHeight)
+            {
+                treeHalfHeight += Mathf.FloorToInt((treeHeight - treeHalfHeight) / 2f);
+                offsetIndex++;
+            }
+            Vector3Int treeTrunkPosition = new
+                (startPosition.x + offsetIndex * randomAddPosition.x, startPosition.y + (i + 1), startPosition.z + offsetIndex * randomAddPosition.z);
+
+            if (i >= treeHeight - 1)
+            {
+                startLeavesPos = startLeavesPos.AddY(1);
+                if (i >= treeHeight)
+                {
+                    //叶子在最顶层递减
+                    range--;
+                }
+
+                //生成叶子
+                for (int x = -range; x <= range; x++)
+                {
+                    for (int z = -range; z <= range; z++)
+                    {
+                        WorldCreateHandler.Instance.manager.AddUpdateBlock(startLeavesPos.x + x, startLeavesPos.y, startLeavesPos.z + z, treeLeaves);
+                    }
+                }
+                leavesHeightOffset++;
+            }
+            else
+            {
+                startLeavesPos = treeTrunkPosition;
+            }
+
+            //生成树干
+            if (i < treeHeight)
+            {
+                WorldCreateHandler.Instance.manager.AddUpdateBlock(treeTrunkPosition, treeTrunk);
             }
         }
     }
@@ -1070,73 +1131,7 @@ public class BiomeCreateTreeTool
         }
     }
 
-    /// <summary>
-    /// 增加倾斜的树（例如椰子树）
-    /// </summary>
-    public static void AddTreeForOblique(uint randomData, Vector3Int startPosition, BiomeForTreeData treeData)
-    {
-        //生成概率
-        float addRate = WorldRandTools.GetValue(startPosition, randomData);
 
-        if (addRate < treeData.addRate)
-        {
-            GetRandomBlockDirection(out BlockDirectionEnum randomBlockDirection, out Vector3Int randomAddPosition);
-            //高度
-            int treeHeight = WorldRandTools.Range(treeData.minHeight, treeData.maxHeight);
-            //树偏移点（每次一半偏移）
-            int treeHalfHeight = Mathf.FloorToInt(treeHeight / 2f);
-            //偏移量
-            int offsetIndex = 0;
-            //最大范围
-            int range = treeData.leavesRange;
-            int leavesHeightOffset = 0;
-            Vector3Int startLeavesPos = Vector3Int.zero;
-            for (int i = 0; i < treeHeight + 1; i++)
-            {
-                if (i >= treeHalfHeight)
-                {
-                    treeHalfHeight += Mathf.FloorToInt((treeHeight - treeHalfHeight) / 2f);
-                    offsetIndex++;
-                }
-                Vector3Int treeTrunkPosition = new
-                    (startPosition.x + offsetIndex * randomAddPosition.x, startPosition.y + (i + 1), startPosition.z + offsetIndex * randomAddPosition.z);
-
-                if (i >= treeHeight - 1)
-                {
-                    startLeavesPos = startLeavesPos.AddY(1);
-                    if (i >= treeHeight)
-                    {
-                        //叶子在最顶层递减
-                        range--;
-                    }
-
-                    //生成叶子
-                    for (int x = -range; x <= range; x++)
-                    {
-                        for (int z = -range; z <= range; z++)
-                        {
-                            //有几率不生成
-                            //int randomLeaves = WorldRandTools.Range(0, 5);
-                            //if (randomLeaves < 1)
-                            //    continue;
-                            WorldCreateHandler.Instance.manager.AddUpdateBlock(startLeavesPos.x + x, startLeavesPos.y, startLeavesPos.z + z, treeData.treeLeaves);
-                        }
-                    }
-                    leavesHeightOffset++;
-                }
-                else
-                {
-                    startLeavesPos = treeTrunkPosition;
-                }
-
-                //生成树干
-                if (i < treeHeight)
-                {
-                    WorldCreateHandler.Instance.manager.AddUpdateBlock(treeTrunkPosition, treeData.treeTrunk);
-                }
-            }
-        }
-    }
     public static void AddTreeForObliqueEditor(Vector3Int startPosition, BiomeForTreeData treeData)
     {
         GetRandomBlockDirection(out BlockDirectionEnum randomBlockDirection, out Vector3Int randomAddPosition);

@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.035687257, g: 0.04330838, b: 0.07361848, a: 1}
+  m_IndirectSpecularColor: {r: 0.03563084, g: 0.043185238, b: 0.073249765, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -168,12 +168,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   testWorldType: 0
-  seed: 0
+  seed: 1
   testTerrain3DCShaderNoise:
     biomeId: 998
-    frequency: 65
-    amplitude: 0.35
-    lacunarity: 3
+    frequency: 500
+    amplitude: 0.295
+    lacunarity: 2.8
     octaves: 5
     caveMinHeight: 0
     caveMaxHeight: 150
@@ -182,13 +182,13 @@ MonoBehaviour:
     caveFrequency: 6
     caveAmplitude: 0.2
     caveOctaves: 2
-    groundMinHeigh: 64
-    oceanMinHeight: 60
-    oceanMaxHeight: 64
-    oceanScale: 200
-    oceanThreshold: 0.3
-    oceanAmplitude: 3
-    oceanFrequency: 3
+    groundMinHeigh: 24
+    oceanMinHeight: 0
+    oceanMaxHeight: 0
+    oceanScale: 0
+    oceanThreshold: 0
+    oceanAmplitude: 0
+    oceanFrequency: 0
 --- !u!1 &1254574177
 GameObject:
   m_ObjectHideFlags: 1
@@ -371,11 +371,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3003678493939037337, guid: e48ab55db35bda74596243c14d61528a, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.0000000021479734
+      value: -0.0000000021475108
       objectReference: {fileID: 0}
     - target: {fileID: 3003678493939037337, guid: e48ab55db35bda74596243c14d61528a, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 1.0713149e-10
+      value: -1.07108426e-10
       objectReference: {fileID: 0}
     - target: {fileID: 3636176074331168163, guid: e48ab55db35bda74596243c14d61528a, type: 3}
       propertyPath: m_LocalPosition.y

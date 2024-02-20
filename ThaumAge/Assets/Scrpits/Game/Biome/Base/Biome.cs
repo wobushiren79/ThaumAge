@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using TreeEditor;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 public class Biome
 {
@@ -84,6 +85,9 @@ public class Biome
             case BlockStructureEnum.NormalTreeSnow:
                 CreateBlockStructureForNormalTreeSnow(blockId, baseWorldPosition);
                 break;
+            case BlockStructureEnum.ObliqueTree:
+                CreateBlockStructureForObliqueTree(blockId, baseWorldPosition);
+                break;
             case BlockStructureEnum.DeadWood:
                 CreateBlockStructureForDeadWood(blockId, baseWorldPosition);
                 break;
@@ -92,6 +96,9 @@ public class Biome
                 break;
             case BlockStructureEnum.Cactus:
                 CreateBlockStructureForCactus(blockId, baseWorldPosition);
+                break;
+            case BlockStructureEnum.Seaweed:
+                CreateBlockStructureForSeaweed(blockId, baseWorldPosition);
                 break;
         }
     }
@@ -107,13 +114,23 @@ public class Biome
     }
 
     /// <summary>
-    /// 
+    /// 创建普通树 带雪
     /// </summary>
     /// <param name="blockId"></param>
     /// <param name="baseWorldPosition"></param>
     public virtual void CreateBlockStructureForNormalTreeSnow(int blockId, Vector3Int baseWorldPosition)
     {
         BiomeCreateTreeTool.CreateNormalTreeSnow(baseWorldPosition, blockId, (int)BlockTypeEnum.LeavesOak);
+    }
+
+    /// <summary>
+    /// 创建斜树 例如椰子树
+    /// </summary>
+    /// <param name="blockId"></param>
+    /// <param name="baseWorldPosition"></param>
+    public virtual void CreateBlockStructureForObliqueTree(int blockId, Vector3Int baseWorldPosition)
+    {
+        BiomeCreateTreeTool.CreateObliqueTree(baseWorldPosition, blockId, (int)BlockTypeEnum.LeavesPalm);
     }
 
     /// <summary>
@@ -143,6 +160,16 @@ public class Biome
     public virtual void CreateBlockStructureForCactus(int blockId, Vector3Int baseWorldPosition)
     {
         BiomeCreateTreeTool.AddCactus(baseWorldPosition, blockId);
+    }
+
+    /// <summary>
+    /// 创建水草
+    /// </summary>
+    /// <param name="blockId"></param>
+    /// <param name="baseWorldPosition"></param>
+    public virtual void CreateBlockStructureForSeaweed(int blockId, Vector3Int baseWorldPosition)
+    {
+        BiomeCreatePlantTool.AddLongPlant(blockId, baseWorldPosition);
     }
 
     /// <summary>

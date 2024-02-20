@@ -32,19 +32,13 @@ public class BiomeCreatePlantTool
     /// <summary>
     /// 增加长植物
     /// </summary>
-    public static void AddLongPlant(uint randomData, Vector3Int startPosition, BiomeForPlantData plantData)
+    public static void AddLongPlant(int blockId, Vector3Int startPosition, int minHeight = 2, int maxHeight = 12)
     {
-        //生成概率
-        float addRate = WorldRandTools.GetValue(startPosition, randomData);
-        if (addRate < plantData.addRate)
+        //高度
+        int plantHeight = WorldRandTools.Range(minHeight, maxHeight, startPosition);
+        for (int i = 1; i < plantHeight; i++)
         {
-            int weedTypeNumber = WorldRandTools.Range(0, plantData.listPlantType.Count);
-            //高度
-            int plantHeight = WorldRandTools.Range(plantData.minSize, plantData.maxSize + 1);
-            for (int i = 0; i < plantHeight; i++)
-            {
-                WorldCreateHandler.Instance.manager.AddUpdateBlock(startPosition.x, startPosition.y + 1 + i, startPosition.z, plantData.listPlantType[weedTypeNumber]);
-            }
+            WorldCreateHandler.Instance.manager.AddUpdateBlock(startPosition.x, startPosition.y + i, startPosition.z, blockId);
         }
     }
 

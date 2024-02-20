@@ -7,7 +7,7 @@ public class BlockBaseLiquid : Block
     public override void InitBlock(Chunk chunk, Vector3Int localPosition, int state)
     {
         base.InitBlock(chunk, localPosition, state);
-        if (state == 0 || state == 1)
+        if (state == 1)
         {
             chunk.RegisterEventUpdate(localPosition, TimeUpdateEventTypeEnum.Sec);
         }

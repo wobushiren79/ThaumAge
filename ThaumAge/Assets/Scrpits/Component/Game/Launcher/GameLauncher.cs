@@ -36,6 +36,7 @@ public class GameLauncher : BaseLauncher
             if(Application.isEditor && seed != 0)
             {
                 userData.seed = seed;
+                LogUtil.Log($"测试世界生成 种子{userData.seed}");
             }
             WorldCreateHandler.Instance.manager.SetWorldSeed(userData.seed);
             //开关角色控制
