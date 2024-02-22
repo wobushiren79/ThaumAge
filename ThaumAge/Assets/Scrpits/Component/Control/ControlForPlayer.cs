@@ -2,6 +2,7 @@
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.TextCore.Text;
 using static UnityEngine.InputSystem.InputAction;
 
 public class ControlForPlayer : ControlForBase
@@ -270,7 +271,8 @@ public class ControlForPlayer : ControlForBase
     {
         if (!rbPlayer.isKinematic && !rbPlayer.IsSleeping())
         {
-            rbPlayer.AddForce(gravityValue, ForceMode.Acceleration);
+            float gravityRate = character.GetCharacterData().creatureStatus.gravityRate;
+            rbPlayer.AddForce(gravityValue * gravityRate, ForceMode.Acceleration);
         }
     }
 

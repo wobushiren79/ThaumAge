@@ -139,7 +139,7 @@ public class BlockHandler : BaseHandler<BlockHandler, BlockManager>
         //方块ID
         public int blockId;
         //方块结构
-        public int blockStructure;
+        public int blockBuilding;
     }
 
     public Terrain3DCShaderNoiseLayer[] terrain3DCShaderNoises;
@@ -211,10 +211,10 @@ public class BlockHandler : BaseHandler<BlockHandler, BlockManager>
                     //添加方块
                     chunk.chunkData.SetBlockForLocal(x, y, z, block, BlockDirectionEnum.UpForward);
                     //创建特殊结构方框的数据
-                    if (itemData.blockStructure != 0)
+                    if (itemData.blockBuilding != 0)
                     {
                         Biome biome = BiomeHandler.Instance.manager.GetBiome(chunk.chunkData.biomeType);
-                        biome.CreateBlockStructure(chunk, itemData.blockId, (BlockStructureEnum)itemData.blockStructure, chunk.chunkData.positionForWorld + new Vector3Int(x, y, z));
+                        biome.CreateBlockBuilding(chunk, itemData.blockId, itemData.blockBuilding, chunk.chunkData.positionForWorld + new Vector3Int(x, y, z));
                     }
                 }
             }

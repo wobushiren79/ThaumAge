@@ -44,6 +44,9 @@ public class CreatureStatusBean
     //移动速度添加
     public float moveSpeedAdd;
 
+    //重力参数比例
+    public float gravityRate = 1;
+
     public List<CreatureStatusChangeBean> listStatusChange = new List<CreatureStatusChangeBean>();
 
     /// <summary>

@@ -12,12 +12,16 @@ public class BiomePrairie : Biome
 
     }
 
-    public override void CreateBlockStructureForNormalTree(int blockId, Vector3Int baseWorldPosition)
+    public override void CreateBlockBuilding(Chunk chunk, int blockId, int blockBuilding, Vector3Int baseWorldPosition)
     {
-        BlockTypeEnum blockType = (BlockTypeEnum)blockId;
-        if (blockType == BlockTypeEnum.TreeCherry)
+        if ((BuildingTypeEnum)blockBuilding == BuildingTypeEnum.NormalTree)
         {
-            BiomeCreateTreeTool.CreateNormalTree(baseWorldPosition, blockId, 6, 10, 2, (int)BlockTypeEnum.LeavesCherry);
+            BuildingTypeNormalTree buildingType = BiomeHandler.Instance.manager.GetBuildingType<BuildingTypeNormalTree>(blockBuilding);
+            buildingType.CreateBuilding(blockId, baseWorldPosition, (int)BlockTypeEnum.LeavesCherry, 6, 10, 4, 2);
+        }
+        else
+        {
+            base.CreateBlockBuilding(chunk, blockId, blockBuilding, baseWorldPosition);
         }
     }
 }

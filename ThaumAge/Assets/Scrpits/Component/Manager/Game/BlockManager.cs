@@ -54,8 +54,6 @@ public class BlockManager : BaseManager, IBlockInfoView
     //路径-方块模型
     public static string pathForBlockModel = "Assets/Prefabs/Block";
 
-
-
     //路径-方块材质 （使用标签）
     public static string pathForBlockMats = "BlockMats";
 

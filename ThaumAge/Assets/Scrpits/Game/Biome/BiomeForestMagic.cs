@@ -12,6 +12,7 @@ public class BiomeForestMagic : Biome
     //魔法深林
     public BiomeForestMagic() : base(BiomeTypeEnum.ForestMagic)
     {
+        
     }
 
     public BlockTypeEnum GetBlockForMaxHeightDown(Chunk chunk, Vector3Int localPos)
@@ -78,9 +79,9 @@ public class BiomeForestMagic : Biome
     protected void AddMushroomTree(Vector3Int wPos)
     {
         Vector3Int startPosition = wPos + Vector3Int.up;
-        AddBuilding(0.0001f, 101, startPosition, BuildingTypeEnum.MushrooBig);
-        AddBuilding(0.0001f, 201, startPosition, BuildingTypeEnum.Mushroom);
-        AddBuilding(0.0001f, 301, startPosition, BuildingTypeEnum.MushrooSmall);
+        //AddBuilding(0.0001f, 101, startPosition, BuildingTypeEnum.MushrooBig);
+        //AddBuilding(0.0001f, 201, startPosition, BuildingTypeEnum.Mushroom);
+        //AddBuilding(0.0001f, 301, startPosition, BuildingTypeEnum.MushrooSmall);
     }
 
     protected void AddTree(Vector3Int wPos)
@@ -149,7 +150,7 @@ public class BiomeForestMagic : Biome
     protected void AddStoneMoss(Vector3Int wPos)
     {
         Vector3Int startPosition = wPos + Vector3Int.up;
-        AddBuilding(0.005f, 801, startPosition, BuildingTypeEnum.StoneMoss);
+        //AddBuilding(0.005f, 801, startPosition, BuildingTypeEnum.StoneMoss);
     }
 
     /// <summary>

@@ -113,49 +113,29 @@ public class BiomeCreateTool
     /// <param name="randomData"></param>
     /// <param name="startPosition"></param>
     /// <param name="buildingType"></param>
-    public static bool AddBuilding(float addRate, uint randomData, Vector3Int startPosition, BuildingTypeEnum buildingType)
+    public static void AddBuilding(Vector3Int startPosition, BuildingInfoBean buildingInfo)
     {
-        float randomRate;
-        if (addRate < 0.00001f)
+        if (buildingInfo == null)
+            return;
+        List<BuildingBean> listBuildingData = buildingInfo.listBuildingData;
+        int randomAngle = WorldRandTools.Range(0, 4, startPosition) * 90;
+        for (int i = 0; i < listBuildingData.Count; i++)
         {
-            //概率小于万分之一的用RandomTools
-            int seed = WorldCreateHandler.Instance.manager.GetWorldSeed();
-            RandomTools randomTools = RandomUtil.GetRandom(seed, startPosition.x, startPosition.y, startPosition.z);
-            //生成概率
-            randomRate = randomTools.NextFloat();
-        }
-        else
-        {
-            randomRate = WorldRandTools.GetValue(startPosition, randomData);
-        }
-        if (randomRate < addRate)
-        {
-            BuildingInfoBean buildingInfo = BiomeHandler.Instance.manager.GetBuildingInfo(buildingType);
+            BuildingBean buildingData = listBuildingData[i];
+            Vector3Int targetPosition = startPosition + buildingData.GetPosition();
 
-            List<BuildingBean> listBuildingData = buildingInfo.listBuildingData;
-
-            int randomAngle = WorldRandTools.Range(0, 4, startPosition) * 90;
-
-            for (int i = 0; i < listBuildingData.Count; i++)
+            float createRate = 1;
+            if (buildingData.randomRate < 1)
             {
-                BuildingBean buildingData = listBuildingData[i];
-                Vector3Int targetPosition = startPosition + buildingData.GetPosition();
-
-                float createRate = 1;
-                if (buildingData.randomRate < 1)
-                {
-                     createRate = WorldRandTools.GetValue(targetPosition);
-                }
-
-                if (buildingData.randomRate == 0 || createRate <= buildingData.randomRate)
-                {
-                    VectorUtil.GetRotatedPosition(startPosition, targetPosition, new Vector3(0, randomAngle, 0));
-                    WorldCreateHandler.Instance.manager.AddUpdateBlock(targetPosition, buildingData.blockId, (BlockDirectionEnum)buildingData.direction);
-                }
+                createRate = WorldRandTools.GetValue(targetPosition);
             }
-            return true;
+
+            if (buildingData.randomRate == 0 || createRate <= buildingData.randomRate)
+            {
+                VectorUtil.GetRotatedPosition(startPosition, targetPosition, new Vector3(0, randomAngle, 0));
+                WorldCreateHandler.Instance.manager.AddUpdateBlock(targetPosition, buildingData.blockId, (BlockDirectionEnum)buildingData.direction);
+            }
         }
-        return false;
     }
 
 }

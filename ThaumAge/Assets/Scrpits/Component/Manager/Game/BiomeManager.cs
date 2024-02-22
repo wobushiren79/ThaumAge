@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using static Unity.Collections.AllocatorManager;
 
 public class BiomeManager : BaseManager
     , IBuildingInfoView
 {
     protected BuildingInfoController controllerForBuilding;
 
-    protected Dictionary<int, BuildingInfoBean> dicBuildingInfo = new Dictionary<int, BuildingInfoBean>();
+    protected Dictionary<int, BuildingBaseType> dicBuildingInfo = new Dictionary<int, BuildingBaseType>();
 
     //地形数据
     public Dictionary<BiomeTypeEnum, Biome> dicBiome = new Dictionary<BiomeTypeEnum, Biome>();
@@ -53,10 +54,38 @@ public class BiomeManager : BaseManager
     public void InitBuildingInfo(List<BuildingInfoBean> listData)
     {
         dicBuildingInfo.Clear();
+        //首先设置数据库里的建筑数据
         for (int i = 0; i < listData.Count; i++)
         {
             BuildingInfoBean itemInfo = listData[i];
-            dicBuildingInfo.Add((int)itemInfo.id, itemInfo);
+            //通过反射获取类
+            string buildingName = EnumExtension.GetEnumName((BuildingTypeEnum)itemInfo.id);
+            string className = $"BuildingType{buildingName}";
+            BuildingBaseType buildingBaseType = ReflexUtil.CreateInstance<BuildingBaseType>(className);
+            if (buildingBaseType == null)
+                buildingBaseType = new BuildingBaseType();
+
+            buildingBaseType.buildingInfo = itemInfo;
+            dicBuildingInfo.Add((int)itemInfo.id, buildingBaseType);
+        }
+        //然后遍历枚举 数据库里没有的数据也添加上
+        List<BuildingTypeEnum> listEnum = EnumExtension.GetEnumValue<BuildingTypeEnum>();
+        for (int i = 0; i < listEnum.Count; i++)
+        {
+            int enumIndex = (int)listEnum[i];
+            if (enumIndex == 0)
+                continue;
+            if (!dicBuildingInfo.ContainsKey(enumIndex))
+            {
+                //通过反射获取类
+                string buildingName = EnumExtension.GetEnumName((BuildingTypeEnum)enumIndex);
+                string className = $"BuildingType{buildingName}";
+                BuildingBaseType buildingBaseType = ReflexUtil.CreateInstance<BuildingBaseType>(className);
+                if (buildingBaseType == null)
+                    buildingBaseType = new BuildingBaseType();
+
+                dicBuildingInfo.Add(enumIndex, buildingBaseType);
+            }
         }
     }
 
@@ -73,7 +102,7 @@ public class BiomeManager : BaseManager
     /// </summary>
     public BiomeInfoBean GetBiomeInfo(int biomeId)
     {
-        return  BiomeInfoCfg.GetItemData(biomeId);
+        return BiomeInfoCfg.GetItemData(biomeId);
     }
 
     /// <summary>
@@ -88,6 +117,23 @@ public class BiomeManager : BaseManager
     /// 获取建筑信息
     /// </summary>
     public BuildingInfoBean GetBuildingInfo(int buildingId)
+    {
+        BuildingBaseType buildingBaseType = base.GetDataById(buildingId, dicBuildingInfo);
+        return buildingBaseType.buildingInfo;
+    }
+
+    /// <summary>
+    /// 获取建筑类
+    /// </summary>
+    public T GetBuildingType<T>(int buildingId) where T: BuildingBaseType
+    {
+        return base.GetDataById(buildingId, dicBuildingInfo) as T;
+    }
+
+    /// <summary>
+    /// 获取建筑类
+    /// </summary>
+    public BuildingBaseType GetBuildingType(int buildingId)
     {
         return base.GetDataById(buildingId, dicBuildingInfo);
     }

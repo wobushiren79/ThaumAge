@@ -15,8 +15,16 @@ public class BiomeMountain : Biome
 
     }
 
-    public override void CreateBlockStructureForNormalTreeSnow(int blockId, Vector3Int baseWorldPosition)
+    public override void CreateBlockBuilding(Chunk chunk, int blockId, int blockBuilding, Vector3Int baseWorldPosition)
     {
-        BiomeCreateTreeTool.CreateNormalTreeSnow(baseWorldPosition, blockId, (int)BlockTypeEnum.LeavesCherry, 3, 6);
+        if ((BuildingTypeEnum)blockBuilding == BuildingTypeEnum.NormalTreeSnow)
+        {
+            BuildingTypeNormalTreeSnow buildingType = BiomeHandler.Instance.manager.GetBuildingType<BuildingTypeNormalTreeSnow>(blockBuilding);
+            buildingType.CreateBuilding(blockId, baseWorldPosition, (int)BlockTypeEnum.LeavesCherry, 3, 6, 4, 2);
+        }
+        else
+        {
+            base.CreateBlockBuilding(chunk, blockId, blockBuilding, baseWorldPosition);
+        }
     }
 }

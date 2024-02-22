@@ -8,6 +8,7 @@
 #include "Biome/BiomeMountainCShader.compute"
 #include "Biome/BiomePrairieLavaCShader.compute"
 #include "Biome/BiomeOceanCShader.compute"
+#include "Biome/BiomeForestBirchCShader.compute"
 #include "Biome/BiomeTestCShader.compute"
 
 //方块数据
@@ -261,103 +262,130 @@ float CreateTerrainOceanData(float3 blockPos, float terrainHeight, uint noiseInd
 int4 HandleBiomeForTest(int seed, float3 blockPos, int blockIndex, uint terrainHeight, 
 	bool isBlockCave, bool isBlockCaveDown,float weighOceanTarget, float weighOcean,float weighOceanDown)
 {
-	int oceanHeight = 64;
-	if (isBlockCave && blockPos.y > oceanHeight)
+    bool isBlockWater = weighOcean > weighOceanTarget ? true : false;
+	bool isBlockWaterDown = weighOceanDown > weighOceanTarget ? true : false;
+	if (isBlockWater) 
+	{
+		//如果又是水 又是洞穴 并且下方也是
+		if (isBlockCave)
+		{
+			return int4(4, 0, 0, 1);
+		}
+		else if (isBlockCaveDown)
+		{
+			return int4(4, 0, 0, 1);
+		}
+		//靠近水区域显示沙子
+		if(weighOcean > weighOceanTarget && weighOcean < weighOceanTarget + 0.05f)
+		{
+			return int4(3, 0, 0, 1);
+		}
+		return int4(9001, 0, 0, 1);
+	}
+	if (isBlockCave)
 	{
 		return int4(0, 0, 0, 1);
 	}
 	int4 targetBlockData = int4(0, 0, 0, 0);
 	//如果大于地面高度
-	if (blockPos.y >= terrainHeight)
+	if (blockPos.y > terrainHeight)
 	{
-		if (blockPos.y == terrainHeight)
-		{
-			if(blockPos.y > oceanHeight + 1)
-			{
-				//使用草地
-				targetBlockData = int4(101, 0, 0, 1);
-			}
-			else if(blockPos.y >= oceanHeight - 1 && blockPos.y <= oceanHeight + 1)
-			{
-				//使用沙子
-				targetBlockData = int4(3, 0, 0, 1);
-			}
-			else
-			{
-				//使用沙子
-				targetBlockData = int4(3, 0, 0, 1);
-			}		
-		}
 		//如果是地面上一格
-	 	else if (blockPos.y == terrainHeight + 1)
-		{	
-			if(blockPos.y > oceanHeight + 1)
+	    if (blockPos.y == terrainHeight + 1)
+		{
+			//如果下方不是洞穴 并且也不是水
+			if (!isBlockCaveDown && !isBlockWaterDown)
 			{
-				bool isCreateWeedWild = snoise(float3(blockPos.xz / 10, seed)) > 0.75;
+				//是否生成草
+				bool isCreateWeedWild = snoise(float3(blockPos.xz / 10, seed)) > 0.3;
+				//是否成成花
+				bool isCreateFlower = snoise(float3(blockPos.xz / 9, seed)) > 0.8;
+
 				//是否生成树
-				bool isCreateTree = GenerateRandom(seed, blockPos.x, blockPos.z) > 0.997;
+				bool isCreateTree = GenerateRandom(seed, blockPos.x, blockPos.z) > 0.993;
+				//是否生成枯木
+				bool isCreateDeadWood = GenerateRandom(seed, blockPos.x / 3, blockPos.z / 3) > 0.9965;
+				///是否生成倒下的树木
+				bool isCreateFallDownTree = GenerateRandom(seed, blockPos.x / 4, blockPos.z / 4) > 0.995;
+				//是否生成元素花
+				bool isCreateElementFlower = GenerateRandom(seed, blockPos.x / 5, blockPos.z / 5) > 0.998;
+				
 				if (isCreateWeedWild)
 				{
 					float randomType = snoise(float4(blockPos, seed));
 					if (randomType > 0 && randomType <= 0.25)
 					{
-						targetBlockData = int4(3001, 0, 0, 1);
+						targetBlockData = int4(3011, 0, 0, 1);
 					}
 					else if (randomType > 0.25 && randomType <= 0.5)
 					{
-						targetBlockData = int4(3002, 0, 0, 1);
+						targetBlockData = int4(3012, 0, 0, 1);
 					}
 					else if (randomType > 0.5 && randomType <= 0.75)
 					{
-						targetBlockData = int4(3003, 0, 0, 1);
+						targetBlockData = int4(3013, 0, 0, 1);
+					}
+					else 
+					{
+						targetBlockData = int4(3014, 0, 0, 1);
+					}
+				}
+				else if (isCreateFlower)
+				{
+					float randomType = snoise(float4(blockPos, seed));
+					if (randomType > 0 && randomType <= 0.33)
+					{
+						targetBlockData = int4(3111, 0, 0, 1);
+					}
+					else if (randomType > 0.33 && randomType <= 0.66)
+					{
+						targetBlockData = int4(3112, 0, 0, 1);
 					}
 					else
 					{
-						targetBlockData = int4(3004, 0, 0, 1);
+						targetBlockData = int4(3113, 0, 0, 1);
 					}
 				}
 				else if (isCreateTree)
 				{
-					//生成椰子树
-					targetBlockData = int4(1005, 11, 0, 1);
+					targetBlockData = int4(1006, 21, 0, 1);
 				}
-			}	
-			else if(blockPos.y <= oceanHeight)
-			{				
-				if(blockPos.y < oceanHeight / 2)
+				else if(isCreateDeadWood)
 				{
-					bool isCreateFlower = GenerateRandom(seed, blockPos.x / 2, blockPos.z / 2) > 0.95;
-					bool isCreateSeaweed = snoise(float3(blockPos.xz / 9, seed)) > 0.75;
-					if (isCreateFlower)
+					targetBlockData = int4(3301, 1001, 0, 1);
+				}		
+				else if(isCreateFallDownTree)
+				{
+					targetBlockData = int4(1006, 1002, 0, 1);
+				}
+				else if(isCreateElementFlower)
+				{
+					float randomType = snoise(float4(blockPos, seed));
+					if (randomType > 0 && randomType <= 0.5)
 					{
-						float randomType = snoise(float4(blockPos, seed));
-						if (randomType > 0 && randomType <= 0.33)
-						{
-							targetBlockData = int4(3091, 0, 0, 1);
-						}
-						else if (randomType > 0.33 && randomType <= 0.66)
-						{
-							targetBlockData = int4(3092, 0, 0, 1);
-						}
-						else
-						{
-							targetBlockData = int4(3093, 0, 0, 1);
-						}
-					}
-					else if (isCreateSeaweed)
-					{
-						targetBlockData = int4(3101, 1004, 0, 1);
+						targetBlockData = int4(3122, 0, 0, 1);
 					}
 					else
 					{
-						//使用海水
-						targetBlockData = int4(9001, 0, 0, 1);
+						targetBlockData = int4(3123, 0, 0, 1);
 					}
+				}
+			}
+			else if(isBlockWaterDown)
+			{
+				//靠近水区域显示沙子
+				if(weighOceanDown > weighOceanTarget && weighOceanDown < weighOceanTarget + 0.05f)
+				{
+
 				}
 				else
 				{
-					//使用海水
-					targetBlockData = int4(9001, 0, 0, 1);
+					//是否生成荷叶
+					bool isCreateLotusLeaf = GenerateRandom(seed, blockPos.x, blockPos.z) > 0.9;
+					if(isCreateLotusLeaf)
+					{
+						targetBlockData = int4(2221, 0, 0, 1);
+					}
 				}			
 			}
 			else
@@ -367,16 +395,13 @@ int4 HandleBiomeForTest(int seed, float3 blockPos, int blockIndex, uint terrainH
 		}
 		else
 		{
-			if(blockPos.y <= oceanHeight)
-			{
-				//使用海水
-				targetBlockData = int4(9001, 0, 0, 1);
-			}
-			else
-			{
-				targetBlockData = int4(0, 0, 0, 1);
-			}	
+			targetBlockData = int4(0, 0, 0, 1);
 		}
+	}
+	else if (blockPos.y == terrainHeight)
+	{
+		//使用荒草泥土
+		targetBlockData = int4(103, 0, 0, 1);
 	}
 	else if (blockPos.y < terrainHeight && blockPos.y > terrainHeight - 6)
 	{
@@ -504,7 +529,7 @@ void StartCreate(uint3 id : SV_DispatchThreadID)
 
 		break;
 	case 12://白桦树森林
-
+		biomeBlockData = HandleBiomeForestBirch(seed, blockPos, blockIndex, terrainHeight, isBlockCave, isBlockCaveDown,selectedNoise.oceanThreshold, weighOcean,weighOceanDown);
 		break;
 	default:
 		//biomeBlockData = HandleBiomePrairie(seed, blockPos, blockIndex, terrainHeight,isBlockCave, isBlockCaveDown);

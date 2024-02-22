@@ -91,6 +91,20 @@ public partial class UIGodMain : UIGameCommonNormal
                 GameHandler.Instance.InitCharacter();
             });
         }
+        else if (viewButton == ui_FlyMod)
+        {
+            var characterData = GameHandler.Instance.manager.player.character.GetCharacterData();
+            if (characterData.creatureStatus.gravityRate == 0)
+            {
+                //飞行模式
+                GameHandler.Instance.manager.player.character.GetCharacterData().creatureStatus.gravityRate = 1;
+            }
+            else
+            {
+                //飞行模式
+                GameHandler.Instance.manager.player.character.GetCharacterData().creatureStatus.gravityRate = 0;
+            }       
+        }
     }
 
     /// <summary>

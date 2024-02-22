@@ -18,5 +18,7 @@ public partial class UIGodMain
 
     public Button ui_RefreshWorld;
 
+    public Button ui_FlyMod;
+
 
 }
