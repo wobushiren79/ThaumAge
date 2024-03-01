@@ -9,6 +9,7 @@
 #include "Biome/BiomePrairieLavaCShader.compute"
 #include "Biome/BiomeOceanCShader.compute"
 #include "Biome/BiomeForestBirchCShader.compute"
+#include "Biome/BiomeForestMagicCShader.compute"
 #include "Biome/BiomeTestCShader.compute"
 
 //方块数据
@@ -379,7 +380,7 @@ int4 HandleBiomeForTest(int seed, float3 blockPos, int blockIndex, uint terrainH
 					}
 					else if (randomType > 0.5 && randomType <= 0.75)
 					{
-						targetBlockData = int4(1001, 1, 0, 1);
+						targetBlockData = int4(1002, 31, 0, 1);
 					}
 					else 
 					{
@@ -566,7 +567,7 @@ void StartCreate(uint3 id : SV_DispatchThreadID)
 
 		break;
 	case 11://魔法森林
-
+		biomeBlockData = HandleBiomeForestMagic(seed, blockPos, blockIndex, terrainHeight, isBlockCave, isBlockCaveDown,selectedNoise.oceanThreshold, weighOcean,weighOceanDown);
 		break;
 	case 12://白桦树森林
 		biomeBlockData = HandleBiomeForestBirch(seed, blockPos, blockIndex, terrainHeight, isBlockCave, isBlockCaveDown,selectedNoise.oceanThreshold, weighOcean,weighOceanDown);

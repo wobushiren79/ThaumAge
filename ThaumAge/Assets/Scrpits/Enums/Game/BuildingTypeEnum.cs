@@ -8,6 +8,8 @@ public enum BuildingTypeEnum
     NormalTreeSnow = 2,//普通树木 带雪
     ObliqueTree = 11,//斜树 例如椰子树
     TallTree = 21,//高树
+    BigTree = 31,//大树
+    WorldTree = 101,//世界之树
 
     DeadWood = 1001,//枯木
     FallDownTree = 1002,//倒下的树
