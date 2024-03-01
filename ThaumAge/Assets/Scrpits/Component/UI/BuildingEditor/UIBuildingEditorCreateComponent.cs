@@ -26,5 +26,7 @@ public partial class UIBuildingEditorCreate
 
     public InputField ui_BuildingNameEdit;
 
+    public Button ui_FixBuilding;
+
 
 }

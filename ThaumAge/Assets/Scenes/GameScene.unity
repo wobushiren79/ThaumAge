@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.035618413, g: 0.04315466, b: 0.07316453, a: 1}
+  m_IndirectSpecularColor: {r: 0.035626996, g: 0.04317892, b: 0.073230274, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -168,27 +168,27 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   testWorldType: 0
-  seed: 2
+  seed: 1
   testTerrain3DCShaderNoise:
-    biomeId: 999
-    frequency: 700
-    amplitude: 0.27
-    lacunarity: 3.3
+    biomeId: 998
+    frequency: 130
+    amplitude: 0.25
+    lacunarity: 3
     octaves: 5
-    caveMinHeight: 1
-    caveMaxHeight: 65
-    caveScale: 0
-    caveThreshold: 0
-    caveFrequency: 0
-    caveAmplitude: 0
-    caveOctaves: 0
-    groundMinHeigh: 40
-    oceanMinHeight: 15
+    caveMinHeight: 0
+    caveMaxHeight: 256
+    caveScale: 50
+    caveThreshold: 0.7
+    caveFrequency: 6
+    caveAmplitude: 0.2
+    caveOctaves: 2
+    groundMinHeigh: 64
+    oceanMinHeight: 62
     oceanMaxHeight: 64
-    oceanScale: 0
-    oceanThreshold: 0
-    oceanAmplitude: 0
-    oceanFrequency: 0
+    oceanScale: 50
+    oceanThreshold: 0.6
+    oceanAmplitude: 1
+    oceanFrequency: 2
 --- !u!1 &1254574177
 GameObject:
   m_ObjectHideFlags: 1
@@ -327,11 +327,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 776616026688040897, guid: e48ab55db35bda74596243c14d61528a, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.00000003404953
+      value: -0.000000034049542
       objectReference: {fileID: 0}
     - target: {fileID: 776616026688040897, guid: e48ab55db35bda74596243c14d61528a, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.0000000026842109
+      value: -0.0000000026842117
       objectReference: {fileID: 0}
     - target: {fileID: 1142364520083975125, guid: e48ab55db35bda74596243c14d61528a, type: 3}
       propertyPath: m_Lens.m_SensorSize.x
@@ -371,11 +371,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3003678493939037337, guid: e48ab55db35bda74596243c14d61528a, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.0000000021481275
+      value: -0.0000000019931248
       objectReference: {fileID: 0}
     - target: {fileID: 3003678493939037337, guid: e48ab55db35bda74596243c14d61528a, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 1.0713917e-10
+      value: -9.940832e-11
       objectReference: {fileID: 0}
     - target: {fileID: 3636176074331168163, guid: e48ab55db35bda74596243c14d61528a, type: 3}
       propertyPath: m_LocalPosition.y
@@ -423,11 +423,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4814944695726202874, guid: e48ab55db35bda74596243c14d61528a, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.000000016633614
+      value: -0.000000016633642
       objectReference: {fileID: 0}
     - target: {fileID: 4814944695726202874, guid: e48ab55db35bda74596243c14d61528a, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.0000000013112699
+      value: -0.0000000013112722
       objectReference: {fileID: 0}
     - target: {fileID: 6089447226099269846, guid: e48ab55db35bda74596243c14d61528a, type: 3}
       propertyPath: m_Follow

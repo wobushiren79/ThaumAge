@@ -52,6 +52,7 @@ public class BuildingEditorHandler : BaseHandler<BuildingEditorHandler, Building
             //纠错处理
             if (itemData.direction < 10)
             {
+                LogUtil.LogError($"建筑有错误数据_方向错误 direction_{itemData.direction}");
                 itemData.direction = (int)BlockDirectionEnum.UpForward;
             }
             BuildBlock(itemData.position, itemData.blockId, (BlockDirectionEnum)itemData.direction);

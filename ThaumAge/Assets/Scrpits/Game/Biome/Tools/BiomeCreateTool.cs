@@ -103,22 +103,18 @@ public class BiomeCreateTool
         BlockTypeEnum.OreSilver,//银矿
         BlockTypeEnum.OreGold,//金矿
         BlockTypeEnum.OreTin,//锡矿
-        BlockTypeEnum. OreAluminum,//铝矿
+        BlockTypeEnum.OreAluminum,//铝矿
     };
 
     /// <summary>
     /// 增加建筑
     /// </summary>
-    /// <param name="addRate"></param>
-    /// <param name="randomData"></param>
-    /// <param name="startPosition"></param>
-    /// <param name="buildingType"></param>
     public static void AddBuilding(Vector3Int startPosition, BuildingInfoBean buildingInfo)
     {
         if (buildingInfo == null)
             return;
         List<BuildingBean> listBuildingData = buildingInfo.listBuildingData;
-        int randomAngle = WorldRandTools.Range(0, 4, startPosition) * 90;
+        //int randomAngle = WorldRandTools.Range(0, 4, startPosition) * 90;
         for (int i = 0; i < listBuildingData.Count; i++)
         {
             BuildingBean buildingData = listBuildingData[i];
@@ -132,7 +128,7 @@ public class BiomeCreateTool
 
             if (buildingData.randomRate == 0 || createRate <= buildingData.randomRate)
             {
-                VectorUtil.GetRotatedPosition(startPosition, targetPosition, new Vector3(0, randomAngle, 0));
+                //VectorUtil.GetRotatedPosition(startPosition, targetPosition, new Vector3(0, randomAngle, 0));
                 WorldCreateHandler.Instance.manager.AddUpdateBlock(targetPosition, buildingData.blockId, (BlockDirectionEnum)buildingData.direction);
             }
         }

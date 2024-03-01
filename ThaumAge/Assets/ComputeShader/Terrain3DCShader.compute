@@ -300,9 +300,13 @@ int4 HandleBiomeForTest(int seed, float3 blockPos, int blockIndex, uint terrainH
 				bool isCreateWeedWild = snoise(float3(blockPos.xz / 10, seed)) > 0.3;
 				//是否成成花
 				bool isCreateFlower = snoise(float3(blockPos.xz / 9, seed)) > 0.8;
+				//是否生成蘑菇
+				bool isCreateMushroom = snoise(float3(blockPos.xz / 8, seed)) > 0.8;	
 
 				//是否生成树
-				bool isCreateTree = GenerateRandom(seed, blockPos.x, blockPos.z) > 0.993;
+				bool isCreateTree = GenerateRandom(seed, blockPos.x, blockPos.z) > 0.98;
+				//是否生成台石
+				bool isCreateStoneMoss = GenerateRandom(seed, blockPos.x / 2, blockPos.z / 2) > 0.995;
 				//是否生成枯木
 				bool isCreateDeadWood = GenerateRandom(seed, blockPos.x / 3, blockPos.z / 3) > 0.9965;
 				///是否生成倒下的树木
@@ -315,19 +319,19 @@ int4 HandleBiomeForTest(int seed, float3 blockPos, int blockIndex, uint terrainH
 					float randomType = snoise(float4(blockPos, seed));
 					if (randomType > 0 && randomType <= 0.25)
 					{
-						targetBlockData = int4(3011, 0, 0, 1);
+						targetBlockData = int4(3031, 0, 0, 1);
 					}
 					else if (randomType > 0.25 && randomType <= 0.5)
 					{
-						targetBlockData = int4(3012, 0, 0, 1);
+						targetBlockData = int4(3032, 0, 0, 1);
 					}
 					else if (randomType > 0.5 && randomType <= 0.75)
 					{
-						targetBlockData = int4(3013, 0, 0, 1);
+						targetBlockData = int4(3033, 0, 0, 1);
 					}
 					else 
 					{
-						targetBlockData = int4(3014, 0, 0, 1);
+						targetBlockData = int4(3034, 0, 0, 1);
 					}
 				}
 				else if (isCreateFlower)
@@ -346,9 +350,45 @@ int4 HandleBiomeForTest(int seed, float3 blockPos, int blockIndex, uint terrainH
 						targetBlockData = int4(3113, 0, 0, 1);
 					}
 				}
-				else if (isCreateTree)
+				else if(isCreateMushroom)
 				{
-					targetBlockData = int4(1006, 21, 0, 1);
+					targetBlockData = int4(3201, 0, 0, 1);
+				}
+				else if (isCreateTree)
+				{					
+					float randomType = snoise(float4(blockPos, seed));
+					if (randomType > 0 && randomType <= 0.25)
+					{
+						targetBlockData = int4(1001, 1, 0, 1);
+					}
+					else if (randomType > 0.25 && randomType <= 0.5)
+					{		
+						float randomType2 = snoise(float4(blockPos/2, seed));
+						if (randomType2 > 0 && randomType2 <= 0.3)
+						{
+							targetBlockData = int4(1001, 1005, 0, 1);
+						}
+						else if (randomType2 > 0.3 && randomType2 <= 0.6)
+						{
+							targetBlockData = int4(1001, 1006, 0, 1);
+						}	
+						else
+						{	
+							targetBlockData = int4(1001, 1007, 0, 1);
+						}
+					}
+					else if (randomType > 0.5 && randomType <= 0.75)
+					{
+						targetBlockData = int4(1001, 1, 0, 1);
+					}
+					else 
+					{
+						targetBlockData = int4(1001, 1, 0, 1);
+					}
+				}
+				else if(isCreateStoneMoss)
+				{
+					targetBlockData = int4(6, 0, 0, 1);
 				}
 				else if(isCreateDeadWood)
 				{
@@ -356,7 +396,7 @@ int4 HandleBiomeForTest(int seed, float3 blockPos, int blockIndex, uint terrainH
 				}		
 				else if(isCreateFallDownTree)
 				{
-					targetBlockData = int4(1006, 1002, 0, 1);
+					targetBlockData = int4(1001, 1002, 0, 1);
 				}
 				else if(isCreateElementFlower)
 				{
@@ -400,8 +440,8 @@ int4 HandleBiomeForTest(int seed, float3 blockPos, int blockIndex, uint terrainH
 	}
 	else if (blockPos.y == terrainHeight)
 	{
-		//使用荒草泥土
-		targetBlockData = int4(103, 0, 0, 1);
+		//使用草泥土
+		targetBlockData = int4(102, 0, 0, 1);
 	}
 	else if (blockPos.y < terrainHeight && blockPos.y > terrainHeight - 6)
 	{

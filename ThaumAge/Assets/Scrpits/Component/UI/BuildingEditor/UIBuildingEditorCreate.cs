@@ -57,12 +57,16 @@ public partial class UIBuildingEditorCreate : BaseUIComponent
         {
             OnClickForLoadBuilding();
         }
+        else if (viewButton == ui_FixBuilding)
+        {
+            OnClickForFixBuilding();
+        }
     }
 
     public override void OnInputActionForStarted(InputActionUIEnum inputType, InputAction.CallbackContext callback)
     {
         base.OnInputActionForStarted(inputType, callback);
-        if(inputType == InputActionUIEnum.F1)
+        if (inputType == InputActionUIEnum.F1)
         {
             ui_CreateSelect.isOn = true;
         }
@@ -210,7 +214,7 @@ public partial class UIBuildingEditorCreate : BaseUIComponent
     public void OnClickForCreateBuilding()
     {
         BuildingEditorHandler.Instance.manager.isStartBuild = false;
-        
+
         DialogBean dialogData = new DialogBean();
         dialogData.content = $"是否要创建ID为 {ui_BuildingIdEdit.text} 的建筑";
         dialogData.actionSubmit = (view, data) =>
@@ -218,12 +222,12 @@ public partial class UIBuildingEditorCreate : BaseUIComponent
             int buildId = int.Parse(ui_BuildingIdEdit.text);
             string buildName = ui_BuildingNameEdit.text;
             BuildingEditorHandler.Instance.SaveBuildingData(buildId, buildName);
-            this.WaitExecuteSeconds(0.1f,()=> 
+            this.WaitExecuteSeconds(0.1f, () =>
             {
                 BuildingEditorHandler.Instance.manager.isStartBuild = true;
             });
         };
-        dialogData.actionCancel= (view, data) =>
+        dialogData.actionCancel = (view, data) =>
         {
             this.WaitExecuteSeconds(0.1f, () =>
             {
@@ -255,7 +259,7 @@ public partial class UIBuildingEditorCreate : BaseUIComponent
                     BuildingEditorHandler.Instance.manager.isStartBuild = true;
                 });
             });
-        }; 
+        };
         dialogData.actionCancel = (view, data) =>
         {
             this.WaitExecuteSeconds(0.1f, () =>
@@ -266,4 +270,47 @@ public partial class UIBuildingEditorCreate : BaseUIComponent
         UIDialogNormal uiDialog = UIHandler.Instance.ShowDialog<UIDialogNormal>(dialogData);
     }
 
+
+    public void OnClickForFixBuilding()
+    {
+        DialogBean dialogData = new DialogBean();
+        dialogData.content = $"是否要修复所有的建筑（会检测相关数据 如果不正确会自动再设置一次）";
+        dialogData.actionSubmit = (view, data) =>
+        {
+            //读取建筑数据
+            BuildingEditorHandler.Instance.manager.controllerForBuildingInfo.GetAllBuildingInfoData((allData) =>
+            {
+                List<BlockDirectionEnum> listBlockDirectionEnum = EnumExtension.GetEnumValue<BlockDirectionEnum>();
+                List<int> listBlockDirectionInt = listBlockDirectionEnum.ToListInt();
+                for (int i = 0; i < allData.Count; i++)
+                {
+                    var itemData = allData[i];
+                    var allBuildingData = itemData.listBuildingData;
+                    bool hasErrorData = false;
+                    for (int f = 0; f < allBuildingData.Count; f++)
+                    {
+                        var itemBlockData = allBuildingData[f];                       
+                        if (!listBlockDirectionInt.Contains(itemBlockData.direction))
+                        {
+                            LogUtil.LogError($"检测到{itemData.id} {itemData.name_cn}的方向数据异常 position_{itemBlockData.position} direction_{itemBlockData.direction}");
+                            itemBlockData.direction = (int)BlockDirectionEnum.UpForward;
+                            hasErrorData = true;
+                        }
+                    }
+                    if (hasErrorData)
+                    {
+                        itemData.SetListBuildingData(itemData.listBuildingData);
+                        BuildingEditorHandler.Instance.manager.controllerForBuildingInfo.SetBuildingInfoData(itemData);
+                        LogUtil.LogError($"修复完成{itemData.id} {itemData.name_cn}");
+                    }
+                }
+
+            });
+        };
+        dialogData.actionCancel = (view, data) =>
+        {
+
+        };
+        UIDialogNormal uiDialog = UIHandler.Instance.ShowDialog<UIDialogNormal>(dialogData);
+    }
 }
