@@ -9,6 +9,7 @@ public enum BuildingTypeEnum
     ObliqueTree = 11,//斜树 例如椰子树
     TallTree = 21,//高树
     BigTree = 31,//大树
+    SalixTree = 41,//柳树
     WorldTree = 101,//世界之树
 
     DeadWood = 1001,//枯木
