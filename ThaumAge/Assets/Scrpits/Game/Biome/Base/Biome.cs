@@ -43,7 +43,13 @@ public class Biome
         string oreDataStr = biomeInfo.oreData;
         if (oreDataStr.IsNull())
         {
-            terrain3DCShaderOre = new Terrain3DShaderOreData[0];
+            terrain3DCShaderOre = new Terrain3DShaderOreData[1];
+            Terrain3DShaderOreData terrain3DShaderOre = new Terrain3DShaderOreData();
+            terrain3DShaderOre.oreId = 0;
+            terrain3DShaderOre.oreDensity = 0;
+            terrain3DShaderOre.oreMinHeight = 0;
+            terrain3DShaderOre.oreMaxHeight = 0;
+            terrain3DCShaderOre[0] = terrain3DShaderOre;
         }
         else
         {

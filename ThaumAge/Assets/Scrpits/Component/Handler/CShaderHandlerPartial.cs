@@ -14,7 +14,6 @@ public partial class CShaderHandler
     public void HandleTerrain3DCShader(Terrain3DCShaderBean cshaderData, Action<Terrain3DCShaderBean> callBackComplete)
     {
         ComputeShader targetCShader = manager.GetTerrain3DCShader();
-
         //线程数量为大小除以cshader的numthreads
         int xThreads = cshaderData.chunkSizeW / 8;
         int yThreads = cshaderData.chunkSizeH / 8;
@@ -43,10 +42,15 @@ public partial class CShaderHandler
         //设置矿石buffer
         cshaderData.oreDatasArrayBuffer = new ComputeBuffer(cshaderData.oreDatas.Length, 16);
         cshaderData.oreDatasArrayBuffer.SetData(cshaderData.oreDatas);
-
         targetCShader.SetBuffer(0, "oreDatasArrayBuffer", cshaderData.oreDatasArrayBuffer);
-        targetCShader.SetInt("oreDatasCount", cshaderData.oreDatas.Length);
-        
+        if (cshaderData.oreDatas.Length == 1 && cshaderData.oreDatas[0].oreId == 0)
+        {
+            targetCShader.SetInt("oreDatasCount", 0);
+        }
+        else
+        {
+            targetCShader.SetInt("oreDatasCount", cshaderData.oreDatas.Length);
+        }
 
         //设置方块buffer
         cshaderData.blockArrayBuffer = new ComputeBuffer(cshaderData.GetBlockTotalNum(), 8);

@@ -214,27 +214,32 @@ Terrain2DData CreateTerrain2DData(float3 blockPos)
 	int lerpHeightMin = chunkSizeH + 1;
 	//过度的方块数量
 	int lerpBlockNum = 5;
+	int curOceanMaxHeight = (selectedNoise.oceanMaxHeight <= 0 ? 64 : selectedNoise.oceanMaxHeight);
 	if (selectedNoiseL.biomeId != selectedNoise.biomeId && posLocalX >= 0 && posLocalX < lerpBlockNum)
 	{
-		float baseHeight = (selectedNoise.oceanMaxHeight + selectedNoiseL.oceanMaxHeight) / 2;
+		int otherOceanMaxHeight = (selectedNoiseL.oceanMaxHeight <= 0 ? 64 : selectedNoiseL.oceanMaxHeight);
+		float baseHeight = (curOceanMaxHeight + otherOceanMaxHeight) / 2;
 		lerpHeightL = lerp(height, baseHeight, 1 - (posLocalX / (lerpBlockNum - 1)));
 		lerpHeightMin = lerpHeightL < lerpHeightMin ? lerpHeightL : lerpHeightMin;
 	}
 	if (selectedNoiseR.biomeId != selectedNoise.biomeId && posLocalX >= (chunkSizeW - lerpBlockNum) && posLocalX < chunkSizeW)
-	{
-		float baseHeight = (selectedNoise.oceanMaxHeight + selectedNoiseR.oceanMaxHeight) / 2;
+	{		
+		int otherOceanMaxHeight = (selectedNoiseR.oceanMaxHeight <= 0 ? 64 : selectedNoiseR.oceanMaxHeight);
+		float baseHeight = (curOceanMaxHeight + otherOceanMaxHeight) / 2;
 		lerpHeightR = lerp(height, baseHeight, (posLocalX - (chunkSizeW - lerpBlockNum)) / (lerpBlockNum - 1));
 		lerpHeightMin = lerpHeightR < lerpHeightMin ? lerpHeightR : lerpHeightMin;
 	}
 	if (selectedNoiseF.biomeId != selectedNoise.biomeId && posLocalZ >= 0 && posLocalZ < lerpBlockNum)
 	{
-		float baseHeight = (selectedNoise.oceanMaxHeight + selectedNoiseF.oceanMaxHeight) / 2;
+		int otherOceanMaxHeight = (selectedNoiseF.oceanMaxHeight <= 0 ? 64 : selectedNoiseF.oceanMaxHeight);
+		float baseHeight = (curOceanMaxHeight + otherOceanMaxHeight) / 2;
 		lerpHeightF = lerp(height, baseHeight, 1 - (posLocalZ / (lerpBlockNum - 1)));
 		lerpHeightMin = lerpHeightF < lerpHeightMin ? lerpHeightF : lerpHeightMin;
 	}
 	if (selectedNoiseB.biomeId != selectedNoise.biomeId && posLocalZ >= (chunkSizeW - lerpBlockNum) && posLocalZ < chunkSizeW)
 	{
-		float baseHeight = (selectedNoise.oceanMaxHeight + selectedNoiseB.oceanMaxHeight) / 2;
+		int otherOceanMaxHeight = (selectedNoiseB.oceanMaxHeight <= 0 ? 64 : selectedNoiseB.oceanMaxHeight);
+		float baseHeight = (curOceanMaxHeight + otherOceanMaxHeight) / 2;
 		lerpHeightB = lerp(height, baseHeight, (posLocalZ - (chunkSizeW - lerpBlockNum)) / (lerpBlockNum - 1));
 		lerpHeightMin = lerpHeightB < lerpHeightMin ? lerpHeightB : lerpHeightMin;
 	}
@@ -507,7 +512,7 @@ void StartCreate(uint3 id : SV_DispatchThreadID)
 	default:
 		//biomeBlockData = HandleBiomePrairie(seed, blockPos, blockIndex, terrainHeight,isBlockCave, isBlockCaveDown);
 		//biomeBlockData = HandleBiomeForest(seed, blockPos, blockIndex, terrainHeight, isBlockCave, isBlockCaveDown,selectedNoise.oceanThreshold, weighOcean,weighOceanDown);
-		biomeBlockData = HandleBiomeForTest(seed, blockPos, blockIndex, terrainHeight, isBlockCave, isBlockCaveDown,selectedNoise.oceanThreshold, weighOcean,weighOceanDown);
+		biomeBlockData = HandleBiomeForest(seed, blockPos, blockIndex, terrainHeight, isBlockCave, isBlockCaveDown,selectedNoise.oceanThreshold, weighOcean,weighOceanDown);
 		break;
 	}
 

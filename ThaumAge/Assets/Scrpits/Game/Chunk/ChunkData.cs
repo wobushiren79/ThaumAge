@@ -43,7 +43,6 @@ public class ChunkData
         WorldTypeEnum worldType = WorldCreateHandler.Instance.manager.worldType;
         int seed = WorldCreateHandler.Instance.manager.GetWorldSeed();
         biomeType = BiomeHandler.Instance.manager.GetBiomeType(wPosition, chunkWidth, worldType, seed);
-
         biomeTypeL = BiomeHandler.Instance.manager.GetBiomeType(wPosition + new Vector3Int(-chunkWidth, 0, 0), chunkWidth, worldType, seed);
         biomeTypeR = BiomeHandler.Instance.manager.GetBiomeType(wPosition + new Vector3Int(chunkWidth, 0, 0), chunkWidth, worldType, seed);
         biomeTypeF = BiomeHandler.Instance.manager.GetBiomeType(wPosition + new Vector3Int(0, 0, -chunkWidth), chunkWidth, worldType, seed);

@@ -175,7 +175,6 @@ public class BlockHandler : BaseHandler<BlockHandler, BlockManager>
             biomeB.terrain3DCShaderNoise
         };
         terrain3DCShaderBean.oreDatas = biome.terrain3DCShaderOre;
-
         CShaderHandler.Instance.HandleTerrain3DCShader(terrain3DCShaderBean, (terrainData) =>
         {
             BlockData[] blockArray = new BlockData[terrain3DCShaderBean.GetBlockTotalNum()];
