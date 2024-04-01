@@ -7,8 +7,11 @@ public class LightManager : BaseManager
 {
     protected Light _sunLight;
     protected HDAdditionalLightData _sunLightHD;
+    protected LightForCelestial _sunLightData;
+
     protected Light _moonLight;
     protected HDAdditionalLightData _moonLightHD;
+    protected LightForCelestial _moonLightData;
 
     protected List<HDAdditionalLightData> listHDLightData = new List<HDAdditionalLightData>();
 
@@ -39,6 +42,17 @@ public class LightManager : BaseManager
             return _sunLightHD;
         }
     }
+    public LightForCelestial sunLightData
+    {
+        get
+        {
+            if (_sunLightData == null)
+            {
+                _sunLightData = sunLight.GetComponent<LightForCelestial>();
+            }
+            return _sunLightData;
+        }
+    }
 
     public Light moonLight
     {
@@ -52,7 +66,6 @@ public class LightManager : BaseManager
             return _moonLight;
         }
     }
-
     public HDAdditionalLightData moonLightHD
     {
         get
@@ -62,6 +75,17 @@ public class LightManager : BaseManager
                 _moonLightHD = moonLight.GetComponent<HDAdditionalLightData>();
             }
             return _moonLightHD;
+        }
+    }
+    public LightForCelestial moonLightData
+    {
+        get
+        {
+            if (_moonLightData == null)
+            {
+                _moonLightData = moonLight.GetComponent<LightForCelestial>();
+            }
+            return _moonLightData;
         }
     }
 

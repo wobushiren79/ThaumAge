@@ -24,7 +24,7 @@ public class BiomeManager : BaseManager
     public static string pathForTerrainCShader = "Assets/ComputeShader/TerrainCShader.compute";
 
     //生态区块大小
-    public int biomeChunkSize = 32;
+    public int biomeChunkSize = 2;
 
     public virtual void Awake()
     {
