@@ -47,7 +47,7 @@ public class MainLauncher : BaseLauncher
         {
             yield return new WaitForSeconds(1f);
         }
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(0.1f);
         //显示人物
         SceneMainHandler.Instance.ShowCharacter();
         //修改光照

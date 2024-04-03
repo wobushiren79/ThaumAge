@@ -8,8 +8,6 @@ TagManager:
   - MainLight
   - AstarPath
   - Volume
-  - Sun
-  - Moon
   - UICamera
   - CameraCinemachine
   - Audio

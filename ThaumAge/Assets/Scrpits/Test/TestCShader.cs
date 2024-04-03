@@ -104,7 +104,6 @@ public class TestCShader : BaseMonoBehaviour
             {
                 for (int y = 0; y < maxHeight; y++)
                 {
-                    bool isCreate = false;
                     for (int z = 0; z < chunkSize; z++)
                     {
                         var itemData = blockArray[x + (y * chunkSize) + (z * chunkSize * maxHeight)];
@@ -112,10 +111,8 @@ public class TestCShader : BaseMonoBehaviour
                         {
                             continue;
                         }
-                        isCreate = true;
                         GameObject obj = GameObject.CreatePrimitive(PrimitiveType.Cube);
                         obj.transform.position = new Vector3(x, y, z) + chunkPosition;
-
                     }
                 }
             }

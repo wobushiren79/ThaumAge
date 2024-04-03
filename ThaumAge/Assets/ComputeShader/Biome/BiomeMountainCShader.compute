@@ -1,6 +1,6 @@
 #include "../Noise/SimplexNoiseCShader.compute"
 
-int4 HandleBiomeForMountain(int seed, float3 blockPos, int blockIndex, uint terrainHeight, 
+int4 HandleBiomeMountain(int seed, float3 blockPos, int blockIndex, uint terrainHeight, 
 	bool isBlockCave, bool isBlockCaveDown,float weighOceanTarget, float weighOcean,float weighOceanDown)
 {
 	bool isBlockWater = weighOcean > weighOceanTarget ? true : false;

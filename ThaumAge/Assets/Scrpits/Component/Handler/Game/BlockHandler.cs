@@ -228,13 +228,18 @@ public class BlockHandler : BaseHandler<BlockHandler, BlockManager>
         GameDataManager gameDataManager = GameDataHandler.Instance.manager;
         //获取数据中的chunk
         UserDataBean userData = gameDataManager.GetUserData();
-
-        chunk.chunkSaveData = gameDataManager.GetChunkSaveData(userData.userId, WorldCreateHandler.Instance.manager.worldType, chunk.chunkData.positionForWorld);
+        WorldTypeEnum worldType = WorldCreateHandler.Instance.manager.worldType;
+        //如果是登录界面不需要读取数据
+        if (worldType == WorldTypeEnum.Launch)
+        {
+            return;
+        }
+        chunk.chunkSaveData = gameDataManager.GetChunkSaveData(userData.userId, worldType, chunk.chunkData.positionForWorld);
         //如果没有世界数据 则创建一个
         if (chunk.chunkSaveData == null)
         {
             chunk.chunkSaveData = new ChunkSaveBean();
-            chunk.chunkSaveData.worldType = (int)WorldCreateHandler.Instance.manager.worldType;
+            chunk.chunkSaveData.worldType = (int)worldType;
             chunk.chunkSaveData.userId = userData.userId;
             chunk.chunkSaveData.position = chunk.chunkData.positionForWorld;
         }

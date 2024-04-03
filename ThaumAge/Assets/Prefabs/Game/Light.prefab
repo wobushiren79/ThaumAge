@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 6087995159987392521}
   m_Layer: 0
   m_Name: MoonLight
-  m_TagString: Moon
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -347,7 +347,7 @@ GameObject:
   - component: {fileID: 4429152221793366570}
   m_Layer: 0
   m_Name: SunLight
-  m_TagString: Sun
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

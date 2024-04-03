@@ -26,7 +26,7 @@ public class LightManager : BaseManager
         {
             if (_sunLight == null)
             {
-                _sunLight = FindWithTag<Light>(TagInfo.Tag_Sun);
+                _sunLight = Find<Light>("Element/Light/SunLight");
             }
             return _sunLight;
         }
@@ -60,7 +60,7 @@ public class LightManager : BaseManager
         {
             if (_moonLight == null)
             {
-                _moonLight = FindWithTag<Light>(TagInfo.Tag_Moon);
+                _moonLight = Find<Light>("Element/Light/MoonLight");
 
             }
             return _moonLight;

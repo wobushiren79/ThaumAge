@@ -62,7 +62,8 @@ Remark about those offsets from the original author:
 //生成随机数0-1
 float GenerateRandom(uint seed, float x, float y)
 {
-	float2 pos = float2(x,y) * seed;
+	float mapSeed = float(seed) / float(0x7FFFFFFF);
+	float2 pos = float2(x,y) * mapSeed;
     return frac(sin(dot(pos, float2(12.9898, 78.233))) * 43758.5453);
 }
 
