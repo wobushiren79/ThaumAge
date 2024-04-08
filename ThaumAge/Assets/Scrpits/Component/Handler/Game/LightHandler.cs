@@ -6,7 +6,7 @@ using UnityEngine.Rendering.HighDefinition;
 public class LightHandler : BaseHandler<LightHandler, LightManager>
 {
     [Header("当前时间（测试用）")]
-    [Range(0,24f)]
+    [Range(0, 24f)]
     public float currentTime;
 
     [Header("主世界光照变化线性速度")]
@@ -46,13 +46,13 @@ public class LightHandler : BaseHandler<LightHandler, LightManager>
             case GameStateEnum.Main:
                 TimeBean mainTime = GameTimeHandler.Instance.manager.GetMainTime();
                 currentTime = mainTime.hour + (mainTime.minute / 60f) + (mainTime.second / 3600);
-                UpdateLightForMain(currentTime,false);
+                UpdateLightForMain(currentTime, false);
                 break;
             //游戏进行中
             case GameStateEnum.Gaming:
                 TimeBean gameTime = GameTimeHandler.Instance.manager.GetGameTime();
-                currentTime = gameTime.hour + (gameTime.minute / 60f) + (gameTime.second /3600);
-                UpdateLightForMain(currentTime);
+                currentTime = gameTime.hour + (gameTime.minute / 60f) + (gameTime.second / 3600);
+                UpdateLightForMain(currentTime, false);
                 break;
         }
     }
@@ -70,7 +70,7 @@ public class LightHandler : BaseHandler<LightHandler, LightManager>
         Quaternion tragetMoonRotation = Quaternion.Euler(90 - manager.moonLightData.latitude, manager.moonLightData.longitude, 0) * Quaternion.Euler(0, sunRotation, 0);
         if (isLerp)
         {
-            manager.sunLight.transform.localRotation = Quaternion.Lerp(manager.sunLight.transform.localRotation, tragetSunRotation,Time.deltaTime * lerpSpeedLightForMain);
+            manager.sunLight.transform.localRotation = Quaternion.Lerp(manager.sunLight.transform.localRotation, tragetSunRotation, Time.deltaTime * lerpSpeedLightForMain);
             manager.moonLight.transform.localRotation = Quaternion.Lerp(manager.moonLight.transform.localRotation, tragetMoonRotation, Time.deltaTime * lerpSpeedLightForMain);
         }
         else

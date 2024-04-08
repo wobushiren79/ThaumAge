@@ -171,6 +171,11 @@ public partial class GameDataManager : BaseManager, IChunkSaveView, IUserDataVie
 
     public void SaveUserData(WorldTypeEnum worldType, Vector3 playerPosition)
     {
+        //如果是腐化地牢 则不保存数据
+        if (worldType == WorldTypeEnum.Putrefy)
+        {
+            return;
+        }
         userData.userExitPosition.SetWorldType(worldType);
         userData.userExitPosition.SetPosition(playerPosition);
         SaveUserData(userData);

@@ -16,5 +16,5 @@ public enum BiomeTypeEnum
 
     Test = 998,//测试
     Main = 999,//登录
-
+    PutrefyDungeonBase = 1001,//腐化地牢-基础
 }

@@ -25,16 +25,6 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
     }
 
     /// <summary>
-    /// 设置世界类型
-    /// </summary>
-    /// <param name="worldType"></param>
-    public void SetWorldType(WorldTypeEnum worldType)
-    {
-        manager.worldType = worldType;
-        BiomeHandler.Instance.InitWorldBiomeData();
-    }
-
-    /// <summary>
     /// 清除世界
     /// </summary>
     public void ClearWorld()
@@ -43,6 +33,28 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
         manager.ClearAllChunk();
         //清除所有寻路
         PathFindingHandler.Instance.manager.InitPathFinding();
+    }
+
+    /// <summary>
+    /// 改变世界
+    /// </summary>
+    public void ChangeWorld(WorldTypeEnum worldType, Action completeForUpdateChunk, Vector3Int startPos, int worldRange = 1)
+    {
+        manager.worldType = worldType;
+        BiomeHandler.Instance.InitWorldBiomeData();
+        switch (worldType)
+        {
+            case WorldTypeEnum.Putrefy://腐化地牢时
+                startPos = Vector3Int.zero;
+                worldRange = 9;
+                break;
+            case WorldTypeEnum.Main://登录界面时
+                break;
+            default://默认刷新角色四周的方块
+                break;
+        }
+        //刷新周围区块
+        CreateChunkRangeForCenterPosition(startPos, worldRange, true, completeForUpdateChunk);
     }
 
     /// <summary>
@@ -89,7 +101,7 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
                     chunkComponent = objChunk.GetComponent<ChunkComponent>();
                 }
                 chunkComponent.transform.position = position;
-                chunkComponent.name = $"Chunk_X:{position.x}_Y:{ position.y}_Z:{position.z}";
+                chunkComponent.name = $"Chunk_X:{position.x}_Y:{position.y}_Z:{position.z}";
                 chunkComponent.SetData(chunk);
                 chunk.chunkComponent = chunkComponent;
             }
@@ -357,25 +369,33 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
     {
         if (GameHandler.Instance.manager.GetGameState() == GameStateEnum.Gaming)
         {
-            //获取玩家位置
-            Vector3 playPosition = GameHandler.Instance.manager.player.transform.position;
-            //不计算Y轴坐标
-            playPosition.y = 0;
-            //计算两点距离
-            float dis = Vector3.Distance(playPosition, positionForWorldUpdate);
-            //获取刷新距离
-            GameConfigBean gameConfig = GameDataHandler.Instance.manager.GetGameConfig();
-            //如果不需要检测距离 就直接刷新
-            if (!isCheckDis)
+            switch (manager.worldType)
             {
-                dis = float.MaxValue;
-            }
-            //对比距离 大于刷新距离则刷新
-            if (dis > manager.widthChunk)
-            {
-                positionForWorldUpdate = playPosition;
-                CreateChunkRangeForWorldPostion(playPosition, gameConfig.worldRefreshRange, null);
-                DestroyChunkRangeForWorldPosition(playPosition, gameConfig.worldRefreshRange + gameConfig.worldDestoryRange, null);
+                case WorldTypeEnum.Main:
+                case WorldTypeEnum.Putrefy:
+                    break;
+                default:
+                    //获取玩家位置
+                    Vector3 playPosition = GameHandler.Instance.manager.player.transform.position;
+                    //不计算Y轴坐标
+                    playPosition.y = 0;
+                    //计算两点距离
+                    float dis = Vector3.Distance(playPosition, positionForWorldUpdate);
+                    //获取刷新距离
+                    GameConfigBean gameConfig = GameDataHandler.Instance.manager.GetGameConfig();
+                    //如果不需要检测距离 就直接刷新
+                    if (!isCheckDis)
+                    {
+                        dis = float.MaxValue;
+                    }
+                    //对比距离 大于刷新距离则刷新
+                    if (dis > manager.widthChunk)
+                    {
+                        positionForWorldUpdate = playPosition;
+                        CreateChunkRangeForWorldPostion(playPosition, gameConfig.worldRefreshRange, null);
+                        DestroyChunkRangeForWorldPosition(playPosition, gameConfig.worldRefreshRange + gameConfig.worldDestoryRange, null);
+                    }
+                    break;
             }
         }
     }

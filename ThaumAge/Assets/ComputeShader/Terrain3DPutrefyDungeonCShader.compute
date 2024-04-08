@@ -14,7 +14,7 @@
 #include "Biome/BiomeSwampCShader.compute"
 #include "Biome/BiomeTestCShader.compute"
 #include "Biome/BiomeMainCShader.compute"
-#include "Biome/BiomePutrefyDungeonBaseCShader.compute"
+
 //方块数据
 struct BlockData
 {
@@ -272,22 +272,6 @@ int4 HandleBiomeTest(int seed, float3 blockPos, int blockIndex, uint terrainHeig
 	bool isBlockCave, bool isBlockCaveDown,float weighOceanTarget, float weighOcean,float weighOceanDown)
 {
 	int4 targetBlockData = int4(0, 0, 0, 0);
-	//处理边界
-	if(blockPos.x > 128 || blockPos.x < -128 || blockPos.z > 128 || blockPos.z < -128)
-	{
-		if(blockPos.y > 64)
-		{
-			//使用空气
-			targetBlockData = int4(0, 0, 0, 1);
-		}
-		else
-		{
-			//使用地基
-			targetBlockData = int4(1, 0, 0, 1);
-		}
-		return targetBlockData;
-	}
-
 	//如果大于地面高度
 	if (blockPos.y > terrainHeight)
 	{
@@ -430,10 +414,6 @@ void StartCreate(uint3 id : SV_DispatchThreadID)
 		break;
 	case 999://主界面
 		biomeBlockData = HandleBiomeMain(seed, blockPos, blockIndex, terrainHeight, isBlockCave, isBlockCaveDown,selectedNoise.oceanThreshold, weighOcean,weighOceanDown);	
-		break;
-	case 1001://腐化地牢 基础
-		//biomeBlockData = HandleBiomePutrefyDungeonBase(seed, blockPos, blockIndex, terrainHeight, isBlockCave, isBlockCaveDown,selectedNoise.oceanThreshold, weighOcean,weighOceanDown);		
-		biomeBlockData = HandleBiomeTest(seed, blockPos, blockIndex, terrainHeight, isBlockCave, isBlockCaveDown,selectedNoise.oceanThreshold, weighOcean,weighOceanDown);
 		break;
 	default:
 		//biomeBlockData = HandleBiomePrairie(seed, blockPos, blockIndex, terrainHeight,isBlockCave, isBlockCaveDown);

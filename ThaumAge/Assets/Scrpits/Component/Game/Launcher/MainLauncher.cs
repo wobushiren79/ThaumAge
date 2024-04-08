@@ -23,13 +23,11 @@ public class MainLauncher : BaseLauncher
             GameHandler.Instance.manager.SetGameState(GameStateEnum.Main);
             //设置种子
             WorldCreateHandler.Instance.manager.SetWorldSeed(worldSeed);
-            //设置世界类型为启动
-            WorldCreateHandler.Instance.SetWorldType(WorldTypeEnum.Launch);
             //设置远景模糊
             VolumeHandler.Instance.SetDepthOfField(GameStateEnum.Main);
             VolumeHandler.Instance.SetFog(GameStateEnum.Main);
-            //刷新周围区块
-            WorldCreateHandler.Instance.CreateChunkRangeForCenterPosition(Vector3Int.zero, worldRange, true, CompleteForUpdateChunk);
+            //设置世界类型为启动
+            WorldCreateHandler.Instance.ChangeWorld(WorldTypeEnum.Launch, CompleteForUpdateChunk, Vector3Int.zero, worldRange);
         });
     }
 

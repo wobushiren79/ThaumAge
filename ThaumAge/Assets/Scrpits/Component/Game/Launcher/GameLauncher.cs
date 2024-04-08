@@ -23,7 +23,7 @@ public class GameLauncher : BaseLauncher
         GameHandler.Instance.LoadGameResources(() =>
         {
             UserDataBean userData = GameDataHandler.Instance.manager.GetUserData();
-            userData.userExitPosition.GetWorldPosition(out WorldTypeEnum worldType, out Vector3 worldPosition);
+            userData.userExitPosition.GetWorldPosition(out WorldTypeEnum worldType, out Vector3 worldPositionUser);
             //如果是测试数据
             if (userData.userId.Equals("Test"))
             {
@@ -41,13 +41,11 @@ public class GameLauncher : BaseLauncher
             WorldCreateHandler.Instance.manager.SetWorldSeed(userData.seed);
             //开关角色控制
             GameControlHandler.Instance.SetPlayerControlEnabled(false);
-            //设置世界类型
-            WorldCreateHandler.Instance.SetWorldType(worldType);
             //渲染设置
             VolumeHandler.Instance.SetFog(GameStateEnum.Gaming);
-            //刷新周围区块
+
             GameConfigBean gameConfig = GameDataHandler.Instance.manager.GetGameConfig();
-            WorldCreateHandler.Instance.CreateChunkRangeForCenterPosition(Vector3Int.zero, gameConfig.worldRefreshRange, true, CompleteForUpdateChunk);
+            WorldCreateHandler.Instance.ChangeWorld(worldType, CompleteForUpdateChunk, Vector3Int.CeilToInt(worldPositionUser), gameConfig.worldRefreshRange);
         });
     }
 
