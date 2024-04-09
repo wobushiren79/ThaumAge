@@ -28,16 +28,17 @@ public class GameLauncher : BaseLauncher
             if (userData.userId.Equals("Test"))
             {
                 worldType = testWorldType;
+                //设置种子
+                if (Application.isEditor && seed != 0)
+                {
+                    userData.seed = seed;
+                    LogUtil.Log($"测试世界生成 种子{userData.seed}");
+                }
             }
             testWorldType = worldType;
             //设置游戏状态
             GameHandler.Instance.manager.SetGameState(GameStateEnum.Init);
-            //设置种子
-            if(Application.isEditor && seed != 0)
-            {
-                userData.seed = seed;
-                LogUtil.Log($"测试世界生成 种子{userData.seed}");
-            }
+
             WorldCreateHandler.Instance.manager.SetWorldSeed(userData.seed);
             //开关角色控制
             GameControlHandler.Instance.SetPlayerControlEnabled(false);
@@ -45,7 +46,7 @@ public class GameLauncher : BaseLauncher
             VolumeHandler.Instance.SetFog(GameStateEnum.Gaming);
 
             GameConfigBean gameConfig = GameDataHandler.Instance.manager.GetGameConfig();
-            WorldCreateHandler.Instance.ChangeWorld(worldType, CompleteForUpdateChunk, Vector3Int.CeilToInt(worldPositionUser), gameConfig.worldRefreshRange);
+            WorldCreateHandler.Instance.ChangeWorld(worldType, CompleteForUpdateChunk, worldPositionUser, gameConfig.worldRefreshRange);
         });
     }
 

@@ -38,7 +38,7 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
     /// <summary>
     /// 改变世界
     /// </summary>
-    public void ChangeWorld(WorldTypeEnum worldType, Action completeForUpdateChunk, Vector3Int startPos, int worldRange = 1)
+    public void ChangeWorld(WorldTypeEnum worldType, Action completeForUpdateChunk, Vector3 startPos, int worldRange = 1)
     {
         manager.worldType = worldType;
         BiomeHandler.Instance.InitWorldBiomeData();
@@ -47,14 +47,16 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
             case WorldTypeEnum.Putrefy://腐化地牢时
                 startPos = Vector3Int.zero;
                 worldRange = 9;
+                CreateChunkRangeForCenterPosition(Vector3Int.CeilToInt(startPos), worldRange, true, completeForUpdateChunk);
                 break;
-            case WorldTypeEnum.Main://登录界面时
+            case WorldTypeEnum.Launch://登录界面时
+                CreateChunkRangeForCenterPosition(Vector3Int.CeilToInt(startPos), worldRange, true, completeForUpdateChunk);
                 break;
             default://默认刷新角色四周的方块
+                CreateChunkRangeForWorldPostion(startPos, worldRange, true, completeForUpdateChunk);
                 break;
         }
-        //刷新周围区块
-        CreateChunkRangeForCenterPosition(startPos, worldRange, true, completeForUpdateChunk);
+
     }
 
     /// <summary>
@@ -229,10 +231,10 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
     /// 通过角色的坐标 创建一定范围内的区块
     /// </summary>
 
-    public void CreateChunkRangeForWorldPostion(Vector3 position, int range, Action callBackForComplete)
+    public void CreateChunkRangeForWorldPostion(Vector3 position, int range, bool isInit, Action callBackForComplete)
     {
         Vector3Int centerPosition = GetChunkCenterPositionByWorldPosition(position);
-        CreateChunkRangeForCenterPosition(centerPosition, range, false, callBackForComplete);
+        CreateChunkRangeForCenterPosition(centerPosition, range, isInit, callBackForComplete);
     }
 
     /// <summary>
@@ -371,7 +373,7 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
         {
             switch (manager.worldType)
             {
-                case WorldTypeEnum.Main:
+                case WorldTypeEnum.Launch:
                 case WorldTypeEnum.Putrefy:
                     break;
                 default:
@@ -392,7 +394,7 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
                     if (dis > manager.widthChunk)
                     {
                         positionForWorldUpdate = playPosition;
-                        CreateChunkRangeForWorldPostion(playPosition, gameConfig.worldRefreshRange, null);
+                        CreateChunkRangeForWorldPostion(playPosition, gameConfig.worldRefreshRange, false, null);
                         DestroyChunkRangeForWorldPosition(playPosition, gameConfig.worldRefreshRange + gameConfig.worldDestoryRange, null);
                     }
                     break;

@@ -432,13 +432,12 @@ void StartCreate(uint3 id : SV_DispatchThreadID)
 		biomeBlockData = HandleBiomeMain(seed, blockPos, blockIndex, terrainHeight, isBlockCave, isBlockCaveDown,selectedNoise.oceanThreshold, weighOcean,weighOceanDown);	
 		break;
 	case 1001://腐化地牢 基础
-		//biomeBlockData = HandleBiomePutrefyDungeonBase(seed, blockPos, blockIndex, terrainHeight, isBlockCave, isBlockCaveDown,selectedNoise.oceanThreshold, weighOcean,weighOceanDown);		
-		biomeBlockData = HandleBiomeTest(seed, blockPos, blockIndex, terrainHeight, isBlockCave, isBlockCaveDown,selectedNoise.oceanThreshold, weighOcean,weighOceanDown);
+		biomeBlockData = HandleBiomePutrefyDungeonBase(seed, blockPos, blockIndex, terrainHeight, isBlockCave, isBlockCaveDown,selectedNoise.oceanThreshold, weighOcean,weighOceanDown);
 		break;
 	default:
 		//biomeBlockData = HandleBiomePrairie(seed, blockPos, blockIndex, terrainHeight,isBlockCave, isBlockCaveDown);
-		//biomeBlockData = HandleBiomeForest(seed, blockPos, blockIndex, terrainHeight, isBlockCave, isBlockCaveDown,selectedNoise.oceanThreshold, weighOcean,weighOceanDown);
-		biomeBlockData = HandleBiomeTest(seed, blockPos, blockIndex, terrainHeight, isBlockCave, isBlockCaveDown,selectedNoise.oceanThreshold, weighOcean,weighOceanDown);
+		biomeBlockData = HandleBiomeForest(seed, blockPos, blockIndex, terrainHeight, isBlockCave, isBlockCaveDown,selectedNoise.oceanThreshold, weighOcean,weighOceanDown);
+		//biomeBlockData = HandleBiomeTest(seed, blockPos, blockIndex, terrainHeight, isBlockCave, isBlockCaveDown,selectedNoise.oceanThreshold, weighOcean,weighOceanDown);
 		break;
 	}
 
