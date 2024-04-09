@@ -3,11 +3,8 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-public class BlockManager : BaseManager, IBlockInfoView
+public class BlockManager : BaseManager
 {
-   
-    protected BlockInfoController controllerForBlock;
-
     //方块信息列表
     protected BlockInfoBean[] arrayBlockInfo = new BlockInfoBean[EnumExtension.GetEnumMaxIndex<BlockTypeEnum>() + 1];
     //注册方块列表
@@ -64,8 +61,7 @@ public class BlockManager : BaseManager, IBlockInfoView
 
     public void InitData()
     {
-        controllerForBlock = new BlockInfoController(this, this);
-        controllerForBlock.GetAllBlockInfoData(InitBlockInfo);
+        InitBlockInfo();
         RegisterBlock();
     }
 
@@ -200,12 +196,12 @@ public class BlockManager : BaseManager, IBlockInfoView
     /// 初始化方块信息
     /// </summary>
     /// <param name="listData"></param>
-    public void InitBlockInfo(List<BlockInfoBean> listData)
+    public void InitBlockInfo()
     {
-        for (int i = 0; i < listData.Count; i++)
+        var dicAllData = BlockInfoCfg.GetAllData();
+        foreach (var itemData in dicAllData)
         {
-            BlockInfoBean itemInfo = listData[i];
-            arrayBlockInfo[itemInfo.id] = itemInfo;
+            arrayBlockInfo[itemData.Key] = itemData.Value;
         }
     }
 

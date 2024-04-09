@@ -31,6 +31,7 @@ public class ChunkComponent : BaseMonoBehaviour
     public Chunk chunk;
 
     protected bool isDrawMeshCollider = false;
+    public int rendererMaterialNum = 0;//材质球数量
     public void Awake()
     {
         //获取自身相关组件引用
@@ -106,16 +107,17 @@ public class ChunkComponent : BaseMonoBehaviour
     protected void InitBlockMats()
     {
         Material[] allBlockMats = BlockHandler.Instance.manager.GetAllBlockMaterial();
-        List<Material> newBlockMtas = new List<Material>();
+        List<Material> newBlockMats = new List<Material>();
         for (int i = 0; i < allBlockMats.Length; i++)
         {
             List<int> listTrisMat = chunk.chunkMeshData.dicTris[i];
             if (!listTrisMat.IsNull())
             {
-                newBlockMtas.Add(allBlockMats[i]);
+                newBlockMats.Add(allBlockMats[i]);
             }
         }
-        meshRenderer.materials = newBlockMtas.ToArray();
+        rendererMaterialNum = newBlockMats.Count;
+        meshRenderer.materials = newBlockMats.ToArray();
     }
 
     /// <summary>
@@ -127,6 +129,7 @@ public class ChunkComponent : BaseMonoBehaviour
             return;
         try
         {
+
             //定点数判断
             if (chunk.chunkMeshData == null && chunk.chunkMeshData.verts.Count < 3)
             {
@@ -136,7 +139,7 @@ public class ChunkComponent : BaseMonoBehaviour
             InitBlockMats();
             chunk.isDrawMesh = true;
             chunkMesh.Clear();
-            chunkMesh.subMeshCount = meshRenderer.materials.Length;
+            chunkMesh.subMeshCount = rendererMaterialNum;
             //设置顶点
             chunkMesh.SetVertices(chunk.chunkMeshData.verts);
             //设置UV
@@ -153,7 +156,6 @@ public class ChunkComponent : BaseMonoBehaviour
                 chunkMesh.SetTriangles(trisData, indexMat);
                 indexMat++;
             }
-
             //碰撞数据设置
             if (chunk.chunkMeshData.vertsCollider.Count >= 3)
             {
@@ -197,6 +199,7 @@ public class ChunkComponent : BaseMonoBehaviour
             //{
 
             //});
+
             //刷新寻路
             PathFindingHandler.Instance.manager.RefreshPathFinding(chunk);
             //显示

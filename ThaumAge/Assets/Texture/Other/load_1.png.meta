@@ -48,7 +48,7 @@ TextureImporter:
       213: 3193076779354431780
     second: load_1_14
   externalObjects: {}
-  serializedVersion: 12
+  serializedVersion: 13
   mipmaps:
     mipMapMode: 0
     enableMipMap: 0
@@ -122,6 +122,7 @@ TextureImporter:
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 0
+    ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
@@ -134,6 +135,7 @@ TextureImporter:
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 0
+    ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
@@ -146,6 +148,7 @@ TextureImporter:
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 0
+    ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
@@ -582,26 +585,26 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      load_1_14: 3193076779354431780
-      load_1_3: 38594267800633475
-      load_1_18: 0
-      load_1_7: 2171374456645739871
-      load_1_16: 0
+      load_1_0: -2528570505504162404
       load_1_1: 8516264547098350874
       load_1_10: -2036836436902803506
-      load_1_9: -4170817523604229655
-      load_1_0: -2528570505504162404
-      load_1_2: 7222560681890584685
       load_1_11: -6614822301479814554
-      load_1_8: -4020364230335004789
-      load_1_4: 5876539140227282063
-      load_1_6: 507919221602475373
-      load_1_17: 0
-      load_1_13: -6314097514933032182
-      load_1_19: 0
-      load_1_15: 0
-      load_1_5: -8123710413326093710
       load_1_12: 3545477647815482516
+      load_1_13: -6314097514933032182
+      load_1_14: 3193076779354431780
+      load_1_15: 0
+      load_1_16: 0
+      load_1_17: 0
+      load_1_18: 0
+      load_1_19: 0
+      load_1_2: 7222560681890584685
+      load_1_3: 38594267800633475
+      load_1_4: 5876539140227282063
+      load_1_5: -8123710413326093710
+      load_1_6: 507919221602475373
+      load_1_7: 2171374456645739871
+      load_1_8: -4020364230335004789
+      load_1_9: -4170817523604229655
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

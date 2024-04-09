@@ -1,4 +1,4 @@
-﻿using Cinemachine;
+﻿using Unity.Cinemachine;
 using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
@@ -54,12 +54,12 @@ public class CameraHandler : BaseHandler<CameraHandler, CameraManager>
         CinemachineBasicMultiChannelPerlin basicMultiChannelPerlin = cameraForFirst.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
         if (basicMultiChannelPerlin != null)
         {
-            basicMultiChannelPerlin.m_AmplitudeGain = amplitude;
-            basicMultiChannelPerlin.m_FrequencyGain = frequency;
+            basicMultiChannelPerlin.AmplitudeGain = amplitude;
+            basicMultiChannelPerlin.FrequencyGain = frequency;
             //初始化位置
             cameraForFirst.transform.position = GameHandler.Instance.manager.player.objFirstLook.transform.position;
             //执行抖动减缓动画
-            DOTween.To(() => basicMultiChannelPerlin.m_AmplitudeGain, x => basicMultiChannelPerlin.m_AmplitudeGain = x, 0, time);
+            DOTween.To(() => basicMultiChannelPerlin.AmplitudeGain, x => basicMultiChannelPerlin.AmplitudeGain = x, 0, time);
         }
 
         //第三人称
@@ -72,10 +72,10 @@ public class CameraHandler : BaseHandler<CameraHandler, CameraManager>
             cameraForThree.transform.position = GameHandler.Instance.manager.player.objThirdLook.transform.position;
             if (itemBasicMultiChannelPerlin != null)
             {
-                itemBasicMultiChannelPerlin.m_AmplitudeGain = amplitude;
-                itemBasicMultiChannelPerlin.m_FrequencyGain = frequency;
+                itemBasicMultiChannelPerlin.AmplitudeGain = amplitude;
+                itemBasicMultiChannelPerlin.FrequencyGain = frequency;
                 //执行抖动减缓动画
-                DOTween.To(() => itemBasicMultiChannelPerlin.m_AmplitudeGain, x => itemBasicMultiChannelPerlin.m_AmplitudeGain = x, 0, time);
+                DOTween.To(() => itemBasicMultiChannelPerlin.AmplitudeGain, x => itemBasicMultiChannelPerlin.AmplitudeGain = x, 0, time);
             }
         }
     }
@@ -166,7 +166,7 @@ public class CameraHandler : BaseHandler<CameraHandler, CameraManager>
     public void ChangeCameraPriority(CinemachineVirtualCameraBase cinemachineVirtual, int priority)
     {
         if (cinemachineVirtual != null)
-            cinemachineVirtual.Priority = priority;
+            cinemachineVirtual.Priority.Value = priority;
     }
 
     /// <summary>

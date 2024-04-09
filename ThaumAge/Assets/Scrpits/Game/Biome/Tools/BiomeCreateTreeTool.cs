@@ -1,6 +1,4 @@
 ﻿using System;
-using TreeEditor;
-using UnityEditor;
 using UnityEngine;
 
 public class BiomeCreateTreeTool

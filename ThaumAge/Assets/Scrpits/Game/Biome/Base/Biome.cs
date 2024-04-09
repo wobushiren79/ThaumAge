@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using TreeEditor;
-using UnityEditor;
-using UnityEngine;
-using UnityEngine.Tilemaps;
+﻿using UnityEngine;
 
 public class Biome
 {

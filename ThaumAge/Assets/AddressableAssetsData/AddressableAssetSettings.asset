@@ -15,7 +15,7 @@ MonoBehaviour:
   m_DefaultGroup: 1261beb35e7b46c4fbf9458f1cd39db6
   m_currentHash:
     serializedVersion: 2
-    Hash: 7b3b4a0af2ffea24d7d13037dd36462d
+    Hash: d65a08c6b54bd3217c37c854e417ff69
   m_OptimizeCatalogSize: 0
   m_BuildRemoteCatalog: 0
   m_BundleLocalCatalog: 0
@@ -79,24 +79,24 @@ MonoBehaviour:
       - m_Id: 1f1d48d9e968a1c42bedb4d8b1836225
         m_Value: '{UnityEngine.AddressableAssets.Addressables.RuntimePath}/[BuildTarget]'
       - m_Id: 4badb5975752cba42b641fa8451964eb
-        m_Value: ServerData/[BuildTarget]
+        m_Value: 'ServerData/[BuildTarget]'
       - m_Id: 6d698f14e1526a4449a22e222192eb4e
-        m_Value: http://localhost/[BuildTarget]
+        m_Value: 'http://localhost/[BuildTarget]'
     m_ProfileEntryNames:
     - m_Id: fb02e5ade70edb44ea4629dd7bae7b37
       m_Name: BuildTarget
       m_InlineUsage: 0
     - m_Id: 933a97c386553b74f93ae5f63eb8a5a4
-      m_Name: LocalBuildPath
+      m_Name: Local.BuildPath
       m_InlineUsage: 0
     - m_Id: 1f1d48d9e968a1c42bedb4d8b1836225
-      m_Name: LocalLoadPath
+      m_Name: Local.LoadPath
       m_InlineUsage: 0
     - m_Id: 4badb5975752cba42b641fa8451964eb
-      m_Name: RemoteBuildPath
+      m_Name: Remote.BuildPath
       m_InlineUsage: 0
     - m_Id: 6d698f14e1526a4449a22e222192eb4e
-      m_Name: RemoteLoadPath
+      m_Name: Remote.LoadPath
       m_InlineUsage: 0
     m_ProfileVersion: 1
   m_LabelTable:

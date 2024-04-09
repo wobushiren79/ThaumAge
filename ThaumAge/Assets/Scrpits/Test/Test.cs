@@ -16,7 +16,7 @@ public class Test : BaseMonoBehaviour
     public void Start()
     {
         // Assuming you have a reference to the MeshRenderer component
-        MeshRenderer meshRenderer = GetComponent<MeshRenderer>();
+        //MeshRenderer meshRenderer = GetComponent<MeshRenderer>();
 
         // Set the culling mode to Front
         //meshRenderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.On;
@@ -30,7 +30,7 @@ public class Test : BaseMonoBehaviour
         //meshRenderer.renderingLayerMask = 1;
 
         // Set the culling mode to Front or Off
-        meshRenderer.material.SetInteger("_Cull", (int)UnityEngine.Rendering.CullMode.Off);
+        //meshRenderer.material.SetInteger("_Cull", (int)UnityEngine.Rendering.CullMode.Off);
     }
 
     public void Update()
@@ -114,6 +114,11 @@ public class Test : BaseMonoBehaviour
             }
             stopwatch.Stop();
             UnityEngine.Debug.Log("List " + stopwatch.ElapsedTicks);
+        }
+        if (Input.GetKeyUp(KeyCode.Tab))
+        {
+            LogUtil.LogError("TEst");
+            SceneUtil.SceneChange(ScenesEnum.MainScene);
         }
     }
 

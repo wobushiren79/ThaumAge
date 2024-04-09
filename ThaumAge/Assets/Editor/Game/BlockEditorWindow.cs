@@ -33,9 +33,9 @@ public class BlockEditorWindow : EditorWindow
     protected string queryBlockName;
     protected BlockInfoBean blockInfoCreate = new BlockInfoBean();
     protected List<BlockInfoBean> listQueryData = new List<BlockInfoBean>();
+    protected Dictionary<long, BlockInfoBean> allBlockData = new Dictionary<long, BlockInfoBean>();
     protected string[] filesNameForTexture = new string[0];
 
-    protected BlockInfoService serviceForBlockInfo;
     protected Vector2 scrollPosition;
 
     [MenuItem("工具/方块生成工具")]
@@ -46,7 +46,7 @@ public class BlockEditorWindow : EditorWindow
 
     private void OnEnable()
     {
-        serviceForBlockInfo = new BlockInfoService();
+         allBlockData = BlockInfoCfg.GetAllData();
     }
 
     private void OnDisable()
@@ -77,6 +77,8 @@ public class BlockEditorWindow : EditorWindow
     {
         filesNameForTexture = Directory.GetFiles(Path_Block_Textures);
         listQueryData.Clear();
+        allBlockData = null;
+        allBlockData = BlockInfoCfg.GetAllData();
     }
 
     protected void UIForBase()
@@ -98,19 +100,41 @@ public class BlockEditorWindow : EditorWindow
         if (EditorUI.GUIButton("Id 查询方块", 150))
         {
             long[] ids = queryBlockIds.SplitForArrayLong(',');
-            listQueryData = serviceForBlockInfo.QueryDataByIds(ids);
+            listQueryData.Clear();
+            foreach (var itemId in ids)
+            {
+                if (allBlockData.TryGetValue(itemId,out BlockInfoBean targetBlockInfo))
+                {
+                    listQueryData.Add(targetBlockInfo);
+                }
+                else
+                {
+                    LogUtil.LogError($"查询ID：{itemId}失败");
+                }
+            }
         }
         queryBlockIds = EditorUI.GUIEditorText(queryBlockIds, 150);
         GUILayout.Space(50);
         if (EditorUI.GUIButton("name 查询方块(中文)", 150))
         {
-            listQueryData = serviceForBlockInfo.QueryDataByName(LanguageEnum.cn, queryBlockName);
+            listQueryData.Clear();
+            foreach (var itemData in allBlockData)
+            {
+                if (itemData.Value.name_cn.Contains(queryBlockName)|| itemData.Value.name_en.Contains(queryBlockName))
+                {
+                    listQueryData.Add(itemData.Value);
+                }
+            }
         }
         queryBlockName = EditorUI.GUIEditorText(queryBlockName, 150);
         GUILayout.Space(50);
         if (EditorUI.GUIButton("查询所有方块", 150))
         {
-            listQueryData = serviceForBlockInfo.QueryAllData();
+            listQueryData.Clear();
+            foreach (var itemData in allBlockData)
+            {
+                listQueryData.Add(itemData.Value);
+            }
         }
         GUILayout.EndHorizontal();
     }
@@ -156,11 +180,11 @@ public class BlockEditorWindow : EditorWindow
             {
                 blockInfo.link_id = (int)blockInfo.id;
                 blockInfo.valid = 1;
-                bool isSuccess = serviceForBlockInfo.UpdateData(blockInfo);
-                if (!isSuccess)
-                {
-                    LogUtil.LogError("创建失败");
-                }
+                //bool isSuccess = serviceForBlockInfo.UpdateData(blockInfo);
+                //if (!isSuccess)
+                //{
+                //    LogUtil.LogError("创建失败");
+                //}
             }
         }
         else
@@ -168,23 +192,23 @@ public class BlockEditorWindow : EditorWindow
             if (EditorUI.GUIButton("更新方块", 150))
             {
                 blockInfo.link_id = (int)blockInfo.id;
-                bool isSuccess = serviceForBlockInfo.UpdateData(blockInfo);
-                if (!isSuccess)
-                {
-                    LogUtil.LogError("更新失败");
-                }
+                //bool isSuccess = serviceForBlockInfo.UpdateData(blockInfo);
+                //if (!isSuccess)
+                //{
+                //    LogUtil.LogError("更新失败");
+                //}
             }
             if (EditorUI.GUIButton("删除方块", 150))
             {
-                bool isSuccess = serviceForBlockInfo.DeleteData(blockInfo.id);
-                if (isSuccess)
-                {
-                    listQueryData.Remove(blockInfo);
-                }
-                else
-                {
-                    LogUtil.LogError("删除失败");
-                }
+                //bool isSuccess = serviceForBlockInfo.DeleteData(blockInfo.id);
+                //if (isSuccess)
+                //{
+                //    listQueryData.Remove(blockInfo);
+                //}
+                //else
+                //{
+                //    LogUtil.LogError("删除失败");
+                //}
             }
         }
         GUILayout.EndHorizontal();

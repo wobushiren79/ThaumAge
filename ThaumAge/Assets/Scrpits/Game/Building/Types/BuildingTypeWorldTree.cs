@@ -1,6 +1,4 @@
-﻿using TreeEditor;
-using UnityEditor;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class BuildingTypeWorldTree : BuildingBaseType
 {
