@@ -56,6 +56,13 @@
       ]
     },
     {
+      "name": "Keijiro",
+      "url": "https://registry.npmjs.com",
+      "scopes": [
+        "jp.keijiro"
+      ]
+    },
+    {
       "name": "Open UPM",
       "url": "https://package.openupm.com",
       "scopes": [
