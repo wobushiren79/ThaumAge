@@ -1,9 +1,10 @@
 // Each #kernel tells which function to compile; you can have many kernels
 #pragma kernel StartCreate
-
 #pragma disable_fastmath
 
 #include "Noise/SimplexNoiseCShader.compute"
+#include "Noise/FastNoiseLiteCShader.compute"
+
 #include "Biome/BiomeForestCShader.compute"
 #include "Biome/BiomePrairieCShader.compute"
 #include "Biome/BiomeDesertCShader.compute"
@@ -17,6 +18,7 @@
 #include "Biome/BiomeTestCShader.compute"
 #include "Biome/BiomeMainCShader.compute"
 #include "Biome/BiomePutrefyDungeonBaseCShader.compute"
+
 //方块数据
 struct BlockData
 {
@@ -145,7 +147,8 @@ float CreateTerrainCaveData(float3 blockPos, float terrainHeight, uint noiseInde
 	//迭代次数
 	for (int i = 0; i < selectedNoise.caveOctaves; i++)
 	{
-		weightCave += snoise(frequency * (blockPos / selectedNoise.caveScale)) * amplitude;
+		float3 tempPosData = frequency * (blockPos / selectedNoise.caveScale);
+		weightCave += _fnlSingleOpenSimplex2S3D(seed, tempPosData.x,tempPosData.y,tempPosData.z) * amplitude;
 		frequency *= selectedNoise.caveFrequency;
 		amplitude *= selectedNoise.caveAmplitude;
 	}
@@ -178,7 +181,7 @@ float CreateTerrain2DWeightH(float2 blockPosXZ, uint noiseIndex)
 		}
 		else
 		{
-			weightH += snoise(float3(posTempData.xy / selectedNoise.frequency, posTempData.z)) * amplitude;
+			weightH += _fnlSingleSimplex2D((int)posTempData.z,posTempData.x/selectedNoise.frequency,posTempData.y/selectedNoise.frequency) * amplitude;
 		}
 		//每次迭代改变间隙性
 		posTempData.xy *= selectedNoise.lacunarity;
@@ -266,7 +269,8 @@ float CreateTerrainOceanData(float3 blockPos, float terrainHeight, uint noiseInd
 	NoiseLayer selectedNoise = noiseLayersArrayBuffer[noiseIndex];
 	float weighOcean = 0;
 	//迭代次数
-	weighOcean += snoise(selectedNoise.oceanFrequency * (blockPos / selectedNoise.oceanScale)) * selectedNoise.oceanAmplitude;
+	float3 tempPosData = selectedNoise.oceanFrequency * (blockPos / selectedNoise.oceanScale);
+	weighOcean += _fnlSingleOpenSimplex2S3D(seed,tempPosData.x,tempPosData.y,tempPosData.z) * selectedNoise.oceanAmplitude;
 	return weighOcean;
 }
 
@@ -309,16 +313,18 @@ int4 HandleBiomeTest(int seed, float3 blockPos, int blockIndex, uint terrainHeig
 			if (!isBlockCaveDown && !isBlockWaterDown)
 			{
 				//是否生成草
-				bool isCreateWeedWild = snoise(float3(blockPos.xz / 10, seed)) > 0.3;
+				bool isCreateWeedWild = _fnlSingleSimplex2D(seed,blockPos.x / 10,blockPos.z / 10) > 0.3;
 				//是否成成花
-				bool isCreateFlower = snoise(float3(blockPos.xz / 9, seed)) > 0.8;
+				bool isCreateFlower = _fnlSingleSimplex2D(seed,blockPos.x / 9,blockPos.z / 9) > 0.8;
+
+
 				//是否生成蘑菇
 				bool isCreateMushroom = snoise(float3(blockPos.xz / 8, seed)) > 0.8;
 				//是否生成浆果
 				bool isCreateBerryBush = snoise(float3(blockPos.xz / 7, seed)) > 0.8;		
 
 				//是否生成树
-				bool isCreateTree = GenerateRandom(seed, blockPos.x , blockPos.z ) > 0.98;
+				bool isCreateTree = GenerateRandom(seed, blockPos.x, blockPos.z) > 0.98;
 				//是否生成台石
 				bool isCreateStoneMoss = GenerateRandom(seed, blockPos.x / 2, blockPos.z / 2) > 0.995;
 				//是否生成枯木
@@ -612,7 +618,8 @@ void StartCreate(uint3 id : SV_DispatchThreadID)
 			//矿石在此高度内
 			if (blockPos.y >= itemOreData.oreMinHeight && blockPos.y <= itemOreData.oreMaxHeight)
 			{
-				float oreCreateRate = snoise(float4(blockPos / (i + 10), seed));
+				float3 tempPosData = blockPos / (i + 10);
+				float oreCreateRate = _fnlSingleOpenSimplex2S3D(seed,tempPosData.x,tempPosData.y,tempPosData.z);
 				if (oreCreateRate > itemOreData.oreDensity)
 				{
 					itemBlock.blockId = itemOreData.oreId;

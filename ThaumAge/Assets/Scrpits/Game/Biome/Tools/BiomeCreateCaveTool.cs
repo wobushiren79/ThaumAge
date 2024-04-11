@@ -20,7 +20,6 @@ public class BiomeCreateCaveTool : ScriptableObject
         float frequency = 2;
         float amplitude = 1;
 
-        FastNoise fastNoise = BiomeHandler.Instance.fastNoise;
         int caveNumber = WorldRandTools.Range(0, 10, chunk.chunkData.positionForWorld);
         for (int i = 8; i < caveNumber; i++)
         {
@@ -40,9 +39,12 @@ public class BiomeCreateCaveTool : ScriptableObject
                     continue;
                 }
 
-                float offsetX = fastNoise.GetPerlin(0, startPosition.y * frequency, startPosition.z * frequency) * amplitude;
-                float offsetY = fastNoise.GetPerlin(startPosition.x * frequency, 0, startPosition.z * frequency) * amplitude;
-                float offsetZ = fastNoise.GetPerlin(startPosition.x * frequency, startPosition.y * frequency, 0) * amplitude;
+                //float offsetX = fastNoise.GetPerlin(0, startPosition.y * frequency, startPosition.z * frequency) * amplitude;
+                //float offsetY = fastNoise.GetPerlin(startPosition.x * frequency, 0, startPosition.z * frequency) * amplitude;
+                //float offsetZ = fastNoise.GetPerlin(startPosition.x * frequency, startPosition.y * frequency, 0) * amplitude;
+                float offsetX = 0;
+                float offsetY = 0;
+                float offsetZ = 0;
 
                 Vector3 offset = new Vector3(offsetX, offsetY, offsetZ).normalized;
                 Vector3Int offsetInt = new Vector3Int(GetCaveDirection(offset.x), GetCaveDirection(offset.y), GetCaveDirection(offset.z));

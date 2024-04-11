@@ -7,7 +7,6 @@ using UnityEngine;
 public class BiomeHandler : BaseHandler<BiomeHandler, BiomeManager>
 {
     protected static object lockWorldCreate = new object();
-    public FastNoise fastNoise;
     public float offsetBiome;
 
     public void InitWorldBiomeData()
@@ -18,7 +17,6 @@ public class BiomeHandler : BaseHandler<BiomeHandler, BiomeManager>
     {
         int seed = WorldCreateHandler.Instance.manager.GetWorldSeed();
         offsetBiome = UnityEngine.Random.value * 1000;
-        fastNoise = new FastNoise(seed);
         SimplexNoiseUtil.Seed = seed;
     }
 
