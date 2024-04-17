@@ -166,8 +166,8 @@ public class BlockHandler : BaseHandler<BlockHandler, BlockManager>
         terrain3DCShaderBean.stateBedrock = 1;
         terrain3DCShaderBean.seed = worldSeed;
         terrain3DCShaderBean.seedOffset = Vector3.zero;
-        terrain3DCShaderBean.noiseLayers = new Terrain3DCShaderNoiseLayer[] 
-        { 
+        terrain3DCShaderBean.noiseLayers = new Terrain3DCShaderNoiseLayer[]
+        {
             biome.terrain3DCShaderNoise,
             biomeL.terrain3DCShaderNoise,
             biomeR.terrain3DCShaderNoise,
@@ -175,7 +175,7 @@ public class BlockHandler : BaseHandler<BlockHandler, BlockManager>
             biomeB.terrain3DCShaderNoise
         };
         terrain3DCShaderBean.oreDatas = biome.terrain3DCShaderOre;
-        CShaderHandler.Instance.HandleTerrain3DCShader(terrain3DCShaderBean, (terrainData) =>
+        CShaderHandler.Instance.HandleTerrain3DCShader(chunk.chunkData.biomeType, terrain3DCShaderBean, (terrainData) =>
         {
             BlockData[] blockArray = new BlockData[terrain3DCShaderBean.GetBlockTotalNum()];
             terrainData.blockArrayBuffer.GetData(blockArray);

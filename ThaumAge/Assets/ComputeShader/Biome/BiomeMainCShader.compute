@@ -1,13 +1,26 @@
-#include "../Noise/SimplexNoiseCShader.compute"
+// Each #kernel tells which function to compile; you can have many kernels
+#pragma kernel StartCreate
 
-int4 HandleBiomeMain(int seed, float3 blockPos, int blockIndex, uint terrainHeight, 
-	bool isBlockCave, bool isBlockCaveDown,float weighOceanTarget, float weighOcean,float weighOceanDown)
+#include "../BiomeBaseCShader.compute"
+
+int4 HandleBiome(BlockTerrainData blockTerrainData)
 {
+    bool isOcean = blockTerrainData.isOcean;
+	bool isOceanDown = blockTerrainData.isOceanDown;
+	float3 blockPos = blockTerrainData.blockPos;
+	int blockIndex = blockTerrainData.blockIndex;
+	uint terrainHeight = blockTerrainData.terrainHeight;
+	bool isCave = blockTerrainData.isCave;
+	bool isCaveDown = blockTerrainData.isCaveDown;
+	float weightOceanTarget = blockTerrainData.selectedNoise.oceanThreshold;
+	float weightOcean = blockTerrainData.weightOcean;
+	float weightOceanDown = blockTerrainData.weightOceanDown;
+
 	int4 targetBlockData = int4(0, 0, 0, 0);
-	//Èç¹û´óÓÚµØÃæ¸ß¶È
+	//å¦‚æœå¤§äºåœ°é¢é«˜åº¦
 	if (blockPos.y > terrainHeight)
 	{
-		//Èç¹ûÊÇµØÃæÉÏÒ»¸ñ
+		//å¦‚æœæ˜¯åœ°é¢ä¸Šä¸€æ ¼
 	    if (blockPos.y == terrainHeight + 1)
 		{
 			if (blockPos.x < 5 && blockPos.x > -5 && blockPos.z < 5 &&  blockPos.z > -5 )
@@ -16,18 +29,11 @@ int4 HandleBiomeMain(int seed, float3 blockPos, int blockIndex, uint terrainHeig
 			}
 			else
 			{
-				//ÊÇ·ñÉú³É²İ
+				//æ˜¯å¦ç”Ÿæˆè‰
 				bool isCreateWeedWild = GenerateRandom(seed, blockPos.x / 3, blockPos.z / 3) > 0.8;
-				//ÊÇ·ñ³É³É»¨
-				bool isCreateFlower = GenerateRandom(seed, blockPos.x / 4, blockPos.z / 4) > 0.99;
-
-				//ÊÇ·ñÉú³ÉÊ÷
-				bool isCreateTree = GenerateRandom(seed, blockPos.x, blockPos.z) > 0.985;
-				//ÊÇ·ñÉú³ÉÌ¨Ê¯
-				bool isCreateStoneMoss = GenerateRandom(seed, blockPos.x / 2, blockPos.z / 2) > 0.995;
 				if (isCreateWeedWild)
 				{
-					float randomType = snoise(float4(blockPos, seed));
+					float randomType = GenerateRandom(seed, blockPos.x / 11, blockPos.z / 11);
 					if (randomType > 0 && randomType <= 0.25)
 					{
 						targetBlockData = int4(3001, 0, 0, 1);
@@ -44,10 +50,14 @@ int4 HandleBiomeMain(int seed, float3 blockPos, int blockIndex, uint terrainHeig
 					{
 						targetBlockData = int4(3004, 0, 0, 1);
 					}
+					return targetBlockData;
 				}
-				else if (isCreateFlower)
+								
+				//æ˜¯å¦æˆæˆèŠ±
+				bool isCreateFlower = GenerateRandom(seed, blockPos.x / 4, blockPos.z / 4) > 0.99;
+				if (isCreateFlower)
 				{
-					float randomType = snoise(float4(blockPos, seed));
+					float randomType = GenerateRandom(seed, blockPos.x / 12, blockPos.z / 12);
 					if (randomType > 0 && randomType <= 0.33)
 					{
 						targetBlockData = int4(3111, 0, 0, 1);
@@ -60,19 +70,27 @@ int4 HandleBiomeMain(int seed, float3 blockPos, int blockIndex, uint terrainHeig
 					{
 						targetBlockData = int4(3113, 0, 0, 1);
 					}
+					return targetBlockData;
 				}
-				else if (isCreateTree)
+
+				//æ˜¯å¦ç”Ÿæˆæ ‘
+				bool isCreateTree = GenerateRandom(seed, blockPos.x, blockPos.z) > 0.985;
+				if (isCreateTree)
 				{
 					targetBlockData = int4(1001, 1, 0, 1);
+					return targetBlockData;
 				}
-				else if(isCreateStoneMoss)
-				{
-					targetBlockData = int4(6, 0, 0, 1);
-				}
-				else
-				{
-					targetBlockData = int4(0, 0, 0, 1);
-				}
+
+				////æ˜¯å¦ç”Ÿæˆå°çŸ³
+				//bool isCreateStoneMoss = GenerateRandom(seed, blockPos.x / 2, blockPos.z / 2) > 0.995;
+				//if(isCreateStoneMoss)
+				//{
+				//	targetBlockData = int4(6, 0, 0, 1);
+				//	return targetBlockData;
+				//}
+
+				targetBlockData = int4(0, 0, 0, 1);
+				return targetBlockData;
 			}
 
 		}
@@ -83,13 +101,28 @@ int4 HandleBiomeMain(int seed, float3 blockPos, int blockIndex, uint terrainHeig
 	}
 	else if (blockPos.y == terrainHeight)
 	{
-		//Ê¹ÓÃÄàÍÁ
+		//ä½¿ç”¨æ³¥åœŸ
 		targetBlockData = int4(101, 0, 0, 1);
 	}
 	else
 	{
-		//Ê¹ÓÃÊ¯Í·
+		//ä½¿ç”¨çŸ³å¤´
 		targetBlockData = int4(5, 0, 0, 1);
 	}
 	return targetBlockData;
+}
+
+//å¼€å§‹ç”Ÿæˆæ•°æ®
+[numthreads(8, 8, 8)]
+void StartCreate(uint3 id : SV_DispatchThreadID)
+{
+	BlockTerrainData blockTerrainData = CreateBaseData(id);
+	//å¦‚æœXZå¤§äºW åˆ™ä¸å¤„ç†
+	if (blockTerrainData.validState == 0)
+		return;
+	//è·å–ç”Ÿæ€æ–¹å—æ•°æ®
+	int4 biomeBlockData = int4(0, 0, 0, 0);
+	biomeBlockData = HandleBiome(blockTerrainData);
+
+	SetBlockData(blockTerrainData, biomeBlockData);
 }

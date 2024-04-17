@@ -1,0 +1,130 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: CShader
+  m_EditorClassIdentifier: 
+  m_GroupName: CShader
+  m_Data:
+    m_SerializedData: []
+  m_GUID: bdca49364caaa104aa814256671e4968
+  m_SerializeEntries:
+  - m_GUID: 8f7fd6fe857eb78429bb858fe9f2795c
+    m_Address: Assets/ComputeShader/Biome/BiomeOceanCShader.compute
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: db7c66158d68ed54c8273c1f7eab4e78
+    m_Address: Assets/ComputeShader/Biome/BiomeSwampCShader.compute
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f3fc5e53ff40fbb46b814adcc5774601
+    m_Address: Assets/ComputeShader/Biome/BiomePrairieCShader.compute
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a58457b2472f53c4ba589de97b418bdd
+    m_Address: Assets/ComputeShader/Biome/BiomeForestMagicCShader.compute
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e1db593eceecbf640b0f2f4dc1c3110e
+    m_Address: Assets/ComputeShader/Biome/BiomePrairieLavaCShader.compute
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 3315593744c4ea240ad30705e91ae65e
+    m_Address: Assets/ComputeShader/Biome/BiomeMountainCShader.compute
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 758d47d8101b3f54ebd14ddf6ba66703
+    m_Address: Assets/ComputeShader/Biome/BiomeMainCShader.compute
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f456bea4e3d0a5e4c981b4d9620b521f
+    m_Address: Assets/ComputeShader/Biome/BiomePutrefyDungeonBaseCShader.compute
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 3534b496536391f43b210affeda76739
+    m_Address: Assets/ComputeShader/Biome/BiomeDesertCShader.compute
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 26447b34cbe40d1458ece6486155cc16
+    m_Address: Assets/ComputeShader/Biome/BiomeSnowlandCShader.compute
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: de36ccadfa4910749832f7a49960a36e
+    m_Address: Assets/ComputeShader/Biome/BiomeForestBirchCShader.compute
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 52956ac97b4d1ce48beae9be237498bf
+    m_Address: Assets/ComputeShader/Biome/BiomeTestCShader.compute
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 42b755d5682c96b44912644df8f8ac7b
+    m_Address: Assets/ComputeShader/Biome/BiomeForestCShader.compute
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 91095e74d4f6ada4c90c4b825b481993
+    m_Address: Assets/ComputeShader/Biome/BiomePrairieLavaCShader.compute
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: d4055bf77949ef04fad162ea05e77abd
+    m_Address: Assets/ComputeShader/Biome/BiomeOceanCShader.compute
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 7dd485ea05f02fa4cacf042eaa3d754d
+    m_Address: Assets/ComputeShader/Biome/BiomeSwampCShader.compute
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: eac2c2afb8d8de24c832593457fea3e8
+    m_Address: Assets/ComputeShader/Biome/BiomeSnowlandCShader.compute
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 729a0f8a8c4bc7b4fbc196524fc614f5
+    m_Address: Assets/ComputeShader/Biome/BiomeForestMagicCShader.compute
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: b0a6500e46e9a70498f3399f31c4040f
+    m_Address: Assets/ComputeShader/Biome/BiomeForestBirchCShader.compute
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ab8a7248576bf244c983277faca879c7
+    m_Address: Assets/ComputeShader/Biome/BiomePutrefyDungeonBaseCShader.compute
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 6bb3444f3f282344a9752d16f4b8ab77
+    m_Address: Assets/ComputeShader/Biome/BiomeMainCShader.compute
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: fd6114d87f1af534fbf270c47c0f10bf, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: 4f52e748c5dacdd46bd25047a028ff76, type: 2}
+    - {fileID: 11400000, guid: 02c1e7fc0cf0f0348bf48f0b19baccee, type: 2}

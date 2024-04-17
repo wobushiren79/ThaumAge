@@ -1,34 +1,46 @@
-#include "../Noise/SimplexNoiseCShader.compute"
+// Each #kernel tells which function to compile; you can have many kernels
+#pragma kernel StartCreate
 
-//¸ù¾İÉúÌ¬Éú³ÉÊı¾İ ²âÊÔÓÃ
-int4 HandleBiomeTest(float3 blockPos, int blockIndex, uint terrainHeight)
+#include "../BiomeBaseCShader.compute"
+
+//æ ¹æ®ç”Ÿæ€ç”Ÿæˆæ•°æ® æµ‹è¯•ç”¨
+int4 HandleBiome(BlockTerrainData blockTerrainData)
 {
 	int4 targetBlockData = int4(0, 0, 0, 0);
-	//Èç¹û´óÓÚµØÃæ¸ß¶È
-	if (blockPos.y > terrainHeight)
+	//å¦‚æœå¤§äºåœ°é¢é«˜åº¦
+	if (blockTerrainData.blockPos.y > blockTerrainData.terrainHeight)
 	{
-		//Èç¹ûÊÇµØÃæÉÏÒ»¸ñ
-		if (blockPos.y == terrainHeight + 1)
-		{
-
-		}
-		//ÆäËûÉèÖÃ¿Õ·½¿é 
-		targetBlockData = int4(0, 0, 0, 0);
+		targetBlockData = int4(0, 0, 0, 1);
 	}
-	//µØÃæÓÃ²İÆº
-	else if (blockPos.y == terrainHeight)
+	else if (blockTerrainData.blockPos.y == blockTerrainData.terrainHeight)
 	{
-		targetBlockData = int4(101, 0, 0, 0);
+		//ä½¿ç”¨è’è‰æ³¥åœŸ
+		targetBlockData = int4(101, 0, 0, 1);
 	}
-	//µØÃæÏÂÒ»¸ñÓÃÄàÍÁ
-	else if (blockPos.y == terrainHeight - 1)
+	else if (blockTerrainData.blockPos.y < blockTerrainData.terrainHeight && blockTerrainData.blockPos.y > blockTerrainData.terrainHeight - 6)
 	{
-		targetBlockData = int4(4, 0, 0, 0);
+		//ä½¿ç”¨æ³¥åœŸ
+		targetBlockData = int4(4, 0, 0, 1);
 	}
-	//ÆäËûÓÃÊ¯Í·
 	else
 	{
-		targetBlockData = int4(5, 0, 0, 0);
+		//ä½¿ç”¨çŸ³å¤´
+		targetBlockData = int4(5, 0, 0, 1);
 	}
 	return targetBlockData;
+}
+
+//å¼€å§‹ç”Ÿæˆæ•°æ®
+[numthreads(8, 8, 8)]
+void StartCreate(uint3 id : SV_DispatchThreadID)
+{
+	BlockTerrainData blockTerrainData = CreateBaseData(id);
+	//å¦‚æœXZå¤§äºW åˆ™ä¸å¤„ç†
+	if (blockTerrainData.validState == 0)
+		return;
+	//è·å–ç”Ÿæ€æ–¹å—æ•°æ®
+	int4 biomeBlockData = int4(0, 0, 0, 0);
+	biomeBlockData = HandleBiome(blockTerrainData);
+
+	SetBlockData(blockTerrainData, biomeBlockData);
 }

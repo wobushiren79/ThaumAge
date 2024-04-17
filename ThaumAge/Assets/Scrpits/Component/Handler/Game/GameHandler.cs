@@ -26,15 +26,10 @@ public class GameHandler : BaseHandler<GameHandler, GameManager>
             {
                 callBack?.Invoke();
             };
-            Action completeForLoadCShader = () =>
+            Action completeForLoadBlockResources = () =>
             {
                 //加载地形算法
                 CShaderHandler.Instance.manager.LoadResources(completeForLoadBiomeResources);
-            };
-            Action completeForLoadBlockResources = () =>
-            {
-                //加载生态资源
-                BiomeHandler.Instance.manager.LoadResources(completeForLoadCShader);
             };
 
             //加载方块资源

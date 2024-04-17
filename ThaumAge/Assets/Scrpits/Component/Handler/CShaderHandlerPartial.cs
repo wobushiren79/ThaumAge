@@ -11,9 +11,9 @@ public partial class CShaderHandler
     /// <summary>
     /// 处理3D地形处理的Shader
     /// </summary> 
-    public void HandleTerrain3DCShader(Terrain3DCShaderBean cshaderData, Action<Terrain3DCShaderBean> callBackComplete)
+    public void HandleTerrain3DCShader(BiomeTypeEnum biomeType, Terrain3DCShaderBean cshaderData, Action<Terrain3DCShaderBean> callBackComplete)
     {
-        ComputeShader targetCShader = manager.GetTerrain3DCShader();
+        ComputeShader targetCShader = manager.GetTerrain3DCShader(biomeType);
         //线程数量为大小除以cshader的numthreads
         int xThreads = cshaderData.chunkSizeW / 8;
         int yThreads = cshaderData.chunkSizeH / 8;
@@ -62,6 +62,7 @@ public partial class CShaderHandler
         cshaderData.blockCountBuffer.SetData(new uint[] { 0 });
         targetCShader.SetBuffer(0, "blockCountBuffer", cshaderData.blockCountBuffer);
 
+        //int kernelIndex = targetCShader.FindKernel("");
         targetCShader.Dispatch(0, xThreads, yThreads, xThreads);
         AsyncGPUReadback.Request(cshaderData.blockCountBuffer, (callbackForGPU) =>
         {

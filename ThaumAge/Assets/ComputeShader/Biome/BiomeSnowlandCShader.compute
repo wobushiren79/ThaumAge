@@ -1,52 +1,63 @@
-#include "../Noise/SimplexNoiseCShader.compute"
+// Each #kernel tells which function to compile; you can have many kernels
+#pragma kernel StartCreate
 
-int4 HandleBiomeSnowland(int seed, float3 blockPos, int blockIndex, uint terrainHeight, 
-	bool isBlockCave, bool isBlockCaveDown,float weighOceanTarget, float weighOcean,float weighOceanDown)
+#include "../BiomeBaseCShader.compute"
+
+int4 HandleBiome(BlockTerrainData blockTerrainData)
 {
+    bool isOcean = blockTerrainData.isOcean;
+	bool isOceanDown = blockTerrainData.isOceanDown;
+	float3 blockPos = blockTerrainData.blockPos;
+	int blockIndex = blockTerrainData.blockIndex;
+	uint terrainHeight = blockTerrainData.terrainHeight;
+	bool isCave = blockTerrainData.isCave;
+	bool isCaveDown = blockTerrainData.isCaveDown;
+	float weightOceanTarget = blockTerrainData.selectedNoise.oceanThreshold;
+	float weightOcean = blockTerrainData.weightOcean;
+	float weightOceanDown = blockTerrainData.weightOceanDown;
+
  	int oceanHeight = 64;
-	if (isBlockCave && blockPos.y > oceanHeight)
+	if (isCave && blockPos.y > oceanHeight)
 	{
 		return int4(0, 0, 0, 1);
 	}
 	int4 targetBlockData = int4(0, 0, 0, 0);
-	//Èç¹û´óÓÚµØÃæ¸ß¶È
+	//å¦‚æœå¤§äºåœ°é¢é«˜åº¦
 	if (blockPos.y >= terrainHeight)
 	{
 		if (blockPos.y == terrainHeight)
 		{
 			if(blockPos.y > oceanHeight + 1)
 			{
-				//Ê¹ÓÃ²İµØ
+				//ä½¿ç”¨è‰åœ°
 				targetBlockData = int4(104, 0, 0, 1);
 			}
 			else if(blockPos.y >= oceanHeight - 1 && blockPos.y <= oceanHeight)
 			{
-				//Ê¹ÓÃ±ù¿é
+				//ä½¿ç”¨å†°å—
 				targetBlockData = int4(8, 0, 0, 1);
 			}
 			else if(blockPos.y > oceanHeight && blockPos.y <= oceanHeight + 1)
 			{
-				//Ê¹ÓÃÑ©¿é
+				//ä½¿ç”¨é›ªå—
 				targetBlockData = int4(9, 0, 0, 1);
 			}
 			else
 			{
-				//Ê¹ÓÃÉ³×Ó
+				//ä½¿ç”¨æ²™å­
 				targetBlockData = int4(3, 0, 0, 1);
 			}		
 		}
-		//Èç¹ûÊÇµØÃæÉÏÒ»¸ñ
+		//å¦‚æœæ˜¯åœ°é¢ä¸Šä¸€æ ¼
 	 	else if (blockPos.y == terrainHeight + 1)
 		{	
 			if(blockPos.y > oceanHeight + 1)
 			{
-				bool isCreateWeedWild = snoise(float3(blockPos.xz / 10, seed)) > 0.75;
-				bool isCreateIconStone = snoise(float3(blockPos.xz / 9, seed)) > 0.3;
-				//ÊÇ·ñÉú³ÉÊ÷
-				bool isCreateTree = GenerateRandom(seed, blockPos.x, blockPos.z) > 0.997;
+				//åˆ›å»ºè‰
+				bool isCreateWeedWild = GenerateRandom(seed, blockPos.x / 11, blockPos.z / 11) > 0.8;
 				if (isCreateWeedWild)
 				{
-					float randomType = snoise(float4(blockPos, seed));
+					float randomType =  GenerateRandom(seed, blockPos.x / 21, blockPos.z / 21);
 					if (randomType > 0 && randomType <= 0.25)
 					{
 						targetBlockData = int4(3021, 0, 0, 1);
@@ -63,15 +74,24 @@ int4 HandleBiomeSnowland(int seed, float3 blockPos, int blockIndex, uint terrain
 					{
 						targetBlockData = int4(3024, 0, 0, 1);
 					}
+					return targetBlockData;
 				}
-				else if(isCreateIconStone  && blockPos.y > oceanHeight + 1)
+
+				//åˆ›å»ºå†°å—
+				bool isCreateIconStone = _fnlSingleSimplex2D(seed, blockPos.x / 9, blockPos.z / 9)  > 0.3;
+				if(isCreateIconStone  && blockPos.y > oceanHeight + 1)
 				{	
-					targetBlockData = int4(7009, 0, 0, 1);		
+					targetBlockData = int4(7009, 0, 0, 1);	
+					return targetBlockData;
 				}
-				else if (isCreateTree)
+
+				//æ˜¯å¦ç”Ÿæˆæ ‘
+				bool isCreateTree = GenerateRandom(seed, blockPos.x, blockPos.z) > 0.997;
+				if (isCreateTree)
 				{
-					//Éú³ÉÒ¬×ÓÊ÷
+					//ç”Ÿæˆæ¤°å­æ ‘
 					//targetBlockData = int4(1005, 11, 0, 1);
+					return targetBlockData;
 				}
 			}	
 			else if(blockPos.y <= oceanHeight)
@@ -79,10 +99,10 @@ int4 HandleBiomeSnowland(int seed, float3 blockPos, int blockIndex, uint terrain
 				if(blockPos.y < oceanHeight / 2)
 				{
 					bool isCreateFlower = GenerateRandom(seed, blockPos.x / 2, blockPos.z / 2) > 0.95;
-					bool isCreateSeaweed = snoise(float3(blockPos.xz / 9, seed)) > 0.75;
+	
 					if (isCreateFlower)
 					{
-						float randomType = snoise(float4(blockPos, seed));
+						float randomType = GenerateRandom(seed, blockPos.x / 12, blockPos.z / 12) ;
 						if (randomType > 0 && randomType <= 0.33)
 						{
 							targetBlockData = int4(3091, 0, 0, 1);
@@ -95,20 +115,22 @@ int4 HandleBiomeSnowland(int seed, float3 blockPos, int blockIndex, uint terrain
 						{
 							targetBlockData = int4(3093, 0, 0, 1);
 						}
+						return targetBlockData;
 					}
-					else if (isCreateSeaweed)
+					bool isCreateSeaweed = GenerateRandom(seed, blockPos.x / 11, blockPos.z / 11) > 0.75;
+					if (isCreateSeaweed)
 					{
 						targetBlockData = int4(3101, 1004, 0, 1);
+						return targetBlockData;
 					}
-					else
-					{
-						//Ê¹ÓÃº£Ë®
-						targetBlockData = int4(9001, 0, 0, 1);
-					}
+
+					//ä½¿ç”¨æµ·æ°´
+					targetBlockData = int4(9001, 0, 0, 1);
+					return targetBlockData;
 				}
 				else
 				{
-					//Ê¹ÓÃ±ù¿é
+					//ä½¿ç”¨å†°å—
 					if(blockPos.y == oceanHeight)
 					{
 						targetBlockData = int4(8, 0, 0, 1);
@@ -128,20 +150,20 @@ int4 HandleBiomeSnowland(int seed, float3 blockPos, int blockIndex, uint terrain
 		{
 			if(blockPos.y <= oceanHeight)
 			{
-				//Èç¹ûÊÇº£Ãæ ²¢ÇÒ¿¿½üÂ½µØ Ê¹ÓÃ±ùÃæ
+				//å¦‚æœæ˜¯æµ·é¢ å¹¶ä¸”é è¿‘é™†åœ° ä½¿ç”¨å†°é¢
 				if(blockPos.y == oceanHeight && oceanHeight - terrainHeight < 5)
 				{
 					targetBlockData = int4(8, 0, 0, 1);
 				}
 				else
-				{	//Ê¹ÓÃº£Ë®
+				{	//ä½¿ç”¨æµ·æ°´
 					targetBlockData = int4(9001, 0, 0, 1);
 				}		
 			}
-			//Èç¹ûÊÇ¿¿½üÂ½µØµÄ±ùÃæ ÓĞÒ»¶¨¸ÅÂÊÉú³É°ë±ù
+			//å¦‚æœæ˜¯é è¿‘é™†åœ°çš„å†°é¢ æœ‰ä¸€å®šæ¦‚ç‡ç”ŸæˆåŠå†°
 			else if(blockPos.y == oceanHeight + 1 && oceanHeight - terrainHeight < 5)
 			{		
-				bool isCreateIceStoneHalf = snoise(float3(blockPos.xz / 10, seed)) > 0.5;
+				bool isCreateIceStoneHalf = _fnlSingleSimplex2D(seed, blockPos.x / 12, blockPos.z / 12) > 0.5;
 				if(isCreateIceStoneHalf)
 				{
 					targetBlockData = int4(7008, 0, 0, 1);
@@ -159,13 +181,28 @@ int4 HandleBiomeSnowland(int seed, float3 blockPos, int blockIndex, uint terrain
 	}
 	else if (blockPos.y < terrainHeight && blockPos.y > terrainHeight - 6)
 	{
-		//Ê¹ÓÃÄàÍÁ
+		//ä½¿ç”¨æ³¥åœŸ
 		targetBlockData = int4(4, 0, 0, 1);
 	}
 	else
 	{
-		//Ê¹ÓÃÊ¯Í·
+		//ä½¿ç”¨çŸ³å¤´
 		targetBlockData = int4(5, 0, 0, 1);
 	}
 	return targetBlockData;
+}
+
+//å¼€å§‹ç”Ÿæˆæ•°æ®
+[numthreads(8, 8, 8)]
+void StartCreate(uint3 id : SV_DispatchThreadID)
+{
+	BlockTerrainData blockTerrainData = CreateBaseData(id);
+	//å¦‚æœXZå¤§äºW åˆ™ä¸å¤„ç†
+	if (blockTerrainData.validState == 0)
+		return;
+	//è·å–ç”Ÿæ€æ–¹å—æ•°æ®
+	int4 biomeBlockData = int4(0, 0, 0, 0);
+	biomeBlockData = HandleBiome(blockTerrainData);
+
+	SetBlockData(blockTerrainData, biomeBlockData);
 }

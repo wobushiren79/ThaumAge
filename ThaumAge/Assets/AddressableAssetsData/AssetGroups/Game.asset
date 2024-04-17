@@ -32,11 +32,6 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: e4f153e2f12c853468828189881b901c
-    m_Address: Assets/ComputeShader/TerrainCShader.compute
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: c4a52135f793a7342b43895f6ba2f1ae
     m_Address: Assets/Prefabs/Game/Item/ItemLaunch.prefab
     m_ReadOnly: 0
@@ -49,11 +44,6 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 61fed860e644db942b739c60ea02d268
     m_Address: Assets/Prefabs/Render/Volume.prefab
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 789737080fecef84d8fea149b957557c
-    m_Address: Assets/ComputeShader/Terrain3DCShader.compute
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0

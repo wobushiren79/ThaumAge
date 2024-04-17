@@ -1,0 +1,434 @@
+// Each #kernel tells which function to compile; you can have many kernels
+#pragma disable_fastmath
+
+#include "Noise/SimplexNoiseCShader.compute"
+#include "Noise/FastNoiseLiteCShader.compute"
+
+//方块数据
+struct BlockData
+{
+	//方块ID
+	int blockId;
+	//方块的结构 0普通方块
+	int blockStructure;
+};
+
+//noise数据
+struct NoiseLayer
+{
+	//生态ID
+	int biomeId;
+	//出现频率 数值越大 波峰越多
+	float frequency;
+	//振幅 数值越大 越宽
+	float amplitude;
+	//间隙性
+	float lacunarity;
+	//噪音循环迭代次数 复杂度
+	int octaves;
+
+	//洞穴高度
+	int caveMinHeight;
+	int caveMaxHeight;
+	//洞穴大小
+	float caveScale;
+	//洞穴的阈值
+	float caveThreshold;
+
+	//洞穴出现频率 数值越大 波峰越多
+	float caveFrequency;
+	//洞穴振幅 数值越大 越宽
+	float caveAmplitude;
+	//洞穴循环迭代次数 复杂度
+	int caveOctaves;
+
+	//地面的最低高度
+	int groundMinHeigh;
+	//海面高度
+	int oceanMinHeight;
+	int oceanMaxHeight;
+	//水的大小
+	float oceanScale;
+	//水的预制
+	float oceanThreshold;
+	//水的振幅 
+	float oceanAmplitude;
+	//水的频率 
+	float oceanFrequency;
+};
+
+//矿石数据
+struct OreData
+{
+	//矿石ID
+	int oreId;
+	//矿石密度
+	float oreDensity;
+	//矿石的范围
+	int oreMinHeight;
+	int oreMaxHeight;
+};
+
+//方块地形数据
+struct BlockTerrainData
+{
+	int validState;//数据状态，0：无效数据 直接return,1：有效数据
+	int blockIndex;//方块的索引
+	float3 blockPos;//方块的世界坐标
+
+	int terrainHeight;//地形高度
+	int terrainNoiseIndex;//地形使用的noiseIndex
+	NoiseLayer selectedNoise;//地形的噪音
+
+	bool isCave;//当前方块是否是洞穴
+	float weightCave;//当前方块洞穴的权重
+
+	bool isCaveDown;//下方方块是否是洞穴
+	float weightCaveDown;//下方方块的洞穴权重
+
+	bool isOcean;//当前方块是否是水
+	float weightOcean;//当前方块的水权重
+
+	bool isOceanDown;//下方方块是否是水
+	float weightOceanDown;//下方方块水的权重
+
+	int blockIdBase;//基础方块id
+	int blockStructureBase;//基础方块结构
+};
+
+//区块宽
+uint chunkSizeW;
+//区块高
+uint chunkSizeH;
+/*
+洞穴状态
+0 不创建洞穴
+1 创建普通洞穴
+*/
+uint stateCaves;
+/*
+基岩状态
+0 不创建基岩
+1 创建普通基岩 y=0
+*/
+uint stateBedrock;
+//区块位置
+float3 chunkPosition;
+//种子
+int seed;
+//种子偏移
+float3 seedOffset;
+//所有noise数据
+StructuredBuffer<NoiseLayer> noiseLayersArrayBuffer;
+int noiseLayersCount;
+//矿石数据
+StructuredBuffer<OreData> oreDatasArrayBuffer;
+int oreDatasCount;
+//所有的方块列表数据
+RWStructuredBuffer<BlockData> blockArrayBuffer;
+//不是空气方块的数量
+RWStructuredBuffer<uint> blockCountBuffer;
+
+//获取方块的序号
+int GetBlockIndex(uint3 idx)
+{
+	return idx.x + (idx.y * chunkSizeW) + (idx.z * chunkSizeW * chunkSizeH);
+}
+
+//创建3D地形数据 暂时用于洞穴
+float CreateTerrainCaveData(float3 blockPos, float terrainHeight, uint noiseIndex)
+{
+	//获取当前noise数据
+	NoiseLayer selectedNoise = noiseLayersArrayBuffer[noiseIndex];
+
+	float amplitude = 1;
+	float frequency = 1;
+
+	//3D地形的权重
+	float weightCave = 0;
+
+	//迭代次数
+	for (int i = 0; i < selectedNoise.caveOctaves; i++)
+	{
+		float3 tempPosData = frequency * (blockPos / selectedNoise.caveScale);
+		weightCave += _fnlSingleOpenSimplex2S3D(seed, tempPosData.x,tempPosData.y,tempPosData.z) * amplitude;
+		frequency *= selectedNoise.caveFrequency;
+		amplitude *= selectedNoise.caveAmplitude;
+	}
+	return weightCave;
+}
+
+//获取指定位置 2D地形的高度权重
+float CreateTerrain2DWeightH(float2 blockPosXZ, uint noiseIndex)
+{
+	//获取当前noise数据
+	NoiseLayer selectedNoise = noiseLayersArrayBuffer[noiseIndex];
+	float weightH = 0;
+	float amplitude = selectedNoise.amplitude;
+	
+	float3 posTempData = float3(blockPosXZ.xy, seed);
+	//容错处理 0，0位置的高度有问题 使用1，1的高度
+	if (posTempData.x == 0 && posTempData.y == 0)
+	{
+		posTempData.x = 1;
+		posTempData.y = 0;
+	}
+	//迭代次数
+	for (int i = 0; i < selectedNoise.octaves; i++)
+	{
+		//调取噪音计算 获取2D的权重高度 这里加上振幅和频率
+		if (selectedNoise.frequency == 0)
+		{
+			//如果频率为0 则为0高度
+			weightH += 0;
+		}
+		else
+		{
+			weightH += _fnlSingleSimplex2D((int)posTempData.z,posTempData.x/selectedNoise.frequency,posTempData.y/selectedNoise.frequency) * amplitude;
+		}
+		//每次迭代改变间隙性
+		posTempData.xy *= selectedNoise.lacunarity;
+		//每次迭代改变振幅
+		amplitude *= selectedNoise.amplitude;
+	}
+	weightH = weightH * weightH;
+	return clamp(weightH, 0, 1);
+}
+
+//创建2D的地形数据
+void CreateTerrain2DData(float3 blockPos,out uint terrainHeight,out uint terrainNoiseIndex)
+{
+	//噪音数据的序号  TODO 暂时只处理第一个
+	uint noiseIndex = 0;
+	//获取2D地形的权重高
+	float weightH = CreateTerrain2DWeightH(blockPos.xz, noiseIndex);
+	//获取当前的noise参数
+	NoiseLayer selectedNoise = noiseLayersArrayBuffer[noiseIndex];
+	//做一个容错。最高不超过区块的高-16
+	float height = clamp((weightH * (chunkSizeH - 32)) + selectedNoise.groundMinHeigh, 0, chunkSizeH - 16);
+
+	//获取左右前后的数据
+	NoiseLayer selectedNoiseL = noiseLayersArrayBuffer[1];
+	NoiseLayer selectedNoiseR = noiseLayersArrayBuffer[2];
+	NoiseLayer selectedNoiseF = noiseLayersArrayBuffer[3];
+	NoiseLayer selectedNoiseB = noiseLayersArrayBuffer[4];
+
+	float posLocalX = blockPos.x - chunkPosition.x;
+	float posLocalZ = blockPos.z - chunkPosition.z;
+
+	float lerpHeightL = 0;
+	float lerpHeightR = 0;
+	float lerpHeightF = 0;
+	float lerpHeightB = 0;
+	//过度总数
+	int lerpHeightMin = chunkSizeH + 1;
+	//过度的方块数量
+	int lerpBlockNum = 5;
+	int curOceanMaxHeight = (selectedNoise.oceanMaxHeight <= 0 ? 64 : selectedNoise.oceanMaxHeight);
+	if (selectedNoiseL.biomeId != selectedNoise.biomeId && posLocalX >= 0 && posLocalX < lerpBlockNum)
+	{
+		int otherOceanMaxHeight = (selectedNoiseL.oceanMaxHeight <= 0 ? 64 : selectedNoiseL.oceanMaxHeight);
+		float baseHeight = (curOceanMaxHeight + otherOceanMaxHeight) / (float)2;
+		lerpHeightL = lerp(height, baseHeight, 1 - (posLocalX / (lerpBlockNum - 1)));
+		lerpHeightMin = lerpHeightL < lerpHeightMin ? lerpHeightL : lerpHeightMin;
+	}
+	if (selectedNoiseR.biomeId != selectedNoise.biomeId && posLocalX >= (chunkSizeW - lerpBlockNum) && posLocalX < chunkSizeW)
+	{		
+		int otherOceanMaxHeight = (selectedNoiseR.oceanMaxHeight <= 0 ? 64 : selectedNoiseR.oceanMaxHeight);
+		float baseHeight = (curOceanMaxHeight + otherOceanMaxHeight) / (float)2;
+		lerpHeightR = lerp(height, baseHeight, (posLocalX - (chunkSizeW - lerpBlockNum)) / (lerpBlockNum - 1));
+		lerpHeightMin = lerpHeightR < lerpHeightMin ? lerpHeightR : lerpHeightMin;
+	}
+	if (selectedNoiseF.biomeId != selectedNoise.biomeId && posLocalZ >= 0 && posLocalZ < lerpBlockNum)
+	{
+		int otherOceanMaxHeight = (selectedNoiseF.oceanMaxHeight <= 0 ? 64 : selectedNoiseF.oceanMaxHeight);
+		float baseHeight = (curOceanMaxHeight + otherOceanMaxHeight) / (float)2;
+		lerpHeightF = lerp(height, baseHeight, 1 - (posLocalZ / (lerpBlockNum - 1)));
+		lerpHeightMin = lerpHeightF < lerpHeightMin ? lerpHeightF : lerpHeightMin;
+	}
+	if (selectedNoiseB.biomeId != selectedNoise.biomeId && posLocalZ >= (chunkSizeW - lerpBlockNum) && posLocalZ < chunkSizeW)
+	{
+		int otherOceanMaxHeight = (selectedNoiseB.oceanMaxHeight <= 0 ? 64 : selectedNoiseB.oceanMaxHeight);
+		float baseHeight = (curOceanMaxHeight + otherOceanMaxHeight) / (float)2;
+		lerpHeightB = lerp(height, baseHeight, (posLocalZ - (chunkSizeW - lerpBlockNum)) / (lerpBlockNum - 1));
+		lerpHeightMin = lerpHeightB < lerpHeightMin ? lerpHeightB : lerpHeightMin;
+	}
+
+	if (lerpHeightMin != chunkSizeH + 1)
+	{
+		height = lerpHeightMin;
+	}
+
+	terrainHeight = round(height);
+	terrainNoiseIndex = noiseIndex;
+}
+
+//创建3D定性数据 用于水
+float CreateTerrainOceanData(float3 blockPos, float terrainHeight, uint noiseIndex)
+{	
+	//获取当前noise数据
+	NoiseLayer selectedNoise = noiseLayersArrayBuffer[noiseIndex];
+	float weightOcean = 0;
+	//迭代次数
+	float3 tempPosData = selectedNoise.oceanFrequency * (blockPos / selectedNoise.oceanScale);
+	weightOcean += _fnlSingleOpenSimplex2S3D(seed,tempPosData.x,tempPosData.y,tempPosData.z) * selectedNoise.oceanAmplitude;
+	return weightOcean;
+}
+
+//创建基础方块地形数据
+BlockTerrainData CreateBaseData(uint3 id)
+{
+	BlockTerrainData blockTerrainData;
+	//设置有效
+	blockTerrainData.validState = 1;
+	blockTerrainData.blockIdBase = 0;
+	blockTerrainData.blockStructureBase = 0;
+
+	//如果XZ大于W 则不处理
+	if (any(id.xz > chunkSizeW))
+	{
+		blockTerrainData.validState = 0;
+		return blockTerrainData;
+	}
+	//获取方块下标
+	blockTerrainData.blockIndex = GetBlockIndex(id);
+	//获取方块的世界坐标
+    blockTerrainData.blockPos = id + chunkPosition + seedOffset;
+	//获取2D地形数据
+	uint terrainHeight,terrainNoiseIndex;
+	CreateTerrain2DData(blockTerrainData.blockPos,terrainHeight,terrainNoiseIndex);
+	blockTerrainData.terrainHeight = terrainHeight;
+	blockTerrainData.terrainNoiseIndex = terrainNoiseIndex;
+	//获取噪音数据
+	blockTerrainData.selectedNoise = noiseLayersArrayBuffer[blockTerrainData.terrainNoiseIndex];
+
+	blockTerrainData.isCave = false;
+	blockTerrainData.isCaveDown = false;
+	blockTerrainData.isOcean = false;
+	blockTerrainData.isOceanDown = false;
+
+	blockTerrainData.weightCave = 0;
+	blockTerrainData.weightCaveDown = 0;
+	blockTerrainData.weightOcean = 0;
+	blockTerrainData.weightOceanDown = 0;
+
+	//如果不是空气方块 并且在地表以下 则创建普通洞穴
+	if (blockTerrainData.blockPos.y <= blockTerrainData.terrainHeight + 1)
+	{
+		if (blockTerrainData.blockPos.y >= blockTerrainData.selectedNoise.caveMinHeight && blockTerrainData.blockPos.y <= blockTerrainData.selectedNoise.caveMaxHeight)
+		{
+			//如果是需要创建普通洞穴
+			switch (stateCaves)
+			{
+			case 1:
+				//如果大于阈值则是空气
+				blockTerrainData.weightCave = CreateTerrainCaveData(blockTerrainData.blockPos, blockTerrainData.terrainHeight, blockTerrainData.terrainNoiseIndex);
+				if (blockTerrainData.weightCave > blockTerrainData.selectedNoise.caveThreshold)
+				{
+					blockTerrainData.isCave = true;
+				}
+
+				if (blockTerrainData.blockPos.y == blockTerrainData.terrainHeight + 1)
+				{
+					//如果大于阈值则是空气 下方方块
+					blockTerrainData.weightCaveDown = CreateTerrainCaveData(blockTerrainData.blockPos - float3(0,1,0),blockTerrainData.terrainHeight, blockTerrainData.terrainNoiseIndex);
+					if (blockTerrainData.weightCaveDown > blockTerrainData.selectedNoise.caveThreshold)
+					{
+						blockTerrainData.isCaveDown = true;
+					}
+				}
+				break;
+			}
+		}
+		//创建水
+		if (blockTerrainData.selectedNoise.oceanScale > 0)
+		{
+			//如果在水的区域内 不生成洞穴
+			if (blockTerrainData.blockPos.y >= blockTerrainData.selectedNoise.oceanMinHeight && blockTerrainData.blockPos.y <= blockTerrainData.selectedNoise.oceanMaxHeight) 
+			{
+				blockTerrainData.isCave = false;
+				blockTerrainData.isCaveDown = false;
+			}
+			//是否生成水
+			if (blockTerrainData.blockPos.y > blockTerrainData.selectedNoise.oceanMinHeight && blockTerrainData.blockPos.y <= blockTerrainData.selectedNoise.oceanMaxHeight) 
+			{
+				blockTerrainData.weightOcean = CreateTerrainOceanData(blockTerrainData.blockPos, blockTerrainData.terrainHeight, blockTerrainData.terrainNoiseIndex);
+				if(blockTerrainData.weightOcean > blockTerrainData.selectedNoise.oceanThreshold)
+				{
+					blockTerrainData.isOcean = true;
+				}
+			}
+			//下方方块是否是水
+			if (blockTerrainData.blockPos.y - 1 > blockTerrainData.selectedNoise.oceanMinHeight && blockTerrainData.blockPos.y - 1 <= blockTerrainData.selectedNoise.oceanMaxHeight)
+			{
+			    blockTerrainData.weightOceanDown = CreateTerrainOceanData(blockTerrainData.blockPos - float3(0,1,0), blockTerrainData.terrainHeight, blockTerrainData.terrainNoiseIndex);
+				if(blockTerrainData.weightOceanDown > blockTerrainData.selectedNoise.oceanThreshold)
+				{
+					blockTerrainData.isOceanDown = true;
+				}
+			}
+		}
+	}
+
+	//矿物处理 如果有矿物数据 并且当前不是洞穴 并且在地面以下na
+	if (oreDatasCount > 0 && !blockTerrainData.isCave &&  !blockTerrainData.isOcean && blockTerrainData.blockPos.y < blockTerrainData.terrainHeight - 5)
+	{
+		for (int i = 0; i < oreDatasCount; i++)
+		{
+			OreData itemOreData = oreDatasArrayBuffer[i];
+			//矿石在此高度内
+			if (blockTerrainData.blockPos.y >= itemOreData.oreMinHeight && blockTerrainData.blockPos.y <= itemOreData.oreMaxHeight)
+			{
+				float3 tempPosData = blockTerrainData.blockPos / (i + 10);
+				float oreCreateRate = _fnlSingleOpenSimplex2S3D(seed,tempPosData.x,tempPosData.y,tempPosData.z);
+				if (oreCreateRate > itemOreData.oreDensity)
+				{
+					blockTerrainData.blockIdBase = itemOreData.oreId;
+					blockTerrainData.blockStructureBase = 0;
+				}
+			}
+		}
+	}
+
+	//设置基岩
+	switch (stateBedrock)
+	{
+	case 1:
+		if (id.y <= 1)
+		{
+			blockTerrainData.blockIdBase = 5;
+			blockTerrainData.blockStructureBase = 0;
+		}
+		break;
+	}
+	return blockTerrainData;
+}
+
+//设置方块数据
+void SetBlockData(BlockTerrainData blockTerrainData,int4 biomeBlockData)
+{
+	BlockData itemBlock;
+	itemBlock.blockId = 0;
+	itemBlock.blockStructure = 0;
+
+	if (biomeBlockData.w == 1)
+	{
+		itemBlock.blockId = biomeBlockData.x;
+		itemBlock.blockStructure = biomeBlockData.y;
+	}
+
+	if(blockTerrainData.blockIdBase != 0)
+	{
+		itemBlock.blockId = blockTerrainData.blockIdBase;
+		itemBlock.blockStructure = blockTerrainData.blockStructureBase;
+	}
+
+	if (itemBlock.blockId != 0)
+	{
+		//blockCountBuffer.IncrementCounter();
+		//也可以使用这种方式增加计数
+		InterlockedAdd(blockCountBuffer[0], 1);
+	}
+
+	blockArrayBuffer[blockTerrainData.blockIndex] = itemBlock;
+}

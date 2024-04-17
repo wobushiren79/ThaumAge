@@ -83,7 +83,7 @@ public class TestCShader : BaseMonoBehaviour
         terrain3DCShaderBean.seed = seed;
         terrain3DCShaderBean.seedOffset = Vector3.zero;
         terrain3DCShaderBean.noiseLayers = noiseLayers;
-        CShaderHandler.Instance.HandleTerrain3DCShader(terrain3DCShaderBean, (shaderData)=> {
+        CShaderHandler.Instance.HandleTerrain3DCShader(BiomeTypeEnum.Test, terrain3DCShaderBean, (shaderData)=> {
 
             stopwatch.Stop();
             LogUtil.Log($"stopwatch1 {stopwatch.ElapsedTicks}");

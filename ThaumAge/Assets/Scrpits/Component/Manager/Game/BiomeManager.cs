@@ -18,11 +18,6 @@ public class BiomeManager : BaseManager
     //世界生态数据
     public static Dictionary<WorldTypeEnum, BiomeInfoBean[]> dicWorldBiomeData = new Dictionary<WorldTypeEnum, BiomeInfoBean[]>();
 
-    //地形生成计算shader
-    public ComputeShader terrainCShader;
-    //路径-地形生成计算shader （使用标签）
-    public static string pathForTerrainCShader = "Assets/ComputeShader/TerrainCShader.compute";
-
     //生态区块大小
     public int biomeChunkSize = 32;
 
@@ -30,21 +25,6 @@ public class BiomeManager : BaseManager
     {
         controllerForBuilding = new BuildingInfoController(this, this);
         controllerForBuilding.GetAllBuildingInfoData(InitBuildingInfo);
-    }
-
-    public virtual void LoadResources(Action loadComplete)
-    {
-        if (terrainCShader != null)
-        {
-            loadComplete?.Invoke();
-            return;
-        }
-        //加载所有方块材质球
-        LoadAddressablesUtil.LoadAssetAsync<ComputeShader>(pathForTerrainCShader, (data) =>
-        {
-            terrainCShader = data.Result;
-            loadComplete?.Invoke();
-        });
     }
 
     /// <summary>
