@@ -56,7 +56,8 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
                 CreateChunkRangeForWorldPostion(startPos, worldRange, true, completeForUpdateChunk);
                 break;
         }
-
+        //改变不同的元素
+        SceneElementHandler.Instance.InitData(worldType);
     }
 
     /// <summary>

@@ -17,28 +17,8 @@ MonoBehaviour:
     m_SerializedData: []
   m_GUID: bdca49364caaa104aa814256671e4968
   m_SerializeEntries:
-  - m_GUID: 8f7fd6fe857eb78429bb858fe9f2795c
-    m_Address: Assets/ComputeShader/Biome/BiomeOceanCShader.compute
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: db7c66158d68ed54c8273c1f7eab4e78
-    m_Address: Assets/ComputeShader/Biome/BiomeSwampCShader.compute
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: f3fc5e53ff40fbb46b814adcc5774601
     m_Address: Assets/ComputeShader/Biome/BiomePrairieCShader.compute
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: a58457b2472f53c4ba589de97b418bdd
-    m_Address: Assets/ComputeShader/Biome/BiomeForestMagicCShader.compute
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: e1db593eceecbf640b0f2f4dc1c3110e
-    m_Address: Assets/ComputeShader/Biome/BiomePrairieLavaCShader.compute
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
@@ -47,28 +27,8 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 758d47d8101b3f54ebd14ddf6ba66703
-    m_Address: Assets/ComputeShader/Biome/BiomeMainCShader.compute
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: f456bea4e3d0a5e4c981b4d9620b521f
-    m_Address: Assets/ComputeShader/Biome/BiomePutrefyDungeonBaseCShader.compute
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 3534b496536391f43b210affeda76739
     m_Address: Assets/ComputeShader/Biome/BiomeDesertCShader.compute
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 26447b34cbe40d1458ece6486155cc16
-    m_Address: Assets/ComputeShader/Biome/BiomeSnowlandCShader.compute
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: de36ccadfa4910749832f7a49960a36e
-    m_Address: Assets/ComputeShader/Biome/BiomeForestBirchCShader.compute
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0

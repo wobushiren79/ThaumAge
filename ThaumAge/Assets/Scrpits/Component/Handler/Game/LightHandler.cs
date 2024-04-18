@@ -68,14 +68,19 @@ public class LightHandler : BaseHandler<LightHandler, LightManager>
         float sunRotation = currentTime / 24f * 360f;
         Quaternion tragetSunRotation = Quaternion.Euler(manager.sunLightData.latitude - 90, manager.sunLightData.longitude, 0) * Quaternion.Euler(0, sunRotation, 0);
         Quaternion tragetMoonRotation = Quaternion.Euler(90 - manager.moonLightData.latitude, manager.moonLightData.longitude, 0) * Quaternion.Euler(0, sunRotation, 0);
+
         if (isLerp)
         {
-            manager.sunLight.transform.localRotation = Quaternion.Lerp(manager.sunLight.transform.localRotation, tragetSunRotation, Time.deltaTime * lerpSpeedLightForMain);
-            manager.moonLight.transform.localRotation = Quaternion.Lerp(manager.moonLight.transform.localRotation, tragetMoonRotation, Time.deltaTime * lerpSpeedLightForMain);
+            Quaternion lerpSunRotation = Quaternion.Lerp(manager.sunLight.transform.localRotation, tragetSunRotation, Time.deltaTime * lerpSpeedLightForMain);
+            manager.sunLight.transform.localRotation = lerpSunRotation;
+
+            Quaternion lerpMoonRotation = Quaternion.Lerp(manager.moonLight.transform.localRotation, tragetMoonRotation, Time.deltaTime * lerpSpeedLightForMain);
+            manager.moonLight.transform.localRotation = lerpMoonRotation;
         }
         else
         {
             manager.sunLight.transform.localRotation = tragetSunRotation;
+
             manager.moonLight.transform.localRotation = tragetMoonRotation;
         }
 

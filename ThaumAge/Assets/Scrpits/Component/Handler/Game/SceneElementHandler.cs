@@ -14,7 +14,8 @@ public class SceneElementHandler : BaseHandler<SceneElementHandler, SceneElement
     protected float timeUpdateElementBlockMax = 1;
     public void Update()
     {
-        if (GameHandler.Instance.manager.GetGameState() == GameStateEnum.Gaming)
+        var gameState = GameHandler.Instance.manager.GetGameState();
+        if (gameState == GameStateEnum.Gaming)
         {
             TimeBean gameTime = GameTimeHandler.Instance.manager.GetGameTime();
             HandleForSky(gameTime);
@@ -26,6 +27,31 @@ public class SceneElementHandler : BaseHandler<SceneElementHandler, SceneElement
                 timeUpdateElementBlock = 0;
                 HandleForBlockElemental();
             }
+        }
+        else if (gameState == GameStateEnum.Main)
+        {
+            TimeBean gameTime = GameTimeHandler.Instance.manager.GetGameTime();
+            HandleForSky(gameTime);
+            HandleForStar(gameTime);
+        }
+    }
+
+    public void InitData(WorldTypeEnum worldType)
+    {
+        switch (worldType)
+        {
+            case WorldTypeEnum.Main:
+                manager.sky.gameObject.SetActive(true);
+                manager.star.gameObject.SetActive(false);
+                break;
+            case WorldTypeEnum.Launch:
+                manager.sky.gameObject.SetActive(true);
+                manager.star.gameObject.SetActive(false);
+                break;
+            default:
+                manager.sky.gameObject.SetActive(false);
+                manager.star.gameObject.SetActive(false);
+                break;
         }
     }
 
@@ -44,12 +70,12 @@ public class SceneElementHandler : BaseHandler<SceneElementHandler, SceneElement
     /// </summary>
     public void HandleForSky(TimeBean gameTime)
     {
-        float totalTime = 24f * 60f;
-        float currentTime = gameTime.hour * 60 + gameTime.minute;
-        timeForSkyAngle = (currentTime / totalTime * 360) + 180;
+        //float totalTime = 24f * 60f;
+        //float currentTime = gameTime.hour * 60 + gameTime.minute;
+        //timeForSkyAngle = (currentTime / totalTime * 360) + 180;
 
-        Quaternion rotate = Quaternion.AngleAxis(timeForSkyAngle, new Vector3(1, 0, 1));
-        manager.sky.transform.rotation = Quaternion.Lerp(manager.sky.transform.rotation, rotate, Time.deltaTime);
+        //Quaternion rotate = Quaternion.AngleAxis(timeForSkyAngle, new Vector3(1, 0, 1));
+        //manager.sky.transform.rotation = Quaternion.Lerp(manager.sky.transform.rotation, rotate, Time.deltaTime);
     }
 
     /// <summary>
@@ -58,7 +84,7 @@ public class SceneElementHandler : BaseHandler<SceneElementHandler, SceneElement
     /// <param name="gameTime"></param>
     public void HandleForStar(TimeBean gameTime)
     {
-        if (gameTime.hour >= 6 && gameTime.hour <= 18)
+        if (gameTime.hour >= 4 && gameTime.hour <= 20)
         {
             manager.star.ShowStar(false);
         }
