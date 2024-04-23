@@ -25,7 +25,6 @@ public class MainLauncher : BaseLauncher
             WorldCreateHandler.Instance.manager.SetWorldSeed(worldSeed);
             //设置远景模糊
             VolumeHandler.Instance.SetDepthOfField(GameStateEnum.Main);
-            VolumeHandler.Instance.SetFog(GameStateEnum.Main);
             //设置世界类型为启动
             WorldCreateHandler.Instance.ChangeWorld(WorldTypeEnum.Launch, CompleteForUpdateChunk, Vector3Int.zero, worldRange);
         });

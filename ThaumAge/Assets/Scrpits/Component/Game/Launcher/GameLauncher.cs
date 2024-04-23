@@ -42,8 +42,6 @@ public class GameLauncher : BaseLauncher
             WorldCreateHandler.Instance.manager.SetWorldSeed(userData.seed);
             //开关角色控制
             GameControlHandler.Instance.SetPlayerControlEnabled(false);
-            //渲染设置
-            VolumeHandler.Instance.SetFog(GameStateEnum.Gaming);
 
             GameConfigBean gameConfig = GameDataHandler.Instance.manager.GetGameConfig();
             WorldCreateHandler.Instance.ChangeWorld(worldType, CompleteForUpdateChunk, worldPositionUser, gameConfig.worldRefreshRange);

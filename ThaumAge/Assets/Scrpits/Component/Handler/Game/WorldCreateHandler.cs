@@ -58,6 +58,8 @@ public class WorldCreateHandler : BaseHandler<WorldCreateHandler, WorldCreateMan
         }
         //改变不同的元素
         SceneElementHandler.Instance.InitData(worldType);
+        //修改不同世界的雾
+        VolumeHandler.Instance.SetFog(worldType);
     }
 
     /// <summary>

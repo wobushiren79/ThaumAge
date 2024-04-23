@@ -128,6 +128,13 @@ public class BiomeManager : BaseManager
         float posX = chunkWorldPosition.x - (chunkWorldPosition.x % (chunkWidth * biomeChunkSize));
         float posZ = chunkWorldPosition.z - (chunkWorldPosition.z % (chunkWidth * biomeChunkSize));
         Vector3 centerPos = new Vector3(posX, posZ);
+
+        //如果是主世界 第一个区块默认是森林
+        if (worldType == WorldTypeEnum.Main && centerPos == Vector3.zero)
+        {
+            return BiomeTypeEnum.Forest;
+        }
+
         int randomRate = WorldRandTools.Range(0, biomeTypes.Length, centerPos, (uint)seed);
         return biomeTypes[randomRate];
     }

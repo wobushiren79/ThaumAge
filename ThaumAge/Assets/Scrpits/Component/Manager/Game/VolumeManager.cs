@@ -221,4 +221,17 @@ public class VolumeManager : BaseManager
         fog.enabled.overrideState = true;
         fog.enabled.value = enabled;
     }
+
+    /// <summary>
+    /// 设置雾的高度
+    /// </summary>
+    /// <param name="baseHeight">基础高度</param>
+    /// <param name="maximumHeight">最高高度</param>
+    public void SetFogHeight(float baseHeight,float maximumHeight)
+    {
+        fog.baseHeight.overrideState = true;
+        fog.baseHeight.value = baseHeight;
+        fog.maximumHeight.overrideState = true;
+        fog.maximumHeight.value = maximumHeight;
+    }
 }

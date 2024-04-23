@@ -65,15 +65,21 @@ public class VolumeHandler : BaseHandler<VolumeHandler, VolumeManager>
     /// 设置雾
     /// </summary>
     /// <param name="gameState"></param>
-    public void SetFog(GameStateEnum gameState)
+    public void SetFog(WorldTypeEnum worldType)
     {
-        if (gameState == GameStateEnum.Main)
+        switch (worldType)
         {
-            manager.SetFog(false);
-        }
-        else if (gameState == GameStateEnum.Gaming)
-        {
-            manager.SetFog(true);
+            case WorldTypeEnum.Launch:
+                manager.SetFog(true);
+                manager.SetFogHeight(0, 10);
+                break;
+            case WorldTypeEnum.Main:
+                manager.SetFog(true);
+                manager.SetFogHeight(0, 64);
+                break;
+            default:
+                manager.SetFog(false);
+                break;
         }
     }
 
