@@ -79,6 +79,10 @@ public partial class BiomeInfoBean : BaseBean
 	///矿石数据(id_density_minH_maxH&id_density_minH_max)density在0-1 越接近1 矿石越稀少
 	/// </summary>
 	public string oreData;
+	/// <summary>
+	///生物信息id_createRange_rangeMaxNum
+	/// </summary>
+	public string creatureData;
 }
 public partial class BiomeInfoCfg : BaseCfg<long, BiomeInfoBean>
 {

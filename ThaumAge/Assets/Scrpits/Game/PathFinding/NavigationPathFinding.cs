@@ -59,26 +59,33 @@ public class NavigationPathFinding : BaseMonoBehaviour
     /// 创建新的地形数据
     /// </summary>
     /// <param name="chunk"></param>
-    public void RefreshNavMeshSource(Chunk chunk)
+    public void RefreshNavMeshSource(Chunk chunk,bool isAdd)
     {
-        if (navMeshSources.TryGetValue(chunk.chunkData.positionForWorld,out NavMeshBuildSource source))
+        if (isAdd)
         {
-            source.size = new Vector3(chunk.chunkData.chunkWidth, chunk.chunkData.chunkHeight, chunk.chunkData.chunkWidth);
-            source.sourceObject = chunk.chunkComponent.chunkMeshCollider;
-            source.transform = chunk.chunkComponent.transform.localToWorldMatrix;
+            if (navMeshSources.TryGetValue(chunk.chunkData.positionForWorld, out NavMeshBuildSource source))
+            {
+                source.size = new Vector3(chunk.chunkData.chunkWidth, chunk.chunkData.chunkHeight, chunk.chunkData.chunkWidth);
+                source.sourceObject = chunk.chunkComponent.chunkMeshCollider;
+                source.transform = chunk.chunkComponent.transform.localToWorldMatrix;
+            }
+            else
+            {
+                NavMeshBuildSource sourceNew = new NavMeshBuildSource();
+                sourceNew.shape = NavMeshBuildSourceShape.Mesh;
+                sourceNew.size = new Vector3(chunk.chunkData.chunkWidth, chunk.chunkData.chunkHeight, chunk.chunkData.chunkWidth);
+                sourceNew.sourceObject = chunk.chunkComponent.chunkMeshCollider;
+                sourceNew.transform = chunk.chunkComponent.transform.localToWorldMatrix;
+                sourceNew.area = 0;
+                navMeshSources.Add(chunk.chunkData.positionForWorld, sourceNew);
+            }
+            worldBounds.Encapsulate(chunk.chunkComponent.meshRenderer.bounds);
+            //worldBounds.Expand(0.01f);
         }
         else
         {
-            NavMeshBuildSource sourceNew = new NavMeshBuildSource();
-            sourceNew.shape = NavMeshBuildSourceShape.Mesh;
-            sourceNew.size = new Vector3(chunk.chunkData.chunkWidth, chunk.chunkData.chunkHeight, chunk.chunkData.chunkWidth);
-            sourceNew.sourceObject = chunk.chunkComponent.chunkMeshCollider;
-            sourceNew.transform = chunk.chunkComponent.transform.localToWorldMatrix;
-            sourceNew.area = 0;
-            navMeshSources.Add(chunk.chunkData.positionForWorld, sourceNew);
+            navMeshSources.Remove(chunk.chunkData.positionForWorld);
         }
-        worldBounds.Encapsulate(chunk.chunkComponent.meshRenderer.bounds);
-        //worldBounds.Expand(0.01f);
         navMeshHasNewData = true;
     }
 

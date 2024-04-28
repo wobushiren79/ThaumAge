@@ -120,7 +120,7 @@ public class WorldCreateManager : BaseManager
     /// <param name="type">0场景创建 1场景编辑异步 2场景编辑同步</param>
     public void AddUpdateChunk(Chunk chunk, int type)
     {
-        if (chunk == null || !chunk.isActive|| !chunk.isInit)
+        if (chunk == null || !chunk.isActive || !chunk.isInit)
             return;
         if (type == 0)
         {
@@ -185,7 +185,7 @@ public class WorldCreateManager : BaseManager
         {
             GetChunkPositionForWorldPosition(worldPositionX, worldPositionZ, out int chunkX, out int chunkZ);
             //如果没有区块 先创建一个
-            chunk = WorldCreateHandler.Instance.CreateChunk(new Vector3Int(chunkX, 0, chunkZ) , false);
+            chunk = WorldCreateHandler.Instance.CreateChunk(new Vector3Int(chunkX, 0, chunkZ), false);
         }
         int localX = worldPositionX - chunk.chunkData.positionForWorld.x;
         int localY = worldPositionY;
@@ -197,7 +197,7 @@ public class WorldCreateManager : BaseManager
     }
     public void AddUpdateBlock(int worldPositionX, int worldPositionY, int worldPositionZ, BlockTypeEnum blockId, BlockDirectionEnum blockDirection = BlockDirectionEnum.UpForward)
     {
-        AddUpdateBlock(worldPositionX, worldPositionY, worldPositionZ,(int)blockId, blockDirection);
+        AddUpdateBlock(worldPositionX, worldPositionY, worldPositionZ, (int)blockId, blockDirection);
     }
     public void AddUpdateBlock(Vector3Int worldPosition, int blockId, BlockDirectionEnum blockDirection = BlockDirectionEnum.UpForward)
     {
@@ -271,6 +271,34 @@ public class WorldCreateManager : BaseManager
     {
         GetChunkPositionForWorldPosition(x, z, out int outX, out int outZ);
         return GetChunk(outX, outZ);
+    }
+
+    /// <summary>
+    /// 获取指定范围内的chunk(包含rangeStart和rangeEnd)
+    /// </summary>
+    /// <returns></returns>
+    public List<Chunk> GetChunkForRange(Vector3Int centerPos, int rangeStart, int rangeEnd)
+    {
+        //首先获取中心点所在区块坐标
+        Vector3Int chunkPosition = GetChunkPositionForWorldPosition(centerPos);
+        List<Chunk> listTargetChunk = new List<Chunk>();
+        for (int x = -rangeEnd * widthChunk; x <= rangeEnd * widthChunk; x += widthChunk)
+        {
+            for (int z = -rangeEnd * widthChunk; z <= rangeEnd * widthChunk; z += widthChunk)
+            {
+                if ((x < rangeStart * widthChunk && x > -rangeStart * widthChunk)
+                    && (z < rangeStart * widthChunk && z > -rangeStart * widthChunk))
+                {
+                    continue;
+                }
+                Chunk targetChunk = GetChunk(chunkPosition.x + x, chunkPosition.z + z);
+                if (targetChunk != null)
+                {
+                    listTargetChunk.Add(targetChunk);
+                }
+            }
+        }
+        return listTargetChunk;
     }
 
     /// <summary>
@@ -375,7 +403,7 @@ public class WorldCreateManager : BaseManager
     {
         foreach (var itemChunk in dicChunk.Values)
         {
-            itemChunk.StartBuildChunk(null,true);
+            itemChunk.StartBuildChunk(null, true);
         }
     }
 }

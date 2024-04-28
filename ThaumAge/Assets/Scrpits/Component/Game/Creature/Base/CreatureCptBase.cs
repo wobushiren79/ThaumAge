@@ -203,4 +203,15 @@ public class CreatureCptBase : BaseMonoBehaviour
         //删除此物体
         CreatureHandler.Instance.DestoryCreature(this);
     }
+
+    /// <summary>
+    /// 保存生物信息并且移除
+    /// </summary>
+    public virtual void CreateSaveAndRemove()
+    {
+        //保存区块生物信息
+        GameDataHandler.Instance.manager.SaveCreatureDataAsync(this);
+        //删除生物
+        DestoryCreature();
+    }
 }

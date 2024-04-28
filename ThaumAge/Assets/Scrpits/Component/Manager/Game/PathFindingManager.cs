@@ -39,12 +39,12 @@ public class PathFindingManager : BaseManager
     /// 刷新寻路
     /// </summary>
     /// <param name="chunk"></param>
-    public void RefreshPathFinding(Chunk chunk)
+    public void RefreshPathFinding(Chunk chunk,bool isAdd)
     {
         switch (ProjectConfigInfo.AI_PATHFINDING)
         {
             case PathFindingEnum.Navigation:
-                navigationPathFinding.RefreshNavMeshSource(chunk);
+                navigationPathFinding.RefreshNavMeshSource(chunk, isAdd);
                 break;
             case PathFindingEnum.Astar:
                 //astarPathFinding.RefreshGraph();

@@ -37,6 +37,8 @@ public class CreatureManager : BaseManager,ICharacterInfoView
     //生物血条模型
     protected GameObject modelForLifeProgress;
 
+    //当前场景所有的生物
+    public Dictionary<int, List<CreatureCptBase>> dicCreature = new Dictionary<int, List<CreatureCptBase>>();
     public void Awake()
     {
         controllerForCharacterInfo = new CharacterInfoController(this, this);
@@ -231,6 +233,52 @@ public class CreatureManager : BaseManager,ICharacterInfoView
     public void GetCreatureModel(string modelName, Action<GameObject> callBack)
     {
         GetModelForAddressables(dicCreatureModel, $"{pathCreature}/{modelName}.prefab", callBack);
+    }
+
+    /// <summary>
+    /// 增加生物
+    /// </summary>
+    /// <param name="creatureInfo"></param>
+    public void AddCreature(CreatureCptBase targetCreature)
+    {
+        if (dicCreature.TryGetValue(targetCreature.creatureInfo.creature_type,out List<CreatureCptBase> listCreatureData))
+        {
+            listCreatureData.Add(targetCreature);
+        }
+        else
+        {
+            dicCreature.Add(targetCreature.creatureInfo.creature_type,new List<CreatureCptBase>() { targetCreature });
+        }
+    }
+
+    /// <summary>
+    /// 移除生物
+    /// </summary>
+    /// <param name="targetCreature"></param>
+    public void RemoveCreature(CreatureCptBase targetCreature)
+    {
+        if (dicCreature.TryGetValue(targetCreature.creatureInfo.creature_type, out List<CreatureCptBase> listCreatureData))
+        {
+            listCreatureData.Remove(targetCreature);
+        }
+    }
+
+    /// <summary>
+    /// 获取生物
+    /// </summary>
+    /// <param name="creatureType"></param>
+    /// <returns></returns>
+    public List<CreatureCptBase> GetCreature(int creatureType)
+    {
+        if (dicCreature.TryGetValue(creatureType, out List<CreatureCptBase> listCreatureData))
+        {
+            return listCreatureData;
+        }
+        return null;
+    }
+    public List<CreatureCptBase> GetCreature(CreatureTypeEnum creatureType)
+    {
+        return GetCreature((int)creatureType);
     }
 
     #region 数据回调

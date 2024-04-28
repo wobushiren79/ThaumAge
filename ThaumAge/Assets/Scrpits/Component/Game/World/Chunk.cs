@@ -38,7 +38,7 @@ public class Chunk
     //是否第一次构建方块
     public bool isInitBuildChunk = false;
 
-    //是否绘制
+    //是否正在绘制
     public bool isDrawMesh = false;
 
     //是否已经优化显示

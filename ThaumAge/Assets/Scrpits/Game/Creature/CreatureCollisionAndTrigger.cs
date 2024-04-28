@@ -24,8 +24,12 @@ public class CreatureCollisionAndTrigger : CreatureBase
         if (targetBlockPosition.y < 0 || targetBlockPosition.y >= WorldCreateHandler.Instance.manager.heightChunk)
             return;
         WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(targetBlockPosition, out Block targetBlock, out Chunk targetChunk);
+        //如果脚下的区块消失了。 则保存改生物的信息
         if (targetChunk == null)
+        {
+            creature.CreateSaveAndRemove();
             return;
+        }
         targetBlock.GetCloseBlockByDirection(targetChunk, targetBlockPosition - targetChunk.chunkData.positionForWorld, DirectionEnum.Down, out Block downBlock, out Chunk downChunk, out Vector3Int downLocalPosition);
         CreatureTypeEnum creatureType = creature.creatureData.GetCreatureType();
         if (targetChunk != null && targetBlock != null)

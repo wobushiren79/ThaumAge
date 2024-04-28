@@ -201,7 +201,7 @@ public class ChunkComponent : BaseMonoBehaviour
             //});
 
             //刷新寻路
-            PathFindingHandler.Instance.manager.RefreshPathFinding(chunk);
+            PathFindingHandler.Instance.manager.RefreshPathFinding(chunk,true);
             //显示
             gameObject.SetActive(true);
         }
@@ -218,6 +218,8 @@ public class ChunkComponent : BaseMonoBehaviour
     /// </summary>
     public void ClearData()
     {
+        //刷新寻路
+        PathFindingHandler.Instance.manager.RefreshPathFinding(chunk, false);
         chunk = null;
         objBlockContainer.transform.DestroyAllChild();
         meshCollider.enabled = false;

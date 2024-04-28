@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
+using static UnityEngine.Animations.AimConstraint;
 
-public partial class GameDataManager : BaseManager, IChunkSaveView, IUserDataView,IBiomeSaveView, IGameConfigView
+public partial class GameDataManager : BaseManager, IChunkSaveView, IUserDataView, IBiomeSaveView, IGameConfigView
 {
     //游戏设置
     public GameConfigBean gameConfig;
@@ -53,7 +54,7 @@ public partial class GameDataManager : BaseManager, IChunkSaveView, IUserDataVie
                 for (int i = 0; i < listData.Count; i++)
                 {
                     UserDataBean itemUserData = listData[i];
-                    if(itemUserData.userId.Equals("Test"))
+                    if (itemUserData.userId.Equals("Test"))
                     {
                         userData = itemUserData;
                     }
@@ -96,7 +97,7 @@ public partial class GameDataManager : BaseManager, IChunkSaveView, IUserDataVie
     /// </summary>
     public BiomeSaveBean GetBiomeSaveData(string userId, WorldTypeEnum worldType)
     {
-        if(dicBiomeSaveData.TryGetValue(worldType,out BiomeSaveBean biomeSaveData))
+        if (dicBiomeSaveData.TryGetValue(worldType, out BiomeSaveBean biomeSaveData))
         {
             return biomeSaveData;
         }
@@ -126,7 +127,7 @@ public partial class GameDataManager : BaseManager, IChunkSaveView, IUserDataVie
     {
         foreach (var itemData in dicBiomeSaveData)
         {
-            controllerForBiomeSave.SetBiomeSaveData(itemData.Value,null);
+            controllerForBiomeSave.SetBiomeSaveData(itemData.Value, null);
         }
     }
 
@@ -156,6 +157,17 @@ public partial class GameDataManager : BaseManager, IChunkSaveView, IUserDataVie
                 //保存区块数据
                 chunkSaveData.SaveData();
                 controllerForChunkSave.SetChunkSaveData(chunkSaveData, null);
+            }
+        });
+    }
+
+    public async void SaveCreatureDataAsync(CreatureCptBase creatureCpt)
+    {
+        await Task.Run(() =>
+        {
+            lock (lockForSaveData)
+            {
+
             }
         });
     }
