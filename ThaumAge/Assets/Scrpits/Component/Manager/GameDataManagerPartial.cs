@@ -161,13 +161,15 @@ public partial class GameDataManager : BaseManager, IChunkSaveView, IUserDataVie
         });
     }
 
-    public async void SaveCreatureDataAsync(CreatureCptBase creatureCpt)
+    public async void SaveCreatureDataAsync(WorldTypeEnum worldType, Vector3Int chunkPos, CreatureCptBase creatureCpt)
     {
         await Task.Run(() =>
         {
             lock (lockForSaveData)
             {
+                ChunkSaveCreatureBean saveCreatureData = controllerForChunkSave.GetChunkSaveCreatureData(userData.userId, worldType, chunkPos, null);
 
+                controllerForChunkSave.SetChunkSaveCreatureData(saveCreatureData, null);
             }
         });
     }

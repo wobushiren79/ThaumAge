@@ -47,5 +47,24 @@ public class ChunkSaveController : BaseMVCController<ChunkSaveModel, IChunkSaveV
     public void SetChunkSaveData(ChunkSaveBean chunkSaveData, Action<ChunkSaveBean> action)
     {
         GetModel().SetChunkSaveData(chunkSaveData);
+        action?.Invoke(chunkSaveData);
+    }
+
+    public ChunkSaveCreatureBean GetChunkSaveCreatureData(string userId, WorldTypeEnum worldType, Vector3Int position, Action<ChunkSaveCreatureBean> action)
+    {
+        ChunkSaveCreatureBean data = GetModel().GetChunkSaveCreatureData(userId, worldType, position);
+        if (data == null)
+        {
+            GetView().GetChunkSaveFail("没有数据", null);
+            return null;
+        }
+        GetView().GetChunkSaveSuccess(data, action);
+        return data;
+    }
+
+    public void SetChunkSaveCreatureData(ChunkSaveCreatureBean chunkSaveCreatureData, Action<ChunkSaveCreatureBean> action)
+    {
+        GetModel().SetChunkSaveCreatureData(chunkSaveCreatureData);
+        action?.Invoke(chunkSaveCreatureData);
     }
 }

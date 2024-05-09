@@ -10,7 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
-public class UserDataService : BaseDataStorage<UserDataBean>
+public class UserDataService : BaseDataStorage
 {
     protected readonly string saveFileName;
 
@@ -24,7 +24,7 @@ public class UserDataService : BaseDataStorage<UserDataBean>
     /// <returns></returns>
     public UserDataBean QueryDataByUserId(string userId)
     {
-        return BaseLoadData(userId + "/Base");
+        return BaseLoadData<UserDataBean>(userId + "/Base");
     }
     
     /// <summary>
@@ -44,7 +44,7 @@ public class UserDataService : BaseDataStorage<UserDataBean>
                 string itemFile = files[f];
                 if (itemFile.Replace(itemDir, "").Contains("Base"))
                 {
-                    UserDataBean userData = BaseLoadDataByPath(itemFile);
+                    UserDataBean userData = BaseLoadDataByPath<UserDataBean>(itemFile);
                     if (userData != null)
                         listData.Add(userData);
                     break;

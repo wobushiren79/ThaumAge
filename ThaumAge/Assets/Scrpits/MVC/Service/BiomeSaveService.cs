@@ -9,7 +9,7 @@ using UnityEditor;
 using System;
 using System.Collections.Generic;
 
-public class BiomeSaveService : BaseDataStorage<BiomeSaveBean>
+public class BiomeSaveService : BaseDataStorage
 {
     protected readonly string saveFileName;
 
@@ -35,7 +35,7 @@ public class BiomeSaveService : BaseDataStorage<BiomeSaveBean>
     {
         string worldName = saveFileName + "_" + EnumExtension.GetEnumName(worldType);
         string fileName = "BiomeData";
-        return BaseLoadData(userId + "/" + worldName + "/" + fileName);
+        return BaseLoadData<BiomeSaveBean>(userId + "/" + worldName + "/" + fileName);
     }
         
     /// <summary>

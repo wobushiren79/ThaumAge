@@ -11,7 +11,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Diagnostics;
 
-public class ChunkSaveService : BaseDataStorage<ChunkSaveBean>
+public class ChunkSaveService : BaseDataStorage
 {
     protected readonly string saveFileName = "WorldData";
 
@@ -26,9 +26,20 @@ public class ChunkSaveService : BaseDataStorage<ChunkSaveBean>
     /// <returns></returns>
     public ChunkSaveBean QueryData(string userId, WorldTypeEnum worldType, Vector3Int position)
     {
-        string worldName = saveFileName + "_" + EnumExtension.GetEnumName(worldType);
-        string fileName = "w_" + position.x + "_" + position.z;
-        return BaseLoadData(userId + "/" + worldName + "/" + fileName);
+        string worldName = $"{saveFileName}_{EnumExtension.GetEnumName(worldType)}";
+        string fileName = $"w_{position.x}_{position.z}";
+        return BaseLoadData<ChunkSaveBean>($"{userId}/{worldName}/{fileName}");
+    }
+
+    /// <summary>
+    /// 查询数据
+    /// </summary>
+    /// <returns></returns>
+    public ChunkSaveCreatureBean QueryDataForCreature(string userId, WorldTypeEnum worldType, Vector3Int position)
+    {
+        string worldName = $"{saveFileName}_{EnumExtension.GetEnumName(worldType)}";
+        string fileName = $"w_{position.x}_{position.z}_ceature";
+        return BaseLoadData<ChunkSaveCreatureBean>($"{userId}/{worldName}/{fileName}");
     }
 
     /// <summary>
@@ -38,12 +49,26 @@ public class ChunkSaveService : BaseDataStorage<ChunkSaveBean>
     public void UpdateData(ChunkSaveBean data)
     {
         WorldTypeEnum worldType = data.GetWorldType();
-        string worldName = saveFileName + "_" + EnumExtension.GetEnumName(worldType);
-        string fileName = "w_" + data.position.x + "_" + data.position.z;
-        FileUtil.CreateDirectory(dataStoragePath + "/" + data.userId);
-        FileUtil.CreateDirectory(dataStoragePath + "/" + data.userId + "/" + worldName);
+        string worldName = $"{saveFileName}_{EnumExtension.GetEnumName(worldType)}";
+        string fileName = $"w_{data.position.x}_{data.position.z}";
+        FileUtil.CreateDirectory($"{dataStoragePath}/{data.userId}");
+        FileUtil.CreateDirectory($"{dataStoragePath}/{data.userId}/{worldName}");
         if (data.userId != null)
-            BaseSaveData(data.userId + "/" + worldName + "/" + fileName, data);
+            BaseSaveData($"{data.userId}/{worldName}/{fileName}", data);
+    }
+    /// <summary>
+    /// 更新数据
+    /// </summary>
+    /// <param name="gameConfig"></param>
+    public void UpdateDataForCreature(ChunkSaveCreatureBean data)
+    {
+        WorldTypeEnum worldType = data.GetWorldType();
+        string worldName = $"{saveFileName}_{EnumExtension.GetEnumName(worldType)}";
+        string fileName = $"w_{data.position.x}_{data.position.z}_ceature";
+        FileUtil.CreateDirectory($"{dataStoragePath}/{data.userId}");
+        FileUtil.CreateDirectory($"{dataStoragePath}/{data.userId}/{worldName}");
+        if (data.userId != null)
+            BaseSaveData($"{data.userId}/{worldName}/{fileName}", data);
     }
 
     /// <summary>

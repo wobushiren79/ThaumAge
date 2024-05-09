@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEditor;
 
-public class GameConfigService : BaseDataStorage<GameConfigBean>
+public class GameConfigService : BaseDataStorage
 {
     protected readonly string saveFileName;
 
@@ -16,7 +16,7 @@ public class GameConfigService : BaseDataStorage<GameConfigBean>
     /// <returns></returns>
     public GameConfigBean QueryData()
     {
-        return BaseLoadData(saveFileName);
+        return BaseLoadData<GameConfigBean>(saveFileName);
     }
 
     /// <summary>

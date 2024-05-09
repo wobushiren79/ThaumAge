@@ -36,4 +36,22 @@ public class ChunkSaveModel : BaseMVCModel
         serviceChunkSave.UpdateData(data);
     }
 
+    /// <summary>
+    /// 获取游戏数据
+    /// </summary>
+    /// <returns></returns>
+    public ChunkSaveCreatureBean GetChunkSaveCreatureData(string userId, WorldTypeEnum worldType, Vector3Int position)
+    {
+        ChunkSaveCreatureBean data = serviceChunkSave.QueryDataForCreature(userId, worldType, position);
+        return data;
+    }
+
+    /// <summary>
+    /// 保存游戏数据
+    /// </summary>
+    /// <param name="data"></param>
+    public void SetChunkSaveCreatureData(ChunkSaveCreatureBean data)
+    {
+        serviceChunkSave.UpdateDataForCreature(data);
+    }
 }

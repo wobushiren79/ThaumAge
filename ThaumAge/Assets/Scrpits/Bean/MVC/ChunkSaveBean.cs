@@ -3,19 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [Serializable]
-public class ChunkSaveBean : BaseBean
+public class ChunkSaveBean : ChunkSaveBaseBean
 {
-    //世界类型
-    public int worldType = 0;
-    //所属账号
-    public string userId;
-    //chunk坐标
-    public Vector3Int position;
     //保存的方块数据
     public BlockBean[] arrayBlockData = new BlockBean[0];
-    //生态数据
-    public int biomeType = -1;
-
     //方块数据 改变
     public Dictionary<int, BlockBean> dicBlockData = new Dictionary<int, BlockBean>();
 
@@ -65,10 +56,5 @@ public class ChunkSaveBean : BaseBean
         int index = MathUtil.GetSingleIndexForThree(x, y, z, widthChunk, heightChunk);
         if(dicBlockData.ContainsKey(index))
             dicBlockData.Remove(index);
-    }
-
-    public WorldTypeEnum GetWorldType()
-    {
-        return (WorldTypeEnum)worldType;
     }
 }

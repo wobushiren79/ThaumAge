@@ -210,7 +210,7 @@ public class CreatureCptBase : BaseMonoBehaviour
     public virtual void CreateSaveAndRemove()
     {
         //保存区块生物信息
-        GameDataHandler.Instance.manager.SaveCreatureDataAsync(this);
+        //GameDataHandler.Instance.manager.SaveCreatureDataAsync(this);
         //删除生物
         DestoryCreature();
     }
