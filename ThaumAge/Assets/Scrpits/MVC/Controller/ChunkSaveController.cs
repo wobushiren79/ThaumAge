@@ -67,4 +67,9 @@ public class ChunkSaveController : BaseMVCController<ChunkSaveModel, IChunkSaveV
         GetModel().SetChunkSaveCreatureData(chunkSaveCreatureData);
         action?.Invoke(chunkSaveCreatureData);
     }
+
+    public void DeleteChunkSaveCreatureData(string userId, WorldTypeEnum worldType, Vector3Int position)
+    {
+        GetModel().DeleteChunkSaveCreatureData(userId, worldType, position);
+    }
 }

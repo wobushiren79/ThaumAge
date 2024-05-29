@@ -35,7 +35,7 @@ public class UserDataModel : BaseMVCModel
     {
         UserDataBean data = serviceUserData.QueryDataByUserId(userId);
         if (data == null)
-            data = new UserDataBean();
+            data = new UserDataBean(userId);
         return data;
     }
 

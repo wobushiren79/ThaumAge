@@ -3,7 +3,7 @@ using UnityEditor;
 using UnityEngine;
 using DG.Tweening;
 
-public class CreatureCptBase : BaseMonoBehaviour
+public class CreatureCptBase : BaseMonoBehaviour 
 {
     //生物基础动画
     [HideInInspector]
@@ -31,6 +31,9 @@ public class CreatureCptBase : BaseMonoBehaviour
     protected float timeUpdateMaxForCollisionAndTrigger = 0.2f;
     public virtual void Awake()
     {
+        creatureData = null;
+        creatureInfo = null;
+
         animCreature = GetComponentInChildren<Animator>();
         colliderCreature = transform.GetComponent<Collider>();
 
@@ -55,11 +58,16 @@ public class CreatureCptBase : BaseMonoBehaviour
     public virtual void SetData(CreatureInfoBean creatureInfo)
     {
         this.creatureInfo = creatureInfo;
-        creatureData = new CreatureBean();
+        string creatureId = SystemUtil.GetUUID(SystemUtil.UUIDTypeEnum.N);
+        creatureData = new CreatureBean(creatureId);
         CreatureStatusBean creatureStatus = creatureData.GetCreatureStatus();
         creatureStatus.health = creatureInfo.life;
         creatureStatus.curHealth = creatureInfo.life;
+
+        creatureData.creatureInfoId = creatureInfo.id;
         creatureData.creatureType = creatureInfo.creature_type;
+
+        gameObject.name = creatureId;
     }
 
     /// <summary>
@@ -105,7 +113,7 @@ public class CreatureCptBase : BaseMonoBehaviour
         effectDataForBody.effectName = EffectInfo.Effect_DeadBody_1;
         effectDataForBody.effectType = EffectTypeEnum.Normal;
         effectDataForBody.timeForShow = 5f;
-        effectDataForBody.effectPosition = transform.position + new Vector3(0,0.3f,0);
+        effectDataForBody.effectPosition = transform.position + new Vector3(0, 0.3f, 0);
 
         SkinnedMeshRenderer skinnedMeshRenderer = gameObject.GetComponentInChildren<SkinnedMeshRenderer>();
         Mesh bodyMesh = skinnedMeshRenderer.sharedMesh;
@@ -205,12 +213,25 @@ public class CreatureCptBase : BaseMonoBehaviour
     }
 
     /// <summary>
+    /// 保存生物信息
+    /// </summary>
+    public virtual void CreatureSave()
+    {
+        //获取当前所在区块坐标
+        Vector3Int targetChuinkPos = WorldCreateHandler.Instance.manager.GetChunkPositionForWorldPosition(Vector3Int.CeilToInt(transform.position));
+        //获取世界类型
+        WorldTypeEnum worldType = WorldCreateHandler.Instance.manager.worldType;
+        //保存区块生物信息
+        CreatureHandler.Instance.AddCreatureDataSave(worldType, targetChuinkPos, this);
+    }
+
+    /// <summary>
     /// 保存生物信息并且移除
     /// </summary>
-    public virtual void CreateSaveAndRemove()
+    public virtual void CreatureSaveAndRemove()
     {
-        //保存区块生物信息
-        //GameDataHandler.Instance.manager.SaveCreatureDataAsync(this);
+        //保存数据
+        CreatureSave();
         //删除生物
         DestoryCreature();
     }

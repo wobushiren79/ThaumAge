@@ -301,6 +301,25 @@ public class WorldCreateManager : BaseManager
         return listTargetChunk;
     }
 
+    public List<Chunk> GetChunkForRange(Vector3Int centerPos, int rangeEnd)
+    {
+        //首先获取中心点所在区块坐标
+        Vector3Int chunkPosition = GetChunkPositionForWorldPosition(centerPos);
+        List<Chunk> listTargetChunk = new List<Chunk>();
+        for (int x = -rangeEnd * widthChunk; x <= rangeEnd * widthChunk; x += widthChunk)
+        {
+            for (int z = -rangeEnd * widthChunk; z <= rangeEnd * widthChunk; z += widthChunk)
+            {
+                Chunk targetChunk = GetChunk(chunkPosition.x + x, chunkPosition.z + z);
+                if (targetChunk != null)
+                {
+                    listTargetChunk.Add(targetChunk);
+                }
+            }
+        }
+        return listTargetChunk;
+    }
+
     /// <summary>
     /// 通过随意一个世界坐标 获取chunk的世界坐标
     /// </summary>

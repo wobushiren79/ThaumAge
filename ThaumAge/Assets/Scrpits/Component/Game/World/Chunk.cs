@@ -37,7 +37,8 @@ public class Chunk
     public bool isBuildChunk = false;
     //是否第一次构建方块
     public bool isInitBuildChunk = false;
-
+    //是否加载过生物信息
+    public bool isLoadCreatureData = false;
     //是否正在绘制
     public bool isDrawMesh = false;
 

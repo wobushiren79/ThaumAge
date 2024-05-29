@@ -125,7 +125,7 @@ public class ChunkComponent : BaseMonoBehaviour
     /// </summary>
     public void DrawMesh()
     {
-        if (chunk.isBuildChunk)
+        if (chunk == null || chunk.isBuildChunk)
             return;
         try
         {

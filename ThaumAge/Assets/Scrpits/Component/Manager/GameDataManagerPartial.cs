@@ -63,9 +63,8 @@ public partial class GameDataManager : BaseManager, IChunkSaveView, IUserDataVie
 
             if (userData == null)
             {
-                userData = new UserDataBean();
+                userData = new UserDataBean("Test");
                 userData.timeForGame.hour = 7;
-                userData.userId = "Test";
                 userData.seed = 132349;
             }
         }
@@ -90,6 +89,26 @@ public partial class GameDataManager : BaseManager, IChunkSaveView, IUserDataVie
     public ChunkSaveBean GetChunkSaveData(string userId, WorldTypeEnum worldType, Vector3Int position)
     {
         return controllerForChunkSave.GetChunkSaveData(userId, worldType, position, null);
+    }
+
+    /// <summary>
+    /// 获取世界数据
+    /// </summary>
+    /// <returns></returns>
+    public ChunkSaveCreatureBean GetChunkSaveCreatureData(string userId, WorldTypeEnum worldType, Vector3Int position)
+    {
+        return controllerForChunkSave.GetChunkSaveCreatureData(userId, worldType, position, null);
+    }
+
+    /// <summary>
+    /// 删除区块生物信息
+    /// </summary>
+    /// <param name="userId"></param>
+    /// <param name="worldType"></param>
+    /// <param name="position"></param>
+    public void DeleteChunkSaveCreatureData(string userId, WorldTypeEnum worldType, Vector3Int position)
+    {
+         controllerForChunkSave.DeleteChunkSaveCreatureData(userId, worldType, position);
     }
 
     /// <summary>
@@ -161,15 +180,21 @@ public partial class GameDataManager : BaseManager, IChunkSaveView, IUserDataVie
         });
     }
 
-    public async void SaveCreatureDataAsync(WorldTypeEnum worldType, Vector3Int chunkPos, CreatureCptBase creatureCpt)
+    public async void SaveCreatureDataAsync(List<ChunkSaveCreatureBean> listCreatureSaveData)
     {
+        if (listCreatureSaveData.IsNull())
+            return;
+        ChunkSaveCreatureBean[] arrayCreatureSaveData = listCreatureSaveData.ToArray();
+        listCreatureSaveData.Clear();
         await Task.Run(() =>
         {
             lock (lockForSaveData)
             {
-                ChunkSaveCreatureBean saveCreatureData = controllerForChunkSave.GetChunkSaveCreatureData(userData.userId, worldType, chunkPos, null);
-
-                controllerForChunkSave.SetChunkSaveCreatureData(saveCreatureData, null);
+                for (int i = 0;i < arrayCreatureSaveData.Length;i++)
+                {
+                    var itemSaveData = arrayCreatureSaveData[i];
+                    controllerForChunkSave.SetChunkSaveCreatureData(itemSaveData, null);
+                }
             }
         });
     }

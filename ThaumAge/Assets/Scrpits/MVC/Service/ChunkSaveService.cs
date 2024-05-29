@@ -14,7 +14,7 @@ using System.Diagnostics;
 public class ChunkSaveService : BaseDataStorage
 {
     protected readonly string saveFileName = "WorldData";
-
+    protected readonly string saveFileNameForCreature = "WorldDataCreature";
     public ChunkSaveService()
     {
 
@@ -37,9 +37,9 @@ public class ChunkSaveService : BaseDataStorage
     /// <returns></returns>
     public ChunkSaveCreatureBean QueryDataForCreature(string userId, WorldTypeEnum worldType, Vector3Int position)
     {
-        string worldName = $"{saveFileName}_{EnumExtension.GetEnumName(worldType)}";
-        string fileName = $"w_{position.x}_{position.z}_ceature";
-        return BaseLoadData<ChunkSaveCreatureBean>($"{userId}/{worldName}/{fileName}");
+        string worldName = $"{saveFileNameForCreature}_{EnumExtension.GetEnumName(worldType)}";
+        string fileName = $"w_{position.x}_{position.z}_creature";
+        return BaseLoadData<ChunkSaveCreatureBean>($"{userId}/{worldName}/{fileName}",false);
     }
 
     /// <summary>
@@ -63,8 +63,8 @@ public class ChunkSaveService : BaseDataStorage
     public void UpdateDataForCreature(ChunkSaveCreatureBean data)
     {
         WorldTypeEnum worldType = data.GetWorldType();
-        string worldName = $"{saveFileName}_{EnumExtension.GetEnumName(worldType)}";
-        string fileName = $"w_{data.position.x}_{data.position.z}_ceature";
+        string worldName = $"{saveFileNameForCreature}_{EnumExtension.GetEnumName(worldType)}";
+        string fileName = $"w_{data.position.x}_{data.position.z}_creature";
         FileUtil.CreateDirectory($"{dataStoragePath}/{data.userId}");
         FileUtil.CreateDirectory($"{dataStoragePath}/{data.userId}/{worldName}");
         if (data.userId != null)
@@ -76,8 +76,18 @@ public class ChunkSaveService : BaseDataStorage
     /// </summary>
     public void DeleteData(string userId, WorldTypeEnum worldType, Vector3Int position)
     {
-        string worldName = saveFileName + "_" + EnumExtension.GetEnumName(worldType);
-        string fileName = "w_" + position.x + "_" + position.z;
-        BaseDeleteFile(userId + "/" + worldName + "/" + fileName);
+        string worldName = $"{saveFileName}_{EnumExtension.GetEnumName(worldType)}";
+        string fileName = $"w_{position.x}_{position.z}";
+        BaseDeleteFile($"{userId}/{worldName}/{fileName}");
+    }
+
+    /// <summary>
+    /// 删除数据
+    /// </summary>
+    public void DeleteDataForCreature(string userId, WorldTypeEnum worldType, Vector3Int position)
+    {
+        string worldName = $"{saveFileNameForCreature}_{EnumExtension.GetEnumName(worldType)}";
+        string fileName = $"w_{position.x}_{position.z}_creature";
+        BaseDeleteFile($"{userId}/{worldName}/{fileName}");
     }
 }

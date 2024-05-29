@@ -25,11 +25,13 @@ public class CreatureCollisionAndTrigger : CreatureBase
             return;
         WorldCreateHandler.Instance.manager.GetBlockForWorldPosition(targetBlockPosition, out Block targetBlock, out Chunk targetChunk);
         //如果脚下的区块消失了。 则保存改生物的信息
-        if (targetChunk == null)
+        if (targetChunk == null && creature.creatureData.GetCreatureType() != CreatureTypeEnum.Player)
         {
-            creature.CreateSaveAndRemove();
+            creature.CreatureSaveAndRemove();
             return;
         }
+        if (targetBlock == null || targetChunk == null)
+            return;
         targetBlock.GetCloseBlockByDirection(targetChunk, targetBlockPosition - targetChunk.chunkData.positionForWorld, DirectionEnum.Down, out Block downBlock, out Chunk downChunk, out Vector3Int downLocalPosition);
         CreatureTypeEnum creatureType = creature.creatureData.GetCreatureType();
         if (targetChunk != null && targetBlock != null)

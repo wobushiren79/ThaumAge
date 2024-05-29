@@ -35,7 +35,7 @@ public class UserDataBean
     //游玩时间
     public TimeBean timeForPlay = new TimeBean();
     //主角数据
-    public CharacterBean characterData = new CharacterBean();
+    public CharacterBean characterData;
 
     //快捷栏位置
     public int indexForShortcuts = 0;
@@ -45,6 +45,13 @@ public class UserDataBean
     public ItemsBean[] listBackpack = new ItemsBean[7 * 7];
     //魔法快捷栏位置
     public int indexForShortcutsMagic = 0;
+
+    public UserDataBean(string userId)
+    {
+        this.userId = userId;
+        characterData = new CharacterBean(userId);
+        characterData.SetCreatureType(CreatureTypeEnum.Player);
+    }
 
     /// <summary>
     /// 增加道具

@@ -54,4 +54,15 @@ public class ChunkSaveModel : BaseMVCModel
     {
         serviceChunkSave.UpdateDataForCreature(data);
     }
+
+    /// <summary>
+    /// 删除数据
+    /// </summary>
+    /// <param name="userId"></param>
+    /// <param name="worldType"></param>
+    /// <param name="position"></param>
+    public void DeleteChunkSaveCreatureData(string userId, WorldTypeEnum worldType, Vector3Int position)
+    {
+        serviceChunkSave.DeleteDataForCreature(userId, worldType, position);
+    }
 }

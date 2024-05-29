@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
@@ -61,6 +62,8 @@ public class NavigationPathFinding : BaseMonoBehaviour
     /// <param name="chunk"></param>
     public void RefreshNavMeshSource(Chunk chunk,bool isAdd)
     {
+        if (chunk == null || chunk.chunkComponent == null)
+            return;
         if (isAdd)
         {
             if (navMeshSources.TryGetValue(chunk.chunkData.positionForWorld, out NavMeshBuildSource source))
@@ -110,12 +113,12 @@ public class NavigationPathFinding : BaseMonoBehaviour
         {
             try
             {
-                navMeshUpdateOperation = NavMeshBuilder.UpdateNavMeshDataAsync(navMeshData, navMeshBuildSettings, navMeshSources.Values.ToList(), worldBounds);
                 navMeshIsUpdating = true;
+                navMeshUpdateOperation = NavMeshBuilder.UpdateNavMeshDataAsync(navMeshData, navMeshBuildSettings, navMeshSources.Values.ToList(), worldBounds);
             }
-            catch
+            catch(Exception e)
             {
-
+                LogUtil.LogError(e.ToString());
             }
             navMeshHasNewData = false;
         }

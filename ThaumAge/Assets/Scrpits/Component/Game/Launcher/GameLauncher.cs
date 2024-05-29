@@ -6,11 +6,11 @@ using UnityEngine;
 
 public class GameLauncher : BaseLauncher
 {
-   
+
     public WorldTypeEnum testWorldType = WorldTypeEnum.Test;
     public int seed = 0;
     public Terrain3DCShaderNoiseLayer testTerrain3DCShaderNoise;
-    
+
     public override void Launch()
     {
         base.Launch();
@@ -44,6 +44,7 @@ public class GameLauncher : BaseLauncher
             GameControlHandler.Instance.SetPlayerControlEnabled(false);
 
             GameConfigBean gameConfig = GameDataHandler.Instance.manager.GetGameConfig();
+
             WorldCreateHandler.Instance.ChangeWorld(worldType, CompleteForUpdateChunk, worldPositionUser, gameConfig.worldRefreshRange);
         });
     }
@@ -65,6 +66,8 @@ public class GameLauncher : BaseLauncher
         yield return new WaitForSeconds(0.1f);
         //修改游戏状态
         GameHandler.Instance.manager.SetGameState(GameStateEnum.Gaming);
+        //一次初始化加载一次生物数据
+        CreatureHandler.Instance.HandleForCreatureCreateLoadData();
         //修改天气
         WeatherHandler.Instance.ChangeWeather(WeatherTypeEnum.Cloudy, 2000);
         //开关角色控制

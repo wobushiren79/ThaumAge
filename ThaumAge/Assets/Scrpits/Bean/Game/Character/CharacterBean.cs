@@ -20,6 +20,11 @@ public class CharacterBean : CreatureBean
     public ColorBean colorHair;
     public ColorBean colorSkin;
 
+    public CharacterBean(string creatureId) : base(creatureId)
+    {
+
+    }
+
     /// <summary>
     /// 获取属性值
     /// </summary>

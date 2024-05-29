@@ -5,12 +5,23 @@ using System;
 [Serializable]
 public class CreatureBean
 {
+    //生物ID
+    public string creatureId;
+    //生物详情ID
+    public long creatureInfoId;
     //生物类型
     public int creatureType;
     //角色状态
     public CreatureStatusBean creatureStatus;
     //数据
     public string meta;
+    //出生坐标位置
+    public Vector3 posForBirth;
+
+    public CreatureBean(string creatureId)
+    {
+        this.creatureId = creatureId;
+    }
 
     public T GetMetaData<T>() where T : CreatureMetaBase
     {

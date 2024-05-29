@@ -41,9 +41,6 @@ public class CreatureCptCharacter : CreatureCptBase
     [HideInInspector]
     public CharacterItems CharacterItems;
 
-    //角色数据
-    protected CharacterBean characterData;
-
     public override void Awake()
     {
         base.Awake();
@@ -64,7 +61,7 @@ public class CreatureCptCharacter : CreatureCptBase
     /// <param name="characterData"></param>
     public void SetCharacterData(CharacterBean characterData)
     {
-        this.characterData = characterData;
+        this.creatureData = characterData;
         characterSkin.SetCharacterData(characterData);
         characterEquip.SetCharacterData(characterData);
     }
@@ -73,13 +70,13 @@ public class CreatureCptCharacter : CreatureCptBase
     /// 获取角色数据
     /// </summary>
     /// <returns></returns>
-    public CharacterBean GetCharacterData()
+    public CharacterBean GetCharacterData(string defCreatureId = "")
     {
-        if (characterData == null)
+        if (creatureData == null)
         {
-            characterData = new CharacterBean();
+            creatureData = new CharacterBean(defCreatureId);
         }
-        return characterData;
+        return (CharacterBean)creatureData;
     }
 
     public override void Dead()

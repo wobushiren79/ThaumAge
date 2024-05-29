@@ -221,10 +221,9 @@ public partial class UIMainCreate : BaseUIComponent,
         }
         Action<DialogView, DialogBean> actionSubmit = (view, data) =>
         {
-            UserDataBean userData = new UserDataBean();
+            UserDataBean userData = new UserDataBean(userId);
             userData.dataIndex = userDataIndex;
-            userData.userId = userId;
-            userData.characterData = character.GetCharacterData();
+            userData.characterData = character.GetCharacterData(userId);
             userData.characterData.characterName = characterName;
             userData.seed = seed;
             //设置位置
