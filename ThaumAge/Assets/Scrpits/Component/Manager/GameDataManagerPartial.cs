@@ -3,15 +3,11 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
-using static UnityEngine.Animations.AimConstraint;
 
-public partial class GameDataManager : BaseManager, IChunkSaveView, IUserDataView, IBiomeSaveView, IGameConfigView
+public partial class GameDataManager : BaseManager, IChunkSaveView, IUserDataView, IBiomeSaveView
 {
-    //游戏设置
-    public GameConfigBean gameConfig;
     public UserDataBean userData;
 
-    public GameConfigController controllerForGameConfig;
     public ChunkSaveController controllerForChunkSave;
     public UserDataController controllerForUserData;
     public BiomeSaveController controllerForBiomeSave;
@@ -128,16 +124,7 @@ public partial class GameDataManager : BaseManager, IChunkSaveView, IUserDataVie
         }
     }
 
-    /// <summary>
-    /// 获取游戏设置
-    /// </summary>
-    /// <returns></returns>
-    public GameConfigBean GetGameConfig()
-    {
-        if (gameConfig == null)
-            gameConfig = new GameConfigBean();
-        return gameConfig;
-    }
+
 
     /// <summary>
     /// 保存生态数据
@@ -150,13 +137,7 @@ public partial class GameDataManager : BaseManager, IChunkSaveView, IUserDataVie
         }
     }
 
-    /// <summary>
-    /// 保存游戏设置
-    /// </summary>
-    public void SaveGameConfig()
-    {
-        controllerForGameConfig.SaveGameConfigData(gameConfig);
-    }
+
 
     /// <summary>
     /// 异步保存游戏数据
@@ -243,26 +224,6 @@ public partial class GameDataManager : BaseManager, IChunkSaveView, IUserDataVie
     }
 
     #region 游戏设置数据回掉
-    public void GetGameConfigFail()
-    {
-
-    }
-
-    public void GetGameConfigSuccess(GameConfigBean configBean)
-    {
-        gameConfig = configBean;
-    }
-
-    public void SetGameConfigFail()
-    {
-
-    }
-
-    public void SetGameConfigSuccess(GameConfigBean configBean)
-    {
-
-    }
-
     public void GetUserDataSuccess<T>(T data, Action<T> action)
     {
         action?.Invoke(data);
