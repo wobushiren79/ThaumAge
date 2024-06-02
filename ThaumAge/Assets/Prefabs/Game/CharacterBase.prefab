@@ -253,6 +253,8 @@ MonoBehaviour:
     time_interval_attack_remote: 0
     damage_data: 
   creatureData:
+    creatureId: 
+    creatureInfoId: 0
     creatureType: 0
     creatureStatus:
       curHealth: 100
@@ -278,6 +280,7 @@ MonoBehaviour:
       gravityRate: 1
       listStatusChange: []
     meta: 
+    posForBirth: {x: 0, y: 0, z: 0}
   characterHead: {fileID: 2532596581479033649}
   characterHat: {fileID: 3573984851173886854}
   characterHair: {fileID: 1634886876084529385}
@@ -293,6 +296,8 @@ MonoBehaviour:
   characterSkin:
     character: {fileID: 0}
     characterData:
+      creatureId: 
+      creatureInfoId: 0
       creatureType: 0
       creatureStatus:
         curHealth: 100
@@ -318,6 +323,7 @@ MonoBehaviour:
         gravityRate: 1
         listStatusChange: []
       meta: 
+      posForBirth: {x: 0, y: 0, z: 0}
       characterEquip:
         hats:
           itemId: 0
@@ -514,15 +520,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 29f92d7b12e3fe44b8a60af57aab65d7, type: 3}
       propertyPath: m_LocalScale.x
-      value: 0.8
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 29f92d7b12e3fe44b8a60af57aab65d7, type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.8
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 29f92d7b12e3fe44b8a60af57aab65d7, type: 3}
       propertyPath: m_LocalScale.z
-      value: 0.8
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 29f92d7b12e3fe44b8a60af57aab65d7, type: 3}
       propertyPath: m_LocalPosition.x
@@ -569,15 +575,15 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -7511558181221131132, guid: 29f92d7b12e3fe44b8a60af57aab65d7, type: 3}
-      propertyPath: m_Materials.Array.data[0]
+      propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: 2d8ca3400a3a8e247a4a7b2bd4857f53, type: 2}
     - target: {fileID: -7511558181221131132, guid: 29f92d7b12e3fe44b8a60af57aab65d7, type: 3}
-      propertyPath: m_Materials.Array.data[1]
+      propertyPath: 'm_Materials.Array.data[1]'
       value: 
       objectReference: {fileID: 0}
     - target: {fileID: -7511558181221131132, guid: 29f92d7b12e3fe44b8a60af57aab65d7, type: 3}
-      propertyPath: m_Materials.Array.data[2]
+      propertyPath: 'm_Materials.Array.data[2]'
       value: 
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 29f92d7b12e3fe44b8a60af57aab65d7, type: 3}
@@ -732,7 +738,7 @@ PrefabInstance:
       value: BodyBase
       objectReference: {fileID: 0}
     - target: {fileID: 1630794972795428178, guid: 7f3659f03838894499aac2a99e85a7df, type: 3}
-      propertyPath: m_Materials.Array.data[0]
+      propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: 42d0f4c6a71101d4496cb01706aaac7d, type: 2}
     m_RemovedComponents: []
@@ -802,7 +808,7 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
 --- !u!95 &1868135459831526249
 Animator:
-  serializedVersion: 5
+  serializedVersion: 7
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -816,6 +822,7 @@ Animator:
   m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
